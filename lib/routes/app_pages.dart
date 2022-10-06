@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../app/modules/multiplexor/multiplexor.dart';
 import '../app/modules/onboarding/onboarding.dart';
 
 class AppPages {
@@ -11,6 +12,10 @@ class AppPages {
     GetPage(
       name: OnboardingPage.route,
       page: () => const OnboardingPage()
+    ),
+    GetPage(
+        name: Multiplexor.route,
+        page: () => const Multiplexor()
     ),
   ];
 }

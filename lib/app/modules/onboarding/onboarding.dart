@@ -3,6 +3,7 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
+import 'package:wayagram/app/modules/multiplexor/multiplexor.dart';
 import '../../../app/global_widgets/app_button.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -44,7 +45,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () {
-
+                          Get.toNamed(Multiplexor.route);
                         },
                         child: Text(
                           'Skip',
@@ -120,8 +121,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       height: 25,
                     ),
                     AppButton(
-                      title: 'Next',
-                      onPressed: (){},
+                      title: currentIndex == 6 ? 'Continue' : 'Next',
+                      onPressed: (){
+                        buttonCarouselController.nextPage();
+                        if (currentIndex == 6) {
+                          Get.toNamed(Multiplexor.route);
+                        }
+                      },
                       borderRadius: 360,
                     ),
                     SizedBox(
