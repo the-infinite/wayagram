@@ -26,106 +26,109 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
-            statusBarColor: Colors.white,
+            statusBarColor: AppColors.background,
             statusBarIconBrightness: Brightness.dark,
             statusBarBrightness: Brightness.dark,
-            systemNavigationBarColor: Colors.white,
+            systemNavigationBarColor: AppColors.background,
             systemNavigationBarIconBrightness: Brightness.dark
         ),
         child: Scaffold(
           body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(AppThemes.appPaddingVal),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: InkWell(
-                      onTap: () {
+            child: Container(
+              color: AppColors.background,
+              child: Padding(
+                padding: const EdgeInsets.all(AppThemes.appPaddingVal),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: InkWell(
+                        onTap: () {
 
-                      },
-                      child: Text(
-                        'Skip',
-                        style: AppTextStyle.bodyText1.copyWith(color: AppColors.grey,fontWeight: FontWeight.normal),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Expanded(
-                    child: CarouselSlider(
-                      items: _screen
-                          .map((e) => OnboardingItem(
-                        onboardingModel: e, pos: _screen.indexOf(e),
-                      ))
-                          .toList(),
-                      carouselController: buttonCarouselController,
-                      options: CarouselOptions(
-                        height: double.infinity,
-                        autoPlay: false,
-                        viewportFraction: 1,
-                        initialPage: 0,
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            currentIndex = index;
-                          });
                         },
+                        child: Text(
+                          'Skip',
+                          style: AppTextStyle.bodyText1.copyWith(color: AppColors.grey,fontWeight: FontWeight.normal),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 31,
-                  ),
-                  SizedBox(
-                    height: 10,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          index == currentIndex
-                              ? Container(
-                            decoration: BoxDecoration(
-                              color: index == currentIndex
-                                  ? AppColors.primary
-                                  : AppColors.fadedPrimary,
-                              //borderRadius: BorderRadius.circular(8),
-                                shape: BoxShape.circle
-                            ),
-                            height: 8,
-                            width: 8,
-                          )
-                              : Container(
-                            decoration: BoxDecoration(
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Expanded(
+                      child: CarouselSlider(
+                        items: _screen
+                            .map((e) => OnboardingItem(
+                          onboardingModel: e, pos: _screen.indexOf(e),
+                        ))
+                            .toList(),
+                        carouselController: buttonCarouselController,
+                        options: CarouselOptions(
+                          height: double.infinity,
+                          autoPlay: false,
+                          viewportFraction: 1,
+                          initialPage: 0,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              currentIndex = index;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 31,
+                    ),
+                    SizedBox(
+                      height: 10,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) => Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            index == currentIndex
+                                ? Container(
+                              decoration: BoxDecoration(
                                 color: index == currentIndex
                                     ? AppColors.primary
                                     : AppColors.fadedPrimary,
-                                shape: BoxShape.circle),
-                            height: 8,
-                            width: 8,
-                          ),
-                        ],
+                                //borderRadius: BorderRadius.circular(8),
+                                  shape: BoxShape.circle
+                              ),
+                              height: 8,
+                              width: 8,
+                            )
+                                : Container(
+                              decoration: BoxDecoration(
+                                  color: index == currentIndex
+                                      ? AppColors.primary
+                                      : AppColors.fadedPrimary,
+                                  shape: BoxShape.circle),
+                              height: 8,
+                              width: 8,
+                            ),
+                          ],
+                        ),
+                        separatorBuilder: (context, index) => const SizedBox(
+                          width: 5,
+                        ),
+                        itemCount: 7,
                       ),
-                      separatorBuilder: (context, index) => const SizedBox(
-                        width: 5,
-                      ),
-                      itemCount: 7,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  AppButton(
-                    title: 'Next',
-                    onPressed: (){},
-                    borderRadius: 360,
-                  ),
-                  SizedBox(
-                    height: Get.height * 0.05,
-                  ),
-                ],
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    AppButton(
+                      title: 'Next',
+                      onPressed: (){},
+                      borderRadius: 360,
+                    ),
+                    SizedBox(
+                      height: Get.height * 0.05,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
