@@ -17,7 +17,7 @@ class AppTextStyle {
   static  TextStyle bodyText2 = TextStyle(
     fontFamily: _font,
     fontWeight: FontWeight.normal,
-    color: AppColors.platinum,
+    color: Colors.black,
     fontSize: 15 * Get.textScaleFactor * 0.90,
   );
   static  TextStyle subtitle2 = TextStyle(

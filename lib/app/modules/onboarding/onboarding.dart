@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/services.dart';
+import '../../../app/global_widgets/app_button.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
@@ -22,121 +24,112 @@ class _OnboardingPageState extends State<OnboardingPage> {
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppThemes.appPaddingVal),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.bottomRight,
-                child: InkWell(
-                  onTap: () {
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.dark,
+            systemNavigationBarColor: Colors.transparent,
+            systemNavigationBarIconBrightness: Brightness.dark
+        ),
+        child: Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(AppThemes.appPaddingVal),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: InkWell(
+                      onTap: () {
 
-                  },
-                  child: Text(
-                    'Skip',
-                    style: AppTextStyle.bodyText1.copyWith(color: Colors.white),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Expanded(
-                child: CarouselSlider(
-                  items: _screen
-                      .map((e) => OnboardingItem(
-                            onboardingModel: e, pos: _screen.indexOf(e),
-                          ))
-                      .toList(),
-                  carouselController: buttonCarouselController,
-                  options: CarouselOptions(
-                    height: double.infinity,
-                    autoPlay: false,
-                    viewportFraction: 1,
-                    initialPage: 0,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        currentIndex = index;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 31,
-              ),
-              SizedBox(
-                height: 10,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      index == currentIndex
-                          ? Container(
-                              decoration: BoxDecoration(
-                                color: index == currentIndex
-                                    ? AppColors.bostonUniRed
-                                    : AppColors.darkChocolate,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              height: 6,
-                              width: 16,
-                            )
-                          : Container(
-                              decoration: BoxDecoration(
-                                  color: index == currentIndex
-                                      ? AppColors.bostonUniRed
-                                      : AppColors.darkChocolate,
-                                  shape: BoxShape.circle),
-                              height: 8,
-                              width: 8,
-                            ),
-                    ],
-                  ),
-                  separatorBuilder: (context, index) => const SizedBox(
-                    width: 5,
-                  ),
-                  itemCount: 4,
-                ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              GestureDetector(
-                onTap: () {
-
-                },
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(1000),
-                  onTap: () {
-                    buttonCarouselController.nextPage();
-                    if (currentIndex == 3) {
-
-                    }
-                  },
-                  child: CircleAvatar(
-                    radius: 30,
-                    backgroundColor: AppColors.bostonUniRed,
-                    child: Icon(
-                      currentIndex == 3
-                          ? FeatherIcons.check
-                          : FeatherIcons.arrowRight,
-                      size: 30,
+                      },
+                      child: Text(
+                        'Skip',
+                        style: AppTextStyle.bodyText1.copyWith(color: AppColors.grey,fontWeight: FontWeight.normal),
+                      ),
                     ),
                   ),
-                ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Expanded(
+                    child: CarouselSlider(
+                      items: _screen
+                          .map((e) => OnboardingItem(
+                        onboardingModel: e, pos: _screen.indexOf(e),
+                      ))
+                          .toList(),
+                      carouselController: buttonCarouselController,
+                      options: CarouselOptions(
+                        height: double.infinity,
+                        autoPlay: false,
+                        viewportFraction: 1,
+                        initialPage: 0,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            currentIndex = index;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 31,
+                  ),
+                  SizedBox(
+                    height: 10,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          index == currentIndex
+                              ? Container(
+                            decoration: BoxDecoration(
+                              color: index == currentIndex
+                                  ? AppColors.primary
+                                  : AppColors.fadedPrimary,
+                              //borderRadius: BorderRadius.circular(8),
+                                shape: BoxShape.circle
+                            ),
+                            height: 8,
+                            width: 8,
+                          )
+                              : Container(
+                            decoration: BoxDecoration(
+                                color: index == currentIndex
+                                    ? AppColors.primary
+                                    : AppColors.fadedPrimary,
+                                shape: BoxShape.circle),
+                            height: 8,
+                            width: 8,
+                          ),
+                        ],
+                      ),
+                      separatorBuilder: (context, index) => const SizedBox(
+                        width: 5,
+                      ),
+                      itemCount: 7,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  AppButton(
+                    title: 'Next',
+                    onPressed: (){},
+                    borderRadius: 360,
+                  ),
+                  SizedBox(
+                    height: Get.height * 0.05,
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        )
     );
   }
 }
@@ -155,20 +148,43 @@ class OnboardingModel {
 
 List<OnboardingModel> _screen = [
   OnboardingModel(
-    image: 'onboarding1',
-    title: 'Get all your tickets at ease',
-    subtitle: 'Do you want to get tickets for concerts, cinema movies,vr games ? Do it here with ease.',
+    image: 'onboarding_1',
+    title: 'Socialize',
+    subtitle: 'Connect to the world of million\npeople, chat, voice/video call, post,\nbuy or sell product, manage\ndonations, manage events and\nadvertise your products...',
   ),
   OnboardingModel(
-    image: 'onboarding2',
-    title: 'Easy access to all booking ',
+    image: 'onboarding_2',
+    title: 'Digital Banking',
     subtitle:
-        'Handle all your bookings ranging from hotels, apartments, and equipments here ',
+        'Digital Banking personalised for\nyou to store funds safely, receive\nmoney, budget spendings, pay bills',
   ),
   OnboardingModel(
-    image: 'onboarding3',
-    title: 'Book studio sessions easily',
+    image: 'onboarding_3',
+    title: 'Payment Link',
+    subtitle: 'Send links to your customers to\npay you with via card, bank, ussd,\nwallet, or payAttitude',
+  ),
+  OnboardingModel(
+    image: 'onboarding_4',
+    title: 'Request for Terminal POS',
     subtitle:
-        'Your studio bookings have been simplified, you can now book studio time without hassle',
+    'Request for Waya Point-of-sale (POS)\nTerminal Device and start\naccepting payment at your physical store.',
+  ),
+  OnboardingModel(
+    image: 'onboarding_5',
+    title: 'Follow your Metrics',
+    subtitle:
+    'Stay up-to-date with your revenue,\npayouts and recent activity\non your business.',
+  ),
+  OnboardingModel(
+    image: 'onboarding_6',
+    title: 'Safe & Secure',
+    subtitle:
+    'Your account & transactions are\nsafe & secure.',
+  ),
+  OnboardingModel(
+    image: 'onboarding_7',
+    title: 'Enjoy Instant Support',
+    subtitle:
+    'Search our FAQ for answers to\nany questions or chat with us ',
   ),
 ];

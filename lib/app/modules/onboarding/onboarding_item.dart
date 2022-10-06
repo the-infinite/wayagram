@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
 import 'onboarding.dart';
@@ -20,36 +22,15 @@ class OnboardingItem extends StatelessWidget {
     return LayoutBuilder(builder: (context, contraint) {
       return Column(
         children: [
-          if(pos == 0)
-            Expanded(
-              flex: 3,
-              child: SvgPicture.asset(
-                'assets/images/${onboardingModel.image}.svg',
-                height: Get.width * 0.2,
-                width: Get.height*0.4,
-              ),
+          Expanded(
+            flex: 3,
+            child: SvgPicture.asset(
+              'assets/images/${onboardingModel.image}.svg',
+              height: Get.width * 0.55,
+              width: Get.height*0.55,
             ),
-          if(pos == 1)
-            Expanded(
-              flex: 3,
-              child: SvgPicture.asset(
-                'assets/images/${onboardingModel.image}.svg',
-                height: Get.width * 0.2,
-                width: Get.height*0.35,
-              ),
-            ),
-          if(pos == 2)
-            Expanded(
-              flex: 3,
-              child: SvgPicture.asset(
-                'assets/images/${onboardingModel.image}.svg',
-                height: Get.width * 0.2,
-                width: Get.height*0.36,
-              ),
-            ),
-          const SizedBox(
-            height: 11,
           ),
+
           Expanded(
             flex: 1,
             child: Column(
@@ -58,6 +39,7 @@ class OnboardingItem extends StatelessWidget {
                   onboardingModel.title,
                   style: AppTextStyle.headline5.copyWith(
                     fontWeight: FontWeight.w700,
+                    color: AppColors.blue
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -66,7 +48,7 @@ class OnboardingItem extends StatelessWidget {
                 ),
                 Text(
                   onboardingModel.subtitle,
-                  style: AppTextStyle.bodyText2.copyWith(height: 1.5),
+                  style: AppTextStyle.bodyText2.copyWith(height: 1.5,color: Colors.black,fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
               ],

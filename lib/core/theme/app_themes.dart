@@ -9,25 +9,25 @@ class AppThemes {
   static const double appPaddingVal = 16;
 
   static final ThemeData lightTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.black,
-    primaryColor: AppColors.bostonUniRed,
+    scaffoldBackgroundColor: Colors.white,
+    primaryColor: AppColors.primary,
     platform: TargetPlatform.iOS,
     appBarTheme: AppBarTheme(
       centerTitle: true,
-      backgroundColor: Colors.black,
-      foregroundColor: Colors.white,
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
       titleTextStyle: AppTextStyle.headline4.copyWith(
         fontWeight: FontWeight.w500,
       ),
     ),
     checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.all(AppColors.bostonUniRed),
+      fillColor: MaterialStateProperty.all(AppColors.primary),
     ),
     tabBarTheme: TabBarTheme(
       labelStyle: AppTextStyle.subtitle1.copyWith(
         fontWeight: FontWeight.w600,
       ),
-      labelColor: AppColors.bostonUniRed,
+      labelColor: AppColors.primary,
       labelPadding:
           const EdgeInsets.symmetric(horizontal: AppThemes.appPaddingVal),
       unselectedLabelColor: AppColors.onyx,
@@ -47,7 +47,7 @@ class AppThemes {
       headline4: AppTextStyle.headline4,
     ),
     colorScheme: const ColorScheme(
-      primary: AppColors.bostonUniRed,
+      primary: AppColors.primary,
       primaryVariant: AppColors.bostonUniRed,
       secondary: AppColors.bostonUniRed,
       secondaryVariant: Color(0xFFD9222A),
@@ -56,10 +56,10 @@ class AppThemes {
       error: Colors.red,
       onPrimary: Colors.white,
       onSecondary: AppColors.bostonUniRed,
-      onSurface: Colors.black,
+      onSurface: Colors.white,
       onBackground: AppColors.bostonUniRed,
       onError: AppColors.bostonUniRed,
-      brightness: Brightness.light,
+      brightness: Brightness.dark,
     ),
   );
 }

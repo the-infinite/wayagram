@@ -8,7 +8,7 @@ class AppButton extends StatefulWidget {
     Key? key,
     required this.title,
     this.onPressed,
-    this.bckgrndColor = AppColors.bostonUniRed,
+    this.bckgrndColor = AppColors.primary,
     this.borderRadius = 10,
     this.border,
     this.width = double.infinity,
