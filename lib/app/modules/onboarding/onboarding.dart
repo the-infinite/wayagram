@@ -26,10 +26,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
+            statusBarColor: Colors.white,
             statusBarIconBrightness: Brightness.dark,
             statusBarBrightness: Brightness.dark,
-            systemNavigationBarColor: Colors.transparent,
+            systemNavigationBarColor: Colors.white,
             systemNavigationBarIconBrightness: Brightness.dark
         ),
         child: Scaffold(
