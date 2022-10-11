@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
+import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 
 import '../app/modules/multiplexor/multiplexor.dart';
 import '../app/modules/onboarding/onboarding.dart';
+import '../app/modules/sign_in/sign_in.dart';
 
 class AppPages {
   AppPages._();
@@ -16,6 +18,14 @@ class AppPages {
     GetPage(
         name: Multiplexor.route,
         page: () => const Multiplexor()
+    ),
+    GetPage(
+        name: SignIn.route,
+        page: () => const SignIn()
+    ),
+    GetPage(
+        name: SignUp.route,
+        page: () => const SignUp()
     ),
   ];
 }

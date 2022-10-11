@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/app/modules/sign_in/sign_in.dart';
+import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
@@ -55,7 +57,9 @@ class Multiplexor extends StatelessWidget {
               SizedBox(height: Get.height * 0.07),
               AppButton(
                 title: 'Get Started',
-                onPressed: () {},
+                onPressed: () {
+                  Get.toNamed(SignUp.route);
+                },
                 borderRadius: 300,
               ),
               const SizedBox(height: 30),
@@ -63,7 +67,9 @@ class Multiplexor extends StatelessWidget {
                 title: 'Login',
                 bckgrndColor: Colors.white,
                 fontColor: AppColors.primary,
-                onPressed: () {},
+                onPressed: () {
+                  Get.toNamed(SignIn.route);
+                },
                 borderRadius: 300,
                 border: Border.all(color: AppColors.primary),
               ),
