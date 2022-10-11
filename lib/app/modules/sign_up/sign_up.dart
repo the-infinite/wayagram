@@ -14,19 +14,37 @@ class SignUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: AppColors.background,
-        child: Padding(
-          padding: const EdgeInsets.all(AppThemes.appPaddingVal),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              
-            ],
+    return  Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
           ),
+          onPressed: () {
+            Get.back();
+          },
         ),
+        title: Image.asset(
+          'assets/images/wayagram.png', width: Get.width * 0.3,
+        ),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(height: Get.height * 0.08),
+          Text(
+            'Register',
+            style: AppTextStyle.headline4.copyWith(
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
