@@ -52,15 +52,15 @@ class SignUp extends StatelessWidget {
               minWidth: Get.width * 0.4,
               initialLabelIndex: 0,
               totalSwitches: 2,
-              inactiveBgColor: const Color(0xffF1F7FA),
+              inactiveBgColor: const Color(0xffbdbdbd).withOpacity(.3),
               activeBgColor: const [Colors.white, Colors.white],
               activeBorders: [
                 Border.all(
-                  color: const Color(0xffF1F7FA),
+                  color: const Color(0xffbdbdbd).withOpacity(.3),
                   width: 3.0,
                 ),
                 Border.all(
-                  color: const Color(0xffF1F7FA),
+                  color: const Color(0xffbdbdbd).withOpacity(.3),
                   width: 3.0,
                 ),
               ],
