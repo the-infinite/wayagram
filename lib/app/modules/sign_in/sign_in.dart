@@ -17,9 +17,20 @@ class SignIn extends StatelessWidget {
     return Scaffold(
       body: Container(
         color: AppColors.background,
-        child: Padding(
-          padding: const EdgeInsets.all(AppThemes.appPaddingVal),
-          child: Column(
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+          ),
+          body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

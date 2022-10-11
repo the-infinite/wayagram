@@ -9,16 +9,19 @@ class AppThemes {
   static const double appPaddingVal = 16;
 
   static final ThemeData lightTheme = ThemeData(
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: AppColors.background,
     primaryColor: AppColors.primary,
     platform: TargetPlatform.iOS,
     appBarTheme: AppBarTheme(
       centerTitle: true,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       foregroundColor: Colors.black,
       titleTextStyle: AppTextStyle.headline4.copyWith(
         fontWeight: FontWeight.w500,
+        color: Colors.black,
       ),
+      elevation: 0,
+      scrolledUnderElevation: 0,
     ),
     checkboxTheme: CheckboxThemeData(
       fillColor: MaterialStateProperty.all(AppColors.primary),
@@ -28,8 +31,7 @@ class AppThemes {
         fontWeight: FontWeight.w600,
       ),
       labelColor: AppColors.primary,
-      labelPadding:
-          const EdgeInsets.symmetric(horizontal: AppThemes.appPaddingVal),
+      labelPadding: const EdgeInsets.symmetric(horizontal: AppThemes.appPaddingVal),
       unselectedLabelColor: AppColors.onyx,
       unselectedLabelStyle: AppTextStyle.subtitle1.copyWith(
         fontWeight: FontWeight.w500,
