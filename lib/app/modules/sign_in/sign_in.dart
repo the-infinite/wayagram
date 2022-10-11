@@ -29,6 +29,9 @@ class SignIn extends StatelessWidget {
                 Get.back();
               },
             ),
+            title: Image.asset(
+              'assets/images/wayagram.png', width: Get.width * 0.3,
+            ),
           ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
