@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
@@ -43,6 +44,15 @@ class SignUp extends StatelessWidget {
               fontSize: 18,
             ),
             textAlign: TextAlign.center,
+          ),
+          SizedBox(height: Get.height * 0.05),
+          ToggleSwitch(
+            initialLabelIndex: 0,
+            totalSwitches: 2,
+            labels: const ['Business account', 'Personal account'],
+            onToggle: (index) {
+
+            },
           ),
         ],
       ),
