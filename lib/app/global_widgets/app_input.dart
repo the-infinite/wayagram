@@ -21,16 +21,16 @@ class AppInput extends StatefulWidget {
     this.isRounded = false,
     this.counterText,
     this.controller,
-    this.filledColor = AppColors.onyx,
+    this.filledColor = AppColors.background,
     this.readOnly = false,
     this.maxLines = 1,
     this.validator,
     this.autovalidateMode,
     this.prefexIcon,
-    this.contentPadding = const EdgeInsets.fromLTRB(15, 20, 19, 20),
+    this.contentPadding = const EdgeInsets.fromLTRB(15, 10, 19, 10),
     this.borderSide = const BorderSide(
       width: 1,
-      color: Colors.transparent,
+      color: Color(0xFF828282),
     ),
     this.borderRadius = 10,
   }) : super(key: key);
@@ -91,64 +91,58 @@ class _AppInputState extends State<AppInput> {
                 widget.label!,
                 style: AppTextStyle.bodyText2.copyWith(
                   fontWeight: FontWeight.w600,
+                  color: const Color(0xFF828282),
                 ),
               )
             : const SizedBox.shrink(),
         SizedBox(
           height: widget.label != null ? 3 : 0,
         ),
-        TextFormField(
-          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-          onFieldSubmitted: widget.onFieldSubmitted,
-          onChanged: widget.onChanged,
-          obscureText: obscureText,
-          readOnly: widget.readOnly,
-          textAlign: widget.textAlign,
-          autovalidateMode: widget.autovalidateMode,
-          maxLines: widget.maxLines,
-          controller: widget.controller,
-          maxLength: widget.maxLength,
-          validator: widget.validator,
-          focusNode: widget.focusNode,
-          keyboardType: widget.keyboardType,
-          style: AppTextStyle.bodyText2.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
-          cursorColor: AppColors.spanishGray,
-          decoration: InputDecoration(
-            suffixIcon: widget.obscureText == true
-                ? GestureDetector(
-                    onTap: _onObscureText,
-                    child: Icon(
-                      obscureText ? FeatherIcons.eyeOff : FeatherIcons.eye,
-                      color: AppColors.spanishGray,
-                      size: 19,
-                    ),
-                  )
-                : widget.suffixIcon,
-            prefixIcon: widget.prefexIcon,
-
-            contentPadding: widget.contentPadding,
-
-            hintText: widget.hintText,
-            counterText: widget.counterText,
-            border: outlineInputBorder,
-            fillColor: widget.filledColor,
-            // filled: widget.filledColor != null ? true : false,
-            filled: true,
-            focusColor: AppColors.spanishGray,
-            hintStyle: AppTextStyle.bodyText2.copyWith(
-              color: const Color(0xFFC4C4C4),
+        SizedBox(
+          height: 50,
+          child: TextFormField(
+            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+            onFieldSubmitted: widget.onFieldSubmitted,
+            onChanged: widget.onChanged,
+            obscureText: obscureText,
+            readOnly: widget.readOnly,
+            textAlign: widget.textAlign,
+            autovalidateMode: widget.autovalidateMode,
+            maxLines: widget.maxLines,
+            controller: widget.controller,
+            maxLength: widget.maxLength,
+            validator: widget.validator,
+            focusNode: widget.focusNode,
+            keyboardType: widget.keyboardType,
+            style: AppTextStyle.bodyText2.copyWith(
+              fontWeight: FontWeight.w500,
             ),
-            focusedBorder: widget.borderSide != BorderSide.none
-                ? outlineInputBorder.copyWith(
-                    borderSide: const BorderSide(
-                      color: Colors.white,
-                      width: 1,
-                    ),
-                  )
-                : null,
-            enabledBorder: outlineInputBorder,
+            cursorColor: AppColors.spanishGray,
+            decoration: InputDecoration(
+              suffixIcon: widget.obscureText == true
+                  ? GestureDetector(
+                      onTap: _onObscureText,
+                      child: Icon(
+                        obscureText ? FeatherIcons.eyeOff : FeatherIcons.eye,
+                        color: AppColors.spanishGray,
+                        size: 19,
+                      ),
+                    )
+                  : widget.suffixIcon,
+              prefixIcon: widget.prefexIcon,
+              contentPadding: widget.contentPadding,
+              hintText: widget.hintText,
+              counterText: widget.counterText,
+              border: outlineInputBorder,
+              fillColor: widget.filledColor,
+              filled: true,
+              focusColor: AppColors.spanishGray,
+              hintStyle: AppTextStyle.bodyText2.copyWith(
+                color: const Color(0xFFC4C4C4),
+              ),
+              focusedBorder: outlineInputBorder,
+              enabledBorder: outlineInputBorder,
+            ),
           ),
         ),
       ],

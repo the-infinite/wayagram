@@ -16,6 +16,7 @@ class PageInput extends StatelessWidget {
     this.validator,
     this.autovalidateMode,
     this.readOnly = false,
+    this.isCompulsory = false
   }) : super(key: key);
 
   final String hint;
@@ -27,6 +28,7 @@ class PageInput extends StatelessWidget {
   final TextEditingController? controller;
   final bool obscureText;
   final bool readOnly;
+  final bool isCompulsory;
   final String? Function(String?)? validator;
 
   @override
@@ -34,13 +36,32 @@ class PageInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: AppTextStyle.bodyText2.copyWith(
-            fontWeight: FontWeight.w600,
+        Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                label,
+                style: AppTextStyle.bodyText2.copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFF828282),
+                ),
+              ),
+              if(isCompulsory)
+                const SizedBox(width: 5),
+              if(isCompulsory)
+                Text(
+                "*",
+                style: AppTextStyle.bodyText2.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.red,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         AppInput(
           hintText: hint,
           keyboardType: keyboardType,
