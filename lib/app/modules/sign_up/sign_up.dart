@@ -31,30 +31,60 @@ class SignUp extends StatelessWidget {
           'assets/images/wayagram.png', width: Get.width * 0.3,
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(height: Get.height * 0.08),
-          Text(
-            'Register',
-            style: AppTextStyle.headline4.copyWith(
-              color: Colors.black,
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
+      body: SizedBox(
+        width: Get.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: Get.height * 0.08),
+            Text(
+              'Register',
+              style: AppTextStyle.headline4.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: Get.height * 0.05),
-          ToggleSwitch(
-            initialLabelIndex: 0,
-            totalSwitches: 2,
-            labels: const ['Business account', 'Personal account'],
-            onToggle: (index) {
+            SizedBox(height: Get.height * 0.05),
+            ToggleSwitch(
+              minWidth: Get.width * 0.4,
+              initialLabelIndex: 0,
+              totalSwitches: 2,
+              inactiveBgColor: const Color(0xffF1F7FA),
+              activeBgColor: const [Colors.white, Colors.white],
+              activeBorders: [
+                Border.all(
+                  color: const Color(0xffF1F7FA),
+                  width: 3.0,
+                ),
+                Border.all(
+                  color: const Color(0xffF1F7FA),
+                  width: 3.0,
+                ),
+              ],
+              radiusStyle: true,
+              cornerRadius: 10.0,
+              labels: const ['Business account', 'Personal account'],
+              customTextStyles: [
+                AppTextStyle.bodyText1.copyWith(
+                  color: const Color(0xff064A72),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
+                AppTextStyle.bodyText1.copyWith(
+                  color: const Color(0xff064A72),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
+              ],
+              onToggle: (index) {
 
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
