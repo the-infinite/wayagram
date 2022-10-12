@@ -9,6 +9,7 @@ import '../../../core/theme/app_themes.dart';
 import '../../../core/utils/validator.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/page_input.dart';
+import '../sign_in/sign_in.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -116,6 +117,23 @@ class SignUp extends StatelessWidget {
                   validator: Validator.emailValidation,
                   isCompulsory: true,
                   isPhoneNumber: true,
+                ),
+                SizedBox(height: Get.height * 0.050),
+                AppButton(
+                  title: 'Next',
+                  onPressed: () {
+
+                  },
+                  borderRadius: 10,
+                ),
+                AppButton(
+                  title: 'Have an Account? Login',
+                  onPressed: () {
+                    Get.toNamed(SignIn.route);
+                  },
+                  borderRadius: 10,
+                  bckgrndColor: AppColors.background,
+                  fontColor: AppColors.primary,
                 ),
               ],
             ),
