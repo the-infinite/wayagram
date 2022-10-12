@@ -1,4 +1,8 @@
+import 'package:dart_countries/dart_countries.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:wayagram/app/global_widgets/page_dropdown.dart';
 
 import '../../core/theme/theme.dart';
 import 'app_input.dart';
@@ -16,7 +20,10 @@ class PageInput extends StatelessWidget {
     this.validator,
     this.autovalidateMode,
     this.readOnly = false,
-    this.isCompulsory = false
+    this.isCompulsory = false,
+    this.isPhoneNumber = false,
+    this.dropDownItems,
+    this.onDropdownChanged
   }) : super(key: key);
 
   final String hint;
@@ -29,7 +36,10 @@ class PageInput extends StatelessWidget {
   final bool obscureText;
   final bool readOnly;
   final bool isCompulsory;
+  final bool isPhoneNumber;
   final String? Function(String?)? validator;
+  final List<DropdownMenuItem<dynamic>>? dropDownItems;
+  final Function(dynamic)? onDropdownChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -62,18 +72,67 @@ class PageInput extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        AppInput(
-          hintText: hint,
-          keyboardType: keyboardType,
-          controller: controller,
-          validator: validator,
-          obscureText: obscureText,
-          autovalidateMode: autovalidateMode,
-          //  contentPadding: const EdgeInsets.only(top: 13),
-          readOnly: readOnly,
-          prefexIcon: prefix,
-          suffixIcon: suffix,
+        if(isPhoneNumber)
+          Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+              SizedBox(
+                width: Get.width * 0.2,
+                child: PageDropButton(
+                  label: "",
+                  hint: '',
+                  onChanged: (val) {
+                    if(onDropdownChanged != null) {
+                      onDropdownChanged!(val);
+                    }
+                  },
+                  value: countries.firstWhere((element) => element.name.toLowerCase() == 'nigeria'),
+                  items: countries.map<DropdownMenuItem<Country>>((Country value) {
+                    return DropdownMenuItem<Country>(
+                      value: value,
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(value.flag),
+                            Text("+${value.countryCode}"),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              SizedBox(
+                width: Get.width * 0.7,
+                child: AppInput(
+                  hintText: hint,
+                  keyboardType: keyboardType,
+                  controller: controller,
+                  validator: validator,
+                  obscureText: obscureText,
+                  autovalidateMode: autovalidateMode,
+                  readOnly: readOnly,
+                  prefexIcon: prefix,
+                  suffixIcon: suffix,
+                ),
+              ),
+          ],
         ),
+        if(!isPhoneNumber)
+          AppInput(
+            hintText: hint,
+            keyboardType: keyboardType,
+            controller: controller,
+            validator: validator,
+            obscureText: obscureText,
+            autovalidateMode: autovalidateMode,
+            readOnly: readOnly,
+            prefexIcon: prefix,
+            suffixIcon: suffix,
+          )
       ],
     );
   }
