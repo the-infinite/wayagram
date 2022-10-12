@@ -7,11 +7,9 @@ import 'api_response.dart';
 import 'my_pref.dart';
 
 class Api {
-  //https://deepend-dev.herokuapp.com/api
-  //https://crypt.deependapp.com.ng/api
-  static const String baseUrl = 'https://deepend-dev.herokuapp.com/api';
+  static const String baseUrl = 'https://baseUrl/api';
 
-  static const String imgUrl = 'http://app.hayahg.greenmouseproperties.com';
+  static const String imgUrl = 'http://imgURl';
   CancelToken token = CancelToken();
 
   final Dio _client = Dio(BaseOptions(
@@ -180,30 +178,6 @@ class Api {
     }
   }
 }
-
-/* Future<ApiResponse> _response(Response response) async {
-  if (response.statusCode == 200) {
-    return ApiResponse.response(response);
-  } else if (response.statusCode! >= 400 && response.statusCode! <= 499) {
-    var val = json.decode(await response.stream.bytesToString());
-    print(val);
-    return ApiResponse(
-      isSuccessful: false,
-      message: val['message'] ?? val['error'].values.first[0],
-    );
-  } else if (response.statusCode >= 500 && response.statusCode <= 599) {
-    return ApiResponse(
-      isSuccessful: false,
-      message:
-          'Error occured while Communication with Server with StatusCode : ${response.statusCode}',
-    );
-  } else {
-    return ApiResponse(
-      isSuccessful: false,
-      message: 'Error occured : ${response.statusCode}',
-    );
-  }
-} */
 
 abstract class AppRepo {
   final Api helper = Api();

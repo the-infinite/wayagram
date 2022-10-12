@@ -11,13 +11,23 @@ import '../../global_widgets/app_button.dart';
 import '../../global_widgets/page_input.dart';
 import '../sign_in/sign_in.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
 
   static const route = '/signUp';
 
   @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  bool isBusiness = false;
+  PageController businessPageController = PageController(initialPage: 0, keepPage: false);
+  PageController personalPageController = PageController(initialPage: 0, keepPage: false);
+
+  @override
   Widget build(BuildContext context) {
+
     return  Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -92,7 +102,7 @@ class SignUp extends StatelessWidget {
                 SizedBox(height: Get.height * 0.05),
                 const PageInput(
                   hint: '',
-                  label: 'Name',
+                  label: 'First Name',
                   validator: Validator.fullnameValidation,
                   isCompulsory: true,
                 ),
