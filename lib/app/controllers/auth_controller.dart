@@ -15,5 +15,22 @@ class AuthController extends GetxController {
   TextEditingController lastname = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
 
+  PageController pageController = PageController(initialPage: 0, keepPage: true);
+  PageController businessPageController = PageController(initialPage: 0, keepPage: true);
+  PageController personalPageController = PageController(initialPage: 0, keepPage: true);
+
+  bool isBusiness = false;
+
   AuthController(this.userRepo);
+
+  toggleBusiness(int index) {
+    if(index == 0) {
+      isBusiness = false;
+      pageController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+    } else {
+      isBusiness = true;
+      pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+    }
+    update();
+  }
 }
