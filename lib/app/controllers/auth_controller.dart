@@ -7,6 +7,7 @@ class AuthController extends GetxController {
   final UserRepository userRepo;
 
   TextEditingController otp = TextEditingController();
+  TextEditingController referral = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController firstname = TextEditingController();
@@ -20,6 +21,7 @@ class AuthController extends GetxController {
   PageController personalPageController = PageController(initialPage: 0, keepPage: true);
 
   bool isBusiness = false;
+  bool isTermsAndConditionsChecked = false;
 
   AuthController(this.userRepo);
 
@@ -31,6 +33,11 @@ class AuthController extends GetxController {
       isBusiness = true;
       pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
     }
+    update();
+  }
+
+  toggleTermsAndConditions(bool value) {
+    isTermsAndConditionsChecked = value;
     update();
   }
 }
