@@ -352,7 +352,6 @@ class Interests extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      //
                       Text(
                         '📊',
                         style: AppTextStyle.headline4.copyWith(
