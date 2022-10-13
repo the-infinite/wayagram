@@ -4,6 +4,7 @@ import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import '../app/bindings/auth_binding.dart';
 import '../app/modules/multiplexor/multiplexor.dart';
 import '../app/modules/onboarding/onboarding.dart';
+import '../app/modules/profile/confirm_pin.dart';
 import '../app/modules/profile/create_pin.dart';
 import '../app/modules/profile/update_profile.dart';
 import '../app/modules/sign_in/sign_in.dart';
@@ -46,6 +47,10 @@ class AppPages {
     GetPage(
         name: CreatePIN.route,
         page: () => const CreatePIN()
+    ),
+    GetPage(
+        name: ConfirmPIN.route,
+        page: () => const ConfirmPIN()
     )
   ];
 }

@@ -12,6 +12,7 @@ import '../../../core/theme/app_themes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../profile/update_profile.dart';
+import 'confirm_pin.dart';
 
 class CreatePIN extends StatelessWidget {
   const CreatePIN({Key? key}) : super(key: key);
@@ -38,7 +39,7 @@ class CreatePIN extends StatelessWidget {
                   color: AppColors.background,
                 ),
                 SizedBox(
-                  height: Get.height * 0.1,
+                  height: Get.height * 0.05,
                 ),
                 Image.asset(
                   'assets/images/otp.png',
@@ -47,7 +48,7 @@ class CreatePIN extends StatelessWidget {
                 ),
                 SizedBox(height: Get.height * 0.07),
                 Text(
-                  'Verify your Account',
+                  'Create a secure Pin',
                   style: AppTextStyle.headline4.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -55,14 +56,7 @@ class CreatePIN extends StatelessWidget {
                 ),
                 SizedBox(height: Get.height * 0.035),
                 Text(
-                  'A one time verification code has been',
-                  style: AppTextStyle.headline4.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                Text(
-                  'sent to your phone number',
+                  'Keep your account safe with a 4 digit pin',
                   style: AppTextStyle.headline4.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.normal,
@@ -70,8 +64,46 @@ class CreatePIN extends StatelessWidget {
                 ),
                 SizedBox(height: Get.height * 0.07),
 
+                SizedBox(
+                  width: Get.width * 0.8,
+                  child: Text(
+                    'Input Pin',
+                    style: AppTextStyle.headline4.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                SizedBox(height: Get.height * 0.01),
                 OTPTextField(
-                  length: 6,
+                  length: 4,
+                  width: MediaQuery.of(context).size.width,
+                  fieldWidth: Get.width * 0.1,
+                  style: const TextStyle(
+                      fontSize: 17
+                  ),
+                  textFieldAlignment: MainAxisAlignment.spaceAround,
+                  fieldStyle: FieldStyle.box,
+                  onCompleted: (pin) {
+
+                  },
+                ),
+
+                SizedBox(height: Get.height * 0.03),
+
+                SizedBox(
+                  width: Get.width * 0.8,
+                  child: Text(
+                    'Confirm New Pin',
+                    style: AppTextStyle.headline4.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                SizedBox(height: Get.height * 0.01),
+                OTPTextField(
+                  length: 4,
                   width: MediaQuery.of(context).size.width,
                   fieldWidth: Get.width * 0.1,
                   style: const TextStyle(
@@ -86,20 +118,11 @@ class CreatePIN extends StatelessWidget {
 
                 SizedBox(height: Get.height * 0.07),
                 AppButton(
-                  title: 'Verify',
+                  title: 'Continue',
                   onPressed: () {
+                    Get.toNamed(ConfirmPIN.route);
                     // Get.toNamed(UpdateProfile.route);
                     //Get.toNamed(SignUp.route);
-                  },
-                  borderRadius: 10,
-                ),
-                const SizedBox(height: 30),
-                AppButton(
-                  title: 'Did not get OTP?',
-                  bckgrndColor: AppColors.background,
-                  fontColor: AppColors.primary,
-                  onPressed: () {
-                    //Get.toNamed(SignIn.route);
                   },
                   borderRadius: 10,
                 ),
