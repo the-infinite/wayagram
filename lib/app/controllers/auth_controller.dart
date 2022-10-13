@@ -16,6 +16,8 @@ class AuthController extends GetxController {
   TextEditingController lastname = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
 
+  var currentBusinessPage = 0;
+  var currentPersonalPage = 0;
   PageController pageController = PageController(initialPage: 0, keepPage: true);
   PageController businessPageController = PageController(initialPage: 0, keepPage: true);
   PageController personalPageController = PageController(initialPage: 0, keepPage: true);

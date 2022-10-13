@@ -5,6 +5,7 @@ import '../app/bindings/auth_binding.dart';
 import '../app/modules/multiplexor/multiplexor.dart';
 import '../app/modules/onboarding/onboarding.dart';
 import '../app/modules/sign_in/sign_in.dart';
+import '../app/modules/verify_otp/verify_otp.dart';
 
 class AppPages {
   AppPages._();
@@ -28,6 +29,11 @@ class AppPages {
     GetPage(
       name: SignUp.route,
       page: () => const SignUp(),
+      binding: AuthBinding(),
+    ),
+    GetPage(
+      name: VerifyOTP.route,
+      page: () => const VerifyOTP(),
       binding: AuthBinding(),
     ),
   ];

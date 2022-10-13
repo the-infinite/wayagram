@@ -29,14 +29,17 @@ class PageDropButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         label.isNotEmpty
             ? Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label,style: style),
-                  SizedBox(
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: Text(label,style: style),
+                  ),
+                  const SizedBox(
                     height: 10,
                   ),
                 ],
