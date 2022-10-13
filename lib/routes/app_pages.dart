@@ -4,6 +4,8 @@ import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import '../app/bindings/auth_binding.dart';
 import '../app/modules/multiplexor/multiplexor.dart';
 import '../app/modules/onboarding/onboarding.dart';
+import '../app/modules/profile/create_pin.dart';
+import '../app/modules/profile/update_profile.dart';
 import '../app/modules/sign_in/sign_in.dart';
 import '../app/modules/verify_otp/verify_otp.dart';
 
@@ -36,5 +38,14 @@ class AppPages {
       page: () => const VerifyOTP(),
       binding: AuthBinding(),
     ),
+    GetPage(
+        name: UpdateProfile.route,
+        page: () => const UpdateProfile()
+    ),
+
+    GetPage(
+        name: CreatePIN.route,
+        page: () => const CreatePIN()
+    )
   ];
 }

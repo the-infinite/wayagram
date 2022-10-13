@@ -28,6 +28,7 @@ class AppOverlay {
           ],
         ),
       );
+
   static void showInfoDialog(
       {required String title,
       String? content,
