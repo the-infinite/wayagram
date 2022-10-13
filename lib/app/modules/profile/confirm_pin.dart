@@ -12,6 +12,7 @@ import '../../../core/theme/app_themes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../profile/update_profile.dart';
+import '../setup/interests.dart';
 
 class ConfirmPIN extends StatelessWidget {
   const ConfirmPIN({Key? key}) : super(key: key);
@@ -70,6 +71,7 @@ class ConfirmPIN extends StatelessWidget {
                 AppButton(
                   title: 'Next',
                   onPressed: () {
+                    Get.toNamed(Interests.route);
                     // Get.toNamed(UpdateProfile.route);
                     //Get.toNamed(SignUp.route);
                   },

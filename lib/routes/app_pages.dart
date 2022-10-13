@@ -7,6 +7,7 @@ import '../app/modules/onboarding/onboarding.dart';
 import '../app/modules/profile/confirm_pin.dart';
 import '../app/modules/profile/create_pin.dart';
 import '../app/modules/profile/update_profile.dart';
+import '../app/modules/setup/interests.dart';
 import '../app/modules/sign_in/sign_in.dart';
 import '../app/modules/verify_otp/verify_otp.dart';
 
@@ -51,6 +52,10 @@ class AppPages {
     GetPage(
         name: ConfirmPIN.route,
         page: () => const ConfirmPIN()
+    ),
+    GetPage(
+        name: Interests.route,
+        page: () => const Interests()
     )
   ];
 }
