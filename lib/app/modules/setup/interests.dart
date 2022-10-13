@@ -26,15 +26,52 @@ class Interests extends StatelessWidget {
             Get.back();
           },
         ),
-        title: Image.asset(
-          'assets/images/wayagram.png', width: Get.width * 0.3,
-        ),
+        actions: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.width * 0.25,
+                height: Get.height * 0.04,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: AppColors.primary,
+                ),
+                child: Center(
+                  child: Text(
+                    'Continue',
+                    style: AppTextStyle.headline4.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: Get.width * 0.03,
+          ),
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-
+          SizedBox(
+            height: Get.height * 0.05,
+          ),
+          Text(
+            'Select interest',
+            style: AppTextStyle.headline4.copyWith(
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
+          )
         ],
       ),
     );
