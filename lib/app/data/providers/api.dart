@@ -6,8 +6,21 @@ import 'package:http/http.dart' as http;
 import 'api_response.dart';
 import 'my_pref.dart';
 
+
+//swagger docs
+//Auth swagger https://services.staging.wayagram.ng/auth-service/swagger-ui/index.html#
+//Main (profile-group-page) https://services.staging.wayagram.ng/main-service/api-docs/
+//graph https://services.staging.wayagram.ng/graph-service/api-docs/
+//post https://services.staging.wayagram.ng/post-services/api-docs/
+//Chat https://services.staging.wayagram.ng/chats-service/api-docs/
+//File resource https://services.staging.wayagram.ng/file-resource-service/api-docs/
+//calls https://services.staging.wayagram.ng/calls-service/api-docs/
+//dispute https://services.staging.wayagram.ng/social-dispute/api-docs/
+//notifications https://services.staging.wayagram.ng/social-notification/api-docs/
+//KYC service https://services.staging.wayagram.ng/kyc-service/swagger-ui/index.html
+
 class Api {
-  static const String baseUrl = 'https://baseUrl/api';
+  static const String baseUrl = 'https://services.wayagram.ng/';
 
   static const String imgUrl = 'http://imgURl';
   CancelToken token = CancelToken();
@@ -15,7 +28,7 @@ class Api {
   final Dio _client = Dio(BaseOptions(
     baseUrl: baseUrl,
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
     },
     receiveTimeout: 10000,
   ));
@@ -34,7 +47,9 @@ class Api {
         url,
         data: body,
         cancelToken: token,
-        options: Options(method: 'POST', headers: hasHeader ? head : null),
+        options: Options(method: 'POST', headers: hasHeader ? head : null,
+          contentType: "application/json"
+        ),
       );
 
       return ApiResponse.response(request);
@@ -67,7 +82,7 @@ class Api {
       var request = await _client.request(
         url,
         cancelToken: token,
-        options: Options(method: 'DELETE', headers: hasHeader ? head : null),
+        options: Options(method: 'DELETE', headers: hasHeader ? head : null,contentType: "application/json"),
       );
       return ApiResponse.response(request);
     } on DioError catch (e) {
@@ -101,7 +116,7 @@ class Api {
         url,
         data: body,
         cancelToken: token,
-        options: Options(method: 'PUT', headers: hasHeader ? head : null),
+        options: Options(method: 'PUT', headers: hasHeader ? head : null,contentType: "application/json"),
       );
 
       return ApiResponse.response(request);

@@ -1,1 +1,1 @@
-# WAYA-PAY-CHAT-2.0-WAYAGRAM-FLUTTER-APP
+# Wayaquick-flutter-service

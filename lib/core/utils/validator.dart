@@ -4,6 +4,8 @@ class Validator {
   static String? phoneNumValidation(String? val) {
     if (!GetUtils.isPhoneNumber(val!)) {
       return 'Please enter a valid Phone number';
+    }else if(val.length >= 12){
+      return 'Please enter a valid Phone number';
     }
     return null;
   }
@@ -12,7 +14,7 @@ class Validator {
     String uppercasePattern = '(?=.*[A-Z])';
     String lowercasePattern = '(?=.*[a-z])';
     String digitPattern = '(?=.*?[0-9])';
-    String spcPattern = '(?=.*?[!@#\$&*~])';
+    String spcPattern = '(?=.*?[!@#\$&*_~])';
 
     if (!(val!.length >= 8)) {
       return 'Must be at least 8 characters in length';
@@ -30,8 +32,16 @@ class Validator {
   }
 
   static String? fullnameValidation(String? val) {
+    String digitPattern = '(?=.*?[0-9])';
+    String spcPattern = '(?=.*?[!@#\$&*_~])';
     if (val == null || val.isEmpty) {
-      return 'Please enter some text';
+      return 'Please enter your name';
+    }else if (GetUtils.hasMatch(val, digitPattern)) {
+      return 'Name should not contain numbers';
+    } else if (GetUtils.hasMatch(val, spcPattern)) {
+      return 'Name should not contain special characters';
+    }else if(val.length <= 2){
+      return 'Name should be more than 2 characters';
     }
     return null;
   }

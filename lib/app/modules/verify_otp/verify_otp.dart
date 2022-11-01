@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:otp_text_field/otp_field.dart';
+import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:wayagram/app/global_widgets/overlays.dart';
 import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
@@ -56,14 +59,14 @@ class VerifyOTP extends GetView<AuthController> {
                 ),
                 SizedBox(height: Get.height * 0.035),
                 Text(
-                  'A one time verification code has been',
+                  'A one time verification code has been sent',
                   style: AppTextStyle.headline4.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.normal,
                   ),
                 ),
                 Text(
-                  'sent to your phone number',
+                  'to your phone number and email',
                   style: AppTextStyle.headline4.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.normal,
@@ -76,22 +79,34 @@ class VerifyOTP extends GetView<AuthController> {
                   width: MediaQuery.of(context).size.width,
                   fieldWidth: Get.width * 0.1,
                   style: const TextStyle(
-                      fontSize: 17
+                      fontSize: 17,
+                    color: Colors.black,
                   ),
                   textFieldAlignment: MainAxisAlignment.spaceAround,
                   fieldStyle: FieldStyle.box,
                   onCompleted: (pin) {
 
                   },
+                  controller: controller.otpController,
+                  obscureText: true,
+                  onChanged: (value) {
+                    controller.otp.text = value;
+                  },
+                  otpFieldStyle: OtpFieldStyle(
+                    backgroundColor: Colors.white,
+                    borderColor: AppColors.grey,
+                  ),
                 ),
 
                 SizedBox(height: Get.height * 0.07),
                 AppButton(
                   title: 'Verify',
-                  onPressed: () {
-                   // Get.toNamed(UpdateProfile.route);
-                    //Get.toNamed(SignUp.route);
-                    Get.toNamed(CreatePIN.route);
+                  onPressed: () async {
+                    if(controller.otp.text.length == 6) {
+                      await controller.confirmOTP();
+                    }else{
+                      AppOverlay.showInfoDialog(title: 'Error', content: 'Please enter a valid OTP');
+                    }
                   },
                   borderRadius: 10,
                 ),

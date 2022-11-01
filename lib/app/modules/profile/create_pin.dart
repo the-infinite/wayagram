@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:otp_text_field/otp_field.dart';
+import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/app/modules/sign_up/sign_up.dart';
@@ -11,10 +12,11 @@ import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
+import '../../global_widgets/overlays.dart';
 import '../profile/update_profile.dart';
 import 'confirm_pin.dart';
 
-class CreatePIN extends StatelessWidget {
+class CreatePIN extends GetView<AuthController> {
   const CreatePIN({Key? key}) : super(key: key);
 
   static const route = '/createPIN';
@@ -80,12 +82,20 @@ class CreatePIN extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   fieldWidth: Get.width * 0.1,
                   style: const TextStyle(
-                      fontSize: 17
+                    fontSize: 17,
+                    color: Colors.black,
                   ),
                   textFieldAlignment: MainAxisAlignment.spaceAround,
                   fieldStyle: FieldStyle.box,
                   onCompleted: (pin) {
 
+                  },
+                  otpFieldStyle: OtpFieldStyle(
+                    backgroundColor: Colors.white,
+                    borderColor: AppColors.grey,
+                  ),
+                  onChanged: (pin) {
+                    controller.pin.text = pin;
                   },
                 ),
 
@@ -107,20 +117,36 @@ class CreatePIN extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   fieldWidth: Get.width * 0.1,
                   style: const TextStyle(
-                      fontSize: 17
+                    fontSize: 17,
+                    color: Colors.black,
                   ),
                   textFieldAlignment: MainAxisAlignment.spaceAround,
                   fieldStyle: FieldStyle.box,
                   onCompleted: (pin) {
 
                   },
+                  otpFieldStyle: OtpFieldStyle(
+                    backgroundColor: Colors.white,
+                    borderColor: AppColors.grey,
+                  ),
+                  onChanged: (pin) {
+                    controller.confirmPin.text = pin;
+                  },
                 ),
 
                 SizedBox(height: Get.height * 0.07),
                 AppButton(
                   title: 'Continue',
-                  onPressed: () {
-                    Get.toNamed(ConfirmPIN.route);
+                  onPressed: () async {
+                    if(controller.pin.text.isEmpty){
+                      AppOverlay.showInfoDialog(title: 'Error', content: 'Please enter a valid PIN');
+                    }else if(controller.pin.text != controller.confirmPin.text){
+                      AppOverlay.showInfoDialog(title: 'Error', content: 'PINs do not match');
+                    }else{
+                      //Get.toNamed(ConfirmPIN.route);
+                      await controller.createPIN();
+                    }
+                    //Get.toNamed(ConfirmPIN.route);
                     // Get.toNamed(UpdateProfile.route);
                     //Get.toNamed(SignUp.route);
                   },

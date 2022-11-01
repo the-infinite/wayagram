@@ -118,63 +118,20 @@ class HorizontalItemShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     double w = width ?? (Get.width / 2) - (AppThemes.appPaddingVal * 2);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Shimmer.fromColors(
-            baseColor: Colors.white.withOpacity(0.4),
-            highlightColor: Colors.white.withOpacity(0.2),
-            child: Container(
-              margin: margin,
-              height: height,
-              width: w,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
+    return Expanded(
+      child: Shimmer.fromColors(
+        baseColor: Colors.white.withOpacity(0.4),
+        highlightColor: Colors.white.withOpacity(0.2),
+        child: Container(
+          margin: margin,
+          height: height,
           width: w,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 11),
-              Shimmer.fromColors(
-                baseColor: Colors.white.withOpacity(0.4),
-                highlightColor: Colors.white.withOpacity(0.2),
-                child: Container(
-                  height: 15,
-                  width: double.infinity,
-                  color: Colors.white.withOpacity(0.4),
-                ),
-              ),
-              const SizedBox(height: 3),
-              Shimmer.fromColors(
-                baseColor: Colors.white.withOpacity(0.4),
-                highlightColor: Colors.white.withOpacity(0.2),
-                child: Container(
-                  height: 12,
-                  width: w / 1.6,
-                  color: Colors.white.withOpacity(0.4),
-                ),
-              ),
-              const SizedBox(height: 3),
-              Shimmer.fromColors(
-                baseColor: Colors.white.withOpacity(0.4),
-                highlightColor: Colors.white.withOpacity(0.2),
-                child: Container(
-                  height: 12,
-                  width: w / 2,
-                  color: Colors.white.withOpacity(0.4),
-                ),
-              ),
-            ],
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey.withOpacity(.5),
           ),
         ),
-      ],
+      ),
     );
   }
 }

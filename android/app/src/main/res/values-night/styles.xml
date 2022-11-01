@@ -9,7 +9,8 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">#FF4400</item>
+        <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
     <!-- Theme applied to the Android Window as soon as the process has started.

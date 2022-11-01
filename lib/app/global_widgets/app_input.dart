@@ -98,51 +98,48 @@ class _AppInputState extends State<AppInput> {
         SizedBox(
           height: widget.label != null ? 3 : 0,
         ),
-        SizedBox(
-          height: 50,
-          child: TextFormField(
-            maxLengthEnforcement: MaxLengthEnforcement.enforced,
-            onFieldSubmitted: widget.onFieldSubmitted,
-            onChanged: widget.onChanged,
-            obscureText: obscureText,
-            readOnly: widget.readOnly,
-            textAlign: widget.textAlign,
-            autovalidateMode: widget.autovalidateMode,
-            maxLines: widget.maxLines,
-            controller: widget.controller,
-            maxLength: widget.maxLength,
-            validator: widget.validator,
-            focusNode: widget.focusNode,
-            keyboardType: widget.keyboardType,
-            style: AppTextStyle.bodyText2.copyWith(
-              fontWeight: FontWeight.w500,
+        TextFormField(
+          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+          onFieldSubmitted: widget.onFieldSubmitted,
+          onChanged: widget.onChanged,
+          obscureText: obscureText,
+          readOnly: widget.readOnly,
+          textAlign: widget.textAlign,
+          autovalidateMode: widget.autovalidateMode,
+          maxLines: widget.maxLines,
+          controller: widget.controller,
+          maxLength: widget.maxLength,
+          validator: widget.validator,
+          focusNode: widget.focusNode,
+          keyboardType: widget.keyboardType,
+          style: AppTextStyle.bodyText2.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+          cursorColor: AppColors.spanishGray,
+          decoration: InputDecoration(
+            suffixIcon: widget.obscureText == true
+                ? GestureDetector(
+                    onTap: _onObscureText,
+                    child: Icon(
+                      obscureText ? FeatherIcons.eyeOff : FeatherIcons.eye,
+                      color: AppColors.spanishGray,
+                      size: 19,
+                    ),
+                  )
+                : widget.suffixIcon,
+            prefixIcon: widget.prefexIcon,
+            contentPadding: widget.contentPadding,
+            hintText: widget.hintText,
+            counterText: widget.counterText,
+            border: outlineInputBorder,
+            fillColor: widget.filledColor,
+            filled: true,
+            focusColor: AppColors.spanishGray,
+            hintStyle: AppTextStyle.bodyText2.copyWith(
+              color: const Color(0xFFC4C4C4),
             ),
-            cursorColor: AppColors.spanishGray,
-            decoration: InputDecoration(
-              suffixIcon: widget.obscureText == true
-                  ? GestureDetector(
-                      onTap: _onObscureText,
-                      child: Icon(
-                        obscureText ? FeatherIcons.eyeOff : FeatherIcons.eye,
-                        color: AppColors.spanishGray,
-                        size: 19,
-                      ),
-                    )
-                  : widget.suffixIcon,
-              prefixIcon: widget.prefexIcon,
-              contentPadding: widget.contentPadding,
-              hintText: widget.hintText,
-              counterText: widget.counterText,
-              border: outlineInputBorder,
-              fillColor: widget.filledColor,
-              filled: true,
-              focusColor: AppColors.spanishGray,
-              hintStyle: AppTextStyle.bodyText2.copyWith(
-                color: const Color(0xFFC4C4C4),
-              ),
-              focusedBorder: outlineInputBorder,
-              enabledBorder: outlineInputBorder,
-            ),
+            focusedBorder: outlineInputBorder,
+            enabledBorder: outlineInputBorder,
           ),
         ),
       ],

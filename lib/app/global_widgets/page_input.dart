@@ -74,7 +74,7 @@ class PageInput extends StatelessWidget {
         const SizedBox(height: 5),
         if(isPhoneNumber)
           Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
               SizedBox(
@@ -96,8 +96,8 @@ class PageInput extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(value.flag),
-                            Text("+${value.countryCode}"),
+                            Text(value.flag, style: TextStyle(fontSize: Get.width * 0.03)),
+                            Text("+${value.countryCode}",style: TextStyle(fontSize: Get.width * 0.03)),
                           ],
                         ),
                       ),
@@ -106,7 +106,7 @@ class PageInput extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: Get.width * 0.7,
+                width: Get.width * 0.65,
                 child: AppInput(
                   hintText: hint,
                   keyboardType: keyboardType,

@@ -10,16 +10,13 @@ enum ApiStatus {
 class ApiResponse {
   final int? code;
   dynamic data;
+  dynamic suggestion;
+  dynamic profiles;
   final bool isSuccessful;
   String? message;
   String? token;
 
-  ApiResponse(
-      {this.code,
-      this.message,
-      this.data,
-      required this.isSuccessful,
-      this.token});
+  ApiResponse({this.code, this.message, this.data, required this.isSuccessful, this.token,this.suggestion,this.profiles});
 
   static ApiResponse response(Response response) {
     var json = response.data;
@@ -28,25 +25,27 @@ class ApiResponse {
       message: json['message'],
       isSuccessful: json['status'],
       data: json['data'],
+      suggestion: json['suggestion'],
+      profiles: json['Profiles'],
     );
   }
 
   static ApiResponse responseFromBody(String json,int isSuccessful) {
     var jsonD = jsonDecode(json);
-    //print(jsonD['status']);
     return ApiResponse(
       message: jsonD['message'],
       isSuccessful: jsonD['status'],
       data: jsonD['data'],
-      //token: jsonD['token'],
+      suggestion: jsonD['suggestion'],
+      profiles: jsonD['Profiles'],
     );
   }
 
-  factory ApiResponse.timout(Response response) {
+  factory ApiResponse.timeout(Response response) {
     return ApiResponse(
       data: null,
       isSuccessful: false,
-      message: 'Error occured. Please try again',
+      message: 'An error occurred. Please try again',
     );
   }
 }

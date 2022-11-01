@@ -26,7 +26,7 @@ class Multiplexor extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: Get.height * 0.05,
+                height: Get.height * 0.04,
               ),
               SvgPicture.asset(
                 'assets/images/wayagram2.svg',
@@ -39,7 +39,7 @@ class Multiplexor extends StatelessWidget {
                 width: Get.width * 0.85,
                 height: Get.width * 0.85,
               ),
-              SizedBox(height: Get.height * 0.07),
+              SizedBox(height: Get.height * 0.05),
               Text(
                 'Discover, Connect and Transact',
                 style: AppTextStyle.headline4.copyWith(
@@ -54,7 +54,7 @@ class Multiplexor extends StatelessWidget {
                   fontWeight: FontWeight.normal,
                 ),
               ),
-              SizedBox(height: Get.height * 0.07),
+              SizedBox(height: Get.height * 0.05),
               AppButton(
                 title: 'Get Started',
                 onPressed: () {
@@ -62,7 +62,7 @@ class Multiplexor extends StatelessWidget {
                 },
                 borderRadius: 300,
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: Get.height * 0.03),
               AppButton(
                 title: 'Login',
                 bckgrndColor: Colors.white,

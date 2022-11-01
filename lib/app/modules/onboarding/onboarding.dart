@@ -77,8 +77,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 31,
+                    SizedBox(
+                      height: Get.height*0.03,
                     ),
                     SizedBox(
                       height: 10,
@@ -117,8 +117,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         itemCount: 7,
                       ),
                     ),
-                    const SizedBox(
-                      height: 25,
+                    SizedBox(
+                      height: Get.height*0.06,
                     ),
                     AppButton(
                       title: currentIndex == 6 ? 'Continue' : 'Next',
@@ -157,41 +157,41 @@ class OnboardingModel {
 
 List<OnboardingModel> _screen = [
   OnboardingModel(
-    image: 'onboarding_1',
+    image: 'one',
     title: 'Socialize',
     subtitle: 'Connect to the world of million\npeople, chat, voice/video call, post,\nbuy or sell product, manage\ndonations, manage events and\nadvertise your products...',
   ),
   OnboardingModel(
-    image: 'onboarding_2',
+    image: 'two',
     title: 'Digital Banking',
     subtitle:
         'Digital Banking personalised for\nyou to store funds safely, receive\nmoney, budget spendings, pay bills',
   ),
   OnboardingModel(
-    image: 'onboarding_3',
+    image: 'three',
     title: 'Payment Link',
     subtitle: 'Send links to your customers to\npay you with via card, bank, ussd,\nwallet, or payAttitude',
   ),
   OnboardingModel(
-    image: 'onboarding_4',
+    image: 'four',
     title: 'Request for Terminal POS',
     subtitle:
     'Request for Waya Point-of-sale (POS)\nTerminal Device and start\naccepting payment at your physical store.',
   ),
   OnboardingModel(
-    image: 'onboarding_5',
+    image: 'five',
     title: 'Follow your Metrics',
     subtitle:
     'Stay up-to-date with your revenue,\npayouts and recent activity\non your business.',
   ),
   OnboardingModel(
-    image: 'onboarding_6',
+    image: 'six',
     title: 'Safe & Secure',
     subtitle:
     'Your account & transactions are\nsafe & secure.',
   ),
   OnboardingModel(
-    image: 'onboarding_7',
+    image: 'seven',
     title: 'Enjoy Instant Support',
     subtitle:
     'Search our FAQ for answers to\nany questions or chat with us ',

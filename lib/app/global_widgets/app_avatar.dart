@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:wayagram/core/theme/app_colors.dart';
 
 class AppAvatar extends StatelessWidget {
   const AppAvatar({
@@ -9,7 +10,7 @@ class AppAvatar extends StatelessWidget {
     this.imgUrl = '',
     this.selectedImg,
     this.radius = 55,
-    this.backgroundColor = const Color.fromARGB(255, 26, 26, 25)
+    this.backgroundColor = AppColors.grey
   }) : super(key: key);
 
   final String imgUrl;
@@ -23,6 +24,8 @@ class AppAvatar extends StatelessWidget {
       backgroundColor: backgroundColor,
       radius: radius,
       child: SizedBox(
+        width: 45,
+        height: 45,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(radius * 2),
           child: selectedImg == null
@@ -30,10 +33,10 @@ class AppAvatar extends StatelessWidget {
                   imageUrl: imgUrl,
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) {
-                    return Icon(
+                    return const Icon(
                       IconlyLight.profile,
                       color: Colors.white,
-                      size: radius * 0.7,
+                      size: 25,
                     );
                   },
                   width: radius * 2,
@@ -41,8 +44,8 @@ class AppAvatar extends StatelessWidget {
               : Image.file(
                   File(selectedImg!),
                   fit: BoxFit.cover,
-                  height: radius * 2,
-                  width: radius * 2,
+                  height:  25,
+                  width: 25,
                 ),
         ),
       ),

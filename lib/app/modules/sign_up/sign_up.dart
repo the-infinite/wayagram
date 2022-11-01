@@ -23,7 +23,47 @@ class SignUp extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    var businessList = [
+      'Catering and Food',
+      'Cakes and Pastries',
+      'Event Planning',
+      'Music and DJ',
+      'Photography and Videography',
+      'Makeup and Hair',
+      'Decorations',
+      'Health and Skin Care',
+      'Fashion and Accessories',
+      'Clothing, Accessories and Shoes',
+      'Computers and Accessories',
+      'Electronics and Accessories',
+      'Transportation',
+      'Church',
+      'Mosque',
+      'School',
+      'Hospital',
+      'Hotel',
+      'Bar and Lounge',
+      'Beauty Salon',
+      'Barber Shop',
+      'Gym',
+      'Fitness Center',
+      'Sports Club',
+      'E-commerce',
+      'Consulting',
+      'Manufacturer',
+      'Wholesaler',
+      'Retailer',
+      'Distributor',
+      'Importer',
+      'Exporter',
+      'Others'
+    ];
+    GlobalKey<FormState> formKeyBusiness1 = GlobalKey<FormState>();
+    GlobalKey<FormState> formKeyBusiness2 = GlobalKey<FormState>();
+    GlobalKey<FormState> formKeyBusiness3 = GlobalKey<FormState>();
+
+    GlobalKey<FormState> formKeyPersonal1 = GlobalKey<FormState>();
+    GlobalKey<FormState> formKeyPersonal2 = GlobalKey<FormState>();
 
     return Scaffold(
         appBar: AppBar(
@@ -45,14 +85,15 @@ class SignUp extends GetView<AuthController> {
         body: GetBuilder<AuthController>(builder: (controller) {
           return SizedBox(
             width: Get.width,
+            height: Get.height,
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(AppThemes.appPaddingVal),
+                padding: const EdgeInsets.only(left: AppThemes.appPaddingVal,right: AppThemes.appPaddingVal),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: Get.height * 0.02),
+                    SizedBox(height: Get.height * 0.01),
                     Text(
                       'Register',
                       style: AppTextStyle.headline4.copyWith(
@@ -62,7 +103,7 @@ class SignUp extends GetView<AuthController> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: Get.height * 0.05),
+                    SizedBox(height: Get.height * 0.03),
                     if(controller.currentPersonalPage == 0 && controller.currentBusinessPage == 0)
                       ToggleSwitch(
                       minWidth: Get.width * 0.4,
@@ -98,282 +139,341 @@ class SignUp extends GetView<AuthController> {
                       onToggle: (index) {
                         controller.toggleBusiness(index!);
                         if (index == 0) {
+                          controller.personalEmail.text = "";
                           //businessPageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                         } else {
+                          controller.businessEmail.text = "";
                           //personalPageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                         }
                       },
                     ),
                     if(controller.currentPersonalPage == 0 && controller.currentBusinessPage == 0)
-                      SizedBox(height: Get.height * 0.05),
+                      SizedBox(height: Get.height * 0.02),
                     SizedBox(
-                      height: Get.height ,
+                      height: (controller.currentBusinessPage == 0 || controller.currentBusinessPage == 2) ? Get.height*0.8 : (Get.height+ Get.height*0.2),
                       child: PageView(
                         controller: controller.pageController,
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
                           //Business
                           SizedBox(
-                            height: Get.height ,
+                            height: Get.height,
                             child: PageView(
                               controller: controller.businessPageController,
                               physics: const NeverScrollableScrollPhysics(),
                               children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Business Name',
-                                      validator: Validator.fullnameValidation,
-                                      isCompulsory: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Business Email',
-                                      validator: Validator.fullnameValidation,
-                                      isCompulsory: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: 'Business Phone Number',
-                                      label: 'Phone Number',
-                                      validator: Validator.emailValidation,
-                                      isCompulsory: true,
-                                      isPhoneNumber: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.050),
-                                    AppButton(
-                                      title: 'Next',
-                                      onPressed: () {
-                                        /*if (_formKey.currentState!.validate()) {
-                                        pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                      }*/
-                                        controller.currentBusinessPage = 1;
-                                        controller.update();
-                                        controller.businessPageController.animateToPage(1, duration: const Duration(
-                                                milliseconds: 500), curve: Curves.easeIn);
-                                      },
-                                      borderRadius: 10,
-                                    ),
-                                    AppButton(
-                                      title:
-                                          'Already have an account?  Login Now',
-                                      onPressed: () {
-                                        Get.toNamed(SignIn.route);
-                                      },
-                                      borderRadius: 10,
-                                      bckgrndColor: AppColors.background,
-                                      fontColor: AppColors.primary,
-                                    ),
-                                  ],
+                                Form(
+                                  key: formKeyBusiness1,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Business Name',
+                                        validator: (val){
+                                          if(val!.isEmpty){
+                                            return 'Please enter your business name';
+                                          }
+                                          return null;
+                                        },
+                                        isCompulsory: true,
+                                        controller: controller.businessName,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Business Email',
+                                        validator: Validator.emailValidation,
+                                        isCompulsory: true,
+                                        controller: controller.businessEmail,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Business Phone Number',
+                                        validator: Validator.phoneNumValidation,
+                                        isCompulsory: true,
+                                        isPhoneNumber: true,
+                                        controller: controller.businessPhone,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageDropButton(
+                                        label: "Business Type",
+                                        hint: '',
+                                        padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                        onChanged: (val) {
+                                          //controller.businessType.value = val!;
+                                        },
+                                        value: "Catering and Food",
+                                        items: businessList.map<DropdownMenuItem<String>>((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      AppButton(
+                                        title: 'Next',
+                                        onPressed: () {
+                                          if(formKeyBusiness1.currentState!.validate()){
+                                            controller.currentBusinessPage = 1;
+                                            controller.update();
+                                            controller.businessPageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                                          }
+                                        },
+                                        borderRadius: 10,
+                                      ),
+                                      AppButton(
+                                        title:
+                                            'Already have an account?  Login Now',
+                                        onPressed: () {
+                                          Get.toNamed(SignIn.route);
+                                        },
+                                        borderRadius: 10,
+                                        bckgrndColor: AppColors.background,
+                                        fontColor: AppColors.primary,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'First Name',
-                                      validator: Validator.fullnameValidation,
-                                      isCompulsory: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Last Name',
-                                      validator: Validator.fullnameValidation,
-                                      isCompulsory: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Personal Email Address',
-                                      validator: Validator.fullnameValidation,
-                                      isCompulsory: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: 'Personal Phone Number',
-                                      label: 'Phone Number',
-                                      validator: Validator.emailValidation,
-                                      isCompulsory: true,
-                                      isPhoneNumber: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Office Address',
-                                      validator: Validator.fullnameValidation,
-                                      isCompulsory: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    PageDropButton(
-                                      label: "State",
-                                      hint: '',
-                                      padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                      onChanged: (val) {
-
-                                      },
-                                      value: NigerianStatesAndLGA.allStates.first,
-                                      items: NigerianStatesAndLGA.allStates.map<DropdownMenuItem<String>>((String value) {
-                                        return DropdownMenuItem<String>(
-                                          child: Text(value),
-                                          value: value,
-                                        );
-                                      }).toList(),
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    PageDropButton(
-                                      label: "City",
-                                      hint: '',
-                                      padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                      onChanged: (val) {
-
-                                      },
-                                      value: NigerianStatesAndLGA.abiaLGAs.first,
-                                      items: NigerianStatesAndLGA.abiaLGAs.map<DropdownMenuItem<String>>((String value) {
-                                        return DropdownMenuItem<String>(
-                                          child: Text(value),
-                                          value: value,
-                                        );
-                                      }).toList(),
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    AppButton(
-                                      title: 'Next',
-                                      onPressed: () {
-                                        /*if (_formKey.currentState!.validate()) {
-                                        pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                      }*/
-                                        controller.currentBusinessPage = 2;
-                                        controller.businessPageController.animateToPage(2, duration: const Duration(
-                                            milliseconds: 500), curve: Curves.easeIn);
-                                        controller.update();
-                                      },
-                                      borderRadius: 10,
-                                    ),
-                                    AppButton(
-                                      title:
-                                      'Already have an account?  Login Now',
-                                      onPressed: () {
-                                        Get.toNamed(SignIn.route);
-                                      },
-                                      borderRadius: 10,
-                                      bckgrndColor: AppColors.background,
-                                      fontColor: AppColors.primary,
-                                    ),
-                                  ],
+                                Form(
+                                  key: formKeyBusiness2,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      PageInput(
+                                        hint: '',
+                                        label: 'First Name',
+                                        validator: Validator.fullnameValidation,
+                                        isCompulsory: true,
+                                        controller: controller.firstname,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Last Name',
+                                        validator: Validator.fullnameValidation,
+                                        isCompulsory: true,
+                                        controller: controller.lastname,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Personal Email Address',
+                                        validator: Validator.emailValidation,
+                                        isCompulsory: true,
+                                        controller: controller.personalEmail,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: 'Personal Phone Number',
+                                        label: 'Phone Number',
+                                        validator: Validator.phoneNumValidation,
+                                        isCompulsory: true,
+                                        isPhoneNumber: true,
+                                        controller: controller.personalPhone,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Office Address',
+                                        validator: (val){
+                                          if(val!.isEmpty){
+                                            return 'Please enter your office address';
+                                          }
+                                          return null;
+                                        },
+                                        isCompulsory: true,
+                                        controller: controller.officeAddress,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageDropButton(
+                                        label: "State",
+                                        hint: '',
+                                        padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                        onChanged: (val) {
+                                          controller.updateCity(val.toString());
+                                        },
+                                        value: NigerianStatesAndLGA.allStates.first,
+                                        items: NigerianStatesAndLGA.allStates.map<DropdownMenuItem<String>>((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value.removeAllWhitespace),
+                                          );
+                                        }).toList(),
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageDropButton(
+                                        label: "City",
+                                        hint: '',
+                                        padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                        onChanged: (val) {
+                                          //controller.state.value = ;
+                                        },
+                                        value: controller.cities.first,
+                                        items: controller.cities.map<DropdownMenuItem<String>>((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value.removeAllWhitespace),
+                                          );
+                                        }).toList(),
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      AppButton(
+                                        title: 'Next',
+                                        onPressed: () {
+                                          /*if (_formKey.currentState!.validate()) {
+                                          pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                        }*/
+                                          if(formKeyBusiness2.currentState!.validate()){
+                                            controller.currentBusinessPage = 2;
+                                            controller.businessPageController.animateToPage(2, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                                            controller.update();
+                                          }
+                                        },
+                                        borderRadius: 10,
+                                      ),
+                                      AppButton(
+                                        title:
+                                        'Already have an account?  Login Now',
+                                        onPressed: () {
+                                          Get.toNamed(SignIn.route);
+                                        },
+                                        borderRadius: 10,
+                                        bckgrndColor: AppColors.background,
+                                        fontColor: AppColors.primary,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Referral Code',
-                                      validator: Validator.fullnameValidation,
-                                      isCompulsory: false,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Password',
-                                      validator: Validator.passwordValidation,
-                                      isCompulsory: true,
-                                      obscureText: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Confirm Password',
-                                      validator: Validator.passwordValidation,
-                                      isCompulsory: true,
-                                      obscureText: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.050),
-                                    Row(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: Checkbox(
-                                            value: controller
-                                                .isTermsAndConditionsChecked,
-                                            onChanged: (value) {
-                                              controller
-                                                  .toggleTermsAndConditions(
-                                                  value!);
-                                            },
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: RichText(
-                                            text: const TextSpan(
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text:
-                                                    'I consent to the collection and processing of my personal data in line with data regulations as described in the'),
-                                                TextSpan(
-                                                    text:
-                                                    'Wayabank’s Privacy Policy',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.w400,
-                                                        color:
-                                                        AppColors.primary)),
-                                              ],
+                                Form(
+                                  key: formKeyBusiness3,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Referral Code',
+                                        isCompulsory: false,
+                                        controller: controller.referral,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Password',
+                                        validator: Validator.passwordValidation,
+                                        isCompulsory: true,
+                                        obscureText: true,
+                                        controller: controller.password,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Confirm Password',
+                                        validator: (val) {
+                                          if (val!.isEmpty) {
+                                            return 'Please confirm your password';
+                                          } else if (val.toString() != controller.password.text) {
+                                            return 'Passwords do not match';
+                                          }
+                                          return null;
+                                        },
+                                        isCompulsory: true,
+                                        obscureText: true,
+                                      ),
+                                      SizedBox(height: Get.height * 0.050),
+                                      Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: Checkbox(
+                                              value: controller.isTermsAndConditionsChecked,
+                                              onChanged: (value) {
+                                                controller
+                                                    .toggleTermsAndConditions(
+                                                    value!);
+                                              },
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    AppButton(
-                                      title: 'Create Account',
-                                      onPressed: () {
-                                        Get.toNamed(VerifyOTP.route);
-                                        /*if (_formKey.currentState!.validate()) {
-                                        pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                      }*/
-                                        //pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                      },
-                                      borderRadius: 10,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    RichText(
-                                      text: const TextSpan(
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                              text:
-                                              'By clicking the “Create your account” button, you agree to '),
-                                          TextSpan(
-                                              text:
-                                              'Wayabank’s terms of acceptable use.',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.primary)),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: (){
+                                                controller.launchURL('https://wayagram.ng/privacy-policy');
+                                              },
+                                              child: RichText(
+                                                text: const TextSpan(
+                                                  style: TextStyle(
+                                                    fontSize: 10.0,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                        text:
+                                                        'I consent to the collection and processing of my personal data in line with data regulations as described in the'),
+                                                    TextSpan(
+                                                        text:
+                                                        ' Wayagram’s Privacy Policy',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                            FontWeight.w400,
+                                                            color:
+                                                            AppColors.primary)),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                    )
-                                  ],
+                                      SizedBox(height: Get.height * 0.025),
+                                      AppButton(
+                                        title: 'Create Account',
+                                        onPressed: () async {
+                                          if(formKeyBusiness3.currentState!.validate()){
+                                            await controller.signUpCorporate();
+                                          }
+                                        },
+                                        borderRadius: 10,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      InkWell(
+                                        onTap: (){
+                                          controller.launchURL('https://wayagram.ng/terms');
+                                        },
+                                        child: RichText(
+                                          text: const TextSpan(
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text:
+                                                  'By clicking the “Create your account” button, you agree to '),
+                                              TextSpan(
+                                                  text:
+                                                  'Wayagram’s terms of acceptable use.',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w400,
+                                                      color: AppColors.primary)),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -385,175 +485,189 @@ class SignUp extends GetView<AuthController> {
                               controller: controller.personalPageController,
                               physics: const NeverScrollableScrollPhysics(),
                               children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Name',
-                                      validator: Validator.fullnameValidation,
-                                      isCompulsory: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Last Name',
-                                      validator: Validator.fullnameValidation,
-                                      isCompulsory: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Email Address',
-                                      validator: Validator.emailValidation,
-                                      isCompulsory: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    const PageInput(
-                                      hint: '',
-                                      label: 'Phone Number',
-                                      validator: Validator.emailValidation,
-                                      isCompulsory: true,
-                                      isPhoneNumber: true,
-                                    ),
-                                    SizedBox(height: Get.height * 0.050),
-                                    AppButton(
-                                      title: 'Next',
-                                      onPressed: () {
-                                        /*if (_formKey.currentState!.validate()) {
-                                        pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                      }*/
-                                        controller.currentPersonalPage = 1;
-                                        controller.update();
-                                        controller.personalPageController
-                                            .animateToPage(1,
-                                                duration: const Duration(
-                                                    milliseconds: 500),
-                                                curve: Curves.easeIn);
-                                      },
-                                      borderRadius: 10,
-                                    ),
-                                    AppButton(
-                                      title: 'Have an Account? Login',
-                                      onPressed: () {
-                                        Get.toNamed(SignIn.route);
-                                      },
-                                      borderRadius: 10,
-                                      bckgrndColor: AppColors.background,
-                                      fontColor: AppColors.primary,
-                                    ),
-                                  ],
+                                Form(
+                                  key:formKeyPersonal1,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      PageInput(
+                                        hint: '',
+                                        label: 'First Name',
+                                        validator: Validator.fullnameValidation,
+                                        isCompulsory: true,
+                                        controller: controller.firstname,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Last Name',
+                                        validator: Validator.fullnameValidation,
+                                        isCompulsory: true,
+                                        controller: controller.lastname,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Email Address',
+                                        validator: Validator.emailValidation,
+                                        isCompulsory: true,
+                                        controller: controller.personalEmail,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Phone Number',
+                                        validator: Validator.phoneNumValidation,
+                                        isCompulsory: true,
+                                        isPhoneNumber: true,
+                                        controller: controller.personalPhone,
+                                      ),
+                                      SizedBox(height: Get.height * 0.050),
+                                      AppButton(
+                                        title: 'Next',
+                                        onPressed: () {
+                                          /*if (_formKey.currentState!.validate()) {
+                                          pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                        }*/
+                                          if(formKeyPersonal1.currentState!.validate()){
+                                            controller.currentPersonalPage = 1;
+                                            controller.update();
+                                            controller.personalPageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                                          }
+                                        },
+                                        borderRadius: 10,
+                                      ),
+                                      AppButton(
+                                        title: 'Have an Account? Login',
+                                        onPressed: () {
+                                          Get.toNamed(SignIn.route);
+                                        },
+                                        borderRadius: 10,
+                                        bckgrndColor: AppColors.background,
+                                        fontColor: AppColors.primary,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    PageInput(
-                                      hint: '',
-                                      label: 'Referral Code [Optional]',
-                                      isCompulsory: false,
-                                      controller: controller.referral,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    PageInput(
-                                      hint: '',
-                                      label: 'Create Password',
-                                      validator: Validator.passwordValidation,
-                                      isCompulsory: true,
-                                      obscureText: true,
-                                      controller: controller.password,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    PageInput(
-                                      hint: '',
-                                      label: 'Confirm Password',
-                                      validator: Validator.passwordValidation,
-                                      isCompulsory: true,
-                                      obscureText: true,
-                                      controller: controller.confirmPassword,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: Checkbox(
-                                            value: controller
-                                                .isTermsAndConditionsChecked,
-                                            onChanged: (value) {
-                                              controller
-                                                  .toggleTermsAndConditions(
-                                                      value!);
-                                            },
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: RichText(
-                                            text: const TextSpan(
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text:
-                                                        'I consent to the collection and processing of my personal data in line with data regulations as described in the'),
-                                                TextSpan(
-                                                    text:
-                                                        'Wayabank’s Privacy Policy',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.primary)),
-                                              ],
+                                Form(
+                                  key:formKeyPersonal2,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Referral Code [Optional]',
+                                        isCompulsory: false,
+                                        controller: controller.referral,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Create Password',
+                                        validator: Validator.passwordValidation,
+                                        isCompulsory: true,
+                                        obscureText: true,
+                                        controller: controller.password,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      PageInput(
+                                        hint: '',
+                                        label: 'Confirm Password',
+                                        validator: (val) {
+                                          if (val!.isEmpty) {
+                                            return 'Please confirm your password';
+                                          } else if (val.toString() != controller.password.text) {
+                                            return 'Passwords do not match';
+                                          }
+                                          return null;
+                                        },
+                                        isCompulsory: true,
+                                        obscureText: true,
+                                        controller: controller.confirmPassword,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: Checkbox(
+                                              value: controller
+                                                  .isTermsAndConditionsChecked,
+                                              onChanged: (value) {
+                                                controller.toggleTermsAndConditions(value!);
+                                              },
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    AppButton(
-                                      title: 'Create Account',
-                                      onPressed: () {
-                                        Get.toNamed(VerifyOTP.route);
-                                        /*if (_formKey.currentState!.validate()) {
-                                        pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                      }*/
-                                        //pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                      },
-                                      borderRadius: 10,
-                                    ),
-                                    SizedBox(height: Get.height * 0.025),
-                                    RichText(
-                                      text: const TextSpan(
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                              text:
-                                                  'By clicking the “Create your account” button, you agree to '),
-                                          TextSpan(
-                                              text:
-                                                  'Wayabank’s terms of acceptable use.',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.primary)),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: InkWell(
+                                              onTap: (){
+                                                controller.launchURL('https://wayagram.ng/privacy-policy');
+                                              },
+                                              child: RichText(
+                                                text: const TextSpan(
+                                                  style: TextStyle(
+                                                    fontSize: 10.0,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                        text:
+                                                            'I consent to the collection and processing of my personal data in line with data regulations as described in the'),
+                                                    TextSpan(
+                                                        text:
+                                                            ' Wayagram’s Privacy Policy',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color:
+                                                                AppColors.primary)),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                    )
-                                  ],
+                                      SizedBox(height: Get.height * 0.025),
+                                      AppButton(
+                                        title: 'Create Account',
+                                        onPressed: () async {
+                                          if(formKeyPersonal2.currentState!.validate()){
+                                            await controller.signUpNormalUser();
+                                          }
+                                        },
+                                        borderRadius: 10,
+                                      ),
+                                      SizedBox(height: Get.height * 0.025),
+                                      InkWell(
+                                        onTap: (){
+                                          controller.launchURL('https://wayagram.ng/terms');
+                                        },
+                                        child: RichText(
+                                          text: const TextSpan(
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                            children: <TextSpan>[
+                                              TextSpan(text: 'By clicking the “Create your account” button, you agree to '),
+                                              TextSpan(text: 'Wayagram’s terms of acceptable use.', style: TextStyle(fontWeight: FontWeight.w400, color: AppColors.primary)),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

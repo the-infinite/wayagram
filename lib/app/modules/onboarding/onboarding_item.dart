@@ -23,14 +23,13 @@ class OnboardingItem extends StatelessWidget {
       return Column(
         children: [
           Expanded(
-            flex: 3,
-            child: SvgPicture.asset(
-              'assets/images/${onboardingModel.image}.svg',
-              height: Get.width * 0.55,
-              width: Get.height*0.55,
+            flex: 2,
+            child: Image.asset(
+              'assets/images/${onboardingModel.image}.png',
+              height: Get.width * 0.25,
+              width: Get.height*0.25,
             ),
           ),
-
           Expanded(
             flex: 1,
             child: Column(
@@ -42,9 +41,6 @@ class OnboardingItem extends StatelessWidget {
                     color: AppColors.blue
                   ),
                   textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 11,
                 ),
                 Text(
                   onboardingModel.subtitle,
