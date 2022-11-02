@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
+import 'package:wayagram/app/data/model/account_model_entity.dart';
 import 'package:wayagram/app/modules/multiplexor/multiplexor.dart';
 
 import '../../core/theme/app_colors.dart';
@@ -26,6 +27,7 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
     var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
+    var accounts = AccountModelEntity.fromJson(jsonDecode(MyPref.account.val));
 
     var controller = Get.find<HomeController>();
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -115,6 +117,37 @@ class AppDrawer extends StatelessWidget {
                               ),
                             ],
                           )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Acct: ",
+                            style: AppTextStyle.headline4.copyWith(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                              fontSize: Get.width*0.04,
+                            ),
+                          ),
+                          Text(
+                            "${accounts.accountNumber} | ",
+                            style: AppTextStyle.headline4.copyWith(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.normal,
+                              fontSize: Get.width*0.04,
+                            ),
+                          ),
+                          Text(
+                            "${accounts.bankName}",
+                            style: AppTextStyle.headline4.copyWith(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.normal,
+                              fontSize: Get.width*0.04,
+                            ),
+                          ),
                         ],
                       ),
                     ),

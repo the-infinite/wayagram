@@ -8,6 +8,7 @@ class MyPref  {
   static final logInDetail = ReadWriteValue('wayagram_logInDetail', '', _box);
   static final userProfile = ReadWriteValue('wayagram_userProfile', '', _box);
   static final fullProfile = ReadWriteValue('wayagram_full_profile', '', _box);
+  static final account = ReadWriteValue('wayagram_account', '', _box);
 
   //home boxes
   static final posts = ReadWriteValue('wayagram_posts', '', _box);

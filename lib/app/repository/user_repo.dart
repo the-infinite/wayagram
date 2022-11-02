@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:wayagram/app/data/model/account_model_entity.dart';
 import 'package:wayagram/app/data/model/blocked_accounts_entity.dart';
 import 'package:wayagram/app/data/model/followers_model_entity.dart';
 import 'package:wayagram/app/data/model/following_model_entity.dart';
@@ -86,6 +87,17 @@ class UserRepository {
     if(response.isSuccessful){
       response.data = FriendsModelEntity.fromJson(response.data);
       MyPref.friends.val = jsonEncode(response.data);
+    }
+    return response;
+  }
+  Future<ApiResponse> getAccountNumber() async {
+    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    print(profile.userId);
+    final response = await api.getData('/account-service/account/getAccounts/${profile.userId}',hasHeader: true);
+    print(response.message);
+    if(response.isSuccessful){
+      response.data = AccountModelEntity.fromJson(response.data);
+      MyPref.account.val = jsonEncode(response.data);
     }
     return response;
   }

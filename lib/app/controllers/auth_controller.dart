@@ -393,6 +393,7 @@ class AuthController extends GetxController {
     await userRepo.getAllProducts();
     await userRepo.getMyProducts();
     await userRepo.getAllNotifications();
+    await userRepo.getAccountNumber();
   }
   void launchURL(String url) async {
     try {

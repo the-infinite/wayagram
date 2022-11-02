@@ -9,10 +9,15 @@ import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/full_user_profile_entity.dart';
+import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/document_picker.dart';
+import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
+
+import 'package:dio/dio.dart' as dio;
 
 class CreatePage extends StatelessWidget {
   const CreatePage({Key? key}) : super(key: key);
@@ -21,11 +26,12 @@ class CreatePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var pos = 0;
     var pageController = PageController();
+    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     var nameController = TextEditingController();
     var descriptionController = TextEditingController();
     var linkController = TextEditingController();
     var pageVisibility = TextEditingController();
-    var pageCategory = TextEditingController();
+    var pageCategory = TextEditingController(text: 'Dance');
 
     var formKey1 = GlobalKey<FormState>();
     var businessList = [
@@ -89,9 +95,43 @@ class CreatePage extends StatelessWidget {
                 child: SizedBox(
                   child: AppButton(
                     title: 'Create',
-                    onPressed: () {
+                    onPressed: () async {
                       if (formKey1.currentState!.validate()) {
+                        Map<String, dynamic> body = {
+                          "userId": fullProfile.id,
+                          "categoryId": "3de9d1b8-2f4a-4beb-9980-c474eb2c62c9",
+                          "category": pageCategory.text,
+                          "username": fullProfile.username,
+                          "title": nameController.text,
+                          "description": descriptionController.text,
+                          "isPublic": true,
+                        };
+                        if(linkController.text.isNotEmpty) {
+                          body['websiteUrl'] = linkController.text;
+                        }
+                        if(controller.imagePaths.isNotEmpty){
+                          body['image'] = await dio.MultipartFile.fromFile(
+                            controller.imagePaths[0],
+                            filename: controller.imagePaths[0].split('/').last,
+                          );
+                        }
 
+                        if(controller.imagePaths.length > 1){
+                          body['headerImage'] = await dio.MultipartFile.fromFile(
+                            controller.imagePaths[1],
+                            filename: controller.imagePaths[0].split('/').last,
+                          );
+                        }
+
+                        var formData = dio.FormData.fromMap(body);
+                        var response = await controller.postData(formData, "wayagram-service/main/page/create-page");
+                        if(response.isSuccessful){
+                          await controller.getPosts;
+                          controller.update(['home']);
+                          Get.back();
+                        }else{
+                          AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                        }
                       }
                     },
                     borderRadius: 10,
@@ -168,9 +208,12 @@ class CreatePage extends StatelessWidget {
                             hint: '',
                             label: 'Description',
                             validator: (val){
+                              if(val!.isEmpty){
+                                return 'Please enter your page description';
+                              }
                               return null;
                             },
-                            isCompulsory: false,
+                            isCompulsory: true,
                             controller: descriptionController,
                           ),
                           SizedBox(height: Get.height*0.025),

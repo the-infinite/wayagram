@@ -23,14 +23,9 @@ GroupModelEntity $GroupModelEntityFromJson(Map<String, dynamic> json) {
 	if (customCategory != null) {
 		groupModelEntity.customCategory = customCategory;
 	}
-	String? name = jsonConvert.convert<String>(json['name']);
+	final String? name = jsonConvert.convert<String>(json['name']);
 	if (name != null) {
 		groupModelEntity.name = name;
-	}else{
-		name = jsonConvert.convert<String>(json['title']);
-		if (name != null) {
-			groupModelEntity.name = name;
-		}
 	}
 	final String? description = jsonConvert.convert<String>(json['description']);
 	if (description != null) {
