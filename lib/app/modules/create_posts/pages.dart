@@ -21,6 +21,12 @@ class CreatePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var pos = 0;
     var pageController = PageController();
+    var nameController = TextEditingController();
+    var descriptionController = TextEditingController();
+    var linkController = TextEditingController();
+    var pageVisibility = TextEditingController();
+    var pageCategory = TextEditingController();
+
     var formKey1 = GlobalKey<FormState>();
     var businessList = [
       'Catering and Food',
@@ -84,7 +90,9 @@ class CreatePage extends StatelessWidget {
                   child: AppButton(
                     title: 'Create',
                     onPressed: () {
+                      if (formKey1.currentState!.validate()) {
 
+                      }
                     },
                     borderRadius: 10,
                     fontColor: AppColors.primary,
@@ -131,6 +139,7 @@ class CreatePage extends StatelessWidget {
                               return null;
                             },
                             isCompulsory: true,
+                            controller: nameController,
                           ),
                           SizedBox(height: Get.height * 0.025),
                           PageDropButton(
@@ -138,6 +147,7 @@ class CreatePage extends StatelessWidget {
                             hint: '',
                             padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                             onChanged: (val) {
+                              pageCategory.text = val;
                               //controller.businessType.value = val!;
                             },
                             value: "Catering and Food",
@@ -161,6 +171,7 @@ class CreatePage extends StatelessWidget {
                               return null;
                             },
                             isCompulsory: false,
+                            controller: descriptionController,
                           ),
                           SizedBox(height: Get.height*0.025),
                           PageInput(
@@ -170,6 +181,7 @@ class CreatePage extends StatelessWidget {
                               return null;
                             },
                             isCompulsory: false,
+                            controller: linkController,
                           ),
                           SizedBox(height: Get.height*0.025),
                           PageDropButton(
@@ -177,6 +189,7 @@ class CreatePage extends StatelessWidget {
                             hint: '',
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             onChanged: (val) {
+                              pageVisibility.text = val;
                             },
                             value: "Public",
                             items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
@@ -188,95 +201,134 @@ class CreatePage extends StatelessWidget {
                           ),
                           SizedBox(height: Get.height*0.025),
                           Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Page Profile Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
-                          DocumentPicker(
-                              radius: 10,
-                              networkImage: null,
-                              renderHeight: Get.width * 0.35,
-                              renderWidth: Get.width * 0.35,
-                              controller: controller,
-                              onSelected: (imagePath, base64Image) async {
-                                /*CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                  sourcePath: imagePath,
-                                  cropStyle: CropStyle.rectangle,
-                                  aspectRatioPresets: [
-                                    CropAspectRatioPreset.square,
-                                    CropAspectRatioPreset.ratio3x2,
-                                    CropAspectRatioPreset.original,
-                                    CropAspectRatioPreset.ratio4x3,
-                                    CropAspectRatioPreset.ratio16x9
-                                  ],
-                                  uiSettings: [
-                                    AndroidUiSettings(
-                                        toolbarTitle: 'Crop ID Photo',
-                                        toolbarColor: AppColors.primary,
-                                        toolbarWidgetColor: Colors.white,
-                                        activeControlsWidgetColor: AppColors.primary,
-                                        cropGridColor: AppColors.primary,
-                                        initAspectRatio: CropAspectRatioPreset.original,
-                                        lockAspectRatio: false),
-                                    IOSUiSettings(
-                                      title: 'Crop ID Photo',
-                                    ),
-                                    WebUiSettings(
-                                      context: context,
-                                    ),
-                                  ],
-                                );
-                                if(croppedFile == null){
-                                  //controller.onPassportSelected(imagePath);
-                                 // field.didChange(imagePath);
-                                }else{
-                                  //controller.onPassportSelected(croppedFile.path);
-                                  //field.didChange(croppedFile.path);
-                                }*/
-                              },
-                              actionWord: "Upload Photo"
+                          FormField<String>(
+                              initialValue: '',
+                              validator: null,
+                              builder: (field) {
+                              return DocumentPicker(
+                                  radius: 10,
+                                  networkImage: null,
+                                  renderHeight: Get.width * 0.35,
+                                  renderWidth: Get.width * 0.35,
+                                  controller: controller,
+                                  fileImage: field.value,
+                                  position: 0,
+                                  onSelected: (imagePath, base64Image) async {
+                                    CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                      sourcePath: imagePath,
+                                      cropStyle: CropStyle.rectangle,
+                                      aspectRatioPresets: [
+                                        CropAspectRatioPreset.square,
+                                        CropAspectRatioPreset.ratio3x2,
+                                        CropAspectRatioPreset.original,
+                                        CropAspectRatioPreset.ratio4x3,
+                                        CropAspectRatioPreset.ratio16x9
+                                      ],
+                                      uiSettings: [
+                                        AndroidUiSettings(
+                                            toolbarTitle: 'Crop Cover Photo',
+                                            toolbarColor: AppColors.primary,
+                                            toolbarWidgetColor: Colors.white,
+                                            activeControlsWidgetColor: AppColors.primary,
+                                            cropGridColor: AppColors.primary,
+                                            initAspectRatio: CropAspectRatioPreset.original,
+                                            lockAspectRatio: false),
+                                        IOSUiSettings(
+                                          title: 'Crop Profile Photo',
+                                        ),
+                                        WebUiSettings(
+                                          context: context,
+                                        ),
+                                      ],
+                                    );
+                                    if(croppedFile == null){
+                                      if(controller.imagePaths.isEmpty){
+                                        controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
+                                      }else{
+                                        controller.imagePaths[0] = imagePath;
+                                      }
+                                      field.didChange(imagePath);
+                                    }else{
+                                      if(controller.imagePaths.isEmpty){
+                                        controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                      }else{
+                                        controller.imagePaths[0] = croppedFile.path;
+                                      }
+                                      field.didChange(croppedFile.path);
+                                    }
+                                  },
+                                  actionWord: "Upload Profile Photo"
+                              );
+                            }
                           ),
                           SizedBox(height: Get.height*0.025),
                           Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Page Cover Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
-                          DocumentPicker(
-                              radius: 10,
-                              networkImage: null,
-                              renderHeight: Get.width * 0.35,
-                              renderWidth: Get.width * 0.8,
-                              controller: controller,
-                              onSelected: (imagePath, base64Image) async {
-                                /*CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                  sourcePath: imagePath,
-                                  cropStyle: CropStyle.rectangle,
-                                  aspectRatioPresets: [
-                                    CropAspectRatioPreset.square,
-                                    CropAspectRatioPreset.ratio3x2,
-                                    CropAspectRatioPreset.original,
-                                    CropAspectRatioPreset.ratio4x3,
-                                    CropAspectRatioPreset.ratio16x9
-                                  ],
-                                  uiSettings: [
-                                    AndroidUiSettings(
-                                        toolbarTitle: 'Crop ID Photo',
-                                        toolbarColor: AppColors.primary,
-                                        toolbarWidgetColor: Colors.white,
-                                        activeControlsWidgetColor: AppColors.primary,
-                                        cropGridColor: AppColors.primary,
-                                        initAspectRatio: CropAspectRatioPreset.original,
-                                        lockAspectRatio: false),
-                                    IOSUiSettings(
-                                      title: 'Crop ID Photo',
-                                    ),
-                                    WebUiSettings(
-                                      context: context,
-                                    ),
-                                  ],
-                                );
-                                if(croppedFile == null){
-                                  //controller.onPassportSelected(imagePath);
-                                 // field.didChange(imagePath);
-                                }else{
-                                  //controller.onPassportSelected(croppedFile.path);
-                                  //field.didChange(croppedFile.path);
-                                }*/
-                              },
-                              actionWord: "Upload Photo"
+                          FormField<String>(
+                              initialValue: '',
+                              validator: null,
+                              builder: (field) {
+                              return DocumentPicker(
+                                  radius: 10,
+                                  networkImage: null,
+                                  renderHeight: Get.width * 0.35,
+                                  renderWidth: Get.width * 0.8,
+                                  controller: controller,
+                                  position: 1,
+                                  onSelected: (imagePath, base64Image) async {
+                                    CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                      sourcePath: imagePath,
+                                      cropStyle: CropStyle.rectangle,
+                                      aspectRatioPresets: [
+                                        CropAspectRatioPreset.square,
+                                        CropAspectRatioPreset.ratio3x2,
+                                        CropAspectRatioPreset.original,
+                                        CropAspectRatioPreset.ratio4x3,
+                                        CropAspectRatioPreset.ratio16x9
+                                      ],
+                                      uiSettings: [
+                                        AndroidUiSettings(
+                                            toolbarTitle: 'Crop Cover Photo',
+                                            toolbarColor: AppColors.primary,
+                                            toolbarWidgetColor: Colors.white,
+                                            activeControlsWidgetColor: AppColors.primary,
+                                            cropGridColor: AppColors.primary,
+                                            initAspectRatio: CropAspectRatioPreset.original,
+                                            lockAspectRatio: false),
+                                        IOSUiSettings(
+                                          title: 'Crop Cover Photo',
+                                        ),
+                                        WebUiSettings(
+                                          context: context,
+                                        ),
+                                      ],
+                                    );
+                                    if(croppedFile == null){
+                                      if(controller.imagePaths.isEmpty){
+                                        controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
+                                      }else{
+                                        if(controller.imagePaths.length > 2) {
+                                          controller.imagePaths[1] = imagePath;
+                                        }else{
+                                          controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
+                                        }
+                                      }
+                                      field.didChange(imagePath);
+                                    }else{
+                                      if(controller.imagePaths.isEmpty){
+                                        controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
+                                      }else{
+                                        if(controller.imagePaths.length > 2) {
+                                          controller.imagePaths[1] = croppedFile.path;
+                                        }else{
+                                          controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                        }
+                                      }
+                                      field.didChange(croppedFile.path);
+                                    }
+                                  },
+                                  actionWord: "Upload Cover Photo"
+                              );
+                            }
                           ),
                           SizedBox(height: Get.height*0.025),
                         ],
