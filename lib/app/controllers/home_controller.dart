@@ -42,6 +42,7 @@ class HomeController extends GetxController {
     NotificationsTab(),
     ChatsTab()
   ];
+  List<String> imagePaths = [];
 
   var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
   var logInDetails = LogInModelEntity.fromJson(jsonDecode(MyPref.logInDetail.val));
