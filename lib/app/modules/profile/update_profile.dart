@@ -25,9 +25,12 @@ class UpdateProfile extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+    var usernameController = TextEditingController(text: fullProfile.username);
+    var displayNameController = TextEditingController(text: fullProfile.displayName);
+    var bioController = TextEditingController(text: fullProfile.bio);
+
     return  GetBuilder<HomeController>(
         builder: (controller) {
-          print("hi");
         return Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -232,15 +235,18 @@ class UpdateProfile extends GetView<HomeController> {
                             return null;
                           },
                           isCompulsory: true,
+                          controller: usernameController,
+                          prefix: Icon(Icons.alternate_email, color: Colors.black,size: Get.width*0.05),
                         ),
                         SizedBox(
                           height: Get.height * 0.025,
                         ),
-                        const PageInput(
+                        PageInput(
                           hint: '',
                           label: 'Display Name',
                           validator: Validator.fullnameValidation,
                           isCompulsory: true,
+                          controller: displayNameController,
                         ),
                         SizedBox(
                           height: Get.height * 0.025,
@@ -255,6 +261,7 @@ class UpdateProfile extends GetView<HomeController> {
                             return null;
                           },
                           isCompulsory: true,
+                          controller: bioController,
                         ),
                         SizedBox(
                           height: Get.height * 0.025,
