@@ -16,14 +16,19 @@ import '../../../core/theme/app_themes.dart';
 import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/all_posts_entity.dart';
 import '../../data/model/friends_model_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/log_in_model_entity.dart';
+import '../../data/model/products_model_entity.dart';
 import '../../data/model/profile_model_entity.dart';
+import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/app_drawer.dart';
 import '../../global_widgets/page_input.dart';
+import '../home/widgets/posts_view.dart';
+import '../home/widgets/product_view.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 import 'inner_pages/followers.dart';
@@ -102,7 +107,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                 headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
                     SliverAppBar(
-                      expandedHeight: Get.height * 0.38,
+                      expandedHeight: Get.height * 0.374,
                       floating: true,
                       pinned: true,
                       flexibleSpace: LayoutBuilder(
@@ -450,8 +455,34 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                     });
                   },
                   children: [
-                    Column(),
-                    Column(),
+                    FutureBuilder<ApiResponse>(
+                        future: controller.getPosts,
+                        builder: (context, snapshot) {
+                          var savedPosts = MyPref.posts.val;
+                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                            final posts = snapshot.data!.data as List<AllPostsEntity>;
+                            return PostsView(posts: posts,userID: fullProfile.userId);
+                          } else if(savedPosts.isNotEmpty){
+                            var posts = AllPostsEntity.getService(jsonDecode(savedPosts));
+                            return PostsView(posts: posts,userID: fullProfile.userId);
+                          }else{
+                            return const PostsView(isLoading: true);
+                          }
+                        }),
+                    FutureBuilder<ApiResponse>(
+                        future: controller.getMyProducts,
+                        builder: (context, snapshot) {
+                          var savedPosts = MyPref.myProducts.val;
+                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                            final posts = snapshot.data!.data as ProductsModelEntity;
+                            return ProductView(posts: posts.data!);
+                          } else if(savedPosts.isNotEmpty){
+                            var posts = ProductsModelEntity.fromJson(jsonDecode(savedPosts));
+                            return ProductView(posts: posts.data!);
+                          }else{
+                            return const ProductView(isLoading: true);
+                          }
+                        }),
                     Column(),
                     Column(),
                   ],

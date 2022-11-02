@@ -36,6 +36,7 @@ class ProductView extends StatelessWidget{
     return ListView.builder(
       itemCount: isLoading ? 5 : posts!.length,
       shrinkWrap: true,
+      padding: EdgeInsets.zero,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         if(isLoading){

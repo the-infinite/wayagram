@@ -24,16 +24,19 @@ class PostsView extends StatelessWidget{
     Key? key,
     this.isLoading = false,
     this.posts,
+    this.userID
   }) : super(key: key);
 
   final bool isLoading;
   final List<AllPostsEntity>? posts;
+  final String? userID;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: isLoading ? 5 : posts!.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(0),
       itemBuilder: (context, index) {
         if(isLoading){
           return SizedBox(
@@ -60,6 +63,11 @@ class PostsView extends StatelessWidget{
         List<String> imageUrls = [];
         for (var element in post.postImages!) {
           imageUrls.add(element.imageURL.toString());
+        }
+        if(userID!=null){
+          if(post.profile!.userId != userID){
+            return const SizedBox.shrink();
+          }
         }
         return Container(
           margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),

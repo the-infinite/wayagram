@@ -52,6 +52,7 @@ dependencies:
   timeago: ^3.3.0
   transparent_image: ^2.0.0
   flutter_image_slideshow: ^0.1.4
+  image_cropper: ^3.0.0
 
 dev_dependencies:
   flutter_test:

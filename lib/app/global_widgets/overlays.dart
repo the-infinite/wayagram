@@ -97,4 +97,89 @@ class AppOverlay {
       ),
     );
   }
+
+  static Future<void> showActionDialog({
+    required String title,
+    String? content,
+    Widget? contentReplacement,
+    required Map<String, Function()> actions,
+  }) async {
+    assert(content != null || contentReplacement != null,
+    "either content or contentReplacement must be provided");
+    if (actions.length == 1) {
+      showInfoDialog(
+        title: title,
+        content: content,
+        buttonText: actions.keys.first,
+        onPressed: actions.values.first,
+      );
+      return;
+    }
+
+    List<Widget> buttons = [];
+    actions.forEach((text, onPressed) {
+      buttons.add(Expanded(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6.5),
+          child: AppButton(
+              borderRadius: 1000,
+              bckgrndColor: AppColors.primary,
+              title: text,
+              onPressed: () async {
+                await onPressed();
+              }),
+        ),
+      ));
+    });
+    showDialog(
+      builder: (context) => Material(
+        color: Colors.black.withOpacity(0.2),
+        child: IntrinsicHeight(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.width * 0.9,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 15,
+                  horizontal: 13.5,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: Get.textTheme.bodyText1!.copyWith(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.black),
+                    ),
+                    const SizedBox(height: 20),
+                    if (content == null) contentReplacement ?? const SizedBox(),
+                    if (content != null)
+                      Center(
+                        child: Text(
+                          content,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyle.bodyText2
+                              .copyWith(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: buttons,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      context: Get.context!,
+    );
+  }
 }
