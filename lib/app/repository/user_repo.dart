@@ -143,6 +143,10 @@ class UserRepository {
     final response = await api.postData(url,hasHeader: hasHeader,body: body);
     return response;
   }
+  Future<ApiResponse> putData(String url,dynamic body,{hasHeader = true}) async {
+    final response = await api.putData(url,hasHeader: hasHeader,body: body);
+    return response;
+  }
   //Not Done Yet
   Future<ApiResponse> getFriendRequests() async {
     var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));

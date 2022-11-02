@@ -119,6 +119,16 @@ class HomeController extends GetxController {
     return response;
   }
 
+  Future<ApiResponse> postData(dynamic body,String url) async {
+    final response = await userRepo.postData(url, body);
+    return response;
+  }
+
+  Future<ApiResponse> putData(dynamic body,String url) async {
+    final response = await userRepo.putData(url, body);
+    return response;
+  }
+
   void launchURL(String url) async {
     try {
       await launch(

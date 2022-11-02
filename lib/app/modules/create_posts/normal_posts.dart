@@ -6,15 +6,21 @@ import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:hashtager/widgets/hashtag_text_field.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/full_user_profile_entity.dart';
+import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/app_button.dart';
+
+import 'package:dio/dio.dart' as dio;
+
+import '../../global_widgets/overlays.dart';
 
 class CreatePosts extends StatelessWidget {
   const CreatePosts({Key? key}) : super(key: key);
@@ -22,6 +28,9 @@ class CreatePosts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ImagePicker _imagePicker = ImagePicker();
+    var textController = TextEditingController();
+    List<String> images = [];
+    var postID = "";
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -48,8 +57,67 @@ class CreatePosts extends StatelessWidget {
                 child: SizedBox(
                   child: AppButton(
                     title: 'Create',
-                    onPressed: () {
-
+                    onPressed: () async {
+                      Map<String, dynamic> body = {
+                        'description': textController.text,
+                        'profile_id': fullProfile.id,
+                        'type': 'user'
+                      };
+                      if(images.isNotEmpty){
+                        body['images'] = await dio.MultipartFile.fromFile(
+                          images[0],
+                          filename: images[0].split('/').last,
+                        );
+                      }
+                      var formData = dio.FormData.fromMap(body);
+                      ApiResponse? response;
+                      if(postID.isNotEmpty){
+                        formData.fields.add(MapEntry('post_id', postID));
+                        //images.removeAt(0);
+                        body['type'] = null;
+                        for (var element in images) {
+                          body['post_id'] = postID;
+                          body['images'] = await dio.MultipartFile.fromFile(
+                            element,
+                            filename: element.split('/').last,
+                          );
+                          formData = dio.FormData.fromMap(body);
+                          response = await controller.putData(formData, "/wayagram-service/all-posts/update");
+                        }
+                        if(response!.isSuccessful){
+                          postID = "";
+                          await controller.getPosts;
+                          controller.update(['home']);
+                          //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                          Get.back();
+                        }
+                      }else{
+                        response = await controller.postData(formData, "/wayagram-service/all-posts/create");
+                        if(response.isSuccessful){
+                          images.removeAt(0);
+                          postID = response.data['id'] as String;
+                          for (var element in images) {
+                            body['post_id'] = postID;
+                            body['type'] = null;
+                            body['images'] = await dio.MultipartFile.fromFile(
+                              element,
+                              filename: element.split('/').last,
+                            );
+                            formData = dio.FormData.fromMap(body);
+                            response = await controller.putData(formData, "/wayagram-service/all-posts/update");
+                          }
+                          if(response!.isSuccessful){
+                            postID = "";
+                            //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                            await controller.getPosts;
+                            controller.update(['home_tab']);
+                            //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                            Get.back();
+                          }
+                        }else{
+                          AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                        }
+                      }
                     },
                     borderRadius: 10,
                     fontColor: AppColors.primary,
@@ -117,6 +185,7 @@ class CreatePosts extends StatelessWidget {
                         ),
                         border: InputBorder.none,
                       ),
+                      controller: textController,
                     ),
                   ),
                 ],
@@ -126,6 +195,60 @@ class CreatePosts extends StatelessWidget {
           bottomNavigationBar: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if(images.isNotEmpty)
+                SizedBox(
+                  height: Get.height * 0.20,
+                  width: Get.width,
+                  child: ListView.builder(
+                    itemCount: images.length,
+                    shrinkWrap: false,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                        height: Get.height * 0.15,
+                        width: Get.width * 0.3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey.withOpacity(.5),
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Image.file(
+                              File(images[index]),
+                              fit: BoxFit.cover,
+                              height: Get.height * 0.15,
+                              width: Get.height * 0.13,
+                            ),
+                            Positioned(
+                              top: 5,
+                              right: 5,
+                              child: Container(
+                                height: 35,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: Center(
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: const Icon(Icons.cancel_rounded, color: Colors.black),
+                                    onPressed: () {
+                                      images.removeAt(index);
+                                      controller.update();
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
               const Divider(
                 height: 0.5,
                 thickness: 0.5,
@@ -142,13 +265,45 @@ class CreatePosts extends StatelessWidget {
                           width: Get.width*0.025,
                         ),
                         IconButton(
-                          icon: const Icon(Icons.image, color: Colors.black),
+                          icon: Icon(Icons.image, color: images.length > 29 ? Colors.grey : Colors.black),
                           onPressed: () async {
-                            final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
-                            if (pickedFile != null) {
-                              await pickedFile.readAsBytes();
-                              final List<int> rawBytes = File(pickedFile.path).readAsBytesSync();
-                              final String base64Image = base64Encode(rawBytes);
+                            if(images.length <= 29){
+                              final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
+                              if (pickedFile != null) {
+                                CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                  sourcePath: pickedFile.path,
+                                  cropStyle: CropStyle.rectangle,
+                                  aspectRatioPresets: [
+                                    CropAspectRatioPreset.square,
+                                    CropAspectRatioPreset.ratio3x2,
+                                    CropAspectRatioPreset.original,
+                                    CropAspectRatioPreset.ratio4x3,
+                                    CropAspectRatioPreset.ratio16x9
+                                  ],
+                                  uiSettings: [
+                                    AndroidUiSettings(
+                                        toolbarTitle: 'Crop Photo',
+                                        toolbarColor: AppColors.primary,
+                                        toolbarWidgetColor: Colors.white,
+                                        activeControlsWidgetColor: AppColors.primary,
+                                        cropGridColor: AppColors.primary,
+                                        initAspectRatio: CropAspectRatioPreset.original,
+                                        lockAspectRatio: false),
+                                    IOSUiSettings(
+                                      title: 'Crop Photo',
+                                    ),
+                                    WebUiSettings(
+                                      context: context,
+                                    ),
+                                  ],
+                                );
+                                if(croppedFile!=null){
+                                  images = List.from(images)..add(croppedFile.path);
+                                }else{
+                                  images = List.from(images)..add(pickedFile.path);
+                                }
+                                controller.update();
+                              }
                             }
                           },
                         ),
@@ -166,15 +321,48 @@ class CreatePosts extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(right: Get.width*0.025),
                       child: IconButton(
-                        icon: const Icon(Icons.camera_alt_rounded, color: Colors.black),
+                        icon: Icon(Icons.camera_alt_rounded, color: images.length > 29 ? Colors.grey : Colors.black),
                         onPressed: () async {
-                          final pickedFile = await _imagePicker.pickImage(
-                            source: ImageSource.camera,
-                            imageQuality: 30,
-                          );
-                          if (pickedFile != null && pickedFile.path.isNotEmpty) {
-                            final List<int> rawBytes = await pickedFile.readAsBytes();
-                            final String base64Image = base64Encode(rawBytes);
+                          if(images.length <= 29){
+                            final pickedFile = await _imagePicker.pickImage(
+                              source: ImageSource.camera,
+                              imageQuality: 30,
+                            );
+                            if (pickedFile != null && pickedFile.path.isNotEmpty) {
+                              CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                sourcePath: pickedFile.path,
+                                cropStyle: CropStyle.rectangle,
+                                aspectRatioPresets: [
+                                  CropAspectRatioPreset.square,
+                                  CropAspectRatioPreset.ratio3x2,
+                                  CropAspectRatioPreset.original,
+                                  CropAspectRatioPreset.ratio4x3,
+                                  CropAspectRatioPreset.ratio16x9
+                                ],
+                                uiSettings: [
+                                  AndroidUiSettings(
+                                      toolbarTitle: 'Crop Photo',
+                                      toolbarColor: AppColors.primary,
+                                      toolbarWidgetColor: Colors.white,
+                                      activeControlsWidgetColor: AppColors.primary,
+                                      cropGridColor: AppColors.primary,
+                                      initAspectRatio: CropAspectRatioPreset.original,
+                                      lockAspectRatio: false),
+                                  IOSUiSettings(
+                                    title: 'Crop Photo',
+                                  ),
+                                  WebUiSettings(
+                                    context: context,
+                                  ),
+                                ],
+                              );
+                              if(croppedFile!=null){
+                                images = List.from(images)..add(croppedFile.path);
+                              }else{
+                                images = List.from(images)..add(pickedFile.path);
+                              }
+                              controller.update();
+                            }
                           }
                         },
                       ),
