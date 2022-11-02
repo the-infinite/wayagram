@@ -19,6 +19,14 @@ class CreatePoll extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var pageController = PageController();
+    var votesController = TextEditingController();
+    var chargeController = TextEditingController();
+
+    var startTimeController = TextEditingController();
+    var startDateController = TextEditingController();
+    var endTimeController = TextEditingController();
+    var endDateController = TextEditingController();
+
     var questionController = TextEditingController();
     var descriptionController = TextEditingController();
     var isTextPoll = true;
@@ -140,6 +148,7 @@ class CreatePoll extends StatelessWidget {
                                   },
                                   keyboardType: TextInputType.number,
                                   isCompulsory: true,
+                                  controller: votesController,
                                 ),
                                 SizedBox(height: Get.height*0.025),
                                 PageInput(
@@ -150,6 +159,7 @@ class CreatePoll extends StatelessWidget {
                                   },
                                   isCompulsory: false,
                                   keyboardType: TextInputType.number,
+                                  controller: chargeController,
                                 ),
                                 SizedBox(height: Get.height*0.025),
                                 Row(
@@ -163,6 +173,7 @@ class CreatePoll extends StatelessWidget {
                                         if(date == null){
                                           return 'Required';
                                         }
+                                        startDateController.text = '${date.day}/${date.month}/${date.year}';
                                         return null;
                                       },
                                     ),
@@ -174,6 +185,7 @@ class CreatePoll extends StatelessWidget {
                                         if(date == null){
                                           return 'Required';
                                         }
+                                        startTimeController.text = Duration(hours: date.hour, minutes: date.minute).inMilliseconds.toString();
                                         return null;
                                       },
                                     ),
@@ -191,6 +203,7 @@ class CreatePoll extends StatelessWidget {
                                         if(date == null){
                                           return 'Required';
                                         }
+                                        endDateController.text = '${date.day}/${date.month}/${date.year}';
                                         return null;
                                       },
                                     ),
@@ -202,6 +215,7 @@ class CreatePoll extends StatelessWidget {
                                         if(date == null){
                                           return 'Required';
                                         }
+                                        endTimeController.text = Duration(hours: date!.hour, minutes: date.minute).inMilliseconds.toString();
                                         return null;
                                       },
                                     ),

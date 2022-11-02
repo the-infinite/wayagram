@@ -220,6 +220,9 @@ class CreatePosts extends StatelessWidget {
                               fit: BoxFit.cover,
                               height: Get.height * 0.15,
                               width: Get.height * 0.13,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error);
+                              },
                             ),
                             Positioned(
                               top: 5,
@@ -313,7 +316,13 @@ class CreatePosts extends StatelessWidget {
                         IconButton(
                           icon: const Icon(Icons.video_camera_back_rounded, color: Colors.white),
                           onPressed: () async {
-
+                            /*if(images.length <= 29){
+                              final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, maxDuration: const Duration(minutes: 10));
+                              if (pickedFile != null) {
+                                images = List.from(images)..add(pickedFile.path);
+                                controller.update();
+                              }
+                            }*/
                           },
                         ),
                       ],
