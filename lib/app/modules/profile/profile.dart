@@ -324,7 +324,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                       ],
                                       radiusStyle: true,
                                       cornerRadius: 10.0,
-                                      labels: const ['TimeLine', 'Likes','Donations','Polls'],
+                                      labels: const ['Posts', 'Products','Events','Donation'],
                                       customTextStyles: [
                                         AppTextStyle.bodyText1.copyWith(
                                           color: page == 0 ? AppColors.primary : Colors.grey,
