@@ -225,7 +225,7 @@ class UpdateProfile extends GetView<HomeController> {
                                     field.didChange(imagePath);
                                   }else{
                                     if(controller.imagePaths.isEmpty){
-                                      controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
+                                      controller.imagePaths = List.from(controller.imagePaths)..add("")..add(croppedFile.path);
                                     }else{
                                       if(controller.imagePaths.length > 2) {
                                         controller.imagePaths[1] = croppedFile.path;
