@@ -73,7 +73,7 @@ class UpdateProfile extends GetView<HomeController> {
                     SizedBox(
                       child: FormField<String>(
                           initialValue: '',
-                          validator: Validator.imageValidator,
+                          validator: null,
                           builder: (field) {
                           return DocumentPicker(
                               radius: 0,
@@ -143,7 +143,7 @@ class UpdateProfile extends GetView<HomeController> {
                         ),
                         child: FormField<String>(
                             initialValue: '',
-                            validator: Validator.imageValidator,
+                            validator: null,
                             builder: (field) {
                             return DocumentPicker(
                                 radius: 100,
