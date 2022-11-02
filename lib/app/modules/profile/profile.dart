@@ -429,7 +429,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                 ),
                               ),
                             ),
-                      ])],
+                      ])
+                      ],
                       backgroundColor: animation.value,
                       systemOverlayStyle: SystemUiOverlayStyle(
                           statusBarColor: animation.value,

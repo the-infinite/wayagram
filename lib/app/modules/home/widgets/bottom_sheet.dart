@@ -6,6 +6,11 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:wayagram/app/modules/create_posts/go_live.dart';
+import 'package:wayagram/app/modules/create_posts/groups.dart';
+import 'package:wayagram/app/modules/create_posts/normal_posts.dart';
+import 'package:wayagram/app/modules/create_posts/pages.dart';
+import 'package:wayagram/app/modules/create_posts/products.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -16,6 +21,9 @@ import '../../../data/model/posts_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/horizontal_item_tile.dart';
+import '../../create_posts/donations.dart';
+import '../../create_posts/events.dart';
+import '../../create_posts/polls.dart';
 import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
 
@@ -67,7 +75,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "POST",
                   subtitle: "Share a post or write what is on your mind",
                   onTap: () {
-
+                    Get.to(() => const CreatePosts());
                   }
               ),
 
@@ -76,7 +84,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "POLLS",
                   subtitle: "Create paid or free polls for users",
                   onTap: () {
-
+                    Get.to(() => const CreatePoll());
                   }
               ),
 
@@ -85,7 +93,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "PAGES",
                   subtitle: "Create a page for your business or brand",
                   onTap: () {
-
+                    Get.to(() => const CreatePage());
                   }
               ),
 
@@ -98,7 +106,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "GROUP",
                   subtitle: "Create a private or public group of interest",
                   onTap: () {
-
+                    Get.to(() => const CreateGroup());
                   }
               ),
               BottomSheetButton(
@@ -106,7 +114,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "EVENTS",
                   subtitle: "Bring people together with public or private events",
                   onTap: () {
-
+                    Get.to(() => const CreateEvent());
                   }
               ),
               BottomSheetButton(
@@ -114,7 +122,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "DONATION",
                   subtitle: "Create a donation page for a cause",
                   onTap: () {
-
+                    Get.to(() => const CreateDonation());
                   }
               ),
 
@@ -126,7 +134,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "PRODUCT",
                   subtitle: "Create and online display products for users to purchase",
                   onTap: () {
-
+                    Get.to(() => const CreateProduct());
                   }
               ),
               BottomSheetButton(
@@ -134,7 +142,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "GO LIVE",
                   subtitle: "Go live on Wayagram",
                   onTap: () {
-
+                    Get.to(() => const CreateLiveVideo());
                   }
               ),
               SizedBox(
