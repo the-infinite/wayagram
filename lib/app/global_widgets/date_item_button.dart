@@ -7,8 +7,8 @@ class DateItemButton extends StatelessWidget {
   const DateItemButton({
     Key? key,
     required this.title,
-    this.color = AppColors.bostonUniRed,
-    this.textColor = Colors.white,
+    this.color = Colors.black,
+    this.textColor = Colors.black,
   }) : super(key: key);
 
   final String title;
@@ -22,13 +22,14 @@ class DateItemButton extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(
-          color: color,
+          color: const Color(0xFF828282),
           width: 1,
         ),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
         title,
-        style: theme.textTheme.caption!.copyWith(color: textColor),
+        style: theme.textTheme.subtitle1!.copyWith(color: textColor),
       ),
     );
   }

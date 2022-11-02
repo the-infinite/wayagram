@@ -23,7 +23,9 @@ class PageInput extends StatelessWidget {
     this.isCompulsory = false,
     this.isPhoneNumber = false,
     this.dropDownItems,
-    this.onDropdownChanged
+    this.onDropdownChanged,
+    this.onChanged,
+    this.hintColor = const Color(0xFFC4C4C4),
   }) : super(key: key);
 
   final String hint;
@@ -40,6 +42,8 @@ class PageInput extends StatelessWidget {
   final String? Function(String?)? validator;
   final List<DropdownMenuItem<dynamic>>? dropDownItems;
   final Function(dynamic)? onDropdownChanged;
+  final Function(String)? onChanged;
+  final Color? hintColor;
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +121,8 @@ class PageInput extends StatelessWidget {
                   readOnly: readOnly,
                   prefexIcon: prefix,
                   suffixIcon: suffix,
+                  onChanged: onChanged,
+                  hintColor: hintColor,
                 ),
               ),
           ],
@@ -132,6 +138,8 @@ class PageInput extends StatelessWidget {
             readOnly: readOnly,
             prefexIcon: prefix,
             suffixIcon: suffix,
+            onChanged: onChanged,
+            hintColor: hintColor,
           )
       ],
     );

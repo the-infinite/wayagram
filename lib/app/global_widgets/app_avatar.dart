@@ -21,7 +21,7 @@ class AppAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-      backgroundColor: backgroundColor,
+      backgroundColor: Colors.grey.shade400,
       radius: radius,
       child: SizedBox(
         width: double.infinity,

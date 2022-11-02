@@ -33,6 +33,7 @@ class AppInput extends StatefulWidget {
       color: Color(0xFF828282),
     ),
     this.borderRadius = 10,
+    this.hintColor = const Color(0xFFC4C4C4),
   }) : super(key: key);
 
   final String? label;
@@ -43,6 +44,7 @@ class AppInput extends StatefulWidget {
   final bool readOnly;
   final EdgeInsetsGeometry? contentPadding;
   final Color filledColor;
+  final Color? hintColor;
   final Widget? suffixIcon;
   final Widget? prefexIcon;
   final TextInputType keyboardType;
@@ -136,7 +138,7 @@ class _AppInputState extends State<AppInput> {
             filled: true,
             focusColor: AppColors.spanishGray,
             hintStyle: AppTextStyle.bodyText2.copyWith(
-              color: const Color(0xFFC4C4C4),
+              color: widget.hintColor,
             ),
             focusedBorder: outlineInputBorder,
             enabledBorder: outlineInputBorder,

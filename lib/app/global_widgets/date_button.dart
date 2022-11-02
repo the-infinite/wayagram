@@ -37,10 +37,13 @@ class _DateButtonState<T> extends State<DateButton<T>> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.label,
-                style: AppTextStyle.bodyText2.copyWith(
-                  color: AppColors.spanishGray,
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Text(
+                  widget.label,
+                  style: AppTextStyle.bodyText2.copyWith(
+                    color: Colors.black,
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -80,28 +83,16 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                     ? Row(
                         children: [
                           DateItemButton(
-                            title: date.day.toString(),
-                          ),
-                          DateItemButton(
-                            title: date.month.toString(),
-                          ),
-                          DateItemButton(
-                            title: date.year.toString(),
+                            title: "${date.day} - ${date.month} - ${date.year}",
                           ),
                         ],
                       )
                     : Row(
                         children: [
                           DateItemButton(
-                            title: time.hourOfPeriod.toString(),
-                          ),
-                          DateItemButton(
-                            title: time.minute.toString(),
-                          ),
-                          DateItemButton(
-                            title: time.period == DayPeriod.am
+                            title: "${time.hourOfPeriod} : ${time.minute}  ${time.period == DayPeriod.am
                                 ? 'AM'
-                                : 'PM',
+                                : 'PM'}",
                           ),
                         ],
                       ),
