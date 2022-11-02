@@ -113,7 +113,7 @@ class PageInput extends StatelessWidget {
                 width: Get.width * 0.65,
                 child: AppInput(
                   hintText: hint,
-                  keyboardType: keyboardType,
+                  keyboardType: TextInputType.phone,
                   controller: controller,
                   validator: validator,
                   obscureText: obscureText,
@@ -123,6 +123,7 @@ class PageInput extends StatelessWidget {
                   suffixIcon: suffix,
                   onChanged: onChanged,
                   hintColor: hintColor,
+                  maxLength: 11,
                 ),
               ),
           ],

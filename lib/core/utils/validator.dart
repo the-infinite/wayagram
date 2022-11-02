@@ -2,9 +2,12 @@ import 'package:get/get.dart';
 
 class Validator {
   static String? phoneNumValidation(String? val) {
+    String spcPattern = '(?=.*?[!@#\$&*_~^+-?><%])';
     if (!GetUtils.isPhoneNumber(val!)) {
       return 'Please enter a valid Phone number';
     }else if(val.length >= 12){
+      return 'Please enter a valid Phone number';
+    }else if (GetUtils.hasMatch(val, spcPattern)) {
       return 'Please enter a valid Phone number';
     }
     return null;
@@ -33,7 +36,7 @@ class Validator {
 
   static String? fullnameValidation(String? val) {
     String digitPattern = '(?=.*?[0-9])';
-    String spcPattern = '(?=.*?[!@#\$&*_~])';
+    String spcPattern = '(?=.*?[!@#\$&*_~^+-?><%])';
     if (val == null || val.isEmpty) {
       return 'Please enter your name';
     }else if (GetUtils.hasMatch(val, digitPattern)) {
@@ -42,6 +45,21 @@ class Validator {
       return 'Name should not contain special characters';
     }else if(val.length <= 2){
       return 'Name should be more than 2 characters';
+    }
+    return null;
+  }
+
+  static String? businessNameValidation(String? val) {
+    String digitPattern = '(?=.*?[0-9])';
+    String spcPattern = '(?=.*?[!@#\$&*_~^+-?><%])';
+    if (val == null || val.isEmpty) {
+      return 'Please enter your business name';
+    }else if (GetUtils.hasMatch(val, digitPattern)) {
+      return 'Business Name should not contain numbers';
+    } else if (GetUtils.hasMatch(val, spcPattern)) {
+      return 'Business Name should not contain special characters';
+    }else if(val.length <= 2){
+      return 'Business Name should be more than 2 characters';
     }
     return null;
   }

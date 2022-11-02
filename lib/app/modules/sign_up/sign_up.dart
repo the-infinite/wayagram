@@ -171,12 +171,7 @@ class SignUp extends GetView<AuthController> {
                                       PageInput(
                                         hint: '',
                                         label: 'Business Name',
-                                        validator: (val){
-                                          if(val!.isEmpty){
-                                            return 'Please enter your business name';
-                                          }
-                                          return null;
-                                        },
+                                        validator: Validator.businessNameValidation,
                                         isCompulsory: true,
                                         controller: controller.businessName,
                                       ),
