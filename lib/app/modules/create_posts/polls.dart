@@ -101,7 +101,6 @@ class CreatePoll extends StatelessWidget {
 
                             ]
                           };
-
                           var response = await controller.postData(body, "/wayagram-service/all-posts/poll-create");
                           if(response.isSuccessful){
                             var id = response.data['id'] as String;
