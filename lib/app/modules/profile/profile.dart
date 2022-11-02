@@ -9,6 +9,7 @@ import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
 import 'package:wayagram/app/modules/profile/inner_pages/blocked.dart';
 import 'package:wayagram/app/modules/profile/inner_pages/muted.dart';
+import 'package:wayagram/app/modules/profile/update_profile.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
@@ -171,7 +172,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                             child: AppButton(
                                               title: 'Edit',
                                               onPressed: () {
-
+                                                Get.toNamed(UpdateProfile.route);
                                               },
                                               borderRadius: 10,
                                               fontColor: AppColors.primary,

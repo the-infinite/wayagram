@@ -26,9 +26,27 @@ class UpdateProfile extends StatelessWidget {
             Get.back();
           },
         ),
-        title: Image.asset(
-          'assets/images/wayagram.png', width: Get.width * 0.3,
-        ),
+        title: Text('Update Profile', style: AppTextStyle.subtitle1.copyWith(
+          color: Colors.black,
+        )),
+        centerTitle: false,
+          actions: [
+            Center(
+              child: SizedBox(
+                child: AppButton(
+                  title: 'Save',
+                  onPressed: () {
+
+                  },
+                  borderRadius: 10,
+                  fontColor: AppColors.primary,
+                  bckgrndColor: AppColors.background,
+                  border: Border.all(color: AppColors.background, width: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                ),
+              ),
+            )
+          ]
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
