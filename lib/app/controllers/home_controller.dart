@@ -115,7 +115,7 @@ class HomeController extends GetxController {
     final response = await userRepo.updateProfile(body);
     await userRepo.getUserProfile(profile.userId.toString());
     AppOverlay.showInfoDialog(title: response.isSuccessful ? 'Success' : 'Error', content: response.message);
-    update(['profile_page']);
+    update(['profile_page','home']);
     return response;
   }
 

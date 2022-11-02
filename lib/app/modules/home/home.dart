@@ -14,6 +14,7 @@ import '../../../core/theme/app_themes.dart';
 import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/log_in_model_entity.dart';
 import '../../data/model/profile_model_entity.dart';
 import '../../data/providers/my_pref.dart';
@@ -41,7 +42,9 @@ class Home extends GetView<HomeController> {
       child: GetBuilder<HomeController>(
           id: 'home',
           builder: (controller) {
-              return Scaffold(
+            var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+
+            return Scaffold(
                 appBar: AppBar(
                 elevation: 0,
                 leading: Column(
@@ -57,7 +60,7 @@ class Home extends GetView<HomeController> {
                           height: 45,
                           child: IconButton(
                             icon: AppAvatar(
-                              imgUrl: controller.logInDetails.user!.profileImage.toString(),
+                              imgUrl: (fullProfile.avatar as String?).toString(),
                               radius: 45,
                             ),
                             onPressed: () {

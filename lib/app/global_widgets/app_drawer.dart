@@ -12,6 +12,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
 import '../controllers/home_controller.dart';
 import '../data/model/friends_model_entity.dart';
+import '../data/model/full_user_profile_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/my_pref.dart';
 import '../modules/profile/profile.dart';
@@ -25,6 +26,7 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
     var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
     var accounts = AccountModelEntity.fromJson(jsonDecode(MyPref.account.val));
@@ -56,7 +58,7 @@ class AppDrawer extends StatelessWidget {
                             height: Get.width*0.2,
                             child: IconButton(
                               icon: AppAvatar(
-                                imgUrl: controller.logInDetails.user!.profileImage.toString(),
+                                imgUrl: (fullProfile.avatar as String?).toString(),
                                 radius: 45,
                               ),
                               onPressed: () {
