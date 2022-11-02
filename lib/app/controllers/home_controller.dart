@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/tabs/chats_tab.dart';
 import 'package:wayagram/app/modules/home/tabs/discover_tab.dart';
 import 'package:wayagram/app/modules/home/tabs/shops_tab.dart';
@@ -109,6 +110,14 @@ class HomeController extends GetxController {
   Future<ApiResponse> get getMuted => userRepo.getMutedAccount();
   Future<ApiResponse> get getFollowing => userRepo.getFollowing();
   Future<ApiResponse> get getFollowers => userRepo.getFollowers();
+
+  Future<ApiResponse> updateProfile(dynamic body) async {
+    final response = await userRepo.updateProfile(body);
+    await userRepo.getUserProfile(profile.userId.toString());
+    AppOverlay.showInfoDialog(title: response.isSuccessful ? 'Success' : 'Error', content: response.message);
+    update(['profile_page']);
+    return response;
+  }
 
   void launchURL(String url) async {
     try {

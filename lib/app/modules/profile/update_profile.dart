@@ -16,6 +16,7 @@ import '../../global_widgets/app_button.dart';
 import '../../global_widgets/document_picker.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
+import 'package:dio/dio.dart' as dio;
 
 class UpdateProfile extends GetView<HomeController> {
   const UpdateProfile({Key? key}) : super(key: key);
@@ -24,6 +25,8 @@ class UpdateProfile extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    var isPrivate = false;
+    var formKey = GlobalKey<FormState>();
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     var usernameController = TextEditingController(text: fullProfile.username);
     var displayNameController = TextEditingController(text: fullProfile.displayName);
@@ -52,8 +55,34 @@ class UpdateProfile extends GetView<HomeController> {
                   child: SizedBox(
                     child: AppButton(
                       title: 'Save',
-                      onPressed: () {
+                      onPressed: () async {
+                        if(formKey.currentState!.validate()){
+                          Map<String, dynamic> body = {
+                            'username': usernameController.text,
+                            'displayName': displayNameController.text,
+                            'bio': bioController.text,
+                            "user_id": fullProfile.userId,
+                            "notPublic": (!isPrivate).toString(),
+                          };
 
+                          if(controller.imagePaths.isNotEmpty){
+                            body['coverImage'] = await dio.MultipartFile.fromFile(
+                              controller.imagePaths[0],
+                              filename: controller.imagePaths[0].split('/').last,
+                            );
+                          }
+
+                          if(controller.imagePaths.length > 1){
+                            body['avatar'] = await dio.MultipartFile.fromFile(
+                              controller.imagePaths[1],
+                              filename: controller.imagePaths[0].split('/').last,
+                            );
+                          }
+
+                          var formData = dio.FormData.fromMap(body);
+
+                          await controller.updateProfile(formData);
+                        }
                       },
                       borderRadius: 10,
                       fontColor: AppColors.primary,
@@ -223,64 +252,64 @@ class UpdateProfile extends GetView<HomeController> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: EdgeInsets.only(left: Get.width * 0.035, right: Get.width * 0.035),
-                    child: Column(
-                      children: [
-                        PageInput(
-                          hint: '',
-                          label: 'Unique Username',
-                          validator: (val){
-                            if(val!.isEmpty){
-                              return 'Please enter your username';
-                            }
-                            return null;
-                          },
-                          isCompulsory: true,
-                          controller: usernameController,
-                          prefix: Icon(Icons.alternate_email, color: Colors.black,size: Get.width*0.05),
-                        ),
-                        SizedBox(
-                          height: Get.height * 0.025,
-                        ),
-                        PageInput(
-                          hint: '',
-                          label: 'Display Name',
-                          validator: Validator.fullnameValidation,
-                          isCompulsory: true,
-                          controller: displayNameController,
-                        ),
-                        SizedBox(
-                          height: Get.height * 0.025,
-                        ),
-                        PageInput(
-                          hint: '',
-                          label: 'Bio',
-                          validator: (val){
-                            if(val!.isEmpty){
-                              return 'Please enter your page name';
-                            }
-                            return null;
-                          },
-                          isCompulsory: true,
-                          controller: bioController,
-                        ),
-                        SizedBox(
-                          height: Get.height * 0.025,
-                        ),
-                        PageDropButton(
-                          label: "Choose Privacy",
-                          hint: '',
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          onChanged: (val) {
-                          },
-                          value: "Public",
-                          items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ],
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        children: [
+                          PageInput(
+                            hint: '',
+                            label: 'Unique Username',
+                            validator: (val){
+                              if(val!.isEmpty){
+                                return 'Please enter your username';
+                              }
+                              return null;
+                            },
+                            isCompulsory: true,
+                            controller: usernameController,
+                            prefix: Icon(Icons.alternate_email, color: Colors.black,size: Get.width*0.05),
+                          ),
+                          SizedBox(
+                            height: Get.height * 0.025,
+                          ),
+                          PageInput(
+                            hint: '',
+                            label: 'Display Name',
+                            validator: Validator.fullnameValidation,
+                            isCompulsory: true,
+                            controller: displayNameController,
+                          ),
+                          SizedBox(
+                            height: Get.height * 0.025,
+                          ),
+                          PageInput(
+                            hint: '',
+                            label: 'Bio',
+                            validator: (val){
+                              return null;
+                            },
+                            isCompulsory: false,
+                            controller: bioController,
+                          ),
+                          SizedBox(
+                            height: Get.height * 0.025,
+                          ),
+                          PageDropButton(
+                            label: "Choose Privacy",
+                            hint: '',
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            onChanged: (val) {
+                            },
+                            value: "Public",
+                            items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

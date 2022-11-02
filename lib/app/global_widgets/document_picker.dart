@@ -175,9 +175,7 @@ class _DocumentPickerState extends State<DocumentPicker> {
 
   void _fromGallery() async {
     Get.back();
-    final pickedFile = await _imagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 30);
-
+    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
     if (pickedFile != null) {
       await pickedFile.readAsBytes();
       final List<int> rawBytes = File(pickedFile.path).readAsBytesSync();

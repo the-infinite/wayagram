@@ -99,6 +99,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
       child: GetBuilder<HomeController>(
           id: 'profile_page',
           builder: (controller) {
+            print('profile page rebuild');
             var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
             var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
@@ -126,6 +127,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                       children: [
                                         SizedBox(
                                           height: Get.height * 0.2,
+                                          width: Get.width,
                                           child: Image.network(
                                             (fullProfile.coverImage as String?).toString(),
                                             fit: BoxFit.cover,

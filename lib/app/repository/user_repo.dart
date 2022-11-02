@@ -134,6 +134,15 @@ class UserRepository {
     }
     return response;
   }
+
+  Future<ApiResponse> updateProfile(dynamic body) async {
+    final response = await api.putData('/wayagram-service/main/profile/update',hasHeader: true,body: body);
+    return response;
+  }
+  Future<ApiResponse> postData(String url,dynamic body,{hasHeader = true}) async {
+    final response = await api.postData(url,hasHeader: hasHeader,body: body);
+    return response;
+  }
   //Not Done Yet
   Future<ApiResponse> getFriendRequests() async {
     var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));

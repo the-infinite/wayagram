@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:hashtager/widgets/hashtag_text_field.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
@@ -19,6 +21,7 @@ class CreatePosts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ImagePicker _imagePicker = ImagePicker();
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -140,16 +143,21 @@ class CreatePosts extends StatelessWidget {
                         ),
                         IconButton(
                           icon: const Icon(Icons.image, color: Colors.black),
-                          onPressed: () {
-
+                          onPressed: () async {
+                            final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
+                            if (pickedFile != null) {
+                              await pickedFile.readAsBytes();
+                              final List<int> rawBytes = File(pickedFile.path).readAsBytesSync();
+                              final String base64Image = base64Encode(rawBytes);
+                            }
                           },
                         ),
                         SizedBox(
                           width: Get.width*0.025,
                         ),
                         IconButton(
-                          icon: const Icon(Icons.video_camera_back_rounded, color: Colors.black),
-                          onPressed: () {
+                          icon: const Icon(Icons.video_camera_back_rounded, color: Colors.white),
+                          onPressed: () async {
 
                           },
                         ),
@@ -159,8 +167,15 @@ class CreatePosts extends StatelessWidget {
                       padding: EdgeInsets.only(right: Get.width*0.025),
                       child: IconButton(
                         icon: const Icon(Icons.camera_alt_rounded, color: Colors.black),
-                        onPressed: () {
-
+                        onPressed: () async {
+                          final pickedFile = await _imagePicker.pickImage(
+                            source: ImageSource.camera,
+                            imageQuality: 30,
+                          );
+                          if (pickedFile != null && pickedFile.path.isNotEmpty) {
+                            final List<int> rawBytes = await pickedFile.readAsBytes();
+                            final String base64Image = base64Encode(rawBytes);
+                          }
                         },
                       ),
                     ),
