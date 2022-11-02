@@ -10,7 +10,7 @@ class AppAvatar extends StatelessWidget {
     this.imgUrl = '',
     this.selectedImg,
     this.radius = 55,
-    this.backgroundColor = AppColors.grey
+    this.backgroundColor = AppColors.background
   }) : super(key: key);
 
   final String imgUrl;
@@ -24,8 +24,8 @@ class AppAvatar extends StatelessWidget {
       backgroundColor: backgroundColor,
       radius: radius,
       child: SizedBox(
-        width: 45,
-        height: 45,
+        width: double.infinity,
+        height: double.infinity,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(radius * 2),
           child: selectedImg == null
