@@ -182,7 +182,7 @@ class PostsView extends StatelessWidget{
                     marginTop: 0,
                   ),
                 ),
-              if(post.isPoll == true)
+              if(post.isPoll == true && post.poll!.pollOptions!.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: FlutterPolls(
@@ -436,7 +436,7 @@ class InnerPost extends StatelessWidget{
                 marginTop: 0,
               ),
             ),
-          if(post.isPoll == true)
+          if(post.isPoll == true && post.poll!.pollOptions!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: FlutterPolls(

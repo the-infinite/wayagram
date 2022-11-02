@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/app/global_widgets/overlays.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/providers/api_response.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/date_button.dart';
 import '../../global_widgets/page_dropdown.dart';
@@ -19,14 +21,15 @@ class CreatePoll extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var pageController = PageController();
-    var votesController = TextEditingController();
-    var chargeController = TextEditingController();
+    var votesController = TextEditingController(text: '1');
+    var chargeController = TextEditingController(text: '0');
 
     var startTimeController = TextEditingController();
     var startDateController = TextEditingController();
     var endTimeController = TextEditingController();
     var endDateController = TextEditingController();
 
+    var titleController = TextEditingController();
     var questionController = TextEditingController();
     var descriptionController = TextEditingController();
     var isTextPoll = true;
@@ -66,13 +69,68 @@ class CreatePoll extends StatelessWidget {
                 child: SizedBox(
                   child: AppButton(
                     title: pos == 0 ? 'Next' : 'Post',
-                    onPressed: () {
-                      if(pageController.page?.toInt() == 0) {
+                    onPressed: () async {
+                      if(pageController.page?.toInt() == 0 && formKey1.currentState!.validate()) {
                         pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.ease);
                         pos = 1;
                         controller.update();
                       } else {
+                        if(formKey2.currentState!.validate()) {
+                          var body = {
+                            'description': titleController.text,
+                            "type": "user",
+                            "page_id": null,
+                            "group_id": null,
+                            "parent_id": null,
+                            "pollCategory": "text",
+                            "showResult": true,
+                            "schedule": true,
+                            "millisecCreatedAt": "0",
+                            "millisecUpdatedAt": "0",
+                            "isPaid": false,
+                            'startTime': startTimeController.text,
+                            'startDate': startDateController.text,
+                            'endTime': endTimeController.text,
+                            'endDate': endDateController.text,
+                            'voteLimit': votesController.text,
+                            'amount': chargeController.text,
+                            "hashtags": [
 
+                            ],
+                            "mentions": [
+
+                            ]
+                          };
+
+                          var response = await controller.postData(body, "/wayagram-service/all-posts/poll-create");
+                          if(response.isSuccessful){
+                            var id = response.data['id'] as String;
+                            ApiResponse? innerResponse;
+                            for (var element in options) {
+                              var innerBody = {
+                                'pollId': id,
+                                "option": element,
+                                "position": options.indexOf(element)+1,
+                              };
+                              if(descriptions[options.indexOf(element)].isNotEmpty){
+                                innerBody['short_desc'] = descriptions[options.indexOf(element)];
+                              }
+                              innerResponse = await controller.postData(innerBody, "/wayagram-service/all-posts/poll-option-create");
+                              if(innerResponse.isSuccessful) {
+                                if(options.indexOf(element) == options.length - 1) {
+                                  await controller.getPosts;
+                                  controller.update(['home']);
+                                  Get.back();
+                                }
+                              } else {
+                                AppOverlay.showInfoDialog(title: 'Error', content: innerResponse.message);
+                                break;
+                              }
+                            }
+                          }else{
+                            AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                          }
+                        }
                       }
                     },
                     borderRadius: 10,
@@ -142,7 +200,9 @@ class CreatePoll extends StatelessWidget {
                                   label: 'Votes Per User',
                                   validator: (val){
                                     if(val!.isEmpty){
-                                      return 'Please enter your office address';
+                                      return 'Please enter your minimum vote number per user';
+                                    }else if(int.parse(val) < 1){
+                                      return 'Please enter a value greater than 0';
                                     }
                                     return null;
                                   },
@@ -251,10 +311,13 @@ class CreatePoll extends StatelessWidget {
                                   validator: (val){
                                     if(val!.isEmpty){
                                       return 'Please enter your question';
+                                    }else if(options.length < 2){
+                                      return 'Please add at least 2 poll options below';
                                     }
                                     return null;
                                   },
                                   isCompulsory: true,
+                                  controller: titleController,
                                 ),
                               ),
                               SizedBox(height: Get.height*0.025),
@@ -274,6 +337,8 @@ class CreatePoll extends StatelessWidget {
                                             validator: (val){
                                               if(val!.isEmpty){
                                                 return 'Please enter your question';
+                                              }else if(options.contains(val)){
+                                                return 'This option already exists';
                                               }
                                               return null;
                                             },
@@ -289,7 +354,7 @@ class CreatePoll extends StatelessWidget {
                                           width: Get.width*0.8,
                                           child: PageInput(
                                             hint: '',
-                                            label: 'Enter Description [Optional]',
+                                            label: 'Enter Description',
                                             validator: (val){
                                               return null;
                                             },
