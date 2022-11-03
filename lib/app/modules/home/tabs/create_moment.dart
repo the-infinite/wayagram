@@ -25,7 +25,7 @@ class CreateMoment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int _currentStep = 0;
+    int currentStep = 0;
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     var textController = TextEditingController();
     PageController pageController = PageController(initialPage: 0, keepPage: true);
@@ -66,7 +66,7 @@ class CreateMoment extends StatelessWidget {
                         Map<String, dynamic> body = {
                           "profile_id": fullProfile.id,
                         };
-                        if(_currentStep == 0){
+                        if(currentStep == 0){
                           if(controller.imagePaths.isNotEmpty){
                             body['file'] = await dio.MultipartFile.fromFile(
                               controller.imagePaths[0],
@@ -131,7 +131,7 @@ class CreateMoment extends StatelessWidget {
               child: PageView(
                 controller: pageController,
                 onPageChanged: (index) {
-                  _currentStep = index;
+                  currentStep = index;
                 },
                 children: [
                   SizedBox(
@@ -230,7 +230,7 @@ class CreateMoment extends StatelessWidget {
               children: [
                 ToggleSwitch(
                   minWidth: Get.width * 0.5,
-                  initialLabelIndex: _currentStep,
+                  initialLabelIndex: currentStep,
                   totalSwitches: 2,
                   inactiveBgColor: AppColors.background,
                   activeBgColor: const [AppColors.background, AppColors.background],
@@ -250,12 +250,12 @@ class CreateMoment extends StatelessWidget {
                   labels: const ['Image', 'Text'],
                   customTextStyles: [
                     AppTextStyle.bodyText1.copyWith(
-                      color: _currentStep == 0 ? AppColors.primary : const Color(0xff064A72),
+                      color: currentStep == 0 ? AppColors.primary : const Color(0xff064A72),
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
                     AppTextStyle.bodyText1.copyWith(
-                      color: _currentStep == 1 ? AppColors.primary : const Color(0xff064A72),
+                      color: currentStep == 1 ? AppColors.primary : const Color(0xff064A72),
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
@@ -263,10 +263,10 @@ class CreateMoment extends StatelessWidget {
                   onToggle: (index) {
                     if (index == 0) {
                       pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                      _currentStep = 0;
+                      currentStep = 0;
                     } else {
                       pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                      _currentStep = 1;
+                      currentStep = 1;
                     }
                     controller.update();
                   },
