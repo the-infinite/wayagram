@@ -62,6 +62,7 @@ class AppDrawer extends StatelessWidget {
                                 radius: 45,
                               ),
                               onPressed: () {
+                                Get.back();
                                 Get.toNamed(Profile.route);
                               },
                             ),
@@ -167,6 +168,7 @@ class AppDrawer extends StatelessWidget {
                             leading: const Icon(Icons.person, color: Colors.black),
                             text: "My Account",
                             onPressed: () {
+                              Get.back();
                               Get.toNamed(Profile.route);
                             },
                           ),
