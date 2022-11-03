@@ -186,6 +186,7 @@ class _MomentsViewState extends State<MomentsView> {
                             controller: storyController,
                             imageFit: BoxFit.contain,
                             duration: const Duration(seconds: 5),
+                            caption: element.text,
                           ),
                         );
                       }else{

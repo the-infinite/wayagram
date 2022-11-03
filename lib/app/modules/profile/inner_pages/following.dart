@@ -75,7 +75,7 @@ class Following extends StatelessWidget {
                           name: names,
                           username: username,
                           profilePic: profile,
-                          length: posts.count == null ? 0 : posts.count!,
+                          length: posts.following == null ? 0 : posts.following!.length,
                         );
                       } else if(savedPosts.isNotEmpty){
                         var posts = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
@@ -86,7 +86,7 @@ class Following extends StatelessWidget {
                           name: names,
                           username: username,
                           profilePic: profile,
-                          length: posts.count == null ? 0 : posts.count!,
+                          length: posts.following == null ? 0 : posts.following!.length,
                         );
                       }else{
                         return const NotificationView(isLoading: true);

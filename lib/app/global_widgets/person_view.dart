@@ -68,7 +68,7 @@ class _PersonViewState extends State<PersonView> {
                 height: 50,
                 child: IconButton(
                   icon: AppAvatar(
-                    imgUrl: widget.profilePic[index],
+                    imgUrl: widget.profilePic.length>= index ?  widget.profilePic[index] : '',
                     radius: 50,
                   ),
                   onPressed: null,
