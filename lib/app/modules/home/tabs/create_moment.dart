@@ -130,6 +130,9 @@ class CreateMoment extends StatelessWidget {
               ),
               child: PageView(
                 controller: pageController,
+                onPageChanged: (index) {
+                  _currentStep = index;
+                },
                 children: [
                   SizedBox(
                     child: FormField<String>(

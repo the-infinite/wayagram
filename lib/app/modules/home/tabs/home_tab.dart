@@ -34,13 +34,14 @@ class HomeTab extends StatelessWidget {
           FutureBuilder<ApiResponse>(
               future: controller.getMoments,
               builder: (context, snapshot) {
+                var saved = MyPref.moments.val;
                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                   final moments = snapshot.data!.data as List<MomentsModelEntity>;
-                  if(moments.isEmpty){
-                    //return const SizedBox.shrink();
-                  }
                   return MomentsView(moments: moments);
-                } else {
+                } else if(saved.isNotEmpty) {
+                  var posts = MomentsModelEntity.getService(jsonDecode(saved));
+                  return MomentsView(moments: posts);
+                }else{
                   return const MomentsView(isLoading: true);
                 }
               }),
