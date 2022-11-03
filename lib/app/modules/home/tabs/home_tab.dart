@@ -37,7 +37,7 @@ class HomeTab extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                   final moments = snapshot.data!.data as List<MomentsModelEntity>;
                   if(moments.isEmpty){
-                    return const SizedBox.shrink();
+                    //return const SizedBox.shrink();
                   }
                   return MomentsView(moments: moments);
                 } else {

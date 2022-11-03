@@ -168,6 +168,7 @@ class AppDrawer extends StatelessWidget {
                             leading: const Icon(Icons.person, color: Colors.black),
                             text: "My Account",
                             onPressed: () {
+                              controller.imagePaths.clear();
                               Get.back();
                               Get.toNamed(Profile.route);
                             },

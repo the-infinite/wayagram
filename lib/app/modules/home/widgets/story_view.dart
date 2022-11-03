@@ -38,19 +38,21 @@ class Story extends StatelessWidget {
           systemNavigationBarIconBrightness: Brightness.light
       ),
       child: GetBuilder<HomeController>(builder: (controller) {
-        return StoryView(
-            storyItems: storyItems,
-            controller: storyController,
-            repeat: true,
-            onStoryShow: (s) {},
-            onComplete: () {
-              Navigator.pop(context);
-            },
-            onVerticalSwipeComplete: (direction) {
-              if (direction == Direction.down) {
+        return Scaffold(
+          body: StoryView(
+              storyItems: storyItems,
+              controller: storyController,
+              repeat: true,
+              onStoryShow: (s) {},
+              onComplete: () {
                 Navigator.pop(context);
+              },
+              onVerticalSwipeComplete: (direction) {
+                if (direction == Direction.down) {
+                  Navigator.pop(context);
+                }
               }
-            }
+          ),
         );
       }),
     );

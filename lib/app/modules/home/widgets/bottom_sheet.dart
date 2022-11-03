@@ -75,6 +75,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "POST",
                   subtitle: "Share a post or write what is on your mind",
                   onTap: () {
+                    controller.imagePaths.clear();
                     Get.back();
                     Get.to(() => const CreatePosts());
                   }
@@ -85,6 +86,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "POLLS",
                   subtitle: "Create paid or free polls for users",
                   onTap: () {
+                    controller.imagePaths.clear();
                     Get.back();
                     Get.to(() => const CreatePoll());
                   }
@@ -95,6 +97,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "PAGES",
                   subtitle: "Create a page for your business or brand",
                   onTap: () {
+                    controller.imagePaths.clear();
                     Get.back();
                     Get.to(() => const CreatePage());
                   }

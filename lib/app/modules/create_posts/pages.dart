@@ -101,10 +101,10 @@ class CreatePage extends StatelessWidget {
                           "userId": fullProfile.id,
                           "categoryId": "3de9d1b8-2f4a-4beb-9980-c474eb2c62c9",
                           "category": pageCategory.text,
-                          "username": fullProfile.username,
+                          "username": nameController.text,
                           "title": nameController.text,
                           "description": descriptionController.text,
-                          "isPublic": true,
+                          "isPublic": pageVisibility.text == 'Public',
                         };
                         if(linkController.text.isNotEmpty) {
                           body['websiteUrl'] = linkController.text;
