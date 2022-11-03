@@ -32,6 +32,8 @@ class UpdateProfile extends GetView<HomeController> {
     var displayNameController = TextEditingController(text: fullProfile.displayName);
     var bioController = TextEditingController(text: fullProfile.bio);
 
+    var private = fullProfile.notPublic;
+
     return  GetBuilder<HomeController>(
         builder: (controller) {
         return Scaffold(
@@ -62,21 +64,25 @@ class UpdateProfile extends GetView<HomeController> {
                             'displayName': displayNameController.text,
                             'bio': bioController.text,
                             "user_id": fullProfile.userId,
-                            "notPublic": (!isPrivate).toString(),
+                            "notPublic": isPrivate.toString(),
                           };
 
                           if(controller.imagePaths.isNotEmpty){
-                            body['coverImage'] = await dio.MultipartFile.fromFile(
-                              controller.imagePaths[0],
-                              filename: controller.imagePaths[0].split('/').last,
-                            );
+                            if(controller.imagePaths[0].toString().isNotEmpty){
+                              body['coverImage'] = await dio.MultipartFile.fromFile(
+                                controller.imagePaths[0],
+                                filename: controller.imagePaths[0].split('/').last,
+                              );
+                            }
                           }
 
                           if(controller.imagePaths.length > 1){
-                            body['avatar'] = await dio.MultipartFile.fromFile(
-                              controller.imagePaths[1],
-                              filename: controller.imagePaths[0].split('/').last,
-                            );
+                            if(controller.imagePaths[1].toString().isNotEmpty){
+                              body['avatar'] = await dio.MultipartFile.fromFile(
+                                controller.imagePaths[1],
+                                filename: controller.imagePaths[0].split('/').last,
+                              );
+                            }
                           }
 
                           var formData = dio.FormData.fromMap(body);
@@ -299,8 +305,13 @@ class UpdateProfile extends GetView<HomeController> {
                             hint: '',
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             onChanged: (val) {
+                              if(val == "Public") {
+                                isPrivate = false;
+                              }else{
+                                isPrivate = true;
+                              }
                             },
-                            value: "Public",
+                            value: private == true ? "Private" : "Public",
                             items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,

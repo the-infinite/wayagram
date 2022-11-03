@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
@@ -114,7 +116,18 @@ class HomeController extends GetxController {
   Future<ApiResponse> updateProfile(dynamic body) async {
     final response = await userRepo.updateProfile(body);
     await userRepo.getUserProfile(profile.userId.toString());
-    AppOverlay.showInfoDialog(title: response.isSuccessful ? 'Success' : 'Error', content: response.message);
+    AppOverlay.showInfoDialog(
+        title: response.isSuccessful ? 'Success' : 'Error',
+        content: response.message,
+      onPressed: () {
+        if(response.isSuccessful) {
+          Get.back();
+          Get.back();
+        }else{
+          Get.back();
+        }
+      }
+    );
     update(['profile_page','home']);
     return response;
   }
