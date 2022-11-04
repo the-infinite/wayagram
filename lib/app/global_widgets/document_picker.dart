@@ -74,6 +74,8 @@ class DocumentPicker extends StatefulWidget {
 
   /// if [displayPickedImage] is false, picked document path is displayed instead
   final bool displayPickedImage;
+  final bool displayPickerIcon;
+  final BoxFit fit;
   final Function(
     String imagePath,
     String base64Image,
@@ -90,6 +92,8 @@ class DocumentPicker extends StatefulWidget {
     this.controller,
     this.position,
     Key? key, this.fileImage,
+    this.displayPickerIcon = true,
+    this.fit = BoxFit.contain,
   }) : super(key: key);
 
   @override
@@ -107,13 +111,12 @@ class _DocumentPickerState extends State<DocumentPicker> {
   Widget build(BuildContext context) {
     final Widget choosePhotoPrompt =
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      const Icon(CupertinoIcons.cloud_upload, size: 45, color: Colors.white),
+      Icon(CupertinoIcons.cloud_upload, size: 45, color: widget.displayPickerIcon ? Colors.white : Colors.transparent),
       const SizedBox(height: 5),
       Text(
         widget.actionWord,
         textAlign: TextAlign.center,
-        style: AppTextStyle.bodyText2
-            .copyWith(fontWeight: FontWeight.w600, color: Colors.white),
+        style: AppTextStyle.bodyText2.copyWith(fontWeight: FontWeight.w500, color: widget.displayPickerIcon ? Colors.white : Colors.transparent),
       )
     ]);
     return GestureDetector(
@@ -130,30 +133,32 @@ class _DocumentPickerState extends State<DocumentPicker> {
             ? Text(
                 _path.isEmpty ? widget.actionWord : _path.split("/").last,
                 textAlign: TextAlign.center,
-                style: AppTextStyle.bodyText2,
+                style: AppTextStyle.bodyText2
               )
             : _path.isEmpty && widget.networkImage != null
-                ? CachedNetworkImage(
-                    fit: BoxFit.contain,
-                    imageUrl: widget.networkImage ?? "",
-                    placeholder: (context, url) => Container(
-                      color: AppColors.grey,
-                    ),
-                    height: widget.renderHeight,
-                    width: widget.renderWidth,
-                    errorWidget: (context, url, error) => Image.asset(
-                      "assets/images/no_image.jpg",
+                ? ClipRRect(borderRadius: BorderRadius.circular(widget.radius),
+                  child: CachedNetworkImage(
+                      fit: widget.fit,
+                      imageUrl: widget.networkImage ?? "",
+                      placeholder: (context, url) => Container(
+                        color: AppColors.grey,
+                      ),
                       height: widget.renderHeight,
-                      fit: BoxFit.contain,
                       width: widget.renderWidth,
+                      errorWidget: (context, url, error) => Image.asset(
+                        "assets/images/no_image.jpg",
+                        height: widget.renderHeight,
+                        fit: widget.fit,
+                        width: widget.renderWidth,
+                      ),
                     ),
-                  ) : _path.isEmpty && widget.networkImage == null
+                ) : _path.isEmpty && widget.networkImage == null
                     ? choosePhotoPrompt
                     : ClipRRect(
                         borderRadius: BorderRadius.circular(widget.radius),
                         child: Image.file(
                           File(widget.controller == null ? _pickedFile!.path : (widget.position == null ? "" : widget.controller!.imagePaths[widget.position!])),
-                          fit: BoxFit.contain,
+                          fit: widget.fit,
                           height: widget.renderHeight,
                           width: widget.renderWidth,
                         ),
