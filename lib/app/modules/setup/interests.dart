@@ -15,6 +15,74 @@ class Interests extends GetView<AuthController>{
 
   @override
   Widget build(BuildContext context) {
+    List<String> interestList = [
+      'Travel',
+      'Food',
+      'Fashion',
+      'Music',
+      'Sports',
+      'Gaming',
+      'Movies',
+      'TV Shows',
+      'Books',
+      'Art',
+      'Photography',
+      'Fitness',
+      'Beauty',
+      'DIY',
+      'Design',
+      'Technology',
+      'Science',
+      'Nature',
+      'Animals',
+      'History',
+      'Politics',
+      'Business',
+      'Finance',
+      'Education',
+      'Religion',
+      'Health',
+      'Parenting',
+      'Relationships',
+      'Entertainment',
+      'News',
+      'Lifestyle',
+      'Other'
+    ];
+    List<String> interestListEmoji = [
+      '🌍',
+      '🍔',
+      '👗',
+      '🎵',
+      '⚽',
+      '🎮',
+      '🎥',
+      '📺',
+      '📚',
+      '🎨',
+      '📷',
+      '🏋️',
+      '💄',
+      '🔨',
+      '🎨',
+      '🖥️',
+      '🔬',
+      '🌳',
+      '🐶',
+      '📜',
+      '🗳️',
+      '💰',
+      '📚',
+      '🙏',
+      '🏥',
+      '👶',
+      '💑',
+      '🎭',
+      '📰',
+      '🛋️',
+      '🤷',
+      '👍'
+    ];
     return  GetBuilder<AuthController>(
       builder: (controller){
         return Scaffold(
@@ -54,310 +122,25 @@ class Interests extends GetView<AuthController>{
               ),
             ],
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: Get.height * 0.05,
-                ),
-                Text(
-                  'Select interest',
-                  style: AppTextStyle.headline4.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: Get.height * 0.05,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      width: Get.width * 0.3,
-                      height: Get.width * 0.3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppColors.background,
-                        border: Border.all(
-                          color: AppColors.grey.withOpacity(0.1),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.grey.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: const Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 1,
-                            left: 1,
-                            child: Checkbox(
-                              value: controller.interests.contains("4"),
-                              onChanged: (value) {
-                                if (value == true) {
-                                  controller.interests.add("4");
-                                } else {
-                                  controller.interests.remove("4");
-                                }
-                                controller.update();
-                              },
-                            ),
-                          ),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                //
-                                Text(
-                                  '⚽️',
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.02,
-                                ),
-                                Text(
-                                  'Sports',
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: Get.width * 0.3,
-                      height: Get.width * 0.3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppColors.background,
-                        border: Border.all(
-                          color: AppColors.grey.withOpacity(0.1),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.grey.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: const Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 1,
-                            left: 1,
-                            child: Checkbox(
-                              value: controller.interests.contains("5"),
-                              onChanged: (value) {
-                                if (value == true) {
-                                  controller.interests.add("5");
-                                } else {
-                                  controller.interests.remove("5");
-                                }
-                                controller.update();
-                              },
-                            ),
-                          ),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                //
-                                Text(
-                                  '🍽',
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 25,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.02,
-                                ),
-                                Text(
-                                  'Food',
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: Get.height * 0.025,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      width: Get.width * 0.3,
-                      height: Get.width * 0.3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppColors.background,
-                        border: Border.all(
-                          color: AppColors.grey.withOpacity(0.1),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.grey.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: const Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 1,
-                            left: 1,
-                            child: Checkbox(
-                              value: controller.interests.contains("2"),
-                              onChanged: (value) {
-                                if (value == true) {
-                                  controller.interests.add("2");
-                                } else {
-                                  controller.interests.remove("2");
-                                }
-                                controller.update();
-                              },
-                            ),
-                          ),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                //
-                                Text(
-                                  '🏔️',
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 25,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.02,
-                                ),
-                                Text(
-                                  'Nature',
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: Get.width * 0.3,
-                      height: Get.width * 0.3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppColors.background,
-                        border: Border.all(
-                          color: AppColors.grey.withOpacity(0.1),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.grey.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: const Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 1,
-                            left: 1,
-                            child: Checkbox(
-                              value: controller.interests.contains("3"),
-                              onChanged: (value) {
-                                if (value == true) {
-                                  controller.interests.add("3");
-                                } else {
-                                  controller.interests.remove("3");
-                                }
-                                controller.update();
-                              },
-                            ),
-                          ),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                //
-                                Text(
-                                  '🐇️',
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 25,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.02,
-                                ),
-                                Text(
-                                  'Animals',
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: Get.height * 0.025,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
+          body: SizedBox(
+            height: Get.height,
+            child: GridView.builder(
+              itemCount: interestList.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              scrollDirection: Axis.vertical,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () {
+                      if (!controller.interests.contains(interestList[index])) {
+                        controller.interests.add(interestList[index]);
+                      } else {
+                        controller.interests.remove(interestList[index]);
+                      }
+                      controller.update();
+                    },
+                    child: Container(
                       width: Get.width * 0.3,
                       height: Get.width * 0.3,
                       decoration: BoxDecoration(
@@ -383,12 +166,12 @@ class Interests extends GetView<AuthController>{
                             top: 1,
                             left: 1,
                             child: Checkbox(
-                              value: controller.interests.contains("0"),
+                              value: controller.interests.contains(interestList[index]),
                               onChanged: (value) {
                                 if (value == true) {
-                                  controller.interests.add("0");
+                                  controller.interests.add(interestList[index]);
                                 } else {
-                                  controller.interests.remove("0");
+                                  controller.interests.remove(interestList[index]);
                                 }
                                 controller.update();
                               },
@@ -401,7 +184,7 @@ class Interests extends GetView<AuthController>{
                               children: [
                                 //
                                 Text(
-                                  '💻',
+                                  interestListEmoji[index],
                                   style: AppTextStyle.headline4.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.normal,
@@ -412,7 +195,7 @@ class Interests extends GetView<AuthController>{
                                   height: Get.height * 0.02,
                                 ),
                                 Text(
-                                  'Technology',
+                                  interestList[index],
                                   style: AppTextStyle.headline4.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.normal,
@@ -425,75 +208,9 @@ class Interests extends GetView<AuthController>{
                         ],
                       ),
                     ),
-                    Container(
-                      width: Get.width * 0.3,
-                      height: Get.width * 0.3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppColors.background,
-                        border: Border.all(
-                          color: AppColors.grey.withOpacity(0.1),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.grey.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: const Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 1,
-                            left: 1,
-                            child: Checkbox(
-                              value: controller.interests.contains("1"),
-                              onChanged: (value) {
-                                if (value == true) {
-                                  controller.interests.add("1");
-                                } else {
-                                  controller.interests.remove("1");
-                                }
-                                controller.update();
-                              },
-                            ),
-                          ),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '📊',
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 23,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.02,
-                                ),
-                                Text(
-                                  'Business &\nfinance',
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-              ],
+                  ),
+                );
+              },
             ),
           ),
         );
