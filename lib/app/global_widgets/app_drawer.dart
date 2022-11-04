@@ -243,6 +243,7 @@ class AppDrawer extends StatelessWidget {
                             leading: const Icon(Icons.settings, color: Colors.black),
                             text: "Settings",
                             onPressed: () {
+                              Get.back();
                               Get.toNamed(Settings.route);
                             },
                           ),

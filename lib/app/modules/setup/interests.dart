@@ -107,10 +107,11 @@ class Interests extends GetView<AuthController>{
                       height: Get.height * 0.04,
                       child: AppButton(title: "Continue", onPressed: () async {
                         //wait 10 seconds
-                        await Future.delayed(const Duration(seconds: 2), () {
+                        //Get.toNamed(Home.route);
+                        await controller.getAllUserData();
+                        await Future.delayed(const Duration(seconds: 0), () {
                           Get.offAllNamed(Home.route);
                         });
-                        //Get.toNamed(Home.route);
                       },
                         padding: const EdgeInsets.only(top: 9, bottom: 9),
                       )

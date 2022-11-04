@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:wayagram/app/controllers/home_controller.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/app/modules/home/home.dart';
+import 'package:wayagram/app/modules/settings/inner_pages/notifications.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
@@ -124,58 +125,60 @@ class Settings extends GetView<HomeController>{
                 ),
               ),
               SizedBox(height: Get.height*0.05),
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _TextButton(
-                        text: "Edit Profile",
-                        subtitle: "Update your profile",
-                        onPressed: (){
-                          controller.imagePaths.clear();
-                          Get.toNamed(UpdateProfile.route);
-                        }
-                    ),
-                    SizedBox(height: Get.height*0.02),
-                    _TextButton(
-                        text: "Notifications",
-                        subtitle: "Manage your notifications",
-                        onPressed: (){
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _TextButton(
+                          text: "Edit Profile",
+                          subtitle: "Update your profile",
+                          onPressed: (){
+                            controller.imagePaths.clear();
+                            Get.toNamed(UpdateProfile.route);
+                          }
+                      ),
+                      SizedBox(height: Get.height*0.02),
+                      _TextButton(
+                          text: "Notifications",
+                          subtitle: "Manage your notifications",
+                          onPressed: (){
+                            Get.to(() => const NotificationsSettings());
+                          }
+                      ),
+                      SizedBox(height: Get.height*0.02),
+                      _TextButton(
+                          text: "Security",
+                          subtitle: "Manage your security settings",
+                          onPressed: (){
 
-                        }
-                    ),
-                    SizedBox(height: Get.height*0.02),
-                    _TextButton(
-                        text: "Security",
-                        subtitle: "Manage your security settings",
-                        onPressed: (){
+                          }
+                      ),
+                      SizedBox(height: Get.height*0.02),
+                      _TextButton(
+                          text: "Payment Settings",
+                          subtitle: "Manage your payments settings",
+                          onPressed: (){
 
-                        }
-                    ),
-                    SizedBox(height: Get.height*0.02),
-                    _TextButton(
-                        text: "Payment Settings",
-                        subtitle: "Manage your payments settings",
-                        onPressed: (){
+                          }
+                      ),
+                      SizedBox(height: Get.height*0.02),
+                      _TextButton(
+                          text: "Privacy Settings",
+                          subtitle: "Manage your privacy settings",
+                          onPressed: (){
 
-                        }
-                    ),
-                    SizedBox(height: Get.height*0.02),
-                    _TextButton(
-                        text: "Privacy Settings",
-                        subtitle: "Manage your privacy settings",
-                        onPressed: (){
+                          }
+                      ),
+                      SizedBox(height: Get.height*0.02),
+                      _TextButton(
+                          text: "Login Information",
+                          subtitle: "Location, device, time Of login",
+                          onPressed: (){
 
-                        }
-                    ),
-                    SizedBox(height: Get.height*0.02),
-                    _TextButton(
-                        text: "Login Information",
-                        subtitle: "Location, device, time Of login",
-                        onPressed: (){
-
-                        }
-                    ),
-                  ],
+                          }
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],

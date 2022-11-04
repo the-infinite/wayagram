@@ -215,7 +215,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                           Text(
                                           fullProfile.bio.toString(),
                                           style: TextStyle(
-                                            color: Colors.grey,
+                                            color: Colors.black,
                                             fontSize: Get.width*0.035,
                                             fontWeight: FontWeight.w400,
                                           ),
