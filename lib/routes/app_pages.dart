@@ -10,6 +10,7 @@ import '../app/modules/profile/confirm_pin.dart';
 import '../app/modules/profile/create_pin.dart';
 import '../app/modules/profile/profile.dart';
 import '../app/modules/profile/update_profile.dart';
+import '../app/modules/settings/settings.dart';
 import '../app/modules/setup/interests.dart';
 import '../app/modules/sign_in/sign_in.dart';
 import '../app/modules/verify_otp/verify_otp.dart';
@@ -74,6 +75,12 @@ class AppPages {
     GetPage(
       name: Profile.route,
       page: () => const Profile(),
+      binding: WayagramBinding(),
+    ),
+
+    GetPage(
+      name: Settings.route,
+      page: () => const Settings(),
       binding: WayagramBinding(),
     ),
   ];

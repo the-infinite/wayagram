@@ -16,6 +16,7 @@ import '../data/model/full_user_profile_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/my_pref.dart';
 import '../modules/profile/profile.dart';
+import '../modules/settings/settings.dart';
 import 'app_avatar.dart';
 import 'app_button.dart';
 
@@ -242,7 +243,7 @@ class AppDrawer extends StatelessWidget {
                             leading: const Icon(Icons.settings, color: Colors.black),
                             text: "Settings",
                             onPressed: () {
-
+                              Get.toNamed(Settings.route);
                             },
                           ),
 

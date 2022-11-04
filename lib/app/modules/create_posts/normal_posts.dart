@@ -87,7 +87,7 @@ class CreatePosts extends StatelessWidget {
                         if(response!.isSuccessful){
                           postID = "";
                           await controller.getPosts;
-                          controller.update(['profile_page','home']);
+                          controller.update(['profile_page','home_page','home']);
                           //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                           Get.back();
                         }
@@ -112,7 +112,7 @@ class CreatePosts extends StatelessWidget {
                             postID = "";
                             //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                             await controller.getPosts;
-                            controller.update(['profile_page','home']);
+                            controller.update(['profile_page','home_page','home']);
                             //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                             Get.back();
                           }
