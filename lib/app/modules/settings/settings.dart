@@ -84,12 +84,50 @@ class Settings extends GetView<HomeController>{
                 ),
               ),
               SizedBox(height: Get.height*0.05),
-              _TextButton(
-                  text: "Edit Profile",
-                  subtitle: "Update your profile",
-                  onPressed: (){
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _TextButton(
+                        text: "Edit Profile",
+                        subtitle: "Update your profile",
+                        onPressed: (){
 
-                  }
+                        }
+                    ),
+                    SizedBox(height: Get.height*0.02),
+                    _TextButton(
+                        text: "Notifications",
+                        subtitle: "Manage your notifications",
+                        onPressed: (){
+
+                        }
+                    ),
+                    SizedBox(height: Get.height*0.02),
+                    _TextButton(
+                        text: "Security",
+                        subtitle: "Manage your security settings",
+                        onPressed: (){
+
+                        }
+                    ),
+                    SizedBox(height: Get.height*0.02),
+                    _TextButton(
+                        text: "Payment Settings",
+                        subtitle: "Manage your payments settings",
+                        onPressed: (){
+
+                        }
+                    ),
+                    SizedBox(height: Get.height*0.02),
+                    _TextButton(
+                        text: "Privacy Settings",
+                        subtitle: "Manage your privacy settings",
+                        onPressed: (){
+
+                        }
+                    ),
+                  ],
+                ),
               )
             ],
           ),
