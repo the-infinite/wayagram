@@ -240,7 +240,7 @@ class UserRepository {
   }
   Future<ApiResponse> getGroupsCreated() async {
     var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
-    final response = await api.getData('/wayagram-service/main/page/get-all-user-pages?userId=${profile.id}',hasHeader: true);
+    final response = await api.getData('/wayagram-service/main/group/get-all-user-created-groups?pageNumber=1&userId=${profile.id}',hasHeader: true);
     if (response.isSuccessful) {
       var newData = GroupModelEntity.getService(response.data);
       if(MyPref.groupsCreated.val.isNotEmpty){
@@ -258,7 +258,7 @@ class UserRepository {
   }
   Future<ApiResponse> getGroupsFollowed() async {
     var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
-    final response = await api.getData('/wayagram-service/main/page/get-all-pages-a-user-follows?userId=${profile.id}&pageNumber=1',hasHeader: true);
+    final response = await api.getData('/wayagram-service/main/group/get-user-groups?pageNumber=1&userId=${profile.id}',hasHeader: true);
     if (response.isSuccessful) {
       var newData = GroupModelEntity.getService(response.data);
       if(MyPref.groupsFollowed.val.isNotEmpty){

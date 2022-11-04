@@ -128,7 +128,7 @@ class GroupsAndPages extends GetView<HomeController>{
                 thickness: 0.3,
               ),
               SizedBox(
-                height: Get.height * 0.7,
+                height: Get.height * 0.8,
                 child: PageView(
                   controller: pageController,
                   onPageChanged: (index) {
@@ -204,14 +204,27 @@ class GroupsAndPages extends GetView<HomeController>{
                       child: Column(
                         children: [
                           FutureBuilder<ApiResponse>(
-                              future: controller.getPagesCreated,
+                              future: controller.getPagesFollowed,
                               builder: (context, snapshot) {
                                 var savedPosts = MyPref.pagesCreated.val;
                                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                   final posts = snapshot.data!.data as List<GroupModelEntity>;
-                                  return GroupView(posts: posts,isGroup: false,isJoined: true);
+                                  List<GroupModelEntity> pages = [];
+                                  for (var element in posts) {
+                                    //print(element.userId == fullProfile.userId);
+                                    if(element.userId == fullProfile.userId){
+                                      pages.add(element);
+                                    }
+                                  }
+                                  return GroupView(posts: pages,isGroup: false,isJoined: true);
                                 } else if(savedPosts.isNotEmpty){
                                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
+                                  List<GroupModelEntity> pages = [];
+                                  for (var element in posts) {
+                                    if(element.userId == fullProfile.userId){
+                                      pages.add(element);
+                                    }
+                                  }
                                   return GroupView(posts: posts,isGroup: false,isJoined: true);
                                 }else{
                                   if(snapshot.connectionState == ConnectionState.done){
