@@ -35,7 +35,7 @@ class AppAvatar extends StatelessWidget {
                   errorWidget: (context, url, error) {
                     return const Icon(
                       IconlyLight.profile,
-                      color: Colors.white,
+                      color: Colors.black,
                       size: 25,
                     );
                   },

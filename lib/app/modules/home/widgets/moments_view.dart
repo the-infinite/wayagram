@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -121,11 +122,21 @@ class _MomentsViewState extends State<MomentsView> {
                                 if (loadingProgress == null) return child;
                                 return Container(
                                   color: Colors.grey[300],
+                                  child: const Icon(
+                                    IconlyLight.profile,
+                                    color: Colors.black,
+                                    size: 25,
+                                  ),
                                 );
                               },
                               errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                                 return Container(
                                   color: Colors.grey[300],
+                                  child: const Icon(
+                                    IconlyLight.profile,
+                                    color: Colors.black,
+                                    size: 25,
+                                  ),
                                 );
                               },
                             ),

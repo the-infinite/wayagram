@@ -14,6 +14,7 @@ import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_avatar.dart';
 import '../profile/profile.dart';
+import '../profile/update_profile.dart';
 
 class Settings extends GetView<HomeController>{
   const Settings({Key? key}) : super(key: key);
@@ -23,6 +24,7 @@ class Settings extends GetView<HomeController>{
   @override
   Widget build(BuildContext context) {
     return  GetBuilder<HomeController>(
+      id: 'settings',
       builder: (controller){
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
@@ -83,6 +85,44 @@ class Settings extends GetView<HomeController>{
                   fontWeight: FontWeight.w400,
                 ),
               ),
+              const SizedBox(height: 10),
+              Text(
+                "Your Referral Code:",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: Get.width*0.035,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(
+                width: Get.width*0.5,
+                child: AppButton(
+                  title: controller.logInDetails.user!.referenceCode.toString(),
+                  onPressed: () {
+
+                  },
+                  borderRadius: 10,
+                  fontColor: Colors.blue,
+                  bckgrndColor: AppColors.background,
+                  border: Border.all(color: AppColors.background, width: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: Get.width*0.4,
+                child: AppButton(
+                  title: 'Wallet Balance',
+                  onPressed: () {
+
+                  },
+                  borderRadius: 10,
+                  fontColor: Colors.white,
+                  bckgrndColor: AppColors.primary,
+                  border: Border.all(color: AppColors.primary, width: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                ),
+              ),
               SizedBox(height: Get.height*0.05),
               SingleChildScrollView(
                 child: Column(
@@ -91,7 +131,8 @@ class Settings extends GetView<HomeController>{
                         text: "Edit Profile",
                         subtitle: "Update your profile",
                         onPressed: (){
-
+                          controller.imagePaths.clear();
+                          Get.toNamed(UpdateProfile.route);
                         }
                     ),
                     SizedBox(height: Get.height*0.02),
@@ -122,6 +163,14 @@ class Settings extends GetView<HomeController>{
                     _TextButton(
                         text: "Privacy Settings",
                         subtitle: "Manage your privacy settings",
+                        onPressed: (){
+
+                        }
+                    ),
+                    SizedBox(height: Get.height*0.02),
+                    _TextButton(
+                        text: "Login Information",
+                        subtitle: "Location, device, time Of login",
                         onPressed: (){
 
                         }

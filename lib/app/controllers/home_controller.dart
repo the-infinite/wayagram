@@ -128,7 +128,7 @@ class HomeController extends GetxController {
         }
       }
     );
-    update(['profile_page','home']);
+    update(['profile_page','home','settings']);
     return response;
   }
 
