@@ -87,14 +87,16 @@ class CreatePosts extends StatelessWidget {
                         if(response!.isSuccessful){
                           postID = "";
                           await controller.getPosts;
-                          controller.update(['home']);
+                          controller.update(['profile_page','home']);
                           //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                           Get.back();
                         }
                       }else{
                         response = await controller.postData(formData, "/wayagram-service/all-posts/create");
                         if(response.isSuccessful){
-                          images.removeAt(0);
+                          if(images.isNotEmpty){
+                            images.removeAt(0);
+                          }
                           postID = response.data['id'] as String;
                           for (var element in images) {
                             body['post_id'] = postID;
@@ -110,7 +112,7 @@ class CreatePosts extends StatelessWidget {
                             postID = "";
                             //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                             await controller.getPosts;
-                            controller.update(['home_tab']);
+                            controller.update(['profile_page','home']);
                             //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                             Get.back();
                           }

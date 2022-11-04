@@ -134,11 +134,13 @@ class HomeController extends GetxController {
 
   Future<ApiResponse> postData(dynamic body,String url) async {
     final response = await userRepo.postData(url, body);
+    await userRepo.getUserProfile(profile.userId.toString());
     return response;
   }
 
   Future<ApiResponse> putData(dynamic body,String url) async {
     final response = await userRepo.putData(url, body);
+    await userRepo.getUserProfile(profile.userId.toString());
     return response;
   }
 
