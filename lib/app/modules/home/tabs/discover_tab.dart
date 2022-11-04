@@ -87,12 +87,12 @@ class DiscoverTab extends StatelessWidget {
                 var savedPosts = MyPref.suggestedPages.val;
                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                   final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
-                  return GroupView(posts: posts);
+                  return GroupView(posts: posts,isGroup: false,);
                 } else if(savedPosts.isNotEmpty){
                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
-                  return GroupView(posts: posts);
+                  return GroupView(posts: posts,isGroup: false,);
                 }else{
-                  return const GroupView(isLoading: true);
+                  return const GroupView(isLoading: true,isGroup: false,);
                 }
               }),
           FutureBuilder<ApiResponse>(

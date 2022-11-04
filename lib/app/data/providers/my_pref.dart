@@ -15,7 +15,11 @@ class MyPref  {
   static final moments = ReadWriteValue('wayagram_moments', '', _box);
   static final groups = ReadWriteValue('wayagram_groups', '', _box);
   static final suggestedGroups = ReadWriteValue('wayagram_suggested_groups', '', _box);
+  static final groupsCreated = ReadWriteValue('wayagram_groups_created', '', _box);
+  static final groupsFollowed = ReadWriteValue('wayagram_groups_followed', '', _box);
   static final suggestedPages = ReadWriteValue('wayagram_suggested_pages', '', _box);
+  static final pagesCreated = ReadWriteValue('wayagram_pages_created', '', _box);
+  static final pagesFollowed = ReadWriteValue('wayagram_pages_followed', '', _box);
   static final eventsToAttend = ReadWriteValue('wayagram_events_to_attend', '', _box);
   static final allProducts = ReadWriteValue('wayagram_all_products', '', _box);
   static final myProducts = ReadWriteValue('wayagram_my_products', '', _box);

@@ -15,6 +15,7 @@ import '../data/model/friends_model_entity.dart';
 import '../data/model/full_user_profile_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/my_pref.dart';
+import '../modules/groups_and_pages/groups_and_pages.dart';
 import '../modules/profile/profile.dart';
 import '../modules/settings/settings.dart';
 import 'app_avatar.dart';
@@ -187,7 +188,8 @@ class AppDrawer extends StatelessWidget {
                             leading: const Icon(Icons.people, color: Colors.black),
                             text: "Groups & Pages",
                             onPressed: () {
-
+                              Get.back();
+                              Get.toNamed(GroupsAndPages.route);
                             },
                           ),
 

@@ -64,136 +64,146 @@ class PrivacySettings extends StatelessWidget {
                   systemNavigationBarIconBrightness: Brightness.dark
               ),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Divider(
-                  color: Colors.grey,
-                  thickness: 0.3,
-                ),
-                ToggleSwitch(
-                  minWidth: Get.width * 0.5,
-                  initialLabelIndex: 0,
-                  totalSwitches: 2,
-                  inactiveBgColor: AppColors.background,
-                  activeBgColor: const [AppColors.background, AppColors.background],
-                  activeBorders: [
-                    //Bottom Border
-                    Border.all(
-                      color: AppColors.background,
-                      width: 3.0,
-                    ),
-                    Border.all(
-                      color: AppColors.background,
-                      width: 3.0,
-                    ),
-                  ],
-                  radiusStyle: true,
-                  cornerRadius: 10.0,
-                  labels: ['Muted Users(${mutedTextController.text})', 'Blocked Users(${blockedTextController.text})'],
-                  customTextStyles: [
-                    AppTextStyle.bodyText1.copyWith(
-                      color: page == 0 ? AppColors.primary : Colors.grey,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                    AppTextStyle.bodyText1.copyWith(
-                      color: page == 1 ? AppColors.primary : Colors.grey,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ],
-                  onToggle: (index) {
-                    page = index!;
-                    pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                  },
-                ),
-                const Divider(
-                  color: Colors.grey,
-                  thickness: 0.3,
-                ),
-                SizedBox(
-                  height: Get.height * 0.7,
-                  child: PageView(
-                    controller: pageController,
-                    onPageChanged: (index) {
-                      page = index;
-                      controller.update();
-                    },
-                    children: [
-                      FutureBuilder<ApiResponse>(
-                          future: controller.getMuted,
-                          builder: (context, snapshot) {
-                            var savedPosts = MyPref.mutedAccounts.val;
-                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                              final posts = snapshot.data!.data as List<BlockedAccountsEntity>;
-                              var names = posts.map((e) => e.displayName.toString()).toList();
-                              var username = posts.map((e) => e.username.toString()).toList();
-                              var profile = posts.map((e) => e.avatar.toString()).toList();
-                              mutedTextController.text = posts.length.toString();
-                              return PersonView(
-                                name: names,
-                                username: username,
-                                profilePic: profile,
-                                length: posts.length,
-                              );
-                            } else if(savedPosts.isNotEmpty){
-                              var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
-                              var names = posts.map((e) => e.displayName.toString()).toList();
-                              var username = posts.map((e) => e.username.toString()).toList();
-                              var profile = posts.map((e) => e.avatar.toString()).toList();
-                              mutedTextController.text = posts.length.toString();
-                              return PersonView(
-                                name: names,
-                                username: username,
-                                profilePic: profile,
-                                length: posts.length,
-                              );
-                            }else{
-                              return const NotificationView(isLoading: true);
-                            }
-                          }),
-                      FutureBuilder<ApiResponse>(
-                          future: controller.getBlocked,
-                          builder: (context, snapshot) {
-                            var savedPosts = MyPref.restrictedAccounts.val;
-                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                              final posts = snapshot.data!.data as List<BlockedAccountsEntity>;
-                              var names = posts.map((e) => e.displayName.toString()).toList();
-                              var username = posts.map((e) => e.username.toString()).toList();
-                              var profile = posts.map((e) => e.avatar.toString()).toList();
-                              blockedTextController.text = posts.length.toString();
-                              //controller.update();
-                              return PersonView(
-                                name: names,
-                                username: username,
-                                profilePic: profile,
-                                length: posts.length,
-                              );
-                            } else if(savedPosts.isNotEmpty){
-                              var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
-                              var names = posts.map((e) => e.displayName.toString()).toList();
-                              var username = posts.map((e) => e.username.toString()).toList();
-                              var profile = posts.map((e) => e.avatar.toString()).toList();
-                              blockedTextController.text = posts.length.toString();
-
-                              return PersonView(
-                                name: names,
-                                username: username,
-                                profilePic: profile,
-                                length: posts.length,
-                              );
-                            }else{
-                              return const NotificationView(isLoading: true);
-                            }
-                          }),
-                    ],
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Divider(
+                color: Colors.grey,
+                thickness: 0.3,
+              ),
+              ToggleSwitch(
+                minWidth: Get.width * 0.5,
+                initialLabelIndex: 0,
+                totalSwitches: 2,
+                inactiveBgColor: AppColors.background,
+                activeBgColor: const [AppColors.background, AppColors.background],
+                activeBorders: [
+                  //Bottom Border
+                  Border.all(
+                    color: AppColors.background,
+                    width: 3.0,
                   ),
-                )
-              ],
-            ),
+                  Border.all(
+                    color: AppColors.background,
+                    width: 3.0,
+                  ),
+                ],
+                radiusStyle: true,
+                cornerRadius: 10.0,
+                labels: ['Muted Users(${mutedTextController.text})', 'Blocked Users(${blockedTextController.text})'],
+                customTextStyles: [
+                  AppTextStyle.bodyText1.copyWith(
+                    color: page == 0 ? AppColors.primary : Colors.grey,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                  AppTextStyle.bodyText1.copyWith(
+                    color: page == 1 ? AppColors.primary : Colors.grey,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ],
+                onToggle: (index) {
+                  page = index!;
+                  pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                },
+              ),
+              const Divider(
+                color: Colors.grey,
+                thickness: 0.3,
+              ),
+              SizedBox(
+                height: Get.height * 0.7,
+                child: PageView(
+                  controller: pageController,
+                  onPageChanged: (index) {
+                    page = index;
+                    controller.update();
+                  },
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          FutureBuilder<ApiResponse>(
+                              future: controller.getMuted,
+                              builder: (context, snapshot) {
+                                var savedPosts = MyPref.mutedAccounts.val;
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  final posts = snapshot.data!.data as List<BlockedAccountsEntity>;
+                                  var names = posts.map((e) => e.displayName.toString()).toList();
+                                  var username = posts.map((e) => e.username.toString()).toList();
+                                  var profile = posts.map((e) => e.avatar.toString()).toList();
+                                  mutedTextController.text = posts.length.toString();
+                                  return PersonView(
+                                    name: names,
+                                    username: username,
+                                    profilePic: profile,
+                                    length: posts.length,
+                                  );
+                                } else if(savedPosts.isNotEmpty){
+                                  var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
+                                  var names = posts.map((e) => e.displayName.toString()).toList();
+                                  var username = posts.map((e) => e.username.toString()).toList();
+                                  var profile = posts.map((e) => e.avatar.toString()).toList();
+                                  mutedTextController.text = posts.length.toString();
+                                  return PersonView(
+                                    name: names,
+                                    username: username,
+                                    profilePic: profile,
+                                    length: posts.length,
+                                  );
+                                }else{
+                                  return const NotificationView(isLoading: true);
+                                }
+                              }),
+                        ],
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          FutureBuilder<ApiResponse>(
+                              future: controller.getBlocked,
+                              builder: (context, snapshot) {
+                                var savedPosts = MyPref.restrictedAccounts.val;
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  final posts = snapshot.data!.data as List<BlockedAccountsEntity>;
+                                  var names = posts.map((e) => e.displayName.toString()).toList();
+                                  var username = posts.map((e) => e.username.toString()).toList();
+                                  var profile = posts.map((e) => e.avatar.toString()).toList();
+                                  blockedTextController.text = posts.length.toString();
+                                  //controller.update();
+                                  return PersonView(
+                                    name: names,
+                                    username: username,
+                                    profilePic: profile,
+                                    length: posts.length,
+                                  );
+                                } else if(savedPosts.isNotEmpty){
+                                  var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
+                                  var names = posts.map((e) => e.displayName.toString()).toList();
+                                  var username = posts.map((e) => e.username.toString()).toList();
+                                  var profile = posts.map((e) => e.avatar.toString()).toList();
+                                  blockedTextController.text = posts.length.toString();
+
+                                  return PersonView(
+                                    name: names,
+                                    username: username,
+                                    profilePic: profile,
+                                    length: posts.length,
+                                  );
+                                }else{
+                                  return const NotificationView(isLoading: true);
+                                }
+                              }),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
         );
       }),

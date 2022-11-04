@@ -26,9 +26,13 @@ class GroupView extends StatelessWidget{
     Key? key,
     this.isLoading = false,
     this.posts,
+    this.isGroup = true,
+    this.isJoined = false,
   }) : super(key: key);
 
   final bool isLoading;
+  final bool isGroup;
+  final bool isJoined;
   final List<GroupModelEntity>? posts;
   @override
   Widget build(BuildContext context) {
@@ -99,27 +103,28 @@ class GroupView extends StatelessWidget{
                   ),
                 ],
               ),
-              Expanded(
-                child: Wrap(
-                  alignment: WrapAlignment.end,
-                  children: [
-                    SizedBox(
-                      width: Get.width*0.2,
-                      child: AppButton(
-                        title: 'Join',
-                        onPressed: () async {
+              if(!isJoined)
+                Expanded(
+                  child: Wrap(
+                    alignment: WrapAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: Get.width*0.2,
+                        child: AppButton(
+                          title: isGroup ? 'Join' : 'Follow',
+                          onPressed: () async {
 
-                        },
-                        borderRadius: 5,
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        bckgrndColor: AppColors.background,
-                        fontColor: AppColors.primary,
-                        border: Border.all(color: AppColors.primary),
+                          },
+                          borderRadius: 5,
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          bckgrndColor: AppColors.background,
+                          fontColor: AppColors.primary,
+                          border: Border.all(color: AppColors.primary),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
             ],
           ),
         );

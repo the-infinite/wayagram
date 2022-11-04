@@ -238,6 +238,43 @@ class UserRepository {
     }
     return response;
   }
+  Future<ApiResponse> getGroupsCreated() async {
+    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    final response = await api.getData('/wayagram-service/main/page/get-all-user-pages?userId=${profile.id}',hasHeader: true);
+    if (response.isSuccessful) {
+      var newData = GroupModelEntity.getService(response.data);
+      if(MyPref.groupsCreated.val.isNotEmpty){
+        var oldData = GroupModelEntity.getService(jsonDecode(MyPref.groupsCreated.val));
+        for (var element in oldData) {
+          if(!newData.contains(element)){
+            newData.add(element);
+          }
+        }
+      }
+      response.data = newData;
+      MyPref.groupsCreated.val = jsonEncode(response.data);
+    }
+    return response;
+  }
+  Future<ApiResponse> getGroupsFollowed() async {
+    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    final response = await api.getData('/wayagram-service/main/page/get-all-pages-a-user-follows?userId=${profile.id}&pageNumber=1',hasHeader: true);
+    if (response.isSuccessful) {
+      var newData = GroupModelEntity.getService(response.data);
+      if(MyPref.groupsFollowed.val.isNotEmpty){
+        var oldData = GroupModelEntity.getService(jsonDecode(MyPref.groupsFollowed.val));
+        for (var element in oldData) {
+          if(!newData.contains(element)){
+            newData.add(element);
+          }
+        }
+      }
+      response.data = newData;
+      MyPref.groupsFollowed.val = jsonEncode(response.data);
+    }
+    return response;
+  }
+
   Future<ApiResponse> getSuggestedPages() async {
     var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
     final response = await api.getData('/wayagram-service/main/page/get-page-suggestion?userId=${profile.id}',hasHeader: true);
@@ -256,6 +293,43 @@ class UserRepository {
     }
     return response;
   }
+  Future<ApiResponse> getPagesCreated() async {
+    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    final response = await api.getData('/wayagram-service/main/page/get-all-user-pages?userId=${profile.id}',hasHeader: true);
+    if (response.isSuccessful) {
+      var newData = GroupModelEntity.getService(response.data);
+      if(MyPref.pagesCreated.val.isNotEmpty){
+        var oldData = GroupModelEntity.getService(jsonDecode(MyPref.pagesCreated.val));
+        for (var element in oldData) {
+          if(!newData.contains(element)){
+            newData.add(element);
+          }
+        }
+      }
+      response.data = newData;
+      MyPref.pagesCreated.val = jsonEncode(response.data);
+    }
+    return response;
+  }
+  Future<ApiResponse> getPagesFollowed() async {
+    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    final response = await api.getData('/wayagram-service/main/page/get-all-pages-a-user-follows?userId=${profile.id}&pageNumber=1',hasHeader: true);
+    if (response.isSuccessful) {
+      var newData = GroupModelEntity.getService(response.data);
+      if(MyPref.pagesFollowed.val.isNotEmpty){
+        var oldData = GroupModelEntity.getService(jsonDecode(MyPref.pagesFollowed.val));
+        for (var element in oldData) {
+          if(!newData.contains(element)){
+            newData.add(element);
+          }
+        }
+      }
+      response.data = newData;
+      MyPref.pagesFollowed.val = jsonEncode(response.data);
+    }
+    return response;
+  }
+
   Future<ApiResponse> getEventsToAttend() async {
     //var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
     final response = await api.getData('/wayagram-service/all-posts/get-all-events?page=1&limit=40',hasHeader: true);

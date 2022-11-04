@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:wayagram/app/modules/groups_and_pages/groups_and_pages.dart';
 import 'package:wayagram/app/modules/home/home.dart';
 import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 
@@ -75,6 +76,12 @@ class AppPages {
     GetPage(
       name: Profile.route,
       page: () => const Profile(),
+      binding: WayagramBinding(),
+    ),
+
+    GetPage(
+      name: GroupsAndPages.route,
+      page: () => const GroupsAndPages(),
       binding: WayagramBinding(),
     ),
 
