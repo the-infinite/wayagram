@@ -167,63 +167,71 @@ class _SwitchButtonState extends State<_SwitchButton> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: Get.width*0.025,right: Get.width*0.025),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
-          border: Border.all(color: Colors.white, width: 1),
-          color: Colors.white,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: Get.width*0.8,
-              child: Padding(
-                padding: EdgeInsets.only(left: Get.width*0.025),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(
-                        height: Get.height*0.01,
-                      ),
-                      Text(
-                        widget.text,
-                        maxLines: 1,
-                        overflow: TextOverflow.clip,
-                        style: AppTextStyle.subtitle1.copyWith(color: Colors.black,fontSize: Get.width*0.038,fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        height: Get.height*0.01,
-                      ),
-                    ]
+      child: InkWell(
+        onTap: (){
+          setState(() {
+            value = !value;
+          });
+          widget.onChanged!(value);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+            border: Border.all(color: Colors.white, width: 1),
+            color: Colors.white,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: Get.width*0.8,
+                child: Padding(
+                  padding: EdgeInsets.only(left: Get.width*0.025),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                        Text(
+                          widget.text,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: AppTextStyle.subtitle1.copyWith(color: value ? Colors.black : Colors.black.withOpacity(.5),fontSize: Get.width*0.038,fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                      ]
+                  ),
                 ),
               ),
-            ),
 
-            Switch(
-              value: value,
-              onChanged: (v) {
-                 setState(() {
-                   value = v;
-                 });
-                if(widget.onChanged != null){
-                  widget.onChanged!(v);
-                }
-              },
-              activeTrackColor: AppColors.primary.withOpacity(0.5),
-              activeColor: AppColors.primary,
-              inactiveTrackColor: Colors.grey.withOpacity(0.5),
-            ),
-          ],
+              Switch(
+                value: value,
+                onChanged: (v) {
+                   setState(() {
+                     value = v;
+                   });
+                  if(widget.onChanged != null){
+                    widget.onChanged!(v);
+                  }
+                },
+                activeTrackColor: AppColors.primary.withOpacity(0.5),
+                activeColor: AppColors.primary,
+                inactiveTrackColor: Colors.grey.withOpacity(0.5),
+              ),
+            ],
+          ),
         ),
       ),
     );

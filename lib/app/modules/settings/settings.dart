@@ -7,6 +7,9 @@ import 'package:wayagram/app/controllers/home_controller.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/app/modules/home/home.dart';
 import 'package:wayagram/app/modules/settings/inner_pages/notifications.dart';
+import 'package:wayagram/app/modules/settings/inner_pages/payment_settings.dart';
+import 'package:wayagram/app/modules/settings/inner_pages/privacy.dart';
+import 'package:wayagram/app/modules/settings/inner_pages/security.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
@@ -16,6 +19,7 @@ import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_avatar.dart';
 import '../profile/profile.dart';
 import '../profile/update_profile.dart';
+import 'inner_pages/login_information.dart';
 
 class Settings extends GetView<HomeController>{
   const Settings({Key? key}) : super(key: key);
@@ -150,7 +154,7 @@ class Settings extends GetView<HomeController>{
                           text: "Security",
                           subtitle: "Manage your security settings",
                           onPressed: (){
-
+                            Get.to(() => const SecuritySettings());
                           }
                       ),
                       SizedBox(height: Get.height*0.02),
@@ -158,7 +162,7 @@ class Settings extends GetView<HomeController>{
                           text: "Payment Settings",
                           subtitle: "Manage your payments settings",
                           onPressed: (){
-
+                            Get.to(() => const PaymentSettings());
                           }
                       ),
                       SizedBox(height: Get.height*0.02),
@@ -166,7 +170,7 @@ class Settings extends GetView<HomeController>{
                           text: "Privacy Settings",
                           subtitle: "Manage your privacy settings",
                           onPressed: (){
-
+                            Get.to(() => const PrivacySettings());
                           }
                       ),
                       SizedBox(height: Get.height*0.02),
@@ -174,7 +178,7 @@ class Settings extends GetView<HomeController>{
                           text: "Login Information",
                           subtitle: "Location, device, time Of login",
                           onPressed: (){
-
+                            Get.to(() => const LoginInformation());
                           }
                       ),
                     ],
