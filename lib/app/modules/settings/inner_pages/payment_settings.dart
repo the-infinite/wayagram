@@ -14,10 +14,12 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
+import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../data/model/posts_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
+import '../../../global_widgets/app_avatar.dart';
 import '../../../global_widgets/app_button.dart';
 import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../../global_widgets/person_view.dart';
@@ -38,6 +40,7 @@ class PaymentSettings extends StatelessWidget {
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeController>(builder: (controller) {
+        var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
               backgroundColor: AppColors.background,
@@ -60,14 +63,163 @@ class PaymentSettings extends StatelessWidget {
           body: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Center(
+                  child: Container(
+                    width: Get.width*0.2,
+                    height: Get.width*0.2,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: AppAvatar(
+                        imgUrl: (fullProfile.avatar as String?).toString(),
+                      ),
+                      onPressed: () {
+
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "Your Referral Code:",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: Get.width*0.035,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(
+                  width: Get.width*0.5,
+                  child: AppButton(
+                    title: controller.logInDetails.user!.referenceCode.toString(),
+                    onPressed: () {
+
+                    },
+                    borderRadius: 10,
+                    fontColor: Colors.blue,
+                    bckgrndColor: AppColors.background,
+                    border: Border.all(color: AppColors.background, width: 1),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _TextButton(
+                    text: "Dispute Resolution",
+                    subtitle: "View your disputes, file a compliant",
+                    onPressed: (){
+
+                    }
+                ),
                 SizedBox(height: Get.height*0.02),
+                _TextButton(
+                    text: "Manage Card",
+                    subtitle: "View and manage your cards",
+                    onPressed: (){
+
+                    }
+                ),
+                SizedBox(height: Get.height*0.02),
+                _TextButton(
+                    text: "Manage Banks",
+                    subtitle: "View and manage your bank accounts",
+                    onPressed: (){
+
+                    }
+                ),
+                SizedBox(height: Get.height*0.02),
+                _TextButton(
+                    text: "Referrals",
+                    subtitle: "View your referrals and bonuses",
+                    onPressed: (){
+
+                    }
+                ),
               ],
             ),
           ),
         );
       }),
+    );
+  }
+}
+
+class _TextButton extends StatelessWidget {
+  final String text;
+  final String subtitle;
+  final Function() onPressed;
+  const _TextButton({required this.text, required this.onPressed, required this.subtitle});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Padding(
+        padding: EdgeInsets.only(left: Get.width*0.025,right: Get.width*0.025),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+            border: Border.all(color: Colors.white, width: 1),
+            color: Colors.white,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: Get.width*0.8,
+                child: Padding(
+                  padding: EdgeInsets.only(left: Get.width*0.025),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                        Text(
+                          text,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: AppTextStyle.subtitle1.copyWith(color: Colors.black,fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                        Text(
+                          subtitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: AppTextStyle.subtitle1.copyWith(color: Colors.black),
+                        ),
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                      ]
+                  ),
+                ),
+              ),
+
+              IconButton(
+                  onPressed: onPressed,
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: 15,)
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

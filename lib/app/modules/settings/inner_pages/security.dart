@@ -63,11 +63,110 @@ class SecuritySettings extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: Get.height*0.02),
+                _TextButton(
+                    text: "Change Password",
+                    subtitle: "Change your password",
+                    onPressed: (){
+
+                    }
+                ),
+                SizedBox(height: Get.height*0.02),
+                _TextButton(
+                    text: "Reset PIN",
+                    subtitle: "Reset your transaction PIN",
+                    onPressed: (){
+
+                    }
+                ),
+                SizedBox(height: Get.height*0.02),
+                _TextButton(
+                    text: "Delete Account",
+                    subtitle: "Delete your account from Wayagram",
+                    onPressed: (){
+
+                    }
+                ),
               ],
             ),
           ),
         );
       }),
+    );
+  }
+}
+
+class _TextButton extends StatelessWidget {
+  final String text;
+  final String subtitle;
+  final Function() onPressed;
+  const _TextButton({required this.text, required this.onPressed, required this.subtitle});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Padding(
+        padding: EdgeInsets.only(left: Get.width*0.025,right: Get.width*0.025),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+            border: Border.all(color: Colors.white, width: 1),
+            color: Colors.white,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: Get.width*0.8,
+                child: Padding(
+                  padding: EdgeInsets.only(left: Get.width*0.025),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                        Text(
+                          text,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: AppTextStyle.subtitle1.copyWith(color: Colors.black,fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                        Text(
+                          subtitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: AppTextStyle.subtitle1.copyWith(color: Colors.black),
+                        ),
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                      ]
+                  ),
+                ),
+              ),
+
+              IconButton(
+                  onPressed: onPressed,
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: 15,)
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
