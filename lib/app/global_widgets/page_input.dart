@@ -26,6 +26,7 @@ class PageInput extends StatelessWidget {
     this.onDropdownChanged,
     this.onChanged,
     this.hintColor = const Color(0xFFC4C4C4),
+    this.contentPadding = const EdgeInsets.fromLTRB(15, 10, 19, 10)
   }) : super(key: key);
 
   final String hint;
@@ -44,6 +45,7 @@ class PageInput extends StatelessWidget {
   final Function(dynamic)? onDropdownChanged;
   final Function(String)? onChanged;
   final Color? hintColor;
+  final EdgeInsetsGeometry? contentPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +126,7 @@ class PageInput extends StatelessWidget {
                   onChanged: onChanged,
                   hintColor: hintColor,
                   maxLength: 11,
+                  contentPadding: contentPadding,
                 ),
               ),
           ],
@@ -141,6 +144,7 @@ class PageInput extends StatelessWidget {
             suffixIcon: suffix,
             onChanged: onChanged,
             hintColor: hintColor,
+            contentPadding: contentPadding,
           )
       ],
     );

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 class Validator {
   static String? phoneNumValidation(String? val) {
-    String spcPattern = '(?=.*?[!@#\$&*_~^+-?><%])';
+    String spcPattern = '(?=.*?[!@#\$&*_~])';
     if (!GetUtils.isPhoneNumber(val!)) {
       return 'Please enter a valid Phone number';
     }else if(val.length >= 12){

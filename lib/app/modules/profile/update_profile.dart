@@ -274,6 +274,7 @@ class UpdateProfile extends GetView<HomeController> {
                             isCompulsory: true,
                             controller: usernameController,
                             prefix: Icon(Icons.alternate_email, color: Colors.black,size: Get.width*0.05),
+                            contentPadding: const EdgeInsets.only(left: 0),
                           ),
                           SizedBox(
                             height: Get.height * 0.025,
