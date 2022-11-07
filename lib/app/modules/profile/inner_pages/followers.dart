@@ -76,7 +76,7 @@ class Followers extends StatelessWidget {
                           name: names,
                           username: username,
                           profilePic: profile,
-                          length: posts.count == null ? 0 : posts.count!,
+                          length: posts.followers == null ? 0 : posts.followers!.length,
                           userIDs: userIds,
                           followers: posts.followers,
                         );
@@ -86,11 +86,12 @@ class Followers extends StatelessWidget {
                         var username = posts.followers!.map((e) => e.username.toString()).toList();
                         var profile = posts.followers!.map((e) => e.avatar.toString()).toList();
                         var userIds = posts.followers!.map((e) => e.userId.toString()).toList();
+
                         return PersonView(
                           name: names,
                           username: username,
                           profilePic: profile,
-                          length: posts.count == null ? 0 : posts.count!,
+                          length: posts.followers == null ? 0 : posts.followers!.length,
                           userIDs: userIds,
                           followers: posts.followers,
                         );

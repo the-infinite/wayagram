@@ -18,6 +18,8 @@ import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/all_posts_entity.dart';
+import '../../data/model/followers_model_entity.dart';
+import '../../data/model/following_model_entity.dart';
 import '../../data/model/friends_model_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/log_in_model_entity.dart';
@@ -99,6 +101,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
       child: GetBuilder<HomeController>(
           id: 'profile_page',
           builder: (controller) {
+            var followers = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));
+            var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
             var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
             var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
@@ -237,7 +241,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                           child: Row(
                                             children: [
                                               Text(
-                                                fullProfile.followers.toString(),
+                                                (followers.followers == null ? 0 : followers.followers!.length).toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: Get.width*0.035,
@@ -264,7 +268,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                           child: Row(
                                             children: [
                                               Text(
-                                                fullProfile.followings.toString(),
+                                                (following.following == null ? 0 : following.following!.length).toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: Get.width*0.035,

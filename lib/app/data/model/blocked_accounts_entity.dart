@@ -47,7 +47,11 @@ class BlockedAccountsEntity {
   Map<String, dynamic> toJson() => $BlockedAccountsEntityToJson(this);
 
 	static List<BlockedAccountsEntity> getService(List<dynamic> val) {
-		return val.map((e) => BlockedAccountsEntity.fromJson(e)).toList();
+		try {
+			return val.map((e) => BlockedAccountsEntity.fromJson(e)).toList();
+		} catch(e) {
+			return [];
+		}
 	}
 
   @override
