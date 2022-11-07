@@ -369,7 +369,7 @@ class CreatePoll extends StatelessWidget {
                                   ),
                                   IconButton(
                                       onPressed: (){
-                                        if(options.length < 4){
+                                        if(options.length < 11){
                                           if(formKey3.currentState!.validate()){
                                             options.add(option);
                                             descriptions.add(description);
@@ -382,7 +382,7 @@ class CreatePoll extends StatelessWidget {
                                             controller.update();
                                           }
                                         } else {
-                                          Get.snackbar('Poll Limit Reached', 'You can only add 4 options',backgroundColor: AppColors.primary);
+                                          Get.snackbar('Poll Limit Reached', 'You can only add 10 options',backgroundColor: AppColors.primary);
                                         }
                                       },
                                       icon: Center(child: Icon(Icons.add_circle_outline, color: AppColors.primary, size: Get.width*0.065)),
