@@ -49,111 +49,126 @@ class AppDrawer extends StatelessWidget {
               body: SafeArea(
                 child: ListView(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: Get.width*0.2,
-                            height: Get.width*0.2,
-                            child: IconButton(
-                              icon: AppAvatar(
-                                imgUrl: (fullProfile.avatar as String?).toString(),
-                                radius: 45,
-                              ),
-                              onPressed: () {
-                                Get.back();
-                                Get.toNamed(Profile.route);
-                              },
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${controller.logInDetails.user!.firstName} ${controller.logInDetails.user!.lastName}",
-                                style: AppTextStyle.headline4.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: Get.width*0.035,
+                    InkWell(
+                      onTap: (){
+                        controller.imagePaths.clear();
+                        Get.back();
+                        Get.toNamed(Profile.route);
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: Get.width*0.2,
+                              height: Get.width*0.2,
+                              child: IconButton(
+                                icon: AppAvatar(
+                                  imgUrl: (fullProfile.avatar as String?).toString(),
+                                  radius: 45,
                                 ),
+                                onPressed: () {
+                                  controller.imagePaths.clear();
+                                  Get.back();
+                                  Get.toNamed(Profile.route);
+                                },
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    friends.followers.toString(),
-                                    style: AppTextStyle.headline4.copyWith(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: Get.width*0.034,
-                                    ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${controller.logInDetails.user!.firstName} ${controller.logInDetails.user!.lastName}",
+                                  style: AppTextStyle.headline4.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: Get.width*0.035,
                                   ),
-                                  Text(
-                                    " followers",
-                                    style: AppTextStyle.headline4.copyWith(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: Get.width*0.034,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      friends.followers.toString(),
+                                      style: AppTextStyle.headline4.copyWith(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: Get.width*0.034,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    friends.following.toString(),
-                                    style: AppTextStyle.headline4.copyWith(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: Get.width*0.034,
+                                    Text(
+                                      " followers",
+                                      style: AppTextStyle.headline4.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: Get.width*0.034,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    " following",
-                                    style: AppTextStyle.headline4.copyWith(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: Get.width*0.034,
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      friends.following.toString(),
+                                      style: AppTextStyle.headline4.copyWith(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: Get.width*0.034,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
+                                    Text(
+                                      " following",
+                                      style: AppTextStyle.headline4.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: Get.width*0.034,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Acct: ",
-                            style: AppTextStyle.headline4.copyWith(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                              fontSize: Get.width*0.04,
+                    InkWell(
+                      onTap: (){
+                        controller.imagePaths.clear();
+                        Get.back();
+                        Get.toNamed(Profile.route);
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Acct: ",
+                              style: AppTextStyle.headline4.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: Get.width*0.04,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "${accounts.accountNumber} | ",
-                            style: AppTextStyle.headline4.copyWith(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.normal,
-                              fontSize: Get.width*0.04,
+                            Text(
+                              "${accounts.accountNumber} | ",
+                              style: AppTextStyle.headline4.copyWith(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.normal,
+                                fontSize: Get.width*0.04,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "${accounts.bankName}",
-                            style: AppTextStyle.headline4.copyWith(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.normal,
-                              fontSize: Get.width*0.04,
+                            Text(
+                              "${accounts.bankName}",
+                              style: AppTextStyle.headline4.copyWith(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.normal,
+                                fontSize: Get.width*0.04,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     //Divider
