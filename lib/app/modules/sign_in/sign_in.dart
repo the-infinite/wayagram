@@ -79,7 +79,12 @@ class SignIn extends GetView<AuthController> {
                       PageInput(
                         hint: '',
                         label: 'Password',
-                        validator: Validator.passwordValidation,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
                         isCompulsory: true,
                         obscureText: true,
                         controller: controller.password,
