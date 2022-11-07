@@ -71,22 +71,28 @@ class Muted extends StatelessWidget {
                         var names = posts.map((e) => e.displayName.toString()).toList();
                         var username = posts.map((e) => e.username.toString()).toList();
                         var profile = posts.map((e) => e.avatar.toString()).toList();
+                        var userIds = posts.map((e) => e.userId.toString()).toList();
                         return PersonView(
                           name: names,
                           username: username,
                           profilePic: profile,
                           length: posts.length,
+                          userIDs: userIds,
+                          blocked: posts,
                         );
                       } else if(savedPosts.isNotEmpty){
                         var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
                         var names = posts.map((e) => e.displayName.toString()).toList();
                         var username = posts.map((e) => e.username.toString()).toList();
                         var profile = posts.map((e) => e.avatar.toString()).toList();
+                        var userIds = posts.map((e) => e.userId.toString()).toList();
                         return PersonView(
                           name: names,
                           username: username,
                           profilePic: profile,
                           length: posts.length,
+                          userIDs: userIds,
+                          blocked: posts,
                         );
                       }else{
                         return const NotificationView(isLoading: true);

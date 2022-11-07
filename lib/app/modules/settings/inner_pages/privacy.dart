@@ -134,24 +134,30 @@ class PrivacySettings extends StatelessWidget {
                                   var names = posts.map((e) => e.displayName.toString()).toList();
                                   var username = posts.map((e) => e.username.toString()).toList();
                                   var profile = posts.map((e) => e.avatar.toString()).toList();
+                                  var userIds = posts.map((e) => e.userId.toString()).toList();
                                   mutedTextController.text = posts.length.toString();
                                   return PersonView(
                                     name: names,
                                     username: username,
                                     profilePic: profile,
                                     length: posts.length,
+                                    userIDs: userIds,
+                                    blocked: posts,
                                   );
                                 } else if(savedPosts.isNotEmpty){
                                   var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
                                   var names = posts.map((e) => e.displayName.toString()).toList();
                                   var username = posts.map((e) => e.username.toString()).toList();
                                   var profile = posts.map((e) => e.avatar.toString()).toList();
+                                  var userIds = posts.map((e) => e.userId.toString()).toList();
                                   mutedTextController.text = posts.length.toString();
                                   return PersonView(
                                     name: names,
                                     username: username,
                                     profilePic: profile,
                                     length: posts.length,
+                                    userIDs: userIds,
+                                    blocked: posts,
                                   );
                                 }else{
                                   return const NotificationView(isLoading: true);
@@ -172,6 +178,7 @@ class PrivacySettings extends StatelessWidget {
                                   var names = posts.map((e) => e.displayName.toString()).toList();
                                   var username = posts.map((e) => e.username.toString()).toList();
                                   var profile = posts.map((e) => e.avatar.toString()).toList();
+                                  var userIds = posts.map((e) => e.userId.toString()).toList();
                                   blockedTextController.text = posts.length.toString();
                                   //controller.update();
                                   return PersonView(
@@ -179,12 +186,15 @@ class PrivacySettings extends StatelessWidget {
                                     username: username,
                                     profilePic: profile,
                                     length: posts.length,
+                                    userIDs: userIds,
+                                    blocked: posts,
                                   );
                                 } else if(savedPosts.isNotEmpty){
                                   var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
                                   var names = posts.map((e) => e.displayName.toString()).toList();
                                   var username = posts.map((e) => e.username.toString()).toList();
                                   var profile = posts.map((e) => e.avatar.toString()).toList();
+                                  var userIds = posts.map((e) => e.userId.toString()).toList();
                                   blockedTextController.text = posts.length.toString();
 
                                   return PersonView(
@@ -192,6 +202,8 @@ class PrivacySettings extends StatelessWidget {
                                     username: username,
                                     profilePic: profile,
                                     length: posts.length,
+                                    userIDs: userIds,
+                                    blocked: posts,
                                   );
                                 }else{
                                   return const NotificationView(isLoading: true);

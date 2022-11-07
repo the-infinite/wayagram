@@ -7,6 +7,10 @@ import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
+import '../data/model/blocked_accounts_entity.dart';
+import '../data/model/followers_model_entity.dart';
+import '../data/model/following_model_entity.dart';
+import '../modules/profile/other_profile.dart';
 import 'app_avatar.dart';
 
 class PersonView extends StatefulWidget {
@@ -17,12 +21,20 @@ class PersonView extends StatefulWidget {
     required this.username,
     required this.profilePic,
     this.length = 0,
+    required this.userIDs,
+    this.blocked,
+    this.following,
+    this.followers,
   }) : super(key: key);
 
   final bool isLoading;
   final List<String> name;
   final List<String> username;
   final List<String> profilePic;
+  final List<String> userIDs;
+  final List<BlockedAccountsEntity>? blocked;
+  final List<FollowingModelFollowing>? following;
+  final List<FollowersModelFollowers>? followers;
   final int length;
 
   @override
@@ -58,49 +70,85 @@ class _PersonViewState extends State<PersonView> {
             ),
           );
         }
-        return Container(
-          margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 50,
-                height: 50,
-                child: IconButton(
-                  icon: AppAvatar(
-                    imgUrl: widget.profilePic.length>= index ?  widget.profilePic[index] : '',
-                    radius: 50,
+        return InkWell(
+          onTap: (){
+            var displayName = widget.name[index];
+            var username = widget.username[index];
+            var profilePic = widget.profilePic[index];
+            var userID = widget.userIDs[index];
+            var postCount = "";
+            var followersCount = "";
+            var followingCount = "";
+            var bio = '';
+            var coverImage = '';
+            if(widget.blocked!=null){
+              bio = widget.blocked![index].bio ?? '';
+              postCount = widget.blocked![index].posts.toString();
+              followersCount = widget.blocked![index].followers.toString();
+              followingCount = widget.blocked![index].followings.toString();
+              coverImage = widget.blocked![index].coverImage ?? '';
+            }else if(widget.following!=null) {
+              bio = widget.following![index].bio ?? '';
+              postCount = widget.following![index].posts.toString();
+              followersCount = widget.following![index].followers.toString();
+              followingCount = widget.following![index].followings.toString();
+              coverImage = widget.following![index].coverImage ?? '';
+            }else if(widget.followers!=null) {
+              bio = widget.followers![index].bio ?? '';
+              postCount = widget.followers![index].posts.toString();
+              followersCount = widget.followers![index].followers.toString();
+              followingCount = widget.followers![index].followings.toString();
+              coverImage = widget.followers![index].coverImage ?? '';
+            }
+            Get.toNamed(
+                OtherProfile.route,
+                arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage]
+            );
+          },
+          child: Container(
+            margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: IconButton(
+                    icon: AppAvatar(
+                      imgUrl: widget.profilePic.length>= index ?  widget.profilePic[index] : '',
+                      radius: 50,
+                    ),
+                    onPressed: null,
                   ),
-                  onPressed: null,
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.name[index],
-                    style: const TextStyle(
-                      color: Colors.black ,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(
-                    width: Get.width*0.8,
-                    child: Text(
-                      "@${widget.username[index]}",
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.name[index],
                       style: const TextStyle(
-                        color: Colors.grey,
+                        color: Colors.black ,
                         fontSize: 16,
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.w500,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(
+                      width: Get.width*0.8,
+                      child: Text(
+                        "@${widget.username[index]}",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },

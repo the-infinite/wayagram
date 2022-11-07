@@ -71,22 +71,28 @@ class Following extends StatelessWidget {
                         var names = posts.following!.map((e) => e.displayName.toString()).toList();
                         var username = posts.following!.map((e) => e.username.toString()).toList();
                         var profile = posts.following!.map((e) => e.avatar.toString()).toList();
+                        var userIds = posts.following!.map((e) => e.userId.toString()).toList();
                         return PersonView(
                           name: names,
                           username: username,
                           profilePic: profile,
                           length: posts.following == null ? 0 : posts.following!.length,
+                          userIDs: userIds,
+                          following: posts.following,
                         );
                       } else if(savedPosts.isNotEmpty){
                         var posts = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
                         var names = posts.following!.map((e) => e.displayName.toString()).toList();
                         var username = posts.following!.map((e) => e.username.toString()).toList();
                         var profile = posts.following!.map((e) => e.avatar.toString()).toList();
+                        var userIds = posts.following!.map((e) => e.userId.toString()).toList();
                         return PersonView(
                           name: names,
                           username: username,
                           profilePic: profile,
                           length: posts.following == null ? 0 : posts.following!.length,
+                          userIDs: userIds,
+                          following: posts.following,
                         );
                       }else{
                         return const NotificationView(isLoading: true);

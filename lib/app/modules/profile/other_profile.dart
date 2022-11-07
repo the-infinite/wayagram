@@ -87,6 +87,16 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     var top = 0.0;
+    var arguments = Get.arguments as List<String>;
+    var userId = arguments[3];
+    var userName = arguments[1];
+    var userImage = arguments[2];
+    var userBio = arguments[4];
+    var userFollowers = arguments[6];
+    var userFollowing = arguments[7];
+    var userPosts = arguments[5];
+    var displayName = arguments[0];
+    var coverImage = arguments[8];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -99,8 +109,6 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
       child: GetBuilder<HomeController>(
           id: 'other_profile_page',
           builder: (controller) {
-            var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
-            var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
             return Scaffold(
@@ -128,7 +136,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           height: Get.height * 0.2,
                                           width: Get.width,
                                           child: Image.network(
-                                            (fullProfile.coverImage as String?).toString(),
+                                            coverImage,
                                             fit: BoxFit.cover,
                                             loadingBuilder: (BuildContext context, Widget child,ImageChunkEvent? loadingProgress) {
                                               if (loadingProgress == null) return child;
@@ -157,7 +165,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                             child: IconButton(
                                               padding: EdgeInsets.zero,
                                               icon: AppAvatar(
-                                                imgUrl: (fullProfile.avatar as String?).toString(),
+                                                imgUrl: userImage,
                                               ),
                                               onPressed: () {
                                                 //Get.toNamed(Profile.route);
@@ -171,10 +179,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           right: 20,
                                           child: SizedBox(
                                             child: AppButton(
-                                              title: 'Edit',
+                                              title: 'Follow',
                                               onPressed: () {
-                                                controller.imagePaths.clear();
-                                                Get.toNamed(UpdateProfile.route);
+
                                               },
                                               borderRadius: 10,
                                               fontColor: AppColors.primary,
@@ -194,7 +201,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '${fullProfile.displayName}',
+                                          displayName,
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: Get.width*0.04,
@@ -203,7 +210,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         ),
                                         const SizedBox(height: 2),
                                         Text(
-                                          "@${fullProfile.username}",
+                                          userName,
                                           style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: Get.width*0.035,
@@ -213,7 +220,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         const SizedBox(height: 2),
                                         if(fullProfile.bio.toString() != "null")
                                           Text(
-                                            fullProfile.bio.toString(),
+                                            userBio,
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: Get.width*0.035,
@@ -232,12 +239,12 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            Get.to(() => const Followers());
+                                            //Get.to(() => const Followers());
                                           },
                                           child: Row(
                                             children: [
                                               Text(
-                                                fullProfile.followers.toString(),
+                                                userFollowers,
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: Get.width*0.035,
@@ -259,12 +266,12 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
 
                                         InkWell(
                                           onTap: () {
-                                            Get.to(() => const Following());
+                                            //Get.to(() => const Following());
                                           },
                                           child: Row(
                                             children: [
                                               Text(
-                                                fullProfile.followings.toString(),
+                                                userFollowing,
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: Get.width*0.035,
@@ -285,7 +292,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         const SizedBox(width: 10),
 
                                         Text(
-                                          fullProfile.posts.toString(),
+                                          userPosts,
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: Get.width*0.035,
@@ -458,45 +465,12 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                     });
                   },
                   children: [
-                    FutureBuilder<ApiResponse>(
-                        future: controller.getPosts,
-                        builder: (context, snapshot) {
-                          var savedPosts = MyPref.posts.val;
-                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                            final posts = snapshot.data!.data as List<AllPostsEntity>;
-                            return PostsView(posts: posts,userID: fullProfile.userId);
-                          } else if(savedPosts.isNotEmpty){
-                            var posts = AllPostsEntity.getService(jsonDecode(savedPosts));
-                            return PostsView(posts: posts,userID: fullProfile.userId);
-                          }else{
-                            return const PostsView(isLoading: true);
-                          }
-                        }),
-                    FutureBuilder<ApiResponse>(
-                        future: controller.getMyProducts,
-                        builder: (context, snapshot) {
-                          var savedPosts = MyPref.myProducts.val;
-                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                            final posts = snapshot.data!.data as ProductsModelEntity;
-                            return ProductView(posts: posts.data!);
-                          } else if(savedPosts.isNotEmpty){
-                            var posts = ProductsModelEntity.fromJson(jsonDecode(savedPosts));
-                            return ProductView(posts: posts.data!);
-                          }else{
-                            return const ProductView(isLoading: true);
-                          }
-                        }),
+                    Column(),
+                    Column(),
                     Column(),
                     Column(),
                   ],
                 ),
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  Get.bottomSheet(const WayaBottomSheet(),isScrollControlled: true);
-                },
-                backgroundColor: AppColors.primary,
-                child: const Icon(Icons.add,color: Colors.white),
               ),
             );
           }),
