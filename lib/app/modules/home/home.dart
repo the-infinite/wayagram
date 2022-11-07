@@ -45,7 +45,7 @@ class Home extends GetView<HomeController> {
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
             return Scaffold(
-                appBar: AppBar(
+              appBar: AppBar(
                 elevation: 0,
                 leading: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +102,7 @@ class Home extends GetView<HomeController> {
                     systemNavigationBarIconBrightness: Brightness.dark
                 ),
             ),
-                body: SizedBox(
+              body: SizedBox(
               width: Get.width,
               child: Column(
                 children: [
@@ -266,8 +266,8 @@ class Home extends GetView<HomeController> {
                 ],
               ),
             ),
-                drawer: const AppDrawer(),
-                bottomNavigationBar: BottomNavigationBar(
+              drawer: const AppDrawer(),
+              bottomNavigationBar: BottomNavigationBar(
                 backgroundColor: AppColors.background,
                 showSelectedLabels: true,
                 showUnselectedLabels: true,
