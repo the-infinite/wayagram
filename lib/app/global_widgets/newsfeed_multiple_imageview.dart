@@ -1,6 +1,7 @@
 library newsfeed_multiple_imageview;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:wayagram/app/global_widgets/smart_image.dart';
 
@@ -27,21 +28,30 @@ class NewsfeedMultipleImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, costraints) => Container(
-        width: costraints.maxWidth,
-        height: costraints.maxWidth,
-        margin: EdgeInsets.fromLTRB(
-          marginLeft,
-          marginTop,
-          marginRight,
-          marginBottom,
+      builder: (context, costraints) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+            statusBarColor: Colors.black,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.light,
+            systemNavigationBarColor: Colors.black,
+            systemNavigationBarIconBrightness: Brightness.light
         ),
-        child: GestureDetector(
-          child: MultipleImageView(imageUrls: imageUrls),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ImageViewer(imageUrls: imageUrls),
+        child: Container(
+          width: costraints.maxWidth,
+          height: costraints.maxWidth,
+          margin: EdgeInsets.fromLTRB(
+            marginLeft,
+            marginTop,
+            marginRight,
+            marginBottom,
+          ),
+          child: GestureDetector(
+            child: MultipleImageView(imageUrls: imageUrls),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ImageViewer(imageUrls: imageUrls),
+              ),
             ),
           ),
         ),
