@@ -28,30 +28,21 @@ class NewsfeedMultipleImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, costraints) => AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
-            statusBarColor: Colors.black,
-            statusBarIconBrightness: Brightness.light,
-            statusBarBrightness: Brightness.light,
-            systemNavigationBarColor: Colors.black,
-            systemNavigationBarIconBrightness: Brightness.light
+      builder: (context, costraints) => Container(
+        width: costraints.maxWidth,
+        height: costraints.maxWidth,
+        margin: EdgeInsets.fromLTRB(
+          marginLeft,
+          marginTop,
+          marginRight,
+          marginBottom,
         ),
-        child: Container(
-          width: costraints.maxWidth,
-          height: costraints.maxWidth,
-          margin: EdgeInsets.fromLTRB(
-            marginLeft,
-            marginTop,
-            marginRight,
-            marginBottom,
-          ),
-          child: GestureDetector(
-            child: MultipleImageView(imageUrls: imageUrls),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ImageViewer(imageUrls: imageUrls),
-              ),
+        child: GestureDetector(
+          child: MultipleImageView(imageUrls: imageUrls),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ImageViewer(imageUrls: imageUrls),
             ),
           ),
         ),
@@ -68,53 +59,62 @@ class ImageViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(
-      bottom: false,
-      child: Container(
-        // width: MediaQuery.of(context).size.width,
-        // height: MediaQuery.of(context).size.height,
-        color: Colors.black,
-        child: SafeArea(
-          top: false,
-          left: false,
-          right: false,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 30,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.black,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: Colors.black,
+          systemNavigationBarIconBrightness: Brightness.light
+      ),
+      child: Scaffold(body: SafeArea(
+        bottom: false,
+        child: Container(
+          // width: MediaQuery.of(context).size.width,
+          // height: MediaQuery.of(context).size.height,
+          color: Colors.black,
+          child: SafeArea(
+            top: false,
+            left: false,
+            right: false,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: ImageSlideshow(
-                  initialPage: 0,
-                  indicatorColor: Colors.red,
-                  indicatorBackgroundColor: Colors.grey,
-                  isLoop: imageUrls.length > 1,
-                  children: imageUrls
-                      .map(
-                        (e) => ClipRect(
-                      child: SmartImage(
-                        e,
-                        fit: BoxFit.contain,
-                        isPost: true,
+                Expanded(
+                  child: ImageSlideshow(
+                    initialPage: 0,
+                    indicatorColor: Colors.red,
+                    indicatorBackgroundColor: Colors.grey,
+                    isLoop: imageUrls.length > 1,
+                    children: imageUrls
+                        .map(
+                          (e) => ClipRect(
+                        child: SmartImage(
+                          e,
+                          fit: BoxFit.contain,
+                          isPost: true,
+                        ),
                       ),
-                    ),
-                  )
-                      .toList(),
+                    )
+                        .toList(),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 }
 

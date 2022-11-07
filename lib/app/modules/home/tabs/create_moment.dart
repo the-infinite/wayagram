@@ -72,6 +72,9 @@ class CreateMoment extends StatelessWidget {
                               controller.imagePaths[0],
                               filename: controller.imagePaths[0].split('/').last,
                             );
+                            if(textController.text.isNotEmpty){
+                              body['content'] = textController.text;
+                            }
                             var formData = dio.FormData.fromMap(body);
                             var response = await controller.postData(formData, "/wayagram-service/all-posts/create-moment");
                             if(response.isSuccessful){
@@ -199,7 +202,7 @@ class CreateMoment extends StatelessWidget {
                         fontSize: 16,
                       ),
                       basicStyle: AppTextStyle.subtitle1.copyWith(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 16,
                       ),
                       expands: true,
