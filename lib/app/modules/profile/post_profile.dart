@@ -18,6 +18,9 @@ import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/all_posts_entity.dart';
+import '../../data/model/blocked_accounts_entity.dart';
+import '../../data/model/followers_model_entity.dart';
+import '../../data/model/following_model_entity.dart';
 import '../../data/model/friends_model_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/log_in_model_entity.dart';
@@ -98,11 +101,21 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeController>(
-          id: 'other_profile_page',
+          id: 'post_profile_page',
           builder: (controller) {
             var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
             var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
+            var followers = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));
+            var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
+            var blocked = BlockedAccountsEntity.getService(jsonDecode(MyPref.restrictedAccounts.val));
+            var muted = BlockedAccountsEntity.getService(jsonDecode(MyPref.mutedAccounts.val));
+
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+
+            var isAFollower = followers.followers!.any((element) => element.userId == post.profile!.userId);
+            var isFollowing = following.following!.any((element) => element.userId == post.profile!.userId);
+            var isBlocked = blocked.any((element) => element.userId == post.profile!.userId);
+            var isMuted = muted.any((element) => element.userId == post.profile!.userId);
 
             return Scaffold(
               body: NestedScrollView(
@@ -172,7 +185,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                           right: 20,
                                           child: SizedBox(
                                             child: AppButton(
-                                              title: 'Follow',
+                                              title: isFollowing ? 'Following' : 'Follow',
                                               onPressed: () {
                                                 //controller.imagePaths.clear();
                                                 //Get.toNamed(UpdateProfile.route);
@@ -265,7 +278,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
 
                                         InkWell(
                                           onTap: () {
-                                            Get.to(() => const Following());
+                                            //Get.to(() => const Following());
                                           },
                                           child: Row(
                                             children: [
@@ -416,7 +429,17 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                               PopupMenuItem(
                                 value: 0,
                                 child: Text(
-                                  "View Muted Users",
+                                  "Report User",
+                                  style: AppTextStyle.bodyText1.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 0,
+                                child: Text(
+                                  isMuted ? "Unmute User" : "Mute User",
                                   style: AppTextStyle.bodyText1.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
@@ -426,7 +449,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                               PopupMenuItem(
                                 value: 1,
                                 child: Text(
-                                  "View Blocked Users",
+                                  isBlocked ? "Unblock User" : "Block User",
                                   style: AppTextStyle.bodyText1.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,

@@ -18,6 +18,9 @@ import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/all_posts_entity.dart';
+import '../../data/model/blocked_accounts_entity.dart';
+import '../../data/model/followers_model_entity.dart';
+import '../../data/model/following_model_entity.dart';
 import '../../data/model/friends_model_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/log_in_model_entity.dart';
@@ -109,7 +112,17 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
       child: GetBuilder<HomeController>(
           id: 'other_profile_page',
           builder: (controller) {
+            var followers = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));
+            var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
+            var blocked = BlockedAccountsEntity.getService(jsonDecode(MyPref.restrictedAccounts.val));
+            var muted = BlockedAccountsEntity.getService(jsonDecode(MyPref.mutedAccounts.val));
+
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+
+            var isAFollower = followers.followers!.any((element) => element.userId == userId);
+            var isFollowing = following.following!.any((element) => element.userId == userId);
+            var isBlocked = blocked.any((element) => element.userId == userId);
+            var isMuted = muted.any((element) => element.userId == userId);
 
             return Scaffold(
               body: NestedScrollView(
@@ -179,14 +192,14 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           right: 20,
                                           child: SizedBox(
                                             child: AppButton(
-                                              title: 'Follow',
+                                              title: isFollowing ? 'Following' : 'Follow',
                                               onPressed: () {
 
                                               },
                                               borderRadius: 10,
-                                              fontColor: AppColors.primary,
-                                              bckgrndColor: AppColors.background,
-                                              border: Border.all(color: AppColors.primary, width: 1),
+                                              fontColor: isFollowing ? AppColors.primary : AppColors.background,
+                                              bckgrndColor: isFollowing ? AppColors.background : AppColors.primary,
+                                              border: Border.all(color: isFollowing ? AppColors.primary : AppColors.background, width: 1),
                                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                             ),
                                           ),
@@ -210,7 +223,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         ),
                                         const SizedBox(height: 2),
                                         Text(
-                                          userName,
+                                          "@$userName",
                                           style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: Get.width*0.035,
@@ -244,7 +257,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           child: Row(
                                             children: [
                                               Text(
-                                                userFollowers,
+                                                userFollowers.split(".")[0],
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: Get.width*0.035,
@@ -271,7 +284,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           child: Row(
                                             children: [
                                               Text(
-                                                userFollowing,
+                                                userFollowing.split(".")[0],
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: Get.width*0.035,
@@ -292,7 +305,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         const SizedBox(width: 10),
 
                                         Text(
-                                          userPosts,
+                                          userPosts.split(".")[0],
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: Get.width*0.035,
@@ -379,7 +392,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                 duration: const Duration(milliseconds: 300),
                                 opacity: top == MediaQuery.of(context).padding.top + kToolbarHeight ? 1.0 : 0.0,
                                 child: Text(
-                                  '${controller.logInDetails.user!.firstName!.capitalizeFirst} ${controller.logInDetails.user!.lastName!.capitalizeFirst}',
+                                  displayName,
                                   style: AppTextStyle.subtitle1.copyWith(
                                     color: Colors.white,
                                   ),
@@ -406,9 +419,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                             ),
                             onSelected: (value) {
                               if (value == 0) {
-                                Get.to(() => const Muted());
+                                //Get.to(() => const Muted());
                               } else if (value == 1) {
-                                Get.to(() => const Blocked());
+                                //Get.to(() => const Blocked());
                               } else if (value == 2) {
                                 //Get.to(() => const Followers());
                               }
@@ -417,7 +430,17 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                               PopupMenuItem(
                                 value: 0,
                                 child: Text(
-                                  "View Muted Users",
+                                  "Report User",
+                                  style: AppTextStyle.bodyText1.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 0,
+                                child: Text(
+                                  isMuted ? "Unmute User" : "Mute User",
                                   style: AppTextStyle.bodyText1.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
@@ -427,7 +450,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                               PopupMenuItem(
                                 value: 1,
                                 child: Text(
-                                  "View Blocked Users",
+                                  isBlocked ? "Unblock User" : "Block User",
                                   style: AppTextStyle.bodyText1.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
