@@ -9,6 +9,8 @@ import '../app/modules/multiplexor/multiplexor.dart';
 import '../app/modules/onboarding/onboarding.dart';
 import '../app/modules/profile/confirm_pin.dart';
 import '../app/modules/profile/create_pin.dart';
+import '../app/modules/profile/other_profile.dart';
+import '../app/modules/profile/post_profile.dart';
 import '../app/modules/profile/profile.dart';
 import '../app/modules/profile/update_profile.dart';
 import '../app/modules/settings/settings.dart';
@@ -88,6 +90,18 @@ class AppPages {
     GetPage(
       name: Settings.route,
       page: () => const Settings(),
+      binding: WayagramBinding(),
+    ),
+
+    GetPage(
+      name: OtherProfile.route,
+      page: () => const OtherProfile(),
+      binding: WayagramBinding(),
+    ),
+
+    GetPage(
+      name: PostProfile.route,
+      page: () => const PostProfile(),
       binding: WayagramBinding(),
     ),
   ];

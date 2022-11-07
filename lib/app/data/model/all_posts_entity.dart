@@ -198,7 +198,6 @@ class AllPostsPollVotes {
 
 @JsonSerializable()
 class AllPostsProfile {
-
 	String? id;
 	@JSONField(name: "UserId")
 	String? userId;

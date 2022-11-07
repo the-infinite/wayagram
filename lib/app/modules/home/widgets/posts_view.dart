@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -12,12 +13,17 @@ import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
+import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../data/model/posts_model_entity.dart';
+import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/app_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../global_widgets/newsfeed_multiple_imageview.dart';
+import '../../profile/other_profile.dart';
+import '../../profile/post_profile.dart';
+import '../../profile/profile.dart';
 
 class PostsView extends StatelessWidget{
   const PostsView({
@@ -32,6 +38,7 @@ class PostsView extends StatelessWidget{
   final String? userID;
   @override
   Widget build(BuildContext context) {
+    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     return ListView.builder(
       itemCount: isLoading ? 5 : posts!.length,
       shrinkWrap: true,
@@ -80,37 +87,63 @@ class PostsView extends StatelessWidget{
             children: [
               Row(
                 children: [
-                  SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: IconButton(
-                      icon: AppAvatar(
-                        imgUrl: post.profile!.avatar.toString(),
-                        radius: 45,
+                  InkWell(
+                    onTap: (){
+                      if(fullProfile.userId!=null){
+                        if(post.profile!.userId == fullProfile.userId) {
+                          Get.toNamed(Profile.route);
+                        }else{
+                          Get.toNamed(PostProfile.route,arguments: post);
+                        }
+                      }else{
+                        Get.toNamed(PostProfile.route,arguments: post);
+                      }
+                    },
+                    child: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: IconButton(
+                        icon: AppAvatar(
+                          imgUrl: post.profile!.avatar.toString(),
+                          radius: 45,
+                        ),
+                        onPressed: null,
                       ),
-                      onPressed: null,
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        post.profile!.displayName.toString(),
-                        style: const TextStyle(
-                          color: Colors.black ,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                  InkWell(
+                    onTap: (){
+                      if(fullProfile.userId!=null){
+                        if(post.profile!.userId == fullProfile.userId) {
+                          Get.toNamed(Profile.route);
+                        }else{
+                          Get.toNamed(PostProfile.route,arguments: post);
+                        }
+                      }else{
+                        Get.toNamed(PostProfile.route,arguments: post);
+                      }
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          post.profile!.displayName.toString(),
+                          style: const TextStyle(
+                            color: Colors.black ,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "@${post.profile!.username}",
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
+                        Text(
+                          "@${post.profile!.username}",
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   Expanded(
                     child: Wrap(
@@ -118,9 +151,9 @@ class PostsView extends StatelessWidget{
                       children: [
                         Text(
                           timeago.format(time),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.grey,
-                            fontSize: 16,
+                            fontSize: Get.width * 0.03,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
