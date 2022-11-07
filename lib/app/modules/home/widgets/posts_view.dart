@@ -74,14 +74,6 @@ class PostsView extends StatelessWidget{
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(.8),
             borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.4),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(0, 1), // changes position of shadow
-              ),
-            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -121,48 +121,64 @@ class _DocumentPickerState extends State<DocumentPicker> {
     ]);
     return GestureDetector(
       onTap: () => _onPressed(),
-      child: Container(
-        height: widget.renderHeight,
-        width: widget.renderWidth,
+      child: Stack(
         alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: AppColors.grey.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(widget.radius),
-        ),
-        child: !widget.displayPickedImage
-            ? Text(
-                _path.isEmpty ? widget.actionWord : _path.split("/").last,
-                textAlign: TextAlign.center,
-                style: AppTextStyle.bodyText2
-              )
-            : _path.isEmpty && widget.networkImage != null
-                ? ClipRRect(borderRadius: BorderRadius.circular(widget.radius),
-                  child: CachedNetworkImage(
-                      fit: widget.fit,
-                      imageUrl: widget.networkImage ?? "",
-                      placeholder: (context, url) => Container(
-                        color: AppColors.grey,
-                      ),
-                      height: widget.renderHeight,
-                      width: widget.renderWidth,
-                      errorWidget: (context, url, error) => Image.asset(
-                        "assets/images/no_image.jpg",
-                        height: widget.renderHeight,
-                        fit: widget.fit,
-                        width: widget.renderWidth,
-                      ),
-                    ),
-                ) : _path.isEmpty && widget.networkImage == null
-                    ? choosePhotoPrompt
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(widget.radius),
-                        child: Image.file(
-                          File(widget.controller == null ? _pickedFile!.path : (widget.position == null ? "" : widget.controller!.imagePaths[widget.position!])),
+        children: [
+          Container(
+            height: widget.renderHeight,
+            width: widget.renderWidth,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: AppColors.grey.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(widget.radius),
+            ),
+            child: !widget.displayPickedImage
+                ? Text(
+                    _path.isEmpty ? widget.actionWord : _path.split("/").last,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyle.bodyText2
+                  )
+                : _path.isEmpty && widget.networkImage != null
+                    ? ClipRRect(borderRadius: BorderRadius.circular(widget.radius),
+                      child: CachedNetworkImage(
                           fit: widget.fit,
+                          imageUrl: widget.networkImage ?? "",
+                          placeholder: (context, url) => Container(
+                            color: AppColors.grey,
+                          ),
                           height: widget.renderHeight,
                           width: widget.renderWidth,
+                          errorWidget: (context, url, error) => Image.asset(
+                            "assets/images/no_image.jpg",
+                            height: widget.renderHeight,
+                            fit: widget.fit,
+                            width: widget.renderWidth,
+                          ),
                         ),
-                      ),
+                    ) : _path.isEmpty && widget.networkImage == null
+                        ? choosePhotoPrompt
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(widget.radius),
+                            child: Image.file(
+                              File(widget.controller == null ? _pickedFile!.path : (widget.position == null ? "" : widget.controller!.imagePaths[widget.position!])),
+                              fit: widget.fit,
+                              height: widget.renderHeight,
+                              width: widget.renderWidth,
+                            ),
+                          ),
+          ),
+          if(!widget.displayPickerIcon)
+            Container(
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.0)
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Icon(Icons.add_a_photo_rounded, color: Colors.white.withOpacity(1), size: 30),
+              ),
+            )
+        ],
       ),
     );
   }
@@ -174,7 +190,7 @@ class _DocumentPickerState extends State<DocumentPicker> {
         actions: {
           "Camera": _fromCamera,
           "Gallery": _fromGallery,
-          "Cancel": Get.back
+         // "Cancel": Get.back
         });
   }
 

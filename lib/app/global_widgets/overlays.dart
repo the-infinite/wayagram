@@ -122,9 +122,11 @@ class AppOverlay {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6.5),
           child: AppButton(
-              borderRadius: 1000,
-              bckgrndColor: AppColors.primary,
+              borderRadius: 0,
+              bckgrndColor: Colors.transparent,
+              fontColor: Colors.black,
               title: text,
+              width: Get.width * 0.4,
               onPressed: () async {
                 await onPressed();
               }),
@@ -132,52 +134,55 @@ class AppOverlay {
       ));
     });
     showDialog(
-      builder: (context) => Material(
-        color: Colors.black.withOpacity(0.2),
-        child: IntrinsicHeight(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: Get.width * 0.9,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 13.5,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  color: Colors.white,
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: Get.textTheme.bodyText1!.copyWith(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.black),
-                    ),
-                    const SizedBox(height: 20),
-                    if (content == null) contentReplacement ?? const SizedBox(),
-                    if (content != null)
-                      Center(
-                        child: Text(
-                          content,
-                          textAlign: TextAlign.center,
-                          style: AppTextStyle.bodyText2
-                              .copyWith(fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: buttons,
-                    )
-                  ],
-                ),
+      useSafeArea: false,
+      barrierDismissible: true,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Material(
+            child: Container(
+              width: Get.width * 0.9,
+              height: Get.height * 0.15,
+              padding: const EdgeInsets.symmetric(
+                vertical: 15,
+                horizontal: 13.5,
               ),
-            ],
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(7),
+                color: Colors.white,
+              ),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: buttons
+                /*Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: Get.textTheme.bodyText1!.copyWith(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.black),
+                  ),
+                  const SizedBox(height: 20),
+                  if (content == null) contentReplacement ?? const SizedBox(),
+                  if (content != null)
+                    Center(
+                      child: Text(
+                        content,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyle.bodyText2
+                            .copyWith(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  const SizedBox(height: 20),*/
+                /*Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: buttons,
+                  )*/
+
+              ),
+            ),
           ),
-        ),
+        ],
       ),
       context: Get.context!,
     );

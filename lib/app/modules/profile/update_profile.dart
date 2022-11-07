@@ -109,79 +109,64 @@ class UpdateProfile extends GetView<HomeController> {
                 child: Stack(
                   children: [
                     SizedBox(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          FormField<String>(
-                              initialValue: '',
-                              validator: null,
-                              builder: (field) {
-                              return DocumentPicker(
-                                  radius: 0,
-                                  networkImage: fullProfile.coverImage,
-                                  renderHeight: Get.width * 0.35,
-                                  renderWidth: Get.width,
-                                  controller: controller,
-                                  position: 0,
-                                  fileImage: field.value,
-                                  fit: BoxFit.cover,
-                                  displayPickerIcon: false,
-                                  onSelected: (imagePath, base64Image) async {
-                                    CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                            sourcePath: imagePath,
-                                            cropStyle: CropStyle.rectangle,
-                                            aspectRatioPresets: [
-                                              CropAspectRatioPreset.original,
-                                              CropAspectRatioPreset.ratio16x9
-                                            ],
-                                            uiSettings: [
-                                              AndroidUiSettings(
-                                                  toolbarTitle: 'Crop Cover Photo',
-                                                  toolbarColor: Colors.white,
-                                                  toolbarWidgetColor: Colors.black,
-                                                  activeControlsWidgetColor: AppColors.primary,
-                                                  cropGridColor: AppColors.primary,
-                                                  initAspectRatio: CropAspectRatioPreset.ratio16x9,
-                                                  lockAspectRatio: false),
-                                              IOSUiSettings(
-                                                title: 'Crop Cover Photo',
-                                              ),
-                                              WebUiSettings(
-                                                context: context,
-                                              ),
-                                            ],
-                                          );
-                                          if(croppedFile == null){
-                                            if(controller.imagePaths.isEmpty){
-                                              controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
-                                            }else{
-                                              controller.imagePaths[0] = imagePath;
-                                            }
-                                            field.didChange(imagePath);
-                                          }else{
-                                            if(controller.imagePaths.isEmpty){
-                                              controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
-                                            }else{
-                                              controller.imagePaths[0] = croppedFile.path;
-                                            }
-                                            field.didChange(croppedFile.path);
-                                          }
-                                  },
-                                  actionWord: "Upload Cover Photo"
-                              );
-                            }
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(0.0)
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Icon(Icons.add_a_photo_rounded, color: Colors.white.withOpacity(1), size: 30),
-                            ),
-                          )
-                        ],
+                      child: FormField<String>(
+                          initialValue: '',
+                          validator: null,
+                          builder: (field) {
+                          return DocumentPicker(
+                              radius: 0,
+                              networkImage: fullProfile.coverImage,
+                              renderHeight: Get.width * 0.35,
+                              renderWidth: Get.width,
+                              controller: controller,
+                              position: 0,
+                              fileImage: field.value,
+                              fit: BoxFit.cover,
+                              displayPickerIcon: false,
+                              onSelected: (imagePath, base64Image) async {
+                                CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                        sourcePath: imagePath,
+                                        cropStyle: CropStyle.rectangle,
+                                        aspectRatioPresets: [
+                                          CropAspectRatioPreset.original,
+                                          CropAspectRatioPreset.ratio16x9
+                                        ],
+                                        uiSettings: [
+                                          AndroidUiSettings(
+                                              toolbarTitle: 'Crop Cover Photo',
+                                              toolbarColor: Colors.white,
+                                              toolbarWidgetColor: Colors.black,
+                                              activeControlsWidgetColor: AppColors.primary,
+                                              cropGridColor: AppColors.primary,
+                                              initAspectRatio: CropAspectRatioPreset.ratio16x9,
+                                              lockAspectRatio: false),
+                                          IOSUiSettings(
+                                            title: 'Crop Cover Photo',
+                                          ),
+                                          WebUiSettings(
+                                            context: context,
+                                          ),
+                                        ],
+                                      );
+                                      if(croppedFile == null){
+                                        if(controller.imagePaths.isEmpty){
+                                          controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
+                                        }else{
+                                          controller.imagePaths[0] = imagePath;
+                                        }
+                                        field.didChange(imagePath);
+                                      }else{
+                                        if(controller.imagePaths.isEmpty){
+                                          controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                        }else{
+                                          controller.imagePaths[0] = croppedFile.path;
+                                        }
+                                        field.didChange(croppedFile.path);
+                                      }
+                              },
+                              actionWord: "Upload Cover Photo"
+                          );
+                        }
                       ),
                     ),
                     Positioned(
@@ -193,88 +178,73 @@ class UpdateProfile extends GetView<HomeController> {
                           border: Border.all(color: Colors.white, width: 2),
                           color: Colors.white
                         ),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            FormField<String>(
-                                initialValue: '',
-                                validator: null,
-                                builder: (field) {
-                                return DocumentPicker(
-                                    radius: 100,
-                                    networkImage: fullProfile.avatar,
-                                    renderHeight: Get.width * 0.25,
-                                    renderWidth: Get.width * 0.25,
-                                    controller: controller,
-                                    position: 1,
-                                    displayPickerIcon: false,
-                                    onSelected: (imagePath, base64Image) async {
-                                      CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                        sourcePath: imagePath,
-                                        cropStyle: CropStyle.rectangle,
-                                        aspectRatioPresets: [
-                                          CropAspectRatioPreset.square,
-                                          CropAspectRatioPreset.ratio3x2,
-                                          CropAspectRatioPreset.original,
-                                          CropAspectRatioPreset.ratio4x3,
-                                          CropAspectRatioPreset.ratio16x9
-                                        ],
-                                        uiSettings: [
-                                          AndroidUiSettings(
-                                              toolbarTitle: 'Crop Profile Photo',
-                                              toolbarColor: Colors.white,
-                                              toolbarWidgetColor: Colors.black,
-                                              activeControlsWidgetColor: AppColors.primary,
-                                              cropGridColor: AppColors.primary,
-                                              initAspectRatio: CropAspectRatioPreset.square,
-                                              lockAspectRatio: false),
-                                          IOSUiSettings(
-                                            title: 'Crop Profile Photo',
-                                          ),
-                                          WebUiSettings(
-                                            context: context,
-                                          ),
-                                        ],
-                                      );
-                                      if(croppedFile == null){
-                                        if(controller.imagePaths.isEmpty){
-                                          controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
-                                        }else{
-                                          if(controller.imagePaths.length > 2) {
-                                            controller.imagePaths[1] = imagePath;
-                                          }else{
-                                            controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
-                                          }
-                                        }
-                                        field.didChange(imagePath);
+                        child: FormField<String>(
+                            initialValue: '',
+                            validator: null,
+                            builder: (field) {
+                            return DocumentPicker(
+                                radius: 100,
+                                networkImage: fullProfile.avatar,
+                                renderHeight: Get.width * 0.25,
+                                renderWidth: Get.width * 0.25,
+                                controller: controller,
+                                position: 1,
+                                displayPickerIcon: false,
+                                onSelected: (imagePath, base64Image) async {
+                                  CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                    sourcePath: imagePath,
+                                    cropStyle: CropStyle.rectangle,
+                                    aspectRatioPresets: [
+                                      CropAspectRatioPreset.square,
+                                      CropAspectRatioPreset.ratio3x2,
+                                      CropAspectRatioPreset.original,
+                                      CropAspectRatioPreset.ratio4x3,
+                                      CropAspectRatioPreset.ratio16x9
+                                    ],
+                                    uiSettings: [
+                                      AndroidUiSettings(
+                                          toolbarTitle: 'Crop Profile Photo',
+                                          toolbarColor: Colors.white,
+                                          toolbarWidgetColor: Colors.black,
+                                          activeControlsWidgetColor: AppColors.primary,
+                                          cropGridColor: AppColors.primary,
+                                          initAspectRatio: CropAspectRatioPreset.square,
+                                          lockAspectRatio: false),
+                                      IOSUiSettings(
+                                        title: 'Crop Profile Photo',
+                                      ),
+                                      WebUiSettings(
+                                        context: context,
+                                      ),
+                                    ],
+                                  );
+                                  if(croppedFile == null){
+                                    if(controller.imagePaths.isEmpty){
+                                      controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
+                                    }else{
+                                      if(controller.imagePaths.length > 2) {
+                                        controller.imagePaths[1] = imagePath;
                                       }else{
-                                        if(controller.imagePaths.isEmpty){
-                                          controller.imagePaths = List.from(controller.imagePaths)..add("")..add(croppedFile.path);
-                                        }else{
-                                          if(controller.imagePaths.length > 2) {
-                                            controller.imagePaths[1] = croppedFile.path;
-                                          }else{
-                                            controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
-                                          }
-                                        }
-                                        field.didChange(croppedFile.path);
+                                        controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
                                       }
-                                    },
-                                    actionWord: "Upload Profile"
-                                );
-                              }
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white.withOpacity(0.0)
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Icon(Icons.add_a_photo_rounded, color: Colors.white.withOpacity(1), size: 30),
-                              ),
-                            )
-                          ],
+                                    }
+                                    field.didChange(imagePath);
+                                  }else{
+                                    if(controller.imagePaths.isEmpty){
+                                      controller.imagePaths = List.from(controller.imagePaths)..add("")..add(croppedFile.path);
+                                    }else{
+                                      if(controller.imagePaths.length > 2) {
+                                        controller.imagePaths[1] = croppedFile.path;
+                                      }else{
+                                        controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                      }
+                                    }
+                                    field.didChange(croppedFile.path);
+                                  }
+                                },
+                                actionWord: "Upload Profile"
+                            );
+                          }
                         ),
                       ),
                     ),
