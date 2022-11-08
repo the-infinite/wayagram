@@ -159,18 +159,18 @@ class Api {
   Future<ApiResponse> getData(String url, {bool hasHeader = false}) async {
     token = CancelToken();
     try {
-      /*var request = await _client.request(
-        url,
-        cancelToken: token,
-        options: Options(method: 'GET', headers: hasHeader ? headers : null),
-      );*/
-
       var head = {
         'Authorization': MyPref.authToken.val,
       };
-      var response = await http.get(Uri.parse(baseUrl+url), headers: hasHeader ? head : null);
-      return ApiResponse.responseFromBody(response.body, response.statusCode);
-      //return ApiResponse.response(request);
+
+      var request = await _client.request(
+        url,
+        cancelToken: token,
+        options: Options(method: 'GET', headers: hasHeader ? head : null),
+      );
+      //var response = await http.get(Uri.parse(baseUrl+url), headers: hasHeader ? head : null);
+      //return ApiResponse.responseFromBody(response.body, response.statusCode);
+      return ApiResponse.response(request);
     } on DioError catch (e) {
       print("Error 3");
       print(e.message);

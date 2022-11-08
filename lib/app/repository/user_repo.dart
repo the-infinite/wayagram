@@ -55,7 +55,9 @@ class UserRepository {
   Future<ApiResponse> getUserProfile(String userID) async {
     final response = await api.getData('/auth-service/api/v1/profile/$userID',hasHeader: true);
     if(response.isSuccessful){
+      print(response.isSuccessful);
       response.data = ProfileModelEntity.fromJson(response.data);
+      MyPref.userProfile.val = jsonEncode(response.data);
     }
     await getFullUserProfile(userID);
     return response;

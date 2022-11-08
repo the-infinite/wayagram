@@ -20,7 +20,7 @@ class ApiResponse {
 
   static ApiResponse response(Response response) {
     var json = response.data;
-
+    print(json['message']);
     return ApiResponse(
       message: json['message'],
       isSuccessful: json['status'],
@@ -32,10 +32,10 @@ class ApiResponse {
 
   static ApiResponse responseFromBody(String json,int isSuccessful) {
     var jsonD = jsonDecode(json);
-
+    //print(jsonD['status']);
     return ApiResponse(
       message: jsonD['message'],
-      isSuccessful: jsonD['status'],
+      isSuccessful: jsonD['status'] == true,
       data: jsonD['data'],
       suggestion: jsonD['suggestion'],
       profiles: jsonD['Profiles'],
@@ -43,6 +43,7 @@ class ApiResponse {
   }
 
   factory ApiResponse.timeout(Response response) {
+    print("timeout");
     return ApiResponse(
       data: null,
       isSuccessful: false,
