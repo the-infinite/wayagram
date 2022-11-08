@@ -73,6 +73,9 @@ class HomeTab extends StatelessWidget {
                   var posts = AllPostsEntity.getService(jsonDecode(savedPosts));
                   return PostsView(posts: posts);
                 }else{
+                  if(snapshot.connectionState == ConnectionState.done){
+                    return const SizedBox.shrink();
+                  }
                   return const PostsView(isLoading: true);
                 }
               }),

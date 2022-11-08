@@ -46,6 +46,9 @@ class ShopsTab extends StatelessWidget {
                           var posts = ProductsModelEntity.fromJson(jsonDecode(savedPosts));
                           return ProductView(posts: posts.data!);
                         }else{
+                          if(snapshot.connectionState == ConnectionState.done){
+                            return const SizedBox.shrink();
+                          }
                           return const ProductView(isLoading: true);
                         }
                       }),
@@ -68,6 +71,9 @@ class ShopsTab extends StatelessWidget {
                           var posts = ProductsModelEntity.fromJson(jsonDecode(savedPosts));
                           return ProductView(posts: posts.data!);
                         }else{
+                          if(snapshot.connectionState == ConnectionState.done){
+                            return const SizedBox.shrink();
+                          }
                           return const ProductView(isLoading: true);
                         }
                       }),

@@ -293,9 +293,12 @@ class UpdateProfile extends GetView<HomeController> {
                             hint: '',
                             label: 'Bio',
                             validator: (val){
+                              if(val!.isEmpty){
+                                return 'Please enter your bio';
+                              }
                               return null;
                             },
-                            isCompulsory: false,
+                            isCompulsory: true,
                             controller: bioController,
                           ),
                           SizedBox(

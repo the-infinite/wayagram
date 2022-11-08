@@ -122,19 +122,21 @@ class HomeController extends GetxController {
   Future<ApiResponse> updateProfile(dynamic body) async {
     final response = await userRepo.updateProfile(body);
     await userRepo.getUserProfile(profile.userId.toString());
+    update(['profile_page','home','settings']);
     AppOverlay.showInfoDialog(
         title: response.isSuccessful ? 'Success' : 'Error',
         content: response.message,
-      onPressed: () {
-        if(response.isSuccessful) {
-          Get.back();
-          Get.back();
-        }else{
-          Get.back();
+        onPressed: () async {
+          if(Get.currentRoute == '/updateProfile') {
+            if(response.isSuccessful) {
+              Get.back();
+              Get.back();
+            }else{
+              Get.back();
+            }
+          }
         }
-      }
     );
-    update(['profile_page','home','settings']);
     return response;
   }
 

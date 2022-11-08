@@ -473,6 +473,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                             var posts = AllPostsEntity.getService(jsonDecode(savedPosts));
                             return PostsView(posts: posts,userID: fullProfile.userId);
                           }else{
+                            if(snapshot.connectionState == ConnectionState.done){
+                              return const SizedBox.shrink();
+                            }
                             return const PostsView(isLoading: true);
                           }
                         }),
@@ -487,6 +490,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                             var posts = ProductsModelEntity.fromJson(jsonDecode(savedPosts));
                             return ProductView(posts: posts.data!);
                           }else{
+                            if(snapshot.connectionState == ConnectionState.done){
+                              return const SizedBox.shrink();
+                            }
                             return const ProductView(isLoading: true);
                           }
                         }),

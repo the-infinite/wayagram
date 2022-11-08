@@ -78,18 +78,24 @@ class CreateMoment extends StatelessWidget {
                             var formData = dio.FormData.fromMap(body);
                             var response = await controller.postData(formData, "/wayagram-service/all-posts/create-moment");
                             if(response.isSuccessful){
+                              controller.imagePaths.clear();
                               await controller.getPosts;
                               controller.update(['home_tab']);
-                              controller.imagePaths.clear();
-                              Get.back();
+                              if(Get.currentRoute == "/CreateMoment"){
+                                Get.back();
+                              }
                             }else{
-                              AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                              if(Get.currentRoute == "/CreateMoment"){
+                                AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                              }
                             }
                           }else{
-                            AppOverlay.showInfoDialog(
-                                title: 'Error',
-                                content: "Please select an image"
-                            );
+                            if(Get.currentRoute == "/CreateMoment"){
+                              AppOverlay.showInfoDialog(
+                                  title: 'Error',
+                                  content: "Please select an image"
+                              );
+                            }
                           }
                         }else{
                           if(textController.text.isNotEmpty){
@@ -100,15 +106,21 @@ class CreateMoment extends StatelessWidget {
                               await controller.getPosts;
                               controller.update(['home_tab']);
                               controller.imagePaths.clear();
-                              Get.back();
+                              if(Get.currentRoute == "/CreateMoment"){
+                                Get.back();
+                              }
                             }else{
-                              AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                              if(Get.currentRoute == "/CreateMoment"){
+                                AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                              }
                             }
                           }else{
-                            AppOverlay.showInfoDialog(
-                                title: 'Error',
-                                content: "Please enter some text"
-                            );
+                            if(Get.currentRoute == "/CreateMoment"){
+                              AppOverlay.showInfoDialog(
+                                  title: 'Error',
+                                  content: "Please enter some text"
+                              );
+                            }
                           }
                         }
                       },

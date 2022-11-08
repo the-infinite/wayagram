@@ -59,6 +59,9 @@ class DiscoverTab extends StatelessWidget {
                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
                   return GroupView(posts: posts);
                 }else{
+                  if(snapshot.connectionState == ConnectionState.done){
+                    return const SizedBox.shrink();
+                  }
                   return const GroupView(isLoading: true);
                 }
               }),
@@ -92,6 +95,9 @@ class DiscoverTab extends StatelessWidget {
                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
                   return GroupView(posts: posts,isGroup: false,);
                 }else{
+                  if(snapshot.connectionState == ConnectionState.done){
+                    return const SizedBox.shrink();
+                  }
                   return const GroupView(isLoading: true,isGroup: false,);
                 }
               }),
@@ -110,6 +116,9 @@ class DiscoverTab extends StatelessWidget {
                     var events = AllEventsEntity.fromJson(jsonDecode(savedEvents));
                     return EventsView(moments: events.data);
                   }else{
+                    if(snapshot.connectionState == ConnectionState.done){
+                      return const SizedBox.shrink();
+                    }
                     return const EventsView(isLoading: true);
                   }
                 }

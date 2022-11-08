@@ -32,6 +32,7 @@ class ApiResponse {
 
   static ApiResponse responseFromBody(String json,int isSuccessful) {
     var jsonD = jsonDecode(json);
+
     return ApiResponse(
       message: jsonD['message'],
       isSuccessful: jsonD['status'],
