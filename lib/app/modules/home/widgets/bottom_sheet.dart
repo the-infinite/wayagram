@@ -112,6 +112,8 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "GROUP",
                   subtitle: "Create a private or public group of interest",
                   onTap: () {
+                    controller.imagePaths.clear();
+                    Get.back();
                     Get.to(() => const CreateGroup());
                   }
               ),
@@ -120,6 +122,8 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "EVENTS",
                   subtitle: "Bring people together with public or private events",
                   onTap: () {
+                    controller.imagePaths.clear();
+                    Get.back();
                     Get.to(() => const CreateEvent());
                   }
               ),
@@ -128,6 +132,8 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "DONATION",
                   subtitle: "Create a donation page for a cause",
                   onTap: () {
+                    controller.imagePaths.clear();
+                    Get.back();
                     Get.to(() => const CreateDonation());
                   }
               ),
@@ -140,6 +146,8 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "PRODUCT",
                   subtitle: "Create and online display products for users to purchase",
                   onTap: () {
+                    controller.imagePaths.clear();
+                    Get.back();
                     Get.to(() => const CreateProduct());
                   }
               ),
@@ -148,6 +156,8 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "GO LIVE",
                   subtitle: "Go live on Wayagram",
                   onTap: () {
+                    controller.imagePaths.clear();
+                    Get.back();
                     Get.to(() => const CreateLiveVideo());
                   }
               ),

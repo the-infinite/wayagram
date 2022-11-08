@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
@@ -11,12 +12,14 @@ class DateButton<T> extends StatefulWidget {
     this.initialValue,
     required this.label,
      this.date,
-    this.time,
+    this.time, this.dateChanged, this.timeChanged,
   }) : super(key: key);
 
   final DateTime? date;
   final TimeOfDay? time;
   final String? Function(T?)? validator;
+  final Function(DateTime)? dateChanged;
+  final Function(TimeOfDay)? timeChanged;
   final T? initialValue;
   final String label;
 
@@ -57,6 +60,9 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                       lastDate: DateTime(2100),
                     ).then((value) {
                       if (value != null) {
+                        if(widget.dateChanged != null) {
+                          widget.dateChanged!(value);
+                        }
                         setState(() {
                           widget.validator!(value as T);
                           date = value;
@@ -70,6 +76,9 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                       initialTime: widget.initialValue! as TimeOfDay,
                     ).then((value) {
                       if (value != null) {
+                        if(widget.timeChanged != null) {
+                          widget.timeChanged!(value);
+                        }
                         setState(() {
                           widget.validator!(value as T);
                           time = value;
@@ -83,7 +92,8 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                     ? Row(
                         children: [
                           DateItemButton(
-                            title: "${date.day} - ${date.month} - ${date.year}",
+                            title: DateFormat.yMMMd().format(date),
+                            icon: Icons.calendar_today,
                           ),
                         ],
                       )
@@ -93,6 +103,7 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                             title: "${time.hourOfPeriod} : ${time.minute}  ${time.period == DayPeriod.am
                                 ? 'AM'
                                 : 'PM'}",
+                            icon: Icons.access_time,
                           ),
                         ],
                       ),

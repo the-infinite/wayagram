@@ -71,6 +71,15 @@ class Validator {
     return null;
   }
 
+  static String? urlValidation(String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Url Field cannot be empty';
+    }else if(!GetUtils.isURL(val)){
+      return 'Please enter a valid url';
+    }
+    return null;
+  }
+
   static String? emailValidation(String? val) {
     if (!GetUtils.isEmail(val!)) {
       return 'Please enter a valid email';

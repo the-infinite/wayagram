@@ -53,6 +53,7 @@ dependencies:
   flutter_image_slideshow: ^0.1.4
   image_cropper: ^3.0.0
   video_thumbnail: ^0.5.3
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

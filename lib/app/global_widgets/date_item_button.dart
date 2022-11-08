@@ -9,11 +9,13 @@ class DateItemButton extends StatelessWidget {
     required this.title,
     this.color = Colors.black,
     this.textColor = Colors.black,
+    this.icon
   }) : super(key: key);
 
   final String title;
   final Color color;
   final Color textColor;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +29,20 @@ class DateItemButton extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Text(
-        title,
-        style: theme.textTheme.subtitle1!.copyWith(color: textColor),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: AppColors.purple,
+            size: Get.width * 0.050,
+          ),
+          SizedBox(width: Get.width * 0.030),
+          Text(
+            title,
+            style: theme.textTheme.subtitle1!.copyWith(color: textColor),
+          ),
+        ],
       ),
     );
   }
