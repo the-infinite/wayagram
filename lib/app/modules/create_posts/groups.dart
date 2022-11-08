@@ -240,7 +240,8 @@ class CreateGroup extends StatelessWidget {
                                             field.didChange(croppedFile.path);
                                           }
                                         },
-                                        actionWord: "Upload Profile Photo"
+                                        actionWord: "Upload Profile Photo",
+                                      displayPickerIcon: false,
                                     );
                                   }
                               ),
@@ -309,7 +310,8 @@ class CreateGroup extends StatelessWidget {
                                             field.didChange(croppedFile.path);
                                           }
                                         },
-                                        actionWord: "Upload Cover Photo"
+                                        actionWord: "Upload Cover Photo",
+                                      displayPickerIcon: false,
                                     );
                                   }
                               ),
