@@ -174,6 +174,7 @@ class _FriendsViewState extends State<FriendsView> {
                                     var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/follow");
                                     if(response.isSuccessful){
                                       await controller.getFollowing;
+                                      await controller.getPosts;
                                       setState(() {
 
                                       });
@@ -182,6 +183,7 @@ class _FriendsViewState extends State<FriendsView> {
                                     var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/unfollow");
                                     if(response.isSuccessful){
                                       await controller.getFollowing;
+                                      await controller.getPosts;
                                       setState(() {
 
                                       });
