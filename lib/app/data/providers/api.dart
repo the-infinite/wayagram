@@ -35,7 +35,7 @@ class Api {
 
   Future<ApiResponse> postData(
     String url, {
-    bool hasHeader = false,
+    bool hasHeader = false, bool sso = true,
     body,
   }) async {
     token = CancelToken();
@@ -104,7 +104,7 @@ class Api {
 
   Future<ApiResponse> putData(
       String url, {
-        bool hasHeader = false,
+        bool hasHeader = false,bool sso = true,
         body,
       }) async {
     token = CancelToken();
@@ -156,7 +156,7 @@ class Api {
     return await _response(response);
   } */
 
-  Future<ApiResponse> getData(String url, {bool hasHeader = false}) async {
+  Future<ApiResponse> getData(String url, {bool hasHeader = false,bool sso = true}) async {
     token = CancelToken();
     try {
       var head = {
@@ -172,7 +172,6 @@ class Api {
       //return ApiResponse.responseFromBody(response.body, response.statusCode);
       return ApiResponse.response(request);
     } on DioError catch (e) {
-      print("Error 3");
       print(e.message);
       return e.toApiError(cancelToken: token);
     } on SocketException {
