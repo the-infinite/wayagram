@@ -193,8 +193,24 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           child: SizedBox(
                                             child: AppButton(
                                               title: isFollowing ? 'Following' : 'Follow',
-                                              onPressed: () {
-
+                                              onPressed: () async {
+                                                var body = {
+                                                  "user_id": userId,
+                                                  "username": userName
+                                                };
+                                                if(!isFollowing){
+                                                  var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/follow");
+                                                  if(response.isSuccessful){
+                                                    await controller.getFollowing;
+                                                    controller.update(['other_profile_page']);
+                                                  }
+                                                }else{
+                                                  var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/unfollow");
+                                                  if(response.isSuccessful){
+                                                    await controller.getFollowing;
+                                                    controller.update(['other_profile_page']);
+                                                  }
+                                                }
                                               },
                                               borderRadius: 10,
                                               fontColor: isFollowing ? AppColors.primary : AppColors.background,
