@@ -20,6 +20,7 @@ import 'my_pref.dart';
 //dispute https://services.staging.wayagram.ng/social-dispute/api-docs/
 //notifications https://services.staging.wayagram.ng/social-notification/api-docs/
 //KYC service https://services.staging.wayagram.ng/kyc-service/swagger-ui/index.html
+//Account Service https://services.wayagram.ng/account-service/swagger-ui/index.html#/
 
 class Api {
   static const String baseUrl = 'https://services.staging.wayagram.ng/';
