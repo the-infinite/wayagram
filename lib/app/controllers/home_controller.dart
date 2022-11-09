@@ -118,6 +118,7 @@ class HomeController extends GetxController {
   Future<ApiResponse> get getMuted => userRepo.getMutedAccount();
   Future<ApiResponse> get getFollowing => userRepo.getFollowing();
   Future<ApiResponse> get getFollowers => userRepo.getFollowers();
+  Future<ApiResponse> get getFriendSuggestions => userRepo.getFriendSuggestions();
 
   Future<ApiResponse> updateProfile(dynamic body) async {
     final response = await userRepo.updateProfile(body);

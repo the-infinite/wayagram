@@ -10,11 +10,13 @@ import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_events_entity.dart';
 import '../../../data/model/all_posts_entity.dart';
+import '../../../data/model/friends_suggestions_entity.dart';
 import '../../../data/model/group_model_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../widgets/events_view.dart';
+import '../widgets/friends_view.dart';
 import '../widgets/group_view.dart';
 import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
@@ -65,9 +67,32 @@ class DiscoverTab extends StatelessWidget {
                   return const GroupView(isLoading: true);
                 }
               }),
+          FutureBuilder<ApiResponse>(
+              future: controller.getFriendSuggestions,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                  final friendsToFollow = snapshot.data!.data as List<FriendsSuggestionsEntity>;
+                  if(friendsToFollow.isEmpty){
+                    return const SizedBox.shrink();
+                  }
+                  return FriendsView(data: friendsToFollow);
+                } else {
+                  var savedEvents = MyPref.friendSuggestions.val;
+                  if(savedEvents.isNotEmpty) {
+                    var friendsToFollow = FriendsSuggestionsEntity.getService(jsonDecode(savedEvents));
+                    return FriendsView(data: friendsToFollow);
+                  }else{
+                    if(snapshot.connectionState == ConnectionState.done){
+                      return const SizedBox.shrink();
+                    }
+                    return const FriendsView(isLoading: true);
+                  }
+                }
+              }),
           Padding(
             padding: const EdgeInsets.only(
-                bottom: 10
+                bottom: 10,
+                top: 10
             ),
             child: Container(
               color: Colors.blue.shade50,

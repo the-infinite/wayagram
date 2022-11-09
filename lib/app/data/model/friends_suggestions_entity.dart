@@ -4,7 +4,6 @@ import 'dart:convert';
 
 @JsonSerializable()
 class FriendsSuggestionsEntity {
-
 	String? id;
 	@JSONField(name: "UserId")
 	String? userId;
