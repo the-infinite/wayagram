@@ -13,6 +13,7 @@ import '../../../data/model/friends_suggestions_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../global_widgets/app_avatar.dart';
 import '../../../global_widgets/app_button.dart';
+import '../../profile/other_profile.dart';
 
 class FriendsView extends StatefulWidget {
   const FriendsView({
@@ -83,71 +84,89 @@ class _FriendsViewState extends State<FriendsView> {
               }
               var person = widget.data[index];
 
-              return Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 3.7, left: 5,right: 5),
-                width: Get.width * 0.4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.4),
-                      spreadRadius: 1,
-                      blurRadius: 1,
-                      offset: const Offset(0, 1), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: Get.height * 0.01),
-                    SizedBox(
-                      width: Get.width * 0.2,
-                      height: Get.width * 0.2,
-                      child: IconButton(
-                        icon: AppAvatar(
-                          imgUrl: person.avatar.toString(),
-                          radius: 50,
-                        ),
-                        onPressed: null,
-                      ),
-                    ),
-                    SizedBox(height: Get.height * 0.0025),
-                    Text(
-                      person.displayName.toString(),
-                      style: const TextStyle(
-                        color: Colors.black ,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      "@${person.username}",
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: Get.height * 0.02),
-                    SizedBox(
-                      width: Get.width * 0.3,
-                      child: AppButton(
-                        title: 'Follow',
-                        onPressed: () {
+              return InkWell(
+                onTap: (){
+                  var displayName = person.displayName.toString();
+                  var username = person.username.toString();
+                  var profilePic = person.avatar.toString();
+                  var userID = person.userId.toString();
+                  var postCount = person.posts.toString();
+                  var followersCount = person.followers.toString();
+                  var followingCount = person.followings.toString();
+                  var bio = person.bio.toString();
+                  var coverImage = person.coverImage.toString();
 
-                        },
-                        borderRadius: 10,
-                        fontColor: AppColors.primary,
-                        bckgrndColor: AppColors.background,
-                        border: Border.all(color: AppColors.primary, width: 1),
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: Get.height * 0.015),
+                  Get.toNamed(
+                      OtherProfile.route,
+                      arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage]
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(top: 5, bottom: 3.7, left: 5,right: 5),
+                  width: Get.width * 0.4,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.4),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: const Offset(0, 1), // changes position of shadow
                       ),
-                    )
-                  ],
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: Get.height * 0.01),
+                      SizedBox(
+                        width: Get.width * 0.2,
+                        height: Get.width * 0.2,
+                        child: IconButton(
+                          icon: AppAvatar(
+                            imgUrl: person.avatar.toString(),
+                            radius: 50,
+                          ),
+                          onPressed: null,
+                        ),
+                      ),
+                      SizedBox(height: Get.height * 0.0025),
+                      Text(
+                        person.displayName.toString(),
+                        style: const TextStyle(
+                          color: Colors.black ,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        "@${person.username}",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: Get.height * 0.02),
+                      SizedBox(
+                        width: Get.width * 0.3,
+                        child: AppButton(
+                          title: 'Follow',
+                          onPressed: () {
+
+                          },
+                          borderRadius: 10,
+                          fontColor: AppColors.primary,
+                          bckgrndColor: AppColors.background,
+                          border: Border.all(color: AppColors.primary, width: 1),
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: Get.height * 0.015),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             },
