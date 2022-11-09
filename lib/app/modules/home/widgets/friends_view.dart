@@ -170,6 +170,7 @@ class _FriendsViewState extends State<FriendsView> {
                                     "user_id": person.userId,
                                     "username": person.username
                                   };
+
                                   if(!isFollowing){
                                     var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/follow");
                                     if(response.isSuccessful){
