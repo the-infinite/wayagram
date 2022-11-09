@@ -28,22 +28,22 @@ class UserRepository {
 
   //Authentication
   Future<ApiResponse> signUpCorporate(dynamic body) async {
-    final response = await api.postData('/auth-service/api/v1/auth/create-corporate', body: body);
+    final response = await api.postData('/auth-service/api/v1/auth/create-corporate', body: body,sso: false);
     return response;
   }
   Future<ApiResponse> signUpNormalUser(dynamic body) async {
-    final response = await api.postData('/auth-service/api/v1/auth/create', body: body);
+    final response = await api.postData('/auth-service/api/v1/auth/create', body: body,sso: false);
     return response;
   }
   Future<ApiResponse> signIn(dynamic body) async {
-    final response = await api.postData('/auth-service/api/v1/auth/login', body: body);
+    final response = await api.postData('/auth-service/api/v1/auth/login', body: body,sso: false);
     if(response.isSuccessful){
       response.data = LogInModelEntity.fromJson(response.data);
     }
     return response;
   }
   Future<ApiResponse> verifyOTP(dynamic body) async {
-    final response = await api.postData('/auth-service/api/v1/auth/verify-otp', body: body);
+    final response = await api.postData('/auth-service/api/v1/auth/verify-otp', body: body,sso: false);
     return response;
   }
   Future<ApiResponse> createPIN(dynamic body) async {
@@ -53,7 +53,7 @@ class UserRepository {
 
   //Profile,Friends,Accounts and Connections
   Future<ApiResponse> getUserProfile(String userID) async {
-    final response = await api.getData('/auth-service/api/v1/profile/$userID',hasHeader: true);
+    final response = await api.getData('/auth-service/api/v1/profile/$userID',hasHeader: true,sso: false);
     if(response.isSuccessful){
       print(response.isSuccessful);
       response.data = ProfileModelEntity.fromJson(response.data);

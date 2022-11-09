@@ -20,8 +20,8 @@ import '../app/modules/verify_otp/verify_otp.dart';
 
 class AppPages {
   AppPages._();
-  static String initial = MyPref.authToken.val.isNotEmpty ? Home.route : OnboardingPage.route;
-  //static String initial =  OnboardingPage.route;
+  //static String initial = MyPref.authToken.val.isNotEmpty ? Home.route : OnboardingPage.route;
+  static String initial =  OnboardingPage.route;
 
   static final routes = [
     GetPage(

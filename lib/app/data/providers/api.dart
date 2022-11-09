@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
+import '../model/profile_model_entity.dart';
 import 'api_response.dart';
 import 'my_pref.dart';
 
@@ -20,7 +22,7 @@ import 'my_pref.dart';
 //KYC service https://services.staging.wayagram.ng/kyc-service/swagger-ui/index.html
 
 class Api {
-  static const String baseUrl = 'https://services.wayagram.ng/';
+  static const String baseUrl = 'https://services.staging.wayagram.ng/';
 
   static const String imgUrl = 'http://imgURl';
   CancelToken token = CancelToken();
@@ -43,8 +45,17 @@ class Api {
       var head = {
         'Authorization': MyPref.authToken.val,
       };
+      var link = url;
+      if(sso){
+        var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+        if(url.contains("?")){
+          link = '$url&sso_id=${profile.userId}';
+        }else{
+          link = '$url/?&sso_id=${profile.userId}';
+        }
+      }
       var request = await _client.request(
-        url,
+        link,
         data: body,
         cancelToken: token,
         options: Options(method: 'POST', headers: hasHeader ? head : null,
@@ -52,6 +63,7 @@ class Api {
         ),
       );
 
+      print(link);
       return ApiResponse.response(request);
     } on DioError catch (e) {
       return e.toApiError(cancelToken: token);
@@ -72,18 +84,28 @@ class Api {
 
   Future<ApiResponse> deleteData(
       String url, {
-        bool hasHeader = false,
+        bool hasHeader = false, bool sso = true,
       }) async {
     token = CancelToken();
     var head = {
       'Authorization': MyPref.authToken.val,
     };
+    var link = url;
+    if(sso){
+      var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+      if(url.contains("?")){
+        link = '$url&sso_id=${profile.userId}';
+      }else{
+        link = '$url/?&sso_id=${profile.userId}';
+      }
+    }
     try {
       var request = await _client.request(
-        url,
+        link,
         cancelToken: token,
         options: Options(method: 'DELETE', headers: hasHeader ? head : null,contentType: "application/json"),
       );
+      print(link);
       return ApiResponse.response(request);
     } on DioError catch (e) {
       return e.toApiError(cancelToken: token);
@@ -111,14 +133,23 @@ class Api {
     var head = {
       'Authorization': MyPref.authToken.val,
     };
+    var link = url;
+    if(sso){
+      var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+      if(url.contains("?")){
+        link = '$url&sso_id=${profile.userId}';
+      }else{
+        link = '$url/?&sso_id=${profile.userId}';
+      }
+    }
     try {
       var request = await _client.request(
-        url,
+        link,
         data: body,
         cancelToken: token,
         options: Options(method: 'PUT', headers: hasHeader ? head : null,contentType: "application/json"),
       );
-
+      print(link);
       return ApiResponse.response(request);
     } on DioError catch (e) {
       return e.toApiError(cancelToken: token);
@@ -162,14 +193,23 @@ class Api {
       var head = {
         'Authorization': MyPref.authToken.val,
       };
-
+      var link = url;
+      if(sso){
+        var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+        if(url.contains("?")){
+          link = '$url&sso_id=${profile.userId}';
+        }else{
+          link = '$url/?&sso_id=${profile.userId}';
+        }
+      }
       var request = await _client.request(
-        url,
+        link,
         cancelToken: token,
         options: Options(method: 'GET', headers: hasHeader ? head : null),
       );
       //var response = await http.get(Uri.parse(baseUrl+url), headers: hasHeader ? head : null);
       //return ApiResponse.responseFromBody(response.body, response.statusCode);
+      print(link);
       return ApiResponse.response(request);
     } on DioError catch (e) {
       print(e.message);
