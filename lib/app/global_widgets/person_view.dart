@@ -76,9 +76,9 @@ class _PersonViewState extends State<PersonView> {
             var username = widget.username[index];
             var profilePic = widget.profilePic[index];
             var userID = widget.userIDs[index];
-            var postCount = "";
-            var followersCount = "";
-            var followingCount = "";
+            var postCount = "0";
+            var followersCount = "0";
+            var followingCount = "0";
             var bio = '';
             var coverImage = '';
             if(widget.blocked!=null){

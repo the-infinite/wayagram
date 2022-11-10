@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:wayagram/app/data/model/SearhPeopleModel.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
@@ -21,6 +22,7 @@ import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
+import '../../global_widgets/person_view.dart';
 import '../home/widgets/group_view.dart';
 import '../home/widgets/posts_view.dart';
 
@@ -139,7 +141,45 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                               }
                             }),
                       ),
-                      const Center(child: Text('People')),
+                      SingleChildScrollView(
+                        child: FutureBuilder<ApiResponse>(
+                            future: controller.searchPeople(searchController.text),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                              //<key>aps-environment</key>
+                              //<string>development</string>
+                                searchedPeople = jsonEncode(snapshot.data!.data);
+                                var posts = SearchPeopleModel.getService(snapshot.data!.data);
+                                return PersonView(
+                                  name: posts.map((e) => e.displayName.toString()).toList(),
+                                  username: posts.map((e) => e.username.toString()).toList(),
+                                  profilePic: posts.map((e) => e.avatar.toString()).toList(),
+                                  length: posts.length,
+                                  userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                );
+                              } else if(searchedPeople.isNotEmpty){
+                                var posts = SearchPeopleModel.getService(jsonDecode(searchedPeople));
+                                return PersonView(
+                                  name: posts.map((e) => e.displayName.toString()).toList(),
+                                  username: posts.map((e) => e.username.toString()).toList(),
+                                  profilePic: posts.map((e) => e.avatar.toString()).toList(),
+                                  length: posts.length,
+                                  userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                );
+                              }else{
+                                if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                  return SizedBox(
+                                    height: Get.height * 0.7,
+                                    child: const Center(
+                                      child: Text('Enter a search term to search for People'),
+                                    ),
+                                  );
+                                }
+                                return const GroupView(isLoading: true,isGroup: true,);
+                              }
+                            }),
+                      ),
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
                             future: controller.searchGroups(searchController.text),
