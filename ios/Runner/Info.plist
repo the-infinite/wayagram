@@ -60,5 +60,7 @@
 	<false/>
 	<key>aps-environment</key>
 	<string>development</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 </dict>
 </plist>
