@@ -103,12 +103,23 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
       child: GetBuilder<HomeController>(
           id: 'profile_page',
           builder: (controller) {
-            var followers = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));
-            var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
+            //
+            //var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
             var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
-            var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
+            //var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
+            var followersCount = 0;
+            var followingCount = 0;
+            if(MyPref.followers.val.isNotEmpty) {
+              var followers = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));
+              followersCount = followers.followers!.length;
+            }
+
+            if(MyPref.following.val.isNotEmpty) {
+              var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
+              followingCount = following.following!.length;
+            }
             return Scaffold(
               body: NestedScrollView(
                 headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -243,7 +254,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                           child: Row(
                                             children: [
                                               Text(
-                                                (followers.followers == null ? 0 : followers.followers!.length).toString(),
+                                                followersCount.toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: Get.width*0.035,
@@ -270,7 +281,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                           child: Row(
                                             children: [
                                               Text(
-                                                (following.following == null ? 0 : following.following!.length).toString(),
+                                                followingCount.toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: Get.width*0.035,

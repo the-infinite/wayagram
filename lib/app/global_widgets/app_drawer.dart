@@ -30,7 +30,14 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
-    var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
+    var followers = 0;
+    var following = 0;
+    //var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
+    if(MyPref.friends.val.isNotEmpty){
+      var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
+      followers = friends.followers!;
+      following = friends.following!;
+    }
     var accounts = AccountModelEntity.fromJson(jsonDecode(MyPref.account.val));
 
     var controller = Get.find<HomeController>();
@@ -90,7 +97,7 @@ class AppDrawer extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      friends.followers.toString(),
+                                      followers.toString(),
                                       style: AppTextStyle.headline4.copyWith(
                                         color: AppColors.primary,
                                         fontWeight: FontWeight.normal,
@@ -110,7 +117,7 @@ class AppDrawer extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      friends.following.toString(),
+                                      following.toString(),
                                       style: AppTextStyle.headline4.copyWith(
                                         color: AppColors.primary,
                                         fontWeight: FontWeight.normal,
