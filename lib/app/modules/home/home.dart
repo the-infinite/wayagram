@@ -43,6 +43,7 @@ class Home extends GetView<HomeController> {
           id: 'home',
           builder: (controller) {
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+            var showSearchIcon = controller.currentBottomNavPage.value == 1 || controller.currentBottomNavPage.value == 2;
 
             return Scaffold(
               appBar: AppBar(
@@ -84,7 +85,10 @@ class Home extends GetView<HomeController> {
                     height: 45,
                     child: IconButton(
                       icon: Image.asset(
-                        'assets/images/follow_new_users.png',
+                        showSearchIcon ? 'assets/images/search.png' : 'assets/images/follow_new_users.png',
+                        color: Colors.black,
+                        width: showSearchIcon ? Get.width*0.05 : Get.width*0.07,
+                        height: showSearchIcon ? Get.width*0.05 : Get.width*0.07,
                       ),
                       onPressed: () {
 
@@ -317,10 +321,10 @@ class Home extends GetView<HomeController> {
                 selectedItemColor: AppColors.primary,
                 unselectedItemColor: Colors.grey,
                 onTap: (index) {
-                controller.currentBottomNavPage.value = index;
-                controller.update(['home']);
-                controller.toggleShop(0,animate: false);
-              }
+                  controller.currentBottomNavPage.value = index;
+                  controller.update(['home']);
+                  controller.toggleShop(0,animate: false);
+                }
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
