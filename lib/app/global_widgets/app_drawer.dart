@@ -191,13 +191,13 @@ class AppDrawer extends StatelessWidget {
                             },
                           ),
 
-                          _TextButton(
+                          /*_TextButton(
                             leading: const Icon(Icons.person_add, color: Colors.black),
                             text: "Discover People",
                             onPressed: () {
 
                             },
-                          ),
+                          ),*/
 
                           _TextButton(
                             leading: const Icon(Icons.people, color: Colors.black),
