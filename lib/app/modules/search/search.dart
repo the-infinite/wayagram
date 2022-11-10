@@ -125,8 +125,13 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 var posts = AllPostsEntity.getService(jsonDecode(searchedPosts));
                                 return PostsView(posts: posts);
                               }else{
-                                if(snapshot.connectionState == ConnectionState.done){
-                                  return const SizedBox.shrink();
+                                if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                  return SizedBox(
+                                    height: Get.height * 0.7,
+                                    child: const Center(
+                                      child: Text('Enter a search term to search for posts'),
+                                    ),
+                                  );
                                 }
                                 return const PostsView(isLoading: true);
                               }
