@@ -12,6 +12,7 @@ import '../../../core/theme/app_themes.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
+import '../../data/model/group_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
@@ -20,6 +21,7 @@ import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
+import '../home/widgets/group_view.dart';
 import '../home/widgets/posts_view.dart';
 
 class Search extends StatefulWidget {
@@ -115,13 +117,13 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                         child: FutureBuilder<ApiResponse>(
                             future: controller.searchPost(searchController.text),
                             builder: (context, snapshot) {
-                              var savedPosts = MyPref.posts.val;
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 //final posts = snapshot.data!.data as List<AllPostsEntity>;
                                 searchedPosts = jsonEncode(snapshot.data!.data);
                                 var posts = AllPostsEntity.getService(snapshot.data!.data);
                                 return PostsView(posts: posts);
-                              }else if(searchedPosts.isNotEmpty){
+                              }
+                              else if(searchedPosts.isNotEmpty){
                                 var posts = AllPostsEntity.getService(jsonDecode(searchedPosts));
                                 return PostsView(posts: posts);
                               }else{
@@ -138,8 +140,56 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                             }),
                       ),
                       const Center(child: Text('People')),
-                      const Center(child: Text('Groups')),
-                      const Center(child: Text('Pages')),
+                      SingleChildScrollView(
+                        child: FutureBuilder<ApiResponse>(
+                            future: controller.searchGroups(searchController.text),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                                searchedGroups = jsonEncode(snapshot.data!.data);
+                                var posts = GroupModelEntity.getService(snapshot.data!.data);
+                                return GroupView(posts: posts,isGroup: true,);
+                              } else if(searchedGroups.isNotEmpty){
+                                var posts = GroupModelEntity.getService(jsonDecode(searchedGroups));
+                                return GroupView(posts: posts,isGroup: true);
+                              }else{
+                                if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                  return SizedBox(
+                                    height: Get.height * 0.7,
+                                    child: const Center(
+                                      child: Text('Enter a search term to search for groups'),
+                                    ),
+                                  );
+                                }
+                                return const GroupView(isLoading: true,isGroup: true,);
+                              }
+                            }),
+                      ),
+                      SingleChildScrollView(
+                        child: FutureBuilder<ApiResponse>(
+                            future: controller.searchPages(searchController.text),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                                searchedPages = jsonEncode(snapshot.data!.data);
+                                var posts = GroupModelEntity.getService(snapshot.data!.data);
+                                return GroupView(posts: posts,isGroup: false,);
+                              } else if(searchedPages.isNotEmpty){
+                                var posts = GroupModelEntity.getService(jsonDecode(searchedPages));
+                                return GroupView(posts: posts,isGroup: false);
+                              }else{
+                                if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                  return SizedBox(
+                                    height: Get.height * 0.7,
+                                    child: const Center(
+                                      child: Text('Enter a search term to search for pages'),
+                                    ),
+                                  );
+                                }
+                                return const GroupView(isLoading: true,isGroup: false,);
+                              }
+                            }),
+                      ),
                     ],
                   ),
                 ),
