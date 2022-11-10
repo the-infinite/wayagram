@@ -33,7 +33,7 @@ class Api {
     headers: {
       'Content-Type': 'application/json',
     },
-    receiveTimeout: 10000,
+    receiveTimeout: 100000,
   ));
 
   Future<ApiResponse> postData(

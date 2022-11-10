@@ -20,7 +20,10 @@ class ApiResponse {
 
   static ApiResponse response(Response response) {
     var json = response.data;
+
+    print(response.statusCode);
     print(json['message']);
+
     return ApiResponse(
       message: json['message'],
       isSuccessful: json['status'],
