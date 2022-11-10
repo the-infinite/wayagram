@@ -5,6 +5,7 @@ import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 
 import '../app/bindings/wayagram_binding.dart';
 import '../app/data/providers/my_pref.dart';
+import '../app/modules/contacts/contact.dart';
 import '../app/modules/multiplexor/multiplexor.dart';
 import '../app/modules/onboarding/onboarding.dart';
 import '../app/modules/profile/confirm_pin.dart';
@@ -13,6 +14,7 @@ import '../app/modules/profile/other_profile.dart';
 import '../app/modules/profile/post_profile.dart';
 import '../app/modules/profile/profile.dart';
 import '../app/modules/profile/update_profile.dart';
+import '../app/modules/search/search.dart';
 import '../app/modules/settings/settings.dart';
 import '../app/modules/setup/interests.dart';
 import '../app/modules/sign_in/sign_in.dart';
@@ -102,6 +104,18 @@ class AppPages {
     GetPage(
       name: PostProfile.route,
       page: () => const PostProfile(),
+      binding: WayagramBinding(),
+    ),
+
+    GetPage(
+      name: Search.route,
+      page: () => const Search(),
+      binding: WayagramBinding(),
+    ),
+
+    GetPage(
+      name: Contact.route,
+      page: () => const Contact(),
       binding: WayagramBinding(),
     ),
   ];

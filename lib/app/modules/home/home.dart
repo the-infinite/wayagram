@@ -21,6 +21,8 @@ import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/app_drawer.dart';
 import '../../global_widgets/page_input.dart';
+import '../contacts/contact.dart';
+import '../search/search.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
@@ -91,7 +93,11 @@ class Home extends GetView<HomeController> {
                         height: showSearchIcon ? Get.width*0.05 : Get.width*0.07,
                       ),
                       onPressed: () {
-
+                        if (showSearchIcon) {
+                          Get.toNamed(Search.route);
+                        } else {
+                          Get.toNamed(Contact.route);
+                        }
                       },
                     ),
                   ),
