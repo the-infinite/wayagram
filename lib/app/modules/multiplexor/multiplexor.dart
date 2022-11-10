@@ -20,31 +20,33 @@ class Multiplexor extends StatelessWidget {
       body: Container(
         color: AppColors.background,
         child: Padding(
-          padding: const EdgeInsets.all(AppThemes.appPaddingVal),
+          padding: const EdgeInsets.only(left: AppThemes.appPaddingVal,right: AppThemes.appPaddingVal,top: AppThemes.appPaddingVal),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: Get.height * 0.04,
+                height: Get.height * 0.05,
               ),
               SvgPicture.asset(
                 'assets/images/wayagram2.svg',
               ),
               SizedBox(
-                height: Get.height * 0.1,
+                height: Get.height * 0.08,
               ),
               Image.asset(
                 'assets/images/multiplexor.png',
-                width: Get.width * 0.85,
-                height: Get.width * 0.85,
+                width: Get.height * 0.38,
+                height: Get.height * 0.38,
+                fit: BoxFit.cover,
               ),
-              SizedBox(height: Get.height * 0.05),
+              SizedBox(height: Get.height * 0.06),
               Text(
                 'Discover, Connect and Transact',
                 style: AppTextStyle.headline4.copyWith(
                   color: Colors.black,
                   fontWeight: FontWeight.normal,
+                  fontSize: Get.textScaleFactor * 15,
                 ),
               ),
               Text(
@@ -52,15 +54,19 @@ class Multiplexor extends StatelessWidget {
                 style: AppTextStyle.headline4.copyWith(
                   color: Colors.black,
                   fontWeight: FontWeight.normal,
+                  fontSize: Get.textScaleFactor * 15,
                 ),
               ),
-              SizedBox(height: Get.height * 0.05),
+              SizedBox(height: Get.height * 0.1),
               AppButton(
                 title: 'Get Started',
                 onPressed: () {
                   Get.toNamed(SignUp.route);
                 },
                 borderRadius: 300,
+                padding: EdgeInsets.symmetric(
+                  vertical: Get.height * 0.016,
+                ),
               ),
               SizedBox(height: Get.height * 0.03),
               AppButton(
@@ -72,6 +78,9 @@ class Multiplexor extends StatelessWidget {
                 },
                 borderRadius: 300,
                 border: Border.all(color: AppColors.primary),
+                padding: EdgeInsets.symmetric(
+                  vertical: Get.height * 0.016,
+                ),
               ),
             ],
           ),
