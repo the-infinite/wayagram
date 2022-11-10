@@ -147,8 +147,6 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
-                              //<key>aps-environment</key>
-                              //<string>development</string>
                                 searchedPeople = jsonEncode(snapshot.data!.data);
                                 var posts = SearchPeopleModel.getService(snapshot.data!.data);
                                 return PersonView(
