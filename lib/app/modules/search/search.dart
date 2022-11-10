@@ -18,16 +18,28 @@ import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
-class Search extends GetView<HomeController> {
+class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
 
   static const route = '/search';
 
   @override
+  State<Search> createState() => _SearchState();
+}
+
+class _SearchState extends State<Search> with TickerProviderStateMixin{
+  var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+  var searchController = TextEditingController();
+  late TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: 4, vsync: this);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-    var searchController = TextEditingController();
-    
     return  GetBuilder<HomeController>(
         builder: (controller) {
           return Scaffold(
@@ -42,20 +54,63 @@ class Search extends GetView<HomeController> {
                     Get.back();
                   },
                 ),
-                title: Text('Update Profile', style: AppTextStyle.subtitle1.copyWith(
-                  color: Colors.black,
-                )),
+                title: Padding(
+                  padding: EdgeInsets.only(top: Get.height * 0.02,bottom: Get.height * 0.02),
+                  child: PageInput(
+                    hint: 'Search',
+                    label: '',
+                    controller: searchController,
+                    keyboardType: TextInputType.text,
+                    borderRadius: 180,
+                  ),
+                ),
                 centerTitle: false,
             ),
             body: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-
+              children: [
+                SizedBox(height: Get.height * 0.015),
+                TabBar(
+                  controller: tabController,
+                  padding: EdgeInsets.zero,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: const Color(0xff9A9A9A),
+                  indicatorColor: AppColors.primary,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelPadding: EdgeInsets.zero,
+                  indicatorPadding: EdgeInsets.zero,
+                  tabs: const [
+                    Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                    Tab(text: 'People',iconMargin: EdgeInsets.zero,),
+                    Tab(text: 'Groups',iconMargin: EdgeInsets.zero,),
+                    Tab(text: 'Pages',iconMargin: EdgeInsets.zero,),
+                  ],
+                ),
+                const Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  color: Colors.grey,
+                ),
+                TabBarView(
+                  controller: tabController,
+                  children: [
+                    Column(),
+                    Column(),
+                    Column(),
+                    Column(),
+                  ],
+                ),
               ],
             ),
           );
         }
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    tabController.dispose();
   }
 }

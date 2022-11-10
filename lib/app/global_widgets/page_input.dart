@@ -26,7 +26,8 @@ class PageInput extends StatelessWidget {
     this.onDropdownChanged,
     this.onChanged,
     this.hintColor = const Color(0xFFC4C4C4),
-    this.contentPadding = const EdgeInsets.fromLTRB(15, 10, 19, 10)
+    this.contentPadding = const EdgeInsets.fromLTRB(15, 10, 19, 10),
+    this.borderRadius = 10,
   }) : super(key: key);
 
   final String hint;
@@ -46,6 +47,7 @@ class PageInput extends StatelessWidget {
   final Function(String)? onChanged;
   final Color? hintColor;
   final EdgeInsetsGeometry? contentPadding;
+  final double borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,8 @@ class PageInput extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
+              if(label.isNotEmpty)
+                Text(
                 label,
                 style: AppTextStyle.bodyText2.copyWith(
                   fontWeight: FontWeight.w400,
@@ -127,6 +130,7 @@ class PageInput extends StatelessWidget {
                   hintColor: hintColor,
                   maxLength: 11,
                   contentPadding: contentPadding,
+                  borderRadius: borderRadius,
                 ),
               ),
           ],
@@ -145,6 +149,7 @@ class PageInput extends StatelessWidget {
             onChanged: onChanged,
             hintColor: hintColor,
             contentPadding: contentPadding,
+            borderRadius: borderRadius,
           )
       ],
     );

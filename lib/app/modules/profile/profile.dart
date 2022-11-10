@@ -47,7 +47,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> with TickerProviderStateMixin{
-  var page = 0;
+  late TabController tabController;
   PageController pageController = PageController(initialPage: 0, keepPage: true);
 
   late Animation<Color?> animation;
@@ -74,6 +74,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
 
         });
       });
+
+    tabController = TabController(length: 4, vsync: this);
   }
 
   void animateColorForward() {
@@ -308,67 +310,28 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                     ),
                                   ),
                                   const SizedBox(height: 10,),
-                                  Center(
-                                    child: ToggleSwitch(
-                                      minWidth: Get.width * 0.5,
-                                      initialLabelIndex: 0,
-                                      totalSwitches: 4,
-                                      inactiveBgColor: animation.value!,
-                                      activeBgColor: [animation.value!, animation.value!,animation.value!,animation.value!],
-                                      activeBorders: [
-                                        //Bottom Border
-                                        Border.all(
-                                          color: animation.value!,
-                                          width: 3.0,
-                                        ),
-                                        Border.all(
-                                          color: animation.value!,
-                                          width: 3.0,
-                                        ),
-                                        Border.all(
-                                          color: animation.value!,
-                                          width: 3.0,
-                                        ),
-                                        Border.all(
-                                          color: animation.value!,
-                                          width: 3.0,
-                                        ),
-                                      ],
-                                      radiusStyle: true,
-                                      cornerRadius: 10.0,
-                                      labels: const ['Posts', 'Products','Events','Donation'],
-                                      customTextStyles: [
-                                        AppTextStyle.bodyText1.copyWith(
-                                          color: page == 0 ? AppColors.primary : Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                        ),
-                                        AppTextStyle.bodyText1.copyWith(
-                                          color: page == 1 ? AppColors.primary : Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                        ),
-                                        AppTextStyle.bodyText1.copyWith(
-                                          color: page == 2 ? AppColors.primary : Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                        ),
-                                        AppTextStyle.bodyText1.copyWith(
-                                          color: page == 3 ? AppColors.primary : Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                        ),
-                                      ],
-                                      onToggle: (index) {
-                                        page = index!;
-                                        pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                                        controller.update(['profile_page']);
-                                      },
-                                    ),
+                                  TabBar(
+                                    controller: tabController,
+                                    padding: EdgeInsets.zero,
+                                    labelColor: Colors.black,
+                                    unselectedLabelColor: const Color(0xff9A9A9A),
+                                    indicatorColor: AppColors.primary,
+                                    indicatorSize: TabBarIndicatorSize.tab,
+                                    tabs: const [
+                                      Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                      Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
+                                      Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
+                                      Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
+                                    ],
+                                    onTap: (index) {
+                                      //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                      //controller.update(['profile_page']);
+                                    },
                                   ),
                                   const Divider(
+                                    height: 0.5,
+                                    thickness: 0.5,
                                     color: Colors.grey,
-                                    thickness: 0.3,
                                   ),
                                 ],
                               ),
@@ -454,13 +417,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                     ),
                   ];
                 },
-                body: PageView(
-                  controller: pageController,
-                  onPageChanged: (page){
-                    setState(() {
-                      this.page = page;
-                    });
-                  },
+                body: TabBarView(
+                  controller: tabController,
                   children: [
                     FutureBuilder<ApiResponse>(
                         future: controller.getPosts,
@@ -511,5 +469,12 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
             );
           }),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    tabController.dispose();
+    pageController.dispose();
   }
 }
