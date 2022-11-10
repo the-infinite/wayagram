@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class SmartImage extends StatelessWidget {
@@ -20,33 +23,23 @@ class SmartImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return networkImage()
-        ? FadeInImage.memoryNetwork(
-            placeholder: kTransparentImage,
-            image: src,
-            fit: fit,
-            imageErrorBuilder: (_, e, a) {
-              return Container(
-                alignment: Alignment.center,
-                child: const Text(
-                  "Error. Please check your internet connection",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Nunito',
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              );
-            },
-          )
-        : isPost
-            ? Image.file(
+
+    return networkImage() ? CachedNetworkImage(
+      imageUrl: src, placeholder: (context, url) => Container(
+      color: Colors.transparent,
+        child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.05),
+    ),
+      errorWidget: (context, url, error) => Container(
+          color: Colors.transparent,
+          child: Icon(Icons.broken_image_rounded,color: Colors.grey,size: Get.height*0.05)
+      ),
+      fit: fit,
+    ) : isPost
+        ? Image.file(
                 File(src),
                 fit: fit,
               )
-            : CircleAvatar(
+        : CircleAvatar(
                 radius: radius,
                 backgroundImage: MemoryImage(
                   imageDecoder(src),

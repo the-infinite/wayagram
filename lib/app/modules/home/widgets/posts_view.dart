@@ -76,6 +76,9 @@ class PostsView extends StatelessWidget{
             return const SizedBox.shrink();
           }
         }
+        if(post.profile == null) {
+          return const SizedBox.shrink();
+        }
         return Container(
           margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
           decoration: BoxDecoration(
@@ -104,7 +107,7 @@ class PostsView extends StatelessWidget{
                       height: 50,
                       child: IconButton(
                         icon: AppAvatar(
-                          imgUrl: post.profile!.avatar.toString(),
+                          imgUrl: post.profile!= null ?  post.profile!.avatar.toString() : "",
                           radius: 45,
                         ),
                         onPressed: null,

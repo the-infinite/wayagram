@@ -31,6 +31,10 @@ class NewsfeedMultipleImageView extends StatelessWidget {
       builder: (context, costraints) => Container(
         width: costraints.maxWidth,
         height: costraints.maxWidth,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey[200],
+        ),
         margin: EdgeInsets.fromLTRB(
           marginLeft,
           marginTop,
@@ -105,8 +109,7 @@ class ImageViewer extends StatelessWidget {
                           isPost: true,
                         ),
                       ),
-                    )
-                        .toList(),
+                    ).toList(),
                   ),
                 ),
               ],

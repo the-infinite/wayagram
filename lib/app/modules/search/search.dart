@@ -10,13 +10,17 @@ import 'package:wayagram/core/utils/validator.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
+import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/document_picker.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
+
+import '../home/widgets/posts_view.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -28,19 +32,30 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> with TickerProviderStateMixin{
+  var homeController = Get.find<HomeController>();
   var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
   var searchController = TextEditingController();
+  var searchedPosts = "";
+  var searchedPeople = "";
+  var searchedGroups = "";
+  var searchedPages = "";
   late TabController tabController;
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 4, vsync: this);
+    searchController.addListener(() {
+      if(searchController.text.isNotEmpty) {
+        homeController.update(['search']);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return  GetBuilder<HomeController>(
+        id: 'search',
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
@@ -92,14 +107,36 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                   thickness: 0.5,
                   color: Colors.grey,
                 ),
-                TabBarView(
-                  controller: tabController,
-                  children: [
-                    Column(),
-                    Column(),
-                    Column(),
-                    Column(),
-                  ],
+                Expanded(
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [
+                      SingleChildScrollView(
+                        child: FutureBuilder<ApiResponse>(
+                            future: controller.searchPost(searchController.text),
+                            builder: (context, snapshot) {
+                              var savedPosts = MyPref.posts.val;
+                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                //final posts = snapshot.data!.data as List<AllPostsEntity>;
+                                searchedPosts = jsonEncode(snapshot.data!.data);
+                                var posts = AllPostsEntity.getService(snapshot.data!.data);
+                                return PostsView(posts: posts);
+                              }else if(searchedPosts.isNotEmpty){
+                                var posts = AllPostsEntity.getService(jsonDecode(searchedPosts));
+                                return PostsView(posts: posts);
+                              }else{
+                                if(snapshot.connectionState == ConnectionState.done){
+                                  return const SizedBox.shrink();
+                                }
+                                return const PostsView(isLoading: true);
+                              }
+                            }),
+                      ),
+                      const Center(child: Text('People')),
+                      const Center(child: Text('Groups')),
+                      const Center(child: Text('Pages')),
+                    ],
+                  ),
                 ),
               ],
             ),
