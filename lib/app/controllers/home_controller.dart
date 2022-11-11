@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -46,6 +47,7 @@ class HomeController extends GetxController {
     ChatsTab()
   ];
   List<String> imagePaths = [];
+  List<Contact> contacts = [];
 
   var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
   var logInDetails = LogInModelEntity.fromJson(jsonDecode(MyPref.logInDetail.val));
