@@ -186,14 +186,31 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                           child: SizedBox(
                                             child: AppButton(
                                               title: isFollowing ? 'Following' : 'Follow',
-                                              onPressed: () {
-                                                //controller.imagePaths.clear();
-                                                //Get.toNamed(UpdateProfile.route);
+                                              onPressed: () async {
+                                                var body = {
+                                                  "user_id": post.profile!.userId,
+                                                  "username": post.profile!.username,
+                                                };
+                                                if(!isFollowing){
+                                                  var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/follow");
+                                                  if(response.isSuccessful){
+                                                    await controller.getFollowing;
+                                                    await controller.getPosts;
+                                                    controller.update(['post_profile_page']);
+                                                  }
+                                                }else{
+                                                  var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/unfollow");
+                                                  if(response.isSuccessful){
+                                                    await controller.getFollowing;
+                                                    await controller.getPosts;
+                                                    controller.update(['post_profile_page']);
+                                                  }
+                                                }
                                               },
                                               borderRadius: 10,
-                                              fontColor: AppColors.primary,
-                                              bckgrndColor: AppColors.background,
-                                              border: Border.all(color: AppColors.primary, width: 1),
+                                              fontColor: isFollowing ? AppColors.primary : AppColors.background,
+                                              bckgrndColor: isFollowing ? AppColors.background : AppColors.primary,
+                                              border: Border.all(color: isFollowing ? AppColors.primary : AppColors.background, width: 1),
                                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                             ),
                                           ),
