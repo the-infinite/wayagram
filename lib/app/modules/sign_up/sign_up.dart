@@ -196,7 +196,7 @@ class SignUp extends GetView<AuthController> {
                                       PageDropButton(
                                         label: "Business Type",
                                         hint: '',
-                                        padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                        padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                         onChanged: (val) {
                                           //controller.businessType.value = val!;
                                         },
@@ -288,7 +288,7 @@ class SignUp extends GetView<AuthController> {
                                       PageDropButton(
                                         label: "State",
                                         hint: '',
-                                        padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                        padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                         onChanged: (val) {
                                           controller.updateCity(val.toString());
                                         },
@@ -304,7 +304,7 @@ class SignUp extends GetView<AuthController> {
                                       PageDropButton(
                                         label: "City",
                                         hint: '',
-                                        padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                        padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                         onChanged: (val) {
                                           //controller.state.value = ;
                                         },
