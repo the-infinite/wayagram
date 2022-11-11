@@ -26,10 +26,22 @@ import '../search/search.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
-class Home extends GetView<HomeController> {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   static const route = '/home';
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  var homeController = Get.find<HomeController>();
+  @override
+  void initState() {
+    super.initState();
+    homeController.checkPermissionStatus();
+  }
 
   @override
   Widget build(BuildContext context) {

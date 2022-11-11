@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/contact.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/tabs/chats_tab.dart';
 import 'package:wayagram/app/modules/home/tabs/discover_tab.dart';
@@ -48,9 +50,44 @@ class HomeController extends GetxController {
   ];
   List<String> imagePaths = [];
   List<Contact> contacts = [];
+  List<Contact> contactToShow = [];
 
   var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
   var logInDetails = LogInModelEntity.fromJson(jsonDecode(MyPref.logInDetail.val));
+
+  Future<void> checkPermissionStatus() async{
+    var status = await Permission.contacts.status;
+    if (status == PermissionStatus.granted) {
+      var contacts = await FlutterContacts.getContacts(withProperties: true,withThumbnail: true,withPhoto: true);
+      this.contacts = contacts;
+      contactToShow.addAll(contacts.sublist(0, 50));
+      update(['contact']);
+    }else{
+      contacts.clear();
+      contactToShow.clear();
+      update(['contact']);
+    }
+  }
+
+  Future<void> updateContactList() async{
+    var status = await Permission.contacts.status;
+    if (status == PermissionStatus.granted) {
+      if(contactToShow.length < contacts.length){
+        var newLength = contactToShow.length+50 > contacts.length ? contacts.length : contactToShow.length+50;
+        await Future.forEach(
+            contacts.sublist(contactToShow.length,newLength),
+                (contact) async {
+              contactToShow.add(contact as Contact);
+            }
+        );
+        update(['contact']);
+      }
+    }else{
+      contacts.clear();
+      contactToShow.clear();
+      update(['contact']);
+    }
+  }
 
   toggleShop(int index, {bool animate = true}) {
     if(index == 0) {

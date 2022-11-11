@@ -13,6 +13,8 @@ class AppRefresher extends StatelessWidget {
     required this.onRefresh,
     required this.onLoading,
     this.errMsg,
+    this.enablePullDown = true,
+    this.enablePullUp = true,
   }) : super(key: key);
 
   final RefreshController controller;
@@ -20,12 +22,16 @@ class AppRefresher extends StatelessWidget {
   final Function() onRefresh;
   final Function() onLoading;
   final String? errMsg;
+  final bool enablePullDown;
+  final bool enablePullUp;
+
 
   @override
   Widget build(BuildContext context) {
     return SmartRefresher(
       controller: controller,
-      enablePullUp: true,
+      enablePullUp: enablePullUp,
+      enablePullDown: enablePullDown,
       onRefresh: onRefresh,
       onLoading: onLoading,
       header: CustomHeader(
@@ -37,13 +43,12 @@ class AppRefresher extends StatelessWidget {
             body = const SizedBox(
               height: 25,
               width: 25,
-              child: CircularProgressIndicator(
-                strokeWidth: 1.5,
-                color: AppColors.spanishGray,
+              child: CupertinoActivityIndicator(
+                color: AppColors.primary,
               ),
             );
           } else if (mode == RefreshStatus.canRefresh) {
-            body = const Text("release to refresh");
+            body = const Text("Release to refresh");
           } else {
             body = const Text("");
           }
@@ -57,11 +62,13 @@ class AppRefresher extends StatelessWidget {
         builder: (BuildContext context, LoadStatus? mode) {
           Widget body;
           if (mode == LoadStatus.loading) {
-            body = const CupertinoActivityIndicator();
+            body = const CupertinoActivityIndicator(
+              color: AppColors.primary,
+            );
           } else if (mode == LoadStatus.failed) {
-            body = const Text("Load Failed!Click retry!");
+            body = const Text("An Error Occurred");
           } else if (mode == LoadStatus.canLoading) {
-            body = const Text("release to load more");
+            body = const Text("Release to load more");
           } else {
             body = const Text("");
           }

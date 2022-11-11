@@ -55,6 +55,7 @@ dependencies:
   video_thumbnail: ^0.5.3
   intl: ^0.17.0
   flutter_contacts: ^1.1.5+1
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:
