@@ -187,6 +187,7 @@ class Contact extends GetView<HomeController> {
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                         person.displayName,
@@ -196,10 +197,11 @@ class Contact extends GetView<HomeController> {
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                      SizedBox(
+                                      if(person.phones.isNotEmpty)
+                                        SizedBox(
                                         width: Get.width*0.8,
                                         child: Text(
-                                          person.phones.isNotEmpty ? person.phones.first.normalizedNumber : '',
+                                          person.phones.first.normalizedNumber,
                                           style: const TextStyle(
                                             color: Colors.grey,
                                             fontSize: 16,
@@ -209,6 +211,34 @@ class Contact extends GetView<HomeController> {
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
+                                      if(person.phones.isEmpty && person.emails.isNotEmpty)
+                                        SizedBox(
+                                          width: Get.width*0.8,
+                                          child: Text(
+                                            person.emails.first.address,
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      if(person.phones.isEmpty && person.emails.isEmpty)
+                                        SizedBox(
+                                          width: Get.width*0.8,
+                                          child: Text(
+                                            person.displayName,
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        )
                                     ],
                                   ),
                                 ],
