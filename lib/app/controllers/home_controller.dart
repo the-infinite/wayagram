@@ -58,11 +58,10 @@ class HomeController extends GetxController {
   Future<void> checkPermissionStatus() async{
     var status = await Permission.contacts.status;
     if (status == PermissionStatus.granted) {
-
       var contacts = await FlutterContacts.getContacts(withProperties: true,withThumbnail: true,withPhoto: true);
       this.contacts = contacts;
       contactToShow.clear();
-      contactToShow.addAll(contacts.sublist(0, 50));
+      contactToShow.addAll(contacts.sublist(0, 15));
       update(['contact']);
     }else{
       contacts.clear();
@@ -75,7 +74,7 @@ class HomeController extends GetxController {
     var status = await Permission.contacts.status;
     if (status == PermissionStatus.granted) {
       if(contactToShow.length < contacts.length){
-        var newLength = contactToShow.length+50 > contacts.length ? contacts.length : contactToShow.length+50;
+        var newLength = contactToShow.length+15 > contacts.length ? contacts.length : contactToShow.length+15;
         await Future.forEach(
             contacts.sublist(contactToShow.length,newLength),
                 (contact) async {
