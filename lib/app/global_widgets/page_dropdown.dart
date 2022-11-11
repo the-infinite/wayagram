@@ -97,6 +97,7 @@ class AppDropdownButton<T> extends StatelessWidget {
       value: value,
       validator: validator,
       items: items,
+      isExpanded: true,
       hint: Center(child: Text(hint)),
       style: const TextStyle(color: Colors.black),
       alignment: AlignmentDirectional.center,
