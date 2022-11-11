@@ -40,7 +40,6 @@ class Api {
         body,
       })
   async {
-    token = CancelToken();
     try {
       var head = {
         'Authorization': MyPref.authToken.val,
@@ -87,7 +86,6 @@ class Api {
         bool hasHeader = false, bool sso = true,
       })
   async {
-    token = CancelToken();
     var head = {
       'Authorization': MyPref.authToken.val,
     };
@@ -170,7 +168,6 @@ class Api {
   }
 
   Future<ApiResponse> getData(String url, {bool hasHeader = false,bool sso = true}) async {
-    token = CancelToken();
     try {
       var head = {
         'Authorization': MyPref.authToken.val,
