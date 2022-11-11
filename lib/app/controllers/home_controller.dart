@@ -58,6 +58,7 @@ class HomeController extends GetxController {
   Future<void> checkPermissionStatus() async{
     var status = await Permission.contacts.status;
     if (status == PermissionStatus.granted) {
+
       var contacts = await FlutterContacts.getContacts(withProperties: true,withThumbnail: true,withPhoto: true);
       this.contacts = contacts;
       contactToShow.clear();

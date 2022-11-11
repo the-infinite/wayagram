@@ -24,8 +24,6 @@ import 'my_pref.dart';
 
 class Api {
   static const String baseUrl = 'https://services.staging.wayagram.ng/';
-
-  static const String imgUrl = 'http://imgURl';
   CancelToken token = CancelToken();
 
   final Dio _client = Dio(BaseOptions(
@@ -37,10 +35,11 @@ class Api {
   ));
 
   Future<ApiResponse> postData(
-    String url, {
-    bool hasHeader = false, bool sso = true,
-    body,
-  }) async {
+      String url, {
+        bool hasHeader = false, bool sso = true,
+        body,
+      })
+  async {
     token = CancelToken();
     try {
       var head = {
@@ -86,7 +85,8 @@ class Api {
   Future<ApiResponse> deleteData(
       String url, {
         bool hasHeader = false, bool sso = true,
-      }) async {
+      })
+  async {
     token = CancelToken();
     var head = {
       'Authorization': MyPref.authToken.val,
@@ -168,25 +168,6 @@ class Api {
       );
     }
   }
-
-  /* Future<ApiResponse> _sendRequest(request, bool hasHeader,
-      {Map<String, String>? body,
-      Iterable<Future<MultipartFile>>? files}) async {
-    if (body != null) {
-      request.fields.addAll(body);
-    }
-    if (files != null) {
-      for (var element in files) {
-        request.files.add(await element);
-      }
-    }
-    request.headers.addAll(headers);
-    http.StreamedResponse response = await request.send().timeout(
-          const Duration(seconds: 15),
-        );
-
-    return await _response(response);
-  } */
 
   Future<ApiResponse> getData(String url, {bool hasHeader = false,bool sso = true}) async {
     token = CancelToken();

@@ -335,7 +335,6 @@ class UserRepository {
     }
     return response;
   }
-
   Future<ApiResponse> getEventsToAttend() async {
     //var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
     final response = await api.getData('/wayagram-service/all-posts/get-all-events?page=1&limit=40',hasHeader: true);
