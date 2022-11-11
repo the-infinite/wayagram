@@ -124,8 +124,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
               body: NestedScrollView(
                 headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
+                    //wrap content height
                     SliverAppBar(
-                      expandedHeight: Get.height * 0.374,
+                      expandedHeight: Get.height * 0.43,
                       floating: true,
                       pinned: true,
                       flexibleSpace: LayoutBuilder(
@@ -198,13 +199,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                               bckgrndColor: AppColors.background,
                                               border: Border.all(color: AppColors.primary, width: 1),
                                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                              fontSize: Get.width * 0.04,
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 10,),
+                                  SizedBox(height: Get.height * 0.01),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Column(
@@ -218,7 +220,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                        const SizedBox(height: 2),
+                                        SizedBox(height: Get.height*0.002),
                                         Text(
                                           "@${fullProfile.username}",
                                           style: TextStyle(
@@ -227,20 +229,20 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
-                                        const SizedBox(height: 2),
+                                        SizedBox(height: Get.height*0.002),
                                         if(fullProfile.bio.toString() != "null")
                                           Text(
                                           fullProfile.bio.toString(),
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: Get.width*0.035,
+                                            fontSize: Get.width*0.04,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 10,),
+                                  SizedBox(height: Get.height * 0.01),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Row(
@@ -257,7 +259,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                 followersCount.toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: Get.width*0.035,
+                                                  fontSize: Get.width*0.04,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -265,7 +267,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                 " Followers",
                                                 style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: Get.width*0.035,
+                                                  fontSize: Get.width*0.04,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
@@ -284,7 +286,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                 followingCount.toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: Get.width*0.035,
+                                                  fontSize: Get.width*0.04,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -292,7 +294,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                 " Following",
                                                 style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: Get.width*0.035,
+                                                  fontSize: Get.width*0.04,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
@@ -305,7 +307,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                           fullProfile.posts.toString(),
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: Get.width*0.035,
+                                            fontSize: Get.width*0.04,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -313,14 +315,13 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                           " Posts",
                                           style: TextStyle(
                                             color: Colors.grey,
-                                            fontSize: Get.width*0.035,
+                                            fontSize: Get.width*0.04,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 10,),
                                   TabBar(
                                     controller: tabController,
                                     padding: EdgeInsets.zero,
@@ -328,6 +329,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                     unselectedLabelColor: const Color(0xff9A9A9A),
                                     indicatorColor: AppColors.primary,
                                     indicatorSize: TabBarIndicatorSize.tab,
+                                    labelStyle: TextStyle(
+                                      fontSize: Get.width*0.035,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    unselectedLabelStyle: TextStyle(
+                                      fontSize: Get.width*0.035,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                     tabs: const [
                                       Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                                       Tab(text: 'Products',iconMargin: EdgeInsets.zero,),

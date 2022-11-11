@@ -51,6 +51,7 @@ class HomeController extends GetxController {
   List<String> imagePaths = [];
   List<Contact> contacts = [];
   List<Contact> contactToShow = [];
+  bool hasContactPermission = false;
 
   var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
   var logInDetails = LogInModelEntity.fromJson(jsonDecode(MyPref.logInDetail.val));
@@ -58,12 +59,14 @@ class HomeController extends GetxController {
   Future<void> checkPermissionStatus() async{
     var status = await Permission.contacts.status;
     if (status == PermissionStatus.granted) {
+      hasContactPermission = true;
       var contacts = await FlutterContacts.getContacts(withProperties: true,withThumbnail: true,withPhoto: true);
       this.contacts = contacts;
       contactToShow.clear();
       contactToShow.addAll(contacts.sublist(0, 15));
       update(['contact']);
     }else{
+      hasContactPermission = false;
       contacts.clear();
       contactToShow.clear();
       update(['contact']);
@@ -189,6 +192,8 @@ class HomeController extends GetxController {
 
   Future<ApiResponse> postData(dynamic body,String url) async {
     final response = await userRepo.postData(url, body);
+    print(url);
+    print(response.data);
     await userRepo.getUserProfile(profile.userId.toString());
     return response;
   }

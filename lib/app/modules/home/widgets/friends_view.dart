@@ -128,37 +128,37 @@ class _FriendsViewState extends State<FriendsView> {
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             SizedBox(height: Get.height * 0.01),
                             SizedBox(
-                              width: Get.width * 0.2,
-                              height: Get.width * 0.2,
-                              child: IconButton(
-                                icon: AppAvatar(
-                                  imgUrl: person.avatar.toString(),
-                                  radius: 50,
-                                ),
-                                onPressed: null,
+                              width: Get.width * 0.13,
+                              height: Get.width * 0.13,
+                              child: AppAvatar(
+                                imgUrl: person.avatar.toString(),
+                                radius: Get.width * 0.1,
                               ),
                             ),
                             SizedBox(height: Get.height * 0.0025),
                             Text(
                               person.displayName.toString(),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.black ,
-                                fontSize: 16,
+                                fontSize: Get.width * 0.04,
                                 fontWeight: FontWeight.w500,
                               ),
+                              textAlign: TextAlign.center,
                             ),
                             Text(
                               "@${person.username}",
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 16,
+                                fontSize: Get.width * 0.04,
                                 fontWeight: FontWeight.normal,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
                             ),
                             SizedBox(height: Get.height * 0.02),
                             SizedBox(
@@ -195,9 +195,11 @@ class _FriendsViewState extends State<FriendsView> {
                                 fontColor: isFollowing ? AppColors.primary : AppColors.background,
                                 bckgrndColor: isFollowing ? AppColors.background : AppColors.primary,
                                 border: Border.all(color: AppColors.primary, width: 1),
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: Get.height * 0.015),
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: Get.height * 0.01),
+                                fontSize: Get.width * 0.04,
                               ),
-                            )
+                            ),
+                            SizedBox(height: Get.height * 0.01),
                           ],
                         ),
                       ),

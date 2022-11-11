@@ -49,6 +49,7 @@ class OtherProfile extends StatefulWidget {
 
 class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMixin{
   var page = 0;
+  late TabController tabController;
   PageController pageController = PageController(initialPage: 0, keepPage: true);
 
   late Animation<Color?> animation;
@@ -75,6 +76,8 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
 
         });
       });
+
+    tabController = TabController(length: 4, vsync: this);
   }
 
   void animateColorForward() {
@@ -129,7 +132,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                 headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
                     SliverAppBar(
-                      expandedHeight: Get.height * 0.374,
+                      expandedHeight: Get.height * 0.45,
                       floating: true,
                       pinned: true,
                       flexibleSpace: LayoutBuilder(
@@ -169,8 +172,8 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           bottom: 0,
                                           left: 20,
                                           child: Container(
-                                            width: Get.width*0.2,
-                                            height: Get.width*0.2,
+                                            width: Get.height*0.1,
+                                            height: Get.height*0.1,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               border: Border.all(color: Colors.white, width: 2),
@@ -219,6 +222,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                               bckgrndColor: isFollowing ? AppColors.background : AppColors.primary,
                                               border: Border.all(color: isFollowing ? AppColors.primary : AppColors.background, width: 1),
                                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                              fontSize: Get.width * 0.04,
                                             ),
                                           ),
                                         ),
@@ -254,14 +258,14 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                             userBio,
                                             style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: Get.width*0.035,
+                                              fontSize: Get.width*0.04,
                                               fontWeight: FontWeight.w400,
                                             ),
                                           ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 10,),
+                                  SizedBox(height: Get.height * 0.01),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Row(
@@ -278,7 +282,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                                 userFollowers.split(".")[0],
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: Get.width*0.035,
+                                                  fontSize: Get.width*0.04,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -286,14 +290,14 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                                 " Followers",
                                                 style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: Get.width*0.035,
+                                                  fontSize: Get.width*0.04,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(width: 10),
+                                        SizedBox(height: Get.height * 0.01),
 
                                         InkWell(
                                           onTap: () {
@@ -305,7 +309,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                                 userFollowing.split(".")[0],
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: Get.width*0.035,
+                                                  fontSize: Get.width*0.04,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -313,7 +317,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                                 " Following",
                                                 style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: Get.width*0.035,
+                                                  fontSize: Get.width*0.04,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
@@ -326,7 +330,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           userPosts.split(".")[0],
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: Get.width*0.035,
+                                            fontSize: Get.width*0.04,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -334,7 +338,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           " Posts",
                                           style: TextStyle(
                                             color: Colors.grey,
-                                            fontSize: Get.width*0.035,
+                                            fontSize: Get.width*0.04,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
@@ -342,67 +346,36 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                     ),
                                   ),
                                   const SizedBox(height: 10,),
-                                  Center(
-                                    child: ToggleSwitch(
-                                      minWidth: Get.width * 0.5,
-                                      initialLabelIndex: 0,
-                                      totalSwitches: 4,
-                                      inactiveBgColor: animation.value!,
-                                      activeBgColor: [animation.value!, animation.value!,animation.value!,animation.value!],
-                                      activeBorders: [
-                                        //Bottom Border
-                                        Border.all(
-                                          color: animation.value!,
-                                          width: 3.0,
-                                        ),
-                                        Border.all(
-                                          color: animation.value!,
-                                          width: 3.0,
-                                        ),
-                                        Border.all(
-                                          color: animation.value!,
-                                          width: 3.0,
-                                        ),
-                                        Border.all(
-                                          color: animation.value!,
-                                          width: 3.0,
-                                        ),
-                                      ],
-                                      radiusStyle: true,
-                                      cornerRadius: 10.0,
-                                      labels: const ['Posts', 'Products','Events','Donation'],
-                                      customTextStyles: [
-                                        AppTextStyle.bodyText1.copyWith(
-                                          color: page == 0 ? AppColors.primary : Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                        ),
-                                        AppTextStyle.bodyText1.copyWith(
-                                          color: page == 1 ? AppColors.primary : Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                        ),
-                                        AppTextStyle.bodyText1.copyWith(
-                                          color: page == 2 ? AppColors.primary : Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                        ),
-                                        AppTextStyle.bodyText1.copyWith(
-                                          color: page == 3 ? AppColors.primary : Colors.grey,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                        ),
-                                      ],
-                                      onToggle: (index) {
-                                        page = index!;
-                                        pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                                        controller.update(['profile_page']);
-                                      },
+                                  TabBar(
+                                    controller: tabController,
+                                    padding: EdgeInsets.zero,
+                                    labelColor: Colors.black,
+                                    unselectedLabelColor: const Color(0xff9A9A9A),
+                                    indicatorColor: AppColors.primary,
+                                    indicatorSize: TabBarIndicatorSize.tab,
+                                    labelStyle: TextStyle(
+                                      fontSize: Get.width*0.035,
+                                      fontWeight: FontWeight.w500,
                                     ),
+                                    unselectedLabelStyle: TextStyle(
+                                      fontSize: Get.width*0.035,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    tabs: const [
+                                      Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                      Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
+                                      Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
+                                      Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
+                                    ],
+                                    onTap: (index) {
+                                      //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                      //controller.update(['profile_page']);
+                                    },
                                   ),
                                   const Divider(
+                                    height: 0.5,
+                                    thickness: 0.5,
                                     color: Colors.grey,
-                                    thickness: 0.3,
                                   ),
                                 ],
                               ),
@@ -498,13 +471,8 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                     ),
                   ];
                 },
-                body: PageView(
-                  controller: pageController,
-                  onPageChanged: (page){
-                    setState(() {
-                      this.page = page;
-                    });
-                  },
+                body: TabBarView(
+                  controller: tabController,
                   children: [
                     Column(),
                     Column(),
@@ -516,5 +484,12 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
             );
           }),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    tabController.dispose();
+    pageController.dispose();
   }
 }

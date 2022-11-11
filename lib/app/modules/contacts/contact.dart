@@ -65,15 +65,15 @@ class Contact extends GetView<HomeController> {
                       height: Get.height * 0.1,
                     ),
                     Text(
-                      'Your contacts are not here yet!',
-                      style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.5),fontSize: Get.textScaleFactor*18),
+                      controller.hasContactPermission ? 'No Contacts Found' : 'Please allow access to your contacts',
+                      style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.5),fontSize: Get.width * 0.045),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
                       height: Get.height * 0.06,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: Get.width * 0.06, right: Get.width * 0.06),
+                      padding: EdgeInsets.only(left: Get.width * 0.04, right: Get.width * 0.04),
                       child: Container(
                         height: Get.height*0.08,
                         decoration: BoxDecoration(
@@ -99,7 +99,7 @@ class Contact extends GetView<HomeController> {
                                   padding: EdgeInsets.only(left: Get.width * 0.03),
                                   child: Text(
                                     'Contacts on Wayagram',
-                                    style: AppTextStyle.subtitle1.copyWith(color: Colors.black,fontSize: Get.textScaleFactor*16,fontWeight: FontWeight.w500),
+                                    style: AppTextStyle.subtitle1.copyWith(color: Colors.black,fontSize: Get.width * 0.045,fontWeight: FontWeight.w500),
                                   ),
                                 ),
                                 SizedBox(height: Get.height*0.005),
@@ -107,7 +107,7 @@ class Contact extends GetView<HomeController> {
                                   padding: EdgeInsets.only(left: Get.width * 0.03),
                                   child: Text(
                                     'Import your contact on Wayagram',
-                                    style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.5),fontSize: Get.textScaleFactor*14),
+                                    style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.5),fontSize: Get.width * 0.03),
                                   ),
                                 ),
                               ],
@@ -128,6 +128,7 @@ class Contact extends GetView<HomeController> {
                                   bckgrndColor: AppColors.primary,
                                   border: Border.all(color: AppColors.primary, width: 1),
                                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                  fontSize: Get.width * 0.04,
                                 ),
                               ),
                             ),
