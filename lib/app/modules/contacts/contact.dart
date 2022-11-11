@@ -179,6 +179,8 @@ class Contact extends GetView<HomeController> {
                                       icon: AppAvatar(
                                         bytes: person.photoOrThumbnail,
                                         radius: 50,
+                                        isContact: true,
+                                        contactName: person.displayName,
                                       ),
                                       onPressed: null,
                                     ),

@@ -60,6 +60,7 @@ class HomeController extends GetxController {
     if (status == PermissionStatus.granted) {
       var contacts = await FlutterContacts.getContacts(withProperties: true,withThumbnail: true,withPhoto: true);
       this.contacts = contacts;
+      contactToShow.clear();
       contactToShow.addAll(contacts.sublist(0, 50));
       update(['contact']);
     }else{
