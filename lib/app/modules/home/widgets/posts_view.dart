@@ -137,7 +137,7 @@ class PostsView extends StatelessWidget{
                           style: TextStyle(
                             color: Colors.black ,
                             fontSize: Get.width * 0.04,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         SizedBox(width: Get.width * 0.01,),
