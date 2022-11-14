@@ -218,6 +218,8 @@ class _ContactState extends State<Contact> {
                             }else{
                               isFollowing = false;
                             }
+                          }else{
+                            return Container();
                           }
                           return Container(
                             margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
@@ -306,7 +308,7 @@ class _ContactState extends State<Contact> {
                                       AppButton(
                                         title: buttonText,
                                         onPressed: () async {
-
+                                          //Hi Friend, Join me on wayagram https://app.staging.wayagram.ng?from=shared
                                         },
                                         borderRadius: 5,
                                         padding: const EdgeInsets.symmetric(vertical: 5),
