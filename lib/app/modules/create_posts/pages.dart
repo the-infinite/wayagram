@@ -185,7 +185,6 @@ class CreatePage extends StatelessWidget {
                           PageDropButton(
                             label: "Page Category",
                             hint: '',
-                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                             onChanged: (val) {
                               pageCategory.text = val;
                               //controller.businessType.value = val!;
