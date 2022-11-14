@@ -101,7 +101,7 @@ class _EventsViewState extends State<EventsView> {
                 margin: EdgeInsets.only(top: Get.height*0.007, left: Get.width*0.02,right: Get.width*0.02,bottom: Get.height*0.007),
                 width: Get.width * 0.5,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(10),
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
@@ -119,7 +119,7 @@ class _EventsViewState extends State<EventsView> {
                       height: Get.height * 0.12,
                       width: Get.width * 0.5,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                         color: Colors.grey[200],
                       ),
                       child: Stack(
@@ -129,14 +129,23 @@ class _EventsViewState extends State<EventsView> {
                             left: 0,
                             right: 0,
                             bottom: 0,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Image.network(
-                                list[index].eventPoster.toString(),
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(Icons.event,color: Colors.grey,size: Get.height*0.04);
-                                },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 1,
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  list[index].eventPoster.toString(),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(Icons.event_rounded,color: Colors.grey,size: Get.height*0.04);
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -235,7 +244,7 @@ class _EventsViewState extends State<EventsView> {
                               onPressed: () async {
 
                               },
-                              borderRadius: 5,
+                              borderRadius: 10,
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               fontSize: Get.height * 0.018,
                             ),
