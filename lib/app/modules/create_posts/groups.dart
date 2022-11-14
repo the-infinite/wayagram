@@ -50,9 +50,11 @@ class _CreateGroupState extends State<CreateGroup> {
     homeController.userRepo.getFullUserProfile(homeController.logInDetails.user!.id.toString()).then((value) {
       if(value.isSuccessful){
         homeController.userRepo.getGroupCategories().then((value) {
-          setState(() {
+          if(mounted){
+            setState(() {
 
-          });
+            });
+          }
         });
       }
     });

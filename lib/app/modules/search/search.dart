@@ -49,6 +49,8 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
   void initState() {
     super.initState();
     tabController = TabController(length: 4, vsync: this);
+    searchController.text = homeController.defaultSearchValue;
+    homeController.defaultSearchValue = "";
     searchController.addListener(() {
       if(searchController.text.isNotEmpty) {
         homeController.update(['search']);
@@ -117,7 +119,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                     children: [
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
-                            future: controller.searchPost(searchController.text),
+                            future: controller.searchPost(searchController.text.replaceAll("#", "")),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 //final posts = snapshot.data!.data as List<AllPostsEntity>;
@@ -143,7 +145,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                       ),
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
-                            future: controller.searchPeople(searchController.text),
+                            future: controller.searchPeople(searchController.text.replaceAll("#", "")),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
@@ -180,7 +182,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                       ),
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
-                            future: controller.searchGroups(searchController.text),
+                            future: controller.searchGroups(searchController.text.replaceAll("#", "")),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
@@ -205,7 +207,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                       ),
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
-                            future: controller.searchPages(searchController.text),
+                            future: controller.searchPages(searchController.text.replaceAll("#", "")),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;

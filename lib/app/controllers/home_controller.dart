@@ -27,6 +27,7 @@ import '../repository/user_repo.dart';
 class HomeController extends GetxController {
   final UserRepository userRepo;
 
+  var defaultSearchValue = "";
   TextEditingController otp = TextEditingController();
   RxInt currentBottomNavPage = 0.obs;
 

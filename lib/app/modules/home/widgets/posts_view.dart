@@ -24,6 +24,7 @@ import '../../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../profile/other_profile.dart';
 import '../../profile/post_profile.dart';
 import '../../profile/profile.dart';
+import '../../search/search.dart';
 
 class PostsView extends StatelessWidget{
   const PostsView({
@@ -39,6 +40,7 @@ class PostsView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+    var homeController = Get.find<HomeController>();
     return ListView.builder(
       itemCount: isLoading ? 5 : posts!.length,
       shrinkWrap: true,
@@ -194,7 +196,8 @@ class PostsView extends StatelessWidget{
                     fontWeight: FontWeight.normal,
                   ),
                   onTap: (text) {
-
+                    homeController.defaultSearchValue = text;
+                    Get.toNamed(Search.route);
                   },
                   decorateAtSign: true,
                 )
@@ -233,7 +236,7 @@ class PostsView extends StatelessWidget{
                   ),
                 ),
               if(post.isRepost == true)
-                InnerPost(outerPost: post),
+                InnerPost(outerPost: post,homeController: homeController),
               const SizedBox(
                 height: 10,
               ),
@@ -363,9 +366,11 @@ class InnerPost extends StatelessWidget{
   const InnerPost({
     Key? key,
     required this.outerPost,
+    required this.homeController,
   }) : super(key: key);
 
   final AllPostsEntity outerPost;
+  final HomeController homeController;
   @override
   Widget build(BuildContext context) {
     var uniqueId = UniqueKey().toString();
@@ -448,7 +453,8 @@ class InnerPost extends StatelessWidget{
                   fontWeight: FontWeight.normal,
                 ),
                 onTap: (text) {
-
+                  homeController.defaultSearchValue = text;
+                  Get.toNamed(Search.route);
                 },
                 decorateAtSign: true,
               )

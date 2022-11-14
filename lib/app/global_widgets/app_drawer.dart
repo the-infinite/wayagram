@@ -38,9 +38,11 @@ class _AppDrawerState extends State<AppDrawer> {
     super.initState();
     homeController.userRepo.getFriends().then((value) {
       homeController.userRepo.getAccountNumber().then((value) {
-        setState(() {
+        if(mounted){
+          setState(() {
 
-        });
+          });
+        }
       });
     });
   }

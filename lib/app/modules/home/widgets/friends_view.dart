@@ -92,7 +92,7 @@ class _FriendsViewState extends State<FriendsView> {
               var isFollowing = false;
               if(MyPref.following.val.isNotEmpty){
                 var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
-                isFollowing = following.following!.any((element) => element.userId == person.userId);
+                isFollowing = following.following!.any((element) => element.username == person.username);
               }
 
               return GetBuilder<HomeController>(

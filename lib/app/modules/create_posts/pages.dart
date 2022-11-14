@@ -45,9 +45,11 @@ class _CreatePageState extends State<CreatePage> {
     homeController.userRepo.getFullUserProfile(homeController.logInDetails.user!.id.toString()).then((value) {
       if(value.isSuccessful){
         homeController.userRepo.getPageCategories().then((value) {
-          setState(() {
+          if(mounted){
+            setState(() {
 
-          });
+            });
+          }
         });
       }
     });

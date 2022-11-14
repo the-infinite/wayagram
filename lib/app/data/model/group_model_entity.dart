@@ -33,8 +33,15 @@ class GroupModelEntity {
 
   Map<String, dynamic> toJson() => $GroupModelEntityToJson(this);
 
-	static List<GroupModelEntity> getService(List<dynamic> val) {
-		return val.map((e) => GroupModelEntity.fromJson(e)).toList();
+	static List<GroupModelEntity> getService(List<dynamic>? val) {
+		if(val == null) {
+			return [];
+		}
+		try{
+			return val.map((e) => GroupModelEntity.fromJson(e)).toList();
+		}catch(e){
+			return [];
+		}
 	}
 
   @override

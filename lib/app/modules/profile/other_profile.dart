@@ -122,10 +122,10 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
 
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
-            var isAFollower = followers.followers!.any((element) => element.userId == userId);
-            var isFollowing = following.following!.any((element) => element.userId == userId);
-            var isBlocked = blocked.any((element) => element.userId == userId);
-            var isMuted = muted.any((element) => element.userId == userId);
+            var isAFollower = followers.followers!.any((element) => element.username == userName);
+            var isFollowing = following.following!.any((element) => element.username == userName);
+            var isBlocked = blocked.any((element) => element.username == userName);
+            var isMuted = muted.any((element) => element.username == userName);
 
             return Scaffold(
               body: NestedScrollView(
