@@ -32,7 +32,7 @@ class CreatePage extends StatelessWidget {
     var descriptionController = TextEditingController();
     var linkController = TextEditingController();
     var pageVisibility = TextEditingController();
-    var pageCategory = TextEditingController(text: 'Dance');
+    var pageCategory = TextEditingController();
     PageCategoriesModel? chosenCategory;
 
     var formKey1 = GlobalKey<FormState>();

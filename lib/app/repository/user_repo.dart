@@ -281,6 +281,23 @@ class UserRepository {
     }
     return response;
   }
+  Future<ApiResponse> getGroupCategories() async {
+    final response = await api.getData('/wayagram-service/main/group/get-all-groups-categories?page=1&limit=100',hasHeader: true);
+    if (response.isSuccessful) {
+      var newData = PageCategoriesModel.listFromJson(response.interests['data']);
+      if(MyPref.groupCategories.val.isNotEmpty){
+        var oldData = PageCategoriesModel.listFromJson(jsonDecode(MyPref.groupCategories.val));
+        for (var element in oldData) {
+          if(!newData.contains(element)){
+            newData.add(element);
+          }
+        }
+      }
+      response.data = newData;
+      MyPref.groupCategories.val = jsonEncode(response.data);
+    }
+    return response;
+  }
 
   Future<ApiResponse> getSuggestedPages() async {
     var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));

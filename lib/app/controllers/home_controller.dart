@@ -197,6 +197,7 @@ class HomeController extends GetxController {
     await userRepo.getAllNotifications();
     await userRepo.getAccountNumber();
     await userRepo.getPageCategories();
+    await userRepo.getGroupCategories();
   }
   void launchURL(String url) async {
     try {

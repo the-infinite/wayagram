@@ -9,6 +9,8 @@ import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/page_categories_model.dart';
+import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/document_picker.dart';
 import '../../global_widgets/page_dropdown.dart';
@@ -27,6 +29,9 @@ class CreateGroup extends StatelessWidget {
     var privacyController = TextEditingController(text: 'Public');
     var inviteController = TextEditingController();
 
+    var pageCategory = TextEditingController();
+    PageCategoriesModel? chosenCategory;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -36,6 +41,10 @@ class CreateGroup extends StatelessWidget {
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeController>(builder: (controller) {
+        List<PageCategoriesModel> categories = [];
+        if(MyPref.groupCategories.val.isNotEmpty){
+          categories = PageCategoriesModel.listFromJson(jsonDecode(MyPref.groupCategories.val));
+        }
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppColors.background,
@@ -52,17 +61,22 @@ class CreateGroup extends StatelessWidget {
                 child: AppButton(
                   title: currentPage == 0 ? 'Next' : 'Create',
                   onPressed: () async {
-                    if(formKey1.currentState!.validate()) {
-                      pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-                      currentPage = 1;
+                    if(currentPage == 0){
+                      if(formKey1.currentState!.validate()) {
+                        pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                        currentPage = 1;
+                        controller.update();
+                      }
+                    }else{
+
                     }
                   },
                   borderRadius: 10,
                   fontColor: AppColors.primary,
                   bckgrndColor: AppColors.background,
                   border: Border.all(color: AppColors.background, width: 1),
-                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-                  width: Get.width * 0.3,
+                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                  width: Get.width * 0.2,
                 ),
               )
             ],
@@ -133,6 +147,38 @@ class CreateGroup extends StatelessWidget {
                                 ),
                                 SizedBox(height: Get.height*0.025),
                                 PageDropButton(
+                                  label: "Page Category",
+                                  hint: 'Choose a category',
+                                  isCompulsory: true,
+                                  onChanged: (value) {
+                                    for (var element in categories) {
+                                      if(element.id == value){
+                                        pageCategory.text = element.title.toString();
+                                        chosenCategory = element;
+                                        break;
+                                      }
+                                    }
+                                  },
+                                  validator: (val){
+                                    if(chosenCategory == null){
+                                      return 'Please choose a category';
+                                    }
+                                    return null;
+                                  },
+                                  items: categories.map<DropdownMenuItem<String>>((PageCategoriesModel value){
+                                    return DropdownMenuItem<String>(
+                                      value: value.id,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Text(value.title.toString()),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                                SizedBox(height: Get.height*0.025),
+                                PageDropButton(
                                   label: "Choose Privacy",
                                   hint: '',
                                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -148,7 +194,7 @@ class CreateGroup extends StatelessWidget {
                                   }).toList(),
                                 ),
                                 SizedBox(height: Get.height*0.025),
-                                PageInput(
+                                /*PageInput(
                                   hint: 'e.g. John Doe',
                                   label: 'Who do you want to invite?',
                                   validator: (val){
@@ -157,7 +203,7 @@ class CreateGroup extends StatelessWidget {
                                   keyboardType: TextInputType.name,
                                   isCompulsory: false,
                                   controller: inviteController,
-                                ),
+                                ),*/
                               ],
                             ),
                           ),
