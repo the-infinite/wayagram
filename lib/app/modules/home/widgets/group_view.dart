@@ -20,6 +20,8 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../global_widgets/app_button.dart';
 import '../../../global_widgets/newsfeed_multiple_imageview.dart';
+import '../../groups_and_pages/group.dart';
+import '../../groups_and_pages/page.dart';
 
 class GroupView extends StatelessWidget{
   const GroupView({
@@ -61,70 +63,79 @@ class GroupView extends StatelessWidget{
           );
         }
         var post = posts![index];
-        return Container(
-          margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 50,
-                height: 50,
-                child: IconButton(
-                  icon: AppAvatar(
-                    imgUrl: post.imageUrl.toString(),
-                    radius: 50,
-                  ),
-                  onPressed: null,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    post.name.toString(),
-                    style: const TextStyle(
-                      color: Colors.black ,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+        return InkWell(
+          onTap: (){
+            if(isGroup) {
+              Get.to(() => Group(group: post,key: ValueKey(post.id)));
+            }else{
+              Get.to(() => PageScreen(page: post,key: ValueKey(post.id)));
+            }
+          },
+          child: Container(
+            margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: IconButton(
+                    icon: AppAvatar(
+                      imgUrl: post.imageUrl.toString(),
+                      radius: 50,
                     ),
+                    onPressed: null,
                   ),
-                  SizedBox(
-                    width: Get.width*0.5,
-                    child: Text(
-                      post.description.toString(),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      post.name.toString(),
                       style: const TextStyle(
-                        color: Colors.grey,
+                        color: Colors.black ,
                         fontSize: 16,
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.w500,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(
+                      width: Get.width*0.5,
+                      child: Text(
+                        post.description.toString(),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                if(!isJoined)
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        AppButton(
+                          title: isGroup ? 'Join' : 'Follow',
+                          onPressed: () async {
+
+                          },
+                          borderRadius: 5,
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          bckgrndColor: AppColors.background,
+                          fontColor: AppColors.primary,
+                          border: Border.all(color: AppColors.primary),
+                          fontSize: Get.width*0.04,
+                          width: Get.width*0.25,
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-              if(!isJoined)
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      AppButton(
-                        title: isGroup ? 'Join' : 'Follow',
-                        onPressed: () async {
-
-                        },
-                        borderRadius: 5,
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        bckgrndColor: AppColors.background,
-                        fontColor: AppColors.primary,
-                        border: Border.all(color: AppColors.primary),
-                        fontSize: Get.width*0.04,
-                        width: Get.width*0.25,
-                      ),
-                    ],
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
         );
       },
