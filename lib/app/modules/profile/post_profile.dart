@@ -194,14 +194,14 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                   "username": post.profile!.username,
                                                 };
                                                 if(!isFollowing){
-                                                  var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/follow");
+                                                  var response = await controller.postData(body, "wayagram-service/graph/friend/follow");
                                                   if(response.isSuccessful){
                                                     await controller.getFollowing;
                                                     await controller.getPosts;
                                                     controller.update(['post_profile_page']);
                                                   }
                                                 }else{
-                                                  var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/unfollow");
+                                                  var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
                                                   if(response.isSuccessful){
                                                     await controller.getFollowing;
                                                     await controller.getPosts;

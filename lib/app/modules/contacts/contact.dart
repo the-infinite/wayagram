@@ -309,7 +309,34 @@ class _ContactState extends State<Contact> {
                                       AppButton(
                                         title: buttonText,
                                         onPressed: () async {
-                                          await Share.share('Hi Friend, Join me on wayagram https://app.staging.wayagram.ng?from=shared');
+                                          if(isOnWayagram){
+                                            var body = {
+                                              "user_id": user!.userId.toString(),
+                                              "username": person.displayName
+                                            };
+
+                                            if(!isFollowing){
+                                              var response = await controller.postData(body, "wayagram-service/graph/friend/follow");
+                                              if(response.isSuccessful){
+                                                await controller.getFollowing;
+                                                await controller.getPosts;
+                                                setState(() {
+
+                                                });
+                                              }
+                                            }else{
+                                              var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
+                                              if(response.isSuccessful){
+                                                await controller.getFollowing;
+                                                await controller.getPosts;
+                                                setState(() {
+
+                                                });
+                                              }
+                                            }
+                                          }else{
+                                            await Share.share('Hi Friend, Join me on wayagram https://app.staging.wayagram.ng?from=shared', subject: 'Invite');
+                                          }
                                         },
                                         borderRadius: 5,
                                         padding: const EdgeInsets.symmetric(vertical: 5),

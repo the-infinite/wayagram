@@ -202,14 +202,14 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                                   "username": userName
                                                 };
                                                 if(!isFollowing){
-                                                  var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/follow");
+                                                  var response = await controller.postData(body, "wayagram-service/graph/friend/follow");
                                                   if(response.isSuccessful){
                                                     await controller.getFollowing;
                                                     await controller.getPosts;
                                                     controller.update(['other_profile_page']);
                                                   }
                                                 }else{
-                                                  var response = await controller.postData(body, "https://services.staging.wayagram.ng/wayagram-service/graph/friend/unfollow");
+                                                  var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
                                                   if(response.isSuccessful){
                                                     await controller.getFollowing;
                                                     await controller.getPosts;

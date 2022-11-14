@@ -92,7 +92,7 @@ class _NotificationViewState extends State<NotificationView> {
                   SizedBox(
                     width: Get.width*0.8,
                     child: Text(
-                      (post.content.toString())*4,
+                      (post.content.toString()),
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 15,
