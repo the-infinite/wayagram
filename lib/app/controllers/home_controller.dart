@@ -30,13 +30,13 @@ class HomeController extends GetxController {
   TextEditingController otp = TextEditingController();
   RxInt currentBottomNavPage = 0.obs;
 
-  PageController shopController = PageController(initialPage: 0, keepPage: true);
+  late TabController shopController;
   bool isPersonalShop = false;
 
-  PageController notificationController = PageController(initialPage: 0, keepPage: true);
+  late TabController notificationController;
   bool isNotification = false;
 
-  PageController chatController = PageController(initialPage: 0, keepPage: true);
+  late TabController chatController;
   bool isChat = false;
 
   HomeController(this.userRepo);
@@ -94,43 +94,14 @@ class HomeController extends GetxController {
   }
 
   toggleShop(int index, {bool animate = true}) {
-    if(index == 0) {
-      isPersonalShop = false;
-      if(animate) {
-        shopController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-      }
-    } else {
-      isPersonalShop = true;
-      if(animate) {
-        shopController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-      }
-    }
     update(['home']);
   }
 
   toggleNotification(int index, {bool animate = true}) {
-    if(index == 0) {
-      isNotification = false;
-      if(animate) {
-        notificationController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-      }
-    } else {
-      isNotification = true;
-      if(animate) {
-        notificationController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-      }
-    }
     update(['home']);
   }
 
   toggleChat(int index) {
-    if(index == 0) {
-      isChat = false;
-      chatController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-    } else {
-      isChat = true;
-      chatController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-    }
     update(['home']);
   }
 
@@ -192,15 +163,19 @@ class HomeController extends GetxController {
 
   Future<ApiResponse> postData(dynamic body,String url) async {
     final response = await userRepo.postData(url, body);
-    print(url);
-    print(response.data);
-    await userRepo.getUserProfile(profile.userId.toString());
+    userRepo.getUserProfile(profile.userId.toString()).then((value){
+      update(['profile_page','home','settings']);
+      getAllUserData().then((value) => update(['profile_page','home','settings']));
+    });
     return response;
   }
 
   Future<ApiResponse> putData(dynamic body,String url) async {
     final response = await userRepo.putData(url, body);
-    await userRepo.getUserProfile(profile.userId.toString());
+    userRepo.getUserProfile(profile.userId.toString()).then((value){
+      update(['profile_page','home','settings']);
+      getAllUserData().then((value) => update(['profile_page','home','settings']));
+    });
     return response;
   }
 

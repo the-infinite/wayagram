@@ -27,9 +27,11 @@ class ProductView extends StatelessWidget{
     Key? key,
     this.isLoading = false,
     this.posts,
+    this.showBuyButton = true,
   }) : super(key: key);
 
   final bool isLoading;
+  final bool showBuyButton;
   final List<ProductsModelData>? posts;
   @override
   Widget build(BuildContext context) {
@@ -113,9 +115,9 @@ class ProductView extends StatelessWidget{
                       children: [
                         Text(
                           timeago.format(time),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.grey,
-                            fontSize: 16,
+                            fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
@@ -218,12 +220,14 @@ class ProductView extends StatelessWidget{
                           )
                         ],
                       ),
-                      AppButton(
-                        title: "Buy",
-                        onPressed: (){},
-                        bckgrndColor: AppColors.background,
-                        fontColor: AppColors.primary,
-                      ),
+                      if(showBuyButton)
+                        AppButton(
+                          title: "Buy",
+                          onPressed: (){},
+                          bckgrndColor: AppColors.background,
+                          fontColor: AppColors.primary,
+                          width: Get.width * 0.2,
+                        ),
                     ],
                   )
               ),

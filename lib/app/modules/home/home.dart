@@ -35,11 +35,22 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin{
   var homeController = Get.find<HomeController>();
+  late TabController shopController;
+  late TabController notificationController;
+  late TabController chatController;
+
   @override
   void initState() {
     super.initState();
+    shopController = TabController(length: 2, vsync: this);
+    notificationController = TabController(length: 2, vsync: this);
+    chatController = TabController(length: 2, vsync: this);
+
+    homeController.shopController = shopController;
+    homeController.notificationController = notificationController;
+    homeController.chatController = chatController;
     homeController.checkPermissionStatus();
   }
 
@@ -134,144 +145,93 @@ class _HomeState extends State<Home> {
                     thickness: 0.3,
                   ),
                   if(controller.currentBottomNavPage.value == 2)
-                    ToggleSwitch(
-                    minWidth: Get.width * 0.5,
-                    initialLabelIndex: controller.isPersonalShop ? 1 : 0,
-                    totalSwitches: 2,
-                    inactiveBgColor: AppColors.background,
-                    activeBgColor: const [AppColors.background, AppColors.background],
-                    activeBorders: [
-                      //Bottom Border
-                      Border.all(
-                        color: AppColors.background,
-                        width: 3.0,
-                      ),
-                      Border.all(
-                        color: AppColors.background,
-                        width: 3.0,
-                      ),
-                    ],
-                    radiusStyle: true,
-                    cornerRadius: 10.0,
-                    labels: const ['All Products', 'My Products'],
-                    customTextStyles: [
-                      AppTextStyle.bodyText1.copyWith(
-                        color: !controller.isPersonalShop ? AppColors.primary : const Color(0xff064A72),
+                    TabBar(
+                      controller: shopController,
+                      padding: EdgeInsets.zero,
+                      labelColor: Colors.black,
+                      unselectedLabelColor: const Color(0xff9A9A9A),
+                      indicatorColor: AppColors.primary,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelStyle: TextStyle(
+                        fontSize: Get.width*0.035,
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
                       ),
-                      AppTextStyle.bodyText1.copyWith(
-                        color: controller.isPersonalShop ? AppColors.primary : const Color(0xff064A72),
+                      unselectedLabelStyle: TextStyle(
+                        fontSize: Get.width*0.035,
                         fontWeight: FontWeight.w500,
-                        fontSize: 14,
                       ),
-                    ],
-                    onToggle: (index) {
-                      controller.toggleShop(index!);
-                      if (index == 0) {
-                        //businessPageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                      } else {
-                        //personalPageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                      }
-                    },
-                  ),
-                  if(controller.currentBottomNavPage.value == 3)
-                    const Divider(
-                      color: Colors.grey,
-                      thickness: 0.3,
+                      tabs: const [
+                        Tab(text: 'All Products',iconMargin: EdgeInsets.zero,),
+                        Tab(text: 'My Products',iconMargin: EdgeInsets.zero,),
+                      ],
+                      onTap: (index) {
+
+                      },
                     ),
                   if(controller.currentBottomNavPage.value == 3)
-                    ToggleSwitch(
-                      minWidth: Get.width * 0.5,
-                      initialLabelIndex: controller.isNotification ? 1 : 0,
-                      totalSwitches: 2,
-                      inactiveBgColor: AppColors.background,
-                      activeBgColor: const [AppColors.background, AppColors.background],
-                      activeBorders: [
-                        //Bottom Border
-                        Border.all(
-                          color: AppColors.background,
-                          width: 3.0,
-                        ),
-                        Border.all(
-                          color: AppColors.background,
-                          width: 3.0,
-                        ),
+                    const Divider(
+                      height: 0.5,
+                      thickness: 0.5,
+                      color: Colors.grey,
+                    ),
+                  if(controller.currentBottomNavPage.value == 3)
+                    TabBar(
+                      controller: notificationController,
+                      padding: EdgeInsets.zero,
+                      labelColor: Colors.black,
+                      unselectedLabelColor: const Color(0xff9A9A9A),
+                      indicatorColor: AppColors.primary,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelStyle: TextStyle(
+                        fontSize: Get.width*0.035,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      unselectedLabelStyle: TextStyle(
+                        fontSize: Get.width*0.035,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      tabs: const [
+                        Tab(text: 'All',iconMargin: EdgeInsets.zero,),
+                        Tab(text: 'Requests',iconMargin: EdgeInsets.zero,),
                       ],
-                      radiusStyle: true,
-                      cornerRadius: 10.0,
-                      labels: const ['All', 'Requests'],
-                      customTextStyles: [
-                        AppTextStyle.bodyText1.copyWith(
-                          color: !controller.isNotification ? AppColors.primary : const Color(0xff064A72),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                        ),
-                        AppTextStyle.bodyText1.copyWith(
-                          color: controller.isNotification ? AppColors.primary : const Color(0xff064A72),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                        ),
-                      ],
-                      onToggle: (index) {
-                        controller.toggleNotification(index!);
-                        if (index == 0) {
-                          //businessPageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                        } else {
-                          //personalPageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                        }
+                      onTap: (index) {
+
                       },
                     ),
                   if(controller.currentBottomNavPage.value == 4)
                     const Divider(
+                      height: 0.5,
+                      thickness: 0.5,
                       color: Colors.grey,
-                      thickness: 0.3,
                     ),
                   if(controller.currentBottomNavPage.value == 4)
-                    ToggleSwitch(
-                      minWidth: Get.width * 0.5,
-                      initialLabelIndex: controller.isChat ? 1 : 0,
-                      totalSwitches: 2,
-                      inactiveBgColor: AppColors.background,
-                      activeBgColor: const [AppColors.background, AppColors.background],
-                      activeBorders: [
-                        //Bottom Border
-                        Border.all(
-                          color: AppColors.background,
-                          width: 3.0,
-                        ),
-                        Border.all(
-                          color: AppColors.background,
-                          width: 3.0,
-                        ),
+                    TabBar(
+                      controller: shopController,
+                      padding: EdgeInsets.zero,
+                      labelColor: Colors.black,
+                      unselectedLabelColor: const Color(0xff9A9A9A),
+                      indicatorColor: AppColors.primary,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelStyle: TextStyle(
+                        fontSize: Get.width*0.035,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      unselectedLabelStyle: TextStyle(
+                        fontSize: Get.width*0.035,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      tabs: const [
+                        Tab(text: 'Chats',iconMargin: EdgeInsets.zero,),
+                        Tab(text: 'Calls',iconMargin: EdgeInsets.zero,),
                       ],
-                      radiusStyle: true,
-                      cornerRadius: 10.0,
-                      labels: const ['Chats', 'Calls'],
-                      customTextStyles: [
-                        AppTextStyle.bodyText1.copyWith(
-                          color: !controller.isChat ? AppColors.primary : const Color(0xff064A72),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                        ),
-                        AppTextStyle.bodyText1.copyWith(
-                          color: controller.isChat ? AppColors.primary : const Color(0xff064A72),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                        ),
-                      ],
-                      onToggle: (index) {
-                        controller.toggleChat(index!);
-                        if (index == 0) {
-                          //businessPageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                        } else {
-                          //personalPageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                        }
+                      onTap: (index) {
+
                       },
                     ),
                   const Divider(
+                    height: 0.5,
+                    thickness: 0.5,
                     color: Colors.grey,
-                    thickness: 0.3,
                   ),
                   Expanded(
                     child: SingleChildScrollView(

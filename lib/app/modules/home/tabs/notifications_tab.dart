@@ -23,12 +23,9 @@ class NotificationsTab extends StatelessWidget {
     return GetBuilder<HomeController>(builder: (controller) {
       return SizedBox(
         width: Get.width,
-        height: Get.height*0.75,
-        child: PageView(
+        height: Get.height*0.71,
+        child: TabBarView(
           controller: controller.notificationController,
-          onPageChanged: (page){
-            controller.toggleNotification(page,animate: false);
-          },
           children: [
             SingleChildScrollView(
               child: Column(

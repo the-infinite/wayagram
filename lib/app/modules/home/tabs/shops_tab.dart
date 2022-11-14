@@ -24,11 +24,8 @@ class ShopsTab extends StatelessWidget {
       return SizedBox(
         width: Get.width,
         height: Get.height*0.75,
-        child: PageView(
+        child: TabBarView(
           controller: controller.shopController,
-          onPageChanged: (page){
-            controller.toggleShop(page,animate: false);
-          },
           children: [
             SingleChildScrollView(
               child: Column(
@@ -66,15 +63,15 @@ class ShopsTab extends StatelessWidget {
                         var savedPosts = MyPref.myProducts.val;
                         if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                           final posts = snapshot.data!.data as ProductsModelEntity;
-                          return ProductView(posts: posts.data!);
+                          return ProductView(posts: posts.data!,showBuyButton: false);
                         } else if(savedPosts.isNotEmpty){
                           var posts = ProductsModelEntity.fromJson(jsonDecode(savedPosts));
-                          return ProductView(posts: posts.data!);
+                          return ProductView(posts: posts.data!,showBuyButton: false);
                         }else{
                           if(snapshot.connectionState == ConnectionState.done){
                             return const SizedBox.shrink();
                           }
-                          return const ProductView(isLoading: true);
+                          return const ProductView(isLoading: true,showBuyButton: false);
                         }
                       }),
                 ],
