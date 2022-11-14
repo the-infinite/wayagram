@@ -16,6 +16,7 @@ import 'package:wayagram/app/modules/home/tabs/discover_tab.dart';
 import 'package:wayagram/app/modules/home/tabs/shops_tab.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../data/model/SearchPeopleResponse.dart';
 import '../data/model/log_in_model_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
@@ -52,6 +53,7 @@ class HomeController extends GetxController {
   List<String> imagePaths = [];
   List<Contact> contacts = [];
   List<Contact> contactToShow = [];
+  List<SearchPeopleResponse> searchPeopleResponse = [];
   bool hasContactPermission = false;
 
   var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
@@ -66,6 +68,19 @@ class HomeController extends GetxController {
       contactToShow.clear();
       contactToShow.addAll(contacts.sublist(0, 15));
       update(['contact']);
+      for (var element in contactToShow) {
+        if(element.phones.isNotEmpty){
+          var number = element.phones.first.normalizedNumber.replaceAll("+", "");
+          getData("auth-service/api/v1/search/search-profile-phoneNumber/$number", false).then((response) {
+            if(response.isSuccessful){
+              var data = SearchPeopleResponse.listFromJson(response.data);
+              if(data.isNotEmpty){
+                searchPeopleResponse.addAll(data);
+              }
+            }
+          });
+        }
+      }
     }else{
       hasContactPermission = false;
       contacts.clear();
@@ -78,12 +93,27 @@ class HomeController extends GetxController {
     var status = await Permission.contacts.status;
     if (status == PermissionStatus.granted) {
       if(contactToShow.length < contacts.length){
-        var newLength = contactToShow.length+15 > contacts.length ? contacts.length : contactToShow.length+15;
+        var oldLength = contactToShow.length;
+        var newLength = contactToShow.length+10 > contacts.length ? contacts.length : contactToShow.length+10;
         await Future.forEach(
-            contacts.sublist(contactToShow.length,newLength),
+            contacts.sublist(oldLength,newLength),
                 (contact) async {
               contactToShow.add(contact as Contact);
             }
+        );
+        await Future.forEach(contacts.sublist(oldLength,newLength), (contact) async {
+          var element = contact as Contact;
+          if(element.phones.isNotEmpty){
+            var number = element.phones.first.normalizedNumber.replaceAll("+", "");
+            var response = await getData("auth-service/api/v1/search/search-profile-phoneNumber/$number", false);
+            if(response.isSuccessful){
+              var data = SearchPeopleResponse.listFromJson(response.data);
+              if(data.isNotEmpty){
+                searchPeopleResponse.addAll(data);
+              }
+            }
+          }
+        }
         );
         update(['contact']);
       }
@@ -177,6 +207,11 @@ class HomeController extends GetxController {
       update(['home','profile_page','settings','app_drawer']);
       getAllUserData().then((value) => update(['profile_page','home','settings','app_drawer']));
     });
+    return response;
+  }
+
+  Future<ApiResponse> getData(String url,bool hasSSO) async {
+    final response = await userRepo.getData(url, sso: hasSSO);
     return response;
   }
 

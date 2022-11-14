@@ -12,6 +12,9 @@ import 'package:wayagram/core/utils/validator.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/SearchPeopleResponse.dart';
+import '../../data/model/followers_model_entity.dart';
+import '../../data/model/following_model_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_avatar.dart';
@@ -22,19 +25,28 @@ import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
-class Contact extends GetView<HomeController> {
+class Contact extends StatefulWidget {
   const Contact({Key? key}) : super(key: key);
 
   static const route = '/contact';
 
   @override
+  State<Contact> createState() => _ContactState();
+}
+
+class _ContactState extends State<Contact> {
+
+  @override
   Widget build(BuildContext context) {
-    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+    //
     RefreshController refreshController = RefreshController(initialRefresh: false);
 
     return  GetBuilder<HomeController>(
         id: 'contact',
         builder: (controller) {
+          var followers = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));
+          var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
+          var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
           return Scaffold(
             appBar: AppBar(
               elevation: 0,
@@ -164,7 +176,49 @@ class Contact extends GetView<HomeController> {
                         itemCount: controller.contactToShow.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
+                          SearchPeopleResponse? user;
                           var person = controller.contactToShow[index];
+                          var isOnWayagram = false;
+                          var isFollowing = false;
+                          var buttonText = "Invite";
+                          var backgroundColor = AppColors.background;
+                          var fontColor = AppColors.primary;
+                          if(person.phones.isEmpty && person.emails.isNotEmpty){
+                            isOnWayagram = controller.searchPeopleResponse.any((element) => element.email == person.emails.first.address);
+                            if(isOnWayagram){
+                              user = controller.searchPeopleResponse.firstWhere((element) => element.email == person.emails.first.address);
+                              if(user!.email == fullProfile.email || user!.phoneNumber == fullProfile.phone){
+                                return Container();
+                              }
+                              buttonText = "Follow";
+                              isFollowing = following.following!.any((element) => (element.email == user!.email) || (element.phone == user.phoneNumber) || (element.id == user.id));
+                              if(isFollowing){
+                                buttonText = "Following";
+                              }
+                              backgroundColor = AppColors.primary;
+                              fontColor = AppColors.background;
+                            }else{
+                              isFollowing = false;
+                            }
+                          }else if(person.phones.isNotEmpty){
+                            isOnWayagram = controller.searchPeopleResponse.any((element) => element.phoneNumber == person.phones.first.normalizedNumber.replaceAll("+",""));
+                            if(isOnWayagram){
+                              user = controller.searchPeopleResponse.firstWhere((element) => element.phoneNumber == person.phones.first.normalizedNumber.replaceAll("+",""));
+                              if(user!.email == fullProfile.email || user!.phoneNumber == fullProfile.phone){
+                                return Container();
+                              }
+                              buttonText = "Follow";
+                              isFollowing = following.following!.any((element) => (element.email == user!.email) || (element.phone == user.phoneNumber) || (element.id == user.id));
+                              if(isFollowing){
+                                buttonText = "Following";
+
+                              }
+                              backgroundColor = AppColors.primary;
+                              fontColor = AppColors.background;
+                            }else{
+                              isFollowing = false;
+                            }
+                          }
                           return Container(
                             margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                             child: Row(
@@ -187,12 +241,17 @@ class Contact extends GetView<HomeController> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      person.displayName,
-                                      style: const TextStyle(
-                                        color: Colors.black ,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
+                                    SizedBox(
+                                      width: Get.width*0.5,
+                                      child: Text(
+                                        person.displayName,
+                                        style: const TextStyle(
+                                          color: Colors.black ,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                     if(person.phones.isNotEmpty)
@@ -239,20 +298,21 @@ class Contact extends GetView<HomeController> {
                                       )
                                   ],
                                 ),
-                                Expanded(
+                                if(person.phones.isNotEmpty || person.emails.isNotEmpty)
+                                  Expanded(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       AppButton(
-                                        title: 'Invite',
+                                        title: buttonText,
                                         onPressed: () async {
 
                                         },
                                         borderRadius: 5,
                                         padding: const EdgeInsets.symmetric(vertical: 5),
-                                        bckgrndColor: AppColors.background,
-                                        fontColor: AppColors.primary,
-                                        border: Border.all(color: AppColors.primary),
+                                        bckgrndColor: backgroundColor,
+                                        fontColor: fontColor,
+                                        border: Border.all(color: (isFollowing && isOnWayagram) ? AppColors.background : AppColors.primary, width: 1),
                                         fontSize: Get.width*0.04,
                                         width: Get.width*0.25,
                                       ),
