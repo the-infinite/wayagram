@@ -108,7 +108,7 @@ class Interests extends GetView<AuthController>{
                       child: AppButton(title: "Continue", onPressed: () async {
                         //wait 10 seconds
                         //Get.toNamed(Home.route);
-                        await controller.getAllUserData();
+                        controller.getAllUserData();
                         await Future.delayed(const Duration(seconds: 0), () {
                           Get.offAllNamed(Home.route);
                         });

@@ -32,13 +32,19 @@ class AppDrawer extends StatelessWidget {
     var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
     var followers = 0;
     var following = 0;
+    var accountNumber = '';
+    var bankName = '';
     //var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
     if(MyPref.friends.val.isNotEmpty){
       var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
       followers = friends.followers!;
       following = friends.following!;
     }
-    var accounts = AccountModelEntity.fromJson(jsonDecode(MyPref.account.val));
+    if(MyPref.account.val.isNotEmpty){
+      var account = AccountModelEntity.fromJson(jsonDecode(MyPref.account.val));
+      accountNumber = account.accountNumber!;
+      bankName = account.bankName!;
+    }
 
     var controller = Get.find<HomeController>();
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -159,7 +165,7 @@ class AppDrawer extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "${accounts.accountNumber} | ",
+                              "$accountNumber | ",
                               style: AppTextStyle.headline4.copyWith(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.normal,
@@ -167,7 +173,7 @@ class AppDrawer extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "${accounts.bankName}",
+                              bankName,
                               style: AppTextStyle.headline4.copyWith(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.normal,

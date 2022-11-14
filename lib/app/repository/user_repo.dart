@@ -14,6 +14,7 @@ import '../data/model/group_model_entity.dart';
 import '../data/model/log_in_model_entity.dart';
 import '../data/model/moments_model_entity.dart';
 import '../data/model/notification_model_entity.dart';
+import '../data/model/page_categories_model.dart';
 import '../data/model/posts_model_entity.dart';
 import '../data/model/products_model_entity.dart';
 import '../data/model/profile_model_entity.dart';
@@ -342,6 +343,23 @@ class UserRepository {
       var newData = AllEventsEntity.fromJson(response.data);
       response.data = newData;
       MyPref.eventsToAttend.val = jsonEncode(response.data);
+    }
+    return response;
+  }
+  Future<ApiResponse> getPageCategories() async {
+    final response = await api.getData('/wayagram-service/main/page/get-all-page-categories?page=1&limit=10',hasHeader: true);
+    if (response.isSuccessful) {
+      var newData = PageCategoriesModel.listFromJson(response.interests['data']);
+      if(MyPref.pageCategories.val.isNotEmpty){
+        var oldData = PageCategoriesModel.listFromJson(jsonDecode(MyPref.pageCategories.val));
+        for (var element in oldData) {
+          if(!newData.contains(element)){
+            newData.add(element);
+          }
+        }
+      }
+      response.data = newData;
+      MyPref.pageCategories.val = jsonEncode(response.data);
     }
     return response;
   }

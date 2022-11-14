@@ -12,28 +12,29 @@ class ApiResponse {
   dynamic data;
   dynamic suggestion;
   dynamic profiles;
+  dynamic interests;
   final bool isSuccessful;
   String? message;
   String? token;
 
-  ApiResponse({this.code, this.message, this.data, required this.isSuccessful, this.token,this.suggestion,this.profiles});
+  ApiResponse({this.code, this.message, this.data, required this.isSuccessful, this.token,this.suggestion,this.profiles,this.interests});
 
   static ApiResponse response(Response response) {
     var json = response.data;
 
     print(response.statusCode);
-    print(json['message']);
-
+    //print(json['message']);
     return ApiResponse(
       message: json['message'],
       isSuccessful: json['status'],
       data: json['data'],
       suggestion: json['suggestion'],
       profiles: json['Profiles'],
+      interests: json['interests'],
     );
   }
 
-  static ApiResponse responseFromBody(String json,int isSuccessful) {
+  /*static ApiResponse responseFromBody(String json,int isSuccessful) {
     var jsonD = jsonDecode(json);
     //print(jsonD['status']);
     return ApiResponse(
@@ -42,8 +43,9 @@ class ApiResponse {
       data: jsonD['data'],
       suggestion: jsonD['suggestion'],
       profiles: jsonD['Profiles'],
+      interests: jsonD['interests'],
     );
-  }
+  }*/
 
   factory ApiResponse.timeout(Response response) {
     print("timeout");

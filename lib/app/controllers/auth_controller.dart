@@ -284,7 +284,7 @@ class AuthController extends GetxController {
     }else{
       var data = response.data as ProfileModelEntity;
       MyPref.userProfile.val = jsonEncode(response.data);
-      await getAllUserData();
+      //getAllUserData();
       Get.toNamed(Home.route);
       //Get.toNamed(Home.route);
     }
@@ -394,6 +394,7 @@ class AuthController extends GetxController {
     await userRepo.getMyProducts();
     await userRepo.getAllNotifications();
     await userRepo.getAccountNumber();
+    await userRepo.getPageCategories();
   }
   void launchURL(String url) async {
     try {

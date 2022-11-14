@@ -17,9 +17,6 @@ class MyPref  {
   static final suggestedGroups = ReadWriteValue('wayagram_suggested_groups', '', _box);
   static final groupsCreated = ReadWriteValue('wayagram_groups_created', '', _box);
   static final groupsFollowed = ReadWriteValue('wayagram_groups_followed', '', _box);
-  static final suggestedPages = ReadWriteValue('wayagram_suggested_pages', '', _box);
-  static final pagesCreated = ReadWriteValue('wayagram_pages_created', '', _box);
-  static final pagesFollowed = ReadWriteValue('wayagram_pages_followed', '', _box);
   static final eventsToAttend = ReadWriteValue('wayagram_events_to_attend', '', _box);
   static final allProducts = ReadWriteValue('wayagram_all_products', '', _box);
   static final myProducts = ReadWriteValue('wayagram_my_products', '', _box);
@@ -33,6 +30,12 @@ class MyPref  {
   static final following = ReadWriteValue('wayagram_following', '', _box);
   static final friendSuggestions = ReadWriteValue('wayagram_friend_suggestion', '', _box);
   static final friendRequests = ReadWriteValue('wayagram_friend_request', '', _box);
+
+  //Pages boxes
+  static final suggestedPages = ReadWriteValue('wayagram_suggested_pages', '', _box);
+  static final pagesCreated = ReadWriteValue('wayagram_pages_created', '', _box);
+  static final pagesFollowed = ReadWriteValue('wayagram_pages_followed', '', _box);
+  static final pageCategories = ReadWriteValue('wayagram_page_categories', '', _box);
 
   static Future<void> clearBoxes() async {
     await _box().erase();
