@@ -143,7 +143,7 @@ class HomeController extends GetxController {
   Future<ApiResponse> updateProfile(dynamic body) async {
     final response = await userRepo.updateProfile(body);
     await userRepo.getUserProfile(profile.userId.toString());
-    update(['profile_page','home','settings']);
+    update(['profile_page','home','settings','app_drawer']);
     AppOverlay.showInfoDialog(
         title: response.isSuccessful ? 'Success' : 'Error',
         content: response.message,
@@ -173,8 +173,8 @@ class HomeController extends GetxController {
   Future<ApiResponse> putData(dynamic body,String url) async {
     final response = await userRepo.putData(url, body);
     userRepo.getUserProfile(profile.userId.toString()).then((value){
-      update(['profile_page','home','settings']);
-      getAllUserData().then((value) => update(['profile_page','home','settings']));
+      update(['profile_page','home','settings','app_drawer']);
+      getAllUserData().then((value) => update(['profile_page','home','settings','app_drawer']));
     });
     return response;
   }

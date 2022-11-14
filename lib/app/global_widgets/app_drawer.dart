@@ -55,156 +55,162 @@ class AppDrawer extends StatelessWidget {
             systemNavigationBarColor: AppColors.background,
             systemNavigationBarIconBrightness: Brightness.dark
         ),
-        child: SizedBox(
-          width: Get.width*0.7,
-          child: Scaffold(
-              backgroundColor: AppColors.background,
-              body: SafeArea(
-                child: ListView(
-                  children: [
-                    InkWell(
-                      onTap: (){
-                        controller.imagePaths.clear();
-                        Get.back();
-                        Get.toNamed(Profile.route);
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: Get.width*0.2,
-                              height: Get.width*0.2,
-                              child: IconButton(
-                                icon: AppAvatar(
-                                  imgUrl: (fullProfile.avatar as String?).toString(),
-                                  radius: 45,
-                                ),
-                                onPressed: () {
-                                  controller.imagePaths.clear();
-                                  Get.back();
-                                  Get.toNamed(Profile.route);
-                                },
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "${controller.logInDetails.user!.firstName} ${controller.logInDetails.user!.lastName}",
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: Get.width*0.035,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      followers.toString(),
-                                      style: AppTextStyle.headline4.copyWith(
-                                        color: AppColors.primary,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: Get.width*0.034,
-                                      ),
-                                    ),
-                                    Text(
-                                      " followers",
-                                      style: AppTextStyle.headline4.copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: Get.width*0.034,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      following.toString(),
-                                      style: AppTextStyle.headline4.copyWith(
-                                        color: AppColors.primary,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: Get.width*0.034,
-                                      ),
-                                    ),
-                                    Text(
-                                      " following",
-                                      style: AppTextStyle.headline4.copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: Get.width*0.034,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: (){
-                        controller.imagePaths.clear();
-                        Get.back();
-                        Get.toNamed(Profile.route);
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
-                        child: Row(
-                          children: [
-                            Text(
-                              "Acct: ",
-                              style: AppTextStyle.headline4.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal,
-                                fontSize: Get.width*0.04,
-                              ),
-                            ),
-                            Text(
-                              "$accountNumber | ",
-                              style: AppTextStyle.headline4.copyWith(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.normal,
-                                fontSize: Get.width*0.04,
-                              ),
-                            ),
-                            Text(
-                              bankName,
-                              style: AppTextStyle.headline4.copyWith(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.normal,
-                                fontSize: Get.width*0.04,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    //Divider
-                    const Divider(
-                      color: Colors.grey,
-                      thickness: 0.5,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.05, right: Get.width*0.05),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+        child: GetBuilder<HomeController>(
+            id: 'app_drawer',
+            builder: (controller) {
+              var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+              var showSearchIcon = controller.currentBottomNavPage.value == 1 || controller.currentBottomNavPage.value == 2;
+
+              return SizedBox(
+                width: Get.width*0.7,
+                child: Scaffold(
+                    backgroundColor: AppColors.background,
+                    body: SafeArea(
+                      child: ListView(
                         children: [
-                          _TextButton(
-                            leading: const Icon(Icons.person, color: Colors.black),
-                            text: "My Account",
-                            onPressed: () {
+                          InkWell(
+                            onTap: (){
                               controller.imagePaths.clear();
                               Get.back();
                               Get.toNamed(Profile.route);
                             },
+                            child: Padding(
+                              padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: Get.width*0.2,
+                                    height: Get.width*0.2,
+                                    child: IconButton(
+                                      icon: AppAvatar(
+                                        imgUrl: (fullProfile.avatar as String?).toString(),
+                                        radius: 45,
+                                      ),
+                                      onPressed: () {
+                                        controller.imagePaths.clear();
+                                        Get.back();
+                                        Get.toNamed(Profile.route);
+                                      },
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${controller.logInDetails.user!.firstName} ${controller.logInDetails.user!.lastName}",
+                                        style: AppTextStyle.headline4.copyWith(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: Get.width*0.035,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            followers.toString(),
+                                            style: AppTextStyle.headline4.copyWith(
+                                              color: AppColors.primary,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: Get.width*0.034,
+                                            ),
+                                          ),
+                                          Text(
+                                            " followers",
+                                            style: AppTextStyle.headline4.copyWith(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: Get.width*0.034,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            following.toString(),
+                                            style: AppTextStyle.headline4.copyWith(
+                                              color: AppColors.primary,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: Get.width*0.034,
+                                            ),
+                                          ),
+                                          Text(
+                                            " following",
+                                            style: AppTextStyle.headline4.copyWith(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: Get.width*0.034,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
+                          InkWell(
+                            onTap: (){
+                              controller.imagePaths.clear();
+                              Get.back();
+                              Get.toNamed(Profile.route);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Acct: ",
+                                    style: AppTextStyle.headline4.copyWith(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: Get.width*0.04,
+                                    ),
+                                  ),
+                                  Text(
+                                    "$accountNumber | ",
+                                    style: AppTextStyle.headline4.copyWith(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: Get.width*0.04,
+                                    ),
+                                  ),
+                                  Text(
+                                    bankName,
+                                    style: AppTextStyle.headline4.copyWith(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: Get.width*0.04,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          //Divider
+                          const Divider(
+                            color: Colors.grey,
+                            thickness: 0.5,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: Get.width*0.05, right: Get.width*0.05),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _TextButton(
+                                  leading: const Icon(Icons.person, color: Colors.black),
+                                  text: "My Account",
+                                  onPressed: () {
+                                    controller.imagePaths.clear();
+                                    Get.back();
+                                    Get.toNamed(Profile.route);
+                                  },
+                                ),
 
-                          /*_TextButton(
+                                /*_TextButton(
                             leading: const Icon(Icons.person_add, color: Colors.black),
                             text: "Discover People",
                             onPressed: () {
@@ -212,132 +218,135 @@ class AppDrawer extends StatelessWidget {
                             },
                           ),*/
 
-                          _TextButton(
-                            leading: const Icon(Icons.people, color: Colors.black),
-                            text: "Groups & Pages",
-                            onPressed: () {
-                              Get.back();
-                              Get.toNamed(GroupsAndPages.route);
-                            },
+                                _TextButton(
+                                  leading: const Icon(Icons.people, color: Colors.black),
+                                  text: "Groups & Pages",
+                                  onPressed: () {
+                                    Get.back();
+                                    Get.toNamed(GroupsAndPages.route);
+                                  },
+                                ),
+
+                                _TextButton(
+                                  leading: const Icon(Icons.bookmark, color: Colors.black),
+                                  text: "Bookmarks",
+                                  onPressed: () {
+
+                                  },
+                                ),
+
+                                _TextButton(
+                                  leading: const Icon(Icons.account_tree_sharp, color: Colors.black),
+                                  text: "Top Clips",
+                                  onPressed: () {
+
+                                  },
+                                ),
+
+                                _TextButton(
+                                  leading: const Icon(Icons.interests, color: Colors.black),
+                                  text: "Interests",
+                                  onPressed: () {
+
+                                  },
+                                ),
+
+                                _TextButton(
+                                  leading: const Icon(Icons.calendar_month, color: Colors.black),
+                                  text: "Events",
+                                  onPressed: () {
+
+                                  },
+                                ),
+
+                                _TextButton(
+                                  leading: const Icon(Icons.analytics, color: Colors.black),
+                                  text: "Post Promotion Analytics",
+                                  onPressed: () {
+
+                                  },
+                                ),
+
+                                _TextButton(
+                                  leading: const Icon(Icons.local_activity, color: Colors.black),
+                                  text: "Activity Log",
+                                  onPressed: () {
+
+                                  },
+                                ),
+
+                                _TextButton(
+                                  leading: const Icon(Icons.settings, color: Colors.black),
+                                  text: "Settings",
+                                  onPressed: () {
+                                    Get.back();
+                                    Get.toNamed(Settings.route);
+                                  },
+                                ),
+
+                                _TextButton(
+                                  leading: const Icon(Icons.support_agent, color: Colors.black),
+                                  text: "Support",
+                                  onPressed: () {
+
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const Divider(
+                            color: Colors.grey,
+                            thickness: 0.5,
                           ),
 
                           _TextButton(
-                            leading: const Icon(Icons.bookmark, color: Colors.black),
-                            text: "Bookmarks",
-                            onPressed: () {
-
-                            },
-                          ),
-
+                              leading: const SizedBox.shrink(),
+                              text: "FAQ",
+                              onPressed: ()  {
+                                controller.launchURL("https://wayagram.ng/faq");
+                              }),
                           _TextButton(
-                            leading: const Icon(Icons.account_tree_sharp, color: Colors.black),
-                            text: "Top Clips",
-                            onPressed: () {
-
-                            },
-                          ),
-
+                              leading: const SizedBox.shrink(),
+                              text: "Privacy Policy",
+                              onPressed: ()  {
+                                controller.launchURL("https://wayagram.ng/privacy-policy");
+                              }),
                           _TextButton(
-                            leading: const Icon(Icons.interests, color: Colors.black),
-                            text: "Interests",
-                            onPressed: () {
+                              leading: const SizedBox.shrink(),
+                              text: "Terms of Use",
+                              onPressed: () {
+                                controller.launchURL("https://wayagram.ng/terms");
+                              }),
 
-                            },
-                          ),
-
-                          _TextButton(
-                            leading: const Icon(Icons.calendar_month, color: Colors.black),
-                            text: "Events",
-                            onPressed: () {
-
-                            },
-                          ),
-
-                          _TextButton(
-                            leading: const Icon(Icons.analytics, color: Colors.black),
-                            text: "Post Promotion Analytics",
-                            onPressed: () {
-
-                            },
-                          ),
-
-                          _TextButton(
-                            leading: const Icon(Icons.local_activity, color: Colors.black),
-                            text: "Activity Log",
-                            onPressed: () {
-
-                            },
-                          ),
-
-                          _TextButton(
-                            leading: const Icon(Icons.settings, color: Colors.black),
-                            text: "Settings",
-                            onPressed: () {
-                              Get.back();
-                              Get.toNamed(Settings.route);
-                            },
-                          ),
-
-                          _TextButton(
-                            leading: const Icon(Icons.support_agent, color: Colors.black),
-                            text: "Support",
-                            onPressed: () {
-
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const Divider(
-                      color: Colors.grey,
-                      thickness: 0.5,
-                    ),
-
-                    _TextButton(
-                        leading: const SizedBox.shrink(),
-                        text: "FAQ",
-                        onPressed: ()  {
-                          controller.launchURL("https://wayagram.ng/faq");
-                        }),
-                    _TextButton(
-                        leading: const SizedBox.shrink(),
-                        text: "Privacy Policy",
-                        onPressed: ()  {
-                          controller.launchURL("https://wayagram.ng/privacy-policy");
-                        }),
-                    _TextButton(
-                        leading: const SizedBox.shrink(),
-                        text: "Terms of Use",
-                        onPressed: () {
-                          controller.launchURL("https://wayagram.ng/terms");
-                        }),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.05, right: Get.width*0.05),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          SizedBox(
-                            child: AppButton(
-                              title: 'LOGOUT',
-                              onPressed: () async {
-                                Get.back();
-                                await MyPref.clearBoxes();
-                                Get.offAllNamed(Multiplexor.route);
-                              },
-                              borderRadius: 10,
-                              fontColor: AppColors.primary,
-                              bckgrndColor: AppColors.background,
+                          Padding(
+                            padding: EdgeInsets.only(left: Get.width*0.05, right: Get.width*0.05),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(
+                                  width: Get.width*0.2,
+                                  child: AppButton(
+                                    title: 'LOGOUT',
+                                    onPressed: () async {
+                                      Get.back();
+                                      await MyPref.clearBoxes();
+                                      Get.offAllNamed(Multiplexor.route);
+                                    },
+                                    borderRadius: 10,
+                                    fontColor: AppColors.primary,
+                                    bckgrndColor: AppColors.background,
+                                    fontSize: Get.width*0.045,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              )),
-        )
+                    )),
+              );
+            })
     );
   }
 }
