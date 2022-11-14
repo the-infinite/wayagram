@@ -56,7 +56,6 @@ class AppDrawer extends StatelessWidget {
             systemNavigationBarIconBrightness: Brightness.dark
         ),
         child: GetBuilder<HomeController>(
-            id: 'app_drawer',
             builder: (controller) {
               var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
               var showSearchIcon = controller.currentBottomNavPage.value == 1 || controller.currentBottomNavPage.value == 2;
@@ -152,44 +151,45 @@ class AppDrawer extends StatelessWidget {
                               ),
                             ),
                           ),
-                          InkWell(
-                            onTap: (){
-                              controller.imagePaths.clear();
-                              Get.back();
-                              Get.toNamed(Profile.route);
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "Acct: ",
-                                    style: AppTextStyle.headline4.copyWith(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: Get.width*0.04,
+                          if(accountNumber.isNotEmpty)
+                            InkWell(
+                              onTap: (){
+                                controller.imagePaths.clear();
+                                Get.back();
+                                Get.toNamed(Profile.route);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "Acct: ",
+                                      style: AppTextStyle.headline4.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: Get.width*0.04,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    "$accountNumber | ",
-                                    style: AppTextStyle.headline4.copyWith(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: Get.width*0.04,
+                                    Text(
+                                      "$accountNumber | ",
+                                      style: AppTextStyle.headline4.copyWith(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: Get.width*0.04,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    bankName,
-                                    style: AppTextStyle.headline4.copyWith(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: Get.width*0.04,
+                                    Text(
+                                      bankName,
+                                      style: AppTextStyle.headline4.copyWith(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: Get.width*0.04,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
                           //Divider
                           const Divider(
                             color: Colors.grey,

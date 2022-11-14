@@ -173,8 +173,8 @@ class HomeController extends GetxController {
   Future<ApiResponse> putData(dynamic body,String url) async {
     final response = await userRepo.putData(url, body);
     userRepo.getUserProfile(profile.userId.toString()).then((value){
-      update();
-      getAllUserData().then((value) => update());
+      update(['home','profile_page','settings','app_drawer']);
+      getAllUserData().then((value) => update(['profile_page','home','settings','app_drawer']));
     });
     return response;
   }
