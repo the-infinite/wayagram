@@ -20,8 +20,29 @@ import '../../global_widgets/page_input.dart';
 
 import 'package:dio/dio.dart' as dio;
 
-class CreatePage extends StatelessWidget {
+class CreatePage extends StatefulWidget {
   const CreatePage({Key? key}) : super(key: key);
+
+  @override
+  State<CreatePage> createState() => _CreatePageState();
+}
+
+class _CreatePageState extends State<CreatePage> {
+  var homeController = Get.find<HomeController>();
+
+  @override
+  void initState() {
+    super.initState();
+    homeController.userRepo.getFullUserProfile(homeController.logInDetails.user!.id.toString()).then((value) {
+      if(value.isSuccessful){
+        homeController.userRepo.getPageCategories().then((value) {
+          setState(() {
+
+          });
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

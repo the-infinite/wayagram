@@ -11,6 +11,7 @@ import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/page_categories_model.dart';
+import '../../data/model/profile_model_entity.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/document_picker.dart';
@@ -20,9 +21,30 @@ import '../../global_widgets/page_input.dart';
 
 import 'package:dio/dio.dart' as dio;
 
-class CreateGroup extends StatelessWidget {
+class CreateGroup extends StatefulWidget {
   const CreateGroup({Key? key}) : super(key: key);
 
+  @override
+  State<CreateGroup> createState() => _CreateGroupState();
+}
+
+class _CreateGroupState extends State<CreateGroup> {
+  var homeController = Get.find<HomeController>();
+  
+  @override
+  void initState() {
+    super.initState();
+    homeController.userRepo.getFullUserProfile(homeController.logInDetails.user!.id.toString()).then((value) {
+      if(value.isSuccessful){
+        homeController.userRepo.getGroupCategories().then((value) {
+          setState(() {
+
+          });
+        });
+      }
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     var currentPage = 0;
