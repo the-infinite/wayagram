@@ -181,10 +181,10 @@ class PostsView extends StatelessWidget{
                   ),
                 ],
               ),
-              Divider(
-                height: 0.5,
-                thickness: 0.5,
-                color: Colors.grey.shade400,
+              const Divider(
+                height: 1.5,
+                thickness: 1.5,
+                color: Color(0xffF2F2F2),
               ),
               const SizedBox(
                 height: 10,
