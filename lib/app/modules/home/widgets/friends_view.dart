@@ -88,9 +88,12 @@ class _FriendsViewState extends State<FriendsView> {
                 );
               }
               var person = widget.data[index];
-              var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-              var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
-              var isFollowing = following.following!.any((element) => element.userId == person.userId);
+              //var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+              var isFollowing = false;
+              if(MyPref.following.val.isNotEmpty){
+                var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
+                isFollowing = following.following!.any((element) => element.userId == person.userId);
+              }
 
               return GetBuilder<HomeController>(
                   builder: (controller) {
