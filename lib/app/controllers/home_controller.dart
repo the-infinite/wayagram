@@ -16,6 +16,8 @@ import 'package:wayagram/app/modules/home/tabs/discover_tab.dart';
 import 'package:wayagram/app/modules/home/tabs/shops_tab.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../data/model/ContactList.dart';
+import '../data/model/ContactsToUpload.dart';
 import '../data/model/SearchPeopleResponse.dart';
 import '../data/model/log_in_model_entity.dart';
 import '../data/model/profile_model_entity.dart';
@@ -79,6 +81,14 @@ class HomeController extends GetxController {
               }
             }
           });
+          var body = {
+            "contactList": [
+              {
+                "phone": number
+              }
+            ]
+          };
+          postData(body, "wayagram-service/main/save-contact");
         }
       }
     }else{
@@ -112,9 +122,16 @@ class HomeController extends GetxController {
                 searchPeopleResponse.addAll(data);
               }
             }
+            var body = {
+              "contactList": [
+                {
+                  "phone": number
+                }
+              ]
+            };
+            postData(body, "wayagram-service/main/save-contact");
           }
-        }
-        );
+        });
         update(['contact']);
       }
     }else{
@@ -194,6 +211,7 @@ class HomeController extends GetxController {
 
   Future<ApiResponse> postData(dynamic body,String url) async {
     final response = await userRepo.postData(url, body);
+    print(response.message);
     userRepo.getUserProfile(profile.userId.toString()).then((value){
       update(['profile_page','home','settings']);
       getAllUserData().then((value) => update(['profile_page','home','settings']));
