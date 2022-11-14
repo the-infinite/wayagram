@@ -21,15 +21,32 @@ import '../modules/settings/settings.dart';
 import 'app_avatar.dart';
 import 'app_button.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends StatefulWidget {
   const AppDrawer({Key? key}) : super(key: key);
 
   static const String route = "/drawer";
 
   @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
+
+class _AppDrawerState extends State<AppDrawer> {
+  var homeController = Get.find<HomeController>();
+
+  @override
+  void initState() {
+    super.initState();
+    homeController.userRepo.getFriends().then((value) {
+      homeController.userRepo.getAccountNumber().then((value) {
+        setState(() {
+
+        });
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
     var followers = 0;
     var following = 0;
     var accountNumber = '';

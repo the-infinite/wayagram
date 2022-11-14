@@ -52,7 +52,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
     homeController.notificationController = notificationController;
     homeController.chatController = chatController;
     homeController.checkPermissionStatus();
-    //homeController.getAllUserData().then((value) => homeController.update());
+    homeController.getAllUserData().then((value) => homeController.update());
   }
 
   @override
