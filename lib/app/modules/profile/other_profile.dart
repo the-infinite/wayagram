@@ -223,6 +223,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                               border: Border.all(color: isFollowing ? AppColors.primary : AppColors.background, width: 1),
                                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                               fontSize: Get.width * 0.04,
+                                              width: Get.width * 0.3,
                                             ),
                                           ),
                                         ),

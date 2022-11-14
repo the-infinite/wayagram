@@ -200,6 +200,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                               border: Border.all(color: AppColors.primary, width: 1),
                                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                               fontSize: Get.width * 0.04,
+                                              width: Get.width * 0.2,
                                             ),
                                           ),
                                         ),
