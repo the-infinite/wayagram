@@ -91,6 +91,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     var top = 0.0;
+    var page = widget.page;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -101,25 +102,13 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeController>(
-          id: 'profile_page',
+          id: 'page_screen',
           builder: (controller) {
-            //
-            //var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
-            var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
-            //var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
-            var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-
-            var followersCount = 0;
-            var followingCount = 0;
-            if(MyPref.followers.val.isNotEmpty) {
-              var followers = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));
-              followersCount = followers.followers!.length;
+            var memberCount = 0;
+            if(page.numberOfMembers != null) {
+              memberCount = page.numberOfMembers!.toInt();
             }
 
-            if(MyPref.following.val.isNotEmpty) {
-              var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
-              followingCount = following.following!.length;
-            }
             return Scaffold(
               body: NestedScrollView(
                 headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -146,7 +135,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                           height: Get.height * 0.2,
                                           width: Get.width,
                                           child: Image.network(
-                                            (fullProfile.coverImage as String?).toString(),
+                                            page.headerImageUrl.toString(),
                                             fit: BoxFit.cover,
                                             loadingBuilder: (BuildContext context, Widget child,ImageChunkEvent? loadingProgress) {
                                               if (loadingProgress == null) return child;
@@ -175,7 +164,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                             child: IconButton(
                                               padding: EdgeInsets.zero,
                                               icon: AppAvatar(
-                                                imgUrl: (fullProfile.avatar as String?).toString(),
+                                                imgUrl: page.imageUrl.toString(),
                                               ),
                                               onPressed: () {
                                                 //Get.toNamed(Profile.route);
@@ -192,7 +181,6 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                               title: 'Edit',
                                               onPressed: () {
                                                 controller.imagePaths.clear();
-                                                Get.toNamed(UpdateProfile.route);
                                               },
                                               borderRadius: 10,
                                               fontColor: AppColors.primary,
@@ -214,7 +202,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '${fullProfile.displayName}',
+                                          '${page.name}',
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: Get.width*0.04,
@@ -222,18 +210,9 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                           ),
                                         ),
                                         SizedBox(height: Get.height*0.002),
-                                        Text(
-                                          "@${fullProfile.username}",
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: Get.width*0.035,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        SizedBox(height: Get.height*0.002),
-                                        if(fullProfile.bio.toString() != "null")
+                                        if(page.description.toString() != "null")
                                           Text(
-                                            fullProfile.bio.toString(),
+                                            page.description.toString(),
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: Get.width*0.04,
@@ -244,85 +223,6 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                     ),
                                   ),
                                   SizedBox(height: Get.height * 0.01),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            Get.to(() => const Followers());
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                followersCount.toString(),
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: Get.width*0.04,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              Text(
-                                                " Followers",
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: Get.width*0.04,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-
-                                        InkWell(
-                                          onTap: () {
-                                            Get.to(() => const Following());
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                followingCount.toString(),
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: Get.width*0.04,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              Text(
-                                                " Following",
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: Get.width*0.04,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-
-                                        Text(
-                                          fullProfile.posts.toString(),
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: Get.width*0.04,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          " Posts",
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: Get.width*0.04,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                   TabBar(
                                     controller: tabController,
                                     padding: EdgeInsets.zero,
@@ -338,11 +238,10 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                       fontSize: Get.width*0.035,
                                       fontWeight: FontWeight.w500,
                                     ),
-                                    tabs: const [
-                                      Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                                      Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
-                                      Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
-                                      Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
+                                    tabs: [
+                                      const Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                      const Tab(text: 'Media',iconMargin: EdgeInsets.zero,),
+                                      Tab(text: "Members ($memberCount)",iconMargin: EdgeInsets.zero,),
                                     ],
                                     onTap: (index) {
                                       //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
@@ -360,7 +259,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                 duration: const Duration(milliseconds: 300),
                                 opacity: top == MediaQuery.of(context).padding.top + kToolbarHeight ? 1.0 : 0.0,
                                 child: Text(
-                                  '${controller.logInDetails.user!.firstName!.capitalizeFirst} ${controller.logInDetails.user!.lastName!.capitalizeFirst}',
+                                  '${page.name}',
                                   style: AppTextStyle.subtitle1.copyWith(
                                     color: Colors.white,
                                   ),
@@ -387,9 +286,9 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                             ),
                             onSelected: (value) {
                               if (value == 0) {
-                                Get.to(() => const Muted());
+                                //Get.to(() => const Muted());
                               } else if (value == 1) {
-                                Get.to(() => const Blocked());
+                                //Get.to(() => const Blocked());
                               } else if (value == 2) {
                                 //Get.to(() => const Followers());
                               }
@@ -398,7 +297,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                               PopupMenuItem(
                                 value: 0,
                                 child: Text(
-                                  "View Muted Users",
+                                  "Invite",
                                   style: AppTextStyle.bodyText1.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
@@ -408,7 +307,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                               PopupMenuItem(
                                 value: 1,
                                 child: Text(
-                                  "View Blocked Users",
+                                  "Search",
                                   style: AppTextStyle.bodyText1.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
@@ -418,7 +317,27 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                               PopupMenuItem(
                                 value: 2,
                                 child: Text(
-                                  "Share",
+                                  "Mute",
+                                  style: AppTextStyle.bodyText1.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 2,
+                                child: Text(
+                                  "Exit",
+                                  style: AppTextStyle.bodyText1.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 2,
+                                child: Text(
+                                  "Report",
                                   style: AppTextStyle.bodyText1.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
@@ -441,40 +360,8 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                 body: TabBarView(
                   controller: tabController,
                   children: [
-                    FutureBuilder<ApiResponse>(
-                        future: controller.getPosts,
-                        builder: (context, snapshot) {
-                          var savedPosts = MyPref.posts.val;
-                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                            final posts = snapshot.data!.data as List<AllPostsEntity>;
-                            return PostsView(posts: posts,userID: fullProfile.userId);
-                          } else if(savedPosts.isNotEmpty){
-                            var posts = AllPostsEntity.getService(jsonDecode(savedPosts));
-                            return PostsView(posts: posts,userID: fullProfile.userId);
-                          }else{
-                            if(snapshot.connectionState == ConnectionState.done){
-                              return const SizedBox.shrink();
-                            }
-                            return const PostsView(isLoading: true);
-                          }
-                        }),
-                    FutureBuilder<ApiResponse>(
-                        future: controller.getMyProducts,
-                        builder: (context, snapshot) {
-                          var savedPosts = MyPref.myProducts.val;
-                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                            final posts = snapshot.data!.data as ProductsModelEntity;
-                            return ProductView(posts: posts.data!);
-                          } else if(savedPosts.isNotEmpty){
-                            var posts = ProductsModelEntity.fromJson(jsonDecode(savedPosts));
-                            return ProductView(posts: posts.data!);
-                          }else{
-                            if(snapshot.connectionState == ConnectionState.done){
-                              return const SizedBox.shrink();
-                            }
-                            return const ProductView(isLoading: true);
-                          }
-                        }),
+                    Column(),
+                    Column(),
                     Column(),
                     Column(),
                   ],
