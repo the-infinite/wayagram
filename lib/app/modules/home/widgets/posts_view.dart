@@ -91,6 +91,7 @@ class PostsView extends StatelessWidget{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   InkWell(
                     onTap: (){
@@ -128,22 +129,23 @@ class PostsView extends StatelessWidget{
                         Get.toNamed(PostProfile.route,arguments: post);
                       }
                     },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      //crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           post.profile!.displayName.toString(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.black ,
-                            fontSize: 16,
+                            fontSize: Get.width * 0.04,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
+                        SizedBox(width: Get.width * 0.01,),
                         Text(
                           "@${post.profile!.username}",
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.grey,
-                            fontSize: 16,
+                            fontSize: Get.width * 0.035,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
@@ -153,6 +155,7 @@ class PostsView extends StatelessWidget{
                   Expanded(
                     child: Wrap(
                       alignment: WrapAlignment.end,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text(
                           timeago.format(time),
@@ -166,7 +169,7 @@ class PostsView extends StatelessWidget{
                           width: 10,
                         ),
                         const Icon(
-                          FeatherIcons.moreVertical,
+                          FeatherIcons.moreHorizontal,
                           color: Colors.black,
                           size: 20,
                         ),
@@ -177,6 +180,11 @@ class PostsView extends StatelessWidget{
                     ),
                   ),
                 ],
+              ),
+              Divider(
+                height: 0.5,
+                thickness: 0.5,
+                color: Colors.grey.shade300,
               ),
               const SizedBox(
                 height: 10,
