@@ -89,7 +89,7 @@ class GroupView extends StatelessWidget{
                     ),
                   ),
                   SizedBox(
-                    width: Get.width*0.7,
+                    width: Get.width*0.5,
                     child: Text(
                       post.description.toString(),
                       style: const TextStyle(
@@ -105,22 +105,21 @@ class GroupView extends StatelessWidget{
               ),
               if(!isJoined)
                 Expanded(
-                  child: Wrap(
-                    alignment: WrapAlignment.end,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      SizedBox(
-                        width: Get.width*0.2,
-                        child: AppButton(
-                          title: isGroup ? 'Join' : 'Follow',
-                          onPressed: () async {
+                      AppButton(
+                        title: isGroup ? 'Join' : 'Follow',
+                        onPressed: () async {
 
-                          },
-                          borderRadius: 5,
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          bckgrndColor: AppColors.background,
-                          fontColor: AppColors.primary,
-                          border: Border.all(color: AppColors.primary),
-                        ),
+                        },
+                        borderRadius: 5,
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        bckgrndColor: AppColors.background,
+                        fontColor: AppColors.primary,
+                        border: Border.all(color: AppColors.primary),
+                        fontSize: Get.width*0.04,
+                        width: Get.width*0.25,
                       ),
                     ],
                   ),

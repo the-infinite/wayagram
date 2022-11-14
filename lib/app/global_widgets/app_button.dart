@@ -51,6 +51,7 @@ class _AppButtonState extends State<AppButton> {
         children: [
           Container(
             padding: widget.padding,
+            width: widget.width,
             decoration: BoxDecoration(
                 color: widget.bckgrndColor,
                 border: widget.border,

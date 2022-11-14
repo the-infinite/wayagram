@@ -67,6 +67,7 @@ class _EventsViewState extends State<EventsView> {
             itemCount: widget.isLoading ? 5 : list.length,
             shrinkWrap: false,
             scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.zero,
             // physics: widget.isLoading ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
             itemBuilder: (context, index) {
               if(widget.isLoading){
@@ -97,10 +98,10 @@ class _EventsViewState extends State<EventsView> {
                 going = list[index].eventParticipants!.length;
               }
               return Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 3.7, left: 5,right: 5),
-                width: Get.width * 0.45,
+                margin: EdgeInsets.only(top: Get.height*0.007, left: Get.width*0.02,right: Get.width*0.02,bottom: Get.height*0.007),
+                width: Get.width * 0.5,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(5),
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
@@ -116,10 +117,10 @@ class _EventsViewState extends State<EventsView> {
                   children: [
                     Container(
                       height: Get.height * 0.12,
-                      width: Get.width * 0.45,
+                      width: Get.width * 0.5,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey.withOpacity(.5),
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.grey[200],
                       ),
                       child: Stack(
                         children: [
@@ -129,10 +130,13 @@ class _EventsViewState extends State<EventsView> {
                             right: 0,
                             bottom: 0,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(5),
                               child: Image.network(
                                 list[index].eventPoster.toString(),
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(Icons.event,color: Colors.grey,size: Get.height*0.04);
+                                },
                               ),
                             ),
                           ),
@@ -171,7 +175,7 @@ class _EventsViewState extends State<EventsView> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 5),
+                      padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,top: Get.height*0.01),
                       child: Text(
                         "Date here",
                         style: TextStyle(
@@ -182,7 +186,7 @@ class _EventsViewState extends State<EventsView> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 5),
+                      padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,),
                       child: Text(
                         list[index].eventName.toString(),
                         style: TextStyle(
@@ -190,10 +194,12 @@ class _EventsViewState extends State<EventsView> {
                           fontSize: Get.height * 0.018,
                           fontWeight: FontWeight.bold,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 5),
+                      padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,),
                       child: Text(
                         list[index].details.toString(),
                         style: TextStyle(
@@ -206,7 +212,7 @@ class _EventsViewState extends State<EventsView> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 5),
+                      padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,),
                       child: Text(
                         "$interested Interested $going Going",
                         style: TextStyle(
@@ -217,14 +223,13 @@ class _EventsViewState extends State<EventsView> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 5),
+                      padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.05,top: Get.height*0.015),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
-                            width: Get.width*0.3,
-                            height: Get.height*0.04,
+                            width: Get.width*0.33,
                             child: AppButton(
                               title: 'Register',
                               onPressed: () async {
@@ -235,13 +240,13 @@ class _EventsViewState extends State<EventsView> {
                               fontSize: Get.height * 0.018,
                             ),
                           ),
-                          IconButton(
-                            icon: const Icon(
+                          SizedBox(
+                            height: Get.height*0.03,
+                            child: Icon(
                               Icons.share,
                               color: Colors.black,
-                              size: 15,
+                              size: Get.width*0.05,
                             ),
-                            onPressed: (){},
                           )
                         ],
                       ),
