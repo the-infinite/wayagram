@@ -118,19 +118,18 @@ class AppOverlay {
 
     List<Widget> buttons = [];
     actions.forEach((text, onPressed) {
-      buttons.add(Expanded(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6.5),
-          child: AppButton(
-              borderRadius: 0,
-              bckgrndColor: Colors.transparent,
-              fontColor: Colors.black,
-              title: text,
-              width: Get.width * 0.4,
-              onPressed: () async {
-                await onPressed();
-              }),
-        ),
+      buttons.add(Padding(
+        padding: EdgeInsets.only(top: Get.height * 0.015,bottom: Get.height * 0.015),
+        child: AppButton(
+            borderRadius: 0,
+            bckgrndColor: Colors.transparent,
+            fontColor: Colors.black,
+            title: text,
+            width: Get.width * 0.7,
+            padding: EdgeInsets.zero,
+            onPressed: () async {
+              await onPressed();
+            }),
       ));
     });
     showDialog(
@@ -145,17 +144,13 @@ class AppOverlay {
             child: Container(
               width: Get.width * 0.9,
               height: Get.height * 0.15,
-              padding: const EdgeInsets.symmetric(
-                vertical: 15,
-                horizontal: 13.5,
-              ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(7),
                 color: Colors.white,
               ),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: buttons
                 /*Text(
                     title,
