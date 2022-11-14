@@ -141,8 +141,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
               child: Column(
                 children: [
                   if(controller.currentBottomNavPage.value == 2)
-                    const Divider(
-                    color: Colors.grey,
+                    Divider(
+                    color: Colors.grey.shade400,
                     thickness: 0.3,
                   ),
                   if(controller.currentBottomNavPage.value == 2)
@@ -170,10 +170,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                       },
                     ),
                   if(controller.currentBottomNavPage.value == 3)
-                    const Divider(
+                    Divider(
                       height: 0.5,
                       thickness: 0.5,
-                      color: Colors.grey,
+                      color: Colors.grey.shade400,
                     ),
                   if(controller.currentBottomNavPage.value == 3)
                     TabBar(
@@ -200,10 +200,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                       },
                     ),
                   if(controller.currentBottomNavPage.value == 4)
-                    const Divider(
+                    Divider(
                       height: 0.5,
                       thickness: 0.5,
-                      color: Colors.grey,
+                      color: Colors.grey.shade400,
                     ),
                   if(controller.currentBottomNavPage.value == 4)
                     TabBar(
@@ -229,10 +229,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
 
                       },
                     ),
-                  const Divider(
+                  Divider(
                     height: 0.5,
-                    thickness: 0.5,
-                    color: Colors.grey,
+                    thickness: 0.45,
+                    color: Colors.grey.shade400,
                   ),
                   Expanded(
                     child: SingleChildScrollView(
