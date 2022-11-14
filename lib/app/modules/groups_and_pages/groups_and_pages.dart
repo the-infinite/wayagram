@@ -78,8 +78,9 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Divider(
+                height: 0.5,
+                thickness: 0.5,
                 color: Colors.grey,
-                thickness: 0.3,
               ),
               TabBar(
                 controller: tabController,

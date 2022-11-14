@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_styles.dart';
 
 class PageDropButton extends StatelessWidget {
   const PageDropButton({
@@ -13,9 +14,11 @@ class PageDropButton extends StatelessWidget {
     this.value,
     this.onChanged,
     this.bckgrndColor,
-    this.style
+    this.style,
+    this.isCompulsory = false,
   }) : super(key: key);
 
+  final bool isCompulsory;
   final TextStyle? style;
   final String label;
   final String hint;
@@ -31,20 +34,33 @@ class PageDropButton extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        label.isNotEmpty
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Text(label,style: style),
+        Padding(
+          padding: const EdgeInsets.only(left: 5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if(label.isNotEmpty)
+                Text(
+                  label,
+                  style: AppTextStyle.bodyText2.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF828282),
                   ),
-                  const SizedBox(
-                    height: 10,
+                ),
+              if(isCompulsory)
+                const SizedBox(width: 5),
+              if(isCompulsory)
+                Text(
+                  "*",
+                  style: AppTextStyle.bodyText2.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.red,
                   ),
-                ],
-              )
-            : const SizedBox.shrink(),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 5),
         AppDropdownButton(
           value: value,
           borderRadius: 10,

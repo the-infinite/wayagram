@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/full_user_profile_entity.dart';
+import '../../data/model/page_categories_model.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/document_picker.dart';
@@ -32,6 +33,7 @@ class CreatePage extends StatelessWidget {
     var linkController = TextEditingController();
     var pageVisibility = TextEditingController();
     var pageCategory = TextEditingController(text: 'Dance');
+    PageCategoriesModel? chosenCategory;
 
     var formKey1 = GlobalKey<FormState>();
     var businessList = [
@@ -79,6 +81,10 @@ class CreatePage extends StatelessWidget {
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeController>(builder: (controller) {
+        List<PageCategoriesModel> categories = [];
+        if(MyPref.pageCategories.val.isNotEmpty){
+          categories = PageCategoriesModel.listFromJson(jsonDecode(MyPref.pageCategories.val));
+        }
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppColors.background,
@@ -99,8 +105,8 @@ class CreatePage extends StatelessWidget {
                       if (formKey1.currentState!.validate()) {
                         Map<String, dynamic> body = {
                           "userId": fullProfile.id,
-                          "categoryId": "3de9d1b8-2f4a-4beb-9980-c474eb2c62c9",
-                          "category": pageCategory.text,
+                          "categoryId": chosenCategory!.id,
+                          "category": chosenCategory!.title,
                           "username": nameController.text,
                           "title": nameController.text,
                           "description": descriptionController.text,
@@ -139,6 +145,7 @@ class CreatePage extends StatelessWidget {
                     bckgrndColor: AppColors.background,
                     border: Border.all(color: AppColors.background, width: 1),
                     padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                    width: Get.width * 0.3,
                   ),
                 ),
               )
@@ -184,19 +191,30 @@ class CreatePage extends StatelessWidget {
                           SizedBox(height: Get.height * 0.025),
                           PageDropButton(
                             label: "Page Category",
-                            hint: '',
-                            onChanged: (val) {
-                              pageCategory.text = val;
-                              //controller.businessType.value = val!;
+                            hint: 'Choose a category',
+                            isCompulsory: true,
+                            onChanged: (value) {
+                              for (var element in categories) {
+                                if(element.id == value){
+                                  pageCategory.text = element.title.toString();
+                                  chosenCategory = element;
+                                  break;
+                                }
+                              }
                             },
-                            value: "Catering and Food",
-                            items: businessList.map<DropdownMenuItem<String>>((String value) {
+                            validator: (val){
+                              if(chosenCategory == null){
+                                return 'Please choose a category';
+                              }
+                              return null;
+                            },
+                            items: categories.map<DropdownMenuItem<String>>((PageCategoriesModel value){
                               return DropdownMenuItem<String>(
-                                value: value,
+                                value: value.id,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(value),
+                                    Text(value.title.toString()),
                                   ],
                                 ),
                               );
