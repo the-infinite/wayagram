@@ -19,6 +19,7 @@ class CreateGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var currentPage = 0;
     var pageController = PageController();
     var formKey1 = GlobalKey<FormState>();
 
@@ -50,10 +51,11 @@ class CreateGroup extends StatelessWidget {
               Center(
                 child: SizedBox(
                   child: AppButton(
-                    title: 'Create',
+                    title: currentPage == 0 ? 'Next' : 'Create',
                     onPressed: () async {
                       if(formKey1.currentState!.validate()) {
                         pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                        currentPage = 1;
                       }
                     },
                     borderRadius: 10,
