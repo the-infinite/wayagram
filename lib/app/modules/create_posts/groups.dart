@@ -30,7 +30,20 @@ class CreateGroup extends StatefulWidget {
 
 class _CreateGroupState extends State<CreateGroup> {
   var homeController = Get.find<HomeController>();
-  
+  var currentPage = 0;
+  var pageController = PageController();
+  var formKey1 = GlobalKey<FormState>();
+
+  var groupNameController = TextEditingController();
+  var privacyController = TextEditingController(text: 'Public');
+  var inviteController = TextEditingController();
+
+  var pageCategory = TextEditingController();
+  PageCategoriesModel? chosenCategory;
+
+  var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+
+
   @override
   void initState() {
     super.initState();
@@ -47,18 +60,6 @@ class _CreateGroupState extends State<CreateGroup> {
   
   @override
   Widget build(BuildContext context) {
-    var currentPage = 0;
-    var pageController = PageController();
-    var formKey1 = GlobalKey<FormState>();
-
-    var groupNameController = TextEditingController();
-    var privacyController = TextEditingController(text: 'Public');
-    var inviteController = TextEditingController();
-
-    var pageCategory = TextEditingController();
-    PageCategoriesModel? chosenCategory;
-
-    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(

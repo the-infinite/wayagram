@@ -29,6 +29,15 @@ class CreatePage extends StatefulWidget {
 
 class _CreatePageState extends State<CreatePage> {
   var homeController = Get.find<HomeController>();
+  var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+  var nameController = TextEditingController();
+  var descriptionController = TextEditingController();
+  var linkController = TextEditingController();
+  var pageVisibility = TextEditingController();
+  var pageCategory = TextEditingController();
+  PageCategoriesModel? chosenCategory;
+
+  var formKey1 = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -46,52 +55,7 @@ class _CreatePageState extends State<CreatePage> {
 
   @override
   Widget build(BuildContext context) {
-    var pos = 0;
-    var pageController = PageController();
-    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-    var nameController = TextEditingController();
-    var descriptionController = TextEditingController();
-    var linkController = TextEditingController();
-    var pageVisibility = TextEditingController();
-    var pageCategory = TextEditingController();
-    PageCategoriesModel? chosenCategory;
 
-    var formKey1 = GlobalKey<FormState>();
-    var businessList = [
-      'Catering and Food',
-      'Cakes and Pastries',
-      'Event Planning',
-      'Music and DJ',
-      'Photography and Videography',
-      'Makeup and Hair',
-      'Decorations',
-      'Health and Skin Care',
-      'Fashion and Accessories',
-      'Clothing, Accessories and Shoes',
-      'Computers and Accessories',
-      'Electronics and Accessories',
-      'Transportation',
-      'Church',
-      'Mosque',
-      'School',
-      'Hospital',
-      'Hotel',
-      'Bar and Lounge',
-      'Beauty Salon',
-      'Barber Shop',
-      'Gym',
-      'Fitness Center',
-      'Sports Club',
-      'E-commerce',
-      'Consulting',
-      'Manufacturer',
-      'Wholesaler',
-      'Retailer',
-      'Distributor',
-      'Importer',
-      'Exporter',
-      'Others'
-    ];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
