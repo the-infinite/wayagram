@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
@@ -308,7 +309,7 @@ class _ContactState extends State<Contact> {
                                       AppButton(
                                         title: buttonText,
                                         onPressed: () async {
-                                          //Hi Friend, Join me on wayagram https://app.staging.wayagram.ng?from=shared
+                                          await Share.share('Hi Friend, Join me on wayagram https://app.staging.wayagram.ng?from=shared');
                                         },
                                         borderRadius: 5,
                                         padding: const EdgeInsets.symmetric(vertical: 5),
