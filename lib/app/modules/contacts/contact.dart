@@ -165,86 +165,101 @@ class Contact extends GetView<HomeController> {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           var person = controller.contactToShow[index];
-                          return InkWell(
-                            onTap: (){
-
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 50,
-                                    height: 50,
-                                    child: IconButton(
-                                      icon: AppAvatar(
-                                        bytes: person.photoOrThumbnail,
-                                        radius: 50,
-                                        isContact: true,
-                                        contactName: person.displayName,
-                                      ),
-                                      onPressed: null,
+                          return Container(
+                            margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 50,
+                                  height: 50,
+                                  child: IconButton(
+                                    icon: AppAvatar(
+                                      bytes: person.photoOrThumbnail,
+                                      radius: 50,
+                                      isContact: true,
+                                      contactName: person.displayName,
                                     ),
+                                    onPressed: null,
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        person.displayName,
-                                        style: const TextStyle(
-                                          color: Colors.black ,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      person.displayName,
+                                      style: const TextStyle(
+                                        color: Colors.black ,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                      if(person.phones.isNotEmpty)
-                                        SizedBox(
-                                        width: Get.width*0.8,
+                                    ),
+                                    if(person.phones.isNotEmpty)
+                                      SizedBox(
+                                      width: Get.width*0.5,
+                                      child: Text(
+                                        person.phones.first.normalizedNumber,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: Get.width * 0.035,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    if(person.phones.isEmpty && person.emails.isNotEmpty)
+                                      SizedBox(
+                                        width: Get.width*0.5,
                                         child: Text(
-                                          person.phones.first.normalizedNumber,
-                                          style: const TextStyle(
+                                          person.emails.first.address,
+                                          style: TextStyle(
                                             color: Colors.grey,
-                                            fontSize: 16,
+                                            fontSize: Get.width * 0.035,
                                             fontWeight: FontWeight.normal,
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                      if(person.phones.isEmpty && person.emails.isNotEmpty)
-                                        SizedBox(
-                                          width: Get.width*0.8,
-                                          child: Text(
-                                            person.emails.first.address,
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                    if(person.phones.isEmpty && person.emails.isEmpty)
+                                      SizedBox(
+                                        width: Get.width*0.5,
+                                        child: Text(
+                                          person.displayName,
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: Get.width * 0.035,
+                                            fontWeight: FontWeight.normal,
                                           ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      if(person.phones.isEmpty && person.emails.isEmpty)
-                                        SizedBox(
-                                          width: Get.width*0.8,
-                                          child: Text(
-                                            person.displayName,
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        )
+                                      )
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      AppButton(
+                                        title: 'Invite',
+                                        onPressed: () async {
+
+                                        },
+                                        borderRadius: 5,
+                                        padding: const EdgeInsets.symmetric(vertical: 5),
+                                        bckgrndColor: AppColors.background,
+                                        fontColor: AppColors.primary,
+                                        border: Border.all(color: AppColors.primary),
+                                        fontSize: Get.width*0.04,
+                                        width: Get.width*0.25,
+                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           );
                         },
