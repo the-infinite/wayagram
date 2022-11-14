@@ -64,15 +64,16 @@ class _NotificationViewState extends State<NotificationView> {
         return Container(
           margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 width: 50,
                 height: 50,
                 child: IconButton(
                   icon: AppAvatar(
-                    imgUrl: post.profile!.avatar.toString(),
+                    imgUrl: post.profile == null ? "" : post.profile!.avatar.toString(),
                     radius: 50,
+                    isNotification: true,
                   ),
                   onPressed: null,
                 ),
@@ -81,7 +82,7 @@ class _NotificationViewState extends State<NotificationView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    post.title.toString(),
+                    post.title.toString().capitalizeFirst.toString(),
                     style: const TextStyle(
                       color: Colors.black ,
                       fontSize: 16,
@@ -91,14 +92,12 @@ class _NotificationViewState extends State<NotificationView> {
                   SizedBox(
                     width: Get.width*0.8,
                     child: Text(
-                      post.content.toString(),
+                      (post.content.toString())*4,
                       style: const TextStyle(
                         color: Colors.grey,
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.normal,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

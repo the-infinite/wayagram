@@ -17,7 +17,8 @@ class AppAvatar extends StatelessWidget {
     this.backgroundColor = AppColors.background,
     this.bytes,
     this.isContact = false,
-    this.contactName = ""
+    this.contactName = "",
+    this.isNotification = false,
   }) : super(key: key);
 
   final String imgUrl;
@@ -26,6 +27,7 @@ class AppAvatar extends StatelessWidget {
   final Color backgroundColor;
   final Uint8List? bytes;
   final bool isContact;
+  final bool isNotification;
   final String contactName;
 
   @override
@@ -56,6 +58,13 @@ class AppAvatar extends StatelessWidget {
                       ),
                     ),
                   ),
+                );
+              }
+              if(isNotification){
+                return const Icon(
+                  IconlyBroken.notification,
+                  color: Colors.black,
+                  size: 25,
                 );
               }
               return const Icon(
@@ -103,6 +112,13 @@ class AppAvatar extends StatelessWidget {
                             ),
                           ),
                         ),
+                      );
+                    }
+                    if(isNotification){
+                      return const Icon(
+                        IconlyBroken.notification,
+                        color: Colors.black,
+                        size: 25,
                       );
                     }
                     return const Icon(
