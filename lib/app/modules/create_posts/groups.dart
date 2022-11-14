@@ -49,21 +49,20 @@ class CreateGroup extends StatelessWidget {
             ),
             actions: [
               Center(
-                child: SizedBox(
-                  child: AppButton(
-                    title: currentPage == 0 ? 'Next' : 'Create',
-                    onPressed: () async {
-                      if(formKey1.currentState!.validate()) {
-                        pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-                        currentPage = 1;
-                      }
-                    },
-                    borderRadius: 10,
-                    fontColor: AppColors.primary,
-                    bckgrndColor: AppColors.background,
-                    border: Border.all(color: AppColors.background, width: 1),
-                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-                  ),
+                child: AppButton(
+                  title: currentPage == 0 ? 'Next' : 'Create',
+                  onPressed: () async {
+                    if(formKey1.currentState!.validate()) {
+                      pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                      currentPage = 1;
+                    }
+                  },
+                  borderRadius: 10,
+                  fontColor: AppColors.primary,
+                  bckgrndColor: AppColors.background,
+                  border: Border.all(color: AppColors.background, width: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                  width: Get.width * 0.3,
                 ),
               )
             ],

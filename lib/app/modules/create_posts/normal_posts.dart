@@ -126,6 +126,7 @@ class CreatePosts extends StatelessWidget {
                     bckgrndColor: AppColors.background,
                     border: Border.all(color: AppColors.background, width: 1),
                     padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                    width: Get.width * 0.3,
                   ),
                 ),
               )

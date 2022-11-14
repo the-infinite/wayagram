@@ -103,7 +103,7 @@ class Interests extends GetView<AuthController>{
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                      width: Get.width * 0.25,
+                      width: Get.width * 0.3,
                       height: Get.height * 0.04,
                       child: AppButton(title: "Continue", onPressed: () async {
                         //wait 10 seconds
