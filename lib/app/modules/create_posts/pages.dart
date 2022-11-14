@@ -144,8 +144,8 @@ class CreatePage extends StatelessWidget {
                     fontColor: AppColors.primary,
                     bckgrndColor: AppColors.background,
                     border: Border.all(color: AppColors.background, width: 1),
-                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-                    width: Get.width * 0.3,
+                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    width: Get.width * 0.2,
                   ),
                 ),
               )

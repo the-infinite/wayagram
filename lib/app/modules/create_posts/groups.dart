@@ -9,12 +9,16 @@ import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/page_categories_model.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/document_picker.dart';
+import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
+
+import 'package:dio/dio.dart' as dio;
 
 class CreateGroup extends StatelessWidget {
   const CreateGroup({Key? key}) : super(key: key);
@@ -31,6 +35,8 @@ class CreateGroup extends StatelessWidget {
 
     var pageCategory = TextEditingController();
     PageCategoriesModel? chosenCategory;
+
+    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -68,7 +74,38 @@ class CreateGroup extends StatelessWidget {
                         controller.update();
                       }
                     }else{
+                      Map<String, dynamic> body = {
+                        "userId": fullProfile.id,
+                        "category": chosenCategory!.title,
+                        "customCategory": "undefined",
+                        "name": groupNameController.text,
+                        "description": "No description",
+                        "isPublic": privacyController.text == 'Public',
+                      };
 
+                      if(controller.imagePaths.isNotEmpty){
+                        body['image'] = await dio.MultipartFile.fromFile(
+                          controller.imagePaths[0],
+                          filename: controller.imagePaths[0].split('/').last,
+                        );
+                      }
+
+                      if(controller.imagePaths.length > 1){
+                        body['headerImage'] = await dio.MultipartFile.fromFile(
+                          controller.imagePaths[1],
+                          filename: controller.imagePaths[0].split('/').last,
+                        );
+                      }
+
+                      var formData = dio.FormData.fromMap(body);
+                      var response = await controller.postData(formData, "wayagram-service/main/group/create-group");
+                      if(response.isSuccessful){
+                        await controller.getSuggestedGroups;
+                        controller.update(['home']);
+                        Get.back();
+                      }else{
+                        AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                      }
                     }
                   },
                   borderRadius: 10,
@@ -147,7 +184,7 @@ class CreateGroup extends StatelessWidget {
                                 ),
                                 SizedBox(height: Get.height*0.025),
                                 PageDropButton(
-                                  label: "Page Category",
+                                  label: "Group Category",
                                   hint: 'Choose a category',
                                   isCompulsory: true,
                                   onChanged: (value) {
