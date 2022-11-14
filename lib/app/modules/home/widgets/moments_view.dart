@@ -240,6 +240,7 @@ class _MomentsViewState extends State<MomentsView> {
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
