@@ -126,7 +126,7 @@ class _TextButton extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: Get.width*0.8,
+                width: Get.width*0.7,
                 child: Padding(
                   padding: EdgeInsets.only(left: Get.width*0.025),
                   child: Column(
@@ -161,7 +161,7 @@ class _TextButton extends StatelessWidget {
               IconButton(
                   onPressed: onPressed,
                   padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: 15,)
+                  icon: Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: Get.width*0.04,)
               )
             ],
           ),

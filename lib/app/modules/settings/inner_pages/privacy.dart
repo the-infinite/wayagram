@@ -25,8 +25,21 @@ import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/notification_view.dart';
 
-class PrivacySettings extends StatelessWidget {
+class PrivacySettings extends StatefulWidget {
   const PrivacySettings({Key? key}) : super(key: key);
+
+  @override
+  State<PrivacySettings> createState() => _PrivacySettingsState();
+}
+
+class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderStateMixin{
+  late TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: 2, vsync: this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,55 +85,37 @@ class PrivacySettings extends StatelessWidget {
                 color: Colors.grey,
                 thickness: 0.3,
               ),
-              ToggleSwitch(
-                minWidth: Get.width * 0.5,
-                initialLabelIndex: 0,
-                totalSwitches: 2,
-                inactiveBgColor: AppColors.background,
-                activeBgColor: const [AppColors.background, AppColors.background],
-                activeBorders: [
-                  //Bottom Border
-                  Border.all(
-                    color: AppColors.background,
-                    width: 3.0,
-                  ),
-                  Border.all(
-                    color: AppColors.background,
-                    width: 3.0,
-                  ),
+              TabBar(
+                controller: tabController,
+                padding: EdgeInsets.zero,
+                labelColor: Colors.black,
+                unselectedLabelColor: const Color(0xff9A9A9A),
+                indicatorColor: AppColors.primary,
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelStyle: TextStyle(
+                  fontSize: Get.width*0.035,
+                  fontWeight: FontWeight.w500,
+                ),
+                unselectedLabelStyle: TextStyle(
+                  fontSize: Get.width*0.035,
+                  fontWeight: FontWeight.w500,
+                ),
+                tabs: const [
+                  Tab(text: 'Muted Users',iconMargin: EdgeInsets.zero,),
+                  Tab(text: 'Blocked Users',iconMargin: EdgeInsets.zero,),
                 ],
-                radiusStyle: true,
-                cornerRadius: 10.0,
-                labels: ['Muted Users(${mutedTextController.text})', 'Blocked Users(${blockedTextController.text})'],
-                customTextStyles: [
-                  AppTextStyle.bodyText1.copyWith(
-                    color: page == 0 ? AppColors.primary : Colors.grey,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                  ),
-                  AppTextStyle.bodyText1.copyWith(
-                    color: page == 1 ? AppColors.primary : Colors.grey,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                  ),
-                ],
-                onToggle: (index) {
-                  page = index!;
-                  pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                onTap: (index) {
+
                 },
               ),
               const Divider(
+                height: 0.5,
+                thickness: 0.5,
                 color: Colors.grey,
-                thickness: 0.3,
               ),
-              SizedBox(
-                height: Get.height * 0.7,
-                child: PageView(
-                  controller: pageController,
-                  onPageChanged: (index) {
-                    page = index;
-                    controller.update();
-                  },
+              Expanded(
+                child: TabBarView(
+                  controller: tabController,
                   children: [
                     SingleChildScrollView(
                       child: Column(
@@ -220,5 +215,11 @@ class PrivacySettings extends StatelessWidget {
         );
       }),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    tabController.dispose();
   }
 }

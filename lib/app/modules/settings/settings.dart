@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/app/controllers/home_controller.dart';
@@ -104,13 +105,17 @@ class Settings extends GetView<HomeController>{
                 child: AppButton(
                   title: controller.logInDetails.user!.referenceCode.toString(),
                   onPressed: () {
-
+                    Clipboard.setData(ClipboardData(text: controller.logInDetails.user!.referenceCode.toString())).then((_){
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
+                    });
                   },
                   borderRadius: 10,
                   fontColor: Colors.blue,
+                  fontSize: Get.width*0.04,
                   bckgrndColor: AppColors.background,
                   border: Border.all(color: AppColors.background, width: 1),
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  leading: Icon(Icons.copy, color: Colors.blue, size: Get.width*0.04),
                 ),
               ),
               const SizedBox(height: 10),
@@ -124,6 +129,7 @@ class Settings extends GetView<HomeController>{
                   borderRadius: 10,
                   fontColor: Colors.white,
                   bckgrndColor: AppColors.primary,
+                  fontSize: Get.width*0.04,
                   border: Border.all(color: AppColors.primary, width: 1),
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 ),
@@ -224,7 +230,7 @@ class _TextButton extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: Get.width*0.8,
+                width: Get.width*0.7,
                 child: Padding(
                   padding: EdgeInsets.only(left: Get.width*0.025),
                   child: Column(
@@ -259,7 +265,7 @@ class _TextButton extends StatelessWidget {
               IconButton(
                   onPressed: onPressed,
                   padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: 15,)
+                  icon: Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: Get.width*0.04,)
               )
             ],
           ),

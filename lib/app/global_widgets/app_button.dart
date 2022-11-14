@@ -15,6 +15,7 @@ class AppButton extends StatefulWidget {
     this.padding = const EdgeInsets.symmetric(vertical: 16),
     this.fontSize = 16,
     this.fontColor = Colors.white,
+    this.leading
   }) : super(key: key);
   final String title;
   final Function()? onPressed;
@@ -25,6 +26,7 @@ class AppButton extends StatefulWidget {
   final double? width;
   final double fontSize;
   final Border? border;
+  final Widget? leading;
 
   @override
   State<AppButton> createState() => _AppButtonState();
@@ -54,34 +56,40 @@ class _AppButtonState extends State<AppButton> {
                 border: widget.border,
                 borderRadius: BorderRadius.circular(widget.borderRadius)),
             child: Center(
-              child: Stack(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Opacity(
-                    opacity: loading ? 0 : 1,
-                    child: Text(
-                      widget.title,
-                      textAlign: TextAlign.center,
-                      style: Get.theme.textTheme.bodyText1!.copyWith(
-                        color: widget.fontColor,
-                        fontSize: widget.fontSize * Get.textScaleFactor * 0.90,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: Opacity(
-                        opacity: !loading ? 0 : 1,
-                        child: SizedBox.square(
-                          dimension: widget.fontSize,
-                          child: CircularProgressIndicator(
+                  if(widget.leading != null) widget.leading!,
+                  Stack(
+                    children: [
+                      Opacity(
+                        opacity: loading ? 0 : 1,
+                        child: Text(
+                          widget.title,
+                          textAlign: TextAlign.center,
+                          style: Get.theme.textTheme.bodyText1!.copyWith(
                             color: widget.fontColor,
-                            strokeWidth: 1.5,
+                            fontSize: widget.fontSize * Get.textScaleFactor * 0.90,
                           ),
                         ),
                       ),
-                    ),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        child: Center(
+                          child: Opacity(
+                            opacity: !loading ? 0 : 1,
+                            child: SizedBox.square(
+                              dimension: widget.fontSize,
+                              child: CircularProgressIndicator(
+                                color: widget.fontColor,
+                                strokeWidth: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -98,19 +98,23 @@ class PaymentSettings extends StatelessWidget {
                   child: AppButton(
                     title: controller.logInDetails.user!.referenceCode.toString(),
                     onPressed: () {
-
+                      Clipboard.setData(ClipboardData(text: controller.logInDetails.user!.referenceCode.toString())).then((_){
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
+                      });
                     },
                     borderRadius: 10,
                     fontColor: Colors.blue,
+                    fontSize: Get.width*0.04,
                     bckgrndColor: AppColors.background,
                     border: Border.all(color: AppColors.background, width: 1),
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    leading: Icon(Icons.copy, color: Colors.blue, size: Get.width*0.04),
                   ),
                 ),
                 const SizedBox(height: 20),
                 _TextButton(
                     text: "Dispute Resolution",
-                    subtitle: "View your disputes, file a compliant",
+                    subtitle: "View and file disputes",
                     onPressed: (){
 
                     }
@@ -179,7 +183,7 @@ class _TextButton extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: Get.width*0.8,
+                width: Get.width*0.7,
                 child: Padding(
                   padding: EdgeInsets.only(left: Get.width*0.025),
                   child: Column(
@@ -214,7 +218,7 @@ class _TextButton extends StatelessWidget {
               IconButton(
                   onPressed: onPressed,
                   padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: 15,)
+                  icon: Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: Get.width*0.04,)
               )
             ],
           ),

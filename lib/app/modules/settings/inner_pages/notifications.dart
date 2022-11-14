@@ -193,7 +193,7 @@ class _SwitchButtonState extends State<_SwitchButton> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: Get.width*0.8,
+                width: Get.width*0.7,
                 child: Padding(
                   padding: EdgeInsets.only(left: Get.width*0.025),
                   child: Column(
@@ -229,6 +229,7 @@ class _SwitchButtonState extends State<_SwitchButton> {
                 activeTrackColor: AppColors.primary.withOpacity(0.5),
                 activeColor: AppColors.primary,
                 inactiveTrackColor: Colors.grey.withOpacity(0.5),
+                inactiveThumbColor: Colors.grey,
               ),
             ],
           ),
