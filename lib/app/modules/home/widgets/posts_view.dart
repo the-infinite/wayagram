@@ -8,9 +8,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
+import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/full_user_profile_entity.dart';
@@ -66,6 +68,7 @@ class PostsView extends StatelessWidget{
             ),
           );
         }
+        var isCurrentUserPost = false;
         var post = posts![index];
         var time = DateTime.parse(post.createdAt!);
         var endPollTime = (post.isPoll == true) ? DateTime.parse(post.poll!.endDate.toString()) : null;
@@ -80,6 +83,11 @@ class PostsView extends StatelessWidget{
         }
         if(post.profile == null) {
           return const SizedBox.shrink();
+        }
+        if(fullProfile.userId!=null){
+          if(post.profile!.userId == fullProfile.userId) {
+            isCurrentUserPost = true;
+          }
         }
         return Container(
           margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
@@ -168,14 +176,56 @@ class PostsView extends StatelessWidget{
                         const SizedBox(
                           width: 10,
                         ),
-                        const Icon(
-                          FeatherIcons.moreHorizontal,
-                          color: Colors.black,
-                          size: 20,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
+                        PopupMenuButton(
+                            color: Colors.white,
+                            icon: const Icon(
+                              FeatherIcons.moreHorizontal,
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                            onSelected: (value) {
+                              if (value == 0) {
+                                //Get.to(() => const Muted());
+                              } else if (value == 1) {
+                                //Get.to(() => const Blocked());
+                              } else if (value == 2) {
+                                //Get.to(() => const Followers());
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 0,
+                                child: Text(
+                                  "Bookmark",
+                                  style: AppTextStyle.bodyText1.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              if(isCurrentUserPost)
+                                PopupMenuItem(
+                                  value: 1,
+                                  child: Text(
+                                    "Edit Post",
+                                    style: AppTextStyle.bodyText1.copyWith(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              if(isCurrentUserPost)
+                                PopupMenuItem(
+                                value: 2,
+                                child: Text(
+                                  "Delete Post",
+                                  style: AppTextStyle.bodyText1.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ]),
                       ],
                     ),
                   ),
@@ -342,16 +392,21 @@ class PostsView extends StatelessWidget{
                   ),
                   //Share
                   Row(
-                    children: const [
+                    children: [
                       SizedBox(
                         width: 10,
                       ),
-                      Icon(
-                        Icons.share,
-                        color: Colors.grey,
-                        size: 20,
+                      InkWell(
+                        onTap: () async {
+                          await Share.share('https://app.staging.wayagram.ng/post/${post.id}', subject: 'Wayagram Post');
+                        },
+                        child: const Icon(
+                          Icons.share,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                     ],
