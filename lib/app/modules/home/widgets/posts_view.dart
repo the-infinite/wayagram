@@ -393,7 +393,7 @@ class PostsView extends StatelessWidget{
                   //Share
                   Row(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       InkWell(

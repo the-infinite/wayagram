@@ -393,31 +393,48 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                             final posts = GroupMembersModel.listFromJson(snapshot.data!.data);
                             savedPosts.val = jsonEncode(posts);
                             //final posts = snapshot.data!.data as FollowersModelEntity;
+                            var names = List<String>.empty(growable: true);
+                            var username = List<String>.empty(growable: true);
+                            var profile = List<String>.empty(growable: true);
+                            var userIds = List<String>.empty(growable: true);
 
-                            var names = posts.map((e) => e.profile!.displayName.toString()).toList();
-                            var username = posts.map((e) => e.profile!.username.toString()).toList();
-                            var profile = posts.map((e) => e.profile!.avatar.toString()).toList();
-                            var userIds = posts.map((e) => e.profile!.userId.toString()).toList();
+                            for (var element in posts) {
+                              if(element.profile != null){
+                                names.add(element.profile!.displayName.toString());
+                                username.add(element.profile!.username.toString());
+                                profile.add(element.profile!.avatar.toString());
+                                userIds.add(element.profile!.userId.toString());
+                              }
+                            }
 
                             return PersonView(
                               name: names,
                               username: username,
                               profilePic: profile,
-                              length: posts.length,
+                              length: names.length,
                               userIDs: userIds,
                             );
                           } else if(savedPosts.val.isNotEmpty){
                             var posts = GroupMembersModel.listFromJson(jsonDecode(savedPosts.val));
-                            var names = posts.map((e) => e.profile!.displayName.toString()).toList();
-                            var username = posts.map((e) => e.profile!.username.toString()).toList();
-                            var profile = posts.map((e) => e.profile!.avatar.toString()).toList();
-                            var userIds = posts.map((e) => e.profile!.userId.toString()).toList();
+                            var names = List<String>.empty(growable: true);
+                            var username = List<String>.empty(growable: true);
+                            var profile = List<String>.empty(growable: true);
+                            var userIds = List<String>.empty(growable: true);
+
+                            for (var element in posts) {
+                              if(element.profile != null){
+                                names.add(element.profile!.displayName.toString());
+                                username.add(element.profile!.username.toString());
+                                profile.add(element.profile!.avatar.toString());
+                                userIds.add(element.profile!.userId.toString());
+                              }
+                            }
 
                             return PersonView(
                               name: names,
                               username: username,
                               profilePic: profile,
-                              length: posts.length,
+                              length: names.length,
                               userIDs: userIds,
                             );
                           }else{
