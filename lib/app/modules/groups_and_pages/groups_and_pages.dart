@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/controllers/home_controller.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
@@ -118,18 +119,76 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10,
+                                top: 10
+                            ),
+                            child: Container(
+                              color: Colors.blue.shade50,
+                              width: Get.width,
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                'My Groups',
+                                style: AppTextStyle.headline4.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ),
+                          FutureBuilder<ApiResponse>(
+                            //https://services.wayagram.ng/wayagram-service/main/page/get-all-user-pages?userId=4cf05f02-f5f6-42d9-84e4-4ab7a234fbbd
+                              future: controller.getData("/wayagram-service/main/group/get-all-user-created-groups?pageNumber=1&userId=${fullProfile.id}", true),
+                              builder: (context, snapshot) {
+                                //var savedPosts = MyPref.suggestedGroups.val;
+                                var savedPosts = ReadWriteValue('wayagram_created_groups', '', MyPref.box);
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                                  final posts = GroupModelEntity.getService(snapshot.data!.groups);
+                                  savedPosts.val = jsonEncode(posts);
+                                  return GroupView(posts: posts,isJoined: true);
+                                } else if(savedPosts.val.isNotEmpty){
+                                  var posts = GroupModelEntity.getService(jsonDecode(savedPosts.val));
+                                  return GroupView(posts: posts,isJoined: true);
+                                }else{
+                                  return const GroupView(isLoading: true,isJoined: true);
+                                }
+                              }),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10,
+                                top: 10
+                            ),
+                            child: Container(
+                              color: Colors.blue.shade50,
+                              width: Get.width,
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                'Groups To Join',
+                                style: AppTextStyle.headline4.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ),
                           FutureBuilder<ApiResponse>(
                               future: controller.getSuggestedGroups,
                               builder: (context, snapshot) {
                                 var savedPosts = MyPref.suggestedGroups.val;
                                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                   final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
-                                  return GroupView(posts: posts,isJoined: true);
+                                  return GroupView(posts: posts);
                                 } else if(savedPosts.isNotEmpty){
                                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
-                                  return GroupView(posts: posts,isJoined: true);
+                                  return GroupView(posts: posts);
                                 }else{
-                                  return const GroupView(isLoading: true,isJoined: true);
+                                  return const GroupView(isLoading: true);
                                 }
                               }),
                         ],
@@ -139,6 +198,26 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10,
+                                top: 10
+                            ),
+                            child: Container(
+                              color: Colors.blue.shade50,
+                              width: Get.width,
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                'My Pages',
+                                style: AppTextStyle.headline4.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ),
                           FutureBuilder<ApiResponse>(
                               future: controller.getPagesFollowed,
                               builder: (context, snapshot) {
@@ -154,6 +233,43 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     return const SizedBox.shrink();
                                   }
                                   return const GroupView(isLoading: true);
+                                }
+                              }),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10,
+                                top: 10
+                            ),
+                            child: Container(
+                              color: Colors.blue.shade50,
+                              width: Get.width,
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                'Pages To Follow',
+                                style: AppTextStyle.headline4.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ),
+                          FutureBuilder<ApiResponse>(
+                              future: controller.getSuggestedPages,
+                              builder: (context, snapshot) {
+                                var savedPosts = MyPref.suggestedPages.val;
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                                  return GroupView(posts: posts,isGroup: false,);
+                                } else if(savedPosts.isNotEmpty){
+                                  var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
+                                  return GroupView(posts: posts,isGroup: false,);
+                                }else{
+                                  if(snapshot.connectionState == ConnectionState.done){
+                                    return const SizedBox.shrink();
+                                  }
+                                  return const GroupView(isLoading: true,isGroup: false,);
                                 }
                               }),
                         ],

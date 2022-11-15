@@ -13,11 +13,12 @@ class ApiResponse {
   dynamic suggestion;
   dynamic profiles;
   dynamic interests;
+  dynamic groups;
   final bool isSuccessful;
   String? message;
   String? token;
 
-  ApiResponse({this.code, this.message, this.data, required this.isSuccessful, this.token,this.suggestion,this.profiles,this.interests});
+  ApiResponse({this.code, this.message, this.data, required this.isSuccessful, this.token,this.suggestion,this.profiles,this.interests,this.groups});
 
   static ApiResponse response(Response response) {
     var json = response.data;
@@ -31,6 +32,7 @@ class ApiResponse {
       suggestion: json['suggestion'],
       profiles: json['Profiles'],
       interests: json['interests'],
+      groups: json['groups'],
     );
   }
 
