@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
@@ -296,10 +297,11 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                               Icons.more_vert,
                               color: animation2.value,
                             ),
-                            onSelected: (value) {
+                            onSelected: (value) async {
                               if (value == 0) {
                                 //Get.to(() => const Muted());
                               } else if (value == 1) {
+                                await Share.share('Join me on this wayagram group https://app.staging.wayagram.ng/wayagram-group/${group.id}?from=shared', subject: 'Wayagram Group');
                                 //Get.to(() => const Blocked());
                               } else if (value == 2) {
                                 //Get.to(() => const Followers());
@@ -319,7 +321,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                               PopupMenuItem(
                                 value: 1,
                                 child: Text(
-                                  "Search",
+                                  "Share",
                                   style: AppTextStyle.bodyText1.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
