@@ -31,6 +31,7 @@ import '../../data/model/profile_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_drawer.dart';
+import '../../global_widgets/gallery_view.dart';
 import '../../global_widgets/page_input.dart';
 import '../../global_widgets/person_view.dart';
 import '../home/widgets/notification_view.dart';
@@ -388,7 +389,17 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                             return const PostsView(isLoading: true);
                           }
                         }),
-                    Column(),
+                    const GalleryView(
+                        key: ValueKey("group_gallery"),
+                        imageUrlList:[
+                          "https://images.unsplash.com/photo-1500100586562-f75ff6540087?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                          "https://images.unsplash.com/photo-1523719185231-aff40a400361?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                          "https://images.unsplash.com/photo-1500100586562-f75ff6540087?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                          "https://images.unsplash.com/photo-1523719185231-aff40a400361?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                          "https://images.unsplash.com/photo-1500100586562-f75ff6540087?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                          "https://images.unsplash.com/photo-1523719185231-aff40a400361?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                        ]
+                    ),
                     FutureBuilder<ApiResponse>(
                         future: controller.getData("/wayagram-service/main/group/see-all-members-in-group?groupId=${group.id}", true),
                         builder: (context, snapshot) {
