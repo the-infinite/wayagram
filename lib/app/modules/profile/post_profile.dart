@@ -124,7 +124,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                 headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
                     SliverAppBar(
-                      expandedHeight: Get.height * 0.43,
+                      expandedHeight: Get.height * 0.37,
                       floating: true,
                       pinned: true,
                       flexibleSpace: LayoutBuilder(
@@ -343,31 +343,34 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                       ],
                                     ),
                                   ),
-                                  TabBar(
-                                    controller: tabController,
-                                    padding: EdgeInsets.zero,
-                                    labelColor: Colors.black,
-                                    unselectedLabelColor: const Color(0xff9A9A9A),
-                                    indicatorColor: AppColors.primary,
-                                    indicatorSize: TabBarIndicatorSize.tab,
-                                    labelStyle: TextStyle(
-                                      fontSize: Get.width*0.035,
-                                      fontWeight: FontWeight.w500,
+                                  SizedBox(
+                                    height: Get.height * 0.05,
+                                    child: TabBar(
+                                      controller: tabController,
+                                      padding: EdgeInsets.zero,
+                                      labelColor: Colors.black,
+                                      unselectedLabelColor: const Color(0xff9A9A9A),
+                                      indicatorColor: AppColors.primary,
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                      labelStyle: TextStyle(
+                                        fontSize: Get.width*0.035,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      unselectedLabelStyle: TextStyle(
+                                        fontSize: Get.width*0.035,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      tabs: const [
+                                        Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                        Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
+                                        Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
+                                        Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
+                                      ],
+                                      onTap: (index) {
+                                        //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                        //controller.update(['profile_page']);
+                                      },
                                     ),
-                                    unselectedLabelStyle: TextStyle(
-                                      fontSize: Get.width*0.035,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    tabs: const [
-                                      Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                                      Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
-                                      Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
-                                      Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
-                                    ],
-                                    onTap: (index) {
-                                      //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                                      //controller.update(['profile_page']);
-                                    },
                                   ),
                                   const Divider(
                                     height: 0.5,
