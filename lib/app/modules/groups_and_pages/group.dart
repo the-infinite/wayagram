@@ -18,6 +18,7 @@ import '../../../core/theme/app_themes.dart';
 import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/GroupMediaModel.dart';
 import '../../data/model/GroupMembersModel.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/followers_model_entity.dart';
@@ -389,17 +390,30 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                             return const PostsView(isLoading: true);
                           }
                         }),
-                    const GalleryView(
-                        key: ValueKey("group_gallery"),
-                        imageUrlList:[
-                          "https://images.unsplash.com/photo-1500100586562-f75ff6540087?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-                          "https://images.unsplash.com/photo-1523719185231-aff40a400361?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-                          "https://images.unsplash.com/photo-1500100586562-f75ff6540087?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-                          "https://images.unsplash.com/photo-1523719185231-aff40a400361?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-                          "https://images.unsplash.com/photo-1500100586562-f75ff6540087?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-                          "https://images.unsplash.com/photo-1523719185231-aff40a400361?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-                        ]
-                    ),
+                    FutureBuilder<ApiResponse>(
+                        future: controller.getData("/wayagram-service/main/group/get-media-files-by-group-id?group_id=${group.id}", true),
+                        builder: (context, snapshot) {
+                          var savedPosts = ReadWriteValue('wayagram_group_images_${group.id}', '', MyPref.box);
+                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                            final posts = GroupMediaModel.listFromJson(snapshot.data!.data);
+                            savedPosts.val = jsonEncode(posts);
+                            return GalleryView(
+                                key: const ValueKey("group_gallery"),
+                                imageUrlList: posts.map((e) => e.fileUrl.toString()).toList()
+                            );
+                          } else if(savedPosts.val.isNotEmpty){
+                            var posts = GroupMediaModel.listFromJson(jsonDecode(savedPosts.val));
+                            return GalleryView(
+                                key: const ValueKey("group_gallery"),
+                                imageUrlList: posts.map((e) => e.fileUrl.toString()).toList()
+                            );
+                          }else{
+                            if(snapshot.connectionState == ConnectionState.done){
+                              return const SizedBox.shrink();
+                            }
+                            return const PostsView(isLoading: true);
+                          }
+                        }),
                     FutureBuilder<ApiResponse>(
                         future: controller.getData("/wayagram-service/main/group/see-all-members-in-group?groupId=${group.id}", true),
                         builder: (context, snapshot) {

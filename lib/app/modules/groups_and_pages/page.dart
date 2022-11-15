@@ -79,7 +79,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
         });
       });
 
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
   }
 
   void animateColorForward() {
@@ -247,7 +247,6 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                       ),
                                       tabs: [
                                         const Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                                        const Tab(text: 'Media',iconMargin: EdgeInsets.zero,),
                                         Tab(text: "Followers ($memberCount)",iconMargin: EdgeInsets.zero,),
                                       ],
                                       onTap: (index) {
@@ -386,7 +385,6 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                             return const PostsView(isLoading: true);
                           }
                         }),
-                    Column(),
                     FutureBuilder<ApiResponse>(
                         future: controller.getData("/wayagram-service/main/page/get-all-page-followers?pageId=${page.id}", true),
                         builder: (context, snapshot) {
