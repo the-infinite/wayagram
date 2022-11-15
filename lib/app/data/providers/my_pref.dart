@@ -1,46 +1,46 @@
 import 'package:get_storage/get_storage.dart';
 
 class MyPref  {
-  static final _box = () => GetStorage('MyPref');
+  static final box = () => GetStorage('MyPref');
 
-  static final userId = ReadWriteValue('wayagram_userId', '', _box);
-  static final authToken = ReadWriteValue('wayagram_auth-token', '', _box);
-  static final logInDetail = ReadWriteValue('wayagram_logInDetail', '', _box);
-  static final userProfile = ReadWriteValue('wayagram_userProfile', '', _box);
-  static final fullProfile = ReadWriteValue('wayagram_full_profile', '', _box);
-  static final account = ReadWriteValue('wayagram_account', '', _box);
+  static final userId = ReadWriteValue('wayagram_userId', '', box);
+  static final authToken = ReadWriteValue('wayagram_auth-token', '', box);
+  static final logInDetail = ReadWriteValue('wayagram_logInDetail', '', box);
+  static final userProfile = ReadWriteValue('wayagram_userProfile', '', box);
+  static final fullProfile = ReadWriteValue('wayagram_full_profile', '', box);
+  static final account = ReadWriteValue('wayagram_account', '', box);
 
   //home boxes
-  static final posts = ReadWriteValue('wayagram_posts', '', _box);
-  static final moments = ReadWriteValue('wayagram_moments', '', _box);
-  static final eventsToAttend = ReadWriteValue('wayagram_events_to_attend', '', _box);
-  static final allProducts = ReadWriteValue('wayagram_all_products', '', _box);
-  static final myProducts = ReadWriteValue('wayagram_my_products', '', _box);
-  static final notifications = ReadWriteValue('wayagram_notifications', '', _box);
+  static final posts = ReadWriteValue('wayagram_posts', '', box);
+  static final moments = ReadWriteValue('wayagram_moments', '', box);
+  static final eventsToAttend = ReadWriteValue('wayagram_events_to_attend', '', box);
+  static final allProducts = ReadWriteValue('wayagram_all_products', '', box);
+  static final myProducts = ReadWriteValue('wayagram_my_products', '', box);
+  static final notifications = ReadWriteValue('wayagram_notifications', '', box);
 
   //friends boxes
-  static final friends = ReadWriteValue('wayagram_friends', '', _box);
-  static final restrictedAccounts = ReadWriteValue('wayagram_restricted_accounts', '', _box);
-  static final mutedAccounts = ReadWriteValue('wayagram_muted_accounts', '', _box);
-  static final followers = ReadWriteValue('wayagram_followers', '', _box);
-  static final following = ReadWriteValue('wayagram_following', '', _box);
-  static final friendSuggestions = ReadWriteValue('wayagram_friend_suggestion', '', _box);
-  static final friendRequests = ReadWriteValue('wayagram_friend_request', '', _box);
+  static final friends = ReadWriteValue('wayagram_friends', '', box);
+  static final restrictedAccounts = ReadWriteValue('wayagram_restricted_accounts', '', box);
+  static final mutedAccounts = ReadWriteValue('wayagram_muted_accounts', '', box);
+  static final followers = ReadWriteValue('wayagram_followers', '', box);
+  static final following = ReadWriteValue('wayagram_following', '', box);
+  static final friendSuggestions = ReadWriteValue('wayagram_friend_suggestion', '', box);
+  static final friendRequests = ReadWriteValue('wayagram_friend_request', '', box);
 
   //Pages boxes
-  static final suggestedPages = ReadWriteValue('wayagram_suggested_pages', '', _box);
-  static final pagesCreated = ReadWriteValue('wayagram_pages_created', '', _box);
-  static final pagesFollowed = ReadWriteValue('wayagram_pages_followed', '', _box);
-  static final pageCategories = ReadWriteValue('wayagram_page_categories', '', _box);
+  static final suggestedPages = ReadWriteValue('wayagram_suggested_pages', '', box);
+  static final pagesCreated = ReadWriteValue('wayagram_pages_created', '', box);
+  static final pagesFollowed = ReadWriteValue('wayagram_pages_followed', '', box);
+  static final pageCategories = ReadWriteValue('wayagram_page_categories', '', box);
 
-  static final groups = ReadWriteValue('wayagram_groups', '', _box);
-  static final suggestedGroups = ReadWriteValue('wayagram_suggested_groups', '', _box);
-  static final groupsCreated = ReadWriteValue('wayagram_groups_created', '', _box);
-  static final groupsFollowed = ReadWriteValue('wayagram_groups_followed', '', _box);
-  static final groupCategories = ReadWriteValue('wayagram_group_categories', '', _box);
-
+  static final groups = ReadWriteValue('wayagram_groups', '', box);
+  static final suggestedGroups = ReadWriteValue('wayagram_suggested_groups', '', box);
+  static final groupsCreated = ReadWriteValue('wayagram_groups_created', '', box);
+  static final groupsFollowed = ReadWriteValue('wayagram_groups_followed', '', box);
+  static final groupCategories = ReadWriteValue('wayagram_group_categories', '', box);
+  
   static Future<void> clearBoxes() async {
-    await _box().erase();
+    await box().erase();
   }
 }
 

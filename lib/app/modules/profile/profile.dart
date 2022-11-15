@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -119,6 +120,11 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
             if(MyPref.following.val.isNotEmpty) {
               var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
               followingCount = following.following!.length;
+            }
+
+            if (kDebugMode) {
+              print("Profile ID" + fullProfile.id.toString());
+              print("User ID" + fullProfile.userId.toString());
             }
             return Scaffold(
               body: NestedScrollView(

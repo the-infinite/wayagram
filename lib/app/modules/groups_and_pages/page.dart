@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
@@ -17,6 +18,7 @@ import '../../../core/theme/app_themes.dart';
 import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/GroupMembersModel.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/followers_model_entity.dart';
 import '../../data/model/following_model_entity.dart';
@@ -30,6 +32,8 @@ import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_drawer.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/person_view.dart';
+import '../home/widgets/notification_view.dart';
 import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
 import '../profile/inner_pages/followers.dart';
@@ -92,6 +96,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     var top = 0.0;
     var page = widget.page;
+    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -115,7 +120,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                   return <Widget>[
                     //wrap content height
                     SliverAppBar(
-                      expandedHeight: Get.height * 0.43,
+                      expandedHeight: Get.height * 0.32,
                       floating: true,
                       pinned: true,
                       flexibleSpace: LayoutBuilder(
@@ -223,30 +228,33 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                     ),
                                   ),
                                   SizedBox(height: Get.height * 0.01),
-                                  TabBar(
-                                    controller: tabController,
-                                    padding: EdgeInsets.zero,
-                                    labelColor: Colors.black,
-                                    unselectedLabelColor: const Color(0xff9A9A9A),
-                                    indicatorColor: AppColors.primary,
-                                    indicatorSize: TabBarIndicatorSize.tab,
-                                    labelStyle: TextStyle(
-                                      fontSize: Get.width*0.035,
-                                      fontWeight: FontWeight.w500,
+                                  SizedBox(
+                                    height: Get.height * 0.05,
+                                    child: TabBar(
+                                      controller: tabController,
+                                      padding: EdgeInsets.zero,
+                                      labelColor: Colors.black,
+                                      unselectedLabelColor: const Color(0xff9A9A9A),
+                                      indicatorColor: AppColors.primary,
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                      labelStyle: TextStyle(
+                                        fontSize: Get.width*0.035,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      unselectedLabelStyle: TextStyle(
+                                        fontSize: Get.width*0.035,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      tabs: [
+                                        const Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                        const Tab(text: 'Media',iconMargin: EdgeInsets.zero,),
+                                        Tab(text: "Followers ($memberCount)",iconMargin: EdgeInsets.zero,),
+                                      ],
+                                      onTap: (index) {
+                                        //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                        //controller.update(['profile_page']);
+                                      },
                                     ),
-                                    unselectedLabelStyle: TextStyle(
-                                      fontSize: Get.width*0.035,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    tabs: [
-                                      const Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                                      const Tab(text: 'Media',iconMargin: EdgeInsets.zero,),
-                                      Tab(text: "Members ($memberCount)",iconMargin: EdgeInsets.zero,),
-                                    ],
-                                    onTap: (index) {
-                                      //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                                      //controller.update(['profile_page']);
-                                    },
                                   ),
                                   const Divider(
                                     height: 0.5,
@@ -360,19 +368,66 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                 body: TabBarView(
                   controller: tabController,
                   children: [
+                    FutureBuilder<ApiResponse>(
+                        future: controller.getData("/wayagram-service/all-posts/page-posts?profile_id=${fullProfile.id}&page_id=${page.id}", true),
+                        builder: (context, snapshot) {
+                          var savedPosts = ReadWriteValue('wayagram_page_${page.id}', '', MyPref.box);
+                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                            final posts = AllPostsEntity.getService(snapshot.data!.data['data']);
+                            savedPosts.val = jsonEncode(posts);
+                            return PostsView(posts: posts,userID: fullProfile.userId);
+                          } else if(savedPosts.val.isNotEmpty){
+                            var posts = AllPostsEntity.getService(jsonDecode(savedPosts.val));
+                            return PostsView(posts: posts,userID: fullProfile.userId);
+                          }else{
+                            if(snapshot.connectionState == ConnectionState.done){
+                              return const SizedBox.shrink();
+                            }
+                            return const PostsView(isLoading: true);
+                          }
+                        }),
                     Column(),
-                    Column(),
-                    Column(),
-                    Column(),
+                    FutureBuilder<ApiResponse>(
+                        future: controller.getData("/wayagram-service/main/page/get-all-page-followers?pageId=${page.id}", true),
+                        builder: (context, snapshot) {
+                          var savedPosts = ReadWriteValue('wayagram_page_followers_${page.id}', '', MyPref.box);
+                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                            final posts = GroupMembersModel.listFromJson(snapshot.data!.data);
+                            savedPosts.val = jsonEncode(posts);
+                            //final posts = snapshot.data!.data as FollowersModelEntity;
+
+                            var names = posts.map((e) => e.profile!.displayName.toString()).toList();
+                            var username = posts.map((e) => e.profile!.username.toString()).toList();
+                            var profile = posts.map((e) => e.profile!.avatar.toString()).toList();
+                            var userIds = posts.map((e) => e.profile!.userId.toString()).toList();
+
+                            return PersonView(
+                              name: names,
+                              username: username,
+                              profilePic: profile,
+                              length: posts.length,
+                              userIDs: userIds,
+                            );
+                          } else if(savedPosts.val.isNotEmpty){
+                            var posts = GroupMembersModel.listFromJson(jsonDecode(savedPosts.val));
+                            var names = posts.map((e) => e.profile!.displayName.toString()).toList();
+                            var username = posts.map((e) => e.profile!.username.toString()).toList();
+                            var profile = posts.map((e) => e.profile!.avatar.toString()).toList();
+                            var userIds = posts.map((e) => e.profile!.userId.toString()).toList();
+
+                            return PersonView(
+                              name: names,
+                              username: username,
+                              profilePic: profile,
+                              length: posts.length,
+                              userIDs: userIds,
+                            );
+                          }else{
+                            return const NotificationView(isLoading: true);
+                          }
+                        }),
                   ],
                 ),
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  Get.bottomSheet(const WayaBottomSheet(),isScrollControlled: true);
-                },
-                backgroundColor: AppColors.primary,
-                child: const Icon(Icons.add,color: Colors.white),
               ),
             );
           }),

@@ -50,6 +50,7 @@ class _PersonViewState extends State<PersonView> {
       itemCount: isLoading ? 3 : widget.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         if(isLoading){
           return SizedBox(
