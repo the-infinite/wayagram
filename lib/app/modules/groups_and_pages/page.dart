@@ -55,42 +55,10 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
   late TabController tabController;
   PageController pageController = PageController(initialPage: 0, keepPage: true);
 
-  late Animation<Color?> animation;
-  late AnimationController controller;
-
-  late Animation<Color?> animation2;
-  late AnimationController controller2;
-
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    animation = ColorTween(begin: AppColors.background, end: AppColors.primary).animate(controller)
-      ..addListener(() {
-        setState(() {
-
-        });
-      });
-
-    controller2 = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    animation2= ColorTween(begin: Colors.black, end: Colors.white).animate(controller2)
-      ..addListener(() {
-        setState(() {
-
-        });
-      });
-
     tabController = TabController(length: 2, vsync: this);
-  }
-
-  void animateColorForward() {
-    controller.forward();
-    controller2.forward();
-  }
-
-  void animateColorBackward() {
-    controller.animateBack(0);
-    controller2.animateBack(0);
   }
 
   @override
@@ -128,8 +96,6 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                           pinned: true,
                           flexibleSpace: LayoutBuilder(
                               builder: (BuildContext context, BoxConstraints constraints) {
-                                top = constraints.biggest.height;
-                                top == MediaQuery.of(context).padding.top + kToolbarHeight ? animateColorForward() : animateColorBackward();
                                 return FlexibleSpaceBar(
                                   stretchModes: const [
                                     StretchMode.zoomBackground,
@@ -424,10 +390,10 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                           if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                             final posts = AllPostsEntity.getService(snapshot.data!.data['data']);
                             savedPosts.val = jsonEncode(posts);
-                            return PostsView(posts: posts,userID: fullProfile.userId);
+                            return PostsView(posts: posts);
                           } else if(savedPosts.val.isNotEmpty){
                             var posts = AllPostsEntity.getService(jsonDecode(savedPosts.val));
-                            return PostsView(posts: posts,userID: fullProfile.userId);
+                            return PostsView(posts: posts);
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
                               return const SizedBox.shrink();

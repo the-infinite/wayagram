@@ -57,42 +57,11 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
   late TabController tabController;
   PageController pageController = PageController(initialPage: 0, keepPage: true);
 
-  late Animation<Color?> animation;
-  late AnimationController controller;
-
-  late Animation<Color?> animation2;
-  late AnimationController controller2;
-
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    animation = ColorTween(begin: AppColors.background, end: AppColors.primary).animate(controller)
-      ..addListener(() {
-        setState(() {
-
-        });
-      });
-
-    controller2 = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    animation2= ColorTween(begin: Colors.black, end: Colors.white).animate(controller2)
-      ..addListener(() {
-        setState(() {
-
-        });
-      });
 
     tabController = TabController(length: 4, vsync: this);
-  }
-
-  void animateColorForward() {
-    controller.forward();
-    controller2.forward();
-  }
-
-  void animateColorBackward() {
-    controller.animateBack(0);
-    controller2.animateBack(0);
   }
 
   @override
@@ -122,117 +91,265 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
               body: NestedScrollView(
                 headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
-                    //wrap content height
-                    SliverAppBar(
-                      expandedHeight: Get.height * 0.32,
-                      floating: true,
-                      pinned: true,
-                      flexibleSpace: LayoutBuilder(
-                          builder: (BuildContext context, BoxConstraints constraints) {
-                            top = constraints.biggest.height;
-                            top == MediaQuery.of(context).padding.top + kToolbarHeight ? animateColorForward() : animateColorBackward();
-                            return FlexibleSpaceBar(
-                              centerTitle: false,
-                              background: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: Get.height * 0.25,
-                                    child: Stack(
-                                      children: [
-                                        SizedBox(
-                                          height: Get.height * 0.2,
-                                          width: Get.width,
-                                          child: Image.network(
-                                            group.headerImageUrl.toString(),
-                                            fit: BoxFit.cover,
-                                            loadingBuilder: (BuildContext context, Widget child,ImageChunkEvent? loadingProgress) {
-                                              if (loadingProgress == null) return child;
-                                              return Container(
-                                                color: Colors.grey[300],
-                                              );
-                                            },
-                                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                              return Container(
-                                                color: Colors.grey[300],
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        //Profile Image
-                                        Positioned(
-                                          bottom: 0,
-                                          left: 20,
-                                          child: Container(
-                                            width: Get.width*0.2,
-                                            height: Get.width*0.2,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(color: Colors.white, width: 2),
-                                            ),
-                                            child: IconButton(
-                                              padding: EdgeInsets.zero,
-                                              icon: AppAvatar(
-                                                imgUrl: group.imageUrl.toString(),
+                    SliverLayoutBuilder(
+                      builder: (BuildContext context, constraints) {
+                        final scrolled = constraints.scrollOffset >= ((Get.height * 0.20));
+                        return SliverAppBar(
+                          expandedHeight: Get.height * 0.32,
+                          floating: false,
+                          pinned: true,
+                          flexibleSpace: LayoutBuilder(
+                              builder: (BuildContext context, BoxConstraints constraints) {
+                                return FlexibleSpaceBar(
+                                  stretchModes: const [
+                                    StretchMode.zoomBackground,
+                                    StretchMode.blurBackground,
+                                  ],
+                                  collapseMode: CollapseMode.pin,
+                                  background: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: Get.height * 0.25,
+                                        child: Stack(
+                                          children: [
+                                            SizedBox(
+                                              height: Get.height * 0.2,
+                                              width: Get.width,
+                                              child: Image.network(
+                                                group.headerImageUrl.toString(),
+                                                fit: BoxFit.cover,
+                                                loadingBuilder: (BuildContext context, Widget child,ImageChunkEvent? loadingProgress) {
+                                                  if (loadingProgress == null) return child;
+                                                  return Container(
+                                                    color: Colors.grey[300],
+                                                  );
+                                                },
+                                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                                  return Container(
+                                                    color: Colors.grey[300],
+                                                  );
+                                                },
                                               ),
-                                              onPressed: () {
-                                                //Get.toNamed(Profile.route);
-                                              },
                                             ),
-                                          ),
-                                        ),
-                                        //Edit Profile
-                                        Positioned(
-                                          bottom: 0,
-                                          right: 20,
-                                          child: SizedBox(
-                                            child: AppButton(
-                                              title: 'Edit',
-                                              onPressed: () {
-                                                controller.imagePaths.clear();
-                                                //Get.toNamed(UpdateProfile.route);
-                                              },
-                                              borderRadius: 10,
-                                              fontColor: AppColors.primary,
-                                              bckgrndColor: AppColors.background,
-                                              border: Border.all(color: AppColors.primary, width: 1),
-                                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                              fontSize: Get.width * 0.04,
-                                              width: Get.width * 0.2,
+                                            //Profile Image
+                                            Positioned(
+                                              bottom: 0,
+                                              left: 20,
+                                              child: Container(
+                                                width: Get.width*0.2,
+                                                height: Get.width*0.2,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(color: Colors.white, width: 2),
+                                                ),
+                                                child: IconButton(
+                                                  padding: EdgeInsets.zero,
+                                                  icon: AppAvatar(
+                                                    imgUrl: group.imageUrl.toString(),
+                                                  ),
+                                                  onPressed: () {
+                                                    //Get.toNamed(Profile.route);
+                                                  },
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            //Edit Profile
+                                            Positioned(
+                                              bottom: 0,
+                                              right: 20,
+                                              child: SizedBox(
+                                                child: AppButton(
+                                                  title: 'Edit',
+                                                  onPressed: () {
+                                                    controller.imagePaths.clear();
+                                                    //Get.toNamed(UpdateProfile.route);
+                                                  },
+                                                  borderRadius: 10,
+                                                  fontColor: AppColors.primary,
+                                                  bckgrndColor: AppColors.background,
+                                                  border: Border.all(color: AppColors.primary, width: 1),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                                  fontSize: Get.width * 0.04,
+                                                  width: Get.width * 0.2,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
+                                      SizedBox(height: Get.height * 0.01),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 15),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${group.name}',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: Get.width*0.04,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            SizedBox(height: Get.height*0.002),
+                                            if(group.description.toString() != "null")
+                                              Text(
+                                                group.description.toString(),
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: Get.width*0.04,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                          ),
+                          leading: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Container(
+                                  width: Get.width * 0.1,
+                                  height: Get.width * 0.1,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.background,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            PopupMenuButton(
+                                color: Colors.white,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 2.5,right: 5),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: Get.width * 0.1,
+                                        height: Get.width * 0.1,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.background,
+                                          borderRadius: BorderRadius.circular(100),
+                                        ),
+                                        child: const Icon(
+                                          Icons.more_vert,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                onSelected: (value) async {
+                                  if (value == 0) {
+                                    //Get.to(() => const Muted());
+                                  } else if (value == 1) {
+                                    await Share.share('Join me on this wayagram group https://app.staging.wayagram.ng/wayagram-group/${group.id}?from=shared', subject: 'Wayagram Group');
+                                    //Get.to(() => const Blocked());
+                                  } else if (value == 2) {
+                                    //Get.to(() => const Followers());
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 0,
+                                    child: Text(
+                                      "Invite",
+                                      style: AppTextStyle.bodyText1.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
-                                  SizedBox(height: Get.height * 0.01),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${group.name}',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: Get.width*0.04,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        SizedBox(height: Get.height*0.002),
-                                        if(group.description.toString() != "null")
-                                          Text(
-                                            group.description.toString(),
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: Get.width*0.04,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                      ],
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: Text(
+                                      "Share",
+                                      style: AppTextStyle.bodyText1.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
-                                  SizedBox(height: Get.height * 0.01),
+                                  PopupMenuItem(
+                                    value: 2,
+                                    child: Text(
+                                      "Mute",
+                                      style: AppTextStyle.bodyText1.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 2,
+                                    child: Text(
+                                      "Exit",
+                                      style: AppTextStyle.bodyText1.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 2,
+                                    child: Text(
+                                      "Report",
+                                      style: AppTextStyle.bodyText1.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ])
+                          ],
+                          title: AnimatedOpacity(
+                            duration: const Duration(milliseconds: 300),
+                            opacity: scrolled ? 1.0 : 0.0,
+                            child: Text(
+                              group.name.toString(),
+                              style: AppTextStyle.subtitle1.copyWith(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          backgroundColor: AppColors.background,
+                          systemOverlayStyle: SystemUiOverlayStyle(
+                              statusBarColor: scrolled ? AppColors.background : Colors.transparent,
+                              statusBarIconBrightness: Brightness.dark,
+                              statusBarBrightness: Brightness.dark,
+                              systemNavigationBarColor: AppColors.background,
+                              systemNavigationBarIconBrightness: Brightness.dark
+                          ),
+                          bottom: PreferredSize(
+                              preferredSize: Size(Get.width, Get.height * 0.06),
+                              child: Column(
+                                children: [
+                                  AnimatedOpacity(
+                                    duration: const Duration(milliseconds: 300),
+                                    opacity: scrolled ? 1.0 : 0.0,
+                                    child: const Divider(
+                                      height: 0.5,
+                                      thickness: 0.5,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                                   SizedBox(
                                     height: Get.height * 0.05,
                                     child: TabBar(
@@ -267,107 +384,9 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                     color: Colors.grey,
                                   ),
                                 ],
-                              ),
-                              title: AnimatedOpacity(
-                                duration: const Duration(milliseconds: 300),
-                                opacity: top == MediaQuery.of(context).padding.top + kToolbarHeight ? 1.0 : 0.0,
-                                child: Text(
-                                  group.name.toString(),
-                                  style: AppTextStyle.subtitle1.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                      ),
-                      leading: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: animation2.value,
-                        ),
-                        onPressed: () {
-                          Get.back();
-                        },
-                      ),
-                      actions: [
-                        PopupMenuButton(
-                            color: Colors.white,
-                            icon: Icon(
-                              Icons.more_vert,
-                              color: animation2.value,
-                            ),
-                            onSelected: (value) async {
-                              if (value == 0) {
-                                //Get.to(() => const Muted());
-                              } else if (value == 1) {
-                                await Share.share('Join me on this wayagram group https://app.staging.wayagram.ng/wayagram-group/${group.id}?from=shared', subject: 'Wayagram Group');
-                                //Get.to(() => const Blocked());
-                              } else if (value == 2) {
-                                //Get.to(() => const Followers());
-                              }
-                            },
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                value: 0,
-                                child: Text(
-                                  "Invite",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: 1,
-                                child: Text(
-                                  "Share",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: 2,
-                                child: Text(
-                                  "Mute",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: 2,
-                                child: Text(
-                                  "Exit",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: 2,
-                                child: Text(
-                                  "Report",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ])
-                      ],
-                      backgroundColor: animation.value,
-                      systemOverlayStyle: SystemUiOverlayStyle(
-                          statusBarColor: animation.value,
-                          statusBarIconBrightness: Brightness.dark,
-                          statusBarBrightness: Brightness.dark,
-                          systemNavigationBarColor: AppColors.background,
-                          systemNavigationBarIconBrightness: Brightness.dark
-                      ),
+                              )),
+                        );
+                      },
                     ),
                   ];
                 },
