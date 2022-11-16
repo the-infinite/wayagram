@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:wayagram/app/data/model/SearhPeopleModel.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
@@ -11,6 +12,8 @@ import 'package:wayagram/core/utils/validator.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/SearchHashtagsModel.dart';
+import '../../data/model/TrendingHashtagsModel.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/group_model_entity.dart';
@@ -23,6 +26,7 @@ import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
 import '../../global_widgets/person_view.dart';
+import '../home/widgets/HashTagView.dart';
 import '../home/widgets/group_view.dart';
 import '../home/widgets/posts_view.dart';
 
@@ -43,12 +47,13 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
   var searchedPeople = "";
   var searchedGroups = "";
   var searchedPages = "";
+  var searchedHashtags = "";
   late TabController tabController;
 
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 5, vsync: this);
     searchController.text = homeController.defaultSearchValue;
     homeController.defaultSearchValue = "";
     searchController.addListener(() {
@@ -99,9 +104,10 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                   unselectedLabelColor: const Color(0xff9A9A9A),
                   indicatorColor: AppColors.primary,
                   indicatorSize: TabBarIndicatorSize.tab,
-                  labelPadding: EdgeInsets.zero,
+                  labelPadding: EdgeInsets.only(left: Get.width * 0.02),
                   indicatorPadding: EdgeInsets.zero,
                   tabs: const [
+                    Tab(text: 'Hashtags',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'People',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Groups',iconMargin: EdgeInsets.zero,),
@@ -117,6 +123,62 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                   child: TabBarView(
                     controller: tabController,
                     children: [
+                      SingleChildScrollView(
+                        child: FutureBuilder<ApiResponse>(
+                          //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
+                            future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${searchController.text.replaceAll("#", "")}", true),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                final posts = SearchHashtagsModel.listFromJson(snapshot.data!.data);
+                                searchedHashtags = jsonEncode(posts);
+                                List<String> title = [];
+                                List<String> subtitle = [];
+                                for (var element in posts) {
+                                  if(element.hashtag != null){
+                                    title.add(element.hashtag!);
+                                    if(element.postToHashtags != null){
+                                      subtitle.add('${element.postToHashtags!.length} Conversations');
+                                    }else{
+                                      subtitle.add('0 Conversations');
+                                    }
+                                  }
+                                }
+                                return HashTagView(
+                                  title: title,
+                                  subtitle: subtitle,
+                                  onClick: (title, subtitle) {
+
+                                  },
+                                );
+                              } else if(searchedHashtags.isNotEmpty){
+                                var posts = SearchHashtagsModel.listFromJson(jsonDecode(searchedHashtags));
+                                List<String> title = [];
+                                List<String> subtitle = [];
+                                for (var element in posts) {
+                                  if(element.hashtag != null){
+                                    title.add(element.hashtag!);
+                                    if(element.postToHashtags != null){
+                                      subtitle.add('${element.postToHashtags!.length} Conversations');
+                                    }else{
+                                      subtitle.add('0 Conversations');
+                                    }
+                                  }
+                                }
+                                return HashTagView(
+                                  title: title,
+                                  subtitle: subtitle,
+                                  onClick: (title, subtitle) {
+
+                                  },
+                                );
+                              }else{
+                                if(snapshot.connectionState == ConnectionState.done){
+                                  return const SizedBox.shrink();
+                                }
+                                return const GroupView(isLoading: true);
+                              }
+                            }),
+                      ),
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
                             future: controller.searchPost(searchController.text.replaceAll("#", "")),
