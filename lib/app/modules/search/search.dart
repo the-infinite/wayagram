@@ -172,8 +172,13 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   },
                                 );
                               }else{
-                                if(snapshot.connectionState == ConnectionState.done){
-                                  return const SizedBox.shrink();
+                                if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                  return SizedBox(
+                                    height: Get.height * 0.7,
+                                    child: const Center(
+                                      child: Text('Enter a search term to search for hashtags'),
+                                    ),
+                                  );
                                 }
                                 return const GroupView(isLoading: true);
                               }

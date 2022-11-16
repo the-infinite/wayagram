@@ -71,7 +71,7 @@ class HashTagView extends StatelessWidget{
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(width: Get.width*0.025),
+                SizedBox(width: Get.width*0.015),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -80,7 +80,7 @@ class HashTagView extends StatelessWidget{
                       style: const TextStyle(
                         color: Colors.black ,
                         fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     SizedBox(
