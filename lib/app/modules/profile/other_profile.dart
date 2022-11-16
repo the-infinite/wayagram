@@ -52,42 +52,11 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
   late TabController tabController;
   PageController pageController = PageController(initialPage: 0, keepPage: true);
 
-  late Animation<Color?> animation;
-  late AnimationController controller;
-
-  late Animation<Color?> animation2;
-  late AnimationController controller2;
-
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    animation = ColorTween(begin: AppColors.background, end: AppColors.primary).animate(controller)
-      ..addListener(() {
-        setState(() {
-
-        });
-      });
-
-    controller2 = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    animation2= ColorTween(begin: Colors.black, end: Colors.white).animate(controller2)
-      ..addListener(() {
-        setState(() {
-
-        });
-      });
 
     tabController = TabController(length: 4, vsync: this);
-  }
-
-  void animateColorForward() {
-    controller.forward();
-    controller2.forward();
-  }
-
-  void animateColorBackward() {
-    controller.animateBack(0);
-    controller2.animateBack(0);
   }
 
   @override
@@ -357,21 +326,51 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                 );
                               }
                           ),
-                          leading: IconButton(
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: animation2.value,
-                            ),
-                            onPressed: () {
-                              Get.back();
-                            },
+                          leading: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Container(
+                                  width: Get.width * 0.1,
+                                  height: Get.width * 0.1,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.background,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.arrow_back,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           actions: [
                             PopupMenuButton(
                                 color: Colors.white,
-                                icon: Icon(
-                                  Icons.more_vert,
-                                  color: animation2.value,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 2.5,right: 5),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: Get.width * 0.1,
+                                        height: Get.width * 0.1,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.background,
+                                          borderRadius: BorderRadius.circular(100),
+                                        ),
+                                        child: const Icon(
+                                          Icons.more_vert,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 onSelected: (value) {
                                   if (value == 0) {
