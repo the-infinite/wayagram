@@ -131,250 +131,356 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
               body: NestedScrollView(
                 headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
-                    SliverAppBar(
-                      expandedHeight: Get.height * 0.37,
-                      floating: true,
-                      pinned: true,
-                      flexibleSpace: LayoutBuilder(
-                          builder: (BuildContext context, BoxConstraints constraints) {
-                            top = constraints.biggest.height;
-                            top == MediaQuery.of(context).padding.top + kToolbarHeight ? animateColorForward() : animateColorBackward();
-                            return FlexibleSpaceBar(
-                              centerTitle: false,
-                              background: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                    SliverLayoutBuilder(
+                      builder: (BuildContext context, constraints) {
+                        final scrolled = constraints.scrollOffset >= ((Get.height * 0.20));
+                        return SliverAppBar(
+                          expandedHeight: Get.height * 0.36,
+                          floating: false,
+                          pinned: true,
+                          flexibleSpace: LayoutBuilder(
+                              builder: (BuildContext context, BoxConstraints constraints) {
+                                top = constraints.biggest.height;
+                                return FlexibleSpaceBar(
+                                  stretchModes: const [
+                                    StretchMode.zoomBackground,
+                                    StretchMode.blurBackground,
+                                  ],
+                                  collapseMode: CollapseMode.pin,
+                                  background: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: Get.height * 0.25,
+                                        child: Stack(
+                                          children: [
+                                            SizedBox(
+                                              height: Get.height * 0.2,
+                                              width: Get.width,
+                                              child: Image.network(
+                                                coverImage,
+                                                fit: BoxFit.cover,
+                                                loadingBuilder: (BuildContext context, Widget child,ImageChunkEvent? loadingProgress) {
+                                                  if (loadingProgress == null) return child;
+                                                  return Container(
+                                                    color: Colors.grey[300],
+                                                  );
+                                                },
+                                                errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                                  return Container(
+                                                    color: Colors.grey[300],
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            //Profile Image
+                                            Positioned(
+                                              bottom: 0,
+                                              left: 20,
+                                              child: Container(
+                                                width: Get.height*0.1,
+                                                height: Get.height*0.1,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(color: Colors.white, width: 2),
+                                                ),
+                                                child: IconButton(
+                                                  padding: EdgeInsets.zero,
+                                                  icon: AppAvatar(
+                                                    imgUrl: userImage,
+                                                  ),
+                                                  onPressed: () {
+                                                    //Get.toNamed(Profile.route);
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            //Edit Profile
+                                            Positioned(
+                                              bottom: 0,
+                                              right: 20,
+                                              child: SizedBox(
+                                                child: AppButton(
+                                                  title: isFollowing ? 'Following' : 'Follow',
+                                                  onPressed: () async {
+                                                    var body = {
+                                                      "user_id": userId,
+                                                      "username": userName
+                                                    };
+                                                    if(!isFollowing){
+                                                      var response = await controller.postData(body, "wayagram-service/graph/friend/follow");
+                                                      if(response.isSuccessful){
+                                                        await controller.getFollowing;
+                                                        await controller.getPosts;
+                                                        controller.update(['other_profile_page']);
+                                                      }
+                                                    }else{
+                                                      var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
+                                                      if(response.isSuccessful){
+                                                        await controller.getFollowing;
+                                                        await controller.getPosts;
+                                                        controller.update(['other_profile_page']);
+                                                      }
+                                                    }
+                                                  },
+                                                  borderRadius: 10,
+                                                  fontColor: isFollowing ? AppColors.primary : AppColors.background,
+                                                  bckgrndColor: isFollowing ? AppColors.background : AppColors.primary,
+                                                  border: Border.all(color: isFollowing ? AppColors.primary : AppColors.background, width: 1),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                                  fontSize: Get.width * 0.04,
+                                                  width: Get.width * 0.3,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10,),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 15),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              displayName,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: Get.width*0.04,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              "@$userName",
+                                              style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: Get.width*0.035,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            if(fullProfile.bio.toString() != "null")
+                                              Text(
+                                                userBio,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: Get.width*0.04,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: Get.height * 0.01),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 15),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                //Get.to(() => const Followers());
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    userFollowers.split(".")[0],
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: Get.width*0.035,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    " Followers",
+                                                    style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: Get.width*0.035,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+
+                                            InkWell(
+                                              onTap: () {
+                                                //Get.to(() => const Following());
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    userFollowing.split(".")[0],
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: Get.width*0.035,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    " Following",
+                                                    style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: Get.width*0.035,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+
+                                            Text(
+                                              userPosts.split(".")[0],
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: Get.width*0.035,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Text(
+                                              " Posts",
+                                              style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: Get.width*0.035,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                          ),
+                          leading: IconButton(
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: animation2.value,
+                            ),
+                            onPressed: () {
+                              Get.back();
+                            },
+                          ),
+                          actions: [
+                            PopupMenuButton(
+                                color: Colors.white,
+                                icon: Icon(
+                                  Icons.more_vert,
+                                  color: animation2.value,
+                                ),
+                                onSelected: (value) {
+                                  if (value == 0) {
+                                    //Get.to(() => const Muted());
+                                  } else if (value == 1) {
+                                    //Get.to(() => const Blocked());
+                                  } else if (value == 2) {
+                                    //Get.to(() => const Followers());
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 0,
+                                    child: Text(
+                                      "Report User",
+                                      style: AppTextStyle.bodyText1.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 0,
+                                    child: Text(
+                                      isMuted ? "Unmute User" : "Mute User",
+                                      style: AppTextStyle.bodyText1.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: Text(
+                                      isBlocked ? "Unblock User" : "Block User",
+                                      style: AppTextStyle.bodyText1.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 2,
+                                    child: Text(
+                                      "Share",
+                                      style: AppTextStyle.bodyText1.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ])
+                          ],
+                          title: AnimatedOpacity(
+                            duration: const Duration(milliseconds: 300),
+                            opacity: scrolled ? 1.0 : 0.0,
+                            child: Text(
+                              displayName,
+                              style: AppTextStyle.subtitle1.copyWith(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          backgroundColor: AppColors.background,
+                          systemOverlayStyle: SystemUiOverlayStyle(
+                              statusBarColor: scrolled ? AppColors.background : Colors.transparent,
+                              statusBarIconBrightness: Brightness.dark,
+                              statusBarBrightness: Brightness.dark,
+                              systemNavigationBarColor: AppColors.background,
+                              systemNavigationBarIconBrightness: Brightness.dark
+                          ),
+                          bottom: PreferredSize(
+                              preferredSize: Size(Get.width, Get.height * 0.06),
+                              child: Column(
                                 children: [
-                                  SizedBox(
-                                    height: Get.height * 0.25,
-                                    child: Stack(
-                                      children: [
-                                        SizedBox(
-                                          height: Get.height * 0.2,
-                                          width: Get.width,
-                                          child: Image.network(
-                                            coverImage,
-                                            fit: BoxFit.cover,
-                                            loadingBuilder: (BuildContext context, Widget child,ImageChunkEvent? loadingProgress) {
-                                              if (loadingProgress == null) return child;
-                                              return Container(
-                                                color: Colors.grey[300],
-                                              );
-                                            },
-                                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                              return Container(
-                                                color: Colors.grey[300],
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        //Profile Image
-                                        Positioned(
-                                          bottom: 0,
-                                          left: 20,
-                                          child: Container(
-                                            width: Get.height*0.1,
-                                            height: Get.height*0.1,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(color: Colors.white, width: 2),
-                                            ),
-                                            child: IconButton(
-                                              padding: EdgeInsets.zero,
-                                              icon: AppAvatar(
-                                                imgUrl: userImage,
-                                              ),
-                                              onPressed: () {
-                                                //Get.toNamed(Profile.route);
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        //Edit Profile
-                                        Positioned(
-                                          bottom: 0,
-                                          right: 20,
-                                          child: SizedBox(
-                                            child: AppButton(
-                                              title: isFollowing ? 'Following' : 'Follow',
-                                              onPressed: () async {
-                                                var body = {
-                                                  "user_id": userId,
-                                                  "username": userName
-                                                };
-                                                if(!isFollowing){
-                                                  var response = await controller.postData(body, "wayagram-service/graph/friend/follow");
-                                                  if(response.isSuccessful){
-                                                    await controller.getFollowing;
-                                                    await controller.getPosts;
-                                                    controller.update(['other_profile_page']);
-                                                  }
-                                                }else{
-                                                  var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
-                                                  if(response.isSuccessful){
-                                                    await controller.getFollowing;
-                                                    await controller.getPosts;
-                                                    controller.update(['other_profile_page']);
-                                                  }
-                                                }
-                                              },
-                                              borderRadius: 10,
-                                              fontColor: isFollowing ? AppColors.primary : AppColors.background,
-                                              bckgrndColor: isFollowing ? AppColors.background : AppColors.primary,
-                                              border: Border.all(color: isFollowing ? AppColors.primary : AppColors.background, width: 1),
-                                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                              fontSize: Get.width * 0.04,
-                                              width: Get.width * 0.3,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                  AnimatedOpacity(
+                                    duration: const Duration(milliseconds: 300),
+                                    opacity: scrolled ? 1.0 : 0.0,
+                                    child: const Divider(
+                                      height: 0.5,
+                                      thickness: 0.5,
+                                      color: Colors.grey,
                                     ),
                                   ),
-                                  const SizedBox(height: 10,),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          displayName,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: Get.width*0.04,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          "@$userName",
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: Get.width*0.035,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        if(fullProfile.bio.toString() != "null")
-                                          Text(
-                                            userBio,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: Get.width*0.04,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                      ],
+                                  TabBar(
+                                    controller: tabController,
+                                    padding: EdgeInsets.zero,
+                                    labelColor: Colors.black,
+                                    unselectedLabelColor: const Color(0xff9A9A9A),
+                                    indicatorColor: AppColors.primary,
+                                    indicatorSize: TabBarIndicatorSize.tab,
+                                    labelStyle: TextStyle(
+                                      fontSize: Get.width*0.035,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                  ),
-                                  SizedBox(height: Get.height * 0.01),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            //Get.to(() => const Followers());
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                userFollowers.split(".")[0],
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: Get.width*0.04,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              Text(
-                                                " Followers",
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: Get.width*0.04,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: Get.height * 0.01),
-
-                                        InkWell(
-                                          onTap: () {
-                                            //Get.to(() => const Following());
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                userFollowing.split(".")[0],
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: Get.width*0.04,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              Text(
-                                                " Following",
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: Get.width*0.04,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-
-                                        Text(
-                                          userPosts.split(".")[0],
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: Get.width*0.04,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          " Posts",
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: Get.width*0.04,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ],
+                                    unselectedLabelStyle: TextStyle(
+                                      fontSize: Get.width*0.035,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                  ),
-                                  const SizedBox(height: 10,),
-                                  SizedBox(
-                                    height: Get.height * 0.05,
-                                    child: TabBar(
-                                      controller: tabController,
-                                      padding: EdgeInsets.zero,
-                                      labelColor: Colors.black,
-                                      unselectedLabelColor: const Color(0xff9A9A9A),
-                                      indicatorColor: AppColors.primary,
-                                      indicatorSize: TabBarIndicatorSize.tab,
-                                      labelStyle: TextStyle(
-                                        fontSize: Get.width*0.035,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      unselectedLabelStyle: TextStyle(
-                                        fontSize: Get.width*0.035,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      tabs: const [
-                                        Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
-                                      ],
-                                      onTap: (index) {
-                                        //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                                        //controller.update(['profile_page']);
-                                      },
-                                    ),
+                                    tabs: const [
+                                      Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                      Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
+                                      Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
+                                      Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
+                                    ],
+                                    onTap: (index) {
+                                      //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                      //controller.update(['profile_page']);
+                                    },
                                   ),
                                   const Divider(
                                     height: 0.5,
@@ -382,96 +488,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                     color: Colors.grey,
                                   ),
                                 ],
-                              ),
-                              title: AnimatedOpacity(
-                                duration: const Duration(milliseconds: 300),
-                                opacity: top == MediaQuery.of(context).padding.top + kToolbarHeight ? 1.0 : 0.0,
-                                child: Text(
-                                  displayName,
-                                  style: AppTextStyle.subtitle1.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                      ),
-                      leading: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: animation2.value,
-                        ),
-                        onPressed: () {
-                          Get.back();
-                        },
-                      ),
-                      actions: [
-                        PopupMenuButton(
-                            color: Colors.white,
-                            icon: Icon(
-                              Icons.more_vert,
-                              color: animation2.value,
-                            ),
-                            onSelected: (value) {
-                              if (value == 0) {
-                                //Get.to(() => const Muted());
-                              } else if (value == 1) {
-                                //Get.to(() => const Blocked());
-                              } else if (value == 2) {
-                                //Get.to(() => const Followers());
-                              }
-                            },
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                value: 0,
-                                child: Text(
-                                  "Report User",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: 0,
-                                child: Text(
-                                  isMuted ? "Unmute User" : "Mute User",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: 1,
-                                child: Text(
-                                  isBlocked ? "Unblock User" : "Block User",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                value: 2,
-                                child: Text(
-                                  "Share",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ])
-                      ],
-                      backgroundColor: animation.value,
-                      systemOverlayStyle: SystemUiOverlayStyle(
-                          statusBarColor: animation.value,
-                          statusBarIconBrightness: Brightness.dark,
-                          statusBarBrightness: Brightness.dark,
-                          systemNavigationBarColor: AppColors.background,
-                          systemNavigationBarIconBrightness: Brightness.dark
-                      ),
+                              )),
+                        );
+                      },
                     ),
                   ];
                 },

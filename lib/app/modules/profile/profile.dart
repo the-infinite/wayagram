@@ -53,42 +53,10 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
   late TabController tabController;
   PageController pageController = PageController(initialPage: 0, keepPage: true);
 
-  late Animation<Color?> animation;
-  late AnimationController controller;
-
-  late Animation<Color?> animation2;
-  late AnimationController controller2;
-
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    animation = ColorTween(begin: AppColors.background, end: AppColors.primary).animate(controller)
-      ..addListener(() {
-        setState(() {
-
-        });
-      });
-
-    controller2 = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    animation2= ColorTween(begin: Colors.black, end: Colors.white).animate(controller2)
-      ..addListener(() {
-        setState(() {
-
-        });
-      });
-
     tabController = TabController(length: 4, vsync: this);
-  }
-
-  void animateColorForward() {
-    controller.forward();
-    controller2.forward();
-  }
-
-  void animateColorBackward() {
-    controller.animateBack(0);
-    controller2.animateBack(0);
   }
 
   @override
@@ -137,7 +105,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                     SliverLayoutBuilder(
                       builder: (BuildContext context, constraints) {
                         final scrolled = constraints.scrollOffset >= ((Get.height * 0.20));
-                        print(scrolled);
                         return SliverAppBar(
                           expandedHeight: Get.height * 0.37,
                           floating: false,
@@ -356,9 +323,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                     borderRadius: BorderRadius.circular(100),
                                   ),
                                   child: IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.arrow_back,
-                                      color: animation2.value,
+                                      color: Colors.black,
                                     ),
                                     onPressed: () {
                                       Get.back();
@@ -444,9 +411,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                               ),
                             ),
                           ),
-                          backgroundColor: animation.value,
+                          backgroundColor: AppColors.background,
                           systemOverlayStyle: SystemUiOverlayStyle(
-                              statusBarColor: innerBoxIsScrolled ? AppColors.background : Colors.transparent,
+                              statusBarColor: scrolled ? AppColors.background : Colors.transparent,
                               statusBarIconBrightness: Brightness.dark,
                               statusBarBrightness: Brightness.dark,
                               systemNavigationBarColor: AppColors.background,
@@ -458,7 +425,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                 children: [
                                   AnimatedOpacity(
                                     duration: const Duration(milliseconds: 300),
-                                    opacity: innerBoxIsScrolled ? 1.0 : 0.0,
+                                    opacity: scrolled ? 1.0 : 0.0,
                                     child: const Divider(
                                       height: 0.5,
                                       thickness: 0.5,
