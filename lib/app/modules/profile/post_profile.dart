@@ -95,8 +95,8 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
     var post = Get.arguments as AllPostsEntity;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: AppColors.background.withOpacity(0.0),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
           systemNavigationBarColor: AppColors.background,
@@ -125,12 +125,10 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                   return <Widget>[
                     SliverAppBar(
                       expandedHeight: Get.height * 0.37,
-                      floating: true,
+                      floating: false,
                       pinned: true,
                       flexibleSpace: LayoutBuilder(
                           builder: (BuildContext context, BoxConstraints constraints) {
-                            top = constraints.biggest.height;
-                            top == MediaQuery.of(context).padding.top + kToolbarHeight ? animateColorForward() : animateColorBackward();
                             return FlexibleSpaceBar(
                               centerTitle: false,
                               background: Column(
@@ -280,7 +278,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                 (post.profile!.followers!.toInt()).toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: Get.width*0.04,
+                                                  fontSize: Get.width*0.035,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -288,7 +286,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                 " Followers",
                                                 style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: Get.width*0.04,
+                                                  fontSize: Get.width*0.035,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
@@ -307,7 +305,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                 (post.profile!.followings!.toInt()).toString(),
                                                 style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: Get.width*0.04,
+                                                  fontSize: Get.width*0.035,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -315,7 +313,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                 " Following",
                                                 style: TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: Get.width*0.04,
+                                                  fontSize: Get.width*0.035,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
@@ -328,7 +326,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                           (post.profile!.posts!.toInt()).toString(),
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: Get.width*0.04,
+                                            fontSize: Get.width*0.035,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -336,77 +334,63 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                           " Posts",
                                           style: TextStyle(
                                             color: Colors.grey,
-                                            fontSize: Get.width*0.04,
+                                            fontSize: Get.width*0.035,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: Get.height * 0.05,
-                                    child: TabBar(
-                                      controller: tabController,
-                                      padding: EdgeInsets.zero,
-                                      labelColor: Colors.black,
-                                      unselectedLabelColor: const Color(0xff9A9A9A),
-                                      indicatorColor: AppColors.primary,
-                                      indicatorSize: TabBarIndicatorSize.tab,
-                                      labelStyle: TextStyle(
-                                        fontSize: Get.width*0.035,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      unselectedLabelStyle: TextStyle(
-                                        fontSize: Get.width*0.035,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      tabs: const [
-                                        Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
-                                      ],
-                                      onTap: (index) {
-                                        //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                                        //controller.update(['profile_page']);
-                                      },
-                                    ),
-                                  ),
-                                  const Divider(
-                                    height: 0.5,
-                                    thickness: 0.5,
-                                    color: Colors.grey,
-                                  ),
                                 ],
-                              ),
-                              title: AnimatedOpacity(
-                                duration: const Duration(milliseconds: 300),
-                                opacity: top == MediaQuery.of(context).padding.top + kToolbarHeight ? 1.0 : 0.0,
-                                child: Text(
-                                  '${post.profile!.displayName}',
-                                  style: AppTextStyle.subtitle1.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
                               ),
                             );
                           }
                       ),
-                      leading: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: animation2.value,
-                        ),
-                        onPressed: () {
-                          Get.back();
-                        },
+                      leading: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Container(
+                              width: Get.width * 0.1,
+                              height: Get.width * 0.1,
+                              decoration: BoxDecoration(
+                                color: AppColors.background,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: animation2.value,
+                                ),
+                                onPressed: () {
+                                  Get.back();
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       actions: [
                         PopupMenuButton(
                             color: Colors.white,
-                            icon: Icon(
-                              Icons.more_vert,
-                              color: animation2.value,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 2.5,right: 5),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: Get.width * 0.1,
+                                    height: Get.width * 0.1,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.background,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: const Icon(
+                                      Icons.more_vert,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             onSelected: (value) {
                               if (value == 0) {
@@ -460,14 +444,70 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                               ),
                             ])
                       ],
-                      backgroundColor: animation.value,
+                      title: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 300),
+                        opacity: innerBoxIsScrolled ? 1.0 : 0.0,
+                        child: Text(
+                          '${post.profile!.displayName}',
+                          style: AppTextStyle.subtitle1.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
                       systemOverlayStyle: SystemUiOverlayStyle(
-                          statusBarColor: animation.value,
+                          statusBarColor: innerBoxIsScrolled ? AppColors.background : Colors.transparent,
                           statusBarIconBrightness: Brightness.dark,
                           statusBarBrightness: Brightness.dark,
                           systemNavigationBarColor: AppColors.background,
                           systemNavigationBarIconBrightness: Brightness.dark
                       ),
+                      bottom: PreferredSize(
+                          preferredSize: Size(Get.width, Get.height * 0.06),
+                          child: Column(
+                            children: [
+                              AnimatedOpacity(
+                                duration: const Duration(milliseconds: 300),
+                                opacity: innerBoxIsScrolled ? 1.0 : 0.0,
+                                child: const Divider(
+                                  height: 0.5,
+                                  thickness: 0.5,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              TabBar(
+                                controller: tabController,
+                                padding: EdgeInsets.zero,
+                                labelColor: Colors.black,
+                                unselectedLabelColor: const Color(0xff9A9A9A),
+                                indicatorColor: AppColors.primary,
+                                indicatorSize: TabBarIndicatorSize.tab,
+                                labelStyle: TextStyle(
+                                  fontSize: Get.width*0.035,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                unselectedLabelStyle: TextStyle(
+                                  fontSize: Get.width*0.035,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                tabs: const [
+                                  Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                  Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
+                                  Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
+                                  Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
+                                ],
+                                onTap: (index) {
+                                  //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                  //controller.update(['profile_page']);
+                                },
+                              ),
+                              const Divider(
+                                height: 0.5,
+                                thickness: 0.5,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          )),
                     ),
                   ];
                 },
