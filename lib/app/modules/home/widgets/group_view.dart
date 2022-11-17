@@ -29,13 +29,14 @@ class GroupView extends StatelessWidget{
     this.isLoading = false,
     this.posts,
     this.isGroup = true,
-    this.isJoined = false,
+    this.isJoined = false, this.onButtonClick,
   }) : super(key: key);
 
   final bool isLoading;
   final bool isGroup;
   final bool isJoined;
   final List<GroupModelEntity>? posts;
+  final Function(GroupModelEntity info)? onButtonClick;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -121,7 +122,9 @@ class GroupView extends StatelessWidget{
                         AppButton(
                           title: isGroup ? 'Join' : 'Follow',
                           onPressed: () async {
-
+                            if(onButtonClick != null){
+                              await onButtonClick!(post);
+                            }
                           },
                           borderRadius: 5,
                           padding: const EdgeInsets.symmetric(vertical: 5),
