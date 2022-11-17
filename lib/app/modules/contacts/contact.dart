@@ -261,7 +261,7 @@ class _ContactState extends State<Contact> {
                                       SizedBox(
                                       width: Get.width*0.5,
                                       child: Text(
-                                        person.phones.first.normalizedNumber,
+                                        person.phones.first.normalizedNumber.isNotEmpty ? person.phones.first.normalizedNumber : person.phones.first.number,
                                         style: TextStyle(
                                           color: Colors.grey,
                                           fontSize: Get.width * 0.035,

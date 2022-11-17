@@ -441,7 +441,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                     ),
                                     tabs: [
                                       const Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                                      Tab(text: "Followers ($memberCount)",iconMargin: EdgeInsets.zero,),
+                                      Tab(text: "Followers",iconMargin: EdgeInsets.zero,),
                                     ],
                                     onTap: (index) {
                                       //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);

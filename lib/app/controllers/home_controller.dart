@@ -65,16 +65,18 @@ class HomeController extends GetxController {
 
   Future<void> checkPermissionStatus() async{
     var status = await Permission.contacts.status;
-    if (status == PermissionStatus.granted) {
-      hasContactPermission = true;
+    if (await FlutterContacts.requestPermission()) {
       var contacts = await FlutterContacts.getContacts(withProperties: true,withThumbnail: true,withPhoto: true);
       this.contacts = contacts;
       contactToShow.clear();
-      contactToShow.addAll(contacts.sublist(0, 15));
+      contactToShow.addAll(contacts.sublist(0, contacts.length > 15 ? 15 : contacts.length));
       update(['contact']);
       for (var element in contactToShow) {
         if(element.phones.isNotEmpty){
           var number = element.phones.first.normalizedNumber.replaceAll("+", "");
+          if(number.isEmpty){
+            number = element.phones.first.number.replaceAll("+", "").replaceFirst("0", "");
+          }
           getData("auth-service/api/v1/search/search-profile-phoneNumber/$number", false).then((response) {
             if(response.isSuccessful){
               var data = SearchPeopleResponse.listFromJson(response.data);
@@ -117,6 +119,9 @@ class HomeController extends GetxController {
           var element = contact as Contact;
           if(element.phones.isNotEmpty){
             var number = element.phones.first.normalizedNumber.replaceAll("+", "");
+            if(number.isEmpty){
+              number = element.phones.first.number.replaceAll("+", "").replaceFirst("0", "");
+            }
             var response = await getData("auth-service/api/v1/search/search-profile-phoneNumber/$number", false);
             if(response.isSuccessful){
               var data = SearchPeopleResponse.listFromJson(response.data);

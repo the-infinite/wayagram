@@ -461,7 +461,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       tabs: [
                                         const Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                                         const Tab(text: 'Media',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: "Members ($memberCount)",iconMargin: EdgeInsets.zero,),
+                                        Tab(text: "Members",iconMargin: EdgeInsets.zero,),
                                       ],
                                       onTap: (index) {
                                         //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
