@@ -26,9 +26,14 @@ import '../widgets/group_view.dart';
 import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
 
-class DiscoverTab extends StatelessWidget {
+class DiscoverTab extends StatefulWidget {
   const DiscoverTab({Key? key}) : super(key: key);
 
+  @override
+  State<DiscoverTab> createState() => _DiscoverTabState();
+}
+
+class _DiscoverTabState extends State<DiscoverTab> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(builder: (controller) {
@@ -138,10 +143,48 @@ class DiscoverTab extends StatelessWidget {
                 var savedPosts = MyPref.suggestedGroups.val;
                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                   final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
-                  return GroupView(posts: posts);
+                  return GroupView(posts: posts,onButtonClick: (group) async {
+                    var body = {
+                      "groupId": group.id,
+                      "userId": fullProfile.id,
+                    };
+                    var response = await controller.postData(body, "/wayagram-service/main/group/join-group");
+                    if(response.isSuccessful){
+                      var newRes = await controller.getData("/wayagram-service/main/group/get-all-user-created-groups?pageNumber=1&userId=${fullProfile.id}", true);
+                      if(newRes.isSuccessful){
+                        var savedPosts = ReadWriteValue('wayagram_created_groups', '', MyPref.box);
+                        final posts = GroupModelEntity.getService(response.groups);
+                        savedPosts.val = jsonEncode(posts);
+                      }
+                      controller.update();
+                      setState(() {});
+                      Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                    }else{
+                      Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                    }
+                  });
                 } else if(savedPosts.isNotEmpty){
                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
-                  return GroupView(posts: posts);
+                  return GroupView(posts: posts,onButtonClick: (group) async {
+                    var body = {
+                      "groupId": group.id,
+                      "userId": fullProfile.id,
+                    };
+                    var response = await controller.postData(body, "/wayagram-service/main/group/join-group");
+                    if(response.isSuccessful){
+                      var newRes = await controller.getData("/wayagram-service/main/group/get-all-user-created-groups?pageNumber=1&userId=${fullProfile.id}", true);
+                      if(newRes.isSuccessful){
+                        var savedPosts = ReadWriteValue('wayagram_created_groups', '', MyPref.box);
+                        final posts = GroupModelEntity.getService(response.groups);
+                        savedPosts.val = jsonEncode(posts);
+                      }
+                      controller.update();
+                      setState(() {});
+                      Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                    }else{
+                      Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                    }
+                  });
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
                     return const SizedBox.shrink();
@@ -197,10 +240,46 @@ class DiscoverTab extends StatelessWidget {
                 var savedPosts = MyPref.suggestedPages.val;
                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                   final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
-                  return GroupView(posts: posts,isGroup: false,);
+                  return GroupView(posts: posts,isGroup: false,
+                      onButtonClick: (group) async {
+                        var body = {
+                          "pageId": group.id,
+                          "userId": fullProfile.id,
+                        };
+                        var response = await controller.putData(body, "/wayagram-service/main/page/follow-or-un-follow");
+                        if(response.isSuccessful){
+                          await controller.getSuggestedPages;
+                          await controller.getPagesFollowed;
+                          controller.update();
+                          setState(() {
+
+                          });
+                          Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                        }else{
+                          Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                        }
+                      });
                 } else if(savedPosts.isNotEmpty){
                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
-                  return GroupView(posts: posts,isGroup: false,);
+                  return GroupView(posts: posts,isGroup: false,
+                      onButtonClick: (group) async {
+                        var body = {
+                          "pageId": group.id,
+                          "userId": fullProfile.id,
+                        };
+                        var response = await controller.putData(body, "/wayagram-service/main/page/follow-or-un-follow");
+                        if(response.isSuccessful){
+                          await controller.getSuggestedPages;
+                          await controller.getPagesFollowed;
+                          controller.update();
+                          setState(() {
+
+                          });
+                          Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                        }else{
+                          Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                        }
+                      });
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
                     return const SizedBox.shrink();

@@ -308,12 +308,8 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     };
                                     var response = await controller.putData(body, "/wayagram-service/main/page/follow-or-un-follow");
                                     if(response.isSuccessful){
-                                      var newRes = await controller.getData("/wayagram-service/main/group/get-all-user-created-groups?pageNumber=1&userId=${fullProfile.id}", true);
-                                      if(newRes.isSuccessful){
-                                        var savedPosts = ReadWriteValue('wayagram_created_groups', '', MyPref.box);
-                                        final posts = GroupModelEntity.getService(response.groups);
-                                        savedPosts.val = jsonEncode(posts);
-                                      }
+                                      await controller.getSuggestedPages;
+                                      await controller.getPagesFollowed;
                                       controller.update();
                                       Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
                                     }else{
@@ -329,12 +325,8 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     };
                                     var response = await controller.putData(body, "/wayagram-service/main/page/follow-or-un-follow");
                                     if(response.isSuccessful){
-                                      var newRes = await controller.getData("/wayagram-service/main/group/get-all-user-created-groups?pageNumber=1&userId=${fullProfile.id}", true);
-                                      if(newRes.isSuccessful){
-                                        var savedPosts = ReadWriteValue('wayagram_created_groups', '', MyPref.box);
-                                        final posts = GroupModelEntity.getService(response.groups);
-                                        savedPosts.val = jsonEncode(posts);
-                                      }
+                                      await controller.getSuggestedPages;
+                                      await controller.getPagesFollowed;
                                       controller.update();
                                       Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
                                     }else{
