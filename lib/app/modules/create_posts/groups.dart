@@ -35,10 +35,12 @@ class _CreateGroupState extends State<CreateGroup> {
   var formKey1 = GlobalKey<FormState>();
 
   var groupNameController = TextEditingController();
+  var groupDescriptionController = TextEditingController();
   var privacyController = TextEditingController(text: 'Public');
   var inviteController = TextEditingController();
 
   var pageCategory = TextEditingController();
+  var otherCategory = TextEditingController(text: 'Catering and Food');
   PageCategoriesModel? chosenCategory;
 
   var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
@@ -62,6 +64,41 @@ class _CreateGroupState extends State<CreateGroup> {
   
   @override
   Widget build(BuildContext context) {
+    var businessList = [
+      'Catering and Food',
+      'Cakes and Pastries',
+      'Event Planning',
+      'Music and DJ',
+      'Photography and Videography',
+      'Makeup and Hair',
+      'Decorations',
+      'Health and Skin Care',
+      'Fashion and Accessories',
+      'Clothing, Accessories and Shoes',
+      'Computers and Accessories',
+      'Electronics and Accessories',
+      'Transportation',
+      'Church',
+      'Mosque',
+      'School',
+      'Hospital',
+      'Hotel',
+      'Bar and Lounge',
+      'Beauty Salon',
+      'Barber Shop',
+      'Gym',
+      'Fitness Center',
+      'Sports Club',
+      'E-commerce',
+      'Consulting',
+      'Manufacturer',
+      'Wholesaler',
+      'Retailer',
+      'Distributor',
+      'Importer',
+      'Exporter',
+      'Others'
+    ];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -102,9 +139,9 @@ class _CreateGroupState extends State<CreateGroup> {
                       Map<String, dynamic> body = {
                         "userId": fullProfile.id,
                         "category": chosenCategory!.title,
-                        "customCategory": "undefined",
+                        "customCategory": chosenCategory!.title!.toLowerCase().trim() == 'others' ? otherCategory.text : "undefined",
                         "name": groupNameController.text,
-                        "description": "No description",
+                        "description": groupDescriptionController.text,
                         "isPublic": privacyController.text == 'Public',
                       };
 
@@ -208,6 +245,20 @@ class _CreateGroupState extends State<CreateGroup> {
                                   controller: groupNameController,
                                 ),
                                 SizedBox(height: Get.height*0.025),
+                                PageInput(
+                                  hint: 'Describe your group',
+                                  label: 'Group Description',
+                                  validator: (val){
+                                    if(val!.isEmpty){
+                                      return 'Please enter a group description';
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  isCompulsory: true,
+                                  controller: groupDescriptionController,
+                                ),
+                                SizedBox(height: Get.height*0.025),
                                 PageDropButton(
                                   label: "Group Category",
                                   hint: 'Choose a category',
@@ -217,6 +268,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                       if(element.id == value){
                                         pageCategory.text = element.title.toString();
                                         chosenCategory = element;
+                                        controller.update();
                                         break;
                                       }
                                     }
@@ -240,6 +292,24 @@ class _CreateGroupState extends State<CreateGroup> {
                                   }).toList(),
                                 ),
                                 SizedBox(height: Get.height*0.025),
+                                if(pageCategory.text.toLowerCase().trim() == "others")
+                                  PageDropButton(
+                                    label: "Other Category",
+                                    hint: '',
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                    onChanged: (val) {
+                                      otherCategory.value = val!;
+                                    },
+                                    value: "Catering and Food",
+                                    items: businessList.map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                if(pageCategory.text.toLowerCase().trim() == "others")
+                                  SizedBox(height: Get.height*0.025),
                                 PageDropButton(
                                   label: "Choose Privacy",
                                   hint: '',

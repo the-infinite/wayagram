@@ -82,9 +82,60 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
       child: GetBuilder<HomeController>(
           id: 'group_screen',
           builder: (controller) {
+            var buttonText = 'Join Group';
+
             var memberCount = 0;
+            var isForUser = false;
+            var isUserAMember = false;
+            var isUserAAdmin = false;
+            var isPublic = false;
+            var muted = false;
+            var userMuted = false;
+            var allowMemberPost = false;
+
             if(group.numberOfMembers != null) {
               memberCount = group.numberOfMembers!.toInt();
+              isUserAAdmin = group.isUserAdmin == true;
+              isUserAMember = group.isUserAMember == true;
+              isPublic = group.isPublic == true;
+              muted = group.mute == true;
+              userMuted = group.isUserOnMute == true;
+              allowMemberPost = group.allowMemberPost == true;
+              if(isUserAMember) {
+                if(isUserAAdmin) {
+                  buttonText = 'Edit';
+                } else {
+                  buttonText = '';
+                }
+              }else{
+                if(isPublic) {
+                  buttonText = 'Join Group';
+                } else {
+                  buttonText = 'Send Request';
+                }
+              }
+            }
+
+            var savedPosts = ReadWriteValue('wayagram_created_groups', '', MyPref.box);
+            if(savedPosts.val.isNotEmpty){
+              GroupModelEntity.getService(jsonDecode(savedPosts.val)).forEach((element) {
+                if(element.id == group.id){
+                  isForUser = true;
+                  buttonText = 'Edit';
+                  isUserAAdmin = element.isUserAdmin == true;
+                  isUserAAdmin = element.isUserAdmin == true;
+                  isUserAMember = element.isUserAMember == true;
+                  isPublic = element.isPublic == true;
+                  muted = element.mute == true;
+                  userMuted = element.isUserOnMute == true;
+                  allowMemberPost = element.allowMemberPost == true;
+                }
+              });
+            }
+
+            if(fullProfile.id == group.userId){
+              isForUser = true;
+              buttonText = 'Edit';
             }
 
             return Scaffold(
@@ -154,13 +205,15 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                                 ),
                                               ),
                                             ),
-                                            //Edit Profile
-                                            Positioned(
+
+                                            if(buttonText.isNotEmpty)
+                                              Positioned(
                                               bottom: 0,
                                               right: 20,
                                               child: SizedBox(
+                                                width: Get.width*0.3,
                                                 child: AppButton(
-                                                  title: 'Edit',
+                                                  title: buttonText,
                                                   onPressed: () {
                                                     controller.imagePaths.clear();
                                                     //Get.toNamed(UpdateProfile.route);
@@ -169,9 +222,9 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                                   fontColor: AppColors.primary,
                                                   bckgrndColor: AppColors.background,
                                                   border: Border.all(color: AppColors.primary, width: 1),
-                                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                                  padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: 5),
                                                   fontSize: Get.width * 0.04,
-                                                  width: Get.width * 0.2,
+                                                  width: Get.width * 0.3,
                                                 ),
                                               ),
                                             ),

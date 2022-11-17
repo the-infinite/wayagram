@@ -79,8 +79,55 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
           id: 'page_screen',
           builder: (controller) {
             var memberCount = 0;
+            var buttonText = 'Follow Page';
+            var isForUser = false;
+            var isUserAMember = false;
+            var isUserAAdmin = false;
+            var isPublic = false;
+            var muted = false;
+            var userMuted = false;
+            var allowMemberPost = false;
             if(page.numberOfMembers != null) {
               memberCount = page.numberOfMembers!.toInt();
+              isUserAAdmin = page.isUserAdmin == true;
+              isUserAMember = page.isUserAMember == true;
+              isPublic = page.isPublic == true;
+              muted = page.mute == true;
+              userMuted = page.isUserOnMute == true;
+              allowMemberPost = page.allowMemberPost == true;
+              if(isUserAMember) {
+                if(isUserAAdmin) {
+                  buttonText = 'Edit';
+                } else {
+                  buttonText = '';
+                }
+              }else{
+                if(isPublic) {
+                  buttonText = 'Follow Page';
+                } else {
+                  buttonText = 'Send Request';
+                }
+              }
+            }
+
+            var savedPosts = MyPref.pagesFollowed;
+            if(savedPosts.val.isNotEmpty){
+              GroupModelEntity.getService(jsonDecode(savedPosts.val)).forEach((element) {
+                if(element.id == page.id){
+                  isUserAAdmin = element.isUserAdmin == true;
+                  isUserAAdmin = element.isUserAdmin == true;
+                  isUserAMember = element.isUserAMember == true;
+                  isPublic = element.isPublic == true;
+                  muted = element.mute == true;
+                  userMuted = element.isUserOnMute == true;
+                  allowMemberPost = element.allowMemberPost == true;
+                }
+              });
+            }
+
+            if(fullProfile.id == page.userId){
+              isForUser = true;
+              buttonText = 'Edit';
             }
 
             return Scaffold(
@@ -151,25 +198,28 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                               ),
                                             ),
                                             //Edit Profile
-                                            Positioned(
-                                              bottom: 0,
-                                              right: 20,
-                                              child: SizedBox(
-                                                child: AppButton(
-                                                  title: 'Edit',
-                                                  onPressed: () {
-                                                    controller.imagePaths.clear();
-                                                  },
-                                                  borderRadius: 10,
-                                                  fontColor: AppColors.primary,
-                                                  bckgrndColor: AppColors.background,
-                                                  border: Border.all(color: AppColors.primary, width: 1),
-                                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                                  fontSize: Get.width * 0.04,
-                                                  width: Get.width * 0.2,
+                                            if(buttonText.isNotEmpty)
+                                              Positioned(
+                                                bottom: 0,
+                                                right: 20,
+                                                child: SizedBox(
+                                                  width: Get.width*0.3,
+                                                  child: AppButton(
+                                                    title: buttonText,
+                                                    onPressed: () {
+                                                      controller.imagePaths.clear();
+                                                      //Get.toNamed(UpdateProfile.route);
+                                                    },
+                                                    borderRadius: 10,
+                                                    fontColor: AppColors.primary,
+                                                    bckgrndColor: AppColors.background,
+                                                    border: Border.all(color: AppColors.primary, width: 1),
+                                                    padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: 5),
+                                                    fontSize: Get.width * 0.04,
+                                                    width: Get.width * 0.3,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
                                           ],
                                         ),
                                       ),
