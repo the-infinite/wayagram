@@ -15,7 +15,7 @@ class AppButton extends StatefulWidget {
     this.padding = const EdgeInsets.symmetric(vertical: 16),
     this.fontSize = 16,
     this.fontColor = Colors.white,
-    this.leading
+    this.leading, this.enabled = true
   }) : super(key: key);
   final String title;
   final Function()? onPressed;
@@ -27,6 +27,7 @@ class AppButton extends StatefulWidget {
   final double fontSize;
   final Border? border;
   final Widget? leading;
+  final bool enabled;
 
   @override
   State<AppButton> createState() => _AppButtonState();
@@ -38,13 +39,15 @@ class _AppButtonState extends State<AppButton> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        setState(() {
-          loading = true;
-        });
-        await widget.onPressed!();
-        setState(() {
-          loading = false;
-        });
+        if(widget.enabled){
+          setState(() {
+            loading = true;
+          });
+          await widget.onPressed!();
+          setState(() {
+            loading = false;
+          });
+        }
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -53,7 +56,7 @@ class _AppButtonState extends State<AppButton> {
             padding: widget.padding,
             width: widget.width,
             decoration: BoxDecoration(
-                color: widget.bckgrndColor,
+                color: widget.enabled ? widget.bckgrndColor : Colors.grey,
                 border: widget.border,
                 borderRadius: BorderRadius.circular(widget.borderRadius)),
             child: Center(

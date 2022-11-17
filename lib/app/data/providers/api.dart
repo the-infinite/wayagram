@@ -143,6 +143,9 @@ class Api {
         link = '$url/?&sso_id=${profile.userId}';
       }
     }
+    if(body != null){
+      //body['wayaBankPayPosGram'] = "WAYAGRAM";
+    }
     try {
       var request = await _client.request(
         link,
@@ -183,13 +186,14 @@ class Api {
         }else{
           link = '$url/?&sso_id=${profile.userId}';
         }
+        print(link);
       }
       var request = await _client.request(
         link,
         cancelToken: token,
         options: Options(method: 'GET', headers: hasHeader ? head : null),
       );
-      //var response = await http.get(Uri.parse(baseUrl+url), headers: hasHeader ? head : null);
+      //var response = await http.get(Uri.parse(baseUrl+link), headers: hasHeader ? head : null);
       //return ApiResponse.responseFromBody(response.body, response.statusCode);
       print(link);
       return ApiResponse.response(request);

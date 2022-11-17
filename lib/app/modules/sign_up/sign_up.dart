@@ -440,6 +440,7 @@ class SignUp extends GetView<AuthController> {
                                           }
                                         },
                                         borderRadius: 10,
+                                        enabled: controller.isTermsAndConditionsChecked,
                                       ),
                                       SizedBox(height: Get.height * 0.025),
                                       InkWell(
@@ -641,6 +642,7 @@ class SignUp extends GetView<AuthController> {
                                           }
                                         },
                                         borderRadius: 10,
+                                        enabled: controller.isTermsAndConditionsChecked,
                                       ),
                                       SizedBox(height: Get.height * 0.025),
                                       InkWell(

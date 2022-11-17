@@ -43,6 +43,10 @@ class UserRepository {
     }
     return response;
   }
+  Future<ApiResponse> resendAuthOTP(dynamic emailOrPhone) async {
+    final response = await api.getData('/auth-service/api/v1/auth/resend-otp/signup/${emailOrPhone.toString()}',sso: false);
+    return response;
+  }
   Future<ApiResponse> verifyOTP(dynamic body) async {
     final response = await api.postData('/auth-service/api/v1/auth/verify-otp', body: body,sso: false);
     return response;
@@ -56,7 +60,6 @@ class UserRepository {
   Future<ApiResponse> getUserProfile(String userID) async {
     final response = await api.getData('/auth-service/api/v1/profile/$userID',hasHeader: true,sso: false);
     if(response.isSuccessful){
-      print(response.isSuccessful);
       response.data = ProfileModelEntity.fromJson(response.data);
       MyPref.userProfile.val = jsonEncode(response.data);
     }

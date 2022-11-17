@@ -101,6 +101,7 @@ class AuthController extends GetxController {
     'state': state.text,
     'city': city.text,
     "officeAddress": officeAddress.text,
+    "wayaBankPayPosGram": "WAYAGRAM",
   };
 
   Map<String, dynamic> get _signUpNormalUser => {
@@ -111,6 +112,7 @@ class AuthController extends GetxController {
     'password': password.text,
     'phoneNumber': personalPhone.text.length == 10 ? "234${personalPhone.text}" : "234${personalPhone.text.substring(1,personalPhone.text.length)}",
     "referenceCode" : referral.text,
+    "wayaBankPayPosGram": "WAYAGRAM",
   };
 
   Future<void> signUpCorporate() async {
@@ -271,6 +273,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> getUserProfile(String userID) async {
+    await userRepo.getFullUserProfile(userID);
     ApiResponse response = await userRepo.getUserProfile(userID);
     if(!response.isSuccessful){
       AppOverlay.showInfoDialog(
@@ -306,6 +309,7 @@ class AuthController extends GetxController {
       MyPref.userProfile.val = jsonEncode(response.data);
       //Get.toNamed(CreatePIN.route);
       //Get.toNamed(Home.route);
+      await userRepo.getFullUserProfile(data.userId.toString());
       await userRepo.getFollowedByWayaOfficial();
       Get.toNamed(Interests.route);
     }
@@ -315,6 +319,7 @@ class AuthController extends GetxController {
   Map<String, dynamic> get _getOTP => {
     'phoneOrEmail': personalEmail.text,
     "otp" : otp.text,
+    "wayaBankPayPosGram": "WAYAGRAM",
   };
   Future<void> confirmOTP() async {
     ApiResponse response = await userRepo.verifyOTP(_getOTP);
@@ -335,6 +340,16 @@ class AuthController extends GetxController {
       //Get.toNamed(SignIn.route);
     }
   }
+  Future<void> resendOTP() async {
+    ApiResponse response = await userRepo.resendAuthOTP(personalEmail.text);
+    var message = "";
+    var buttonMessage = "";
+    if(!response.isSuccessful){
+      Get.snackbar("Request Failed", response.message!=null ? response.message.toString() : "An Error Occurred",backgroundColor: Colors.red, colorText: Colors.white);
+    }else{
+      Get.snackbar("OTP Resent", "OTP has been resent to your email address",backgroundColor: Colors.green, colorText: Colors.white);
+    }
+  }
 
   //Create PIN
   Map<String, dynamic> get _createPIN => {
@@ -345,6 +360,7 @@ class AuthController extends GetxController {
     "roleId": 0,
     "inviteeId": 0,
     "invitorId": 0,
+    "wayaBankPayPosGram": "WAYAGRAM",
   };
   Map<String, dynamic> get _createPINBusiness => {
     'email': businessEmail.text,

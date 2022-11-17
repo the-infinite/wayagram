@@ -115,8 +115,8 @@ class VerifyOTP extends GetView<AuthController> {
                   title: 'Did not get OTP?',
                   bckgrndColor: AppColors.background,
                   fontColor: AppColors.primary,
-                  onPressed: () {
-                    //Get.toNamed(SignIn.route);
+                  onPressed: () async {
+                    await controller.resendOTP();
                   },
                   borderRadius: 10,
                 ),
