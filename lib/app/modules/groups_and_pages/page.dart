@@ -41,6 +41,7 @@ import '../profile/inner_pages/followers.dart';
 import '../profile/inner_pages/following.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
+import 'edit/edit_page.dart';
 
 class PageScreen extends StatefulWidget {
   const PageScreen({Key? key, required this.page}) : super(key: key);
@@ -65,6 +66,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     var top = 0.0;
     var page = widget.page;
+    var pageFollowed = false;
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -112,8 +114,12 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
 
             var savedPosts = MyPref.pagesFollowed;
             if(savedPosts.val.isNotEmpty){
-              GroupModelEntity.getService(jsonDecode(savedPosts.val)).forEach((element) {
+              var allGroups = GroupModelEntity.getService(jsonDecode(savedPosts.val));
+              for(var i = 0; i < allGroups.length; i++){
+                var element = allGroups[i];
                 if(element.id == page.id){
+                  page = element;
+                  buttonText = 'Unfollow Page';
                   isUserAAdmin = element.isUserAdmin == true;
                   isUserAAdmin = element.isUserAdmin == true;
                   isUserAMember = element.isUserAMember == true;
@@ -121,8 +127,9 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                   muted = element.mute == true;
                   userMuted = element.isUserOnMute == true;
                   allowMemberPost = element.allowMemberPost == true;
+                  break;
                 }
-              });
+              }
             }
 
             if(fullProfile.id == page.userId){
@@ -206,9 +213,32 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                                   width: Get.width*0.3,
                                                   child: AppButton(
                                                     title: buttonText,
-                                                    onPressed: () {
+                                                    onPressed: () async {
                                                       controller.imagePaths.clear();
-                                                      //Get.toNamed(UpdateProfile.route);
+                                                      controller.image1 = "";
+                                                      controller.image2 = "";
+                                                      if(buttonText == "Edit"){
+                                                        Get.to(() => EditPage(editInfo: page));
+                                                      }else{
+                                                        var body = {
+                                                          "pageId": page.id,
+                                                          "userId": fullProfile.id,
+                                                        };
+
+                                                        var response = await controller.putData(body, "/wayagram-service/main/page/follow-or-un-follow");
+                                                        if(response.isSuccessful){
+                                                          await controller.getPagesFollowed;
+                                                          await controller.getSuggestedPages;
+                                                          if(buttonText == "Follow Page") {
+                                                            //pageFollowed = true;
+                                                          }
+                                                          controller.update(['page_screen']);
+                                                          controller.update();
+                                                          Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                                                        }else{
+                                                          Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                                                        }
+                                                      }
                                                     },
                                                     borderRadius: 10,
                                                     fontColor: AppColors.primary,

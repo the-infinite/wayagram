@@ -52,6 +52,8 @@ class HomeController extends GetxController {
     NotificationsTab(),
     ChatsTab()
   ];
+  String image1 = "";
+  String image2 = "";
   List<String> imagePaths = [];
   List<Contact> contacts = [];
   List<Contact> contactToShow = [];

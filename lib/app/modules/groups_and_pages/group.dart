@@ -43,6 +43,7 @@ import '../profile/inner_pages/followers.dart';
 import '../profile/inner_pages/following.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
+import 'edit/edit_group.dart';
 
 class Group extends StatefulWidget {
   const Group({Key? key, required this.group}) : super(key: key);
@@ -61,13 +62,15 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
   void initState() {
     super.initState();
 
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     var top = 0.0;
     var group = widget.group;
+    var groupRequestSent = false;
+    var groupJoined = false;
 
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
@@ -101,6 +104,9 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
               muted = group.mute == true;
               userMuted = group.isUserOnMute == true;
               allowMemberPost = group.allowMemberPost == true;
+              if(groupJoined){
+                isUserAMember = true;
+              }
               if(isUserAMember) {
                 if(isUserAAdmin) {
                   buttonText = 'Edit';
@@ -118,8 +124,11 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
 
             var savedPosts = ReadWriteValue('wayagram_created_groups', '', MyPref.box);
             if(savedPosts.val.isNotEmpty){
-              GroupModelEntity.getService(jsonDecode(savedPosts.val)).forEach((element) {
+              var allGroups = GroupModelEntity.getService(jsonDecode(savedPosts.val));
+              for(var i = 0; i < allGroups.length; i++){
+                var element = allGroups[i];
                 if(element.id == group.id){
+                  group = element;
                   isForUser = true;
                   buttonText = 'Edit';
                   isUserAAdmin = element.isUserAdmin == true;
@@ -129,8 +138,9 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                   muted = element.mute == true;
                   userMuted = element.isUserOnMute == true;
                   allowMemberPost = element.allowMemberPost == true;
+                  break;
                 }
-              });
+              }
             }
 
             if(fullProfile.id == group.userId){
@@ -214,9 +224,37 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                                 width: Get.width*0.3,
                                                 child: AppButton(
                                                   title: buttonText,
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     controller.imagePaths.clear();
-                                                    //Get.toNamed(UpdateProfile.route);
+                                                    controller.image1 = "";
+                                                    controller.image2 = "";
+                                                    if(buttonText == "Edit"){
+                                                      Get.to(() => EditGroup(editInfo: group));
+                                                    }else{
+                                                      var body = {
+                                                        "groupId": group.id,
+                                                        "userId": fullProfile.id,
+                                                      };
+
+                                                      var response = await controller.postData(body, "/wayagram-service/main/group/join-group");
+                                                      if(response.isSuccessful){
+                                                        var newRes = await controller.getData("/wayagram-service/main/group/get-all-user-created-groups?pageNumber=1&userId=${fullProfile.id}", true);
+                                                        if(newRes.isSuccessful){
+                                                          var savedPosts = ReadWriteValue('wayagram_created_groups', '', MyPref.box);
+                                                          final posts = GroupModelEntity.getService(response.groups);
+                                                          savedPosts.val = jsonEncode(posts);
+                                                        }
+                                                        if(buttonText == "Join Group") {
+                                                          groupJoined = true;
+                                                        } else {
+                                                          groupRequestSent = true;
+                                                        }
+                                                        controller.update(['group_screen']);
+                                                        Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                                                      }else{
+                                                        Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                                                      }
+                                                    }
                                                   },
                                                   borderRadius: 10,
                                                   fontColor: AppColors.primary,

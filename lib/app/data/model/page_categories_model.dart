@@ -39,4 +39,14 @@ class PageCategoriesModel {
     if (list.isEmpty) return [];
     return list.map((item) => PageCategoriesModel.fromJson(item)).toList();
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PageCategoriesModel &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

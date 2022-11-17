@@ -160,7 +160,7 @@ class _DocumentPickerState extends State<DocumentPicker> {
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(widget.radius),
                             child: Image.file(
-                              File(widget.controller == null ? _pickedFile!.path : (widget.position == null ? "" : widget.controller!.imagePaths[widget.position!])),
+                              File(widget.controller == null ? _pickedFile!.path : (widget.position == null ? "" : widget.controller!.imagePaths.isEmpty ? (widget.position == 0 ? widget.controller!.image1 : widget.controller!.image2) : widget.controller!.imagePaths[widget.position!])),
                               fit: widget.fit,
                               height: widget.renderHeight,
                               width: widget.renderWidth,
