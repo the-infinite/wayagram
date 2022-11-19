@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:bordered_text/bordered_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -107,76 +109,70 @@ class _MomentsViewState extends State<MomentsView> {
                       color: Colors.grey.withOpacity(.5),
                     ),
                     child: Stack(
+                      alignment: Alignment.bottomLeft,
                       children: [
                         ClipRRect(
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10)
                           ),
                           child: SizedBox(
-                            height: Get.height * 0.09,
+                            height: Get.height * 0.19,
                             width: Get.width * 0.3,
-                            child: Image.network((fullProfile.avatar as String?).toString(),
+                            child: CachedNetworkImage(
+                              imageUrl: (fullProfile.avatar as String?).toString(),
                               fit: BoxFit.cover,
-                              loadingBuilder: (BuildContext context, Widget child,ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  color: Colors.grey[300],
-                                  child: const Icon(
-                                    IconlyLight.profile,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                );
-                              },
-                              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                return Container(
-                                  color: Colors.grey[300],
-                                  child: const Icon(
-                                    IconlyLight.profile,
-                                    color: Colors.black,
-                                    size: 25,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: Container(
-                            height: Get.width * 0.08,
-                            width: Get.width * 0.08,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey.withOpacity(.8),
-                            ),
-                            child: Center(
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                  onPressed: (){
-
-                                  },icon: const Icon(Icons.add_circle_rounded)),
-                            ),
-                          ),
-                        ),
-                        //Create Moment text
-                        Positioned(
-                          bottom: 5,
-                          left: 0,
-                          right: 0,
-                          child: SizedBox(
-                            width: Get.width * 0.3,
-                            child: Center(
-                              child: Text(
-                                'Create \nMoment',
-                                style: AppTextStyle.headline4.copyWith(
+                              errorWidget: (context, url, error) {
+                                return const Icon(
+                                  IconlyLight.profile,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: Get.width * 0.035,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                                  size: 25,
+                                );
+                              },
+                              width: Get.width * 0.3,
                             ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: Get.width * 0.01,
+                            bottom: Get.height * 0.005,
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: Get.width * 0.07,
+                                width: Get.width * 0.07,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: Colors.white,
+                                ),
+                                child: Center(
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                      onPressed: (){
+
+                                      },icon: const Icon(Icons.add_circle_rounded),color: Colors.grey.withOpacity(.8),),
+                                ),
+                              ),
+                              SizedBox(width: Get.width *0.01),
+                              BorderedText(
+                                strokeWidth: 2.0,
+                                child: Text(
+                                  "Create",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: Get.width * 0.04,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],

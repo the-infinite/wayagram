@@ -3,6 +3,8 @@ library newsfeed_multiple_imageview;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/app/global_widgets/smart_image.dart';
 
 import 'multiple_image_view.dart';
@@ -15,6 +17,10 @@ class NewsfeedMultipleImageView extends StatelessWidget {
   final double marginTop;
   final double marginRight;
   final double marginBottom;
+  final double radius;
+  final bool isFile;
+  final bool useAspectRatio;
+  final bool isSlideShow;
 
   const NewsfeedMultipleImageView({
     Key? key,
@@ -23,6 +29,10 @@ class NewsfeedMultipleImageView extends StatelessWidget {
     this.marginRight = 0,
     this.marginBottom = 0,
     required this.imageUrls,
+    this.radius = 10,
+    this.isFile = false,
+    this.useAspectRatio = false,
+    this.isSlideShow = false,
   }) : super(key: key);
 
   @override
@@ -32,7 +42,7 @@ class NewsfeedMultipleImageView extends StatelessWidget {
         width: costraints.maxWidth,
         height: costraints.maxWidth,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(radius),
           color: Colors.grey[200],
         ),
         margin: EdgeInsets.fromLTRB(
@@ -42,7 +52,7 @@ class NewsfeedMultipleImageView extends StatelessWidget {
           marginBottom,
         ),
         child: GestureDetector(
-          child: MultipleImageView(imageUrls: imageUrls),
+          child: MultipleImageView(imageUrls: imageUrls,radius: radius,isSlideShow: isSlideShow,useAspectRatio: useAspectRatio),
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
@@ -86,14 +96,6 @@ class ImageViewer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                ),
                 Expanded(
                   child: ImageSlideshow(
                     initialPage: 0,
@@ -102,13 +104,16 @@ class ImageViewer extends StatelessWidget {
                     isLoop: imageUrls.length > 1,
                     children: imageUrls
                         .map(
-                          (e) => ClipRect(
-                        child: SmartImage(
-                          e,
-                          fit: BoxFit.contain,
-                          isPost: true,
-                        ),
-                      ),
+                          (e) => Padding(
+                            padding: EdgeInsets.only(bottom: Get.height * 0.025),
+                            child: SmartImage(
+                              e,
+                              fit: BoxFit.contain,
+                              isPost: true,
+                              useAspectRatio: false,
+                              isSlideShow: true,
+                            ),
+                          ),
                     ).toList(),
                   ),
                 ),

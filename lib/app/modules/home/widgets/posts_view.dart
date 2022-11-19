@@ -74,6 +74,7 @@ class PostsView extends StatelessWidget{
         var endPollTime = (post.isPoll == true) ? DateTime.parse(post.poll!.endDate.toString()) : null;
         List<String> imageUrls = [];
         for (var element in post.postImages!) {
+          print(element.imageURL.toString());
           imageUrls.add(element.imageURL.toString());
         }
         if(userID!=null){

@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/app/global_widgets/smart_image.dart';
 
+import '../../core/theme/app_styles.dart';
+
 class MultipleImageView extends StatelessWidget {
   final List<String> imageUrls;
+  final double radius;
+  final bool isFile;
+  final bool useAspectRatio;
+  final bool isSlideShow;
+
   const MultipleImageView({
     Key? key,
     required this.imageUrls,
+    this.radius = 10,
+    this.isFile = false,
+    this.useAspectRatio = false,
+    this.isSlideShow = false,
   }) : super(key: key);
 
   @override
@@ -42,11 +53,13 @@ class MultipleImageView extends StatelessWidget {
       Expanded(
         flex: 1,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(radius),
           child: SmartImage(
             imageUrls.first,
             fit: BoxFit.cover,
             isPost: true,
+            useAspectRatio: useAspectRatio,
+            isSlideShow: isSlideShow,
           ),
         ),
       ),
@@ -58,14 +71,16 @@ class MultipleImageView extends StatelessWidget {
       Expanded(
         flex: 1,
         child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(radius),
+            bottomLeft: Radius.circular(radius),
           ),
           child: SmartImage(
             imageUrls.first,
             fit: BoxFit.cover,
             isPost: true,
+            useAspectRatio: useAspectRatio,
+            isSlideShow: isSlideShow,
           ),
         ),
       ),
@@ -73,14 +88,16 @@ class MultipleImageView extends StatelessWidget {
       Expanded(
         flex: 1,
         child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(10),
-            bottomRight: Radius.circular(10),
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(radius),
+            bottomRight: Radius.circular(radius),
           ),
           child: SmartImage(
             imageUrls.last,
             fit: BoxFit.cover,
             isPost: true,
+            useAspectRatio: useAspectRatio,
+            isSlideShow: isSlideShow,
           ),
         ),
       )
@@ -92,14 +109,16 @@ class MultipleImageView extends StatelessWidget {
       Expanded(
         flex: 1,
         child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(radius),
+            bottomLeft: Radius.circular(radius),
           ),
           child: SmartImage(
             imageUrls[0],
             fit: BoxFit.cover,
             isPost: true,
+            useAspectRatio: useAspectRatio,
+            isSlideShow: isSlideShow,
           ),
         ),
       ),
@@ -114,13 +133,15 @@ class MultipleImageView extends StatelessWidget {
             Expanded(
               flex: 1,
               child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(10),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(radius),
                 ),
                 child: SmartImage(
                   imageUrls[1],
                   fit: BoxFit.cover,
                   isPost: true,
+                  useAspectRatio: useAspectRatio,
+                  isSlideShow: isSlideShow,
                 ),
               ),
             ),
@@ -128,13 +149,15 @@ class MultipleImageView extends StatelessWidget {
             Expanded(
               flex: 1,
               child: ClipRRect(
-                borderRadius:const BorderRadius.only(
-                  bottomRight: Radius.circular(10),
+                borderRadius:BorderRadius.only(
+                  bottomRight: Radius.circular(radius),
                 ),
                 child: SmartImage(
                   imageUrls[2],
                   fit: BoxFit.cover,
                   isPost: true,
+                  useAspectRatio: useAspectRatio,
+                  isSlideShow: isSlideShow,
                 ),
               ),
             ),
@@ -150,13 +173,15 @@ class MultipleImageView extends StatelessWidget {
         flex: 2,
         child: ClipRRect(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
+            topLeft: Radius.circular(radius),
+            bottomLeft: Radius.circular(radius),
           ),
           child: SmartImage(
             imageUrls[0],
             fit: BoxFit.cover,
             isPost: true,
+            useAspectRatio: useAspectRatio,
+            isSlideShow: isSlideShow,
           ),
         ),
       ),
@@ -171,13 +196,15 @@ class MultipleImageView extends StatelessWidget {
             Expanded(
               flex: 1,
               child: ClipRRect(
-                borderRadius:const  BorderRadius.only(
-                  topRight: Radius.circular(10),
+                borderRadius:BorderRadius.only(
+                  topRight: Radius.circular(radius),
                 ),
                 child: SmartImage(
                   imageUrls[1],
                   fit: BoxFit.cover,
                   isPost: true,
+                  useAspectRatio: useAspectRatio,
+                  isSlideShow: isSlideShow,
                 ),
               ),
             ),
@@ -189,6 +216,8 @@ class MultipleImageView extends StatelessWidget {
                   imageUrls[2],
                   fit: BoxFit.cover,
                   isPost: true,
+                  useAspectRatio: useAspectRatio,
+                  isSlideShow: isSlideShow,
                 ),
               ),
             ),
@@ -196,13 +225,15 @@ class MultipleImageView extends StatelessWidget {
             Expanded(
               flex: 1,
               child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomRight: Radius.circular(10),
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(radius),
                 ),
                 child: SmartImage(
                   imageUrls[3],
                   fit: BoxFit.cover,
                   isPost: true,
+                  useAspectRatio: useAspectRatio,
+                  isSlideShow: isSlideShow,
                 ),
               ),
             ),
@@ -217,14 +248,16 @@ class MultipleImageView extends StatelessWidget {
       Expanded(
         flex: 2,
         child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(radius),
+            bottomLeft: Radius.circular(radius),
           ),
           child: SmartImage(
             imageUrls[0],
             fit: BoxFit.cover,
             isPost: true,
+            useAspectRatio: useAspectRatio,
+            isSlideShow: isSlideShow,
           ),
         ),
       ),
@@ -239,13 +272,15 @@ class MultipleImageView extends StatelessWidget {
             Expanded(
               flex: 1,
               child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(10),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(radius),
                 ),
                 child: SmartImage(
                   imageUrls[1],
                   fit: BoxFit.cover,
                   isPost: true,
+                  useAspectRatio: useAspectRatio,
+                  isSlideShow: isSlideShow,
                 ),
               ),
             ),
@@ -257,6 +292,8 @@ class MultipleImageView extends StatelessWidget {
                   imageUrls[2],
                   fit: BoxFit.cover,
                   isPost: true,
+                  useAspectRatio: useAspectRatio,
+                  isSlideShow: isSlideShow,
                 ),
               ),
             ),
@@ -268,13 +305,15 @@ class MultipleImageView extends StatelessWidget {
                 fit: StackFit.expand,
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(10),
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(radius),
                     ),
                     child: SmartImage(
                       imageUrls[3],
                       fit: BoxFit.cover,
                       isPost: true,
+                      useAspectRatio: useAspectRatio,
+                      isSlideShow: isSlideShow,
                     ),
                   ),
                   Positioned.fill(
@@ -282,17 +321,15 @@ class MultipleImageView extends StatelessWidget {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.5),
-                        borderRadius: const BorderRadius.only(
-                          bottomRight: Radius.circular(10),
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(radius),
                         ),
                       ),
                       child: Text(
                         '+${imageUrls.length - 4}',
-                        style: const TextStyle(
+                        style: AppTextStyle.subtitle1.copyWith(
                           color: Colors.white,
-                          fontSize: 22,
-                          fontFamily: "Nulito",
-                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
                         ),
                       ),
                     ),
