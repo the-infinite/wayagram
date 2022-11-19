@@ -6,7 +6,7 @@ class MyPref  {
   static final userId = ReadWriteValue('wayagram_userId', '', box);
   static final authToken = ReadWriteValue('wayagram_auth-token', '', box);
   static final logInDetail = ReadWriteValue('wayagram_logInDetail', '', box);
-  static final userProfile = ReadWriteValue('wayagram_userProfile', '', box);
+  //static final userProfile = ReadWriteValue('wayagram_userProfile', '', box);
   static final fullProfile = ReadWriteValue('wayagram_full_profile', '', box);
   static final account = ReadWriteValue('wayagram_account', '', box);
 

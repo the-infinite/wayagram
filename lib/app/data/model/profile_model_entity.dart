@@ -4,7 +4,6 @@ import 'dart:convert';
 
 @JsonSerializable()
 class ProfileModelEntity {
-
 	String? id;
 	String? email;
 	String? firstName;

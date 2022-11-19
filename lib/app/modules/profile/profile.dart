@@ -77,7 +77,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
           builder: (controller) {
             //
             //var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
-            var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
             //var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 

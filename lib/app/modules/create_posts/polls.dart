@@ -135,6 +135,7 @@ class CreatePoll extends StatelessWidget {
                     borderRadius: 10,
                     fontColor: AppColors.primary,
                     bckgrndColor: AppColors.background,
+                    width: Get.width * 0.2,
                     border: Border.all(color: AppColors.background, width: 1),
                     padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
                   ),

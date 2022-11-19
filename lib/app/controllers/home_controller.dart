@@ -19,6 +19,7 @@ import '../../core/theme/app_colors.dart';
 import '../data/model/ContactList.dart';
 import '../data/model/ContactsToUpload.dart';
 import '../data/model/SearchPeopleResponse.dart';
+import '../data/model/full_user_profile_entity.dart';
 import '../data/model/log_in_model_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
@@ -60,7 +61,7 @@ class HomeController extends GetxController {
   List<SearchPeopleResponse> searchPeopleResponse = [];
   bool hasContactPermission = false;
 
-  var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+  var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
   var logInDetails = LogInModelEntity.fromJson(jsonDecode(MyPref.logInDetail.val));
 
   Future<void> checkPermissionStatus() async{
@@ -197,7 +198,7 @@ class HomeController extends GetxController {
 
   Future<ApiResponse> updateProfile(dynamic body) async {
     final response = await userRepo.updateProfile(body);
-    await userRepo.getUserProfile(profile.userId.toString());
+    await userRepo.getFullUserProfile(profile.userId.toString());
     update(['profile_page','home','settings','app_drawer']);
     AppOverlay.showInfoDialog(
         title: response.isSuccessful ? 'Success' : 'Error',
@@ -219,7 +220,7 @@ class HomeController extends GetxController {
   Future<ApiResponse> postData(dynamic body,String url) async {
     final response = await userRepo.postData(url, body);
     print(response.message);
-    userRepo.getUserProfile(profile.userId.toString()).then((value){
+    userRepo.getFullUserProfile(profile.userId.toString()).then((value){
       update(['profile_page','home','settings']);
       getAllUserData().then((value) => update(['profile_page','home','settings']));
     });
@@ -228,7 +229,7 @@ class HomeController extends GetxController {
 
   Future<ApiResponse> putData(dynamic body,String url) async {
     final response = await userRepo.putData(url, body);
-    userRepo.getUserProfile(profile.userId.toString()).then((value){
+    userRepo.getFullUserProfile(profile.userId.toString()).then((value){
       update(['home','profile_page','settings','app_drawer']);
       getAllUserData().then((value) => update(['profile_page','home','settings','app_drawer']));
     });
@@ -260,6 +261,7 @@ class HomeController extends GetxController {
     await userRepo.getPageCategories();
     await userRepo.getGroupCategories();
   }
+
   void launchURL(String url) async {
     try {
       await launch(

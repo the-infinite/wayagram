@@ -57,7 +57,7 @@ class UserRepository {
   }
 
   //Profile,Friends,Accounts and Connections
-  Future<ApiResponse> getUserProfile(String userID) async {
+  /*Future<ApiResponse> getUserProfile(String userID) async {
     final response = await api.getData('/auth-service/api/v1/profile/$userID',hasHeader: true,sso: false);
     if(response.isSuccessful){
       response.data = ProfileModelEntity.fromJson(response.data);
@@ -65,7 +65,7 @@ class UserRepository {
     }
     await getFullUserProfile(userID);
     return response;
-  }
+  }*/
   Future<ApiResponse> getFullUserProfile(String userID) async {
     final response = await api.getData('/wayagram-service/main/profile/get-by-user-id?user_id=$userID',hasHeader: true);
     if(response.isSuccessful){
@@ -76,7 +76,8 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getFollowedByWayaOfficial() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    //var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     var body = {
       "user_id": profile.userId.toString()
     };
@@ -88,7 +89,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getFriends() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/graph/friend?user_id=${profile.userId}',hasHeader: true);
     if(response.isSuccessful){
       response.data = FriendsModelEntity.fromJson(response.data);
@@ -97,7 +98,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getAccountNumber() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     print(profile.userId);
     final response = await api.getData('/account-service/account/getAccounts/${profile.userId}',hasHeader: true);
     print(response.message);
@@ -108,7 +109,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getRestrictedAccount() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/graph/friend/get-all-restricted-accounts?user_id=${profile.userId}',hasHeader: true);
     if(response.isSuccessful){
       response.data = BlockedAccountsEntity.getService(response.data);
@@ -117,7 +118,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getMutedAccount() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/graph/friend/get-all-muted-accounts?user_id=${profile.userId}',hasHeader: true);
     if(response.isSuccessful){
       response.data = BlockedAccountsEntity.getService(response.data);
@@ -126,7 +127,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getFollowers() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/graph/friend/followers?user_id=${profile.userId}',hasHeader: true);
     if(response.isSuccessful){
       response.data = FollowersModelEntity.fromJson(response.data);
@@ -135,7 +136,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getFollowing() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/graph/friend/following?user_id=${profile.userId}',hasHeader: true);
     if(response.isSuccessful){
       response.data = FollowingModelEntity.fromJson(response.data);
@@ -144,7 +145,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getFriendSuggestions() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/graph/friend/suggestions?user_id=${profile.userId}',hasHeader: true);
     if(response.isSuccessful){
       response.data = FriendsSuggestionsEntity.getService(response.profiles);
@@ -171,7 +172,7 @@ class UserRepository {
   }
   //Not Done Yet
   Future<ApiResponse> getFriendRequests() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/graph/friend/requests?user_id=${profile.userId}',hasHeader: true);
     if(response.isSuccessful){
       response.data = ProfileModelEntity.fromJson(response.data);
@@ -191,7 +192,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getPosts() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/all-posts/feed?profile_id=${profile.id}&page=1&limit=40',hasHeader: true);
     if (response.isSuccessful) {
       //response.data = AllPostsEntity.getService(response.data['data']);
@@ -212,7 +213,7 @@ class UserRepository {
 
   //Home - Discover
   Future<ApiResponse> getGroups() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/main/group/get-all-groups?pageNumber=1&userId=${profile.id}',hasHeader: true);
     if (response.isSuccessful) {
       //response.data = AllPostsEntity.getService(response.data['data']);
@@ -231,7 +232,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getSuggestedGroups() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/main/group/get-group-suggestion?userId=${profile.id}',hasHeader: true);
     if (response.isSuccessful) {
       var newData = GroupModelEntity.getService(response.suggestion);
@@ -249,7 +250,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getGroupsCreated() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/main/group/get-all-user-created-groups?pageNumber=1&userId=${profile.id}',hasHeader: true);
     if (response.isSuccessful) {
       var newData = GroupModelEntity.getService(response.data);
@@ -267,7 +268,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getGroupsFollowed() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/main/group/get-user-groups?pageNumber=1&userId=${profile.id}',hasHeader: true);
     if (response.isSuccessful) {
       var newData = GroupModelEntity.getService(response.data);
@@ -303,7 +304,7 @@ class UserRepository {
   }
 
   Future<ApiResponse> getSuggestedPages() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/main/page/get-page-suggestion?userId=${profile.id}',hasHeader: true);
     if (response.isSuccessful) {
       var newData = GroupModelEntity.getService(response.suggestion);
@@ -321,7 +322,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getPagesCreated() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/main/page/get-all-user-pages?userId=${profile.id}',hasHeader: true);
     if (response.isSuccessful) {
       var newData = GroupModelEntity.getService(response.data);
@@ -339,7 +340,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getPagesFollowed() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/main/page/get-all-pages-a-user-follows?userId=${profile.id}&pageNumber=1',hasHeader: true);
     if (response.isSuccessful) {
       var newData = GroupModelEntity.getService(response.data);
@@ -357,7 +358,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getEventsToAttend() async {
-    //var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    //var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/all-posts/get-all-events?page=1&limit=40',hasHeader: true);
     if (response.isSuccessful) {
       var newData = AllEventsEntity.fromJson(response.data);
@@ -386,7 +387,7 @@ class UserRepository {
 
   //Home - Shops
   Future<ApiResponse> getAllProducts() async {
-    //var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    //var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/all-posts/get-all-products',hasHeader: true);
     if (response.isSuccessful) {
       var newData = ProductsModelEntity.fromJson(response.data);
@@ -396,7 +397,7 @@ class UserRepository {
     return response;
   }
   Future<ApiResponse> getMyProducts() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/all-posts/get-user-products?profile_id=${profile.id}',hasHeader: true);
     if (response.isSuccessful) {
       var newData = ProductsModelEntity.fromJson(response.data);
@@ -421,7 +422,7 @@ class UserRepository {
 
   //Home - Notifications
   Future<ApiResponse> getAllNotifications() async {
-    var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/notification/get-notifications-user?profile_id=${profile.id}',hasHeader: true);
     if (response.isSuccessful) {
       var newData = NotificationModelEntity.fromJson(response.data);

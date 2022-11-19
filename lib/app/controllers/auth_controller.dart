@@ -12,6 +12,7 @@ import 'package:wayagram/app/data/model/log_in_model_entity.dart';
 import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
+import '../data/model/full_user_profile_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
 import '../data/providers/my_pref.dart';
@@ -211,17 +212,14 @@ class AuthController extends GetxController {
   Future<void> signIn() async {
     var message = "";
     var buttonMessage = "";
-    var isLogin = true;
     ApiResponse response = await userRepo.signIn(_signIn);
     if(!response.isSuccessful){
       if(response.message.toString().contains("Bad credentials")) {
         message = "Bad credentials. Check your details and try again";
         buttonMessage = "Okay";
-        isLogin = false;
       }
       else{
         message = "An Error Occurred";
-        isLogin = false;
         buttonMessage = "Okay";
       }
       AppOverlay.showInfoDialog(
@@ -236,6 +234,7 @@ class AuthController extends GetxController {
       var data = response.data as LogInModelEntity;
       MyPref.authToken.val = data.token.toString();
       MyPref.logInDetail.val = jsonEncode(response.data);
+      MyPref.userId.val = data.user!.id.toString();
       await getUserProfile(data.user!.id.toString());
     }
   }
@@ -246,19 +245,9 @@ class AuthController extends GetxController {
     var isLogin = true;
     ApiResponse response = await userRepo.signIn(_signInFirst);
     if(!response.isSuccessful){
-      if(response.message.toString().contains("Bad credentials")) {
-        message = "Bad credentials. Check your details and try again";
-        buttonMessage = "Okay";
-        isLogin = false;
-      }
-      else{
-        message = "An Error Occurred";
-        isLogin = false;
-        buttonMessage = "Okay";
-      }
       AppOverlay.showInfoDialog(
         title: 'An Error Occurred',
-        content: message,
+        content: "Please try again",
         buttonText: buttonMessage,
         onPressed: () {
           Get.back();
@@ -268,14 +257,16 @@ class AuthController extends GetxController {
       var data = response.data as LogInModelEntity;
       MyPref.authToken.val = data.token.toString();
       MyPref.logInDetail.val = jsonEncode(response.data);
+      MyPref.userId.val = data.user!.id.toString();
       await getUserProfileFirst(data.user!.id.toString());
     }
   }
 
   Future<void> getUserProfile(String userID) async {
-    await userRepo.getFullUserProfile(userID);
-    ApiResponse response = await userRepo.getUserProfile(userID);
+    ApiResponse response = await userRepo.getFullUserProfile(userID);
+    //ApiResponse response = await userRepo.getUserProfile(userID);
     if(!response.isSuccessful){
+      MyPref.authToken.val = "";
       AppOverlay.showInfoDialog(
         title: 'Sign In Failed',
         content: "An Error Occurred",
@@ -285,8 +276,8 @@ class AuthController extends GetxController {
         },
       );
     }else{
-      var data = response.data as ProfileModelEntity;
-      MyPref.userProfile.val = jsonEncode(response.data);
+      var data = response.data as FullUserProfileEntity;
+      MyPref.fullProfile.val = jsonEncode(response.data);
       //getAllUserData();
       Get.toNamed(Home.route);
       //Get.toNamed(Home.route);
@@ -294,22 +285,22 @@ class AuthController extends GetxController {
   }
 
   Future<void> getUserProfileFirst(String userID) async {
-    ApiResponse response = await userRepo.getUserProfile(userID);
+    ApiResponse response = await userRepo.getFullUserProfile(userID);
     if(!response.isSuccessful){
+      MyPref.authToken.val = "";
       AppOverlay.showInfoDialog(
-        title: 'PIN Creation Failed',
-        content: "An Error Occurred",
+        title: 'An Error Occurred',
+        content: "Please try again",
         buttonText: "Okay",
         onPressed: () {
           Get.back();
         },
       );
     }else{
-      var data = response.data as ProfileModelEntity;
-      MyPref.userProfile.val = jsonEncode(response.data);
+      //var data = response.data as FullUserProfileEntity;
+      MyPref.fullProfile.val = jsonEncode(response.data);
       //Get.toNamed(CreatePIN.route);
       //Get.toNamed(Home.route);
-      await userRepo.getFullUserProfile(data.userId.toString());
       await userRepo.getFollowedByWayaOfficial();
       Get.toNamed(Interests.route);
     }

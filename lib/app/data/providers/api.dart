@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
+import '../model/full_user_profile_entity.dart';
 import '../model/profile_model_entity.dart';
 import 'api_response.dart';
 import 'my_pref.dart';
@@ -34,24 +35,19 @@ class Api {
     receiveTimeout: 100000,
   ));
 
-  Future<ApiResponse> postData(
-      String url, {
-        bool hasHeader = false, bool sso = true,
-        body,
-      })
-  async {
+  Future<ApiResponse> postData(String url, {bool hasHeader = false, bool sso = true, body}) async {
     token = CancelToken();
     try {
       var head = {
         'Authorization': MyPref.authToken.val,
+        //'Authorization':"serial eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbeyJjcmVhdGVkQXQiOiIxNS0wMi0yMDIyIDA2OjI3OjEzIiwidXBkYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsImNyZWF0ZWRCeSI6Ik1HUiIsIm1vZGlmaWVkQnkiOiJNR1IiLCJpZCI6MTMsIm5hbWUiOiJST0xFX1VTRVIiLCJkZXNjcmlwdGlvbiI6IlVTRVIgUk9MRSIsImRlZmF1bHQiOnRydWV9XSwiaWQiOjEyMjEsInN1YiI6ImdyZWVuMTBAeW9wbWFpbC5jb20iLCJpYXQiOjE2Njg3NjQ2MTIsImV4cCI6MTcwMDMyMjIxMn0.ITr_SLT4Zqm6G9w0c-H9vphGIhxv8hnZFdYTk0uW91eFVqutAkAZjkfwiSOMA70qZVF2NKfjyMgST7OauUd2gQ"
       };
       var link = url;
       if(sso){
-        var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
         if(url.contains("?")){
-          link = '$url&sso_id=${profile.userId}';
+          link = '$url&sso_id=${MyPref.userId.val}';
         }else{
-          link = '$url/?&sso_id=${profile.userId}';
+          link = '$url/?&sso_id=${MyPref.userId.val}';
         }
       }
       var request = await _client.request(
@@ -63,7 +59,6 @@ class Api {
         ),
       );
 
-      print(link);
       return ApiResponse.response(request);
     } on DioError catch (e) {
       return e.toApiError(cancelToken: token);
@@ -82,22 +77,18 @@ class Api {
     }
   }
 
-  Future<ApiResponse> deleteData(
-      String url, {
-        bool hasHeader = false, bool sso = true,
-      })
-  async {
+  Future<ApiResponse> deleteData(String url, {bool hasHeader = false, bool sso = true}) async {
     token = CancelToken();
     var head = {
       'Authorization': MyPref.authToken.val,
+      //'Authorization':"serial eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbeyJjcmVhdGVkQXQiOiIxNS0wMi0yMDIyIDA2OjI3OjEzIiwidXBkYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsImNyZWF0ZWRCeSI6Ik1HUiIsIm1vZGlmaWVkQnkiOiJNR1IiLCJpZCI6MTMsIm5hbWUiOiJST0xFX1VTRVIiLCJkZXNjcmlwdGlvbiI6IlVTRVIgUk9MRSIsImRlZmF1bHQiOnRydWV9XSwiaWQiOjEyMjEsInN1YiI6ImdyZWVuMTBAeW9wbWFpbC5jb20iLCJpYXQiOjE2Njg3NjQ2MTIsImV4cCI6MTcwMDMyMjIxMn0.ITr_SLT4Zqm6G9w0c-H9vphGIhxv8hnZFdYTk0uW91eFVqutAkAZjkfwiSOMA70qZVF2NKfjyMgST7OauUd2gQ"
     };
     var link = url;
     if(sso){
-      var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
       if(url.contains("?")){
-        link = '$url&sso_id=${profile.userId}';
+        link = '$url&sso_id=${MyPref.userId.val}';
       }else{
-        link = '$url/?&sso_id=${profile.userId}';
+        link = '$url/?&sso_id=${MyPref.userId.val}';
       }
     }
     try {
@@ -106,7 +97,6 @@ class Api {
         cancelToken: token,
         options: Options(method: 'DELETE', headers: hasHeader ? head : null,contentType: "application/json"),
       );
-      print(link);
       return ApiResponse.response(request);
     } on DioError catch (e) {
       return e.toApiError(cancelToken: token);
@@ -125,26 +115,19 @@ class Api {
     }
   }
 
-  Future<ApiResponse> putData(
-      String url, {
-        bool hasHeader = false,bool sso = true,
-        body,
-      }) async {
+  Future<ApiResponse> putData(String url, {bool hasHeader = false,bool sso = true, body,}) async {
     token = CancelToken();
     var head = {
       'Authorization': MyPref.authToken.val,
+      //'Authorization':"serial eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbeyJjcmVhdGVkQXQiOiIxNS0wMi0yMDIyIDA2OjI3OjEzIiwidXBkYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsImNyZWF0ZWRCeSI6Ik1HUiIsIm1vZGlmaWVkQnkiOiJNR1IiLCJpZCI6MTMsIm5hbWUiOiJST0xFX1VTRVIiLCJkZXNjcmlwdGlvbiI6IlVTRVIgUk9MRSIsImRlZmF1bHQiOnRydWV9XSwiaWQiOjEyMjEsInN1YiI6ImdyZWVuMTBAeW9wbWFpbC5jb20iLCJpYXQiOjE2Njg3NjQ2MTIsImV4cCI6MTcwMDMyMjIxMn0.ITr_SLT4Zqm6G9w0c-H9vphGIhxv8hnZFdYTk0uW91eFVqutAkAZjkfwiSOMA70qZVF2NKfjyMgST7OauUd2gQ"
     };
     var link = url;
     if(sso){
-      var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
       if(url.contains("?")){
-        link = '$url&sso_id=${profile.userId}';
+        link = '$url&sso_id=${MyPref.userId.val}';
       }else{
-        link = '$url/?&sso_id=${profile.userId}';
+        link = '$url/?&sso_id=${MyPref.userId.val}';
       }
-    }
-    if(body != null){
-      //body['wayaBankPayPosGram'] = "WAYAGRAM";
     }
     try {
       var request = await _client.request(
@@ -153,7 +136,6 @@ class Api {
         cancelToken: token,
         options: Options(method: 'PUT', headers: hasHeader ? head : null,contentType: "application/json"),
       );
-      print(link);
       return ApiResponse.response(request);
     } on DioError catch (e) {
       return e.toApiError(cancelToken: token);
@@ -177,16 +159,15 @@ class Api {
     try {
       var head = {
         'Authorization': MyPref.authToken.val,
+        //'Authorization':"serial eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbeyJjcmVhdGVkQXQiOiIxNS0wMi0yMDIyIDA2OjI3OjEzIiwidXBkYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsImNyZWF0ZWRCeSI6Ik1HUiIsIm1vZGlmaWVkQnkiOiJNR1IiLCJpZCI6MTMsIm5hbWUiOiJST0xFX1VTRVIiLCJkZXNjcmlwdGlvbiI6IlVTRVIgUk9MRSIsImRlZmF1bHQiOnRydWV9XSwiaWQiOjEyMjEsInN1YiI6ImdyZWVuMTBAeW9wbWFpbC5jb20iLCJpYXQiOjE2Njg3NjQ2MTIsImV4cCI6MTcwMDMyMjIxMn0.ITr_SLT4Zqm6G9w0c-H9vphGIhxv8hnZFdYTk0uW91eFVqutAkAZjkfwiSOMA70qZVF2NKfjyMgST7OauUd2gQ"
       };
       var link = url;
       if(sso){
-        var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
         if(url.contains("?")){
-          link = '$url&sso_id=${profile.userId}';
+          link = '$url&sso_id=${MyPref.userId.val}';
         }else{
-          link = '$url/?&sso_id=${profile.userId}';
+          link = '$url/?&sso_id=${MyPref.userId.val}';
         }
-        print(link);
       }
       var request = await _client.request(
         link,
@@ -195,7 +176,6 @@ class Api {
       );
       //var response = await http.get(Uri.parse(baseUrl+link), headers: hasHeader ? head : null);
       //return ApiResponse.responseFromBody(response.body, response.statusCode);
-      print(link);
       return ApiResponse.response(request);
     } on DioError catch (e) {
       print(e.message);

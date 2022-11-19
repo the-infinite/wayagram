@@ -73,7 +73,6 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
       child: GetBuilder<HomeController>(
           id: 'post_profile_page',
           builder: (controller) {
-            var profile = ProfileModelEntity.fromJson(jsonDecode(MyPref.userProfile.val));
             var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
             var followers = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));
             var following = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
