@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,6 +13,7 @@ import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/CommentModel.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/api_response.dart';
@@ -33,13 +35,8 @@ class ViewPost extends StatelessWidget {
   final AllPostsEntity post;
   @override
   Widget build(BuildContext context) {
-    final ImagePicker _imagePicker = ImagePicker();
     var commentController = TextEditingController();
-    List<String> images = [];
-    var postID = "";
-
-    /*images.removeAt(index);
-     controller.update();*/
+    print(post.id);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -48,7 +45,7 @@ class ViewPost extends StatelessWidget {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(builder: (controller) {
+      child: GetBuilder<HomeController>(id: "comment_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
@@ -98,30 +95,24 @@ class ViewPost extends StatelessWidget {
                       homeController: controller,
                       //hasBorder: false,
                     ),
-                    CommentPost(
-                      post: post,
-                      fullProfile: fullProfile,
-                      homeController: controller,
-                      //hasBorder: false,
-                    ),
-                    CommentPost(
-                      post: post,
-                      fullProfile: fullProfile,
-                      homeController: controller,
-                      //hasBorder: false,
-                    ),
-                    CommentPost(
-                      post: post,
-                      fullProfile: fullProfile,
-                      homeController: controller,
-                      //hasBorder: false,
-                    ),
-                    CommentPost(
-                      post: post,
-                      fullProfile: fullProfile,
-                      homeController: controller,
-                      //hasBorder: false,
-                    ),
+                    FutureBuilder<ApiResponse>(
+                        future: controller.getData("/wayagram-service/all-posts/post-comments?post_id=${post.id}&page=1&limit=10", true),
+                        builder: (context, snapshot) {
+                          var savedPosts = ReadWriteValue('wayagram_comment_${post.id}', '', MyPref.box);
+                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                            final posts = CommentModel.listFromJson(snapshot.data!.data['data']);
+                            savedPosts.val = jsonEncode(posts);
+                            return CommentPostsView(posts: posts);
+                          } else if(savedPosts.val.isNotEmpty){
+                            var posts = CommentModel.listFromJson(jsonDecode(savedPosts.val));
+                            return CommentPostsView(posts: posts);
+                          }else{
+                            if(snapshot.connectionState == ConnectionState.done){
+                              return const SizedBox.shrink();
+                            }
+                            return const CommentPostsView(isLoading: true);
+                          }
+                        }),
                   ],
                 ),
               ),

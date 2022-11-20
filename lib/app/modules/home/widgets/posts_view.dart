@@ -14,6 +14,7 @@ import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
+import '../../../data/model/CommentModel.dart' as comment;
 import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
@@ -44,6 +45,7 @@ class PostsView extends StatelessWidget{
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     var homeController = Get.find<HomeController>();
+
     return ListView.builder(
       itemCount: isLoading ? 5 : posts!.length,
       shrinkWrap: true,
@@ -80,6 +82,60 @@ class PostsView extends StatelessWidget{
             homeController: homeController,
             userID: userID,
           ),
+        );
+      },
+    );
+  }
+
+}
+
+class CommentPostsView extends StatelessWidget{
+  const CommentPostsView({
+    Key? key,
+    this.isLoading = false,
+    this.posts,
+    this.userID
+  }) : super(key: key);
+
+  final bool isLoading;
+  final List<comment.CommentModel>? posts;
+  final String? userID;
+  @override
+  Widget build(BuildContext context) {
+    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+    var homeController = Get.find<HomeController>();
+
+    return ListView.builder(
+      itemCount: isLoading ? 5 : posts!.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(0),
+      itemBuilder: (context, index) {
+        if(isLoading){
+          return SizedBox(
+            height: Get.height * 0.18,
+            width: Get.width * 0.35,
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey.withOpacity(0.8),
+              highlightColor: Colors.grey.withOpacity(0.2),
+              child: Container(
+                margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                height: Get.height * 0.18,
+                width: Get.width * 0.35,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey.withOpacity(.5),
+                ),
+              ),
+            ),
+          );
+        }
+        var post = posts![index];
+        return CommentPost(
+          post: post,
+          fullProfile: fullProfile,
+          homeController: homeController,
+          userID: userID,
         );
       },
     );
@@ -164,15 +220,7 @@ class Post extends StatelessWidget{
               ),
               InkWell(
                 onTap: (){
-                  if(fullProfile.userId!=null){
-                    if(post.profile!.userId == fullProfile.userId) {
-                      Get.toNamed(Profile.route);
-                    }else{
-                      Get.toNamed(PostProfile.route,arguments: post);
-                    }
-                  }else{
-                    Get.toNamed(PostProfile.route,arguments: post);
-                  }
+
                 },
                 child: Row(
                   //crossAxisAlignment: CrossAxisAlignment.start,
@@ -617,47 +665,20 @@ class CommentPost extends StatelessWidget{
 
   final FullUserProfileEntity fullProfile;
   final HomeController homeController;
-  final AllPostsEntity post;
+  final comment.CommentModel post;
   final String? userID;
   final bool hasBorder;
 
   @override
   Widget build(BuildContext context) {
-    var isCurrentUserPost = false;
     var time = DateTime.parse(post.createdAt!);
-    var endPollTime = (post.isPoll == true) ? DateTime.parse(post.poll!.endDate.toString()) : null;
-    List<String> imageUrls = [];
-    for (var element in post.postImages!) {
-      imageUrls.add(element.imageURL.toString());
-    }
-    if(userID!=null){
-      if(post.profile!.userId != fullProfile.userId){
-        return const SizedBox.shrink();
-      }
-    }
-    if(post.profile == null) {
-      return const SizedBox.shrink();
-    }
-    if(fullProfile.userId!=null){
-      if(post.profile!.userId == fullProfile.userId) {
-        isCurrentUserPost = true;
-      }
-    }
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
           onTap: (){
-            if(fullProfile.userId!=null){
-              if(post.profile!.userId == fullProfile.userId) {
-                Get.toNamed(Profile.route);
-              }else{
-                Get.toNamed(PostProfile.route,arguments: post);
-              }
-            }else{
-              Get.toNamed(PostProfile.route,arguments: post);
-            }
+
           },
           child: SizedBox(
             width: Get.width * 0.13,
@@ -742,7 +763,7 @@ class CommentPost extends StatelessWidget{
                 Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
                     child: HashTagText(
-                      text: post.description.toString(),
+                      text: post.comment.toString(),
                       decoratedStyle: const TextStyle(
                         color: Colors.blue,
                         fontSize: 15,
@@ -815,7 +836,7 @@ class CommentPost extends StatelessWidget{
                             width: 2,
                           ),
                           Text(
-                            post.commentCount.toString(),
+                            "0",
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 14,
