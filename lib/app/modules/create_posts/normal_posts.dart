@@ -241,28 +241,92 @@ class CreatePosts extends StatelessWidget {
               ),
             ),
           ),
-          bottomNavigationBar: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                color: const Color(0xffEDEAEA),
-                height: 1.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: Get.width*0.025,
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.image_outlined, color: images.length > 29 ? Colors.grey : Colors.black),
+          bottomNavigationBar: Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  color: const Color(0xffEDEAEA),
+                  height: 1.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: Get.width*0.025,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.image_outlined, color: images.length > 29 ? Colors.grey : Colors.black),
+                          onPressed: () async {
+                            if(images.length <= 29){
+                              final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
+                              if (pickedFile != null) {
+                                CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                  sourcePath: pickedFile.path,
+                                  cropStyle: CropStyle.rectangle,
+                                  aspectRatioPresets: [
+                                    CropAspectRatioPreset.square,
+                                    CropAspectRatioPreset.ratio3x2,
+                                    CropAspectRatioPreset.original,
+                                    CropAspectRatioPreset.ratio4x3,
+                                    CropAspectRatioPreset.ratio16x9
+                                  ],
+                                  uiSettings: [
+                                    AndroidUiSettings(
+                                        toolbarTitle: 'Crop Photo',
+                                        toolbarColor: AppColors.primary,
+                                        toolbarWidgetColor: Colors.white,
+                                        activeControlsWidgetColor: AppColors.primary,
+                                        cropGridColor: AppColors.primary,
+                                        initAspectRatio: CropAspectRatioPreset.original,
+                                        lockAspectRatio: false),
+                                    IOSUiSettings(
+                                      title: 'Crop Photo',
+                                    ),
+                                    WebUiSettings(
+                                      context: context,
+                                    ),
+                                  ],
+                                );
+                                if(croppedFile!=null){
+                                  images = List.from(images)..add(croppedFile.path);
+                                }else{
+                                  images = List.from(images)..add(pickedFile.path);
+                                }
+                                controller.update();
+                              }
+                            }
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.video_camera_back_outlined, color: images.length > 29 ? Colors.grey : Colors.black,size: Get.width*0.065),
+                          onPressed: () async {
+                            if(images.length <= 29){
+                              final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, maxDuration: const Duration(minutes: 10));
+                              if (pickedFile != null) {
+                                images = List.from(images)..add(pickedFile.path);
+                                controller.update();
+                              }
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: Get.width*0.025),
+                      child: IconButton(
+                        icon: Icon(Icons.camera_alt_outlined, color: images.length > 29 ? Colors.grey : Colors.black),
                         onPressed: () async {
                           if(images.length <= 29){
-                            final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
-                            if (pickedFile != null) {
+                            final pickedFile = await _imagePicker.pickImage(
+                              source: ImageSource.camera,
+                              imageQuality: 30,
+                            );
+                            if (pickedFile != null && pickedFile.path.isNotEmpty) {
                               CroppedFile? croppedFile = await ImageCropper().cropImage(
                                 sourcePath: pickedFile.path,
                                 cropStyle: CropStyle.rectangle,
@@ -300,72 +364,11 @@ class CreatePosts extends StatelessWidget {
                           }
                         },
                       ),
-                      IconButton(
-                        icon: Icon(Icons.video_camera_back_outlined, color: images.length > 29 ? Colors.grey : Colors.black,size: Get.width*0.065),
-                        onPressed: () async {
-                          if(images.length <= 29){
-                            final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, maxDuration: const Duration(minutes: 10));
-                            if (pickedFile != null) {
-                              images = List.from(images)..add(pickedFile.path);
-                              controller.update();
-                            }
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(right: Get.width*0.025),
-                    child: IconButton(
-                      icon: Icon(Icons.camera_alt_outlined, color: images.length > 29 ? Colors.grey : Colors.black),
-                      onPressed: () async {
-                        if(images.length <= 29){
-                          final pickedFile = await _imagePicker.pickImage(
-                            source: ImageSource.camera,
-                            imageQuality: 30,
-                          );
-                          if (pickedFile != null && pickedFile.path.isNotEmpty) {
-                            CroppedFile? croppedFile = await ImageCropper().cropImage(
-                              sourcePath: pickedFile.path,
-                              cropStyle: CropStyle.rectangle,
-                              aspectRatioPresets: [
-                                CropAspectRatioPreset.square,
-                                CropAspectRatioPreset.ratio3x2,
-                                CropAspectRatioPreset.original,
-                                CropAspectRatioPreset.ratio4x3,
-                                CropAspectRatioPreset.ratio16x9
-                              ],
-                              uiSettings: [
-                                AndroidUiSettings(
-                                    toolbarTitle: 'Crop Photo',
-                                    toolbarColor: AppColors.primary,
-                                    toolbarWidgetColor: Colors.white,
-                                    activeControlsWidgetColor: AppColors.primary,
-                                    cropGridColor: AppColors.primary,
-                                    initAspectRatio: CropAspectRatioPreset.original,
-                                    lockAspectRatio: false),
-                                IOSUiSettings(
-                                  title: 'Crop Photo',
-                                ),
-                                WebUiSettings(
-                                  context: context,
-                                ),
-                              ],
-                            );
-                            if(croppedFile!=null){
-                              images = List.from(images)..add(croppedFile.path);
-                            }else{
-                              images = List.from(images)..add(pickedFile.path);
-                            }
-                            controller.update();
-                          }
-                        }
-                      },
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       }),

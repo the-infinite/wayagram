@@ -27,6 +27,7 @@ import '../../profile/other_profile.dart';
 import '../../profile/post_profile.dart';
 import '../../profile/profile.dart';
 import '../../search/search.dart';
+import '../../view_posts/view_post.dart';
 
 class PostsView extends StatelessWidget{
   const PostsView({
@@ -69,11 +70,16 @@ class PostsView extends StatelessWidget{
           );
         }
         var post = posts![index];
-        return Post(
-          post: post,
-          fullProfile: fullProfile,
-          homeController: homeController,
-          userID: userID,
+        return InkWell(
+          onTap: (){
+            Get.to(() => ViewPost(post: post));
+          },
+          child: Post(
+            post: post,
+            fullProfile: fullProfile,
+            homeController: homeController,
+            userID: userID,
+          ),
         );
       },
     );
