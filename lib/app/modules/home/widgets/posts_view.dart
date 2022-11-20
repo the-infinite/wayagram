@@ -68,359 +68,387 @@ class PostsView extends StatelessWidget{
             ),
           );
         }
-        var isCurrentUserPost = false;
         var post = posts![index];
-        var time = DateTime.parse(post.createdAt!);
-        var endPollTime = (post.isPoll == true) ? DateTime.parse(post.poll!.endDate.toString()) : null;
-        List<String> imageUrls = [];
-        for (var element in post.postImages!) {
-          print(element.imageURL.toString());
-          imageUrls.add(element.imageURL.toString());
-        }
-        if(userID!=null){
-          if(post.profile!.userId != userID){
-            return const SizedBox.shrink();
-          }
-        }
-        if(post.profile == null) {
-          return const SizedBox.shrink();
-        }
-        if(fullProfile.userId!=null){
-          if(post.profile!.userId == fullProfile.userId) {
-            isCurrentUserPost = true;
-          }
-        }
-        return Container(
-          margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(.8),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        return Post(
+          post: post,
+          fullProfile: fullProfile,
+          homeController: homeController,
+          userID: userID,
+        );
+      },
+    );
+  }
+
+}
+
+class Post extends StatelessWidget{
+  const Post({
+    Key? key,
+    required this.fullProfile,
+    required this.homeController,
+    required this.post,
+    this.userID,
+    this.hasBorder = true,
+  }) : super(key: key);
+
+  final FullUserProfileEntity fullProfile;
+  final HomeController homeController;
+  final AllPostsEntity post;
+  final String? userID;
+  final bool hasBorder;
+
+  @override
+  Widget build(BuildContext context) {
+    var isCurrentUserPost = false;
+    var time = DateTime.parse(post.createdAt!);
+    var endPollTime = (post.isPoll == true) ? DateTime.parse(post.poll!.endDate.toString()) : null;
+    List<String> imageUrls = [];
+    for (var element in post.postImages!) {
+      imageUrls.add(element.imageURL.toString());
+    }
+    if(userID!=null){
+      if(post.profile!.userId != fullProfile.userId){
+        return const SizedBox.shrink();
+      }
+    }
+    if(post.profile == null) {
+      return const SizedBox.shrink();
+    }
+    if(fullProfile.userId!=null){
+      if(post.profile!.userId == fullProfile.userId) {
+        isCurrentUserPost = true;
+      }
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+      decoration: hasBorder ? BoxDecoration(
+        color: Colors.white.withOpacity(.8),
+        borderRadius: BorderRadius.circular(10),
+      ) : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: (){
-                      if(fullProfile.userId!=null){
-                        if(post.profile!.userId == fullProfile.userId) {
-                          Get.toNamed(Profile.route);
-                        }else{
-                          Get.toNamed(PostProfile.route,arguments: post);
-                        }
-                      }else{
-                        Get.toNamed(PostProfile.route,arguments: post);
-                      }
-                    },
-                    child: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: IconButton(
-                        icon: AppAvatar(
-                          imgUrl: post.profile!= null ?  post.profile!.avatar.toString() : "",
-                          radius: 45,
-                        ),
-                        onPressed: null,
-                      ),
+              InkWell(
+                onTap: (){
+                  if(fullProfile.userId!=null){
+                    if(post.profile!.userId == fullProfile.userId) {
+                      Get.toNamed(Profile.route);
+                    }else{
+                      Get.toNamed(PostProfile.route,arguments: post);
+                    }
+                  }else{
+                    Get.toNamed(PostProfile.route,arguments: post);
+                  }
+                },
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: IconButton(
+                    icon: AppAvatar(
+                      imgUrl: post.profile!= null ?  post.profile!.avatar.toString() : "",
+                      radius: 45,
                     ),
-                  ),
-                  InkWell(
-                    onTap: (){
-                      if(fullProfile.userId!=null){
-                        if(post.profile!.userId == fullProfile.userId) {
-                          Get.toNamed(Profile.route);
-                        }else{
-                          Get.toNamed(PostProfile.route,arguments: post);
-                        }
-                      }else{
-                        Get.toNamed(PostProfile.route,arguments: post);
-                      }
-                    },
-                    child: Row(
-                      //crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          post.profile!.displayName.toString(),
-                          style: TextStyle(
-                            color: Colors.black ,
-                            fontSize: Get.width * 0.04,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(width: Get.width * 0.01,),
-                        Text(
-                          "@${post.profile!.username}",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: Get.width * 0.035,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Wrap(
-                      alignment: WrapAlignment.end,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Text(
-                          timeago.format(time),
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: Get.width * 0.03,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        PopupMenuButton(
-                            color: Colors.white,
-                            icon: const Icon(
-                              FeatherIcons.moreHorizontal,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onSelected: (value) {
-                              if (value == 0) {
-                                //Get.to(() => const Muted());
-                              } else if (value == 1) {
-                                //Get.to(() => const Blocked());
-                              } else if (value == 2) {
-                                //Get.to(() => const Followers());
-                              }
-                            },
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                value: 0,
-                                child: Text(
-                                  "Bookmark",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              if(isCurrentUserPost)
-                                PopupMenuItem(
-                                  value: 1,
-                                  child: Text(
-                                    "Edit Post",
-                                    style: AppTextStyle.bodyText1.copyWith(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              if(isCurrentUserPost)
-                                PopupMenuItem(
-                                value: 2,
-                                child: Text(
-                                  "Delete Post",
-                                  style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ]),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(
-                height: 1.5,
-                thickness: 1.5,
-                color: Color(0xffF2F2F2),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
-                child: HashTagText(
-                  text: post.description.toString(),
-                  decoratedStyle: const TextStyle(
-                    color: Colors.blue,
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                  ),
-                  basicStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                  ),
-                  onTap: (text) {
-                    homeController.defaultSearchValue = text;
-                    Get.toNamed(Search.route);
-                  },
-                  decorateAtSign: true,
-                )
-              ),
-              if(imageUrls.isNotEmpty)
-                SizedBox(
-                  height: Get.height * 0.18,
-                  child: NewsfeedMultipleImageView(
-                    imageUrls: imageUrls,
-                    marginLeft: 10.0,
-                    marginRight: 10.0,
-                    marginBottom: 0,
-                    marginTop: 0,
+                    onPressed: null,
                   ),
                 ),
-              if(post.isPoll == true && post.poll!.pollOptions!.length >= 2)
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: FlutterPolls(
-                    pollId: '1',
-                    onVoted: (PollOption pollOption, int newTotalVotes) {
-                      return Future(() => true);
-                    },
-                    pollOptionsSplashColor: Colors.white,
-                    votedProgressColor: AppColors.primary,
-                    votedBackgroundColor: Colors.grey.withOpacity(0.2),
-                    leadingVotedProgessColor: AppColors.primary,
-                    pollOptions: post.poll!.pollOptions!.map((e){
-                      return PollOption(title: Text(e.option.toString()), votes: e.totalVotesCountPollOption!.toInt());
-                    }).toList(),
-                    pollTitle: const SizedBox.shrink(),
-                    metaWidget: Text(' • Ends in ${timeago.format(endPollTime!,allowFromNow: true)}',style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                    )),
-                  ),
-                ),
-              if(post.isRepost == true)
-                InnerPost(outerPost: post,homeController: homeController),
-              const SizedBox(
-                height: 10,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  //Comment
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 10,
+              InkWell(
+                onTap: (){
+                  if(fullProfile.userId!=null){
+                    if(post.profile!.userId == fullProfile.userId) {
+                      Get.toNamed(Profile.route);
+                    }else{
+                      Get.toNamed(PostProfile.route,arguments: post);
+                    }
+                  }else{
+                    Get.toNamed(PostProfile.route,arguments: post);
+                  }
+                },
+                child: Row(
+                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      post.profile!.displayName.toString(),
+                      style: TextStyle(
+                        color: Colors.black ,
+                        fontSize: Get.width * 0.04,
+                        fontWeight: FontWeight.w600,
                       ),
-                      const Icon(
-                        FeatherIcons.messageCircle,
+                    ),
+                    SizedBox(width: Get.width * 0.01,),
+                    Text(
+                      "@${post.profile!.username}",
+                      style: TextStyle(
                         color: Colors.grey,
-                        size: 20,
+                        fontSize: Get.width * 0.035,
+                        fontWeight: FontWeight.normal,
                       ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Text(
-                        post.commentCount.toString(),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                  //Heart
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      if(post.isLiked == true)
-                        const Icon(
-                          Icons.favorite,
-                          color: AppColors.primary,
-                          size: 20,
-                        ),
-                      if(post.isLiked == false || post.isLiked == null)
-                        const Icon(
-                        FeatherIcons.heart,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Wrap(
+                  alignment: WrapAlignment.end,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      timeago.format(time),
+                      style: TextStyle(
                         color: Colors.grey,
-                        size: 20,
+                        fontSize: Get.width * 0.03,
+                        fontWeight: FontWeight.normal,
                       ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Text(
-                        post.likeCount.toString().split(".")[0],
-                        style: const TextStyle(
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    PopupMenuButton(
+                        color: Colors.white,
+                        icon: const Icon(
+                          FeatherIcons.moreHorizontal,
                           color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                  //Retweet
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      if(post.isRepost == true)
-                        const Icon(
-                          FeatherIcons.repeat,
-                          color: AppColors.primary,
                           size: 20,
                         ),
-                      if(post.isRepost == false || post.isRepost == null)
-                        const Icon(
-                          FeatherIcons.repeat,
-                          color: Colors.grey,
-                          size: 20,
-                        ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Text(
-                        post.repostCount.toString(),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    width: 60,
-                  ),
-                  //Share
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      InkWell(
-                        onTap: () async {
-                          await Share.share('https://app.staging.wayagram.ng/post/${post.id}', subject: 'Wayagram Post');
+                        onSelected: (value) {
+                          if (value == 0) {
+                            //Get.to(() => const Muted());
+                          } else if (value == 1) {
+                            //Get.to(() => const Blocked());
+                          } else if (value == 2) {
+                            //Get.to(() => const Followers());
+                          }
                         },
-                        child: const Icon(
-                          Icons.share,
-                          color: Colors.grey,
-                          size: 20,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            value: 0,
+                            child: Text(
+                              "Bookmark",
+                              style: AppTextStyle.bodyText1.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          if(isCurrentUserPost)
+                            PopupMenuItem(
+                              value: 1,
+                              child: Text(
+                                "Edit Post",
+                                style: AppTextStyle.bodyText1.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          if(isCurrentUserPost)
+                            PopupMenuItem(
+                              value: 2,
+                              child: Text(
+                                "Delete Post",
+                                style: AppTextStyle.bodyText1.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                        ]),
+                  ],
+                ),
               ),
             ],
           ),
-        );
-      },
+          const Divider(
+            height: 1.5,
+            thickness: 1.5,
+            color: Color(0xffF2F2F2),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
+              child: HashTagText(
+                text: post.description.toString(),
+                decoratedStyle: const TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                ),
+                basicStyle: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                ),
+                onTap: (text) {
+                  homeController.defaultSearchValue = text;
+                  Get.toNamed(Search.route);
+                },
+                decorateAtSign: true,
+              )
+          ),
+          if(imageUrls.isNotEmpty)
+            SizedBox(
+              height: Get.height * 0.18,
+              child: NewsfeedMultipleImageView(
+                imageUrls: imageUrls,
+                marginLeft: 10.0,
+                marginRight: 10.0,
+                marginBottom: 0,
+                marginTop: 0,
+              ),
+            ),
+          if(post.isPoll == true && post.poll!.pollOptions!.length >= 2)
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: FlutterPolls(
+                pollId: '1',
+                onVoted: (PollOption pollOption, int newTotalVotes) {
+                  return Future(() => true);
+                },
+                pollOptionsSplashColor: Colors.white,
+                votedProgressColor: AppColors.primary,
+                votedBackgroundColor: Colors.grey.withOpacity(0.2),
+                leadingVotedProgessColor: AppColors.primary,
+                pollOptions: post.poll!.pollOptions!.map((e){
+                  return PollOption(title: Text(e.option.toString()), votes: e.totalVotesCountPollOption!.toInt());
+                }).toList(),
+                pollTitle: const SizedBox.shrink(),
+                metaWidget: Text(' • Ends in ${timeago.format(endPollTime!,allowFromNow: true)}',style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                )),
+              ),
+            ),
+          if(post.isRepost == true)
+            InnerPost(outerPost: post,homeController: homeController),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //Comment
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const Icon(
+                    FeatherIcons.messageCircle,
+                    color: Colors.grey,
+                    size: 20,
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Text(
+                    post.commentCount.toString(),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+              //Heart
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  if(post.isLiked == true)
+                    const Icon(
+                      Icons.favorite,
+                      color: AppColors.primary,
+                      size: 20,
+                    ),
+                  if(post.isLiked == false || post.isLiked == null)
+                    const Icon(
+                      FeatherIcons.heart,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Text(
+                    post.likeCount.toString().split(".")[0],
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+              //Retweet
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  if(post.isRepost == true)
+                    const Icon(
+                      FeatherIcons.repeat,
+                      color: AppColors.primary,
+                      size: 20,
+                    ),
+                  if(post.isRepost == false || post.isRepost == null)
+                    const Icon(
+                      FeatherIcons.repeat,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Text(
+                    post.repostCount.toString(),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                width: 60,
+              ),
+              //Share
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      await Share.share('https://app.staging.wayagram.ng/post/${post.id}', subject: 'Wayagram Post');
+                    },
+                    child: const Icon(
+                      Icons.share,
+                      color: Colors.grey,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
     );
   }
 
@@ -437,6 +465,7 @@ class InnerPost extends StatelessWidget{
   final HomeController homeController;
   @override
   Widget build(BuildContext context) {
+
     var uniqueId = UniqueKey().toString();
     var post = outerPost.originalOwner!;
     var pollEnded = false;
