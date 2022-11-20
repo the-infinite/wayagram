@@ -136,22 +136,7 @@ class AuthController extends GetxController {
         isLogin = false;
         buttonMessage = "Okay";
       }
-      AppOverlay.showInfoDialog(
-        title: 'Account Creation Failed',
-        content: message,
-        buttonText: buttonMessage,
-        onPressed: () {
-          if(response.isSuccessful){
-            Get.toNamed(VerifyOTP.route);
-          }else{
-            if(isLogin){
-              Get.toNamed(SignIn.route);
-            }else{
-              Get.back();
-            }
-          }
-        },
-      );
+      Get.snackbar("Account Creation Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       Get.toNamed(VerifyOTP.route);
     }
@@ -161,9 +146,7 @@ class AuthController extends GetxController {
     var message = "";
     var buttonMessage = "";
     var isLogin = true;
-    print(_signUpNormalUser["phoneNumber"]);
     ApiResponse response = await userRepo.signUpNormalUser(_signUpNormalUser);
-    print(response.message);
     if(!response.isSuccessful){
       if(response.message.toString().contains("This email already exists")) {
         message = "This email is already in Use, Please enter another email or log in";
@@ -178,22 +161,7 @@ class AuthController extends GetxController {
         isLogin = false;
         buttonMessage = "Okay";
       }
-      AppOverlay.showInfoDialog(
-        title: 'Account Creation Failed',
-        content: message,
-        buttonText: buttonMessage,
-        onPressed: () {
-          if(response.isSuccessful){
-            Get.toNamed(VerifyOTP.route);
-          }else{
-            if(isLogin){
-              Get.toNamed(SignIn.route);
-            }else{
-              Get.back();
-            }
-          }
-        },
-      );
+      Get.snackbar("Account Creation Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       Get.toNamed(VerifyOTP.route);
     }
@@ -223,14 +191,7 @@ class AuthController extends GetxController {
         message = "An Error Occurred";
         buttonMessage = "Okay";
       }
-      AppOverlay.showInfoDialog(
-        title: 'Sign In Failed',
-        content: message,
-        buttonText: buttonMessage,
-        onPressed: () {
-          Get.back();
-        },
-      );
+      Get.snackbar("Sign In Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       var data = response.data as LogInModelEntity;
       MyPref.authToken.val = data.token.toString();
@@ -246,14 +207,7 @@ class AuthController extends GetxController {
     var isLogin = true;
     ApiResponse response = await userRepo.signIn(_signInFirst);
     if(!response.isSuccessful){
-      AppOverlay.showInfoDialog(
-        title: 'An Error Occurred',
-        content: "Please try again",
-        buttonText: buttonMessage,
-        onPressed: () {
-          Get.back();
-        },
-      );
+      Get.snackbar("An Error Occurred", "Please try again",backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       var data = response.data as LogInModelEntity;
       MyPref.authToken.val = data.token.toString();
@@ -276,6 +230,7 @@ class AuthController extends GetxController {
           Get.back();
         },
       );
+      Get.snackbar("Sign In Failed", "An Error Occured",backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
@@ -288,14 +243,7 @@ class AuthController extends GetxController {
     ApiResponse response = await userRepo.getFullUserProfile(userID);
     if(!response.isSuccessful){
       MyPref.authToken.val = "";
-      AppOverlay.showInfoDialog(
-        title: 'An Error Occurred',
-        content: "Please try again",
-        buttonText: "Okay",
-        onPressed: () {
-          Get.back();
-        },
-      );
+      Get.snackbar("An Error Occurred", "Please try again",backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       //var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
@@ -317,14 +265,8 @@ class AuthController extends GetxController {
     var message = "";
     var buttonMessage = "";
     if(!response.isSuccessful){
-      AppOverlay.showInfoDialog(
-        title: 'OTP Verification Failed',
-        content: response.message.toString().toLowerCase() == "record with provided input not found" ? "Incorrect OTP Entered" : "An Error Occurred",
-        buttonText: "Okay",
-        onPressed: () {
-          Get.back();
-        },
-      );
+      message = response.message.toString().toLowerCase() == "record with provided input not found" ? "Incorrect OTP Entered" : "An Error Occurred";
+      Get.snackbar("OTP Verification Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       await signInFirst();
       //Get.toNamed(CreatePIN.route);

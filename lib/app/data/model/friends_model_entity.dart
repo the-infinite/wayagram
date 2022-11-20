@@ -8,7 +8,6 @@ class FriendsModelEntity {
 	int? following;
 	int? followers;
 	List<FriendsModelFriends>? friends;
-  
   FriendsModelEntity();
 
   factory FriendsModelEntity.fromJson(Map<String, dynamic> json) => $FriendsModelEntityFromJson(json);

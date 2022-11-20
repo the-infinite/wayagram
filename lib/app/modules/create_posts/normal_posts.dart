@@ -79,7 +79,8 @@ class _CreatePostsState extends State<CreatePosts> {
                     title: 'Send',
                     onPressed: () async {
                       var hashtags = [];
-                      exp.allMatches(textController.text).forEach((match){
+                      await Future.forEach(exp.allMatches(textController.text), (element){
+                        var match = element as RegExpMatch;
                         hashtags.add(match.group(0)!.substring(1));
                       });
                       Map<String, dynamic> body = {

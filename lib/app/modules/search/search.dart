@@ -126,7 +126,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
                           //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
-                            future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${searchController.text.replaceAll("#", "")}", true),
+                            future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${searchController.text.replaceAll("#", "").replaceAll("@","")}", true),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 final posts = SearchHashtagsModel.listFromJson(snapshot.data!.data);
@@ -186,7 +186,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                       ),
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
-                            future: controller.searchPost(searchController.text.replaceAll("#", "")),
+                            future: controller.searchPost(searchController.text.replaceAll("#", "").replaceAll("@","")),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 //final posts = snapshot.data!.data as List<AllPostsEntity>;
@@ -212,7 +212,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                       ),
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
-                            future: controller.searchPeople(searchController.text.replaceAll("#", "")),
+                            future: controller.searchPeople(searchController.text.replaceAll("#", "").replaceAll("@","")),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
@@ -249,7 +249,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                       ),
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
-                            future: controller.searchGroups(searchController.text.replaceAll("#", "")),
+                            future: controller.searchGroups(searchController.text.replaceAll("#", "").replaceAll("@","")),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
@@ -274,7 +274,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                       ),
                       SingleChildScrollView(
                         child: FutureBuilder<ApiResponse>(
-                            future: controller.searchPages(searchController.text.replaceAll("#", "")),
+                            future: controller.searchPages(searchController.text.replaceAll("#", "").replaceAll("@","")),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                 //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;

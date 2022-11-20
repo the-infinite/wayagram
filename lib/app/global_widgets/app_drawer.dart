@@ -11,6 +11,8 @@ import 'package:wayagram/app/modules/multiplexor/multiplexor.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
 import '../controllers/home_controller.dart';
+import '../data/model/followers_model_entity.dart';
+import '../data/model/following_model_entity.dart';
 import '../data/model/friends_model_entity.dart';
 import '../data/model/full_user_profile_entity.dart';
 import '../data/model/profile_model_entity.dart';
@@ -54,15 +56,25 @@ class _AppDrawerState extends State<AppDrawer> {
     var accountNumber = '';
     var bankName = '';
     //var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
-    if(MyPref.friends.val.isNotEmpty){
-      var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
-      followers = friends.followers!;
-      following = friends.following!;
-    }
+    //if(MyPref.friends.val.isNotEmpty){
+      //var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
+      //followers = friends.followers!;
+      //following = friends.following!;
+   // }
     if(MyPref.account.val.isNotEmpty){
       var account = AccountModelEntity.fromJson(jsonDecode(MyPref.account.val));
       accountNumber = account.accountNumber!;
       bankName = account.bankName!;
+    }
+
+    if(MyPref.followers.val.isNotEmpty) {
+      var follower = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));
+      followers = follower.followers!.length;
+    }
+
+    if(MyPref.following.val.isNotEmpty) {
+      var follow = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
+      following = follow.following!.length;
     }
 
     var controller = Get.find<HomeController>();

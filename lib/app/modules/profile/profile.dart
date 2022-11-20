@@ -92,6 +92,12 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
               followingCount = following.following!.length;
             }
 
+            if(MyPref.friends.val.isNotEmpty){
+              //var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));
+              //followersCount = friends.followers!;
+              //followingCount = friends.following!;
+            }
+
             if (kDebugMode) {
               print("Profile ID ${fullProfile.id}");
               print("User ID ${fullProfile.userId}");
