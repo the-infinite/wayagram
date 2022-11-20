@@ -23,15 +23,22 @@ import 'package:dio/dio.dart' as dio;
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 
-class CreatePosts extends StatelessWidget {
+class CreatePosts extends StatefulWidget {
   const CreatePosts({Key? key}) : super(key: key);
 
   @override
+  State<CreatePosts> createState() => _CreatePostsState();
+}
+
+class _CreatePostsState extends State<CreatePosts> {
+  final ImagePicker _imagePicker = ImagePicker();
+  var textController = TextEditingController();
+  List<String> images = [];
+  var postID = "";
+  RegExp exp = RegExp(r"\B#\w\w+");
+
+  @override
   Widget build(BuildContext context) {
-    final ImagePicker _imagePicker = ImagePicker();
-    var textController = TextEditingController();
-    List<String> images = [];
-    var postID = "";
 
     /*images.removeAt(index);
      controller.update();*/
@@ -71,10 +78,15 @@ class CreatePosts extends StatelessWidget {
                   child: AppButton(
                     title: 'Send',
                     onPressed: () async {
+                      var hashtags = [];
+                      exp.allMatches(textController.text).forEach((match){
+                        hashtags.add(match.group(0)!.substring(1));
+                      });
                       Map<String, dynamic> body = {
                         'description': textController.text,
                         'profile_id': fullProfile.id,
-                        'type': 'user'
+                        'type': 'user',
+                        'hashtags': hashtags.join(","),
                       };
                       if(images.isNotEmpty){
                         body['images'] = await dio.MultipartFile.fromFile(
