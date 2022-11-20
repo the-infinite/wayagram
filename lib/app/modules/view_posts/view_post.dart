@@ -88,16 +88,25 @@ class ViewPost extends StatelessWidget {
             width: double.infinity,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: Get.width*0.008, vertical: Get.height*0.005),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Post(
-                    post: post,
-                    fullProfile: fullProfile,
-                    homeController: controller,
-                    //hasBorder: false,
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Post(
+                      post: post,
+                      fullProfile: fullProfile,
+                      homeController: controller,
+                      //hasBorder: false,
+                    ),
+                    const SizedBox(height: 10,),
+                    CommentPost(
+                      post: post,
+                      fullProfile: fullProfile,
+                      homeController: controller,
+                      //hasBorder: false,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -149,7 +158,6 @@ class ViewPost extends StatelessWidget {
               ],
             ),
           ),
-          resizeToAvoidBottomInset: true,
         );
       }),
     );

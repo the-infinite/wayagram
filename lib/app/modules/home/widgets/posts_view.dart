@@ -151,8 +151,8 @@ class Post extends StatelessWidget{
                   }
                 },
                 child: SizedBox(
-                  width: 50,
-                  height: 50,
+                  width: Get.width * 0.13,
+                  height: Get.width * 0.13,
                   child: IconButton(
                     icon: AppAvatar(
                       imgUrl: post.profile!= null ?  post.profile!.avatar.toString() : "",
@@ -501,8 +501,8 @@ class InnerPost extends StatelessWidget{
           Row(
             children: [
               SizedBox(
-                width: 50,
-                height: 50,
+                width: Get.width * 0.13,
+                height: Get.width * 0.13,
                 child: IconButton(
                   icon: AppAvatar(
                     imgUrl: post.profile!.avatar.toString(),
@@ -600,6 +600,246 @@ class InnerPost extends StatelessWidget{
           ),
         ],
       ),
+    );
+  }
+
+}
+
+class CommentPost extends StatelessWidget{
+  const CommentPost({
+    Key? key,
+    required this.fullProfile,
+    required this.homeController,
+    required this.post,
+    this.userID,
+    this.hasBorder = true,
+  }) : super(key: key);
+
+  final FullUserProfileEntity fullProfile;
+  final HomeController homeController;
+  final AllPostsEntity post;
+  final String? userID;
+  final bool hasBorder;
+
+  @override
+  Widget build(BuildContext context) {
+    var isCurrentUserPost = false;
+    var time = DateTime.parse(post.createdAt!);
+    var endPollTime = (post.isPoll == true) ? DateTime.parse(post.poll!.endDate.toString()) : null;
+    List<String> imageUrls = [];
+    for (var element in post.postImages!) {
+      imageUrls.add(element.imageURL.toString());
+    }
+    if(userID!=null){
+      if(post.profile!.userId != fullProfile.userId){
+        return const SizedBox.shrink();
+      }
+    }
+    if(post.profile == null) {
+      return const SizedBox.shrink();
+    }
+    if(fullProfile.userId!=null){
+      if(post.profile!.userId == fullProfile.userId) {
+        isCurrentUserPost = true;
+      }
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: (){
+            if(fullProfile.userId!=null){
+              if(post.profile!.userId == fullProfile.userId) {
+                Get.toNamed(Profile.route);
+              }else{
+                Get.toNamed(PostProfile.route,arguments: post);
+              }
+            }else{
+              Get.toNamed(PostProfile.route,arguments: post);
+            }
+          },
+          child: SizedBox(
+            width: Get.width * 0.13,
+            height: Get.width * 0.13,
+            child: IconButton(
+              icon: AppAvatar(
+                imgUrl: post.profile!= null ?  post.profile!.avatar.toString() : "",
+                radius: 45,
+              ),
+              onPressed: null,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+            decoration: hasBorder ? BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(10),
+            ) : null,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: Get.height * 0.01),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: (){
+
+                        },
+                        child: Row(
+                          //crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              post.profile!.displayName.toString(),
+                              style: TextStyle(
+                                color: Colors.black ,
+                                fontSize: Get.width * 0.035,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(width: Get.width * 0.01,),
+                            Text(
+                              "@${post.profile!.username}",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: Get.width * 0.03,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Wrap(
+                          alignment: WrapAlignment.end,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(
+                              timeago.format(time),
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: Get.width * 0.03,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
+                    child: HashTagText(
+                      text: post.description.toString(),
+                      decoratedStyle: const TextStyle(
+                        color: Colors.blue,
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      basicStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      onTap: (text) {
+                        homeController.defaultSearchValue = text;
+                        Get.toNamed(Search.route);
+                      },
+                      decorateAtSign: true,
+                    )
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      //Comment
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Icon(
+                            FeatherIcons.messageCircle,
+                            color: Colors.grey,
+                            size: 18,
+                          ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            post.commentCount.toString(),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(width: Get.width * 0.05,),
+                      //Heart
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          if(post.isLiked == true)
+                            const Icon(
+                              Icons.favorite,
+                              color: AppColors.primary,
+                              size: 18,
+                            ),
+                          if(post.isLiked == false || post.isLiked == null)
+                            const Icon(
+                              FeatherIcons.heart,
+                              color: Colors.grey,
+                              size: 18,
+                            ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            post.likeCount.toString().split(".")[0],
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
