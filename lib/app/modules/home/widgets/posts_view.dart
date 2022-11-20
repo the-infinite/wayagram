@@ -94,12 +94,14 @@ class CommentPostsView extends StatelessWidget{
     Key? key,
     this.isLoading = false,
     this.posts,
-    this.userID
+    this.userID,
+    this.onReplyClick,
   }) : super(key: key);
 
   final bool isLoading;
   final List<comment.CommentModel>? posts;
   final String? userID;
+  final Function(String id, String username)? onReplyClick;
   @override
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
@@ -136,6 +138,11 @@ class CommentPostsView extends StatelessWidget{
           fullProfile: fullProfile,
           homeController: homeController,
           userID: userID,
+          onReplyClick: (id, username) {
+            if(onReplyClick != null){
+              onReplyClick!(id, username);
+            }
+          },
         );
       },
     );
@@ -227,7 +234,7 @@ class Post extends StatelessWidget{
                   children: [
                     Text(
                       post.profile!.displayName.toString(),
-                      style: TextStyle(
+                      style: AppTextStyle.bodyText1.copyWith(
                         color: Colors.black ,
                         fontSize: Get.width * 0.04,
                         fontWeight: FontWeight.w600,
@@ -236,7 +243,7 @@ class Post extends StatelessWidget{
                     SizedBox(width: Get.width * 0.01,),
                     Text(
                       "@${post.profile!.username}",
-                      style: TextStyle(
+                      style: AppTextStyle.bodyText1.copyWith(
                         color: Colors.grey,
                         fontSize: Get.width * 0.035,
                         fontWeight: FontWeight.normal,
@@ -252,7 +259,7 @@ class Post extends StatelessWidget{
                   children: [
                     Text(
                       timeago.format(time),
-                      style: TextStyle(
+                      style: AppTextStyle.bodyText1.copyWith(
                         color: Colors.grey,
                         fontSize: Get.width * 0.03,
                         fontWeight: FontWeight.normal,
@@ -328,12 +335,12 @@ class Post extends StatelessWidget{
               padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
               child: HashTagText(
                 text: post.description.toString(),
-                decoratedStyle: const TextStyle(
+                decoratedStyle: AppTextStyle.bodyText1.copyWith(
                   color: Colors.blue,
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                 ),
-                basicStyle: const TextStyle(
+                basicStyle: AppTextStyle.bodyText1.copyWith(
                   color: Colors.black,
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
@@ -505,7 +512,6 @@ class Post extends StatelessWidget{
       ),
     );
   }
-
 }
 
 class InnerPost extends StatelessWidget{
@@ -564,7 +570,7 @@ class InnerPost extends StatelessWidget{
                 children: [
                   Text(
                     post.profile!.displayName.toString(),
-                    style: const TextStyle(
+                    style: AppTextStyle.bodyText1.copyWith(
                       color: Colors.black ,
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
@@ -572,7 +578,7 @@ class InnerPost extends StatelessWidget{
                   ),
                   Text(
                     "@${post.profile!.username}",
-                    style: const TextStyle(
+                    style: AppTextStyle.bodyText1.copyWith(
                       color: Colors.grey,
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
@@ -589,12 +595,12 @@ class InnerPost extends StatelessWidget{
               padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
               child: HashTagText(
                 text: post.description.toString(),
-                decoratedStyle: const TextStyle(
+                decoratedStyle: AppTextStyle.bodyText1.copyWith(
                   color: Colors.blue,
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                 ),
-                basicStyle: const TextStyle(
+                basicStyle: AppTextStyle.bodyText1.copyWith(
                   color: Colors.black,
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
@@ -661,6 +667,7 @@ class CommentPost extends StatelessWidget{
     required this.post,
     this.userID,
     this.hasBorder = true,
+    this.onReplyClick
   }) : super(key: key);
 
   final FullUserProfileEntity fullProfile;
@@ -668,6 +675,7 @@ class CommentPost extends StatelessWidget{
   final comment.CommentModel post;
   final String? userID;
   final bool hasBorder;
+  final Function(String id, String username)? onReplyClick;
 
   @override
   Widget build(BuildContext context) {
@@ -764,12 +772,12 @@ class CommentPost extends StatelessWidget{
                     padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
                     child: HashTagText(
                       text: post.comment.toString(),
-                      decoratedStyle: const TextStyle(
+                      decoratedStyle: AppTextStyle.bodyText1.copyWith(
                         color: Colors.blue,
                         fontSize: 15,
                         fontWeight: FontWeight.normal,
                       ),
-                      basicStyle: const TextStyle(
+                      basicStyle: AppTextStyle.bodyText1.copyWith(
                         color: Colors.black,
                         fontSize: 15,
                         fontWeight: FontWeight.normal,
@@ -822,28 +830,35 @@ class CommentPost extends StatelessWidget{
                       ),
                       SizedBox(width: Get.width * 0.05,),
                       //Comment
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Icon(
-                            FeatherIcons.messageCircle,
-                            color: Colors.grey,
-                            size: 18,
-                          ),
-                          const SizedBox(
-                            width: 2,
-                          ),
-                          Text(
-                            "0",
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
+                      InkWell(
+                        onTap: (){
+                          if(onReplyClick != null){
+                            onReplyClick!(post.id.toString(), post.profile!.username.toString());
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 10,
                             ),
-                          ),
-                        ],
+                            const Icon(
+                              FeatherIcons.messageCircle,
+                              color: Colors.grey,
+                              size: 18,
+                            ),
+                            const SizedBox(
+                              width: 2,
+                            ),
+                            Text(
+                              "0",
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
 
                       const SizedBox(

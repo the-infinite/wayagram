@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,14 +30,24 @@ import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_input.dart';
 import '../home/widgets/posts_view.dart';
 
-class ViewPost extends StatelessWidget {
+class ViewPost extends StatefulWidget {
   const ViewPost({Key? key,required this.post}) : super(key: key);
 
   final AllPostsEntity post;
+
+  @override
+  State<ViewPost> createState() => _ViewPostState();
+}
+
+class _ViewPostState extends State<ViewPost> {
+  var commentController = TextEditingController();
+  var parentID = "";
+  var usernameToReplyTo = "";
+
   @override
   Widget build(BuildContext context) {
-    var commentController = TextEditingController();
-    print(post.id);
+
+    //print(post.id);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -84,25 +95,32 @@ class ViewPost extends StatelessWidget {
           body: SizedBox(
             width: double.infinity,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: Get.width*0.008, vertical: Get.height*0.005),
+              padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Post(
-                      post: post,
+                      post: widget.post,
                       fullProfile: fullProfile,
                       homeController: controller,
                       //hasBorder: false,
                     ),
                     FutureBuilder<ApiResponse>(
-                        future: controller.getData("/wayagram-service/all-posts/post-comments?post_id=${post.id}&page=1&limit=10", true),
+                        future: controller.getData("/wayagram-service/all-posts/post-comments?post_id=${widget.post.id}&page=1&limit=10", true),
                         builder: (context, snapshot) {
-                          var savedPosts = ReadWriteValue('wayagram_comment_${post.id}', '', MyPref.box);
+                          var savedPosts = ReadWriteValue('wayagram_comment_${widget.post.id}', '', MyPref.box);
                           if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                             final posts = CommentModel.listFromJson(snapshot.data!.data['data']);
                             savedPosts.val = jsonEncode(posts);
-                            return CommentPostsView(posts: posts);
+                            return CommentPostsView(
+                              posts: posts,
+                              onReplyClick: (id, username) {
+                                parentID = id;
+                                usernameToReplyTo = username;
+                                controller.update(["comment_page"]);
+                              },
+                            );
                           } else if(savedPosts.val.isNotEmpty){
                             var posts = CommentModel.listFromJson(jsonDecode(savedPosts.val));
                             return CommentPostsView(posts: posts);
@@ -128,6 +146,47 @@ class ViewPost extends StatelessWidget {
                   height: 1.0,
                 ),
                 SizedBox(height: Get.height*0.008),
+                if(usernameToReplyTo.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: Get.width*0.035),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: Get.width*0.8,
+                          child: HashTagText(
+                            text: "Replying to @$usernameToReplyTo",
+                            basicStyle: AppTextStyle.bodyText1.copyWith(
+                              color: Colors.black,
+                              fontSize: Get.textScaleFactor * 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                              color: Colors.blue,
+                              fontSize: Get.textScaleFactor * 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                            decorateAtSign: true,
+                          ),
+                        ),
+                        const Spacer(),
+                        InkWell(
+                          onTap: (){
+                            parentID = "";
+                            usernameToReplyTo = "";
+                            controller.update(["comment_page"]);
+                          },
+                          child: const Icon(Icons.cancel_rounded, color: Colors.grey),
+                        )
+                      ],
+                    ),
+                  ),
+                if(usernameToReplyTo.isNotEmpty)
+                  SizedBox(height: Get.height*0.008),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -151,7 +210,24 @@ class ViewPost extends StatelessWidget {
                     AppButton(
                       title: 'Send',
                       onPressed: () async {
-
+                        if(commentController.text.isNotEmpty){
+                          var data = {
+                            "post_id": widget.post.id,
+                            "comment": commentController.text,
+                            "profile_id": fullProfile.id,
+                            "type": "user"
+                          };
+                          var response = await controller.postData(data,"/wayagram-service/all-posts/comment-create");
+                          if(response.isSuccessful){
+                            commentController.clear();
+                            controller.update(["comment_page"]);
+                            controller.getPosts.then((value) {
+                              controller.update(["home_tab"]);
+                            });
+                          }else{
+                            AppOverlay.showErrorSnackBar(title: "Error", content: "Unable to comment, please try again later");
+                          }
+                        }
                       },
                       borderRadius: 10,
                       fontColor: AppColors.button,

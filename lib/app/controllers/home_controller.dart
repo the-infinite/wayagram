@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -219,7 +220,7 @@ class HomeController extends GetxController {
 
   Future<ApiResponse> postData(dynamic body,String url) async {
     final response = await userRepo.postData(url, body);
-    print(response.message);
+    debugPrint(response.message);
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
       update(['profile_page','home','settings']);
       getAllUserData().then((value) => update(['profile_page','home','settings']));

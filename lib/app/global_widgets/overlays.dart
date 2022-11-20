@@ -182,4 +182,12 @@ class AppOverlay {
       context: Get.context!,
     );
   }
+
+  static void showErrorSnackBar({String title = "Error",String content = "Something Went Wrong"}) {
+    Get.snackbar(title, content, backgroundColor: Colors.red, colorText: Colors.white);
+  }
+
+  static void showSuccessSnackBar({String title = "Success",String content = "Your request was successful"}) {
+    Get.snackbar(title, content, backgroundColor: Colors.green, colorText: Colors.white);
+  }
 }
