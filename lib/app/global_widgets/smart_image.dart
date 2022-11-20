@@ -42,34 +42,28 @@ class _SmartImageState extends State<SmartImage> {
 
   @override
   void initState() {
-    super.initState();
     if(isVideo()){
       if(networkImage()){
-        DefaultCacheManager().getSingleFile(widget.src).then((value){
-          controller = VideoPlayerController.file(value);
-          _chewieController = ChewieController(
-            videoPlayerController: controller,
-            autoInitialize: true,
-            autoPlay: false,
-            allowFullScreen: false,
-            aspectRatio: aspectRatio,
-            showControls: widget.isSlideShow,
-            deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
-            materialProgressColors: ChewieProgressColors(
-              playedColor: Colors.purple,
-              handleColor: Colors.purple,
-              backgroundColor: Colors.grey,
-              bufferedColor: Colors.purple[100]!,
-            ),
-            placeholder: Container(
-              color: Colors.black,
-            ),
-          );
-          videoLoaded = true;
-          setState(() {
-
-          });
-        });
+        controller = VideoPlayerController.network(widget.src);
+        _chewieController = ChewieController(
+          videoPlayerController: controller,
+          autoInitialize: true,
+          autoPlay: false,
+          allowFullScreen: false,
+          aspectRatio: aspectRatio,
+          showControls: widget.isSlideShow,
+          deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
+          materialProgressColors: ChewieProgressColors(
+            playedColor: Colors.purple,
+            handleColor: Colors.purple,
+            backgroundColor: Colors.grey,
+            bufferedColor: Colors.purple[100]!,
+          ),
+          placeholder: Container(
+            color: Colors.black,
+          ),
+        );
+        videoLoaded = true;
       }else{
         controller = VideoPlayerController.file(File(widget.src));
         _chewieController = ChewieController(
@@ -91,11 +85,9 @@ class _SmartImageState extends State<SmartImage> {
           ),
         );
         videoLoaded = true;
-        setState(() {
-
-        });
       }
     }
+    super.initState();
   }
 
   @override
@@ -177,7 +169,6 @@ UrlType getUrlType(String url) {
   if (typeString == "mp4" || typeString == "avi" || typeString == "mov" || typeString == "mkv" || typeString == "flv" || typeString == "wmv" || typeString == "3gp" || typeString == "webm" ) {
     return UrlType.VIDEO;
   } else {
-    print(typeString);
     return UrlType.UNKNOWN;
   }
 }

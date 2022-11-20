@@ -125,7 +125,7 @@ class CreatePosts extends StatelessWidget {
                             postID = "";
                             //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                             await controller.getPosts;
-                            controller.update(['profile_page','home_page','home']);
+                            controller.update(['profile_page','home_tab','home']);
                             //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                             Get.back();
                           }
