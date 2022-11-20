@@ -768,32 +768,6 @@ class CommentPost extends StatelessWidget{
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      //Comment
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Icon(
-                            FeatherIcons.messageCircle,
-                            color: Colors.grey,
-                            size: 18,
-                          ),
-                          const SizedBox(
-                            width: 2,
-                          ),
-                          Text(
-                            post.commentCount.toString(),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(width: Get.width * 0.05,),
                       //Heart
                       Row(
                         children: [
@@ -817,6 +791,31 @@ class CommentPost extends StatelessWidget{
                           ),
                           Text(
                             post.likeCount.toString().split(".")[0],
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: Get.width * 0.05,),
+                      //Comment
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Icon(
+                            FeatherIcons.messageCircle,
+                            color: Colors.grey,
+                            size: 18,
+                          ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            post.commentCount.toString(),
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 14,

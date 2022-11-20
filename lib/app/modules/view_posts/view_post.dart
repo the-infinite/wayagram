@@ -98,7 +98,24 @@ class ViewPost extends StatelessWidget {
                       homeController: controller,
                       //hasBorder: false,
                     ),
-                    const SizedBox(height: 10,),
+                    CommentPost(
+                      post: post,
+                      fullProfile: fullProfile,
+                      homeController: controller,
+                      //hasBorder: false,
+                    ),
+                    CommentPost(
+                      post: post,
+                      fullProfile: fullProfile,
+                      homeController: controller,
+                      //hasBorder: false,
+                    ),
+                    CommentPost(
+                      post: post,
+                      fullProfile: fullProfile,
+                      homeController: controller,
+                      //hasBorder: false,
+                    ),
                     CommentPost(
                       post: post,
                       fullProfile: fullProfile,
