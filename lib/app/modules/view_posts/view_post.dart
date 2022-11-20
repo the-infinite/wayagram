@@ -115,15 +115,42 @@ class _ViewPostState extends State<ViewPost> {
                             savedPosts.val = jsonEncode(posts);
                             return CommentPostsView(
                               posts: posts,
-                              onReplyClick: (id, username) {
-                                parentID = id;
-                                usernameToReplyTo = username;
-                                controller.update(["comment_page"]);
+                              onReplyClick: (id, username) async {
+                                if(parentID.isEmpty || usernameToReplyTo == username){
+                                  parentID = id;
+                                  usernameToReplyTo = username;
+                                  controller.update(["comment_page"]);
+                                }else{
+                                  parentID = "";
+                                  usernameToReplyTo = "";
+                                  controller.update(["comment_page"]);
+                                  await Future.delayed(const Duration(milliseconds: 300));
+                                  parentID = id;
+                                  usernameToReplyTo = username;
+                                  controller.update(["comment_page"]);
+                                }
                               },
                             );
                           } else if(savedPosts.val.isNotEmpty){
                             var posts = CommentModel.listFromJson(jsonDecode(savedPosts.val));
-                            return CommentPostsView(posts: posts);
+                            return CommentPostsView(
+                              posts: posts,
+                              onReplyClick: (id, username) async {
+                                if(parentID.isEmpty || usernameToReplyTo == username){
+                                  parentID = id;
+                                  usernameToReplyTo = username;
+                                  controller.update(["comment_page"]);
+                                }else{
+                                  parentID = "";
+                                  usernameToReplyTo = "";
+                                  controller.update(["comment_page"]);
+                                  await Future.delayed(const Duration(milliseconds: 300));
+                                  parentID = id;
+                                  usernameToReplyTo = username;
+                                  controller.update(["comment_page"]);
+                                }
+                              },
+                            );
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
                               return const SizedBox.shrink();
@@ -146,45 +173,48 @@ class _ViewPostState extends State<ViewPost> {
                   height: 1.0,
                 ),
                 SizedBox(height: Get.height*0.008),
-                if(usernameToReplyTo.isNotEmpty)
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: Get.width*0.035),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: Get.width*0.8,
-                          child: HashTagText(
-                            text: "Replying to @$usernameToReplyTo",
-                            basicStyle: AppTextStyle.bodyText1.copyWith(
-                              color: Colors.black,
-                              fontSize: Get.textScaleFactor * 16,
-                              fontWeight: FontWeight.normal,
+                AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.fastOutSlowIn,
+                    child: usernameToReplyTo.isEmpty ? const SizedBox.shrink() : Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width*0.035),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: Get.width*0.8,
+                            child: HashTagText(
+                              text: "Replying to @$usernameToReplyTo",
+                              basicStyle: AppTextStyle.bodyText1.copyWith(
+                                color: Colors.black,
+                                fontSize: Get.textScaleFactor * 16,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                color: Colors.blue,
+                                fontSize: Get.textScaleFactor * 16,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              decorateAtSign: true,
                             ),
-                            decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                              color: Colors.blue,
-                              fontSize: Get.textScaleFactor * 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                            decorateAtSign: true,
                           ),
-                        ),
-                        const Spacer(),
-                        InkWell(
-                          onTap: (){
-                            parentID = "";
-                            usernameToReplyTo = "";
-                            controller.update(["comment_page"]);
-                          },
-                          child: const Icon(Icons.cancel_rounded, color: Colors.grey),
-                        )
-                      ],
-                    ),
-                  ),
+                          const Spacer(),
+                          InkWell(
+                            onTap: (){
+                              parentID = "";
+                              usernameToReplyTo = "";
+                              controller.update(["comment_page"]);
+                            },
+                            child: const Icon(Icons.cancel_rounded, color: Colors.grey),
+                          )
+                        ],
+                      ),
+                    )
+                ),
                 if(usernameToReplyTo.isNotEmpty)
                   SizedBox(height: Get.height*0.008),
                 Row(
@@ -217,8 +247,12 @@ class _ViewPostState extends State<ViewPost> {
                             "profile_id": fullProfile.id,
                             "type": "user"
                           };
+                          if(parentID.isNotEmpty){
+                            data["parent_id"] = parentID;
+                          }
                           var response = await controller.postData(data,"/wayagram-service/all-posts/comment-create");
                           if(response.isSuccessful){
+                            widget.post.commentCount = (int.parse(widget.post.commentCount.toString()) + 1).toString();
                             commentController.clear();
                             controller.update(["comment_page"]);
                             controller.getPosts.then((value) {
