@@ -105,7 +105,7 @@ class VerifyOTP extends GetView<AuthController> {
                     if(controller.otp.text.length == 6) {
                       await controller.confirmOTP();
                     }else{
-                      AppOverlay.showInfoDialog(title: 'Error', content: 'Please enter a valid OTP');
+                      Get.snackbar("Error", "Please Enter a valid otp",backgroundColor: Colors.red, colorText: Colors.white);
                     }
                   },
                   borderRadius: 10,

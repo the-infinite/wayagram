@@ -17,6 +17,7 @@ import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
 import '../data/providers/my_pref.dart';
 import '../global_widgets/overlays.dart';
+import '../modules/forgot_password/enter_otp.dart';
 import '../modules/home/home.dart';
 import '../modules/profile/confirm_pin.dart';
 import '../modules/profile/create_pin.dart';
@@ -200,7 +201,7 @@ class AuthController extends GetxController {
 
   //Sign In
   Map<String, dynamic> get _signIn => {
-    'emailOrPhoneNumber': GetUtils.isEmail(emailOrPhone.text) ?  emailOrPhone.text : emailOrPhone.text.length == 10 ? "234${emailOrPhone.text}" : "234${emailOrPhone.text.substring(1,emailOrPhone.text.length)}",
+    'emailOrPhoneNumber': GetUtils.isEmail(emailOrPhone.text) ?  emailOrPhone.text : emailOrPhone.text.startsWith("+234") ? emailOrPhone.text.substring(1,emailOrPhone.text.length) : emailOrPhone.text.startsWith("234") ? emailOrPhone.text : emailOrPhone.text.length == 10 ? "234${emailOrPhone.text}" : "234${emailOrPhone.text.substring(1,emailOrPhone.text.length)}",
     'password': password.text,
   };
 
@@ -279,8 +280,7 @@ class AuthController extends GetxController {
       var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
       //getAllUserData();
-      Get.toNamed(Home.route);
-      //Get.toNamed(Home.route);
+      Get.offAllNamed(Home.route);
     }
   }
 
@@ -380,6 +380,77 @@ class AuthController extends GetxController {
     }else{
       Get.toNamed(ConfirmPIN.route);
       //Get.toNamed(SignIn.route);
+    }
+  }
+
+  //Reset Password
+  Future<void> getResetOtp({bool showOverlay = false}) async {
+    var message = "";
+    var buttonMessage = "";
+    ApiResponse? response;
+    if(GetUtils.isEmail(emailOrPhone.text)){
+      var data = emailOrPhone.text;
+      response = await userRepo.getData("/auth-service/api/v1/password/forgot-password/byEmail?email=$data",hasHeader: false,sso: false);
+    }else{
+      var data = emailOrPhone.text.startsWith("+234") ? emailOrPhone.text.substring(1,emailOrPhone.text.length) : emailOrPhone.text.startsWith("234") ? emailOrPhone.text : emailOrPhone.text.length == 10 ? "234${emailOrPhone.text}" : "234${emailOrPhone.text.substring(1,emailOrPhone.text.length)}";
+      response = await userRepo.getData("/auth-service/api/v1/password/forgot-password/byPhone?phoneNumber=$data",hasHeader: false,sso: false);
+    }
+    if(!response.isSuccessful){
+      if(response.message.toString().contains("Bad credentials")) {
+        message = "Check your details and try again";
+        buttonMessage = "Okay";
+      }
+      else{
+        message = "An Error Occurred";
+        buttonMessage = "Okay";
+      }
+      Get.snackbar("Error", message,backgroundColor: Colors.red, colorText: Colors.white);
+    }else{
+      if(showOverlay){
+        Get.snackbar("Success", "OTP Resent Successfully",backgroundColor: Colors.green, colorText: Colors.white);
+      }else{
+        Get.to(() => const EnterOTP());
+      }
+    }
+  }
+  Future<void> confirmResetPassword() async {
+    var data = "";
+    if(GetUtils.isEmail(emailOrPhone.text)){
+      data = emailOrPhone.text;
+    }else{
+      data = emailOrPhone.text.startsWith("+234") ? emailOrPhone.text.substring(1,emailOrPhone.text.length) : emailOrPhone.text.startsWith("234") ? emailOrPhone.text : emailOrPhone.text.length == 10 ? "234${emailOrPhone.text}" : "234${emailOrPhone.text.substring(1,emailOrPhone.text.length)}";
+    }
+    var body = {
+      "newPassword": password.text,
+      "otp": otp.text,
+      "phoneOrEmail": data
+    };
+
+    ApiResponse response = await userRepo.postData("/auth-service/api/v1/password/forgot-password", body);
+
+    var message = "";
+    var buttonMessage = "";
+    if(!response.isSuccessful){
+      if(response.message.toString().contains("is not valid")){
+        message = "Incorrect OTP Entered";
+        buttonMessage = "Okay";
+      } else if(response.message.toString().contains("Record with Provided input not Found For User")){
+        message = "User not found";
+        buttonMessage = "Okay";
+      }else if(response.message.toString().contains("New password cannot be same with old password")){
+        message = "New password cannot be same with old password";
+        buttonMessage = "Okay";
+      }else{
+        message = "An Error Occurred";
+        buttonMessage = "Okay";
+      }
+      Get.snackbar("Password Reset Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
+    }else{
+      Get.snackbar("Success", "Password Reset Successfully",backgroundColor: Colors.green, colorText: Colors.white);
+      password.clear();
+      otp.clear();
+      emailOrPhone.clear();
+      Navigator.popUntil(Get.context!, (route) => Get.currentRoute == SignIn.route);
     }
   }
 

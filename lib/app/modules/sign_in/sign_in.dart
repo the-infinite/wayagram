@@ -9,6 +9,7 @@ import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/page_input.dart';
+import '../forgot_password/enter_email.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
@@ -54,7 +55,7 @@ class SignIn extends GetView<AuthController> {
                         'Welcome Back',
                         style: AppTextStyle.headline4.copyWith(
                           color: Colors.black,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           fontSize: 18,
                         ),
                         textAlign: TextAlign.center,
@@ -103,7 +104,7 @@ class SignIn extends GetView<AuthController> {
                         title:
                         'Forgot Password?',
                         onPressed: () {
-                          //Get.toNamed(SignIn.route);
+                          Get.to(() => const EnterEmail());
                         },
                         borderRadius: 10,
                         bckgrndColor: AppColors.background,

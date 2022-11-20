@@ -88,6 +88,9 @@ class Validator {
   }
 
   static confirmPasswordValidation(String? val, String? confirmPassword) {
+    if(val!.isEmpty){
+      return 'Please re-enter your password';
+    }
     if (val != confirmPassword) {
       return 'Passwords do not match';
     }
