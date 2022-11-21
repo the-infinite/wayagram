@@ -40,9 +40,18 @@ class ViewPost extends StatefulWidget {
 }
 
 class _ViewPostState extends State<ViewPost> {
+  FocusNode inputNode = FocusNode();
   var commentController = TextEditingController();
   var parentID = "";
   var usernameToReplyTo = "";
+
+  void openKeyboard(){
+    FocusScope.of(context).requestFocus(inputNode);
+  }
+
+  void closeKeyboard(){
+    FocusScope.of(context).unfocus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +138,7 @@ class _ViewPostState extends State<ViewPost> {
                                   usernameToReplyTo = username;
                                   controller.update(["comment_page"]);
                                 }
+                                //openKeyboard();
                               },
                             );
                           } else if(savedPosts.val.isNotEmpty){
@@ -234,6 +244,7 @@ class _ViewPostState extends State<ViewPost> {
                           hintColor: Colors.grey.shade500,
                           maxLines: 1,
                           keyboardType: TextInputType.text,
+                          focusNode: inputNode,
                         ),
                       ),
                     ),
@@ -254,10 +265,16 @@ class _ViewPostState extends State<ViewPost> {
                           if(response.isSuccessful){
                             widget.post.commentCount = (int.parse(widget.post.commentCount.toString()) + 1).toString();
                             commentController.clear();
+                            if(parentID.isNotEmpty){
+                              controller.getCommentID = parentID;
+                              parentID = "";
+                              usernameToReplyTo = "";
+                            }
                             controller.update(["comment_page"]);
                             controller.getPosts.then((value) {
                               controller.update(["home_tab"]);
                             });
+                            closeKeyboard();
                           }else{
                             AppOverlay.showErrorSnackBar(title: "Error", content: "Unable to comment, please try again later");
                           }

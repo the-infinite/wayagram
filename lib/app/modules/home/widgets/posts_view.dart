@@ -6,10 +6,12 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_polls/flutter_polls.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
@@ -23,6 +25,7 @@ import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/app_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../../global_widgets/helpers/size.dart';
 import '../../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../profile/other_profile.dart';
 import '../../profile/post_profile.dart';
@@ -134,6 +137,7 @@ class CommentPostsView extends StatelessWidget{
         }
         var post = posts![index];
         return CommentPost(
+          key: ValueKey(post.id),
           post: post,
           fullProfile: fullProfile,
           homeController: homeController,
@@ -150,7 +154,7 @@ class CommentPostsView extends StatelessWidget{
 
 }
 
-class Post extends StatelessWidget{
+class Post extends StatefulWidget{
   const Post({
     Key? key,
     required this.fullProfile,
@@ -167,31 +171,36 @@ class Post extends StatelessWidget{
   final bool hasBorder;
 
   @override
+  State<Post> createState() => _PostState();
+}
+
+class _PostState extends State<Post> {
+  @override
   Widget build(BuildContext context) {
     var isCurrentUserPost = false;
-    var time = DateTime.parse(post.createdAt!);
-    var endPollTime = (post.isPoll == true) ? DateTime.parse(post.poll!.endDate.toString()) : null;
+    var time = DateTime.parse(widget.post.createdAt!);
+    var endPollTime = (widget.post.isPoll == true) ? DateTime.parse(widget.post.poll!.endDate.toString()) : null;
     List<String> imageUrls = [];
-    for (var element in post.postImages!) {
+    for (var element in widget.post.postImages!) {
       imageUrls.add(element.imageURL.toString());
     }
-    if(userID!=null){
-      if(post.profile!.userId != fullProfile.userId){
+    if(widget.userID!=null){
+      if(widget.post.profile!.userId != widget.fullProfile.userId){
         return const SizedBox.shrink();
       }
     }
-    if(post.profile == null) {
+    if(widget.post.profile == null) {
       return const SizedBox.shrink();
     }
-    if(fullProfile.userId!=null){
-      if(post.profile!.userId == fullProfile.userId) {
+    if(widget.fullProfile.userId!=null){
+      if(widget.post.profile!.userId == widget.fullProfile.userId) {
         isCurrentUserPost = true;
       }
     }
 
     return Container(
       margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-      decoration: hasBorder ? BoxDecoration(
+      decoration: widget.hasBorder ? BoxDecoration(
         color: Colors.white.withOpacity(.8),
         borderRadius: BorderRadius.circular(10),
       ) : null,
@@ -203,14 +212,14 @@ class Post extends StatelessWidget{
             children: [
               InkWell(
                 onTap: (){
-                  if(fullProfile.userId!=null){
-                    if(post.profile!.userId == fullProfile.userId) {
+                  if(widget.fullProfile.userId!=null){
+                    if(widget.post.profile!.userId == widget.fullProfile.userId) {
                       Get.toNamed(Profile.route);
                     }else{
-                      Get.toNamed(PostProfile.route,arguments: post);
+                      Get.toNamed(PostProfile.route,arguments: widget.post);
                     }
                   }else{
-                    Get.toNamed(PostProfile.route,arguments: post);
+                    Get.toNamed(PostProfile.route,arguments: widget.post);
                   }
                 },
                 child: SizedBox(
@@ -218,7 +227,7 @@ class Post extends StatelessWidget{
                   height: Get.width * 0.13,
                   child: IconButton(
                     icon: AppAvatar(
-                      imgUrl: post.profile!= null ?  post.profile!.avatar.toString() : "",
+                      imgUrl: widget.post.profile!= null ?  widget.post.profile!.avatar.toString() : "",
                       radius: 45,
                     ),
                     onPressed: null,
@@ -233,7 +242,7 @@ class Post extends StatelessWidget{
                   //crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      post.profile!.displayName.toString(),
+                      widget.post.profile!.displayName.toString(),
                       style: AppTextStyle.bodyText1.copyWith(
                         color: Colors.black ,
                         fontSize: Get.width * 0.04,
@@ -242,7 +251,7 @@ class Post extends StatelessWidget{
                     ),
                     SizedBox(width: Get.width * 0.01,),
                     Text(
-                      "@${post.profile!.username}",
+                      "@${widget.post.profile!.username}",
                       style: AppTextStyle.bodyText1.copyWith(
                         color: Colors.grey,
                         fontSize: Get.width * 0.035,
@@ -334,7 +343,7 @@ class Post extends StatelessWidget{
           Padding(
               padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
               child: HashTagText(
-                text: post.description.toString(),
+                text: widget.post.description.toString(),
                 decoratedStyle: AppTextStyle.bodyText1.copyWith(
                   color: Colors.blue,
                   fontSize: 16,
@@ -346,7 +355,7 @@ class Post extends StatelessWidget{
                   fontWeight: FontWeight.normal,
                 ),
                 onTap: (text) {
-                  homeController.defaultSearchValue = text;
+                  widget.homeController.defaultSearchValue = text;
                   Get.toNamed(Search.route);
                 },
                 decorateAtSign: true,
@@ -363,7 +372,7 @@ class Post extends StatelessWidget{
                 marginTop: 0,
               ),
             ),
-          if(post.isPoll == true && post.poll!.pollOptions!.length >= 2)
+          if(widget.post.isPoll == true && widget.post.poll!.pollOptions!.length >= 2)
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: FlutterPolls(
@@ -375,7 +384,7 @@ class Post extends StatelessWidget{
                 votedProgressColor: AppColors.primary,
                 votedBackgroundColor: Colors.grey.withOpacity(0.2),
                 leadingVotedProgessColor: AppColors.primary,
-                pollOptions: post.poll!.pollOptions!.map((e){
+                pollOptions: widget.post.poll!.pollOptions!.map((e){
                   return PollOption(title: Text(e.option.toString()), votes: e.totalVotesCountPollOption!.toInt());
                 }).toList(),
                 pollTitle: const SizedBox.shrink(),
@@ -385,8 +394,8 @@ class Post extends StatelessWidget{
                 )),
               ),
             ),
-          if(post.isRepost == true)
-            InnerPost(outerPost: post,homeController: homeController),
+          if(widget.post.isRepost == true)
+            InnerPost(outerPost: widget.post,homeController: widget.homeController),
           const SizedBox(
             height: 10,
           ),
@@ -408,7 +417,7 @@ class Post extends StatelessWidget{
                     width: 2,
                   ),
                   Text(
-                    post.commentCount.toString(),
+                    widget.post.commentCount.toString(),
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -423,23 +432,67 @@ class Post extends StatelessWidget{
                   const SizedBox(
                     width: 10,
                   ),
-                  if(post.isLiked == true)
-                    const Icon(
-                      Icons.favorite,
-                      color: AppColors.primary,
-                      size: 20,
+                  if(widget.post.isLiked == true)
+                    InkWell(
+                      onTap: () async {
+                        var body = {
+                          "post_id": widget.post.id,
+                          "profile_id": widget.fullProfile.id,
+                          "type": "user",
+                        };
+                        var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/unlike-post");
+                        if(response.isSuccessful){
+                          widget.post.isLiked = false;
+                          widget.post.likeCount = widget.post.likeCount! - 1;
+                          setState(() {
+
+                          });
+                          widget.homeController.getPosts.then((value) {
+                            //widget.homeController.update(["home_tab"]);
+                          });
+                        }else{
+                          AppOverlay.showErrorSnackBar(content: "Unable to un-like post, please try again later");
+                        }
+                      },
+                      child: const Icon(
+                        Icons.favorite,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
                     ),
-                  if(post.isLiked == false || post.isLiked == null)
-                    const Icon(
-                      FeatherIcons.heart,
-                      color: Colors.grey,
-                      size: 20,
+                  if(widget.post.isLiked == false || widget.post.isLiked == null)
+                    InkWell(
+                      onTap: () async {
+                        var body = {
+                          "post_id": widget.post.id,
+                          "profile_id": widget.fullProfile.id,
+                          "type": "user",
+                        };
+                        var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/like-post");
+                        if(response.isSuccessful){
+                          widget.post.isLiked = true;
+                          widget.post.likeCount = widget.post.likeCount! + 1;
+                          setState(() {
+
+                          });
+                          widget.homeController.getPosts.then((value) {
+                            //widget.homeController.update(["home_tab"]);
+                          });
+                        }else{
+                          AppOverlay.showErrorSnackBar(content: "Unable to like post, please try again later");
+                        }
+                      },
+                      child: const Icon(
+                        FeatherIcons.heart,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
                     ),
                   const SizedBox(
                     width: 2,
                   ),
                   Text(
-                    post.likeCount.toString().split(".")[0],
+                    widget.post.likeCount.toString().split(".")[0],
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -454,13 +507,13 @@ class Post extends StatelessWidget{
                   const SizedBox(
                     width: 10,
                   ),
-                  if(post.isRepost == true)
+                  if(widget.post.isRepost == true)
                     const Icon(
                       FeatherIcons.repeat,
                       color: AppColors.primary,
                       size: 20,
                     ),
-                  if(post.isRepost == false || post.isRepost == null)
+                  if(widget.post.isRepost == false || widget.post.isRepost == null)
                     const Icon(
                       FeatherIcons.repeat,
                       color: Colors.grey,
@@ -470,7 +523,7 @@ class Post extends StatelessWidget{
                     width: 2,
                   ),
                   Text(
-                    post.repostCount.toString(),
+                    widget.post.repostCount.toString(),
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -490,7 +543,7 @@ class Post extends StatelessWidget{
                   ),
                   InkWell(
                     onTap: () async {
-                      await Share.share('https://app.staging.wayagram.ng/post/${post.id}', subject: 'Wayagram Post');
+                      await Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
                     },
                     child: const Icon(
                       Icons.share,
@@ -659,7 +712,7 @@ class InnerPost extends StatelessWidget{
 
 }
 
-class CommentPost extends StatelessWidget{
+class CommentPost extends StatefulWidget{
   const CommentPost({
     Key? key,
     required this.fullProfile,
@@ -678,32 +731,446 @@ class CommentPost extends StatelessWidget{
   final Function(String id, String username)? onReplyClick;
 
   @override
+  State<CommentPost> createState() => _CommentPostState();
+}
+
+class _CommentPostState extends State<CommentPost> {
+  var lineHeight = 0.0;
+  List<comment.CommentModel> replies = [];
+
+  @override
+  void initState() {
+    var savedPosts = ReadWriteValue('wayagram_replies_${widget.post.id}', '', MyPref.box);
+    if(savedPosts.val.isNotEmpty){
+      replies = comment.CommentModel.listFromJson(jsonDecode(savedPosts.val));
+    }
+    super.initState();
+    widget.homeController.getData("/wayagram-service/all-posts/child-comments?comment_id=${widget.post.id}&limit=10", true).then((value){
+      if(value.isSuccessful){
+        replies = comment.CommentModel.listFromJson(value.data['data']);
+        savedPosts.val = jsonEncode(replies);
+        if(mounted){
+          setState(() {});
+        }
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant CommentPost oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if(widget.homeController.getCommentID == widget.post.id){
+      widget.homeController.getCommentID = '';
+      var savedPosts = ReadWriteValue('wayagram_replies_${widget.post.id}', '', MyPref.box);
+      widget.homeController.getData("/wayagram-service/all-posts/child-comments?comment_id=${widget.post.id}&limit=10", true).then((value){
+        if(value.isSuccessful){
+          replies = comment.CommentModel.listFromJson(value.data['data']);
+          savedPosts.val = jsonEncode(replies);
+          if(mounted){
+            setState(() {});
+          }
+        }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var time = DateTime.parse(post.createdAt!);
+    var time = DateTime.parse(widget.post.createdAt!);
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                if(replies.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Container(
+                      width: 1.0,
+                      color: Colors.grey.withOpacity(0.5),
+                      height: lineHeight,
+                    ),
+                  ),
+                InkWell(
+                  onTap: (){
+
+                  },
+                  child: SizedBox(
+                    width: Get.width * 0.13,
+                    height: Get.width * 0.13,
+                    child: IconButton(
+                      icon: AppAvatar(
+                        imgUrl: widget.post.profile!= null ?  widget.post.profile!.avatar.toString() : "",
+                        radius: 45,
+                      ),
+                      onPressed: null,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if(replies.isNotEmpty)
+              Expanded(
+                child: MeasureSize(
+                  onChange: (size) {
+                    lineHeight = size.height;
+                    setState(() {
+                    });
+                  },
+                  child: buildCommentContainer(time),
+                ),
+              ),
+            if(replies.isEmpty)
+              Expanded(
+                child: buildCommentContainer(time),
+              ),
+          ],
+        ),
+        AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.fastOutSlowIn,
+            child: replies.isEmpty ? const SizedBox.shrink() : ListView.builder(
+              itemCount: replies.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(0),
+              itemBuilder: (context, index) {
+                var post = replies[index];
+                return CommentPostReply(
+                  post: post,
+                  fullProfile: widget.fullProfile,
+                  homeController: widget.homeController,
+                  userID: widget.userID,
+                  onReplyClick: (id, username) {
+
+                  },
+                  lastReply: index == replies.length - 1,
+                );
+              },
+            )
+        ),
+      ],
+    );
+  }
+
+  Container buildCommentContainer(DateTime time) {
+    return Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 10, left: 5,right: 5),
+                decoration: widget.hasBorder ? BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(10),
+                ) : null,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: Get.height * 0.01),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: (){
+
+                            },
+                            child: Row(
+                              //crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.post.profile!.displayName.toString(),
+                                  style: TextStyle(
+                                    color: Colors.black ,
+                                    fontSize: Get.width * 0.035,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(width: Get.width * 0.01,),
+                                Text(
+                                  "@${widget.post.profile!.username}",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: Get.width * 0.03,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Wrap(
+                              alignment: WrapAlignment.end,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                Text(
+                                  timeago.format(time),
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: Get.width * 0.03,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
+                        child: HashTagText(
+                          text: widget.post.comment.toString(),
+                          decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                            color: Colors.blue,
+                            fontSize: 15,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          basicStyle: AppTextStyle.bodyText1.copyWith(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          onTap: (text) {
+                            widget.homeController.defaultSearchValue = text;
+                            Get.toNamed(Search.route);
+                          },
+                          decorateAtSign: true,
+                        )
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          //Heart
+                          Row(
+                            children: [
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              if(widget.post.isLiked == true)
+                                InkWell(
+                                  onTap: () async {
+                                    var body = {
+                                      "comment_id": widget.post.id,
+                                      "profile_id": widget.fullProfile.id,
+                                      "type": "user",
+                                    };
+                                    widget.post.isLiked = false;
+                                    widget.post.likeCount = widget.post.likeCount! - 1;
+                                    setState(() {
+
+                                    });
+                                    var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/unlike-comment");
+                                    if(response.isSuccessful){
+                                      widget.homeController.getPosts.then((value) {
+                                        //widget.homeController.update(["home_tab"]);
+                                      });
+                                    }
+                                  },
+                                  child: const Icon(
+                                    Icons.favorite,
+                                    color: AppColors.primary,
+                                    size: 18,
+                                  ),
+                                ),
+                              if(widget.post.isLiked == false || widget.post.isLiked == null)
+                                InkWell(
+                                  onTap: () async {
+                                    var body = {
+                                      "comment_id": widget.post.id,
+                                      "profile_id": widget.fullProfile.id,
+                                      "type": "user",
+                                    };
+                                    widget.post.isLiked = true;
+                                    widget.post.likeCount = widget.post.likeCount! + 1;
+                                    setState(() {
+
+                                    });
+                                    var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/like-comment");
+                                    if(response.isSuccessful){
+                                      widget.homeController.getPosts.then((value) {
+                                        //widget.homeController.update(["home_tab"]);
+                                      });
+                                    }
+                                  },
+                                  child: const Icon(
+                                    FeatherIcons.heart,
+                                    color: Colors.grey,
+                                    size: 18,
+                                  ),
+                                ),
+                              const SizedBox(
+                                width: 2,
+                              ),
+                              Text(
+                                widget.post.likeCount.toString().split(".")[0],
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: Get.width * 0.05,),
+                          //Comment
+                          InkWell(
+                            onTap: (){
+                              if(widget.onReplyClick != null){
+                                widget.onReplyClick!(widget.post.id.toString(), widget.post.profile!.username.toString());
+                              }
+                            },
+                            child: Row(
+                              children: [
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                const Icon(
+                                  FeatherIcons.messageCircle,
+                                  color: Colors.grey,
+                                  size: 18,
+                                ),
+                                const SizedBox(
+                                  width: 2,
+                                ),
+                                Text(
+                                  replies.length.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
+              );
+  }
+}
+
+class CommentPostReply extends StatefulWidget{
+  const CommentPostReply({
+    Key? key,
+    required this.fullProfile,
+    required this.homeController,
+    required this.post,
+    this.userID,
+    this.hasBorder = true,
+    this.onReplyClick,
+    this.lastReply = false,
+  }) : super(key: key);
+
+  final FullUserProfileEntity fullProfile;
+  final HomeController homeController;
+  final comment.CommentModel post;
+  final String? userID;
+  final bool hasBorder;
+  final bool lastReply;
+  final Function(String id, String username)? onReplyClick;
+
+  @override
+  State<CommentPostReply> createState() => _CommentPostReplyState();
+}
+
+class _CommentPostReplyState extends State<CommentPostReply> {
+  var lineHeight = 0.0;
+  @override
+  Widget build(BuildContext context) {
+    var time = DateTime.parse(widget.post.createdAt!);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(width: Get.width * 0.064),
+        SizedBox(
+          width: Get.width * 0.06,
+          child: Stack(
+            alignment: Alignment.topLeft,
+            children: [
+              if(!widget.lastReply)
+                Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Container(
+                  width: 1.0,
+                  color: Colors.grey.withOpacity(0.5),
+                  height: lineHeight,
+                ),
+              ),
+              RoundedBorderOnSomeSidesWidget(
+                borderColor: Colors.grey.withOpacity(0.5),
+                contentBackgroundColor: AppColors.background,
+                borderRadius: 10,
+                borderWidth: 1.0,
+                bottomLeft: true,
+              )
+            ],
+          ),
+        ),
         InkWell(
           onTap: (){
 
           },
           child: SizedBox(
-            width: Get.width * 0.13,
-            height: Get.width * 0.13,
+            width: Get.width * 0.1,
+            height: Get.width * 0.1,
             child: IconButton(
               icon: AppAvatar(
-                imgUrl: post.profile!= null ?  post.profile!.avatar.toString() : "",
+                imgUrl: widget.post.profile!= null ?  widget.post.profile!.avatar.toString() : "",
                 radius: 45,
               ),
               onPressed: null,
             ),
           ),
         ),
-        Expanded(
-          child: Container(
+        if(!widget.lastReply)
+          Expanded(
+          child: MeasureSize(
+            onChange: (size) {
+              if(!widget.lastReply){
+                lineHeight = size.height;
+                setState(() {
+                });
+              }
+            },
+            child: buildReplyContainer(time),
+          ),
+        ),
+        if(widget.lastReply)
+          Expanded(
+            child: buildReplyContainer(time),
+          ),
+      ],
+    );
+  }
+
+  Container buildReplyContainer(DateTime time) {
+    return Container(
             margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-            decoration: hasBorder ? BoxDecoration(
+            decoration: widget.hasBorder ? BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(10),
             ) : null,
@@ -724,7 +1191,7 @@ class CommentPost extends StatelessWidget{
                           //crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              post.profile!.displayName.toString(),
+                              widget.post.profile!.displayName.toString(),
                               style: TextStyle(
                                 color: Colors.black ,
                                 fontSize: Get.width * 0.035,
@@ -733,7 +1200,7 @@ class CommentPost extends StatelessWidget{
                             ),
                             SizedBox(width: Get.width * 0.01,),
                             Text(
-                              "@${post.profile!.username}",
+                              "@${widget.post.profile!.username}",
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: Get.width * 0.03,
@@ -771,7 +1238,7 @@ class CommentPost extends StatelessWidget{
                 Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
                     child: HashTagText(
-                      text: post.comment.toString(),
+                      text: widget.post.comment.toString(),
                       decoratedStyle: AppTextStyle.bodyText1.copyWith(
                         color: Colors.blue,
                         fontSize: 15,
@@ -783,7 +1250,7 @@ class CommentPost extends StatelessWidget{
                         fontWeight: FontWeight.normal,
                       ),
                       onTap: (text) {
-                        homeController.defaultSearchValue = text;
+                        widget.homeController.defaultSearchValue = text;
                         Get.toNamed(Search.route);
                       },
                       decorateAtSign: true,
@@ -792,90 +1259,8 @@ class CommentPost extends StatelessWidget{
                 const SizedBox(
                   height: 10,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      //Heart
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          if(post.isLiked == true)
-                            const Icon(
-                              Icons.favorite,
-                              color: AppColors.primary,
-                              size: 18,
-                            ),
-                          if(post.isLiked == false || post.isLiked == null)
-                            const Icon(
-                              FeatherIcons.heart,
-                              color: Colors.grey,
-                              size: 18,
-                            ),
-                          const SizedBox(
-                            width: 2,
-                          ),
-                          Text(
-                            post.likeCount.toString().split(".")[0],
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: Get.width * 0.05,),
-                      //Comment
-                      InkWell(
-                        onTap: (){
-                          if(onReplyClick != null){
-                            onReplyClick!(post.id.toString(), post.profile!.username.toString());
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Icon(
-                              FeatherIcons.messageCircle,
-                              color: Colors.grey,
-                              size: 18,
-                            ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            Text(
-                              "0",
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(
-                        width: 10,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
               ],
             ),
-          ),
-        ),
-      ],
-    );
+          );
   }
-
 }

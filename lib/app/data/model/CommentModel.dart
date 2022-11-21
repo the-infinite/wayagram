@@ -44,7 +44,7 @@ class CommentModel {
     _postId = postId;
     _profileId = profileId;
     _parentId = parentId;
-    _likeCount = likeCount;
+    likeCount = likeCount;
     _unLikeCount = unLikeCount;
     _isDeleted = isDeleted;
     _millisecCreatedAt = millisecCreatedAt;
@@ -53,7 +53,7 @@ class CommentModel {
     _createdAt = createdAt;
     _updatedAt = updatedAt;
     _profile = profile;
-    _isLiked = isLiked;
+    isLiked = isLiked;
     _isOwner = isOwner;
 }
 
@@ -64,7 +64,7 @@ class CommentModel {
     _postId = json['PostId'];
     _profileId = json['ProfileId'];
     _parentId = json['ParentId'];
-    _likeCount = json['likeCount'];
+    likeCount = json['likeCount'];
     _unLikeCount = json['unLikeCount'];
     _isDeleted = json['isDeleted'];
     _millisecCreatedAt = json['millisecCreatedAt'];
@@ -73,7 +73,7 @@ class CommentModel {
     _createdAt = json['createdAt'];
     _updatedAt = json['updatedAt'];
     _profile = json['Profile'] != null ? Profile.fromJson(json['Profile']) : null;
-    _isLiked = json['isLiked'];
+    isLiked = json['isLiked'];
     _isOwner = json['isOwner'];
   }
   String? _id;
@@ -82,7 +82,7 @@ class CommentModel {
   String? _postId;
   String? _profileId;
   dynamic _parentId;
-  num? _likeCount;
+  num? likeCount;
   String? _unLikeCount;
   bool? _isDeleted;
   String? _millisecCreatedAt;
@@ -91,7 +91,7 @@ class CommentModel {
   String? _createdAt;
   String? _updatedAt;
   Profile? _profile;
-  bool? _isLiked;
+  bool? isLiked;
   bool? _isOwner;
 CommentModel copyWith({  String? id,
   String? type,
@@ -116,7 +116,7 @@ CommentModel copyWith({  String? id,
   postId: postId ?? _postId,
   profileId: profileId ?? _profileId,
   parentId: parentId ?? _parentId,
-  likeCount: likeCount ?? _likeCount,
+  likeCount: likeCount ?? likeCount,
   unLikeCount: unLikeCount ?? _unLikeCount,
   isDeleted: isDeleted ?? _isDeleted,
   millisecCreatedAt: millisecCreatedAt ?? _millisecCreatedAt,
@@ -125,7 +125,7 @@ CommentModel copyWith({  String? id,
   createdAt: createdAt ?? _createdAt,
   updatedAt: updatedAt ?? _updatedAt,
   profile: profile ?? _profile,
-  isLiked: isLiked ?? _isLiked,
+  isLiked: isLiked ?? isLiked,
   isOwner: isOwner ?? _isOwner,
 );
   String? get id => _id;
@@ -134,7 +134,6 @@ CommentModel copyWith({  String? id,
   String? get postId => _postId;
   String? get profileId => _profileId;
   dynamic get parentId => _parentId;
-  num? get likeCount => _likeCount;
   String? get unLikeCount => _unLikeCount;
   bool? get isDeleted => _isDeleted;
   String? get millisecCreatedAt => _millisecCreatedAt;
@@ -143,9 +142,7 @@ CommentModel copyWith({  String? id,
   String? get createdAt => _createdAt;
   String? get updatedAt => _updatedAt;
   Profile? get profile => _profile;
-  bool? get isLiked => _isLiked;
   bool? get isOwner => _isOwner;
-
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = _id;
@@ -154,7 +151,7 @@ CommentModel copyWith({  String? id,
     map['PostId'] = _postId;
     map['ProfileId'] = _profileId;
     map['ParentId'] = _parentId;
-    map['likeCount'] = _likeCount;
+    map['likeCount'] = likeCount;
     map['unLikeCount'] = _unLikeCount;
     map['isDeleted'] = _isDeleted;
     map['millisecCreatedAt'] = _millisecCreatedAt;
@@ -165,7 +162,7 @@ CommentModel copyWith({  String? id,
     if (_profile != null) {
       map['Profile'] = _profile?.toJson();
     }
-    map['isLiked'] = _isLiked;
+    map['isLiked'] = isLiked;
     map['isOwner'] = _isOwner;
     return map;
   }

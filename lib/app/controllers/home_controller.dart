@@ -45,6 +45,8 @@ class HomeController extends GetxController {
   late TabController chatController;
   bool isChat = false;
 
+  String getCommentID = "";
+
   HomeController(this.userRepo);
 
   List<Widget> pages = const [
