@@ -68,6 +68,16 @@ class FollowingModelFollowing {
   String toString() {
     return jsonEncode(this);
   }
+
+	@override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FollowingModelFollowing &&
+          runtimeType == other.runtimeType &&
+          userId == other.userId;
+
+  @override
+  int get hashCode => userId.hashCode;
 }
 
 @JsonSerializable()

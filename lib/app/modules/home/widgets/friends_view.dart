@@ -18,6 +18,7 @@ import '../../../data/model/moments_model_entity.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/app_avatar.dart';
 import '../../../global_widgets/app_button.dart';
+import '../../../global_widgets/overlays.dart';
 import '../../profile/other_profile.dart';
 
 class FriendsView extends StatefulWidget {
@@ -177,17 +178,26 @@ class _FriendsViewState extends State<FriendsView> {
                                   if(!isFollowing){
                                     var response = await controller.postData(body, "wayagram-service/graph/friend/follow");
                                     if(response.isSuccessful){
+                                      if(response.message.toString().toLowerCase().contains("request")){
+                                        AppOverlay.showSuccessSnackBar(content :"Friend request sent successfully");
+                                      }
                                       await controller.getFollowing;
-                                      await controller.getPosts;
+                                      //await controller.getPosts;
                                       setState(() {
 
                                       });
+                                    }else{
+                                      if(response.message.toString().toLowerCase().contains("request")){
+                                        AppOverlay.showSuccessSnackBar(content :"Friend request sent successfully");
+                                      }else{
+                                        AppOverlay.showErrorSnackBar();
+                                      }
                                     }
                                   }else{
                                     var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
                                     if(response.isSuccessful){
                                       await controller.getFollowing;
-                                      await controller.getPosts;
+                                      //await controller.getPosts;
                                       setState(() {
 
                                       });

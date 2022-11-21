@@ -135,12 +135,36 @@ class UserRepository {
     }
     return response;
   }
-  Future<ApiResponse> getFollowing() async {
+  Future<ApiResponse> getFollowing({int page = 1}) async {
     var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-    final response = await api.getData('/wayagram-service/graph/friend/following?user_id=${profile.userId}',hasHeader: true);
+    final response = await api.getData('/wayagram-service/graph/friend/following?user_id=${profile.userId}&page=$page',hasHeader: true);
     if(response.isSuccessful){
-      response.data = FollowingModelEntity.fromJson(response.data);
-      MyPref.following.val = jsonEncode(response.data);
+      if(page == 1){
+        response.data = FollowingModelEntity.fromJson(response.data);
+        MyPref.following.val = jsonEncode(response.data);
+        await getFollowing(page: page+1);
+      }else{
+        var newData = FollowingModelEntity.fromJson(response.data);
+        var oldData = FollowingModelEntity.fromJson(jsonDecode(MyPref.following.val));
+        if(newData.following != null){
+          if(newData.following!.isNotEmpty){
+            await Future.forEach(newData.following!, (element){
+              if(!(oldData.following!.contains(element as FollowingModelFollowing))){
+                oldData.following?.add(element);
+              }
+            });
+            response.data = oldData;
+            MyPref.following.val = jsonEncode(response.data);
+            await getFollowing(page: page+1);
+          }else{
+            response.data = oldData;
+            MyPref.following.val = jsonEncode(response.data);
+          }
+        }else{
+          response.data = oldData;
+          MyPref.following.val = jsonEncode(response.data);
+        }
+      }
     }
     return response;
   }

@@ -288,7 +288,7 @@ class _PostState extends State<Post> {
                           if (value == 0) {
                             //Get.to(() => const Muted());
                           } else if (value == 1) {
-                            //Get.to(() => const Blocked());
+                            Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
                           } else if (value == 2) {
                             //Get.to(() => const Followers());
                           }
@@ -304,11 +304,21 @@ class _PostState extends State<Post> {
                               ),
                             ),
                           ),
+                          PopupMenuItem(
+                            value: 1,
+                            child: Text(
+                              "Share",
+                              style: AppTextStyle.bodyText1.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
                           if(isCurrentUserPost)
                             PopupMenuItem(
-                              value: 1,
+                              value: 2,
                               child: Text(
-                                "Edit Post",
+                                "Edit",
                                 style: AppTextStyle.bodyText1.copyWith(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500,
@@ -317,9 +327,9 @@ class _PostState extends State<Post> {
                             ),
                           if(isCurrentUserPost)
                             PopupMenuItem(
-                              value: 2,
+                              value: 3,
                               child: Text(
-                                "Delete Post",
+                                "Delete",
                                 style: AppTextStyle.bodyText1.copyWith(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500,
@@ -440,7 +450,7 @@ class _PostState extends State<Post> {
                           "profile_id": widget.fullProfile.id,
                           "type": "user",
                         };
-                        var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/unlike-post");
+                        var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/unlike-post",updatePages: false);
                         if(response.isSuccessful){
                           widget.post.isLiked = false;
                           widget.post.likeCount = widget.post.likeCount! - 1;
@@ -468,7 +478,7 @@ class _PostState extends State<Post> {
                           "profile_id": widget.fullProfile.id,
                           "type": "user",
                         };
-                        var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/like-post");
+                        var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/like-post",updatePages: false);
                         if(response.isSuccessful){
                           widget.post.isLiked = true;
                           widget.post.likeCount = widget.post.likeCount! + 1;
@@ -542,13 +552,11 @@ class _PostState extends State<Post> {
                     width: 10,
                   ),
                   InkWell(
-                    onTap: () async {
-                      await Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
-                    },
-                    child: const Icon(
-                      Icons.share,
-                      color: Colors.grey,
-                      size: 20,
+                    onTap: isCurrentUserPost ? (){} : null,
+                    child: Icon(
+                      Icons.bar_chart,
+                      color: isCurrentUserPost ? Colors.grey : Colors.white.withOpacity(0.8),
+                      size: 22,
                     ),
                   ),
                   const SizedBox(
@@ -972,7 +980,7 @@ class _CommentPostState extends State<CommentPost> {
                                     setState(() {
 
                                     });
-                                    var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/unlike-comment");
+                                    var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/unlike-comment",updatePages: false);
                                     if(response.isSuccessful){
                                       widget.homeController.getPosts.then((value) {
                                         //widget.homeController.update(["home_tab"]);
@@ -998,7 +1006,7 @@ class _CommentPostState extends State<CommentPost> {
                                     setState(() {
 
                                     });
-                                    var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/like-comment");
+                                    var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/like-comment",updatePages: false);
                                     if(response.isSuccessful){
                                       widget.homeController.getPosts.then((value) {
                                         //widget.homeController.update(["home_tab"]);

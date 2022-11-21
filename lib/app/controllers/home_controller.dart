@@ -220,21 +220,33 @@ class HomeController extends GetxController {
     return response;
   }
 
-  Future<ApiResponse> postData(dynamic body,String url) async {
+  Future<ApiResponse> postData(dynamic body,String url,{bool updatePages = true}) async {
     final response = await userRepo.postData(url, body);
     debugPrint(response.message);
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
-      update(['profile_page','home','settings']);
-      getAllUserData().then((value) => update(['profile_page','home','settings']));
+      if(updatePages){
+        update(['profile_page','home','settings']);
+      }
+      getAllUserData().then((value){
+        if(updatePages){
+          update(['profile_page','home','settings']);
+        }
+      });
     });
     return response;
   }
 
-  Future<ApiResponse> putData(dynamic body,String url) async {
+  Future<ApiResponse> putData(dynamic body,String url,{bool updatePages = true}) async {
     final response = await userRepo.putData(url, body);
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
-      update(['home','profile_page','settings','app_drawer']);
-      getAllUserData().then((value) => update(['profile_page','home','settings','app_drawer']));
+      if(updatePages){
+        update(['profile_page','home','settings']);
+      }
+      getAllUserData().then((value){
+        if(updatePages){
+          update(['profile_page','home','settings']);
+        }
+      });
     });
     return response;
   }

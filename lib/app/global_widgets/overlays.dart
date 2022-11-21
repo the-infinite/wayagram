@@ -183,7 +183,7 @@ class AppOverlay {
     );
   }
 
-  static void showErrorSnackBar({String title = "Error",String content = "Something Went Wrong"}) {
+  static void showErrorSnackBar({String title = "Error",String content = "Something Went Wrong, Please Try Again Later"}) {
     Get.snackbar(title, content, backgroundColor: Colors.red, colorText: Colors.white);
   }
 

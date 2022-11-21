@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -164,15 +165,24 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                     if(!isFollowing){
                                                       var response = await controller.postData(body, "wayagram-service/graph/friend/follow");
                                                       if(response.isSuccessful){
+                                                        if(response.message.toString().toLowerCase().contains("request")){
+                                                          AppOverlay.showSuccessSnackBar(content :"Friend request sent successfully");
+                                                        }
                                                         await controller.getFollowing;
-                                                        await controller.getPosts;
+                                                        //await controller.getPosts;
                                                         controller.update(['post_profile_page']);
+                                                      }else{
+                                                        if(response.message.toString().toLowerCase().contains("request")){
+                                                          AppOverlay.showSuccessSnackBar(content :"Friend request sent successfully");
+                                                        }else{
+                                                          AppOverlay.showErrorSnackBar();
+                                                        }
                                                       }
                                                     }else{
                                                       var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
                                                       if(response.isSuccessful){
                                                         await controller.getFollowing;
-                                                        await controller.getPosts;
+                                                        //await controller.getPosts;
                                                         controller.update(['post_profile_page']);
                                                       }
                                                     }
@@ -369,11 +379,156 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                 ),
                                 onSelected: (value) {
                                   if (value == 0) {
-                                    Get.to(() => const Muted());
+
                                   } else if (value == 1) {
-                                    Get.to(() => const Blocked());
+                                    showPlatformDialog(
+                                      context: context,
+                                      builder: (context) => BasicDialogAlert(
+                                        title: Text(
+                                          isMuted ? "UnMute @${post.profile!.username}" : "Mute @${post.profile!.username}",
+                                          style: AppTextStyle.bodyText1.copyWith(
+                                            //color: Colors.grey,
+                                            fontSize: Get.width * 0.04,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        content: Text(
+                                          isMuted ? "You will now see their activities on your timeline" : "You will not see their activities on your timeline, they can still see your activities and follow you",
+                                          style: AppTextStyle.bodyText1.copyWith(
+                                            //color: Colors.grey,
+                                            fontSize: Get.width * 0.035,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          BasicDialogAction(
+                                            title: Text(
+                                              "Cancel",
+                                              style: AppTextStyle.bodyText1.copyWith(
+                                                color: Colors.blue,
+                                                fontSize: Get.width * 0.03,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          BasicDialogAction(
+                                            title: Text(
+                                              isMuted ? "Unmute" : "Mute",
+                                              style: AppTextStyle.bodyText1.copyWith(
+                                                color: Colors.blue,
+                                                fontSize: Get.width * 0.03,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              var body = {
+                                                "user_id": post.profile!.userId,
+                                                "username": post.profile!.username,
+                                              };
+                                              controller.putData(body, "/wayagram-service/graph/friend/mute-or-unmute-friend").then((value){
+                                                if(value.isSuccessful){
+                                                  AppOverlay.showSuccessSnackBar(content: isMuted ? "User un-muted successfully" : "User muted successfully");
+                                                  controller.getMuted.then((value){
+                                                    controller.update(["post_profile_page"]);
+                                                  });
+                                                }else {
+                                                  var message = "Something went wrong, Please try again later";
+                                                  if(value.message.toString().contains("You can only mute your follower")){
+                                                    message = "You can only mute your followers";
+                                                  }
+                                                  AppOverlay.showErrorSnackBar(content: message);
+                                                }
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
                                   } else if (value == 2) {
-                                    //Get.to(() => const Followers());
+                                    showPlatformDialog(
+                                      context: context,
+                                      builder: (context) => BasicDialogAlert(
+                                        title: Text(
+                                          isBlocked ? "UnBlock @${post.profile!.username}" : "Block @${post.profile!.username}",
+                                          style: AppTextStyle.bodyText1.copyWith(
+                                            //color: Colors.grey,
+                                            fontSize: Get.width * 0.04,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        content: Text(
+                                          isBlocked ? "They will be able to follow you and view your posts, you will also be able to see them and their activities" : "They will not be able to follow you or view your posts, you will also not see them or their activities",
+                                          style: AppTextStyle.bodyText1.copyWith(
+                                            //color: Colors.grey,
+                                            fontSize: Get.width * 0.035,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          BasicDialogAction(
+                                            title: Text(
+                                              "Cancel",
+                                              style: AppTextStyle.bodyText1.copyWith(
+                                                color: Colors.blue,
+                                                fontSize: Get.width * 0.03,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                          BasicDialogAction(
+                                            title: Text(
+                                              isBlocked ? "Unblock" : "Block",
+                                              style: AppTextStyle.bodyText1.copyWith(
+                                                color: Colors.blue,
+                                                fontSize: Get.width * 0.03,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              var body = {
+                                                "user_id": post.profile!.userId,
+                                                "username": post.profile!.username,
+                                              };
+                                              if(isBlocked){
+                                                controller.postData(body, "/wayagram-service/graph/friend/unblock").then((value){
+                                                  if(value.isSuccessful){
+                                                    AppOverlay.showSuccessSnackBar(content: "User un-blocked successfully");
+                                                    controller.getBlocked.then((value){
+                                                      controller.update(["post_profile_page"]);
+                                                    });
+                                                  }else {
+                                                    AppOverlay.showErrorSnackBar(content: "Something went wrong, Please try again later");
+                                                  }
+                                                });
+                                              }else{
+                                                controller.postData(body, "/wayagram-service/graph/friend/block").then((value){
+                                                  if(value.isSuccessful){
+                                                    AppOverlay.showSuccessSnackBar(content:  "User blocked successfully");
+                                                    controller.getBlocked.then((value){
+                                                      controller.update(["post_profile_page"]);
+                                                    });
+                                                  }else {
+                                                    var message = "Something went wrong, Please try again later";
+                                                    if(value.message.toString().contains("You can only block active friends")){
+                                                      message = "You can only block active friends";
+                                                    }
+                                                    AppOverlay.showErrorSnackBar(content: message);
+                                                  }
+                                                });
+                                              }
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
                                   }
                                 },
                                 itemBuilder: (context) => [
@@ -388,7 +543,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                     ),
                                   ),
                                   PopupMenuItem(
-                                    value: 0,
+                                    value: 1,
                                     child: Text(
                                       isMuted ? "Unmute User" : "Mute User",
                                       style: AppTextStyle.bodyText1.copyWith(
@@ -398,19 +553,9 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                     ),
                                   ),
                                   PopupMenuItem(
-                                    value: 1,
-                                    child: Text(
-                                      isBlocked ? "Unblock User" : "Block User",
-                                      style: AppTextStyle.bodyText1.copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
                                     value: 2,
                                     child: Text(
-                                      "Share",
+                                      isBlocked ? "Unblock User" : "Block User",
                                       style: AppTextStyle.bodyText1.copyWith(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
