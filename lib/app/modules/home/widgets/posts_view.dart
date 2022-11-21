@@ -31,6 +31,7 @@ import '../../profile/other_profile.dart';
 import '../../profile/post_profile.dart';
 import '../../profile/profile.dart';
 import '../../search/search.dart';
+import '../../view_posts/post_analytics.dart';
 import '../../view_posts/view_post.dart';
 
 class PostsView extends StatelessWidget{
@@ -162,6 +163,8 @@ class Post extends StatefulWidget{
     required this.post,
     this.userID,
     this.hasBorder = true,
+    this.showActions = true,
+    this.decoration
   }) : super(key: key);
 
   final FullUserProfileEntity fullProfile;
@@ -169,6 +172,8 @@ class Post extends StatefulWidget{
   final AllPostsEntity post;
   final String? userID;
   final bool hasBorder;
+  final bool showActions;
+  final BoxDecoration? decoration;
 
   @override
   State<Post> createState() => _PostState();
@@ -177,6 +182,13 @@ class Post extends StatefulWidget{
 class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
+    BoxDecoration? decoration = BoxDecoration(
+      color: Colors.white.withOpacity(.8),
+      borderRadius: BorderRadius.circular(10),
+    );
+    if(widget.decoration != null){
+      decoration = widget.decoration;
+    }
     var isCurrentUserPost = false;
     var time = DateTime.parse(widget.post.createdAt!);
     var endPollTime = (widget.post.isPoll == true) ? DateTime.parse(widget.post.poll!.endDate.toString()) : null;
@@ -200,10 +212,7 @@ class _PostState extends State<Post> {
 
     return Container(
       margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-      decoration: widget.hasBorder ? BoxDecoration(
-        color: Colors.white.withOpacity(.8),
-        borderRadius: BorderRadius.circular(10),
-      ) : null,
+      decoration: widget.hasBorder ? decoration : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -277,7 +286,8 @@ class _PostState extends State<Post> {
                     const SizedBox(
                       width: 10,
                     ),
-                    PopupMenuButton(
+                    if(widget.showActions)
+                      PopupMenuButton(
                         color: Colors.white,
                         icon: const Icon(
                           FeatherIcons.moreHorizontal,
@@ -342,10 +352,10 @@ class _PostState extends State<Post> {
               ),
             ],
           ),
-          const Divider(
+          Divider(
             height: 1.5,
             thickness: 1.5,
-            color: Color(0xffF2F2F2),
+            color: widget.showActions ? const Color(0xffF2F2F2) : Colors.transparent,
           ),
           const SizedBox(
             height: 10,
@@ -409,7 +419,8 @@ class _PostState extends State<Post> {
           const SizedBox(
             height: 10,
           ),
-          Row(
+          if(widget.showActions)
+            Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               //Comment
@@ -545,18 +556,20 @@ class _PostState extends State<Post> {
               const SizedBox(
                 width: 60,
               ),
-              //Share
+              //Analytics
               Row(
                 children: [
                   const SizedBox(
                     width: 10,
                   ),
                   InkWell(
-                    onTap: isCurrentUserPost ? (){} : null,
+                    onTap: isCurrentUserPost ? (){
+                      Get.to(() => PostAnalytics(post: widget.post));
+                    } : null,
                     child: Icon(
                       Icons.bar_chart,
                       color: isCurrentUserPost ? Colors.grey : Colors.white.withOpacity(0.8),
-                      size: 22,
+                      size: 24,
                     ),
                   ),
                   const SizedBox(
@@ -566,7 +579,8 @@ class _PostState extends State<Post> {
               ),
             ],
           ),
-          const SizedBox(
+          if(widget.showActions)
+            const SizedBox(
             height: 10,
           ),
         ],
