@@ -193,8 +193,10 @@ class _PostState extends State<Post> {
     var time = DateTime.parse(widget.post.createdAt!);
     var endPollTime = (widget.post.isPoll == true) ? DateTime.parse(widget.post.poll!.endDate.toString()) : null;
     List<String> imageUrls = [];
-    for (var element in widget.post.postImages!) {
-      imageUrls.add(element.imageURL.toString());
+    if(widget.post.postImages != null){
+      for (var element in widget.post.postImages!) {
+        imageUrls.add(element.imageURL.toString());
+      }
     }
     if(widget.userID!=null){
       if(widget.post.profile!.userId != widget.fullProfile.userId){
@@ -299,6 +301,7 @@ class _PostState extends State<Post> {
                             var body = {
                               "postId": widget.post.id,
                             };
+                            print(widget.fullProfile.id);
                             widget.homeController.postData(body, "/wayagram-service/all-posts/create-bookmark?profileId=${widget.fullProfile.id}",updatePages: false).then((value){
                               if(value.isSuccessful){
                                 AppOverlay.showSuccessSnackBar(title: "Bookmark",content: "Post bookmarked successfully");
@@ -316,7 +319,7 @@ class _PostState extends State<Post> {
                           PopupMenuItem(
                             value: 0,
                             child: Text(
-                              "Bookmark",
+                              Get.currentRoute == "/BookmarksPage" ? "Remove" : "Bookmark",
                               style: AppTextStyle.bodyText1.copyWith(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
@@ -414,7 +417,7 @@ class _PostState extends State<Post> {
                 votedBackgroundColor: Colors.grey.withOpacity(0.2),
                 leadingVotedProgessColor: AppColors.primary,
                 pollOptions: widget.post.poll!.pollOptions!.map((e){
-                  return PollOption(title: Text(e.option.toString()), votes: e.totalVotesCountPollOption!.toInt());
+                  return PollOption(title: Text(e.option.toString()), votes: e.totalVotesCountPollOption == null ? 0 : e.totalVotesCountPollOption!.toInt());
                 }).toList(),
                 pollTitle: const SizedBox.shrink(),
                 metaWidget: Text(' • Ends in ${timeago.format(endPollTime!,allowFromNow: true)}',style: const TextStyle(

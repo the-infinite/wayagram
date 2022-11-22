@@ -234,6 +234,43 @@ class UserRepository {
     }
     return response;
   }
+  Future<ApiResponse> getBookmarks() async {
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+    final response = await api.getData('/wayagram-service/all-posts/get-user-bookmarks?profileId=${profile.id}&page=1&limit=40',hasHeader: true);
+    if (response.isSuccessful) {
+      var newData = AllPostsEntity.getServiceForBookmarks(response.data['data']);
+      if(MyPref.bookmarks.val.isNotEmpty){
+        var oldData = AllPostsEntity.getService(jsonDecode(MyPref.bookmarks.val));
+        for (var element in oldData) {
+          if(!newData.contains(element)){
+            newData.add(element);
+          }
+        }
+      }
+      response.data = newData;
+      MyPref.bookmarks.val = jsonEncode(response.data);
+    }
+    return response;
+  }
+  Future<ApiResponse> getTopClips() async {
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+    final response = await api.getData('/wayagram-service/all-posts/get-top-clips?profile_id=${profile.id}&page=1&limit=40',hasHeader: true);
+    if (response.isSuccessful) {
+      //response.data = AllPostsEntity.getService(response.data['data']);
+      var newData = AllPostsEntity.getService(response.data['data']);
+      if(MyPref.topClips.val.isNotEmpty){
+        var oldData = AllPostsEntity.getService(jsonDecode(MyPref.posts.val));
+        for (var element in oldData) {
+          if(!newData.contains(element)){
+            newData.add(element);
+          }
+        }
+      }
+      response.data = newData;
+      MyPref.topClips.val = jsonEncode(response.data);
+    }
+    return response;
+  }
 
   //Home - Discover
   Future<ApiResponse> getGroups() async {

@@ -95,9 +95,9 @@ class _BookmarksPageState extends State<BookmarksPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     FutureBuilder<ApiResponse>(
-                        future: controller.getPosts,
+                        future: controller.getBookmarks,
                         builder: (context, snapshot) {
-                          var savedPosts = MyPref.posts.val;
+                          var savedPosts = MyPref.bookmarks.val;
                           if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                             final posts = snapshot.data!.data as List<AllPostsEntity>;
                             return PostsView(posts: posts);

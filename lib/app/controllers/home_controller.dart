@@ -167,6 +167,8 @@ class HomeController extends GetxController {
   //home
   Future<ApiResponse> get getMoments => userRepo.getMoments();
   Future<ApiResponse> get getPosts => userRepo.getPosts();
+  Future<ApiResponse> get getBookmarks => userRepo.getBookmarks();
+  Future<ApiResponse> get getTopClips => userRepo.getTopClips();
 
   //Search
   Future<ApiResponse> searchPost(String query) => userRepo.getData("wayagram-service/all-posts/search?query=$query");

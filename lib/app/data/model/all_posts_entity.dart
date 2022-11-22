@@ -75,6 +75,23 @@ class AllPostsEntity {
 		return val.map((e) => AllPostsEntity.fromJson(e)).toList();
 	}
 
+	static List<AllPostsEntity> getServiceForBookmarks(List<dynamic> val) {
+		/*return val.map((e){
+			if(e['Post'] == null){
+
+			}
+			return AllPostsEntity.fromJson(e['Post']);
+		}).toList();*/
+		return val.map((e) => AllPostsEntity.fromJson(e['Post'])).toList();
+		List<AllPostsEntity> data = [];
+		for (var i = 0; i < val.length; i++) {
+			if(val[i]['Post'] != null){
+				data.add(AllPostsEntity.fromJson(val[i]['Post']));
+			}
+		}
+		return data;
+	}
+
   @override
   String toString() {
     return jsonEncode(this);
