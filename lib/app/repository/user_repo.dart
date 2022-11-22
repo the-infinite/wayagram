@@ -194,6 +194,10 @@ class UserRepository {
     final response = await api.putData(url,hasHeader: hasHeader,sso: sso,body: body);
     return response;
   }
+  Future<ApiResponse> deleteData(String url,dynamic body,{hasHeader = true,sso = true}) async {
+    final response = await api.deleteData(url,hasHeader: hasHeader,sso: sso,body: body);
+    return response;
+  }
   //Not Done Yet
   Future<ApiResponse> getFriendRequests() async {
     var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));

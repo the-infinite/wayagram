@@ -253,6 +253,21 @@ class HomeController extends GetxController {
     return response;
   }
 
+  Future<ApiResponse> deleteData(dynamic body,String url,{bool updatePages = true}) async {
+    final response = await userRepo.deleteData(url, body);
+    userRepo.getFullUserProfile(profile.userId.toString()).then((value){
+      if(updatePages){
+        update(['profile_page','home','settings']);
+      }
+      getAllUserData().then((value){
+        if(updatePages){
+          update(['profile_page','home','settings']);
+        }
+      });
+    });
+    return response;
+  }
+
   Future<ApiResponse> getData(String url,bool hasSSO) async {
     final response = await userRepo.getData(url, sso: hasSSO);
     return response;

@@ -20,6 +20,7 @@ import '../data/model/profile_model_entity.dart';
 import '../data/providers/my_pref.dart';
 import '../modules/bookmarks/bookmark.dart';
 import '../modules/groups_and_pages/groups_and_pages.dart';
+import '../modules/interests/add_interests.dart';
 import '../modules/profile/profile.dart';
 import '../modules/settings/settings.dart';
 import 'app_avatar.dart';
@@ -282,7 +283,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.interests, color: Colors.black),
                                   text: "Interests",
                                   onPressed: () {
-
+                                    Get.back();
+                                    Get.to(() => const AddInterestPage());
                                   },
                                 ),
 

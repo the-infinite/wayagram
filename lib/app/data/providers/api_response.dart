@@ -9,6 +9,7 @@ enum ApiStatus {
 
 class ApiResponse {
   final int? code;
+  dynamic id;
   dynamic data;
   dynamic suggestion;
   dynamic profiles;
@@ -18,13 +19,12 @@ class ApiResponse {
   String? message;
   String? token;
 
-  ApiResponse({this.code, this.message, this.data, required this.isSuccessful, this.token,this.suggestion,this.profiles,this.interests,this.groups});
+  ApiResponse({this.code, this.message, this.data, required this.isSuccessful, this.token,this.suggestion,this.profiles,this.interests,this.groups,this.id});
 
   static ApiResponse response(Response response) {
     var json = response.data;
 
     //print(response.statusCode);
-    print(json['message']);
     return ApiResponse(
       message: json['message'],
       isSuccessful: json['status'],
@@ -38,7 +38,7 @@ class ApiResponse {
 
   static ApiResponse responseFromBody(String json,int isSuccessful) {
     var jsonD = jsonDecode(json);
-    //print(jsonD['status']);
+    var id = 0;
     return ApiResponse(
       message: jsonD['message'],
       isSuccessful: jsonD['status'] == true,

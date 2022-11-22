@@ -77,7 +77,7 @@ class Api {
     }
   }
 
-  Future<ApiResponse> deleteData(String url, {bool hasHeader = false, bool sso = true}) async {
+  Future<ApiResponse> deleteData(String url, {bool hasHeader = false, bool sso = true, body}) async {
     token = CancelToken();
     var head = {
       'Authorization': MyPref.authToken.val,
@@ -94,6 +94,7 @@ class Api {
     try {
       var request = await _client.request(
         link,
+        data: body,
         cancelToken: token,
         options: Options(method: 'DELETE', headers: hasHeader ? head : null,contentType: "application/json"),
       );
