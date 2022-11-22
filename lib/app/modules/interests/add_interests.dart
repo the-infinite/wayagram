@@ -375,7 +375,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                         "interestId" : res[0].id.toString()
                                       };
                                       controller.postData(dio.FormData.fromMap(innerBody), "/wayagram-service/graph/user-interest/selectUserInterest").then((value) {
-                                        if(value1.isSuccessful){
+                                        if(value.isSuccessful){
                                           interestList.remove(interestList[index]);
                                           AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
                                           controller.update(["add_interests_page"]);

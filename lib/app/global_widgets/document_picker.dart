@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
+import '../controllers/auth_controller.dart';
 import '../controllers/home_controller.dart';
 import 'overlays.dart';
 
@@ -64,6 +65,7 @@ class DocumentPicker extends StatefulWidget {
   final String actionWord;
   final double radius;
   final HomeController? controller;
+  final AuthController? controller2;
 
   /// if [networkImage] is not null,
   /// then [DocumentPicker] will display the
@@ -90,6 +92,7 @@ class DocumentPicker extends StatefulWidget {
     this.displayPickedImage = true,
     required this.actionWord,
     this.controller,
+    this.controller2,
     this.position,
     Key? key, this.fileImage,
     this.displayPickerIcon = true,
@@ -159,7 +162,12 @@ class _DocumentPickerState extends State<DocumentPicker> {
                         ? choosePhotoPrompt
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(widget.radius),
-                            child: Image.file(
+                            child: widget.controller2 != null ? Image.file(
+                              File(widget.controller2 == null ? _pickedFile!.path : (widget.position == null ? "" : widget.controller2!.imagePaths.isEmpty ? (widget.position == 0 ? widget.controller2!.image1 : widget.controller2!.image2) : widget.controller2!.imagePaths[widget.position!])),
+                              fit: widget.fit,
+                              height: widget.renderHeight,
+                              width: widget.renderWidth,
+                            ) : Image.file(
                               File(widget.controller == null ? _pickedFile!.path : (widget.position == null ? "" : widget.controller!.imagePaths.isEmpty ? (widget.position == 0 ? widget.controller!.image1 : widget.controller!.image2) : widget.controller!.imagePaths[widget.position!])),
                               fit: widget.fit,
                               height: widget.renderHeight,

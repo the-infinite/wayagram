@@ -439,4 +439,15 @@ class AuthController extends GetxController {
       debugPrint(e.toString());
     }
   }
+
+  String image1 = "";
+  String image2 = "";
+  List<String> imagePaths = [];
+  Future<ApiResponse> updateProfile(dynamic body) async {
+    final response = await userRepo.updateProfile(body);
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+    await userRepo.getFullUserProfile(profile.userId.toString());
+    Get.offAllNamed(Home.route);
+    return response;
+  }
 }

@@ -1,17 +1,54 @@
+import 'dart:convert';
+
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/app/modules/home/home.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
+import '../../bindings/wayagram_binding.dart';
 import '../../controllers/auth_controller.dart';
+import '../../data/model/InterestsModel.dart';
+import '../../data/model/NewInterestModel.dart';
+import '../../data/model/full_user_profile_entity.dart';
+import '../../data/providers/api_response.dart';
+import '../../data/providers/my_pref.dart';
+import '../../global_widgets/overlays.dart';
 
-class Interests extends GetView<AuthController>{
+import 'package:dio/dio.dart' as dio;
+
+import '../home/widgets/group_view.dart';
+import '../profile/update_profile_on_sign_up.dart';
+
+
+class Interests extends StatefulWidget{
   const Interests({Key? key}) : super(key: key);
 
   static const route = '/interests';
+
+  @override
+  State<Interests> createState() => _InterestsState();
+}
+
+class _InterestsState extends State<Interests> with TickerProviderStateMixin{
+  late TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    tabController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,134 +122,282 @@ class Interests extends GetView<AuthController>{
     ];
     return  GetBuilder<AuthController>(
       builder: (controller){
+        var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
+            backgroundColor: AppColors.background,
+            title: Text(
+              "Interests",
+              style: TextStyle(
+                color: const Color(0xff4F4F4F),
+                fontSize: Get.textScaleFactor * 18,
+                fontWeight: FontWeight.bold,
               ),
-              onPressed: () {
-                Get.back();
-              },
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
-            actions: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      width: Get.width * 0.3,
-                      height: Get.height * 0.04,
-                      child: AppButton(title: "Continue", onPressed: () async {
-                        //wait 10 seconds
-                        //Get.toNamed(Home.route);
-                        controller.getAllUserData();
-                        await Future.delayed(const Duration(seconds: 0), () {
-                          Get.offAllNamed(Home.route);
-                        });
+            leading: InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+            ),
+            bottom: PreferredSize(
+                preferredSize: Size(Get.width, Get.height * 0.06),
+                child: Column(
+                  children: [
+                    const Divider(
+                      height: 0.5,
+                      thickness: 0.5,
+                      color: Colors.grey,
+                    ),
+                    TabBar(
+                      controller: tabController,
+                      padding: EdgeInsets.zero,
+                      labelColor: Colors.black,
+                      unselectedLabelColor: const Color(0xff9A9A9A),
+                      indicatorColor: AppColors.primary,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelStyle: TextStyle(
+                        fontSize: Get.width*0.035,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      unselectedLabelStyle: TextStyle(
+                        fontSize: Get.width*0.035,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      tabs: const [
+                        Tab(text: 'Your Interests',iconMargin: EdgeInsets.zero,),
+                        Tab(text: 'All Interests',iconMargin: EdgeInsets.zero,),
+                      ],
+                      onTap: (index) {
+                        //pagecontroller.userRepoanimateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                        //controller.userRepoupdate(['profile_page']);
                       },
-                        padding: const EdgeInsets.only(top: 9, bottom: 9),
-                      )
+                    ),
+                    const Divider(
+                      height: 0.5,
+                      thickness: 0.5,
+                      color: Colors.grey,
+                    ),
+                  ],
+                )),
+            actions: [
+                Center(
+                  child: SizedBox(
+                    child: AppButton(
+                      title: 'Continue',
+                      onPressed: () {
+                        //,binding: WayagramBinding()
+                        Get.to(() => const UpdateProfileSignUp());
+                      },
+                      borderRadius: 10,
+                      fontColor: AppColors.button,
+                      bckgrndColor: AppColors.background,
+                      border: Border.all(color: AppColors.background, width: 1),
+                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                      width: Get.width * 0.2,
+                    ),
                   ),
-                ],
-              ),
-              SizedBox(
-                width: Get.width * 0.03,
-              ),
-            ],
+                )
+              ],
+            systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: AppColors.background,
+                statusBarIconBrightness: Brightness.dark,
+                statusBarBrightness: Brightness.dark,
+                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarIconBrightness: Brightness.dark
+            ),
           ),
-          body: SizedBox(
-            height: Get.height,
-            child: GridView.builder(
-              itemCount: interestList.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              scrollDirection: Axis.vertical,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: InkWell(
-                    onTap: () {
-                      if (!controller.interests.contains(interestList[index])) {
-                        controller.interests.add(interestList[index]);
-                      } else {
-                        controller.interests.remove(interestList[index]);
+          body: TabBarView(
+            controller: tabController,
+            children: [
+              FutureBuilder<ApiResponse>(
+                  future: controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}"),
+                  builder: (context, snapshot) {
+                    var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                    if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                      final posts = InterestsModel.fromJsonList(snapshot.data!.data);
+                      savedPosts.val = jsonEncode(posts);
+                      return ListView.builder(
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          var post = posts[index];
+                          if(!interestList.contains(post.title)){
+                            interestList.add(post.title.toString());
+                          }
+                          return InkWell(
+                            onTap: (){
+
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: Get.height*0.04,
+                                    width: Get.height*0.04,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
+                                  ),
+                                  const SizedBox(width: 10,),
+                                  Text(post.title.toString(), style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: Get.textScaleFactor * 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),),
+                                  const Spacer(),
+                                  InkWell(
+                                      onTap: (){
+                                        var innerBody = {
+                                          "profileId": fullProfile.id,
+                                          "userInterestId" : post.id.toString()
+                                        };
+                                        controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
+                                          if(value.isSuccessful){
+                                            interestList.add(post.title.toString());
+                                            AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
+                                            controller.update(["add_interests_page"]);
+                                          }
+                                        });
+                                      },
+                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else if(savedPosts.val.isNotEmpty){
+                      var posts = InterestsModel.fromJsonList(jsonDecode(savedPosts.val));
+                      return ListView.builder(
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          var post = posts[index];
+                          if(!interestList.contains(post.title)){
+                            interestList.add(post.title.toString());
+                          }
+                          return InkWell(
+                            onTap: (){
+
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: Get.height*0.04,
+                                    width: Get.height*0.04,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
+                                  ),
+                                  const SizedBox(width: 10,),
+                                  Text(post.title.toString(), style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: Get.textScaleFactor * 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),),
+                                  const Spacer(),
+                                  const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }else{
+                      if(snapshot.connectionState == ConnectionState.done){
+                        return const SizedBox.shrink();
                       }
-                      controller.update();
+                      return const GroupView(isLoading: true);
+                    }
+                  }),
+              ListView.builder(
+                itemCount: interestList.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: (){
+
                     },
                     child: Container(
-                      width: Get.width * 0.3,
-                      height: Get.width * 0.3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppColors.background,
-                        border: Border.all(
-                          color: AppColors.grey.withOpacity(0.1),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.grey.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 7,
-                            offset: const Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Stack(
-                        alignment: Alignment.topLeft,
+                      padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                      child: Row(
                         children: [
-                          //Radio Button
-                          Positioned(
-                            top: 1,
-                            left: 1,
-                            child: Checkbox(
-                              value: controller.interests.contains(interestList[index]),
-                              onChanged: (value) {
-                                if (value == true) {
-                                  controller.interests.add(interestList[index]);
-                                } else {
-                                  controller.interests.remove(interestList[index]);
-                                }
-                                controller.update();
-                              },
+                          Container(
+                            height: Get.height*0.04,
+                            width: Get.height*0.04,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(100),
                             ),
+                            child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                           ),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                //
-                                Text(
-                                  interestListEmoji[index],
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 25,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.02,
-                                ),
-                                Text(
-                                  interestList[index],
-                                  style: AppTextStyle.headline4.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          const SizedBox(width: 10,),
+                          Text(interestList[index], style: TextStyle(
+                            color: Colors.black,
+                            fontSize: Get.textScaleFactor * 17,
+                            fontWeight: FontWeight.w500,
+                          ),),
+                          const Spacer(),
+                          InkWell(
+                              onTap: (){
+                                var body = {
+                                  "title": interestList[index],
+                                  "description" : interestList[index]
+                                };
+                                var formData = dio.FormData.fromMap(body);
+                                controller.userRepo.postData("/wayagram-service/graph/createInterest",formData).then((value1) {
+                                  if(value1.isSuccessful){
+                                    var res = NewInterestModel.fromJson(value1.data);
+                                    var innerBody = {
+                                      "profileId": fullProfile.id,
+                                      "interestId" : res.id.toString()
+                                    };
+                                    controller.userRepo.postData( "/wayagram-service/graph/user-interest/selectUserInterest",dio.FormData.fromMap(innerBody),).then((value) {
+                                      if(value1.isSuccessful){
+                                        interestList.remove(interestList[index]);
+                                        AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
+                                        controller.update(["add_interests_page"]);
+                                      }
+                                    });
+                                  }else{
+                                    controller.userRepo.getData("/wayagram-service/graph/search?query=${interestList[index]}&filterBy=NAME").then((value) {
+                                      if(value.isSuccessful){
+                                        var res = NewInterestModel.fromJsonList(value.data["data"]);
+                                        var innerBody = {
+                                          "profileId": fullProfile.id,
+                                          "interestId" : res[0].id.toString()
+                                        };
+                                        controller.userRepo.postData( "/wayagram-service/graph/user-interest/selectUserInterest",dio.FormData.fromMap(innerBody),).then((value) {
+                                          if(value.isSuccessful){
+                                            interestList.remove(interestList[index]);
+                                            AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
+                                            controller.update(["add_interests_page"]);
+                                          }else{
+                                            AppOverlay.showErrorSnackBar(content: "Something went wrong, please try again later");
+                                          }
+                                        });
+                                      }
+                                    });
+                                  }
+                                });
+                              }, child: const Icon(Icons.add_circle, color: AppColors.primary,)
+                          )
                         ],
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
+                  );
+                },
+              ),
+            ],
           ),
         );
       },
