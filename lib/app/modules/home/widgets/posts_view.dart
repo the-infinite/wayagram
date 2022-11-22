@@ -296,7 +296,16 @@ class _PostState extends State<Post> {
                         ),
                         onSelected: (value) {
                           if (value == 0) {
-                            //Get.to(() => const Muted());
+                            var body = {
+                              "postId": widget.post.id,
+                            };
+                            widget.homeController.postData(body, "/wayagram-service/all-posts/create-bookmark?profileId=${widget.fullProfile.id}",updatePages: false).then((value){
+                              if(value.isSuccessful){
+                                AppOverlay.showSuccessSnackBar(title: "Bookmark",content: "Post bookmarked successfully");
+                              }else{
+                                AppOverlay.showErrorSnackBar(title: "Bookmark",content: value.message != null ? value.message.toString() : "Something went wrong");
+                              }
+                            });
                           } else if (value == 1) {
                             Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
                           } else if (value == 2) {

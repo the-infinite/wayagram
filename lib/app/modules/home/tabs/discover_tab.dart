@@ -52,7 +52,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
               width: Get.width,
               padding: const EdgeInsets.all(10),
               child: Text(
-                'Trending Hashtags',
+                'Trending',
                 style: AppTextStyle.headline4.copyWith(
                   color: Colors.black,
                   fontWeight: FontWeight.normal,

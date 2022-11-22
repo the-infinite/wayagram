@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:wayagram/app/data/model/account_model_entity.dart';
 import 'package:wayagram/app/modules/multiplexor/multiplexor.dart';
+import 'package:wayagram/app/modules/top_clips/top_clips.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
@@ -17,6 +18,7 @@ import '../data/model/friends_model_entity.dart';
 import '../data/model/full_user_profile_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/my_pref.dart';
+import '../modules/bookmarks/bookmark.dart';
 import '../modules/groups_and_pages/groups_and_pages.dart';
 import '../modules/profile/profile.dart';
 import '../modules/settings/settings.dart';
@@ -262,7 +264,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.bookmark, color: Colors.black),
                                   text: "Bookmarks",
                                   onPressed: () {
-
+                                    Get.back();
+                                    Get.to(() => const BookmarksPage());
                                   },
                                 ),
 
@@ -270,7 +273,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.account_tree_sharp, color: Colors.black),
                                   text: "Top Clips",
                                   onPressed: () {
-
+                                    Get.back();
+                                    Get.to(() => const TopClips());
                                   },
                                 ),
 
