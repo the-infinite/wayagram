@@ -66,11 +66,16 @@ class _CreatePostsState extends State<CreatePosts> {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
             ),
-            leading: InkWell(
-                onTap: (){
-                  Navigator.pop(context);
-                },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+            leading: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(
+                FeatherIcons.arrowLeft,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Get.back();
+              },
+              iconSize: Get.width * 0.06,
             ),
             actions: [
               Center(

@@ -57,7 +57,7 @@ class HomeTab extends StatelessWidget {
               style: AppTextStyle.headline4.copyWith(
                 color: Colors.black,
                 fontWeight: FontWeight.normal,
-                fontSize: 16,
+                fontSize: Get.textScaleFactor * 14,
               ),
               textAlign: TextAlign.center,
             ),

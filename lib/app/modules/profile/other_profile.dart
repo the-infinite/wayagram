@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
@@ -105,7 +106,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                       builder: (BuildContext context, constraints) {
                         final scrolled = constraints.scrollOffset >= ((Get.height * 0.20));
                         return SliverAppBar(
-                          expandedHeight: Get.height * 0.36,
+                          expandedHeight: Get.height * 0.40,
                           floating: false,
                           pinned: true,
                           flexibleSpace: LayoutBuilder(
@@ -215,7 +216,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(height: 10,),
+                                      SizedBox(height: Get.height * 0.01),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 15),
                                         child: Column(
@@ -331,55 +332,59 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                           ],
                                         ),
                                       ),
+                                      SizedBox(height: Get.height * 0.01),
                                     ],
                                   ),
                                 );
                               }
                           ),
-                          leading: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Container(
-                                  width: Get.width * 0.1,
-                                  height: Get.width * 0.1,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.background,
-                                    borderRadius: BorderRadius.circular(100),
+                          leading: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Container(
+                                width: Get.width * 0.1,
+                                height: Get.width * 0.1,
+                                decoration: BoxDecoration(
+                                  color: AppColors.background,
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  icon: const Icon(
+                                    FeatherIcons.arrowLeft,
+                                    color: Colors.black,
                                   ),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.arrow_back,
-                                      color: Colors.black,
-                                    ),
-                                    onPressed: () {
-                                      Get.back();
-                                    },
-                                  ),
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  iconSize: Get.width * 0.06,
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                           actions: [
                             PopupMenuButton(
                                 color: Colors.white,
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 2.5,right: 5),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        width: Get.width * 0.1,
-                                        height: Get.width * 0.1,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.background,
-                                          borderRadius: BorderRadius.circular(100),
-                                        ),
-                                        child: const Icon(
+                                  child: Center(
+                                    child: Container(
+                                      width: Get.width * 0.1,
+                                      height: Get.width * 0.1,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.background,
+                                        borderRadius: BorderRadius.circular(100),
+                                      ),
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: const Icon(
                                           Icons.more_vert,
                                           color: Colors.black,
                                         ),
+                                        onPressed: null,
+                                        iconSize: Get.width * 0.06,
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
                                 onSelected: (value) {
@@ -569,13 +574,17 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                   ),
                                 ])
                           ],
-                          title: AnimatedOpacity(
-                            duration: const Duration(milliseconds: 300),
-                            opacity: scrolled ? 1.0 : 0.0,
-                            child: Text(
-                              displayName,
-                              style: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.black,
+                          title: Center(
+                            child: AnimatedOpacity(
+                              duration: const Duration(milliseconds: 300),
+                              opacity: scrolled ? 1.0 : 0.0,
+                              child: Text(
+                                displayName,
+                                style: AppTextStyle.subtitle1.copyWith(
+                                  color: const Color(0xff4F4F4F),
+                                  fontSize: Get.textScaleFactor * 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),

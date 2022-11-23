@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -313,13 +314,13 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                     borderRadius: BorderRadius.circular(100),
                                   ),
                                   child: IconButton(
+                                    padding: EdgeInsets.zero,
                                     icon: const Icon(
-                                      Icons.arrow_back,
+                                      FeatherIcons.arrowLeft,
                                       color: Colors.black,
                                     ),
-                                    onPressed: () {
-                                      Get.back();
-                                    },
+                                    onPressed: null,
+                                    iconSize: Get.width * 0.06,
                                   ),
                                 ),
                               ),
@@ -339,9 +340,14 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                           color: AppColors.background,
                                           borderRadius: BorderRadius.circular(100),
                                         ),
-                                        child: const Icon(
-                                          Icons.more_vert,
-                                          color: Colors.black,
+                                        child: IconButton(
+                                          padding: EdgeInsets.zero,
+                                          icon: const Icon(
+                                            Icons.more_vert,
+                                            color: Colors.black,
+                                          ),
+                                          onPressed: null,
+                                          iconSize: Get.width * 0.06,
                                         ),
                                       ),
                                     ],
@@ -416,7 +422,9 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                             child: Text(
                               group.name.toString(),
                               style: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.black,
+                                color: const Color(0xff4F4F4F),
+                                fontWeight: FontWeight.bold,
+                                fontSize: Get.textScaleFactor * 18,
                               ),
                             ),
                           ),

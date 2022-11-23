@@ -48,13 +48,13 @@ class _EventsViewState extends State<EventsView> {
           child: Container(
             color: Colors.blue.shade50,
             width: Get.width,
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8),
             child: Text(
               'Events To Attend',
               style: AppTextStyle.headline4.copyWith(
                 color: Colors.black,
                 fontWeight: FontWeight.normal,
-                fontSize: 16,
+                fontSize: Get.textScaleFactor * 14,
               ),
               textAlign: TextAlign.start,
             ),

@@ -63,7 +63,7 @@ class _MomentsViewState extends State<MomentsView> {
             style: AppTextStyle.headline4.copyWith(
               color: Colors.black,
               fontWeight: FontWeight.normal,
-              fontSize: 16,
+              fontSize: Get.textScaleFactor * 14,
             ),
             textAlign: TextAlign.center,
           ),
@@ -153,8 +153,11 @@ class _MomentsViewState extends State<MomentsView> {
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
                                       onPressed: (){
-
-                                      },icon: const Icon(Icons.add_circle_rounded),color: Colors.grey.withOpacity(.8),),
+                                        Get.to(() => const CreateMoment());
+                                      },
+                                      icon: const Icon(Icons.add_circle_rounded),color: Colors.grey.withOpacity(.8),
+                                    iconSize: Get.width * 0.06,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: Get.width *0.01),

@@ -43,23 +43,18 @@ class _DiscoverTabState extends State<DiscoverTab> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(
-                bottom: 10
-            ),
-            child: Container(
-              color: Colors.blue.shade50,
-              width: Get.width,
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                'Trending',
-                style: AppTextStyle.headline4.copyWith(
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.start,
+          Container(
+            color: Colors.blue.shade50,
+            width: Get.width,
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              'Trending',
+              style: AppTextStyle.headline4.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+                fontSize: Get.textScaleFactor * 14,
               ),
+              textAlign: TextAlign.start,
             ),
           ),
           FutureBuilder<ApiResponse>(
@@ -118,23 +113,18 @@ class _DiscoverTabState extends State<DiscoverTab> {
                   return const GroupView(isLoading: true);
                 }
               }),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 10
-            ),
-            child: Container(
-              color: Colors.blue.shade50,
-              width: Get.width,
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                'Groups To Join',
-                style: AppTextStyle.headline4.copyWith(
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.start,
+          Container(
+            color: Colors.blue.shade50,
+            width: Get.width,
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              'Groups To Join',
+              style: AppTextStyle.headline4.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+                fontSize: Get.textScaleFactor * 14,
               ),
+              textAlign: TextAlign.start,
             ),
           ),
           FutureBuilder<ApiResponse>(
@@ -216,19 +206,19 @@ class _DiscoverTabState extends State<DiscoverTab> {
               }),
           Padding(
             padding: const EdgeInsets.only(
-                bottom: 10,
+                bottom: 0,
                 top: 10
             ),
             child: Container(
               color: Colors.blue.shade50,
               width: Get.width,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(8),
               child: Text(
                 'Pages To Follow',
                 style: AppTextStyle.headline4.copyWith(
                   color: Colors.black,
                   fontWeight: FontWeight.normal,
-                  fontSize: 16,
+                  fontSize: Get.textScaleFactor * 14,
                 ),
                 textAlign: TextAlign.start,
               ),

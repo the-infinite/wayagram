@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -296,14 +297,18 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                     color: AppColors.background,
                                     borderRadius: BorderRadius.circular(100),
                                   ),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.arrow_back,
-                                      color: Colors.black,
+                                  child: Center(
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      icon: const Icon(
+                                        FeatherIcons.arrowLeft,
+                                        color: Colors.black,
+                                      ),
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                      iconSize: Get.width * 0.06,
                                     ),
-                                    onPressed: () {
-                                      Get.back();
-                                    },
                                   ),
                                 ),
                               ),
@@ -323,9 +328,14 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                           color: AppColors.background,
                                           borderRadius: BorderRadius.circular(100),
                                         ),
-                                        child: const Icon(
-                                          Icons.more_vert,
-                                          color: Colors.black,
+                                        child: IconButton(
+                                          padding: EdgeInsets.zero,
+                                          icon: const Icon(
+                                            Icons.more_vert,
+                                            color: Colors.black,
+                                          ),
+                                          onPressed: null,
+                                          iconSize: Get.width * 0.06,
                                         ),
                                       ),
                                     ],
@@ -399,7 +409,9 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                             child: Text(
                               '${page.name}',
                               style: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.black,
+                                color: const Color(0xff4F4F4F),
+                                fontSize: Get.textScaleFactor * 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
