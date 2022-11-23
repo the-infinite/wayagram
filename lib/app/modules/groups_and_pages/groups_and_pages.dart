@@ -62,8 +62,10 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
             elevation: 0,
             title: Text('Groups & Pages', style: AppTextStyle.subtitle1.copyWith(
               color: Colors.black,
+              fontSize: Get.textScaleFactor * 18,
+              fontWeight: FontWeight.bold,
             )),
-            centerTitle: false,
+            centerTitle: true,
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back,
