@@ -51,6 +51,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    List<String> chosenInterestList = [];
     List<String> interestList = [
       'Others',
       'Travel',
@@ -222,8 +223,8 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                         itemCount: posts.length,
                         itemBuilder: (context, index) {
                           var post = posts[index];
-                          if(!interestList.contains(post.title)){
-                            interestList.add(post.title.toString());
+                          if(!chosenInterestList.contains(post.title)){
+                            chosenInterestList.add(post.title.toString());
                           }
                           return InkWell(
                             onTap: (){
@@ -257,9 +258,15 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                       };
                                       controller.deleteData(dio.FormData.fromMap(innerBody), "/wayagram-service/graph/user-interest/deleteUserInterest").then((value) {
                                         if(value.isSuccessful){
-                                          interestList.add(post.title.toString());
-                                          AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
-                                          controller.update(["add_interests_page"]);
+                                          controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                            if(valueRes.isSuccessful){
+                                              var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                              savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                            }
+                                            chosenInterestList.remove(post.title.toString());
+                                            AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
+                                            controller.update(["add_interests_page"]);
+                                          });
                                         }
                                       });
                                     },
@@ -277,8 +284,8 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                         itemCount: posts.length,
                         itemBuilder: (context, index) {
                           var post = posts[index];
-                          if(!interestList.contains(post.title)){
-                            interestList.add(post.title.toString());
+                          if(!chosenInterestList.contains(post.title)){
+                            chosenInterestList.add(post.title.toString());
                           }
                           return InkWell(
                             onTap: (){
@@ -304,7 +311,28 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                     fontWeight: FontWeight.w500,
                                   ),),
                                   const Spacer(),
-                                  const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                  InkWell(
+                                      onTap: (){
+                                        var innerBody = {
+                                          "profileId": fullProfile.id,
+                                          "userInterestId" : post.id.toString()
+                                        };
+                                        controller.deleteData(dio.FormData.fromMap(innerBody), "/wayagram-service/graph/user-interest/deleteUserInterest").then((value) {
+                                          if(value.isSuccessful){
+                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                              if(valueRes.isSuccessful){
+                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                              }
+                                              chosenInterestList.remove(post.title.toString());
+                                              AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
+                                              controller.update(["add_interests_page"]);
+                                            });
+                                          }
+                                        });
+                                      },
+                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                  )
                                 ],
                               ),
                             ),
@@ -321,6 +349,10 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
               ListView.builder(
                 itemCount: interestList.length,
                 itemBuilder: (context, index) {
+                  var currentInterest = interestList.reversed.toList()[index];
+                  if(chosenInterestList.contains(currentInterest)){
+                    return const SizedBox.shrink();
+                  }
                   return InkWell(
                     onTap: (){
 
@@ -339,7 +371,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                             child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                           ),
                           const SizedBox(width: 10,),
-                          Text(interestList[index], style: TextStyle(
+                          Text(currentInterest, style: TextStyle(
                             color: Colors.black,
                             fontSize: Get.textScaleFactor * 17,
                             fontWeight: FontWeight.w500,
@@ -348,8 +380,8 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                           InkWell(
                             onTap: (){
                               var body = {
-                                "title": interestList[index],
-                                "description" : interestList[index]
+                                "title": currentInterest,
+                                "description" : currentInterest
                               };
                               var formData = dio.FormData.fromMap(body);
                               controller.postData(formData, "/wayagram-service/graph/createInterest").then((value1) {
@@ -361,13 +393,19 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                   };
                                   controller.postData(dio.FormData.fromMap(innerBody), "/wayagram-service/graph/user-interest/selectUserInterest").then((value) {
                                     if(value1.isSuccessful){
-                                      interestList.remove(interestList[index]);
-                                      AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
-                                      controller.update(["add_interests_page"]);
+                                      controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                        if(valueRes.isSuccessful){
+                                          var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                          savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                        }
+                                        interestList.remove(currentInterest);
+                                        AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
+                                        controller.update(["add_interests_page"]);
+                                      });
                                     }
                                   });
                                 }else{
-                                  controller.getData("/wayagram-service/graph/search?query=${interestList[index]}&filterBy=NAME",true).then((value) {
+                                  controller.getData("/wayagram-service/graph/search?query=${currentInterest}&filterBy=NAME",true).then((value) {
                                     if(value.isSuccessful){
                                       var res = NewInterestModel.fromJsonList(value.data["data"]);
                                       var innerBody = {
@@ -376,9 +414,15 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                       };
                                       controller.postData(dio.FormData.fromMap(innerBody), "/wayagram-service/graph/user-interest/selectUserInterest").then((value) {
                                         if(value.isSuccessful){
-                                          interestList.remove(interestList[index]);
-                                          AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
-                                          controller.update(["add_interests_page"]);
+                                          controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                            if(valueRes.isSuccessful){
+                                              var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                              savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                            }
+                                            interestList.remove(currentInterest);
+                                            AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
+                                            controller.update(["add_interests_page"]);
+                                          });
                                         }else{
                                           AppOverlay.showErrorSnackBar(content: "Something went wrong, please try again later");
                                         }

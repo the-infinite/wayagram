@@ -52,7 +52,9 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+    List<String> chosenInterestList = [];
     List<String> interestList = [
+      'Other',
       'Travel',
       'Food',
       'Fashion',
@@ -84,9 +86,8 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
       'Entertainment',
       'News',
       'Lifestyle',
-      'Other'
     ];
-    List<String> interestListEmoji = [
+    /*List<String> interestListEmoji = [
       '🌍',
       '🍔',
       '👗',
@@ -119,8 +120,9 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
       '🛋️',
       '🤷',
       '👍'
-    ];
+    ];*/
     return  GetBuilder<AuthController>(
+      id: 'interests',
       builder: (controller){
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
@@ -198,6 +200,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                       border: Border.all(color: AppColors.background, width: 1),
                       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                       width: Get.width * 0.2,
+                      fontSize: Get.width * 0.04,
                     ),
                   ),
                 )
@@ -224,8 +227,8 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                         itemCount: posts.length,
                         itemBuilder: (context, index) {
                           var post = posts[index];
-                          if(!interestList.contains(post.title)){
-                            interestList.add(post.title.toString());
+                          if(!chosenInterestList.contains(post.title)){
+                            chosenInterestList.add(post.title.toString());
                           }
                           return InkWell(
                             onTap: (){
@@ -259,9 +262,15 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                         };
                                         controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
                                           if(value.isSuccessful){
-                                            interestList.add(post.title.toString());
-                                            AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
-                                            controller.update(["add_interests_page"]);
+                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                              if(valueRes.isSuccessful){
+                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                              }
+                                              chosenInterestList.remove(post.title.toString());
+                                              AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
+                                              controller.update(["interests"]);
+                                            });
                                           }
                                         });
                                       },
@@ -279,8 +288,8 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                         itemCount: posts.length,
                         itemBuilder: (context, index) {
                           var post = posts[index];
-                          if(!interestList.contains(post.title)){
-                            interestList.add(post.title.toString());
+                          if(!chosenInterestList.contains(post.title)){
+                            chosenInterestList.add(post.title.toString());
                           }
                           return InkWell(
                             onTap: (){
@@ -306,7 +315,28 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                     fontWeight: FontWeight.w500,
                                   ),),
                                   const Spacer(),
-                                  const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                  InkWell(
+                                      onTap: (){
+                                        var innerBody = {
+                                          "profileId": fullProfile.id,
+                                          "userInterestId" : post.id.toString()
+                                        };
+                                        controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
+                                          if(value.isSuccessful){
+                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                              if(valueRes.isSuccessful){
+                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                              }
+                                              chosenInterestList.remove(post.title.toString());
+                                              AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
+                                              controller.update(["interests"]);
+                                            });
+                                          }
+                                        });
+                                      },
+                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                  )
                                 ],
                               ),
                             ),
@@ -323,6 +353,10 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
               ListView.builder(
                 itemCount: interestList.length,
                 itemBuilder: (context, index) {
+                  var currentInterest = interestList.reversed.toList()[index];
+                  if(chosenInterestList.contains(currentInterest)){
+                    return const SizedBox.shrink();
+                  }
                   return InkWell(
                     onTap: (){
 
@@ -341,7 +375,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                             child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                           ),
                           const SizedBox(width: 10,),
-                          Text(interestList[index], style: TextStyle(
+                          Text(currentInterest, style: TextStyle(
                             color: Colors.black,
                             fontSize: Get.textScaleFactor * 17,
                             fontWeight: FontWeight.w500,
@@ -350,8 +384,8 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                           InkWell(
                               onTap: (){
                                 var body = {
-                                  "title": interestList[index],
-                                  "description" : interestList[index]
+                                  "title": currentInterest,
+                                  "description" : currentInterest
                                 };
                                 var formData = dio.FormData.fromMap(body);
                                 controller.userRepo.postData("/wayagram-service/graph/createInterest",formData).then((value1) {
@@ -361,26 +395,38 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                       "profileId": fullProfile.id,
                                       "interestId" : res.id.toString()
                                     };
-                                    controller.userRepo.postData( "/wayagram-service/graph/user-interest/selectUserInterest",dio.FormData.fromMap(innerBody),).then((value) {
+                                    controller.userRepo.postData( "/wayagram-service/graph/user-interest/selectUserInterest",dio.FormData.fromMap(innerBody),).then((value){
                                       if(value1.isSuccessful){
-                                        interestList.remove(interestList[index]);
-                                        AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
-                                        controller.update(["add_interests_page"]);
+                                        controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                          if(valueRes.isSuccessful){
+                                            var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                            savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                          }
+                                          chosenInterestList.add(currentInterest);
+                                          AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
+                                          controller.update(["interests"]);
+                                        });
                                       }
                                     });
                                   }else{
-                                    controller.userRepo.getData("/wayagram-service/graph/search?query=${interestList[index]}&filterBy=NAME").then((value) {
+                                    controller.userRepo.getData("/wayagram-service/graph/search?query=${currentInterest}&filterBy=NAME").then((value) {
                                       if(value.isSuccessful){
                                         var res = NewInterestModel.fromJsonList(value.data["data"]);
                                         var innerBody = {
                                           "profileId": fullProfile.id,
                                           "interestId" : res[0].id.toString()
                                         };
-                                        controller.userRepo.postData( "/wayagram-service/graph/user-interest/selectUserInterest",dio.FormData.fromMap(innerBody),).then((value) {
+                                        controller.userRepo.postData( "/wayagram-service/graph/user-interest/selectUserInterest",dio.FormData.fromMap(innerBody),).then((value){
                                           if(value.isSuccessful){
-                                            interestList.remove(interestList[index]);
-                                            AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
-                                            controller.update(["add_interests_page"]);
+                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                              if(valueRes.isSuccessful){
+                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                              }
+                                              chosenInterestList.add(currentInterest);
+                                              AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
+                                              controller.update(["interests"]);
+                                            });
                                           }else{
                                             AppOverlay.showErrorSnackBar(content: "Something went wrong, please try again later");
                                           }
