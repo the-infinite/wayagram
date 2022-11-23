@@ -114,12 +114,11 @@ class _DocumentPickerState extends State<DocumentPicker> {
   Widget build(BuildContext context) {
     final Widget choosePhotoPrompt =
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(CupertinoIcons.cloud_upload, size: 45, color: widget.displayPickerIcon ? Colors.white : Colors.transparent),
-      const SizedBox(height: 5),
-      Text(
-        widget.actionWord,
-        textAlign: TextAlign.center,
-        style: AppTextStyle.bodyText2.copyWith(fontWeight: FontWeight.w500, color: widget.displayPickerIcon ? Colors.white : Colors.transparent),
+          Icon(CupertinoIcons.cloud_upload, size: Get.height*0.045, color: widget.displayPickerIcon ? Colors.white : Colors.transparent),
+          Text(
+            widget.actionWord,
+            textAlign: TextAlign.center,
+            style: AppTextStyle.bodyText2.copyWith(fontWeight: FontWeight.w500, color: widget.displayPickerIcon ? Colors.white : Colors.transparent,fontSize: Get.textScaleFactor * 12),
       )
     ]);
     return GestureDetector(

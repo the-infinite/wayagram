@@ -47,9 +47,10 @@ class UpdateProfileSignUp extends GetView<AuthController> {
                 Get.back();
               },
             ),
-            title: Text('Update Profile', style: AppTextStyle.subtitle1.copyWith(
+            title: Text('Set Up Profile', style: AppTextStyle.subtitle1.copyWith(
               color: Colors.black,
             )),
+            titleSpacing: 0,
             centerTitle: false,
               actions: [
                 Center(
@@ -90,7 +91,7 @@ class UpdateProfileSignUp extends GetView<AuthController> {
                         }
                       },
                       borderRadius: 10,
-                      fontColor: AppColors.primary,
+                      fontColor: AppColors.button,
                       bckgrndColor: AppColors.background,
                       border: Border.all(color: AppColors.background, width: 1),
                       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
