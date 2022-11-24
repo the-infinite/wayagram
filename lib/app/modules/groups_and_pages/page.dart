@@ -41,6 +41,7 @@ import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
 import '../profile/inner_pages/followers.dart';
 import '../profile/inner_pages/following.dart';
+import '../profile/report_user.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 import 'edit/edit_page.dart';
@@ -506,6 +507,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                             var username = List<String>.empty(growable: true);
                             var profile = List<String>.empty(growable: true);
                             var userIds = List<String>.empty(growable: true);
+                            var ids = List<String>.empty(growable: true);
 
                             for (var element in posts) {
                               if(element.profile != null){
@@ -513,6 +515,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                 username.add(element.profile!.username.toString());
                                 profile.add(element.profile!.avatar.toString());
                                 userIds.add(element.profile!.userId.toString());
+                                ids.add(element.profile!.id.toString());
                               }
                             }
 
@@ -522,6 +525,16 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                               profilePic: profile,
                               length: names.length,
                               userIDs: userIds,
+                              iDs: ids,
+                              showReport: true,
+                              onReportClick: (value) {
+                                controller.pageToPost = page;
+                                controller.groupToPost = null;
+                                Get.to(() => ReportUser(
+                                  person: value,
+                                  page: page,
+                                ));
+                              },
                             );
                           } else if(savedPosts.val.isNotEmpty){
                             var posts = GroupMembersModel.listFromJson(jsonDecode(savedPosts.val));
@@ -529,6 +542,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                             var username = List<String>.empty(growable: true);
                             var profile = List<String>.empty(growable: true);
                             var userIds = List<String>.empty(growable: true);
+                            var ids = List<String>.empty(growable: true);
 
                             for (var element in posts) {
                               if(element.profile != null){
@@ -536,6 +550,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                 username.add(element.profile!.username.toString());
                                 profile.add(element.profile!.avatar.toString());
                                 userIds.add(element.profile!.userId.toString());
+                                ids.add(element.profile!.id.toString());
                               }
                             }
 
@@ -545,6 +560,16 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                               profilePic: profile,
                               length: names.length,
                               userIDs: userIds,
+                              iDs: ids,
+                              showReport: true,
+                              onReportClick: (value) {
+                                controller.pageToPost = page;
+                                controller.groupToPost = null;
+                                Get.to(() => ReportUser(
+                                  person: value,
+                                  page: page,
+                                ));
+                              },
                             );
                           }else{
                             return const NotificationView(isLoading: true);

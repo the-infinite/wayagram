@@ -55,6 +55,9 @@ class HomeController extends GetxController {
   GroupModelEntity? groupToPost;
   GroupModelEntity? pageToPost;
 
+  GroupModelEntity? groupToReportIn;
+  GroupModelEntity? pageToReportIn;
+
   List<Widget> pages = const [
     HomeTab(),
     DiscoverTab(),
@@ -230,6 +233,7 @@ class HomeController extends GetxController {
   }
 
   Future<ApiResponse> postData(dynamic body,String url,{bool updatePages = true}) async {
+    print(url);
     final response = await userRepo.postData(url, body);
     debugPrint(response.message);
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){

@@ -11,6 +11,7 @@ import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
 import 'package:wayagram/app/modules/profile/inner_pages/blocked.dart';
 import 'package:wayagram/app/modules/profile/inner_pages/muted.dart';
+import 'package:wayagram/app/modules/profile/report_user.dart';
 import 'package:wayagram/app/modules/profile/update_profile.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
@@ -33,6 +34,7 @@ import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/app_drawer.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/person_view.dart';
 import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
 import '../setup/interests.dart';
@@ -74,6 +76,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
     var userPosts = arguments[5];
     var displayName = arguments[0];
     var coverImage = arguments[8];
+    var id = arguments[9];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -97,6 +100,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
             var isFollowing = following.following!.any((element) => element.username == userName);
             var isBlocked = blocked.any((element) => element.username == userName);
             var isMuted = muted.any((element) => element.username == userName);
+
 
             return Scaffold(
               body: NestedScrollView(
@@ -389,7 +393,20 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                 ),
                                 onSelected: (value) {
                                   if (value == 0) {
-
+                                    Person person = Person(
+                                      displayName: displayName,
+                                      username: userName,
+                                      userID: userId,
+                                      followersCount: userFollowers,
+                                      followingCount: userFollowing,
+                                      profilePic: userImage,
+                                      bio: userBio,
+                                      coverImage: coverImage,
+                                      id: id
+                                    );
+                                    controller.pageToReportIn = null;
+                                    controller.groupToReportIn = null;
+                                    Get.to(() => ReportUser(person: person));
                                   } else if (value == 1) {
                                     showPlatformDialog(
                                       context: context,

@@ -11,6 +11,7 @@ import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
 import 'package:wayagram/app/modules/profile/inner_pages/blocked.dart';
 import 'package:wayagram/app/modules/profile/inner_pages/muted.dart';
+import 'package:wayagram/app/modules/profile/report_user.dart';
 import 'package:wayagram/app/modules/profile/update_profile.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
@@ -33,6 +34,7 @@ import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/app_drawer.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/person_view.dart';
 import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
 import '../setup/interests.dart';
@@ -384,7 +386,20 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                 ),
                                 onSelected: (value) {
                                   if (value == 0) {
-
+                                    Person person = Person(
+                                      displayName: post.profile!.displayName.toString(),
+                                      username: post.profile!.username.toString(),
+                                      userID: post.profile!.userId.toString(),
+                                      followersCount: post.profile!.followers!.toInt().toString(),
+                                      followingCount: post.profile!.followings!.toInt().toString(),
+                                      profilePic: post.profile!.avatar.toString(),
+                                      bio: post.profile!.bio.toString(),
+                                      coverImage: post.profile!.coverImage.toString(),
+                                      id: post.profile!.id.toString(),
+                                    );
+                                    controller.pageToReportIn = null;
+                                    controller.groupToReportIn = null;
+                                    Get.to(() => ReportUser(person: person));
                                   } else if (value == 1) {
                                     showPlatformDialog(
                                       context: context,

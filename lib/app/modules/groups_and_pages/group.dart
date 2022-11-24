@@ -43,6 +43,7 @@ import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
 import '../profile/inner_pages/followers.dart';
 import '../profile/inner_pages/following.dart';
+import '../profile/report_user.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 import 'edit/edit_group.dart';
@@ -550,6 +551,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                             var username = posts.map((e) => e.profile!.username.toString()).toList();
                             var profile = posts.map((e) => e.profile!.avatar.toString()).toList();
                             var userIds = posts.map((e) => e.profile!.userId.toString()).toList();
+                            var ids = posts.map((e) => e.profile!.id.toString()).toList();
 
                             return PersonView(
                               name: names,
@@ -557,6 +559,16 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                               profilePic: profile,
                               length: posts.length,
                               userIDs: userIds,
+                              iDs: ids,
+                              showReport: true,
+                              onReportClick: (value) {
+                                controller.pageToPost = null;
+                                controller.groupToPost = group;
+                                Get.to(() => ReportUser(
+                                  person: value,
+                                  group: group,
+                                ));
+                              },
                             );
                           } else if(savedPosts.val.isNotEmpty){
                             var posts = GroupMembersModel.listFromJson(jsonDecode(savedPosts.val));
@@ -564,6 +576,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                             var username = posts.map((e) => e.profile!.username.toString()).toList();
                             var profile = posts.map((e) => e.profile!.avatar.toString()).toList();
                             var userIds = posts.map((e) => e.profile!.userId.toString()).toList();
+                            var ids = posts.map((e) => e.profile!.id.toString()).toList();
 
                             return PersonView(
                               name: names,
@@ -571,6 +584,16 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                               profilePic: profile,
                               length: posts.length,
                               userIDs: userIds,
+                              iDs: ids,
+                              showReport: true,
+                              onReportClick: (value) {
+                                controller.pageToPost = null;
+                                controller.groupToPost = group;
+                                Get.to(() => ReportUser(
+                                  person: value,
+                                  group: group,
+                                ));
+                              },
                             );
                           }else{
                             return const NotificationView(isLoading: true);

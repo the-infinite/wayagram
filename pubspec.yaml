@@ -63,6 +63,7 @@ dependencies:
   video_player: ^2.4.7
   flutter_cache_manager: ^3.3.0
   flutter_screenutil: ^5.5.4
+  group_radio_button: ^1.2.0
 
 dev_dependencies:
   flutter_test:
