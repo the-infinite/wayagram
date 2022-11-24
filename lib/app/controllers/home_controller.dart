@@ -20,6 +20,7 @@ import '../../core/theme/app_colors.dart';
 import '../data/model/ContactList.dart';
 import '../data/model/ContactsToUpload.dart';
 import '../data/model/SearchPeopleResponse.dart';
+import '../data/model/all_posts_entity.dart';
 import '../data/model/full_user_profile_entity.dart';
 import '../data/model/log_in_model_entity.dart';
 import '../data/model/profile_model_entity.dart';
@@ -49,6 +50,7 @@ class HomeController extends GetxController {
 
   HomeController(this.userRepo);
 
+  AllPostsEntity? postToQuote;
   List<Widget> pages = const [
     HomeTab(),
     DiscoverTab(),

@@ -79,6 +79,7 @@ class WayaBottomSheet extends StatelessWidget {
                           title: "POST",
                           subtitle: "Share a post or write what is on your mind",
                           onTap: () {
+                            controller.postToQuote = null;
                             controller.imagePaths.clear();
                             Get.back();
                             Get.to(() => const CreatePosts());
@@ -168,6 +169,69 @@ class WayaBottomSheet extends StatelessWidget {
                     ],
                   ),
                 ),
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class RepostBottomSheet extends StatelessWidget {
+  const RepostBottomSheet({Key? key, required this.post}) : super(key: key);
+  final AllPostsEntity post;
+  @override
+  Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: AppColors.background1,
+          systemNavigationBarIconBrightness: Brightness.dark
+      ),
+      child: GetBuilder<HomeController>(builder: (controller) {
+        return Container(
+          //height: Get.height * 0.65,
+          decoration: const BoxDecoration(
+            color: AppColors.background1,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: Get.height * 0.01,
+              ),
+              BottomSheetButton(
+                  icon: FeatherIcons.repeat,
+                  title: "REPOST",
+                  subtitle: "Share this post on your timeline",
+                  onTap: () {
+                    controller.imagePaths.clear();
+                    Get.back();
+                    Get.to(() => const CreatePosts());
+                  }
+              ),
+              BottomSheetButton(
+                  icon: FeatherIcons.edit,
+                  title: "QUOTE POST",
+                  subtitle: "Share your opinion on this post",
+                  onTap: () {
+                    controller.postToQuote = post;
+                    controller.imagePaths.clear();
+                    Get.back();
+                    Get.to(() => const CreatePosts());
+                  }
               ),
             ],
           ),

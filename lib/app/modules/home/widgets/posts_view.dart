@@ -33,6 +33,7 @@ import '../../profile/profile.dart';
 import '../../search/search.dart';
 import '../../view_posts/post_analytics.dart';
 import '../../view_posts/view_post.dart';
+import 'bottom_sheet.dart';
 
 class PostsView extends StatelessWidget{
   const PostsView({
@@ -535,35 +536,40 @@ class _PostState extends State<Post> {
                 ],
               ),
               //Retweet
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  if(widget.post.isRepost == true)
-                    const Icon(
-                      FeatherIcons.repeat,
-                      color: AppColors.primary,
-                      size: 20,
+              InkWell(
+                onTap: (){
+                  Get.bottomSheet(RepostBottomSheet(post: widget.post));
+                },
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
                     ),
-                  if(widget.post.isRepost == false || widget.post.isRepost == null)
-                    const Icon(
-                      FeatherIcons.repeat,
-                      color: Colors.grey,
-                      size: 20,
+                    if(widget.post.isRepost == true)
+                      const Icon(
+                        FeatherIcons.repeat,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
+                    if(widget.post.isRepost == false || widget.post.isRepost == null)
+                      const Icon(
+                        FeatherIcons.repeat,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
+                    const SizedBox(
+                      width: 2,
                     ),
-                  const SizedBox(
-                    width: 2,
-                  ),
-                  Text(
-                    widget.post.repostCount.toString(),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
+                    Text(
+                      widget.post.repostCount.toString(),
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(
                 width: 60,
