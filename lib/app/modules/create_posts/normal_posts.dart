@@ -12,6 +12,8 @@ import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/SearchHashtagsModel.dart';
+import '../../data/model/SearhPeopleModel.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
@@ -22,6 +24,9 @@ import 'package:dio/dio.dart' as dio;
 
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
+import '../../global_widgets/person_view.dart';
+import '../home/widgets/HashTagView.dart';
+import '../home/widgets/group_view.dart';
 
 class CreatePosts extends StatefulWidget {
   const CreatePosts({Key? key}) : super(key: key);
@@ -33,15 +38,16 @@ class CreatePosts extends StatefulWidget {
 class _CreatePostsState extends State<CreatePosts> {
   final ImagePicker _imagePicker = ImagePicker();
   var textController = TextEditingController();
+  var detectedHashtagController = TextEditingController();
   List<String> images = [];
   var postID = "";
+  var searchedPeople = "";
+  var searchedHashtags = "";
   RegExp exp = RegExp(r"\B#\w\w+");
 
   @override
   Widget build(BuildContext context) {
 
-    /*images.removeAt(index);
-     controller.update();*/
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -234,6 +240,16 @@ class _CreatePostsState extends State<CreatePosts> {
                               ),
                               controller: textController,
                               decorateAtSign: true,
+                              onDetectionTyped: (String value) {
+                                detectedHashtagController.text = value;
+                                controller.update();
+                              },
+                              onDetectionFinished: () {
+                                detectedHashtagController.text = "";
+                                searchedPeople = "";
+                                searchedHashtags = "";
+                                controller.update();
+                              },
                             ),
                           ),
                           if(images.isNotEmpty)
@@ -269,7 +285,8 @@ class _CreatePostsState extends State<CreatePosts> {
                   color: const Color(0xffEDEAEA),
                   height: 1.0,
                 ),
-                Row(
+                if(detectedHashtagController.text.isEmpty)
+                  Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
@@ -385,6 +402,166 @@ class _CreatePostsState extends State<CreatePosts> {
                     ),
                   ],
                 ),
+                if(detectedHashtagController.text.isNotEmpty)
+                  SizedBox(
+                    height: Get.height*0.25,
+                    child: SingleChildScrollView(
+                      child: detectedHashtagController.text.startsWith("#") ?
+                      FutureBuilder<ApiResponse>(
+                        //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
+                          future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")}", true),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                              final posts = SearchHashtagsModel.listFromJson(snapshot.data!.data);
+                              searchedHashtags = jsonEncode(posts);
+                              List<String> title = [];
+                              List<String> subtitle = [];
+                              for (var element in posts) {
+                                if(element.hashtag != null){
+                                  if(element.hashtag.toString().startsWith("#")){
+                                    title.add(element.hashtag!);
+                                  }else{
+                                    title.add("#${element.hashtag!}");
+                                  }
+                                  if(element.postToHashtags != null){
+                                    subtitle.add('${element.postToHashtags!.length} Conversations');
+                                  }else{
+                                    subtitle.add('0 Conversations');
+                                  }
+                                }
+                              }
+                              if(title.isEmpty){
+                                return SizedBox(
+                                  height: Get.height*0.25,
+                                  child: const Center(
+                                    child: Text('No Hashtags Found'),
+                                  ),
+                                );
+                              }
+                              return HashTagView(
+                                title: title,
+                                subtitle: subtitle,
+                                onClick: (title, subtitle) {
+                                  //replace last only
+                                  //textController.text = textController.text.replaceAll(detectedHashtagController.text, title);
+                                  var pos = textController.text.lastIndexOf(detectedHashtagController.text);
+                                  textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "$title ");
+                                  textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                },
+                              );
+                            }else{
+                              if(searchedHashtags.isNotEmpty){
+                                final posts = SearchHashtagsModel.listFromJson(jsonDecode(searchedHashtags));
+                                List<String> title = [];
+                                List<String> subtitle = [];
+                                for (var element in posts) {
+                                  if(element.hashtag != null){
+                                    if(element.hashtag.toString().startsWith("#")){
+                                      title.add(element.hashtag!);
+                                    }else{
+                                      title.add("#${element.hashtag!}");
+                                    }
+                                    if(element.postToHashtags != null){
+                                      subtitle.add('${element.postToHashtags!.length} Conversations');
+                                    }else{
+                                      subtitle.add('0 Conversations');
+                                    }
+                                  }
+                                }
+                                if(title.isEmpty){
+                                  return SizedBox(
+                                    height: Get.height*0.25,
+                                    child: const Center(
+                                      child: Text('No Hashtags Found'),
+                                    ),
+                                  );
+                                }
+                                return HashTagView(
+                                  title: title,
+                                  subtitle: subtitle,
+                                  onClick: (title, subtitle) {
+                                    //replace last only
+                                    //textController.text = textController.text.replaceAll(detectedHashtagController.text, title);
+                                    var pos = textController.text.lastIndexOf(detectedHashtagController.text);
+                                    textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "$title ");
+                                    textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                  },
+                                );
+                              }
+                              if(snapshot.connectionState == ConnectionState.done){
+                                return SizedBox(
+                                  height: Get.height*0.25,
+                                  child: const Center(
+                                    child: Text('No Hashtags Found'),
+                                  ),
+                                );
+                              }
+                              return const GroupView(isLoading: true);
+                            }
+                          }) : FutureBuilder<ApiResponse>(
+                          future: controller.searchPeople(detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                              //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                              var posts = SearchPeopleModel.getService(snapshot.data!.data);
+                              searchedPeople = jsonEncode(posts);
+                              if(posts.isEmpty){
+                                return SizedBox(
+                                  height: Get.height * 0.7,
+                                  child: const Center(
+                                    child: Text('No People Found'),
+                                  ),
+                                );
+                              }
+                              return PersonView(
+                                name: posts.map((e) => e.displayName.toString()).toList(),
+                                username: posts.map((e) => e.username.toString()).toList(),
+                                profilePic: posts.map((e) => e.avatar.toString()).toList(),
+                                length: posts.length,
+                                userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                onClick: (value){
+                                  var pos = textController.text.lastIndexOf(detectedHashtagController.text);
+                                  textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "@${value.username} ");
+                                  textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                },
+                              );
+                            }else{
+                              if(searchedPeople.isNotEmpty){
+                                var posts = SearchPeopleModel.getService(jsonDecode(searchedPeople));
+                                if(posts.isEmpty){
+                                  return SizedBox(
+                                    height: Get.height * 0.7,
+                                    child: const Center(
+                                      child: Text('No People Found'),
+                                    ),
+                                  );
+                                }
+                                return PersonView(
+                                  name: posts.map((e) => e.displayName.toString()).toList(),
+                                  username: posts.map((e) => e.username.toString()).toList(),
+                                  profilePic: posts.map((e) => e.avatar.toString()).toList(),
+                                  length: posts.length,
+                                  userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                  onClick: (value){
+                                    var pos = textController.text.lastIndexOf(detectedHashtagController.text);
+                                    textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "@${value.username} ");
+                                    textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                  },
+                                );
+                              }
+                              if(snapshot.connectionState == ConnectionState.done){
+                                return SizedBox(
+                                  height: Get.height * 0.7,
+                                  child: const Center(
+                                    child: Text('No People Found'),
+                                  ),
+                                );
+                              }
+                              return const GroupView(isLoading: true,isGroup: true,);
+                            }
+                          }),
+                    ),
+                  )
               ],
             ),
           ),

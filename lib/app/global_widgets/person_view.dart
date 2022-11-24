@@ -13,6 +13,27 @@ import '../data/model/following_model_entity.dart';
 import '../modules/profile/other_profile.dart';
 import 'app_avatar.dart';
 
+class Person{
+  final String displayName;
+  final String username;
+  final String profilePic;
+  final String userID;
+  final String followersCount;
+  final String followingCount;
+  final String bio;
+  final String coverImage;
+
+  Person({
+    required this.displayName,
+    required this.username,
+    required this.profilePic,
+    required this.userID,
+    required this.followersCount,
+    required this.followingCount,
+    required this.bio,
+    required this.coverImage,
+  });
+}
 class PersonView extends StatefulWidget {
   const PersonView({
     Key? key,
@@ -25,6 +46,7 @@ class PersonView extends StatefulWidget {
     this.blocked,
     this.following,
     this.followers,
+    this.onClick
   }) : super(key: key);
 
   final bool isLoading;
@@ -35,6 +57,7 @@ class PersonView extends StatefulWidget {
   final List<BlockedAccountsEntity>? blocked;
   final List<FollowingModelFollowing>? following;
   final List<FollowersModelFollowers>? followers;
+  final Function(Person person)? onClick;
   final int length;
 
   @override
@@ -101,10 +124,23 @@ class _PersonViewState extends State<PersonView> {
               followingCount = widget.followers![index].followings.toString();
               coverImage = widget.followers![index].coverImage ?? '';
             }
-            Get.toNamed(
-                OtherProfile.route,
-                arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage]
-            );
+            if(widget.onClick!=null){
+              widget.onClick!(Person(
+                displayName: displayName,
+                username: username,
+                profilePic: profilePic,
+                userID: userID,
+                followersCount: followersCount,
+                followingCount: followingCount,
+                bio: bio,
+                coverImage: coverImage,
+              ));
+            }else{
+              Get.toNamed(
+                  OtherProfile.route,
+                  arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage]
+              );
+            }
           },
           child: Container(
             margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
