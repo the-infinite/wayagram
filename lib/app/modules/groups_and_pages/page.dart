@@ -35,6 +35,7 @@ import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_drawer.dart';
 import '../../global_widgets/page_input.dart';
 import '../../global_widgets/person_view.dart';
+import '../create_posts/normal_posts.dart';
 import '../home/widgets/notification_view.dart';
 import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
@@ -89,7 +90,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
             var isPublic = false;
             var muted = false;
             var userMuted = false;
-            var allowMemberPost = false;
+            var allowMemberPost = true;
             if(page.numberOfMembers != null) {
               memberCount = page.numberOfMembers!.toInt();
               isUserAAdmin = page.isUserAdmin == true;
@@ -123,7 +124,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                   buttonText = 'Unfollow Page';
                   isUserAAdmin = element.isUserAdmin == true;
                   isUserAAdmin = element.isUserAdmin == true;
-                  isUserAMember = element.isUserAMember == true;
+                  isUserAMember = true;
                   isPublic = element.isPublic == true;
                   muted = element.mute == true;
                   userMuted = element.isUserOnMute == true;
@@ -552,6 +553,16 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                   ],
                 ),
               ),
+              floatingActionButton: ((isUserAMember && allowMemberPost) || isForUser) ? FloatingActionButton(
+                onPressed: () {
+                  controller.groupToPost = null;
+                  controller.pageToPost = page;
+                  controller.imagePaths.clear();
+                  Get.to(() => const CreatePosts());
+                },
+                backgroundColor: AppColors.primary,
+                child: const Icon(Icons.add,color: Colors.white),
+              ) : null,
             );
           }),
     );

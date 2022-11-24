@@ -37,6 +37,7 @@ import '../../global_widgets/app_drawer.dart';
 import '../../global_widgets/gallery_view.dart';
 import '../../global_widgets/page_input.dart';
 import '../../global_widgets/person_view.dart';
+import '../create_posts/normal_posts.dart';
 import '../home/widgets/notification_view.dart';
 import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
@@ -319,7 +320,9 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       FeatherIcons.arrowLeft,
                                       color: Colors.black,
                                     ),
-                                    onPressed: null,
+                                    onPressed: (){
+                                      Get.back();
+                                    },
                                     iconSize: Get.width * 0.06,
                                   ),
                                 ),
@@ -466,9 +469,9 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                         fontSize: Get.width*0.035,
                                         fontWeight: FontWeight.w500,
                                       ),
-                                      tabs: [
-                                        const Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                                        const Tab(text: 'Media',iconMargin: EdgeInsets.zero,),
+                                      tabs: const [
+                                        Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                        Tab(text: 'Media',iconMargin: EdgeInsets.zero,),
                                         Tab(text: "Members",iconMargin: EdgeInsets.zero,),
                                       ],
                                       onTap: (index) {
@@ -576,6 +579,16 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                   ],
                 ),
               ),
+              floatingActionButton: ((isUserAMember && allowMemberPost) || isForUser) ? FloatingActionButton(
+              onPressed: () {
+                controller.pageToPost = null;
+                controller.groupToPost = group;
+                controller.imagePaths.clear();
+                Get.to(() => const CreatePosts());
+              },
+              backgroundColor: AppColors.primary,
+              child: const Icon(Icons.add,color: Colors.white),
+            ) : null,
             );
           }),
     );

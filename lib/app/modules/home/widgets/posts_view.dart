@@ -250,8 +250,8 @@ class _PostState extends State<Post> {
                 onTap: (){
 
                 },
-                child: Row(
-                  //crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       widget.post.profile!.displayName.toString(),
@@ -261,7 +261,6 @@ class _PostState extends State<Post> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(width: Get.width * 0.01,),
                     Text(
                       "@${widget.post.profile!.username}",
                       style: AppTextStyle.bodyText1.copyWith(
@@ -302,7 +301,6 @@ class _PostState extends State<Post> {
                             var body = {
                               "postId": widget.post.id,
                             };
-                            print(widget.fullProfile.id);
                             widget.homeController.postData(body, "/wayagram-service/all-posts/create-bookmark?profileId=${widget.fullProfile.id}",updatePages: false).then((value){
                               if(value.isSuccessful){
                                 AppOverlay.showSuccessSnackBar(title: "Bookmark",content: "Post bookmarked successfully");
@@ -314,6 +312,17 @@ class _PostState extends State<Post> {
                             Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
                           } else if (value == 2) {
                             //Get.to(() => const Followers());
+                          }else if (value == 3) {
+                            var body = {
+                              "post_id": widget.post.id,
+                            };
+                            widget.homeController.deleteData(body, "/wayagram-service/all-posts/delete?profile_id=${widget.fullProfile.id}",updatePages: true).then((value){
+                              if(value.isSuccessful){
+                                AppOverlay.showSuccessSnackBar(title: "Delete",content: "Post deleted successfully");
+                              }else{
+                                AppOverlay.showErrorSnackBar(title: "Delete",content: value.message != null ? value.message.toString() : "Something went wrong");
+                              }
+                            });
                           }
                         },
                         itemBuilder: (context) => [
@@ -337,7 +346,7 @@ class _PostState extends State<Post> {
                               ),
                             ),
                           ),
-                          if(isCurrentUserPost)
+                          /*if(isCurrentUserPost)
                             PopupMenuItem(
                               value: 2,
                               child: Text(
@@ -347,7 +356,7 @@ class _PostState extends State<Post> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ),
+                            ),*/
                           if(isCurrentUserPost)
                             PopupMenuItem(
                               value: 3,
@@ -469,22 +478,28 @@ class _PostState extends State<Post> {
                   if(widget.post.isLiked == true)
                     InkWell(
                       onTap: () async {
+                        var formerCount = widget.post.likeCount;
                         var body = {
                           "post_id": widget.post.id,
                           "profile_id": widget.fullProfile.id,
                           "type": "user",
                         };
                         var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/unlike-post",updatePages: false);
-                        if(response.isSuccessful){
-                          widget.post.isLiked = false;
-                          widget.post.likeCount = widget.post.likeCount! - 1;
-                          setState(() {
+                        widget.post.isLiked = false;
+                        widget.post.likeCount = widget.post.likeCount! - 1;
+                        setState(() {
 
-                          });
+                        });
+                        if(response.isSuccessful){
                           widget.homeController.getPosts.then((value) {
                             //widget.homeController.update(["home_tab"]);
                           });
                         }else{
+                          widget.post.isLiked = false;
+                          widget.post.likeCount = formerCount;
+                          setState(() {
+
+                          });
                           AppOverlay.showErrorSnackBar(content: "Unable to un-like post, please try again later");
                         }
                       },
@@ -497,22 +512,28 @@ class _PostState extends State<Post> {
                   if(widget.post.isLiked == false || widget.post.isLiked == null)
                     InkWell(
                       onTap: () async {
+                        var formerCount = widget.post.likeCount;
                         var body = {
                           "post_id": widget.post.id,
                           "profile_id": widget.fullProfile.id,
                           "type": "user",
                         };
                         var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/like-post",updatePages: false);
-                        if(response.isSuccessful){
-                          widget.post.isLiked = true;
-                          widget.post.likeCount = widget.post.likeCount! + 1;
-                          setState(() {
+                        widget.post.isLiked = true;
+                        widget.post.likeCount = widget.post.likeCount! + 1;
+                        setState(() {
 
-                          });
+                        });
+                        if(response.isSuccessful){
                           widget.homeController.getPosts.then((value) {
                             //widget.homeController.update(["home_tab"]);
                           });
                         }else{
+                          widget.post.isLiked = true;
+                          widget.post.likeCount = formerCount;
+                          setState(() {
+
+                          });
                           AppOverlay.showErrorSnackBar(content: "Unable to like post, please try again later");
                         }
                       },

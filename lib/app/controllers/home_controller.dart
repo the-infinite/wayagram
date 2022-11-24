@@ -22,6 +22,7 @@ import '../data/model/ContactsToUpload.dart';
 import '../data/model/SearchPeopleResponse.dart';
 import '../data/model/all_posts_entity.dart';
 import '../data/model/full_user_profile_entity.dart';
+import '../data/model/group_model_entity.dart';
 import '../data/model/log_in_model_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
@@ -51,6 +52,9 @@ class HomeController extends GetxController {
   HomeController(this.userRepo);
 
   AllPostsEntity? postToQuote;
+  GroupModelEntity? groupToPost;
+  GroupModelEntity? pageToPost;
+
   List<Widget> pages = const [
     HomeTab(),
     DiscoverTab(),
@@ -260,11 +264,11 @@ class HomeController extends GetxController {
     final response = await userRepo.deleteData(url, body);
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
       if(updatePages){
-        update(['profile_page','home','settings']);
+        update(['profile_page','home','settings','home_tab']);
       }
       getAllUserData().then((value){
         if(updatePages){
-          update(['profile_page','home','settings']);
+          update(['profile_page','home','settings','home_tab']);
         }
       });
     });

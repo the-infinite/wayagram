@@ -20,6 +20,8 @@ import '../../global_widgets/page_input.dart';
 
 import 'package:dio/dio.dart' as dio;
 
+import 'normal_posts.dart';
+
 class CreatePage extends StatefulWidget {
   const CreatePage({Key? key}) : super(key: key);
 

@@ -28,6 +28,8 @@ import '../../global_widgets/person_view.dart';
 import '../home/widgets/HashTagView.dart';
 import '../home/widgets/group_view.dart';
 
+import '../home/widgets/posts_view.dart' as post_view;
+
 class CreatePosts extends StatefulWidget {
   const CreatePosts({Key? key}) : super(key: key);
 
@@ -62,7 +64,7 @@ class _CreatePostsState extends State<CreatePosts> {
           appBar: AppBar(
             backgroundColor: AppColors.background,
             title: Text(
-              "Posts",
+              controller.postToQuote == null ? "Create Post" : "Quote Post",
               style: TextStyle(
                 color: const Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
@@ -89,55 +91,55 @@ class _CreatePostsState extends State<CreatePosts> {
                   child: AppButton(
                     title: 'Send',
                     onPressed: () async {
-                      var hashtags = [];
-                      await Future.forEach(exp.allMatches(textController.text), (element){
-                        var match = element as RegExpMatch;
-                        hashtags.add(match.group(0)!.substring(1));
-                      });
-                      Map<String, dynamic> body = {
-                        'description': textController.text,
-                        'profile_id': fullProfile.id,
-                        'type': 'user',
-                        'hashtags': hashtags.join(","),
-                      };
-                      if(images.isNotEmpty){
-                        body['images'] = await dio.MultipartFile.fromFile(
-                          images[0],
-                          filename: images[0].split('/').last,
-                        );
-                      }
-                      var formData = dio.FormData.fromMap(body);
-                      ApiResponse? response;
-                      if(postID.isNotEmpty){
-                        formData.fields.add(MapEntry('post_id', postID));
-                        //images.removeAt(0);
-                        body['type'] = null;
-                        for (var element in images) {
-                          body['post_id'] = postID;
-                          body['images'] = await dio.MultipartFile.fromFile(
-                            element,
-                            filename: element.split('/').last,
-                          );
-                          formData = dio.FormData.fromMap(body);
-                          response = await controller.putData(formData, "/wayagram-service/all-posts/update");
-                        }
-                        if(response!.isSuccessful){
-                          postID = "";
+                      if(controller.postToQuote != null){
+                        var body = {
+                          "original_post_id": controller.postToQuote!.id,
+                          "reposter_profile_id": fullProfile.id,
+                          "repost_comment_desc": textController.text,
+                        };
+                        var response = await controller.postData(body, "/wayagram-service/all-posts/repost-post");
+                        if(response.isSuccessful){
                           await controller.getPosts;
-                          controller.update(['profile_page','home_page','home']);
-                          //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                          controller.update(['profile_page','home_tab','home']);
                           Get.back();
+                        }else{
+                          AppOverlay.showErrorSnackBar(content: "An error occurred, please try again later");
                         }
                       }else{
-                        response = await controller.postData(formData, "/wayagram-service/all-posts/create");
-                        if(response.isSuccessful){
-                          if(images.isNotEmpty){
-                            images.removeAt(0);
-                          }
-                          postID = response.data['id'] as String;
+                        var hashtags = [];
+                        await Future.forEach(exp.allMatches(textController.text), (element){
+                          var match = element as RegExpMatch;
+                          hashtags.add(match.group(0)!.substring(1));
+                        });
+                        Map<String, dynamic> body = {
+                          'description': textController.text,
+                          'profile_id': fullProfile.id,
+                          'type': 'user',
+                          'hashtags': hashtags.join(","),
+                        };
+                        if(controller.groupToPost != null){
+                          body['group_id'] = controller.groupToPost!.id;
+                          body['type'] = 'group';
+                        }
+                        if(controller.pageToPost != null){
+                          body['page_id'] = controller.pageToPost!.id;
+                          body['type'] = 'page';
+                        }
+
+                        if(images.isNotEmpty){
+                          body['images'] = await dio.MultipartFile.fromFile(
+                            images[0],
+                            filename: images[0].split('/').last,
+                          );
+                        }
+                        var formData = dio.FormData.fromMap(body);
+                        ApiResponse? response;
+                        if(postID.isNotEmpty){
+                          formData.fields.add(MapEntry('post_id', postID));
+                          //images.removeAt(0);
+                          body['type'] = null;
                           for (var element in images) {
                             body['post_id'] = postID;
-                            body['type'] = null;
                             body['images'] = await dio.MultipartFile.fromFile(
                               element,
                               filename: element.split('/').last,
@@ -147,14 +149,39 @@ class _CreatePostsState extends State<CreatePosts> {
                           }
                           if(response!.isSuccessful){
                             postID = "";
-                            //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                             await controller.getPosts;
-                            controller.update(['profile_page','home_tab','home']);
+                            controller.update(['profile_page','home_page','home','group_screen','page_screen']);
                             //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                             Get.back();
                           }
                         }else{
-                          AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                          response = await controller.postData(formData, "/wayagram-service/all-posts/create");
+                          if(response.isSuccessful){
+                            if(images.isNotEmpty){
+                              images.removeAt(0);
+                            }
+                            postID = response.data['id'] as String;
+                            for (var element in images) {
+                              body['post_id'] = postID;
+                              body['type'] = null;
+                              body['images'] = await dio.MultipartFile.fromFile(
+                                element,
+                                filename: element.split('/').last,
+                              );
+                              formData = dio.FormData.fromMap(body);
+                              response = await controller.putData(formData, "/wayagram-service/all-posts/update");
+                            }
+                            if(response!.isSuccessful){
+                              postID = "";
+                              //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                              await controller.getPosts;
+                              controller.update(['profile_page','home_page','home','group_screen','page_screen']);
+                              //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                              Get.back();
+                            }
+                          }else{
+                            AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                          }
                         }
                       }
                     },
@@ -187,88 +214,146 @@ class _CreatePostsState extends State<CreatePosts> {
             width: double.infinity,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: Get.height*0.01),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
                 children: [
-                  Container(
-                    width: Get.width*0.13,
-                    height: Get.width*0.13,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.background, width: 2),
+                  if(controller.groupToPost != null)
+                    Row(
+                      children: [
+                        Text(
+                          'To Group: ',
+                          style: TextStyle(
+                            color: const Color(0xff4F4F4F),
+                            fontSize: Get.textScaleFactor * 16,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        Text(
+                          controller.groupToPost!.name.toString(),
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontSize: Get.textScaleFactor * 16,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: AppAvatar(
-                        imgUrl: (fullProfile.avatar as String?).toString(),
-                      ),
-                      onPressed: () {
-
-                      },
+                  if(controller.pageToPost != null)
+                    Row(
+                      children: [
+                        Text(
+                          'To Page: ',
+                          style: TextStyle(
+                            color: const Color(0xff4F4F4F),
+                            fontSize: Get.textScaleFactor * 16,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        Text(
+                          controller.pageToPost!.name.toString(),
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontSize: Get.textScaleFactor * 16,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  SizedBox(
-                    width: Get.width*0.02
-                  ),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: Get.width*0.01,right: Get.width*0.015),
-                            child: HashTagTextField(
-                              decoratedStyle: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.blue,
-                                fontSize: 16,
-                              ),
-                              basicStyle: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                              expands: false,
-                              maxLines: null,
-                              minLines: null,
-                              decoration: InputDecoration(
-                                hintText: 'Create New Post',
-                                hintStyle: AppTextStyle.subtitle1.copyWith(
-                                  color: Colors.grey,
-                                  fontSize: 16,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: Get.width*0.13,
+                          height: Get.width*0.13,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: AppColors.background, width: 2),
+                          ),
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: AppAvatar(
+                              imgUrl: (fullProfile.avatar as String?).toString(),
+                            ),
+                            onPressed: () {
+
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: Get.width*0.02
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: Get.width*0.01,right: Get.width*0.015),
+                                  child: HashTagTextField(
+                                    decoratedStyle: AppTextStyle.subtitle1.copyWith(
+                                      color: Colors.blue,
+                                      fontSize: 16,
+                                    ),
+                                    basicStyle: AppTextStyle.subtitle1.copyWith(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                    expands: false,
+                                    maxLines: null,
+                                    minLines: null,
+                                    decoration: InputDecoration(
+                                      hintText: 'Create New Post',
+                                      hintStyle: AppTextStyle.subtitle1.copyWith(
+                                        color: Colors.grey,
+                                        fontSize: 16,
+                                      ),
+                                      border: InputBorder.none,
+                                    ),
+                                    controller: textController,
+                                    decorateAtSign: true,
+                                    onDetectionTyped: (String value) {
+                                      detectedHashtagController.text = value;
+                                      controller.update();
+                                    },
+                                    onDetectionFinished: () {
+                                      detectedHashtagController.text = "";
+                                      searchedPeople = "";
+                                      searchedHashtags = "";
+                                      controller.update();
+                                    },
+                                  ),
                                 ),
-                                border: InputBorder.none,
-                              ),
-                              controller: textController,
-                              decorateAtSign: true,
-                              onDetectionTyped: (String value) {
-                                detectedHashtagController.text = value;
-                                controller.update();
-                              },
-                              onDetectionFinished: () {
-                                detectedHashtagController.text = "";
-                                searchedPeople = "";
-                                searchedHashtags = "";
-                                controller.update();
-                              },
+                                if(images.isNotEmpty)
+                                  SizedBox(
+                                    height: Get.height*0.25,
+                                    child: NewsfeedMultipleImageView(
+                                      imageUrls: images,
+                                      marginLeft: 5,
+                                      marginRight: 5,
+                                      marginBottom: 0,
+                                      marginTop: 0,
+                                      radius: 15,
+                                      isFile: true,
+                                      useAspectRatio: true,
+                                      isSlideShow: false,
+                                ),
+                                  ),
+                                if(controller.postToQuote != null)
+                                  post_view.Post(
+                                    post: controller.postToQuote!,
+                                    fullProfile: fullProfile,
+                                    homeController: controller,
+                                    showActions: false,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.background,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
-                          if(images.isNotEmpty)
-                            SizedBox(
-                              height: Get.height*0.25,
-                              child: NewsfeedMultipleImageView(
-                                imageUrls: images,
-                                marginLeft: 0.0,
-                                marginRight: Get.width*0.028,
-                                marginBottom: 0,
-                                marginTop: 0,
-                                radius: 15,
-                                isFile: true,
-                                useAspectRatio: true,
-                                isSlideShow: false,
-                          ),
-                            )
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -281,11 +366,12 @@ class _CreatePostsState extends State<CreatePosts> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
+                if(controller.postToQuote == null)
+                  Container(
                   color: const Color(0xffEDEAEA),
                   height: 1.0,
                 ),
-                if(detectedHashtagController.text.isEmpty)
+                if(detectedHashtagController.text.isEmpty && controller.postToQuote == null)
                   Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -403,7 +489,8 @@ class _CreatePostsState extends State<CreatePosts> {
                   ],
                 ),
                 if(detectedHashtagController.text.isNotEmpty)
-                  SizedBox(
+                  Container(
+                    color: AppColors.background,
                     height: Get.height*0.25,
                     child: SingleChildScrollView(
                       child: detectedHashtagController.text.startsWith("#") ?
