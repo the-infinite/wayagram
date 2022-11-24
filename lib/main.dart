@@ -18,8 +18,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var token = MyPref.authToken.val;
-    print(token);
     return GetMaterialApp(
       theme: AppThemes.lightTheme,
       debugShowCheckedModeBanner: false,
