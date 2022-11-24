@@ -24,4 +24,9 @@ class AppColors {
   static const Color steelPink = Color(0xFFCF43CF);
   static const Color fadedBlue = Color(0xFFF1F7FA);
   static const Color purple = Color(0xFF064A72);
+
+  static const Color grayColor =  Color(0xFF828282);
+  static const Color lightGrayColor =  Color(0xFFF4F4F4);
+  static const Color white = Color(0xffffffff);
+  static const Color black = Color(0xff141414);
 }
