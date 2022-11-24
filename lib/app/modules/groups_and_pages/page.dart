@@ -578,7 +578,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                   ],
                 ),
               ),
-              floatingActionButton: ((isUserAMember && allowMemberPost) || isForUser) ? FloatingActionButton(
+              floatingActionButton: ((isUserAMember) || isForUser) ? FloatingActionButton(
                 onPressed: () {
                   controller.groupToPost = null;
                   controller.pageToPost = page;
