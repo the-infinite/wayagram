@@ -12,15 +12,19 @@ import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
+import '../../../controllers/auth_controller.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../data/model/posts_model_entity.dart';
+import '../../../data/providers/api.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/app_button.dart';
 import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../../global_widgets/person_view.dart';
+import '../../../repository/user_repo.dart';
+import '../../change_password/enter_email.dart';
 import '../../home/widgets/notification_view.dart';
 
 class SecuritySettings extends StatelessWidget {
@@ -28,7 +32,6 @@ class SecuritySettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -67,7 +70,7 @@ class SecuritySettings extends StatelessWidget {
                     text: "Change Password",
                     subtitle: "Change your password",
                     onPressed: (){
-
+                      Get.to(() => EnterEmail(controller.profile.email, controller.profile.phone));
                     }
                 ),
                 SizedBox(height: Get.height*0.02),

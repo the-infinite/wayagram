@@ -17,6 +17,7 @@ import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
 import '../data/providers/my_pref.dart';
 import '../global_widgets/overlays.dart';
+import '../modules/change_password/enter_otp.dart';
 import '../modules/forgot_password/enter_otp.dart';
 import '../modules/home/home.dart';
 import '../modules/profile/confirm_pin.dart';
@@ -40,6 +41,7 @@ class AuthController extends GetxController {
   TextEditingController referral = TextEditingController();
   TextEditingController personalEmail = TextEditingController();
   TextEditingController businessEmail = TextEditingController();
+  TextEditingController oldPassword = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController firstname = TextEditingController();
   TextEditingController personalPhone = TextEditingController();
@@ -393,6 +395,81 @@ class AuthController extends GetxController {
       otp.clear();
       emailOrPhone.clear();
       Navigator.popUntil(Get.context!, (route) => Get.currentRoute == SignIn.route);
+    }
+  }
+
+  Future<void> getChangeOtp({bool showOverlay = false}) async {
+    var message = "";
+    var buttonMessage = "";
+    ApiResponse? response;
+    if(GetUtils.isEmail(emailOrPhone.text)){
+      var data = emailOrPhone.text;
+      response = await userRepo.getData("/auth-service/api/v1/password/change-password/byEmail?email=$data",hasHeader: false,sso: false);
+    }else{
+      var data = emailOrPhone.text.startsWith("+234") ? emailOrPhone.text.substring(1,emailOrPhone.text.length) : emailOrPhone.text.startsWith("234") ? emailOrPhone.text : emailOrPhone.text.length == 10 ? "234${emailOrPhone.text}" : "234${emailOrPhone.text.substring(1,emailOrPhone.text.length)}";
+      response = await userRepo.getData("/auth-service/api/v1/password/change-password/byPhone?phoneNumber=$data",hasHeader: false,sso: false);
+    }
+    if(!response.isSuccessful){
+      if(response.message.toString().contains("Bad credentials")) {
+        message = "Check your details and try again";
+        buttonMessage = "Okay";
+      }
+      else{
+        message = "An Error Occurred";
+        buttonMessage = "Okay";
+      }
+      Get.snackbar("Error", message,backgroundColor: Colors.red, colorText: Colors.white);
+    }else{
+      if(showOverlay){
+        Get.snackbar("Success", "OTP Resent Successfully",backgroundColor: Colors.green, colorText: Colors.white);
+      }else{
+        Get.to(() => const EnterChangeOTP());
+      }
+    }
+  }
+  Future<void> confirmChangePassword() async {
+    var data = "";
+    if(GetUtils.isEmail(emailOrPhone.text)){
+      data = emailOrPhone.text;
+    }else{
+      data = emailOrPhone.text.startsWith("+234") ? emailOrPhone.text.substring(1,emailOrPhone.text.length) : emailOrPhone.text.startsWith("234") ? emailOrPhone.text : emailOrPhone.text.length == 10 ? "234${emailOrPhone.text}" : "234${emailOrPhone.text.substring(1,emailOrPhone.text.length)}";
+    }
+    var body = {
+      "newPassword": password.text,
+      "otp": otp.text,
+      "phoneOrEmail": data,
+      "oldPassword": oldPassword.text
+    };
+
+    ApiResponse response = await userRepo.postData("/auth-service/api/v1/password/change-password", body);
+
+    var message = "";
+    var buttonMessage = "";
+    print(response.message);
+    if(!response.isSuccessful){
+      if(response.message.toString().contains("is not valid")){
+        message = "Incorrect OTP Entered";
+        buttonMessage = "Okay";
+      } else if(response.message.toString().contains("Record with Provided input not Found For User")){
+        message = "User not found";
+        buttonMessage = "Okay";
+      }else if(response.message.toString().contains("New password cannot be same with old password")){
+        message = "New password cannot be same with old password";
+        buttonMessage = "Okay";
+      }else if(response.message.toString().contains("Incorrect Old Password")){
+        message = "Incorrect Old Password";
+        buttonMessage = "Okay";
+      }else{
+        message = "An Error Occurred";
+        buttonMessage = "Okay";
+      }
+      Get.snackbar("Password Change Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
+    }else{
+      Get.snackbar("Success", "Password Changed Successfully",backgroundColor: Colors.green, colorText: Colors.white);
+      password.clear();
+      otp.clear();
+      emailOrPhone.clear();
+      Navigator.popUntil(Get.context!, (route) => Get.currentRoute == "/SecuritySettings");
     }
   }
 
