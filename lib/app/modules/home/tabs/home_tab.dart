@@ -21,7 +21,7 @@ import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
 
 const String wayapayIconSvg="assets/images/waya_pay_ic.svg";
-const String wayagramIconSvg="assets/images/waya_gram_ic.svg";
+const String wayabankIconSvg="assets/images/waya_bank_ic.svg";
 const String wayaposIconSvg="assets/images/waya_pos_ic.svg";
 const String failed = "assets/images/failed.svg";
 
@@ -138,26 +138,23 @@ class HomeTab extends StatelessWidget {
             SizedBox(
               height: 0.01 * Get.height,
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 0.01 * Get.width,
-                ),
-                otherBusinessWidget(Get.context!, title: "Wayaquick",
-                    onOptionsTap: () {
-                      onWayaQuickTap();
-                    },
-                    description: "Accept Payment anytime, anywhere.",
-                    icon: wayapayIconSvg),
-                otherBusinessWidget(Get.context!, title: "Wayapos", onOptionsTap: () {
-                  onWayaPosTap();
-                }, description: "Start accepting instant payment with Wayapos Terminal Device", icon: wayaposIconSvg),
-                otherBusinessWidget(Get.context!, title: "Wayabank", onOptionsTap: () {
-                  onWayaBankTap();
-                }, description: "Free internet banking \nand bills payment", icon: wayagramIconSvg),
-              ],
+            SizedBox(
+              width: Get.width,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  otherBusinessWidget(Get.context!, title: "Wayabank", onOptionsTap: () {
+                    onWayaBankTap();
+                  }, description: "Free internet banking \nand bills payment", icon: wayabankIconSvg),
+                  otherBusinessWidget(Get.context!, title: "Wayapay", onOptionsTap: () {
+                        onWayaQuickTap();
+                      }, description: "Accept Payment anytime, anywhere.", icon: wayapayIconSvg),
+                  otherBusinessWidget(Get.context!, title: "Wayapos", onOptionsTap: () {
+                    onWayaPosTap();
+                  }, description: "Start accepting instant payment with Wayapos Terminal Device", icon: wayaposIconSvg),
+                ],
+              ),
             ),
             SizedBox(
               height: 0.01 * Get.height,
