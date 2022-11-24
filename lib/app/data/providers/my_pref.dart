@@ -16,6 +16,7 @@ class MyPref  {
   static final topClips = ReadWriteValue('wayagram_top_clips', '', box);
   static final moments = ReadWriteValue('wayagram_moments', '', box);
   static final eventsToAttend = ReadWriteValue('wayagram_events_to_attend', '', box);
+  static final createdEvents = ReadWriteValue('wayagram_created_events', '', box);
   static final allProducts = ReadWriteValue('wayagram_all_products', '', box);
   static final myProducts = ReadWriteValue('wayagram_my_products', '', box);
   static final notifications = ReadWriteValue('wayagram_notifications', '', box);

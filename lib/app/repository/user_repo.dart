@@ -432,6 +432,17 @@ class UserRepository {
     }
     return response;
   }
+  Future<ApiResponse> getAllCreatedEvents() async {
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+    //https://services.staging.wayagram.ng/wayagram-service/all-posts/get-all-user-events?profile_id=bc63e326-7619-45da-9aab-0876d5e96956&page=1&limit=40&sso_id=639
+    final response = await api.getData('/wayagram-service/all-posts/get-all-user-events?profile_id=${profile.id}&page=1&limit=40',hasHeader: true);
+    if (response.isSuccessful) {
+      var newData = AllEventsEntity.fromJson(response.data);
+      response.data = newData;
+      MyPref.createdEvents.val = jsonEncode(response.data);
+    }
+    return response;
+  }
   Future<ApiResponse> getPageCategories() async {
     final response = await api.getData('/wayagram-service/main/page/get-all-page-categories?page=1&limit=10',hasHeader: true);
     if (response.isSuccessful) {

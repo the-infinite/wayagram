@@ -181,6 +181,7 @@ class HomeController extends GetxController {
   Future<ApiResponse> get getSuggestedGroups => userRepo.getSuggestedGroups();
   Future<ApiResponse> get getSuggestedPages => userRepo.getSuggestedPages();
   Future<ApiResponse> get getEventsToAttend => userRepo.getEventsToAttend();
+  Future<ApiResponse> get getCreatedEvents => userRepo.getAllCreatedEvents();
 
   Future<ApiResponse> get getPagesFollowed => userRepo.getPagesFollowed();
   Future<ApiResponse> get getPagesCreated => userRepo.getPagesCreated();

@@ -124,7 +124,7 @@ class _SmartImageState extends State<SmartImage> {
     return networkImage() ? CachedNetworkImage(
       imageUrl: widget.src, placeholder: (context, url) => Container(
       color: Colors.transparent,
-        child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.05),
+      child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.05),
     ),
       errorWidget: (context, url, error) => Container(
           color: Colors.transparent,

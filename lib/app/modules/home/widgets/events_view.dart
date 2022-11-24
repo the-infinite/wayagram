@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,19 +12,32 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_events_entity.dart';
+import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
+import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/app_avatar.dart';
 import '../../../global_widgets/app_button.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class EventsView extends StatefulWidget {
   const EventsView({
     Key? key,
     this.isLoading = false,
     this.moments,
+    this.title = 'Events To Attend',
+    this.buttonText = 'Register',
+    this.actionIcon = Icons.share,
+    this.onActionClick,
+    this.onButtonClick
   }) : super(key: key);
 
   final bool isLoading;
   final List<AllEventsData>? moments;
+  final String title;
+  final String buttonText;
+  final IconData actionIcon;
+  final Function(AllEventsData data)? onButtonClick;
+  final Function(AllEventsData data)? onActionClick;
 
   @override
   State<EventsView> createState() => _EventsViewState();
@@ -33,12 +49,14 @@ class _EventsViewState extends State<EventsView> {
 
   @override
   Widget build(BuildContext context) {
+    var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     widget.moments?.forEach((element) {
       if (element.profileId != userID) {
         list.add(element);
         userID = element.profileId.toString();
       }
     });
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,11 +68,11 @@ class _EventsViewState extends State<EventsView> {
             width: Get.width,
             padding: const EdgeInsets.all(8),
             child: Text(
-              'Events To Attend',
+              widget.title,
               style: AppTextStyle.headline4.copyWith(
                 color: Colors.black,
-                fontWeight: FontWeight.normal,
-                fontSize: Get.textScaleFactor * 14,
+                fontWeight: FontWeight.bold,
+                fontSize: Get.textScaleFactor * 15,
               ),
               textAlign: TextAlign.start,
             ),
@@ -91,12 +109,37 @@ class _EventsViewState extends State<EventsView> {
               }
               var interested = 0;
               var going = 0;
+              var isLiked = false;
               if(list[index].eventLikes != null){
                 interested = list[index].eventLikes!.length;
+                var eventLikedProfileID = list[index].eventLikes!.firstWhere((element) => element.profileId.toString() == profile.id, orElse: () => AllEventsDataEventLikes());
+                if(eventLikedProfileID.profileId.toString() == profile.id){
+                  isLiked = true;
+                }
+                if(widget.title.trim() == 'Liked Events'){
+                  if(isLiked == false){
+                    return const SizedBox.shrink();
+                  }
+                }
+              }else{
+                if(widget.title.trim() == 'Liked Events'){
+                  if(isLiked == false){
+                    return const SizedBox.shrink();
+                  }
+                }
+              }
+
+              if(widget.title.trim() == 'All Events'){
+                if(list[index].profileId.toString() == profile.id){
+                  return const SizedBox.shrink();
+                }
               }
               if(list[index].eventParticipants != null){
                 going = list[index].eventParticipants!.length;
               }
+              var date = DateTime.fromMillisecondsSinceEpoch(int.parse(list[index].eventStart!));
+              var time = timeago.format(date);
+              var isEnded = date.isBefore(DateTime.now());
               return Container(
                 margin: EdgeInsets.only(top: Get.height*0.007, left: Get.width*0.02,right: Get.width*0.02,bottom: Get.height*0.007),
                 width: Get.width * 0.5,
@@ -139,12 +182,16 @@ class _EventsViewState extends State<EventsView> {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  list[index].eventPoster.toString(),
+                                child: CachedNetworkImage(
+                                  imageUrl: list[index].eventPoster.toString(), placeholder: (context, url) => Container(
+                                  color: Colors.transparent,
+                                  child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.04),
+                                ),
+                                  errorWidget: (context, url, error) => Container(
+                                      color: Colors.transparent,
+                                      child: Icon(Icons.event_rounded,color: Colors.grey,size: Get.height*0.04)
+                                  ),
                                   fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Icon(Icons.event_rounded,color: Colors.grey,size: Get.height*0.04);
-                                  },
                                 ),
                               ),
                             ),
@@ -167,9 +214,9 @@ class _EventsViewState extends State<EventsView> {
                                     height:30,
                                     child: Center(
                                       child: IconButton(
-                                        icon: const Icon(
-                                          FeatherIcons.heart,
-                                          color: Colors.black,
+                                        icon: Icon(
+                                          isLiked ?  Icons.favorite : FeatherIcons.heart,
+                                          color: isLiked ? AppColors.primary : Colors.black,
                                           size: 15,
                                         ),
                                         onPressed: (){},
@@ -186,7 +233,7 @@ class _EventsViewState extends State<EventsView> {
                     Padding(
                       padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,top: Get.height*0.01),
                       child: Text(
-                        "Date here",
+                        time.capitalizeFirst.toString(),
                         style: TextStyle(
                           color: Colors.grey.shade600,
                           fontSize: Get.height * 0.018,
@@ -240,21 +287,31 @@ class _EventsViewState extends State<EventsView> {
                           SizedBox(
                             width: Get.width*0.33,
                             child: AppButton(
-                              title: 'Register',
+                              title: (isEnded && (widget.buttonText != 'Delete')) ? "Ended" : widget.buttonText,
                               onPressed: () async {
-
+                                if(widget.onButtonClick != null){
+                                  widget.onButtonClick!(list[index]);
+                                }
                               },
                               borderRadius: 10,
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               fontSize: Get.height * 0.018,
+                              bckgrndColor: (isEnded && (widget.buttonText != 'Delete')) ? Colors.grey : AppColors.primary,
                             ),
                           ),
                           SizedBox(
                             height: Get.height*0.03,
-                            child: Icon(
-                              Icons.share,
-                              color: Colors.black,
-                              size: Get.width*0.05,
+                            child: InkWell(
+                              onTap: (){
+                                if(widget.onActionClick != null){
+                                  widget.onActionClick!(list[index]);
+                                }
+                              },
+                              child: Icon(
+                                widget.actionIcon,
+                                color: Colors.black,
+                                size: Get.width*0.05,
+                              ),
                             ),
                           )
                         ],
