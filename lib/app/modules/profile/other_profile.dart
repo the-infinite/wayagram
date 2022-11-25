@@ -76,7 +76,10 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
     var userPosts = arguments[5];
     var displayName = arguments[0];
     var coverImage = arguments[8];
-    var id = arguments[9];
+    var id = "";
+    if(arguments.length > 9){
+      id = arguments[9];
+    }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(

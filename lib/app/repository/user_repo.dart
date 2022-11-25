@@ -242,6 +242,7 @@ class UserRepository {
     var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/all-posts/get-user-bookmarks?profileId=${profile.id}&page=1&limit=40',hasHeader: true);
     if (response.isSuccessful) {
+      print(response.data);
       var newData = AllPostsEntity.getServiceForBookmarks(response.data['data']);
       if(MyPref.bookmarks.val.isNotEmpty){
         var oldData = AllPostsEntity.getService(jsonDecode(MyPref.bookmarks.val));
@@ -254,6 +255,7 @@ class UserRepository {
       response.data = newData;
       MyPref.bookmarks.val = jsonEncode(response.data);
     }
+    print(response.data);
     return response;
   }
   Future<ApiResponse> getTopClips() async {

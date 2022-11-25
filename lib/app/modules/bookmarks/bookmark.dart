@@ -98,6 +98,7 @@ class _BookmarksPageState extends State<BookmarksPage> {
                         future: controller.getBookmarks,
                         builder: (context, snapshot) {
                           var savedPosts = MyPref.bookmarks.val;
+                          print(snapshot.data);
                           if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                             final posts = snapshot.data!.data as List<AllPostsEntity>;
                             return PostsView(posts: posts);
