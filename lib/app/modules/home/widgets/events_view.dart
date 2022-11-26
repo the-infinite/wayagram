@@ -19,6 +19,8 @@ import '../../../global_widgets/app_avatar.dart';
 import '../../../global_widgets/app_button.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../events/view_event_details.dart';
+
 class EventsView extends StatefulWidget {
   const EventsView({
     Key? key,
@@ -27,6 +29,7 @@ class EventsView extends StatefulWidget {
     this.title = 'Events To Attend',
     this.buttonText = 'Register',
     this.actionIcon = Icons.share,
+    this.onEventClick,
     this.onActionClick,
     this.onButtonClick
   }) : super(key: key);
@@ -36,6 +39,7 @@ class EventsView extends StatefulWidget {
   final String title;
   final String buttonText;
   final IconData actionIcon;
+  final Function(AllEventsData data)? onEventClick;
   final Function(AllEventsData data)? onButtonClick;
   final Function(AllEventsData data)? onActionClick;
 
@@ -50,12 +54,8 @@ class _EventsViewState extends State<EventsView> {
   @override
   Widget build(BuildContext context) {
     var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-    widget.moments?.forEach((element) {
-      if (element.profileId != userID) {
-        list.add(element);
-        userID = element.profileId.toString();
-      }
-    });
+    list = widget.moments ?? [];
+
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -134,6 +134,7 @@ class _EventsViewState extends State<EventsView> {
                   return const SizedBox.shrink();
                 }
               }
+
               if(list[index].eventParticipants != null){
                 going = list[index].eventParticipants!.length;
               }
@@ -155,169 +156,178 @@ class _EventsViewState extends State<EventsView> {
                     ),
                   ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: Get.height * 0.12,
-                      width: Get.width * 0.5,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[200],
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 1,
-                                ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: CachedNetworkImage(
-                                  imageUrl: list[index].eventPoster.toString(), placeholder: (context, url) => Container(
-                                  color: Colors.transparent,
-                                  child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.04),
-                                ),
-                                  errorWidget: (context, url, error) => Container(
-                                      color: Colors.transparent,
-                                      child: Icon(Icons.event_rounded,color: Colors.grey,size: Get.height*0.04)
+                child: InkWell(
+                  onTap: () {
+                    if(widget.onEventClick != null){
+                      widget.onEventClick!(list[index]);
+                    }else{
+                      Get.to(() => ViewEventDetails(event: list[index]));
+                    }
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: Get.height * 0.12,
+                        width: Get.width * 0.5,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[200],
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 1,
                                   ),
-                                  fit: BoxFit.cover,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: CachedNetworkImage(
+                                    imageUrl: list[index].eventPoster.toString(), placeholder: (context, url) => Container(
+                                    color: Colors.transparent,
+                                    child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.04),
+                                  ),
+                                    errorWidget: (context, url, error) => Container(
+                                        color: Colors.transparent,
+                                        child: Icon(Icons.event_rounded,color: Colors.grey,size: Get.height*0.04)
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children:  [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(180)),
-                                      color: AppColors.background,
-                                    ),
-                                    width: 30,
-                                    height:30,
-                                    child: Center(
-                                      child: IconButton(
-                                        icon: Icon(
-                                          isLiked ?  Icons.favorite : FeatherIcons.heart,
-                                          color: isLiked ? AppColors.primary : Colors.black,
-                                          size: 15,
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children:  [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.circular(180)),
+                                        color: AppColors.background,
+                                      ),
+                                      width: 30,
+                                      height:30,
+                                      child: Center(
+                                        child: IconButton(
+                                          icon: Icon(
+                                            isLiked ?  Icons.favorite : FeatherIcons.heart,
+                                            color: isLiked ? AppColors.primary : Colors.black,
+                                            size: 15,
+                                          ),
+                                          onPressed: (){},
                                         ),
-                                        onPressed: (){},
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,top: Get.height*0.01),
-                      child: Text(
-                        time.capitalizeFirst.toString(),
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: Get.height * 0.018,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,),
-                      child: Text(
-                        list[index].eventName.toString(),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: Get.height * 0.018,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,),
-                      child: Text(
-                        list[index].details.toString(),
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: Get.height * 0.017,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,),
-                      child: Text(
-                        "$interested Interested $going Going",
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: Get.height * 0.017,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.05,top: Get.height*0.015),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: Get.width*0.33,
-                            child: AppButton(
-                              title: (isEnded && (widget.buttonText != 'Delete')) ? "Ended" : widget.buttonText,
-                              onPressed: () async {
-                                if(widget.onButtonClick != null){
-                                  widget.onButtonClick!(list[index]);
-                                }
-                              },
-                              borderRadius: 10,
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              fontSize: Get.height * 0.018,
-                              bckgrndColor: (isEnded && (widget.buttonText != 'Delete')) ? Colors.grey : AppColors.primary,
-                            ),
-                          ),
-                          SizedBox(
-                            height: Get.height*0.03,
-                            child: InkWell(
-                              onTap: (){
-                                if(widget.onActionClick != null){
-                                  widget.onActionClick!(list[index]);
-                                }
-                              },
-                              child: Icon(
-                                widget.actionIcon,
-                                color: Colors.black,
-                                size: Get.width*0.05,
+                                ],
                               ),
                             ),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,top: Get.height*0.01),
+                        child: Text(
+                          time.capitalizeFirst.toString(),
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: Get.height * 0.018,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,),
+                        child: Text(
+                          list[index].eventName.toString(),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: Get.height * 0.018,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,),
+                        child: Text(
+                          list[index].details.toString(),
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: Get.height * 0.017,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02,),
+                        child: Text(
+                          "$interested Interested $going Going",
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: Get.height * 0.017,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.05,top: Get.height*0.015),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: Get.width*0.33,
+                              child: AppButton(
+                                title: (isEnded && (widget.buttonText != 'Delete')) ? "Ended" : widget.buttonText,
+                                onPressed: () async {
+                                  if(widget.onButtonClick != null){
+                                    widget.onButtonClick!(list[index]);
+                                  }
+                                },
+                                borderRadius: 10,
+                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                fontSize: Get.height * 0.018,
+                                bckgrndColor: (isEnded && (widget.buttonText != 'Delete')) ? Colors.grey : AppColors.primary,
+                              ),
+                            ),
+                            SizedBox(
+                              height: Get.height*0.03,
+                              child: InkWell(
+                                onTap: (){
+                                  if(widget.onActionClick != null){
+                                    widget.onActionClick!(list[index]);
+                                  }
+                                },
+                                child: Icon(
+                                  widget.actionIcon,
+                                  color: Colors.black,
+                                  size: Get.width*0.05,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             },

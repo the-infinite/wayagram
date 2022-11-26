@@ -88,6 +88,7 @@ class _AllEventsState extends State<AllEvents> {
                         if(moments.data == null){
                           return const SizedBox.shrink();
                         }
+                        print(moments.data!.length);
                         return EventsView(
                           moments: moments.data,
                           title: 'My Created Events',
@@ -97,6 +98,7 @@ class _AllEventsState extends State<AllEvents> {
                         var savedEvents = MyPref.createdEvents.val;
                         if(savedEvents.isNotEmpty) {
                           var events = AllEventsEntity.fromJson(jsonDecode(savedEvents));
+                          print(events.data!.length);
                           return EventsView(
                               moments: events.data,
                             title: 'My Created Events',
