@@ -18,12 +18,14 @@ import '../data/model/friends_model_entity.dart';
 import '../data/model/full_user_profile_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/my_pref.dart';
+import '../modules/activity_log/activity_log.dart';
 import '../modules/bookmarks/bookmark.dart';
 import '../modules/events/all_events.dart';
 import '../modules/groups_and_pages/groups_and_pages.dart';
 import '../modules/interests/add_interests.dart';
 import '../modules/profile/profile.dart';
 import '../modules/settings/settings.dart';
+import '../modules/support/support.dart';
 import 'app_avatar.dart';
 import 'app_button.dart';
 
@@ -310,7 +312,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.local_activity, color: Colors.black),
                                   text: "Activity Log",
                                   onPressed: () {
-
+                                    Get.back();
+                                    Get.to(() => const ActivityLog());
                                   },
                                 ),
 
@@ -327,7 +330,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.support_agent, color: Colors.black),
                                   text: "Support",
                                   onPressed: () {
-
+                                    Get.back();
+                                    Get.to(() => const Support());
                                   },
                                 ),
                               ],

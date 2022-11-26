@@ -64,5 +64,10 @@
     <false/>
     <key>NSContactsUsageDescription</key>
     <string>Assess to contacts is needed for friends and followers synchronization</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>whatsapp</string>
+        <string>tel</string>
+    </array>
 </dict>
 </plist>

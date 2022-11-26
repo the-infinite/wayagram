@@ -38,9 +38,11 @@ class Settings extends GetView<HomeController>{
           appBar: AppBar(
             elevation: 0,
             title: Text('Settings', style: AppTextStyle.subtitle1.copyWith(
-              color: Colors.black,
+              color: const Color(0xff4F4F4F),
+              fontSize: Get.textScaleFactor * 18,
+              fontWeight: FontWeight.bold,
             )),
-            centerTitle: false,
+            centerTitle: true,
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back,
@@ -50,11 +52,19 @@ class Settings extends GetView<HomeController>{
                 Get.back();
               },
             ),
+            bottom: PreferredSize(
+                preferredSize: Size(Get.width, 0.5),
+                child: const Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  color: Colors.grey,
+                )),
           ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: Get.height * 0.02),
               Center(
                 child: Container(
                   width: Get.width*0.2,
@@ -187,6 +197,7 @@ class Settings extends GetView<HomeController>{
                             Get.to(() => const LoginInformation());
                           }
                       ),
+                      SizedBox(height: Get.height * 0.02),
                     ],
                   ),
                 ),

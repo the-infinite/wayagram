@@ -226,12 +226,12 @@ class _PostState extends State<Post> {
                 onTap: (){
                   if(widget.fullProfile.userId!=null){
                     if(widget.post.profile!.userId == widget.fullProfile.userId) {
-                      Get.toNamed(Profile.route);
+                      Get.to(() => const Profile());
                     }else{
-                      Get.toNamed(PostProfile.route,arguments: widget.post);
+                      Get.to(() => const PostProfile(), arguments: widget.post);
                     }
                   }else{
-                    Get.toNamed(PostProfile.route,arguments: widget.post);
+                    Get.to(() => const PostProfile(), arguments: widget.post);
                   }
                 },
                 child: SizedBox(
@@ -398,7 +398,7 @@ class _PostState extends State<Post> {
                 ),
                 onTap: (text) {
                   widget.homeController.defaultSearchValue = text;
-                  Get.toNamed(Search.route);
+                  Get.to(() => const Search());
                 },
                 decorateAtSign: true,
               )
@@ -721,7 +721,7 @@ class InnerPost extends StatelessWidget{
                 ),
                 onTap: (text) {
                   homeController.defaultSearchValue = text;
-                  Get.toNamed(Search.route);
+                  Get.to(() => const Search());
                 },
                 decorateAtSign: true,
               )
@@ -1001,7 +1001,7 @@ class _CommentPostState extends State<CommentPost> {
                           ),
                           onTap: (text) {
                             widget.homeController.defaultSearchValue = text;
-                            Get.toNamed(Search.route);
+                            Get.to(() => const Search());
                           },
                           decorateAtSign: true,
                         )
@@ -1312,7 +1312,7 @@ class _CommentPostReplyState extends State<CommentPostReply> {
                       ),
                       onTap: (text) {
                         widget.homeController.defaultSearchValue = text;
-                        Get.toNamed(Search.route);
+                        Get.to(() => const Search());
                       },
                       decorateAtSign: true,
                     )
