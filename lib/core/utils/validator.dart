@@ -103,4 +103,15 @@ class Validator {
     }
     return null;
   }
+
+  static String? moneyValidation(String? val) {
+    String digitPattern = '(?=.*?[0-9])';
+    String spcPattern = '(?=.*?[!@#\$&*_~^+-?><%])';
+    if (val == null || val.isEmpty) {
+      return 'Please enter amount';
+    }else if (!GetUtils.isNumericOnly(val)) {
+      return 'Enter a valid amount';
+    }
+    return null;
+  }
 }

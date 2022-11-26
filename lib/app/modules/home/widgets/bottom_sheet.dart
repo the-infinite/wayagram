@@ -151,6 +151,9 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "PRODUCT",
                   subtitle: "Create and online display products for users to purchase",
                   onTap: () {
+                    controller.pageToPost = null;
+                    controller.groupToPost = null;
+                    controller.postToQuote = null;
                     controller.imagePaths.clear();
                     Get.back();
                     Get.to(() => const CreateProduct());

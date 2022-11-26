@@ -258,6 +258,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.people, color: Colors.black),
                                   text: "Groups & Pages",
                                   onPressed: () {
+                                    controller.imagePaths.clear();
                                     Get.back();
                                     Get.to(() => const GroupsAndPages());
                                   },
@@ -267,6 +268,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.bookmark, color: Colors.black),
                                   text: "Bookmarks",
                                   onPressed: () {
+                                    controller.imagePaths.clear();
                                     Get.back();
                                     Get.to(() => const BookmarksPage());
                                   },
@@ -276,6 +278,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.account_tree_sharp, color: Colors.black),
                                   text: "Top Clips",
                                   onPressed: () {
+                                    controller.imagePaths.clear();
                                     Get.back();
                                     Get.to(() => const TopClips());
                                   },
@@ -285,6 +288,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.interests, color: Colors.black),
                                   text: "Interests",
                                   onPressed: () {
+                                    controller.imagePaths.clear();
                                     Get.back();
                                     Get.to(() => const AddInterestPage());
                                   },
@@ -294,6 +298,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.calendar_month, color: Colors.black),
                                   text: "Events",
                                   onPressed: () {
+                                    controller.imagePaths.clear();
                                     Get.back();
                                     Get.to(() => const AllEvents());
                                   },
@@ -303,7 +308,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.analytics, color: Colors.black),
                                   text: "Post Promotion Analytics",
                                   onPressed: () {
-
+                                    controller.imagePaths.clear();
                                   },
                                 ),
 
@@ -311,6 +316,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.local_activity, color: Colors.black),
                                   text: "Activity Log",
                                   onPressed: () {
+                                    controller.imagePaths.clear();
                                     Get.back();
                                     Get.to(() => const ActivityLog());
                                   },
@@ -320,6 +326,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.settings, color: Colors.black),
                                   text: "Settings",
                                   onPressed: () {
+                                    controller.imagePaths.clear();
                                     Get.back();
                                     Get.to(() => const Settings());
                                   },
@@ -329,6 +336,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   leading: const Icon(Icons.support_agent, color: Colors.black),
                                   text: "Support",
                                   onPressed: () {
+                                    controller.imagePaths.clear();
                                     Get.back();
                                     Get.to(() => const Support());
                                   },
