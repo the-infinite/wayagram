@@ -95,7 +95,6 @@ class _AppDrawerState extends State<AppDrawer> {
         child: GetBuilder<HomeController>(
             builder: (controller) {
               var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-              var showSearchIcon = controller.currentBottomNavPage.value == 1 || controller.currentBottomNavPage.value == 2;
 
               return SizedBox(
                 width: Get.width*0.7,
@@ -108,7 +107,7 @@ class _AppDrawerState extends State<AppDrawer> {
                             onTap: (){
                               controller.imagePaths.clear();
                               Get.back();
-                              Get.toNamed(Profile.route);
+                              Get.to(() => const Profile());
                             },
                             child: Padding(
                               padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
@@ -127,7 +126,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                       onPressed: () {
                                         controller.imagePaths.clear();
                                         Get.back();
-                                        Get.toNamed(Profile.route);
+                                        Get.to(() => const Profile());
                                       },
                                     ),
                                   ),
@@ -193,7 +192,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               onTap: (){
                                 controller.imagePaths.clear();
                                 Get.back();
-                                Get.toNamed(Profile.route);
+                                Get.to(() => const Profile());
                               },
                               child: Padding(
                                 padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
@@ -243,7 +242,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.toNamed(Profile.route);
+                                    Get.to(() => const Profile());
                                   },
                                 ),
 
@@ -260,7 +259,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   text: "Groups & Pages",
                                   onPressed: () {
                                     Get.back();
-                                    Get.toNamed(GroupsAndPages.route);
+                                    Get.to(() => const GroupsAndPages());
                                   },
                                 ),
 
@@ -322,7 +321,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   text: "Settings",
                                   onPressed: () {
                                     Get.back();
-                                    Get.toNamed(Settings.route);
+                                    Get.to(() => const Settings());
                                   },
                                 ),
 
