@@ -117,9 +117,11 @@ class _CreateGroupState extends State<CreateGroup> {
           appBar: AppBar(
             backgroundColor: AppColors.background,
             title: Text('Create Group', style: AppTextStyle.subtitle1.copyWith(
-              color: Colors.black,
+              color: const Color(0xff4F4F4F),
+              fontSize: Get.textScaleFactor * 18,
+              fontWeight: FontWeight.bold,
             )),
-            centerTitle: false,
+            centerTitle: true,
             leading: IconButton(
               icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () => Navigator.pop(context),
@@ -171,7 +173,7 @@ class _CreateGroupState extends State<CreateGroup> {
                     }
                   },
                   borderRadius: 10,
-                  fontColor: AppColors.primary,
+                  fontColor: AppColors.button,
                   bckgrndColor: AppColors.background,
                   border: Border.all(color: AppColors.background, width: 1),
                   padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),

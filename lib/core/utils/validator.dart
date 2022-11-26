@@ -66,7 +66,7 @@ class Validator {
 
   static String? textValidation(String? val) {
     if (val == null || val.isEmpty) {
-      return 'Please enter some text';
+      return 'Please enter something here';
     }
     return null;
   }
