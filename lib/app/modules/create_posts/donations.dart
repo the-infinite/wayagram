@@ -37,7 +37,6 @@ class _CreateDonationState extends State<CreateDonation> {
   var descriptionOfSolutionController = TextEditingController();
   var tellUsMoreAboutYouController = TextEditingController();
 
-
   var targetController = TextEditingController();
   var minimumAmountController = TextEditingController(text: '500');
 
