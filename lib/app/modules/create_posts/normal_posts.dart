@@ -49,6 +49,7 @@ class _CreatePostsState extends State<CreatePosts> {
   var postID = "";
   var searchedPeople = "";
   var searchedHashtags = "";
+  var formKey = GlobalKey<FormState>();
   RegExp exp = RegExp(r"\B#\w\w+");
 
   @override
@@ -95,96 +96,158 @@ class _CreatePostsState extends State<CreatePosts> {
                   child: AppButton(
                     title: 'Send',
                     onPressed: () async {
-                      if(controller.postToQuote != null){
-                        var body = {
-                          "original_post_id": controller.postToQuote!.id,
-                          "reposter_profile_id": fullProfile.id,
-                          "repost_comment_desc": textController.text,
-                        };
-                        var response = await controller.postData(body, "/wayagram-service/all-posts/repost-post");
-                        if(response.isSuccessful){
-                          await controller.getPosts;
-                          controller.update(['profile_page','home_tab','home']);
-                          Get.back();
-                        }else{
-                          AppOverlay.showErrorSnackBar(content: "An error occurred, please try again later");
-                        }
-                      }else{
-                        var hashtags = [];
-                        await Future.forEach(exp.allMatches(textController.text), (element){
-                          var match = element as RegExpMatch;
-                          hashtags.add(match.group(0)!.substring(1));
-                        });
-                        Map<String, dynamic> body = {
-                          'description': textController.text,
-                          'profile_id': fullProfile.id,
-                          'type': 'user',
-                          'hashtags': hashtags.join(","),
-                        };
-                        if(controller.groupToPost != null){
-                          body['group_id'] = controller.groupToPost!.id;
-                          body['type'] = 'group';
-                        }
-                        if(controller.pageToPost != null){
-                          body['page_id'] = controller.pageToPost!.id;
-                          body['type'] = 'page';
-                        }
-
-                        if(images.isNotEmpty){
-                          body['images'] = await dio.MultipartFile.fromFile(
-                            images[0],
-                            filename: images[0].split('/').last,
-                          );
-                        }
-                        var formData = dio.FormData.fromMap(body);
-                        ApiResponse? response;
-                        if(postID.isNotEmpty){
-                          formData.fields.add(MapEntry('post_id', postID));
-                          //images.removeAt(0);
-                          body['type'] = null;
-                          for (var element in images) {
-                            body['post_id'] = postID;
-                            body['images'] = await dio.MultipartFile.fromFile(
-                              element,
-                              filename: element.split('/').last,
+                      if(formKey.currentState!.validate()){
+                        if(controller.isProductPost){
+                          Map<String, dynamic> body = {
+                            'description': textController.text,
+                            'name':nameController.text,
+                            'amount':priceController.text,
+                            'profile_id': fullProfile.id,
+                          };
+                          if(images.isNotEmpty){
+                            body['image'] = await dio.MultipartFile.fromFile(
+                              images[0],
+                              filename: images[0].split('/').last,
                             );
-                            formData = dio.FormData.fromMap(body);
-                            response = await controller.putData(formData, "/wayagram-service/all-posts/update");
                           }
-                          if(response!.isSuccessful){
-                            postID = "";
-                            await controller.getPosts;
-                            controller.update(['profile_page','home_page','home','group_screen','page_screen']);
-                            //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
-                            Get.back();
-                          }
-                        }else{
-                          response = await controller.postData(formData, "/wayagram-service/all-posts/create");
-                          if(response.isSuccessful){
-                            if(images.isNotEmpty){
-                              images.removeAt(0);
-                            }
-                            postID = response.data['id'] as String;
+                          var formData = dio.FormData.fromMap(body);
+                          ApiResponse? response;
+                          if(postID.isNotEmpty){
+                            formData.fields.add(MapEntry('product_id', postID));
                             for (var element in images) {
-                              body['post_id'] = postID;
-                              body['type'] = null;
-                              body['images'] = await dio.MultipartFile.fromFile(
+                              body['product_id'] = postID;
+                              body['image'] = await dio.MultipartFile.fromFile(
                                 element,
                                 filename: element.split('/').last,
                               );
                               formData = dio.FormData.fromMap(body);
-                              response = await controller.putData(formData, "/wayagram-service/all-posts/update");
+                              response = await controller.putData(formData, "/wayagram-service/all-posts/update-product");
                             }
-                            if(response!.isSuccessful){
+                            if(response!.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram product created successfully".toLowerCase() || response.message.toString().trim().toLowerCase() == "WAYAGram Product updated successfully".toLowerCase()){
                               postID = "";
-                              //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
-                              await controller.getPosts;
-                              controller.update(['profile_page','home_page','home','group_screen','page_screen']);
-                              //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                               Get.back();
+                              AppOverlay.showSuccessSnackBar(content: "Product created successfully");
                             }
                           }else{
-                            AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                            response = await controller.postData(formData, "/wayagram-service/all-posts/create-product");
+                            if(response.isSuccessful || response.message == "WAYAGram product created successfully" || response.message == "WAYAGram Product updated successfully"){
+                              if(images.isNotEmpty){
+                                images.removeAt(0);
+                              }
+                              postID = response.data['id'] as String;
+                              for (var element in images) {
+                                body['product_id'] = postID;
+                                body['image'] = await dio.MultipartFile.fromFile(
+                                  element,
+                                  filename: element.split('/').last,
+                                );
+                                formData = dio.FormData.fromMap(body);
+                                response = await controller.putData(formData, "/wayagram-service/all-posts/update-product");
+                              }
+                              if(response!.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram product created successfully".toLowerCase() || response.message.toString().trim().toLowerCase() == "WAYAGram Product updated successfully".toLowerCase()){
+                                postID = "";
+                                print("hey");
+                                Get.back();
+                                AppOverlay.showSuccessSnackBar(content: "Product created successfully");
+                              }
+                            }else{
+                              AppOverlay.showErrorSnackBar(title: 'Error', content: "Something went wrong, please try again later");
+                            }
+                          }
+
+                        }else{
+                          if(controller.postToQuote != null){
+                            var body = {
+                              "original_post_id": controller.postToQuote!.id,
+                              "reposter_profile_id": fullProfile.id,
+                              "repost_comment_desc": textController.text,
+                            };
+                            var response = await controller.postData(body, "/wayagram-service/all-posts/repost-post");
+                            if(response.isSuccessful){
+                              await controller.getPosts;
+                              controller.update(['profile_page','home_tab','home']);
+                              Get.back();
+                            }else{
+                              AppOverlay.showErrorSnackBar(content: "An error occurred, please try again later");
+                            }
+                          }else{
+                            var hashtags = [];
+                            await Future.forEach(exp.allMatches(textController.text), (element){
+                              var match = element as RegExpMatch;
+                              hashtags.add(match.group(0)!.substring(1));
+                            });
+                            Map<String, dynamic> body = {
+                              'description': textController.text,
+                              'profile_id': fullProfile.id,
+                              'type': 'user',
+                              'hashtags': hashtags.join(","),
+                            };
+                            if(controller.groupToPost != null){
+                              body['group_id'] = controller.groupToPost!.id;
+                              body['type'] = 'group';
+                            }
+                            if(controller.pageToPost != null){
+                              body['page_id'] = controller.pageToPost!.id;
+                              body['type'] = 'page';
+                            }
+
+                            if(images.isNotEmpty){
+                              body['images'] = await dio.MultipartFile.fromFile(
+                                images[0],
+                                filename: images[0].split('/').last,
+                              );
+                            }
+                            var formData = dio.FormData.fromMap(body);
+                            ApiResponse? response;
+                            if(postID.isNotEmpty){
+                              formData.fields.add(MapEntry('post_id', postID));
+                              //images.removeAt(0);
+                              body['type'] = null;
+                              for (var element in images) {
+                                body['post_id'] = postID;
+                                body['images'] = await dio.MultipartFile.fromFile(
+                                  element,
+                                  filename: element.split('/').last,
+                                );
+                                formData = dio.FormData.fromMap(body);
+                                response = await controller.putData(formData, "/wayagram-service/all-posts/update");
+                              }
+                              if(response!.isSuccessful){
+                                postID = "";
+                                await controller.getPosts;
+                                controller.update(['profile_page','home_page','home','group_screen','page_screen']);
+                                //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                                Get.back();
+                              }
+                            }else{
+                              response = await controller.postData(formData, "/wayagram-service/all-posts/create");
+                              if(response.isSuccessful){
+                                if(images.isNotEmpty){
+                                  images.removeAt(0);
+                                }
+                                postID = response.data['id'] as String;
+                                for (var element in images) {
+                                  body['post_id'] = postID;
+                                  body['type'] = null;
+                                  body['images'] = await dio.MultipartFile.fromFile(
+                                    element,
+                                    filename: element.split('/').last,
+                                  );
+                                  formData = dio.FormData.fromMap(body);
+                                  response = await controller.putData(formData, "/wayagram-service/all-posts/update");
+                                }
+                                if(response!.isSuccessful){
+                                  postID = "";
+                                  //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                                  await controller.getPosts;
+                                  controller.update(['profile_page','home_page','home','group_screen','page_screen']);
+                                  //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                                  Get.back();
+                                }
+                              }else{
+                                AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                              }
+                            }
                           }
                         }
                       }
@@ -218,305 +281,388 @@ class _CreatePostsState extends State<CreatePosts> {
             width: double.infinity,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: Get.height*0.01),
-              child: Column(
-                children: [
-                  if(controller.groupToPost != null)
-                    Row(
-                      children: [
-                        Text(
-                          'To Group: ',
-                          style: TextStyle(
-                            color: const Color(0xff4F4F4F),
-                            fontSize: Get.textScaleFactor * 16,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        Text(
-                          controller.groupToPost!.name.toString(),
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  if(controller.pageToPost != null)
-                    Row(
-                      children: [
-                        Text(
-                          'To Page: ',
-                          style: TextStyle(
-                            color: const Color(0xff4F4F4F),
-                            fontSize: Get.textScaleFactor * 16,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        Text(
-                          controller.pageToPost!.name.toString(),
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: Get.width*0.13,
-                          height: Get.width*0.13,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: AppColors.background, width: 2),
-                          ),
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            icon: AppAvatar(
-                              imgUrl: (fullProfile.avatar as String?).toString(),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    if(controller.groupToPost != null)
+                      Row(
+                        children: [
+                          Text(
+                            'To Group: ',
+                            style: TextStyle(
+                              color: const Color(0xff4F4F4F),
+                              fontSize: Get.textScaleFactor * 16,
+                              fontWeight: FontWeight.normal,
                             ),
-                            onPressed: () {
-
-                            },
                           ),
-                        ),
-                        SizedBox(
-                          width: Get.width*0.02
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: Get.width*0.01,right: Get.width*0.015),
-                                  child: HashTagTextField(
-                                    decoratedStyle: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.blue,
-                                      fontSize: 16,
-                                    ),
-                                    basicStyle: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                    ),
-                                    expands: false,
-                                    maxLines: null,
-                                    minLines: null,
-                                    decoration: InputDecoration(
-                                      hintText: controller.isProductPost ? "Enter Product Description" : controller.postToQuote == null ? "Create New Post" : "Quote Post Description",
-                                      hintStyle: AppTextStyle.subtitle1.copyWith(
-                                        color: Colors.grey,
-                                        fontSize: 16,
-                                      ),
-                                      border: InputBorder.none,
-                                    ),
-                                    controller: textController,
-                                    decorateAtSign: true,
-                                    onDetectionTyped: (String value) {
-                                      detectedHashtagController.text = value;
-                                      controller.update();
-                                    },
-                                    onDetectionFinished: () {
-                                      detectedHashtagController.text = "";
-                                      searchedPeople = "";
-                                      searchedHashtags = "";
-                                      controller.update();
-                                    },
-                                  ),
-                                ),
-                                if(images.isNotEmpty && !controller.isProductPost)
-                                  SizedBox(
-                                    height: Get.height*0.25,
-                                    child: NewsfeedMultipleImageView(
-                                      imageUrls: images,
-                                      marginLeft: 5,
-                                      marginRight: 5,
-                                      marginBottom: 0,
-                                      marginTop: 0,
-                                      radius: 15,
-                                      isFile: true,
-                                      useAspectRatio: true,
-                                      isSlideShow: false,
-                                ),
-                                  ),
-                                if(controller.postToQuote != null)
-                                  post_view.Post(
-                                    post: controller.postToQuote!,
-                                    fullProfile: fullProfile,
-                                    homeController: controller,
-                                    showActions: false,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.background,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: const Color(0xffEDEAEA), width: 1),
-                                    ),
-                                  ),
-                                if(controller.isProductPost)
-                                  Container(
-                                    //height: Get.height*0.4,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.background,
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(color: const Color(0xffEDEAEA), width: 1),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 10, bottom: 0, left: 5,right: 5),
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(10),
-                                            child: SizedBox(
-                                              height: Get.height * 0.20,
-                                              child: images.isNotEmpty ?  ListView.builder(
-                                                itemCount: images.length,
-                                                shrinkWrap: false,
-                                                scrollDirection: Axis.horizontal,
-                                                itemBuilder: (context, index) {
-                                                  return Container(
-                                                    margin: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
-                                                    padding: const EdgeInsets.all(0),
-                                                    height: Get.height * 0.15,
-                                                    width: Get.width * 0.3,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(10),
-                                                      color: Colors.grey.withOpacity(.5),
-                                                    ),
-                                                    child: Stack(
-                                                      alignment: Alignment.center,
-                                                      children: [
-                                                        ClipRRect(
-                                                          borderRadius: BorderRadius.circular(10),
-                                                          child: Image.file(
-                                                            File(images[index]),
-                                                            fit: BoxFit.cover,
-                                                            height: Get.height * 0.20,
-                                                            width: Get.width * 0.3,
-                                                            errorBuilder: (context, error, stackTrace) {
-                                                              return const Icon(Icons.error);
-                                                            },
-                                                          ),
+                          Text(
+                            controller.groupToPost!.name.toString(),
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    if(controller.pageToPost != null)
+                      Row(
+                        children: [
+                          Text(
+                            'To Page: ',
+                            style: TextStyle(
+                              color: const Color(0xff4F4F4F),
+                              fontSize: Get.textScaleFactor * 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            controller.pageToPost!.name.toString(),
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: Get.width*0.13,
+                            height: Get.width*0.13,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: AppColors.background, width: 2),
+                            ),
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              icon: AppAvatar(
+                                imgUrl: (fullProfile.avatar as String?).toString(),
+                              ),
+                              onPressed: () {
+
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: Get.width*0.02
+                          ),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  FormField<String>(
+                                      initialValue: '',
+                                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                                      validator: (val){
+                                        if(textController.text.isEmpty){
+                                          if(controller.isProductPost){
+                                            return 'Please enter product description';
+                                          }
+                                          return "Please enter post description";
+                                        }
+                                        return null;
+                                      },
+                                      builder: (field) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(left: Get.width*0.01,right: Get.width*0.015),
+                                          child: Column(
+                                            children: [
+                                              HashTagTextField(
+                                                decoratedStyle: AppTextStyle.subtitle1.copyWith(
+                                                  color: Colors.blue,
+                                                  fontSize: 16,
+                                                ),
+                                                basicStyle: AppTextStyle.subtitle1.copyWith(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                ),
+                                                expands: false,
+                                                maxLines: null,
+                                                minLines: null,
+                                                decoration: InputDecoration(
+                                                  hintText: controller.isProductPost ? "Enter Product Description" : controller.postToQuote == null ? "Create New Post" : "Quote Post Description",
+                                                  hintStyle: AppTextStyle.subtitle1.copyWith(
+                                                    color: Colors.grey,
+                                                    fontSize: 16,
+                                                  ),
+                                                  border: InputBorder.none,
+                                                ),
+                                                controller: textController,
+                                                decorateAtSign: true,
+                                                onDetectionTyped: (String value) {
+                                                  detectedHashtagController.text = value;
+                                                  controller.update();
+                                                },
+                                                onDetectionFinished: () {
+                                                  detectedHashtagController.text = "";
+                                                  searchedPeople = "";
+                                                  searchedHashtags = "";
+                                                  controller.update();
+                                                },
+                                              ),
+                                              if(field.hasError)
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: Get.height*0.01),
+                                                  child: Row(
+                                                    children: [
+                                                      const Icon(
+                                                        Icons.error,
+                                                        color: Colors.red,
+                                                        size: 16,
+                                                      ),
+                                                      SizedBox(
+                                                        width: Get.width*0.01,
+                                                      ),
+                                                      Text(
+                                                        field.errorText.toString(),
+                                                        style: AppTextStyle.subtitle1.copyWith(
+                                                          color: Colors.red,
+                                                          fontSize: 16,
                                                         ),
-                                                        Positioned(
-                                                          top: 5,
-                                                          right: 5,
-                                                          child: Container(
-                                                            height: Get.width * 0.06,
-                                                            width: Get.width * 0.06,
-                                                            decoration: BoxDecoration(
-                                                              color: Colors.black.withOpacity(.8),
-                                                              borderRadius: BorderRadius.circular(100),
-                                                            ),
-                                                            child: Center(
-                                                              child: IconButton(
-                                                                padding: EdgeInsets.zero,
-                                                                icon: const Icon(Icons.cancel_rounded, color: AppColors.background),
-                                                                onPressed: () {
-                                                                  images.removeAt(index);
-                                                                  controller.update();
-                                                                },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                  ),
+                                  if(images.isNotEmpty && !controller.isProductPost)
+                                    SizedBox(
+                                      height: Get.height*0.25,
+                                      child: NewsfeedMultipleImageView(
+                                        imageUrls: images,
+                                        marginLeft: 5,
+                                        marginRight: 5,
+                                        marginBottom: 0,
+                                        marginTop: 0,
+                                        radius: 15,
+                                        isFile: true,
+                                        useAspectRatio: true,
+                                        isSlideShow: false,
+                                  ),
+                                    ),
+                                  if(controller.postToQuote != null)
+                                    post_view.Post(
+                                      post: controller.postToQuote!,
+                                      fullProfile: fullProfile,
+                                      homeController: controller,
+                                      showActions: false,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.background,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                                      ),
+                                    ),
+                                  if(controller.isProductPost)
+                                    Container(
+                                      //height: Get.height*0.4,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.background,
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          FormField<String>(
+                                              initialValue: '',
+                                              validator: (val){
+                                                if(images.isEmpty){
+                                                  return "Please add product image";
+                                                }
+                                                return null;
+                                              },
+                                              builder: (field) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.only(top: 10, bottom: 0, left: 5,right: 5),
+                                                  child: Column(
+                                                    children: [
+                                                      ClipRRect(
+                                                        borderRadius: BorderRadius.circular(10),
+                                                        child: SizedBox(
+                                                          height: Get.height * 0.20,
+                                                          child: images.isNotEmpty ?  ListView.builder(
+                                                            itemCount: images.length,
+                                                            shrinkWrap: false,
+                                                            scrollDirection: Axis.horizontal,
+                                                            itemBuilder: (context, index) {
+                                                              return Container(
+                                                                margin: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                                                padding: const EdgeInsets.all(0),
+                                                                height: Get.height * 0.15,
+                                                                width: Get.width * 0.3,
+                                                                decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(10),
+                                                                  color: Colors.grey.withOpacity(.5),
+                                                                ),
+                                                                child: Stack(
+                                                                  alignment: Alignment.center,
+                                                                  children: [
+                                                                    ClipRRect(
+                                                                      borderRadius: BorderRadius.circular(10),
+                                                                      child: Image.file(
+                                                                        File(images[index]),
+                                                                        fit: BoxFit.cover,
+                                                                        height: Get.height * 0.20,
+                                                                        width: Get.width * 0.3,
+                                                                        errorBuilder: (context, error, stackTrace) {
+                                                                          return const Icon(Icons.error);
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                    Positioned(
+                                                                      top: 5,
+                                                                      right: 5,
+                                                                      child: Container(
+                                                                        height: Get.width * 0.06,
+                                                                        width: Get.width * 0.06,
+                                                                        decoration: BoxDecoration(
+                                                                          color: Colors.black.withOpacity(.8),
+                                                                          borderRadius: BorderRadius.circular(100),
+                                                                        ),
+                                                                        child: Center(
+                                                                          child: IconButton(
+                                                                            padding: EdgeInsets.zero,
+                                                                            icon: const Icon(Icons.cancel_rounded, color: AppColors.background),
+                                                                            onPressed: () {
+                                                                              images.removeAt(index);
+                                                                              controller.update();
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            },
+                                                          ): InkWell(
+                                                            onTap: () async {
+                                                              final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
+                                                              if (pickedFile != null) {
+                                                                CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                                                  sourcePath: pickedFile.path,
+                                                                  cropStyle: CropStyle.rectangle,
+                                                                  aspectRatioPresets: [
+                                                                    CropAspectRatioPreset.square,
+                                                                    CropAspectRatioPreset.ratio3x2,
+                                                                    CropAspectRatioPreset.original,
+                                                                    CropAspectRatioPreset.ratio4x3,
+                                                                    CropAspectRatioPreset.ratio16x9
+                                                                  ],
+                                                                  uiSettings: [
+                                                                    AndroidUiSettings(
+                                                                        toolbarTitle: 'Crop Photo',
+                                                                        toolbarColor: AppColors.primary,
+                                                                        toolbarWidgetColor: Colors.white,
+                                                                        activeControlsWidgetColor: AppColors.primary,
+                                                                        cropGridColor: AppColors.primary,
+                                                                        initAspectRatio: CropAspectRatioPreset.original,
+                                                                        lockAspectRatio: false),
+                                                                    IOSUiSettings(
+                                                                      title: 'Crop Photo',
+                                                                    ),
+                                                                    WebUiSettings(
+                                                                      context: context,
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                                if(croppedFile!=null){
+                                                                  images = List.from(images)..add(croppedFile.path);
+                                                                }else{
+                                                                  images = List.from(images)..add(pickedFile.path);
+                                                                }
+                                                                controller.update();
+                                                              }
+                                                            },
+                                                            child: Container(
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.grey.withOpacity(.5),
+                                                                borderRadius: BorderRadius.circular(10),
+                                                                border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                                                              ),
+                                                              child: const Center(
+                                                                child: Icon(Icons.image_rounded, color: Colors.grey),
                                                               ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                              ): InkWell(
-                                                onTap: () async {
-                                                  final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
-                                                  if (pickedFile != null) {
-                                                    CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                                      sourcePath: pickedFile.path,
-                                                      cropStyle: CropStyle.rectangle,
-                                                      aspectRatioPresets: [
-                                                        CropAspectRatioPreset.square,
-                                                        CropAspectRatioPreset.ratio3x2,
-                                                        CropAspectRatioPreset.original,
-                                                        CropAspectRatioPreset.ratio4x3,
-                                                        CropAspectRatioPreset.ratio16x9
-                                                      ],
-                                                      uiSettings: [
-                                                        AndroidUiSettings(
-                                                            toolbarTitle: 'Crop Photo',
-                                                            toolbarColor: AppColors.primary,
-                                                            toolbarWidgetColor: Colors.white,
-                                                            activeControlsWidgetColor: AppColors.primary,
-                                                            cropGridColor: AppColors.primary,
-                                                            initAspectRatio: CropAspectRatioPreset.original,
-                                                            lockAspectRatio: false),
-                                                        IOSUiSettings(
-                                                          title: 'Crop Photo',
+                                                      ),
+                                                      if(field.hasError)
+                                                        Padding(
+                                                          padding: EdgeInsets.only(top: Get.height*0.01),
+                                                          child: Row(
+                                                            children: [
+                                                              const Icon(
+                                                                Icons.error,
+                                                                color: Colors.red,
+                                                                size: 16,
+                                                              ),
+                                                              SizedBox(
+                                                                width: Get.width*0.01,
+                                                              ),
+                                                              Text(
+                                                                field.errorText.toString(),
+                                                                style: AppTextStyle.subtitle1.copyWith(
+                                                                  color: Colors.red,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
-                                                        WebUiSettings(
-                                                          context: context,
-                                                        ),
-                                                      ],
-                                                    );
-                                                    if(croppedFile!=null){
-                                                      images = List.from(images)..add(croppedFile.path);
-                                                    }else{
-                                                      images = List.from(images)..add(pickedFile.path);
-                                                    }
-                                                    controller.update();
-                                                  }
-                                                },
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey.withOpacity(.5),
-                                                    borderRadius: BorderRadius.circular(10),
-                                                    border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                                                    ],
                                                   ),
-                                                  child: const Center(
-                                                    child: Icon(Icons.image_rounded, color: Colors.grey),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+                                                );
+                                              }
                                           ),
-                                        ),
-                                        SizedBox(height: Get.height * 0.01),
-                                        Container(
-                                          color: const Color(0xffEDEAEA),
-                                          height: 1.0,
-                                        ),
-                                        AppInput(
-                                          hintText: "Enter Product Name",
-                                          borderRadius: 0,
-                                          borderSide: BorderSide.none,
-                                          controller: nameController,
-                                          keyboardType: TextInputType.text,
-                                          validator: Validator.textValidation,
-                                        ),
-                                        SizedBox(height: Get.height * 0.01),
-                                        Container(
-                                          color: const Color(0xffEDEAEA),
-                                          height: 1.0,
-                                        ),
-                                        AppInput(
-                                          hintText: "Enter Product Price",
-                                          borderRadius: 0,
-                                          borderSide: BorderSide.none,
-                                          controller: priceController,
-                                          keyboardType: TextInputType.number,
-                                          validator: Validator.moneyValidation,
-                                        ),
-                                        SizedBox(height: Get.height * 0.01),
-                                      ],
-                                    ),
-                                  )
-                              ],
+                                          SizedBox(height: Get.height * 0.01),
+                                          Container(
+                                            color: const Color(0xffEDEAEA),
+                                            height: 1.0,
+                                          ),
+                                          AppInput(
+                                            hintText: "Enter Product Name",
+                                            borderRadius: 0,
+                                            borderSide: BorderSide.none,
+                                            controller: nameController,
+                                            keyboardType: TextInputType.text,
+                                            validator: Validator.textValidation,
+                                          ),
+                                          SizedBox(height: Get.height * 0.01),
+                                          Container(
+                                            color: const Color(0xffEDEAEA),
+                                            height: 1.0,
+                                          ),
+                                          AppInput(
+                                            hintText: "Enter Product Price",
+                                            borderRadius: 0,
+                                            borderSide: BorderSide.none,
+                                            controller: priceController,
+                                            keyboardType: TextInputType.number,
+                                            validator: Validator.moneyValidation,
+                                          ),
+                                          SizedBox(height: Get.height * 0.01),
+                                        ],
+                                      ),
+                                    )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
