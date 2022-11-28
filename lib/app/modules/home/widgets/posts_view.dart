@@ -248,6 +248,8 @@ class _PostState extends State<Post> {
     }
 
     DonationsModel? donation;
+    var amountRaised = 0;
+    //var amountNeeded = 0;
     if(widget.post.kind == 'donation'){
       donation = DonationsModel.fromJson(widget.post.donation);
       if(donation.donationImages != null){
@@ -255,6 +257,9 @@ class _PostState extends State<Post> {
         for (var element in donation.donationImages!) {
           imageUrls.add(element.imageUrl.toString());
         }
+      }
+      if(donation.amountRaised != null){
+        amountRaised = donation.amountRaised!.toInt();
       }
     }
     return Container(
@@ -549,7 +554,7 @@ class _PostState extends State<Post> {
                   ),
                   if(isCurrentUserPost)
                     Text(
-                      "₦${donation.amountRaised} raised of ₦${donation.estimatedAmount}",
+                      "₦$amountRaised raised of ₦${donation.estimatedAmount}",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: Get.textScaleFactor * 16,
@@ -570,7 +575,7 @@ class _PostState extends State<Post> {
                     child: LinearProgressIndicator(
                       backgroundColor: AppColors.primary.withOpacity(0.2),
                       valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
-                      value: donation.amountRaised! / donation.estimatedAmount!,
+                      value: amountRaised / donation.estimatedAmount!,
                     ),
                   ),
                 ),

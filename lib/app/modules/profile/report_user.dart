@@ -34,11 +34,14 @@ import '../../global_widgets/page_input.dart';
 import '../home/widgets/posts_view.dart';
 
 class ReportUser extends StatefulWidget {
-  const ReportUser({Key? key, required this.person, this.group, this.page}) : super(key: key);
+  const ReportUser({Key? key, required this.person, this.group, this.page,this.isGroup = false, this.isPage = false}) : super(key: key);
 
   final Person person;
   final GroupModelEntity? group;
   final GroupModelEntity? page;
+  final bool isGroup;
+  final bool isPage;
+
   @override
   State<ReportUser> createState() => _ReportUserState();
 }
@@ -48,7 +51,8 @@ class _ReportUserState extends State<ReportUser> {
   final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-
+    var title = widget.isGroup ? "Report Group" : widget.isPage ? "Report Page" : "Report User";
+    var subtitle = widget.isGroup ? "Why are you reporting this group?" : widget.isPage ? "Why are you reporting this page?" : "Why are you reporting this profile?";
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -63,7 +67,7 @@ class _ReportUserState extends State<ReportUser> {
           appBar: AppBar(
             backgroundColor: AppColors.background,
             title: Text(
-              "Report Profile",
+              title,
               style: TextStyle(
                 color: const Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
@@ -85,17 +89,102 @@ class _ReportUserState extends State<ReportUser> {
                   child: AppButton(
                     title: 'Submit',
                     onPressed: () async {
-                      if(_reason == "Other"){
-                        if(_controller.text.isNotEmpty){
+                      if(widget.isGroup || widget.isPage){
+                        var reason = _reason;
+                        if(_reason == "Other"){
+                          reason = _controller.text;
+                        }
+                        if(widget.isGroup){
+                          var newBody = {
+                            "groupId": widget.group!.id,
+                            "reportingUserId": fullProfile.id,
+                            "reportedUserId": widget.group!.id,
+                            "reportType": "group",
+                            "report": _reason
+                          };
+                          var response = await controller.postData(newBody, "/wayagram-service/main/group/report",updatePages: false);
+                          if(response.isSuccessful){
+                            if(Get.currentRoute == "/ReportUser"){
+                              Get.back();
+                            }
+                            AppOverlay.showSuccessSnackBar(content: "${widget.group!.name} Group reported successfully");
+                          }else{
+                            AppOverlay.showErrorSnackBar(content: "An error occurred reporting ${widget.group!.name} group");
+                          }
+                        }else {
+                          var newBody = {
+                            "reportingUserId": fullProfile.id,
+                            "pageId": widget.page!.id,
+                            "reportedUserId": widget.page!.id,
+                            "reportType": "page",
+                            "report": _reason
+                          };
+                          var response = await controller.postData(newBody, "/wayagram-service/main/page/page-report",updatePages: false);
+                          if(response.isSuccessful){
+                            if(Get.currentRoute == "/ReportUser"){
+                              Get.back();
+                            }
+                            AppOverlay.showSuccessSnackBar(content: "${widget.page!.name} Page reported successfully");
+                          }else{
+                            AppOverlay.showErrorSnackBar(content: "An error occurred reporting ${widget.page!.name} page");
+                          }
+                        }
+                      }else {
+                        if(_reason == "Other"){
+                          if(_controller.text.isNotEmpty){
+                            var body = {
+                              "profile_id": fullProfile.id,
+                              "reported_id": widget.person.id,
+                              "reason": _controller.text,
+                            };
+                            ApiResponse? response;
+                            //print(widget.page!.id);
+                            if(widget.group == null && widget.page == null){
+                              response = await controller.postData(body, "/wayagram-service/main/profile/report",updatePages: false);
+                            }else{
+                              if(widget.group != null){
+                                var newBody = {
+                                  "groupId": widget.group!.id,
+                                  "reportingUserId": fullProfile.id,
+                                  "reportedUserId": widget.person.id,
+                                  "reportType": "member",
+                                  "report": _controller.text
+                                };
+                                response = await controller.postData(newBody, "/wayagram-service/main/group/report",updatePages: false);
+                              }else if(widget.page != null){
+                                var newBody = {
+                                  "reportingUserId": fullProfile.id,
+                                  "pageId": widget.page!.id,
+                                  "reportedUserId": widget.person.id,
+                                  "reportType": "follower",
+                                  "report": _controller.text
+                                };
+                                response = await controller.postData(newBody, "/wayagram-service/main/page/page-report",updatePages: false);
+                              }
+                            }
+                            print(widget.page!.id);
+                            if(response!.isSuccessful || response.message == "WAYAGram user reported"){
+                              Get.back();
+                              if(widget.group != null){
+                                AppOverlay.showSuccessSnackBar(content: "User Reported To Group Admin");
+                              }else if(widget.page != null){
+                                AppOverlay.showSuccessSnackBar(content: "User Reported To Page Admin");
+                              }else{
+                                AppOverlay.showSuccessSnackBar(content: "Account Reported Successfully");
+                              }
+                            }else{
+                              AppOverlay.showErrorSnackBar(content: "Failed to Report Account, Please try again later");
+                            }
+                          }
+                        }
+                        else{
                           var body = {
                             "profile_id": fullProfile.id,
                             "reported_id": widget.person.id,
-                            "reason": _controller.text,
+                            "reason": _reason,
                           };
                           ApiResponse? response;
-                          //print(widget.page!.id);
                           if(widget.group == null && widget.page == null){
-                            print("paf");
                             response = await controller.postData(body, "/wayagram-service/main/profile/report",updatePages: false);
                           }else{
                             if(widget.group != null){
@@ -104,7 +193,7 @@ class _ReportUserState extends State<ReportUser> {
                                 "reportingUserId": fullProfile.id,
                                 "reportedUserId": widget.person.id,
                                 "reportType": "member",
-                                "report": _controller.text
+                                "report": _reason
                               };
                               response = await controller.postData(newBody, "/wayagram-service/main/group/report",updatePages: false);
                             }else if(widget.page != null){
@@ -113,12 +202,11 @@ class _ReportUserState extends State<ReportUser> {
                                 "pageId": widget.page!.id,
                                 "reportedUserId": widget.person.id,
                                 "reportType": "follower",
-                                "report": _controller.text
+                                "report": _reason
                               };
                               response = await controller.postData(newBody, "/wayagram-service/main/page/page-report",updatePages: false);
                             }
                           }
-                          print(widget.page!.id);
                           if(response!.isSuccessful || response.message == "WAYAGram user reported"){
                             Get.back();
                             if(widget.group != null){
@@ -131,48 +219,6 @@ class _ReportUserState extends State<ReportUser> {
                           }else{
                             AppOverlay.showErrorSnackBar(content: "Failed to Report Account, Please try again later");
                           }
-                        }
-                      }else{
-                        var body = {
-                          "profile_id": fullProfile.id,
-                          "reported_id": widget.person.id,
-                          "reason": _reason,
-                        };
-                        ApiResponse? response;
-                        if(widget.group == null && widget.page == null){
-                          response = await controller.postData(body, "/wayagram-service/main/profile/report",updatePages: false);
-                        }else{
-                          if(widget.group != null){
-                            var newBody = {
-                              "groupId": widget.group!.id,
-                              "reportingUserId": fullProfile.id,
-                              "reportedUserId": widget.person.id,
-                              "reportType": "member",
-                              "report": _reason
-                            };
-                            response = await controller.postData(newBody, "/wayagram-service/main/group/report",updatePages: false);
-                          }else if(widget.page != null){
-                            var newBody = {
-                              "reportingUserId": fullProfile.id,
-                              "pageId": widget.page!.id,
-                              "reportedUserId": widget.person.id,
-                              "reportType": "follower",
-                              "report": _reason
-                            };
-                            response = await controller.postData(newBody, "/wayagram-service/main/page/page-report",updatePages: false);
-                          }
-                        }
-                        if(response!.isSuccessful || response.message == "WAYAGram user reported"){
-                          Get.back();
-                          if(widget.group != null){
-                            AppOverlay.showSuccessSnackBar(content: "User Reported To Group Admin");
-                          }else if(widget.page != null){
-                            AppOverlay.showSuccessSnackBar(content: "User Reported To Page Admin");
-                          }else{
-                            AppOverlay.showSuccessSnackBar(content: "Account Reported Successfully");
-                          }
-                        }else{
-                          AppOverlay.showErrorSnackBar(content: "Failed to Report Account, Please try again later");
                         }
                       }
                     },
@@ -255,7 +301,7 @@ class _ReportUserState extends State<ReportUser> {
                     Padding(
                       padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02),
                       child: Text(
-                        "Why are you reporting this profile?",
+                        subtitle,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: Get.textScaleFactor * 16,

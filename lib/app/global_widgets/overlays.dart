@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -189,5 +190,59 @@ class AppOverlay {
 
   static void showSuccessSnackBar({String title = "Success",String content = "Your request was successful"}) {
     Get.snackbar(title, content, backgroundColor: Colors.green, colorText: Colors.white);
+  }
+
+  static void showDeviceDialog({String title = "",String content = "",String positiveText = "Confirm",String  negativeText = "Cancel",Function()? onPositivePressed,Function()? onNegativePressed}) {
+    showPlatformDialog(
+      context: Get.context!,
+      builder: (context) => BasicDialogAlert(
+        title: Text(
+          title,
+          style: AppTextStyle.bodyText1.copyWith(
+            //color: Colors.grey,
+            fontSize: Get.width * 0.04,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          content,
+          style: AppTextStyle.bodyText1.copyWith(
+            //color: Colors.grey,
+            fontSize: Get.width * 0.035,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        actions: <Widget>[
+          BasicDialogAction(
+            title: Text(
+              negativeText,
+              style: AppTextStyle.bodyText1.copyWith(
+                color: Colors.blue,
+                fontSize: Get.width * 0.03,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            onPressed: () {
+              if(onNegativePressed != null) onNegativePressed();
+              Navigator.pop(context);
+            },
+          ),
+          BasicDialogAction(
+            title: Text(
+              positiveText,
+              style: AppTextStyle.bodyText1.copyWith(
+                color: Colors.blue,
+                fontSize: Get.width * 0.03,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            onPressed: () {
+              if(onPositivePressed != null) onPositivePressed();
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

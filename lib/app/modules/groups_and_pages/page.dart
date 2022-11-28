@@ -70,6 +70,13 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
     var top = 0.0;
     var page = widget.page;
     var pageFollowed = false;
+
+    var savedMutedPages = ReadWriteValue('wayagram_muted_pages', '', MyPref.box);
+    List<String> mutedPages = [];
+    if(savedMutedPages.val.isNotEmpty){
+      mutedPages = savedMutedPages.val.split(',');
+    }
+
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -345,11 +352,22 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                 ),
                                 onSelected: (value) async {
                                   if (value == 0) {
-                                    //Get.to(() => const Muted());
+
                                   } else if (value == 1) {
                                     await Share.share('Join me on wayagram to follow this page https://app.staging.wayagram.ng/wayagram-page/${page.id}?from=shared', subject: 'Wayagram Page');
                                   } else if (value == 2) {
-                                    //Get.to(() => const Followers());
+                                    var person = Person(
+                                      displayName: page.name.toString(),
+                                      username: page.name.toString(),
+                                      profilePic: page.imageUrl.toString(),
+                                      bio:page.description.toString(),
+                                      userID: page.id.toString(),
+                                      id: page.id.toString(),
+                                      followersCount: "0",
+                                      followingCount: "0",
+                                      coverImage: page.headerImageUrl.toString(),
+                                    );
+                                    Get.to(() => ReportUser(person: person,page: page,isPage: true,));
                                   }
                                 },
                                 itemBuilder: (context) => [
@@ -367,26 +385,6 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                     value: 1,
                                     child: Text(
                                       "Share",
-                                      style: AppTextStyle.bodyText1.copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 2,
-                                    child: Text(
-                                      "Mute",
-                                      style: AppTextStyle.bodyText1.copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 2,
-                                    child: Text(
-                                      "Exit",
                                       style: AppTextStyle.bodyText1.copyWith(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,

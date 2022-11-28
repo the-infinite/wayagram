@@ -75,6 +75,12 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
     var groupRequestSent = false;
     var groupJoined = false;
 
+    var savedMutedGroups = ReadWriteValue('wayagram_muted_groups', '', MyPref.box);
+    List<String> mutedGroups = [];
+    if(savedMutedGroups.val.isNotEmpty){
+      mutedGroups = savedMutedGroups.val.split(',');
+    }
+
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -359,12 +365,74 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                 ),
                                 onSelected: (value) async {
                                   if (value == 0) {
-                                    //Get.to(() => const Muted());
+
                                   } else if (value == 1) {
                                     await Share.share('Join me on this wayagram group https://app.staging.wayagram.ng/wayagram-group/${group.id}?from=shared', subject: 'Wayagram Group');
-                                    //Get.to(() => const Blocked());
                                   } else if (value == 2) {
-                                    //Get.to(() => const Followers());
+                                    AppOverlay.showDeviceDialog(
+                                      title: "Mute Group",
+                                      content: "Are you sure you want to mute this group?",
+                                      onPositivePressed: (){
+                                        var body = {
+                                          "groupId": group.id,
+                                          "userId": fullProfile.id
+                                        };
+                                        controller.putData(body, "/wayagram-service/main/group/mute-group-from-user-end",updatePages: false).then((value){
+                                          if(value.isSuccessful){
+                                            if(value.message.toString().trim().toLowerCase() == "mute success"){
+                                              mutedGroups.add(group.id.toString());
+                                              savedMutedGroups.val = mutedGroups.join(",");
+                                              AppOverlay.showSuccessSnackBar(content: "Group muted successfully");
+                                            }else{
+                                              mutedGroups.remove(group.id.toString());
+                                              savedMutedGroups.val = mutedGroups.join(",");
+                                              AppOverlay.showSuccessSnackBar(content: "Group un-muted successfully");
+                                            }
+                                            controller.update(['group_screen']);
+                                          }else{
+                                            AppOverlay.showErrorSnackBar(content: "An Error Occurred while muting group, please try again later");
+                                          }
+                                        });
+                                      }
+                                    );
+                                  }else if (value == 3) {
+                                    var person = Person(
+                                      displayName: group.name.toString(),
+                                      username: group.name.toString(),
+                                      profilePic: group.imageUrl.toString(),
+                                      bio:group.description.toString(),
+                                      userID: group.id.toString(),
+                                      id: group.id.toString(),
+                                      followersCount: "0",
+                                      followingCount: "0",
+                                      coverImage: group.headerImageUrl.toString(),
+                                    );
+                                    Get.to(() => ReportUser(person: person,group: group,isGroup: true,));
+                                  }else if (value == 4) {
+                                    AppOverlay.showDeviceDialog(
+                                        title: isForUser? "Delete Group":"Exit Group",
+                                        content: isForUser? "Are you sure you want to delete this group?": "Are you sure you want to leave this group?",
+                                        onPositivePressed: (){
+                                          var body = {
+                                            "groupId": group.id,
+                                            "userId": fullProfile.id
+                                          };
+                                          controller.putData(body, "/wayagram-service/main/group/leave-and-delete-group",updatePages: false).then((value){
+                                            if(value.isSuccessful){
+                                              if(Get.currentRoute == "/Group"){
+                                                Get.back();
+                                              }
+                                              if(isForUser){
+                                                AppOverlay.showSuccessSnackBar(content: "${group.name} Group deleted successfully");
+                                              }else{
+                                                AppOverlay.showSuccessSnackBar(content: "${group.name} Group left successfully");
+                                              }
+                                            }else{
+                                              AppOverlay.showErrorSnackBar(content: "An Error Occurred, please try again later");
+                                            }
+                                          });
+                                        }
+                                    );
                                   }
                                 },
                                 itemBuilder: (context) => [
@@ -391,7 +459,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                   PopupMenuItem(
                                     value: 2,
                                     child: Text(
-                                      "Mute",
+                                      (muted || mutedGroups.contains(group.id.toString())) ? "UnMute" : "Mute",
                                       style: AppTextStyle.bodyText1.copyWith(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
@@ -399,19 +467,19 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                     ),
                                   ),
                                   PopupMenuItem(
-                                    value: 2,
-                                    child: Text(
-                                      "Exit",
-                                      style: AppTextStyle.bodyText1.copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 2,
+                                    value: 3,
                                     child: Text(
                                       "Report",
+                                      style: AppTextStyle.bodyText1.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 4,
+                                    child: Text(
+                                      isForUser ? "Delete":"Exit",
                                       style: AppTextStyle.bodyText1.copyWith(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,

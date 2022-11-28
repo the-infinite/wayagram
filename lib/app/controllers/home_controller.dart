@@ -235,9 +235,10 @@ class HomeController extends GetxController {
   }
 
   Future<ApiResponse> postData(dynamic body,String url,{bool updatePages = true}) async {
-    print(url);
     final response = await userRepo.postData(url, body);
-    debugPrint(response.message);
+    if (kDebugMode) {
+      print(response.message);
+    }
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
       if(updatePages){
         update(['profile_page','home','settings']);
@@ -253,6 +254,9 @@ class HomeController extends GetxController {
 
   Future<ApiResponse> putData(dynamic body,String url,{bool updatePages = true}) async {
     final response = await userRepo.putData(url, body);
+    if (kDebugMode) {
+      print(response.message);
+    }
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
       if(updatePages){
         update(['profile_page','home','settings']);
