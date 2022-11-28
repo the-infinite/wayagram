@@ -146,7 +146,6 @@ class _CreatePostsState extends State<CreatePosts> {
                               }
                               if(response!.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram product created successfully".toLowerCase() || response.message.toString().trim().toLowerCase() == "WAYAGram Product updated successfully".toLowerCase()){
                                 postID = "";
-                                print("hey");
                                 Get.back();
                                 AppOverlay.showSuccessSnackBar(content: "Product created successfully");
                               }
