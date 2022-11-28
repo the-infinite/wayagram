@@ -6,16 +6,21 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
+import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/full_user_profile_entity.dart';
+import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/date_button.dart';
 import '../../global_widgets/document_picker.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
+import 'package:dio/dio.dart' as dio;
+
 
 class CreateEvent extends StatelessWidget {
   const CreateEvent({Key? key}) : super(key: key);
@@ -36,6 +41,9 @@ class CreateEvent extends StatelessWidget {
     var freeOrPaidController = TextEditingController(text: "Free");
     var linkController = TextEditingController();
 
+    var priceController = TextEditingController(text:'0');
+    var ticketsController = TextEditingController(text:'0');
+
     var startTimeController = TextEditingController();
     var startDateController = TextEditingController();
     var endTimeController = TextEditingController();
@@ -55,6 +63,7 @@ class CreateEvent extends StatelessWidget {
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeController>(id:'create_event',builder: (controller) {
+        var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppColors.background,
@@ -86,6 +95,36 @@ class CreateEvent extends StatelessWidget {
                           pageController.animateToPage(currentPage+1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                           currentPage++;
                           controller.update(['create_event']);
+                        }else{
+                          Map<String, dynamic> body = {
+                            'location':locationController.text.toString(),
+                            'amount':int.parse(priceController.text),
+                            'eventOrganizer': eventOrganizerController.text.toString(),
+                            'eventUrl': linkController.text.isEmpty ? "wayagram.com":linkController.text,
+                            'eventName': eventNameController.text.toString(),
+                            'details': eventNameController.text.toString(),
+                            'eventStart': startDate.millisecondsSinceEpoch.toString(),
+                            'eventEnd': endDate.millisecondsSinceEpoch.toString(),
+                            'eventTicketEnd': endDate.millisecondsSinceEpoch.toString(),
+                            'isPaid': freeOrPaidController.text != "Free",
+                            'isPrivate': privacyController.text != "Public",
+                            'virtual': eventsTypeController.text != "Physical",
+                            'no_of_ticket': int.parse(ticketsController.text),
+                          };
+
+                          body['eventPoster'] = await dio.MultipartFile.fromFile(
+                            controller.imagePaths[1],
+                            filename: controller.imagePaths[1].split('/').last,
+                          );
+
+                          var formData = dio.FormData.fromMap(body);
+                          var response = await controller.postData(formData, "/wayagram-service/all-posts/create-event",updatePages: false);
+                          if(response.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram event created successfully".toLowerCase()){
+                            Get.back();
+                            AppOverlay.showSuccessSnackBar(content: "Event Created Successfully");
+                          }else{
+                            AppOverlay.showErrorSnackBar(content: "An Error Occurred, Please try again later");
+                          }
                         }
                       }
                     },
@@ -204,7 +243,7 @@ class CreateEvent extends StatelessWidget {
                                 SizedBox(height: Get.height*0.025),
                                 Padding(
                                   padding: EdgeInsets.only(left: Get.width*0.01),
-                                  child: Text('Location', style: AppTextStyle.subtitle1.copyWith(
+                                  child: Text('Location And Price', style: AppTextStyle.subtitle1.copyWith(
                                     color: Colors.black,
                                     fontSize: Get.width*0.05,
                                     fontWeight: FontWeight.w600,
@@ -213,7 +252,7 @@ class CreateEvent extends StatelessWidget {
                                 SizedBox(height: Get.height*0.01),
                                 Padding(
                                   padding: EdgeInsets.only(left: Get.width*0.01),
-                                  child: Text('Where is the location of your event?', style: AppTextStyle.subtitle1.copyWith(
+                                  child: Text('Where is the location of your event and what is the price of your tickets?', style: AppTextStyle.subtitle1.copyWith(
                                     color: Colors.black.withOpacity(0.5),
                                     fontSize: Get.width*0.04,
                                     fontWeight: FontWeight.normal,
@@ -263,6 +302,7 @@ class CreateEvent extends StatelessWidget {
                                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   onChanged: (val) {
                                     freeOrPaidController.text = val;
+                                    controller.update(['create_event']);
                                   },
                                   value: "Free",
                                   items: ["Free","Paid"].map<DropdownMenuItem<String>>((String value) {
@@ -272,6 +312,36 @@ class CreateEvent extends StatelessWidget {
                                     );
                                   }).toList(),
                                 ),
+                                if(freeOrPaidController.text != 'Free')
+                                  SizedBox(height: Get.height*0.025),
+                                if(freeOrPaidController.text != 'Free')
+                                  PageInput(
+                                    hint: 'Please input the number of tickets available',
+                                    label: 'Number Of Tickets',
+                                    validator: (val){
+                                      if(ticketsController.text.isEmpty){
+                                        return "Enter a amount";
+                                      }
+                                      if(!GetUtils.isNumericOnly(ticketsController.text)){
+                                        return "Enter a valid amount";
+                                      }
+                                      return null;
+                                    },
+                                    keyboardType: TextInputType.number,
+                                    isCompulsory: true,
+                                    controller: ticketsController,
+                                  ),
+                                if(freeOrPaidController.text != 'Free')
+                                  SizedBox(height: Get.height*0.025),
+                                if(freeOrPaidController.text != 'Free')
+                                  PageInput(
+                                    hint: 'Please input the price of each tickets',
+                                    label: 'Tickets Price',
+                                    validator: Validator.moneyValidation,
+                                    keyboardType: TextInputType.number,
+                                    isCompulsory: true,
+                                    controller: priceController,
+                                  ),
                               ],
                             ),
                             Column(

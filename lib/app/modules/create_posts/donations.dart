@@ -170,7 +170,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             controller: titleController,
                           ),
                           SizedBox(height: Get.height*0.025),
-                          PageInput(
+                          /*PageInput(
                             hint: 'Who is organizing this donation?',
                             label: 'Organizer’s name',
                             validator: Validator.fullnameValidation,
@@ -178,7 +178,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             isCompulsory: true,
                             controller: organizerController,
                           ),
-                          SizedBox(height: Get.height*0.025),
+                          SizedBox(height: Get.height*0.025),*/
                           PageInput(
                             hint: 'Tell people why they should donate to this cause?',
                             label: 'Description',
@@ -384,7 +384,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             ],
                           ),
                           SizedBox(height: Get.height*0.025),
-                          Row(
+                         /* Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
@@ -417,7 +417,7 @@ class _CreateDonationState extends State<CreateDonation> {
                                 ),
                               ),
                             ],
-                          ),
+                          ),*/
                         ],
                       ),
                       Column(
@@ -429,69 +429,101 @@ class _CreateDonationState extends State<CreateDonation> {
                           //Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Event Image', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
                           FormField<String>(
                               initialValue: '',
-                              validator: Validator.imageValidator,
+                              validator: (val){
+                                if(controller.imagePaths.isEmpty){
+                                  return "Please select an image";
+                                }
+                                return null;
+                              },
                               builder: (field) {
-                                return DocumentPicker(
-                                  radius: 10,
-                                  networkImage: null,
-                                  renderHeight: Get.width * 0.35,
-                                  renderWidth: Get.width,
-                                  controller: controller,
-                                  position: 1,
-                                  onSelected: (imagePath, base64Image) async {
-                                    CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                      sourcePath: imagePath,
-                                      cropStyle: CropStyle.rectangle,
-                                      aspectRatioPresets: [
-                                        CropAspectRatioPreset.ratio3x2,
-                                        CropAspectRatioPreset.original,
-                                        CropAspectRatioPreset.ratio16x9
-                                      ],
-                                      uiSettings: [
-                                        AndroidUiSettings(
-                                            toolbarTitle: 'Crop Event Photo',
-                                            toolbarColor: AppColors.background,
-                                            toolbarWidgetColor: Colors.black,
-                                            activeControlsWidgetColor: AppColors.primary,
-                                            cropGridColor: AppColors.primary,
-                                            initAspectRatio: CropAspectRatioPreset.original,
-                                            lockAspectRatio: true),
-                                        IOSUiSettings(
-                                          title: 'Crop Cover Photo',
-                                          aspectRatioLockEnabled: true,
-                                        ),
-                                        WebUiSettings(
-                                          context: context,
-                                        ),
-                                      ],
-                                    );
-                                    if(croppedFile == null){
-                                      if(controller.imagePaths.isEmpty){
-                                        controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
-                                      }else{
-                                        if(controller.imagePaths.length > 2) {
-                                          controller.imagePaths[1] = imagePath;
+                                return Column(
+                                  children: [
+                                    DocumentPicker(
+                                      radius: 10,
+                                      networkImage: null,
+                                      renderHeight: Get.width * 0.35,
+                                      renderWidth: Get.width,
+                                      controller: controller,
+                                      position: 1,
+                                      onSelected: (imagePath, base64Image) async {
+                                        CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                          sourcePath: imagePath,
+                                          cropStyle: CropStyle.rectangle,
+                                          aspectRatioPresets: [
+                                            CropAspectRatioPreset.ratio3x2,
+                                            CropAspectRatioPreset.original,
+                                            CropAspectRatioPreset.ratio16x9
+                                          ],
+                                          uiSettings: [
+                                            AndroidUiSettings(
+                                                toolbarTitle: 'Crop Event Photo',
+                                                toolbarColor: AppColors.background,
+                                                toolbarWidgetColor: Colors.black,
+                                                activeControlsWidgetColor: AppColors.primary,
+                                                cropGridColor: AppColors.primary,
+                                                initAspectRatio: CropAspectRatioPreset.original,
+                                                lockAspectRatio: true),
+                                            IOSUiSettings(
+                                              title: 'Crop Cover Photo',
+                                              aspectRatioLockEnabled: true,
+                                            ),
+                                            WebUiSettings(
+                                              context: context,
+                                            ),
+                                          ],
+                                        );
+                                        if(croppedFile == null){
+                                          if(controller.imagePaths.isEmpty){
+                                            controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
+                                          }else{
+                                            if(controller.imagePaths.length > 2) {
+                                              controller.imagePaths[1] = imagePath;
+                                            }else{
+                                              controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
+                                            }
+                                          }
+                                          field.didChange(imagePath);
                                         }else{
-                                          controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
+                                          if(controller.imagePaths.isEmpty){
+                                            controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
+                                          }else{
+                                            if(controller.imagePaths.length > 2) {
+                                              controller.imagePaths[1] = croppedFile.path;
+                                            }else{
+                                              controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                            }
+                                          }
+                                          field.didChange(croppedFile.path);
                                         }
-                                      }
-                                      field.didChange(imagePath);
-                                    }else{
-                                      if(controller.imagePaths.isEmpty){
-                                        controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
-                                      }else{
-                                        if(controller.imagePaths.length > 2) {
-                                          controller.imagePaths[1] = croppedFile.path;
-                                        }else{
-                                          controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
-                                        }
-                                      }
-                                      field.didChange(croppedFile.path);
-                                    }
-                                  },
-                                  actionWord: "Upload Cover Photo",
-                                  displayPickerIcon: false,
-                                  fit: BoxFit.cover,
+                                      },
+                                      actionWord: "Upload Cover Photo",
+                                      displayPickerIcon: false,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    if(field.hasError)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: Get.height*0.01),
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.error,
+                                              color: Colors.red,
+                                              size: 16,
+                                            ),
+                                            SizedBox(
+                                              width: Get.width*0.01,
+                                            ),
+                                            Text(
+                                              field.errorText.toString(),
+                                              style: AppTextStyle.subtitle1.copyWith(
+                                                color: Colors.red,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
                                 );
                               }
                           ),
@@ -503,13 +535,13 @@ class _CreateDonationState extends State<CreateDonation> {
                             },
                           ),
                           SizedBox(height: Get.height*0.01),
-                          _TextButton(
+                          /*_TextButton(
                             title: 'Organizer Name:',
                             text: organizerController.text,
                             onPressed: () {
                             },
                           ),
-                          SizedBox(height: Get.height*0.01),
+                          SizedBox(height: Get.height*0.01),*/
                           _TextButton(
                             title: 'Target:',
                             text: targetController.text,
@@ -517,13 +549,13 @@ class _CreateDonationState extends State<CreateDonation> {
                             },
                           ),
                           SizedBox(height: Get.height*0.01),
-                          _TextButton(
+                         /* _TextButton(
                             title: 'Minimum Amount:',
                             text: minimumAmountController.text,
                             onPressed: () {
                             },
                           ),
-                          SizedBox(height: Get.height*0.01),
+                          SizedBox(height: Get.height*0.01),*/
                           _TextButton(
                             title: 'Description:',
                             text: descriptionController.text,
