@@ -8,6 +8,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
@@ -99,48 +100,91 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
               //followingCount = friends.following!;
             }
 
+            var postListID = fullProfile.id;
             var tabs = [
-              FutureBuilder<ApiResponse>(
-                  key: const ValueKey('posts'),
-                  future: controller.getPosts,
-                  builder: (context, snapshot) {
-                    var savedPosts = MyPref.posts.val;
-                    if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                      final posts = snapshot.data!.data as List<AllPostsEntity>;
-                      return PostsView(posts: posts,userID: fullProfile.userId);
-                    } else if(savedPosts.isNotEmpty){
-                      var posts = AllPostsEntity.getService(jsonDecode(savedPosts));
-                      return PostsView(posts: posts,userID: fullProfile.userId);
-                    }else{
-                      if(snapshot.connectionState == ConnectionState.done){
-                        return const SizedBox.shrink();
+              SingleChildScrollView(
+                key: const ValueKey('posts'),
+                child: FutureBuilder<ApiResponse>(
+                    future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID&page=1&limit=40", true),
+                    builder: (context, snapshot) {
+                      var savedPosts = ReadWriteValue('wayagram_posts_$postListID', '', MyPref.box);
+                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                        final posts =  AllPostsEntity.getService(snapshot.data!.data['data']);
+                        savedPosts.val = jsonEncode(posts);
+                        return PostsView(posts: posts);
+                      } else if(savedPosts.val.isNotEmpty){
+                        var posts = AllPostsEntity.getService(jsonDecode(savedPosts.val));
+                        return PostsView(posts: posts);
+                      }else{
+                        if(snapshot.connectionState == ConnectionState.done){
+                          return const SizedBox.shrink();
+                        }
+                        return const PostsView(isLoading: true);
                       }
-                      return const PostsView(isLoading: true);
-                    }
-                  }),
-              FutureBuilder<ApiResponse>(
-                  key: const ValueKey('products'),
-                  future: controller.getMyProducts,
-                  builder: (context, snapshot) {
-                    var savedPosts = MyPref.myProducts.val;
-                    if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                      final posts = snapshot.data!.data as ProductsModelEntity;
-                      return ProductView(posts: posts.data!);
-                    } else if(savedPosts.isNotEmpty){
-                      var posts = ProductsModelEntity.fromJson(jsonDecode(savedPosts));
-                      return ProductView(posts: posts.data!);
-                    }else{
-                      if(snapshot.connectionState == ConnectionState.done){
-                        return const SizedBox.shrink();
-                      }
-                      return const ProductView(isLoading: true);
-                    }
-                  }),
-              Column(
-                key: const ValueKey('io'),
+                    }),
               ),
-              Column(
-                key: const ValueKey('aa'),
+              SingleChildScrollView(
+                key: const ValueKey('products'),
+                child: FutureBuilder<ApiResponse>(
+                    future: controller.getData("/wayagram-service/all-posts/get-user-products?page=1&limit=40&profile_id=$postListID", true),
+                    builder: (context, snapshot) {
+                      var savedPosts = ReadWriteValue('wayagram_products_$postListID', '', MyPref.box);
+                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                        final posts = ProductsModelEntity.fromJson(snapshot.data!.data);
+                        savedPosts.val = jsonEncode(posts);
+                        return ProductView(posts: posts.data!);
+                      } else if(savedPosts.val.isNotEmpty){
+                        var posts = ProductsModelEntity.fromJson(jsonDecode(savedPosts.val));
+                        return ProductView(posts: posts.data!);
+                      }else{
+                        if(snapshot.connectionState == ConnectionState.done){
+                          return const SizedBox.shrink();
+                        }
+                        return const ProductView(isLoading: true);
+                      }
+                    }),
+              ),
+              SingleChildScrollView(
+                key: const ValueKey('polls'),
+                child: FutureBuilder<ApiResponse>(
+                    future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID&page=1&limit=40", true),
+                    builder: (context, snapshot) {
+                      var savedPosts = ReadWriteValue('wayagram_posts_$postListID', '', MyPref.box);
+                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                        final posts =  AllPostsEntity.getService(snapshot.data!.data['data']);
+                        savedPosts.val = jsonEncode(posts);
+                        return PostsView(posts: posts,userID: fullProfile.userId,isPoll: true);
+                      } else if(savedPosts.val.isNotEmpty){
+                        var posts = AllPostsEntity.getService(jsonDecode(savedPosts.val));
+                        return PostsView(posts: posts,userID: fullProfile.userId,isPoll: true);
+                      }else{
+                        if(snapshot.connectionState == ConnectionState.done){
+                          return const SizedBox.shrink();
+                        }
+                        return const PostsView(isLoading: true);
+                      }
+                    }),
+              ),
+              SingleChildScrollView(
+                key: const ValueKey('donations'),
+                child: FutureBuilder<ApiResponse>(
+                    future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID&page=1&limit=40", true),
+                    builder: (context, snapshot) {
+                      var savedPosts = ReadWriteValue('wayagram_posts_$postListID', '', MyPref.box);
+                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                        final posts =  AllPostsEntity.getService(snapshot.data!.data['data']);
+                        savedPosts.val = jsonEncode(posts);
+                        return PostsView(posts: posts,userID: fullProfile.userId,isDonation: true);
+                      } else if(savedPosts.val.isNotEmpty){
+                        var posts = AllPostsEntity.getService(jsonDecode(savedPosts.val));
+                        return PostsView(posts: posts,userID: fullProfile.userId,isDonation: true);
+                      }else{
+                        if(snapshot.connectionState == ConnectionState.done){
+                          return const SizedBox.shrink();
+                        }
+                        return const PostsView(isLoading: true);
+                      }
+                    }),
               ),
             ];
 
@@ -510,7 +554,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                       tabs: const [
                                         Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                                         Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
+                                        Tab(text: 'Polls',iconMargin: EdgeInsets.zero,),
                                         Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
                                       ],
                                       onTap: (index) {
@@ -540,6 +584,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                       child: Builder(
                         builder: (BuildContext context) {
                           return CustomScrollView(
+                            physics: const NeverScrollableScrollPhysics(),
                             key: PageStorageKey<String>(widget.key.toString()),
                             slivers: <Widget>[
                               SliverOverlapInjector(

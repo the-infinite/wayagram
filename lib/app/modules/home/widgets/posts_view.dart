@@ -17,6 +17,7 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/CommentModel.dart' as comment;
+import '../../../data/model/DonationsModel.dart';
 import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
@@ -40,12 +41,18 @@ class PostsView extends StatelessWidget{
     Key? key,
     this.isLoading = false,
     this.posts,
-    this.userID
+    this.userID,
+    this.isPoll,
+    this.isDonation ,
+    this.isNormal,
   }) : super(key: key);
 
   final bool isLoading;
   final List<AllPostsEntity>? posts;
   final String? userID;
+  final bool? isPoll;
+  final bool? isDonation;
+  final bool? isNormal;
   @override
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
@@ -86,6 +93,9 @@ class PostsView extends StatelessWidget{
             fullProfile: fullProfile,
             homeController: homeController,
             userID: userID,
+            isPoll: isPoll,
+            isDonation: isDonation,
+            isNormal: isNormal,
           ),
         );
       },
@@ -165,7 +175,10 @@ class Post extends StatefulWidget{
     this.userID,
     this.hasBorder = true,
     this.showActions = true,
-    this.decoration
+    this.decoration,
+    this.isPoll,
+    this.isDonation,
+    this.isNormal,
   }) : super(key: key);
 
   final FullUserProfileEntity fullProfile;
@@ -175,6 +188,9 @@ class Post extends StatefulWidget{
   final bool hasBorder;
   final bool showActions;
   final BoxDecoration? decoration;
+  final bool? isPoll;
+  final bool? isDonation;
+  final bool? isNormal;
 
   @override
   State<Post> createState() => _PostState();
@@ -183,6 +199,24 @@ class Post extends StatefulWidget{
 class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
+    if(widget.post.kind == 'product'){
+      return const SizedBox.shrink();
+    }
+    if(widget.isDonation != null){
+      if(widget.isDonation!){
+        if(widget.post.kind != 'donation'){
+          return const SizedBox.shrink();
+        }
+      }
+    }
+
+    if(widget.isPoll != null){
+      if(widget.isPoll!){
+        if(widget.post.isPoll == false){
+          return const SizedBox.shrink();
+        }
+      }
+    }
     BoxDecoration? decoration = BoxDecoration(
       color: Colors.white.withOpacity(.8),
       borderRadius: BorderRadius.circular(10),
@@ -213,6 +247,16 @@ class _PostState extends State<Post> {
       }
     }
 
+    DonationsModel? donation;
+    if(widget.post.kind == 'donation'){
+      donation = DonationsModel.fromJson(widget.post.donation);
+      if(donation.donationImages != null){
+        imageUrls.clear();
+        for (var element in donation.donationImages!) {
+          imageUrls.add(element.imageUrl.toString());
+        }
+      }
+    }
     return Container(
       margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
       decoration: widget.hasBorder ? decoration : null,
@@ -382,6 +426,33 @@ class _PostState extends State<Post> {
           const SizedBox(
             height: 10,
           ),
+          if(donation != null)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10,bottom: 0),
+                    child: HashTagText(
+                      text: donation.title.toString(),
+                      decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                        color: Colors.blue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      basicStyle: AppTextStyle.bodyText1.copyWith(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      onTap: (text) {
+                        widget.homeController.defaultSearchValue = text;
+                        Get.to(() => const Search());
+                      },
+                      decorateAtSign: true,
+                    )
+                ),
+              ],
+            ),
           Padding(
               padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
               child: HashTagText(
@@ -438,6 +509,73 @@ class _PostState extends State<Post> {
             ),
           if(widget.post.isRepost == true)
             InnerPost(outerPost: widget.post,homeController: widget.homeController),
+          if(donation != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10,top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if(!isCurrentUserPost)
+                    Row(
+                    children: [
+                      //tag icon
+                      const Icon(
+                        Icons.money_rounded,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "₦${donation.estimatedAmount}",
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if(!isCurrentUserPost)
+                    AppButton(
+                    title: "Donate",
+                    onPressed: (){},
+                    bckgrndColor: AppColors.primary,
+                    fontColor: AppColors.background,
+                    width: Get.width * 0.2,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  if(isCurrentUserPost)
+                    Text(
+                      "₦${donation.amountRaised} raised of ₦${donation.estimatedAmount}",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: Get.textScaleFactor * 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          if(donation != null && isCurrentUserPost)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 11, right: 11,top: 0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      backgroundColor: AppColors.primary.withOpacity(0.2),
+                      valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                      value: donation.amountRaised! / donation.estimatedAmount!,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           const SizedBox(
             height: 10,
           ),
@@ -556,8 +694,9 @@ class _PostState extends State<Post> {
                   ),
                 ],
               ),
-              //Retweet
-              InkWell(
+              //Repost
+              if(donation == null)
+                InkWell(
                 onTap: (){
                   Get.bottomSheet(RepostBottomSheet(post: widget.post));
                 },
@@ -592,8 +731,8 @@ class _PostState extends State<Post> {
                   ],
                 ),
               ),
-              const SizedBox(
-                width: 60,
+              SizedBox(
+                width: donation == null ? 60 : Get.width * 0.5,
               ),
               //Analytics
               Row(

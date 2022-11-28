@@ -110,10 +110,7 @@ class _FriendsViewState extends State<FriendsView> {
                         var bio = person.bio.toString();
                         var coverImage = person.coverImage.toString();
 
-                        Get.toNamed(
-                            OtherProfile.route,
-                            arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage]
-                        );
+                        Get.to(() => const OtherProfile(),arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,person.id.toString()]);
                       },
                       child: Container(
                         margin: const EdgeInsets.only(top: 5, bottom: 3.7, left: 5,right: 5),

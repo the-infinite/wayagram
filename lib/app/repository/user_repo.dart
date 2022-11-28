@@ -223,7 +223,6 @@ class UserRepository {
     var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     final response = await api.getData('/wayagram-service/all-posts/feed?profile_id=${profile.id}&page=1&limit=40',hasHeader: true);
     if (response.isSuccessful) {
-      //response.data = AllPostsEntity.getService(response.data['data']);
       var newData = AllPostsEntity.getService(response.data['data']);
       if(MyPref.posts.val.isNotEmpty){
         var oldData = AllPostsEntity.getService(jsonDecode(MyPref.posts.val));

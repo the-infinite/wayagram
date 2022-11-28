@@ -150,12 +150,10 @@ class _PersonViewState extends State<PersonView> {
                 followingCount: followingCount,
                 bio: bio,
                 coverImage: coverImage,
+              id: id
               ));
             }else{
-              Get.toNamed(
-                  OtherProfile.route,
-                  arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,id]
-              );
+              Get.to(() => const OtherProfile(),arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,id]);
             }
           },
           child: Container(

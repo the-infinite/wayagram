@@ -82,7 +82,7 @@ class ProductView extends StatelessWidget{
                     height: 50,
                     child: IconButton(
                       icon: AppAvatar(
-                        imgUrl: post.profile!.avatar.toString(),
+                        imgUrl: post.profile == null ? "" : post.profile!.avatar.toString(),
                         radius: 45,
                       ),
                       onPressed: null,
@@ -160,65 +160,68 @@ class ProductView extends StatelessWidget{
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          HashTagText(
-                            text: post.name.toString(),
-                            decoratedStyle: const TextStyle(
-                              color: Colors.blue,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            basicStyle: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            onTap: (text) {
-
-                            },
-                            decorateAtSign: true,
-                          ),
-                          HashTagText(
-                            text: post.description.toString(),
-                            decoratedStyle: const TextStyle(
-                              color: Colors.blue,
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                            basicStyle: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                            onTap: (text) {
-
-                            },
-                            decorateAtSign: true,
-                          ),
-                          Row(
-                            children: [
-                              //tag icon
-                              const Icon(
-                                FeatherIcons.tag,
-                                color: AppColors.primary,
-                                size: 20,
+                      SizedBox(
+                        width: Get.width * 0.6,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            HashTagText(
+                              text: post.name.toString(),
+                              decoratedStyle: const TextStyle(
+                                color: Colors.blue,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
                               ),
-                              const SizedBox(
-                                width: 5,
+                              basicStyle: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
                               ),
-                              Text(
-                                post.amount.toString(),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
+                              onTap: (text) {
+
+                              },
+                              decorateAtSign: true,
+                            ),
+                            HashTagText(
+                              text: post.description.toString(),
+                              decoratedStyle: const TextStyle(
+                                color: Colors.blue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              basicStyle: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              onTap: (text) {
+
+                              },
+                              decorateAtSign: true,
+                            ),
+                            Row(
+                              children: [
+                                //tag icon
+                                const Icon(
+                                  FeatherIcons.tag,
+                                  color: AppColors.primary,
+                                  size: 20,
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "₦${post.amount}",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                       if(showBuyButton)
                         AppButton(
