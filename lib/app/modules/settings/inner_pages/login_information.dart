@@ -42,9 +42,11 @@ class LoginInformation extends StatelessWidget {
           appBar: AppBar(
               backgroundColor: AppColors.background,
               title: Text('Login Information', style: AppTextStyle.subtitle1.copyWith(
-                color: Colors.black,
+                color: const Color(0xff4F4F4F),
+                fontSize: Get.textScaleFactor * 18,
+                fontWeight: FontWeight.bold,
               )),
-              centerTitle: false,
+              centerTitle: true,
               leading: IconButton(
                 icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
                 onPressed: () => Navigator.pop(context),

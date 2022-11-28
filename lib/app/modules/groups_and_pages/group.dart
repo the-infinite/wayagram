@@ -47,6 +47,7 @@ import '../profile/report_user.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 import 'edit/edit_group.dart';
+import 'invite/invite_to_group_or_pages.dart';
 
 class Group extends StatefulWidget {
   const Group({Key? key, required this.group}) : super(key: key);
@@ -365,7 +366,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                 ),
                                 onSelected: (value) async {
                                   if (value == 0) {
-
+                                    Get.to(() => InviteToGroupOrPage(group: group,isGroup: true));
                                   } else if (value == 1) {
                                     await Share.share('Join me on this wayagram group https://app.staging.wayagram.ng/wayagram-group/${group.id}?from=shared', subject: 'Wayagram Group');
                                   } else if (value == 2) {

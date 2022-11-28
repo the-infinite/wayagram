@@ -45,6 +45,7 @@ import '../profile/report_user.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 import 'edit/edit_page.dart';
+import 'invite/invite_to_group_or_pages.dart';
 
 class PageScreen extends StatefulWidget {
   const PageScreen({Key? key, required this.page}) : super(key: key);
@@ -352,7 +353,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                 ),
                                 onSelected: (value) async {
                                   if (value == 0) {
-
+                                    Get.to(() => InviteToGroupOrPage(page: page,isPage: true));
                                   } else if (value == 1) {
                                     await Share.share('Join me on wayagram to follow this page https://app.staging.wayagram.ng/wayagram-page/${page.id}?from=shared', subject: 'Wayagram Page');
                                   } else if (value == 2) {
@@ -371,7 +372,8 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                   }
                                 },
                                 itemBuilder: (context) => [
-                                  PopupMenuItem(
+                                  if(isForUser)
+                                    PopupMenuItem(
                                     value: 0,
                                     child: Text(
                                       "Invite",
@@ -451,8 +453,8 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                       fontSize: Get.width*0.035,
                                       fontWeight: FontWeight.w500,
                                     ),
-                                    tabs: [
-                                      const Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                    tabs: const [
+                                      Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                                       Tab(text: "Followers",iconMargin: EdgeInsets.zero,),
                                     ],
                                     onTap: (index) {

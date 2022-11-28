@@ -48,10 +48,12 @@ class UpdateProfileSignUp extends GetView<AuthController> {
               },
             ),
             title: Text('Set Up Profile', style: AppTextStyle.subtitle1.copyWith(
-              color: Colors.black,
+              color: const Color(0xff4F4F4F),
+              fontSize: Get.textScaleFactor * 18,
+              fontWeight: FontWeight.bold,
             )),
             titleSpacing: 0,
-            centerTitle: false,
+            centerTitle: true,
               actions: [
                 Center(
                   child: SizedBox(
