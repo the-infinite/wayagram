@@ -11,11 +11,16 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../core/utils/validator.dart';
 import '../../controllers/home_controller.dart';
+import '../../data/model/full_user_profile_entity.dart';
+import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/date_button.dart';
 import '../../global_widgets/document_picker.dart';
+import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
+import 'package:dio/dio.dart' as dio;
+
 
 class CreateDonation extends StatefulWidget {
   const CreateDonation({Key? key}) : super(key: key);
@@ -65,6 +70,7 @@ class _CreateDonationState extends State<CreateDonation> {
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeController>(id: "create_donation",builder: (controller) {
+        var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppColors.background,
@@ -89,6 +95,36 @@ class _CreateDonationState extends State<CreateDonation> {
                           pageController.animateToPage(currentPage+1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                           currentPage++;
                           controller.update(['create_donation']);
+                        }else{
+                          var body = {
+                            "profile_id":fullProfile.id,
+                            "title": titleController.text,
+                            "description":descriptionController.text,
+                            "amountJustification":tellUsMoreAboutYouController.text,
+                            "impact": "${descriptionOfCauseController.text} ${descriptionOfSolutionController.text}",
+                            "ownerDescription": "${descriptionOfCauseController.text} ${descriptionOfSolutionController.text}",
+                            "estimatedAmount":targetController.text,
+                            "displayTotalDonation": !hideContributions,
+                            "minimumAmount":minimumAmountController.text,
+                            "displayNumberOfDonors":!hideDonors,
+                            "donationExpiresAt":endDate.millisecondsSinceEpoch,
+                          };
+
+                          body['donationImage'] = await dio.MultipartFile.fromFile(
+                            controller.imagePaths[1],
+                            filename: controller.imagePaths[1].split('/').last,
+                          );
+
+                          var formData = dio.FormData.fromMap(body);
+                          var response = await controller.postData(formData, "/wayagram-service/all-posts/create-donation",updatePages: false);
+                          if(response.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram donation created successfully".toLowerCase()){
+                            await controller.getPosts;
+                            controller.update(['profile_page','home_tab','home']);
+                            Get.back();
+                            AppOverlay.showSuccessSnackBar(content: "Donation Created Successfully");
+                          }else{
+                            AppOverlay.showErrorSnackBar(content: "An Error Occurred, Please try again later");
+                          }
                         }
                       }
                     },
@@ -384,7 +420,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             ],
                           ),
                           SizedBox(height: Get.height*0.025),
-                         /* Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
@@ -417,7 +453,7 @@ class _CreateDonationState extends State<CreateDonation> {
                                 ),
                               ),
                             ],
-                          ),*/
+                          ),
                         ],
                       ),
                       Column(

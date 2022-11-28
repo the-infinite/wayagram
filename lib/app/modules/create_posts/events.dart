@@ -110,6 +110,7 @@ class CreateEvent extends StatelessWidget {
                             'isPrivate': privacyController.text != "Public",
                             'virtual': eventsTypeController.text != "Physical",
                             'no_of_ticket': int.parse(ticketsController.text),
+                            "profile_id":fullProfile.id
                           };
 
                           body['eventPoster'] = await dio.MultipartFile.fromFile(

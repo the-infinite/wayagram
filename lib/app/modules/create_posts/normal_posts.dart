@@ -214,7 +214,7 @@ class _CreatePostsState extends State<CreatePosts> {
                               if(response!.isSuccessful){
                                 postID = "";
                                 await controller.getPosts;
-                                controller.update(['profile_page','home_page','home','group_screen','page_screen']);
+                                controller.update(['profile_page','home_tab','home','group_screen','page_screen']);
                                 //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                                 Get.back();
                               }
@@ -239,7 +239,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                   postID = "";
                                   //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                                   await controller.getPosts;
-                                  controller.update(['profile_page','home_page','home','group_screen','page_screen']);
+                                  controller.update(['profile_page','home_tab','home','group_screen','page_screen']);
                                   //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                                   Get.back();
                                 }
