@@ -8,7 +8,9 @@ import 'package:get/get.dart';
 import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/app/global_widgets/app_input.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -40,6 +42,8 @@ class CreatePosts extends StatefulWidget {
 class _CreatePostsState extends State<CreatePosts> {
   final ImagePicker _imagePicker = ImagePicker();
   var textController = TextEditingController();
+  var nameController = TextEditingController();
+  var priceController = TextEditingController();
   var detectedHashtagController = TextEditingController();
   List<String> images = [];
   var postID = "";
@@ -64,7 +68,7 @@ class _CreatePostsState extends State<CreatePosts> {
           appBar: AppBar(
             backgroundColor: AppColors.background,
             title: Text(
-              controller.postToQuote == null ? "Create Post" : "Quote Post",
+              controller.isProductPost ? "Create Product" : controller.postToQuote == null ? "Create Post" : "Quote Post",
               style: TextStyle(
                 color: const Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
@@ -301,7 +305,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                     maxLines: null,
                                     minLines: null,
                                     decoration: InputDecoration(
-                                      hintText: 'Create New Post',
+                                      hintText: controller.isProductPost ? "Enter Product Description" : controller.postToQuote == null ? "Create New Post" : "Quote Post Description",
                                       hintStyle: AppTextStyle.subtitle1.copyWith(
                                         color: Colors.grey,
                                         fontSize: 16,
@@ -322,7 +326,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                     },
                                   ),
                                 ),
-                                if(images.isNotEmpty)
+                                if(images.isNotEmpty && !controller.isProductPost)
                                   SizedBox(
                                     height: Get.height*0.25,
                                     child: NewsfeedMultipleImageView(
@@ -349,6 +353,162 @@ class _CreatePostsState extends State<CreatePosts> {
                                       border: Border.all(color: const Color(0xffEDEAEA), width: 1),
                                     ),
                                   ),
+                                if(controller.isProductPost)
+                                  Container(
+                                    //height: Get.height*0.4,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.background,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 10, bottom: 0, left: 5,right: 5),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(10),
+                                            child: SizedBox(
+                                              height: Get.height * 0.20,
+                                              child: images.isNotEmpty ?  ListView.builder(
+                                                itemCount: images.length,
+                                                shrinkWrap: false,
+                                                scrollDirection: Axis.horizontal,
+                                                itemBuilder: (context, index) {
+                                                  return Container(
+                                                    margin: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                                    padding: const EdgeInsets.all(0),
+                                                    height: Get.height * 0.15,
+                                                    width: Get.width * 0.3,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      color: Colors.grey.withOpacity(.5),
+                                                    ),
+                                                    child: Stack(
+                                                      alignment: Alignment.center,
+                                                      children: [
+                                                        ClipRRect(
+                                                          borderRadius: BorderRadius.circular(10),
+                                                          child: Image.file(
+                                                            File(images[index]),
+                                                            fit: BoxFit.cover,
+                                                            height: Get.height * 0.20,
+                                                            width: Get.width * 0.3,
+                                                            errorBuilder: (context, error, stackTrace) {
+                                                              return const Icon(Icons.error);
+                                                            },
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                          top: 5,
+                                                          right: 5,
+                                                          child: Container(
+                                                            height: Get.width * 0.06,
+                                                            width: Get.width * 0.06,
+                                                            decoration: BoxDecoration(
+                                                              color: Colors.black.withOpacity(.8),
+                                                              borderRadius: BorderRadius.circular(100),
+                                                            ),
+                                                            child: Center(
+                                                              child: IconButton(
+                                                                padding: EdgeInsets.zero,
+                                                                icon: const Icon(Icons.cancel_rounded, color: AppColors.background),
+                                                                onPressed: () {
+                                                                  images.removeAt(index);
+                                                                  controller.update();
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ): InkWell(
+                                                onTap: () async {
+                                                  final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
+                                                  if (pickedFile != null) {
+                                                    CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                                      sourcePath: pickedFile.path,
+                                                      cropStyle: CropStyle.rectangle,
+                                                      aspectRatioPresets: [
+                                                        CropAspectRatioPreset.square,
+                                                        CropAspectRatioPreset.ratio3x2,
+                                                        CropAspectRatioPreset.original,
+                                                        CropAspectRatioPreset.ratio4x3,
+                                                        CropAspectRatioPreset.ratio16x9
+                                                      ],
+                                                      uiSettings: [
+                                                        AndroidUiSettings(
+                                                            toolbarTitle: 'Crop Photo',
+                                                            toolbarColor: AppColors.primary,
+                                                            toolbarWidgetColor: Colors.white,
+                                                            activeControlsWidgetColor: AppColors.primary,
+                                                            cropGridColor: AppColors.primary,
+                                                            initAspectRatio: CropAspectRatioPreset.original,
+                                                            lockAspectRatio: false),
+                                                        IOSUiSettings(
+                                                          title: 'Crop Photo',
+                                                        ),
+                                                        WebUiSettings(
+                                                          context: context,
+                                                        ),
+                                                      ],
+                                                    );
+                                                    if(croppedFile!=null){
+                                                      images = List.from(images)..add(croppedFile.path);
+                                                    }else{
+                                                      images = List.from(images)..add(pickedFile.path);
+                                                    }
+                                                    controller.update();
+                                                  }
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey.withOpacity(.5),
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                                                  ),
+                                                  child: const Center(
+                                                    child: Icon(Icons.image_rounded, color: Colors.grey),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: Get.height * 0.01),
+                                        Container(
+                                          color: const Color(0xffEDEAEA),
+                                          height: 1.0,
+                                        ),
+                                        AppInput(
+                                          hintText: "Enter Product Name",
+                                          borderRadius: 0,
+                                          borderSide: BorderSide.none,
+                                          controller: nameController,
+                                          keyboardType: TextInputType.text,
+                                          validator: Validator.textValidation,
+                                        ),
+                                        SizedBox(height: Get.height * 0.01),
+                                        Container(
+                                          color: const Color(0xffEDEAEA),
+                                          height: 1.0,
+                                        ),
+                                        AppInput(
+                                          hintText: "Enter Product Price",
+                                          borderRadius: 0,
+                                          borderSide: BorderSide.none,
+                                          controller: priceController,
+                                          keyboardType: TextInputType.number,
+                                          validator: Validator.moneyValidation,
+                                        ),
+                                        SizedBox(height: Get.height * 0.01),
+                                      ],
+                                    ),
+                                  )
                               ],
                             ),
                           ),
@@ -423,7 +583,8 @@ class _CreatePostsState extends State<CreatePosts> {
                             }
                           },
                         ),
-                        IconButton(
+                        if(!controller.isProductPost)
+                          IconButton(
                           icon: Icon(Icons.video_camera_back_outlined, color: images.length > 29 ? Colors.grey : Colors.black,size: Get.width*0.065),
                           onPressed: () async {
                             if(images.length <= 29){

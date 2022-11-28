@@ -58,6 +58,8 @@ class HomeController extends GetxController {
   GroupModelEntity? groupToReportIn;
   GroupModelEntity? pageToReportIn;
 
+  bool isProductPost = false;
+
   List<Widget> pages = const [
     HomeTab(),
     DiscoverTab(),

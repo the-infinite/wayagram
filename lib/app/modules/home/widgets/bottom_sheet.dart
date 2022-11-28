@@ -77,6 +77,7 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "POST",
                   subtitle: "Share a post or write what is on your mind",
                   onTap: () {
+                    controller.isProductPost = false;
                     controller.pageToPost = null;
                     controller.groupToPost = null;
                     controller.postToQuote = null;
@@ -151,12 +152,13 @@ class WayaBottomSheet extends StatelessWidget {
                   title: "PRODUCT",
                   subtitle: "Create and online display products for users to purchase",
                   onTap: () {
+                    controller.isProductPost = true;
                     controller.pageToPost = null;
                     controller.groupToPost = null;
                     controller.postToQuote = null;
                     controller.imagePaths.clear();
                     Get.back();
-                    Get.to(() => const CreateProduct());
+                    Get.to(() => const CreatePosts());
                   }
               ),
               BottomSheetButton(
@@ -239,6 +241,7 @@ class RepostBottomSheet extends StatelessWidget {
                   title: "QUOTE POST",
                   subtitle: "Share your opinion on this post",
                   onTap: () {
+                    controller.isProductPost = false;
                     controller.pageToPost = null;
                     controller.groupToPost = null;
                     controller.postToQuote = post;

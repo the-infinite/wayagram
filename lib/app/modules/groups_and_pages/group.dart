@@ -604,6 +604,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
               ),
               floatingActionButton: ((isUserAMember && allowMemberPost) || isForUser) ? FloatingActionButton(
               onPressed: () {
+                controller.isProductPost = false;
                 controller.pageToPost = null;
                 controller.groupToPost = group;
                 controller.imagePaths.clear();
