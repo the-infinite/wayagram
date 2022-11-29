@@ -69,7 +69,7 @@ class _MomentsViewState extends State<MomentsView> {
           ),
         ),
         SizedBox(
-          height: Get.height * 0.20,
+          height: Get.height * 0.18,
           width: Get.width,
           child: ListView.builder(
             itemCount: widget.isLoading ? 5 : (list.length+1),
@@ -79,7 +79,7 @@ class _MomentsViewState extends State<MomentsView> {
               if(widget.isLoading){
                 return SizedBox(
                   height: Get.height * 0.18,
-                  width: Get.width * 0.35,
+                  width: Get.width * 0.28,
                   child: Shimmer.fromColors(
                     baseColor: Colors.grey.withOpacity(0.8),
                     highlightColor: Colors.grey.withOpacity(0.2),
@@ -102,8 +102,8 @@ class _MomentsViewState extends State<MomentsView> {
                   },
                   child: Container(
                     margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-                    height: Get.height * 0.18,
-                    width: Get.width * 0.3,
+                    height: Get.height * 0.15,
+                    width: Get.width * 0.28,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey.withOpacity(.5),
@@ -215,7 +215,7 @@ class _MomentsViewState extends State<MomentsView> {
                 child: Container(
                   margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                   height: Get.height * 0.18,
-                  width: Get.width * 0.3,
+                  width: Get.width * 0.28,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: AppColors.primary,

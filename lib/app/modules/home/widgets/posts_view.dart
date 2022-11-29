@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:ffi';
 
+import 'package:bordered_text/bordered_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_polls/flutter_polls.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -231,6 +234,21 @@ class _PostState extends State<Post> {
     if(widget.post.postImages != null){
       for (var element in widget.post.postImages!) {
         imageUrls.add(element.imageURL.toString());
+      }
+    }
+
+    List<String> pollImageUrls = [];
+    var pollEnded = false;
+    if(endPollTime != null){
+      if(endPollTime.isBefore(DateTime.now())){
+        pollEnded = true;
+      }
+    }
+    if(widget.post.isPoll == true && widget.post.poll!.pollOptions!.length >= 2){
+      for (var element in widget.post.poll!.pollOptions!) {
+        if(element.mediaUrl != null){
+          pollImageUrls.add(element.mediaUrl.toString());
+        }
       }
     }
     if(widget.userID!=null){
@@ -490,11 +508,74 @@ class _PostState extends State<Post> {
                 marginTop: 0,
               ),
             ),
+          if(pollImageUrls.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  constraints: BoxConstraints(maxHeight: Get.height * 0.20),
+                  child: ListView.builder(
+                    itemCount: pollImageUrls.length,
+                    shrinkWrap: false,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, i) {
+                      return Container(
+                        margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
+                        padding: const EdgeInsets.all(0),
+                        constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey.withOpacity(.5),
+                        ),
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                imageUrl: pollImageUrls[i],
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) {
+                                  return const Icon(
+                                    IconlyLight.profile,
+                                    color: Colors.black,
+                                    size: 25,
+                                  );
+                                },
+                                width: Get.width * 0.3,
+                                height: Get.height * 0.20,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: BorderedText(
+                                strokeWidth: 2.0,
+                                child: Text(
+                                  (i+1).toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: Get.width * 0.04,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  )),
+              ),
+            ),
           if(widget.post.isPoll == true && widget.post.poll!.pollOptions!.length >= 2)
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: FlutterPolls(
-                pollId: '1',
+                pollId: widget.post.id.toString(),
                 onVoted: (PollOption pollOption, int newTotalVotes) {
                   return Future(() => true);
                 },
@@ -506,10 +587,14 @@ class _PostState extends State<Post> {
                   return PollOption(title: Text(e.option.toString()), votes: e.totalVotesCountPollOption == null ? 0 : e.totalVotesCountPollOption!.toInt());
                 }).toList(),
                 pollTitle: const SizedBox.shrink(),
-                metaWidget: Text(' • Ends in ${timeago.format(endPollTime!,allowFromNow: true)}',style: const TextStyle(
+                metaWidget: pollEnded ? Text(' • Ended ${timeago.format(endPollTime!,allowFromNow: true)}',style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                )) : Text(' • Ends in ${timeago.format(endPollTime!,allowFromNow: true)}',style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
                 )),
+                pollEnded: pollEnded,
               ),
             ),
           if(widget.post.isRepost == true)
@@ -798,6 +883,15 @@ class InnerPost extends StatelessWidget{
       imageUrls.add(element.imageURL.toString());
     }
 
+    List<String> pollImageUrls = [];
+    if(post.isPoll == true && post.poll!.pollOptions!.length >= 2){
+      for (var element in post.poll!.pollOptions!) {
+        if(element.mediaUrl != null){
+          pollImageUrls.add(element.mediaUrl.toString());
+        }
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
       decoration: BoxDecoration(
@@ -881,11 +975,74 @@ class InnerPost extends StatelessWidget{
                 marginTop: 0,
               ),
             ),
-          if(post.isPoll == true && post.poll!.pollOptions!.isNotEmpty)
+          if(pollImageUrls.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                    constraints: BoxConstraints(maxHeight: Get.height * 0.20),
+                    child: ListView.builder(
+                      itemCount: pollImageUrls.length,
+                      shrinkWrap: false,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, i) {
+                        return Container(
+                          margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
+                          padding: const EdgeInsets.all(0),
+                          constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey.withOpacity(.5),
+                          ),
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  imageUrl: pollImageUrls[i],
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) {
+                                    return const Icon(
+                                      IconlyLight.profile,
+                                      color: Colors.black,
+                                      size: 25,
+                                    );
+                                  },
+                                  width: Get.width * 0.3,
+                                  height: Get.height * 0.20,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: BorderedText(
+                                  strokeWidth: 2.0,
+                                  child: Text(
+                                    (i+1).toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: Get.width * 0.04,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )),
+              ),
+            ),
+          if(post.isPoll == true && post.poll!.pollOptions!.length >= 2)
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: FlutterPolls(
-                pollId: uniqueId,
+                pollId: "${post.id} ${post.poll!.id}",
                 onVoted: (PollOption pollOption, int newTotalVotes) {
                   return Future(() => true);
                 },

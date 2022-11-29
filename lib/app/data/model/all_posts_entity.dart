@@ -165,7 +165,6 @@ class AllPostsPoll {
 
 @JsonSerializable()
 class AllPostsPollPollOptions {
-
 	String? id;
 	double? position;
 	String? option;
