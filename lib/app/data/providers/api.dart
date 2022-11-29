@@ -155,6 +155,45 @@ class Api {
     }
   }
 
+  Future<ApiResponse> patchData(String url, {bool hasHeader = false,bool sso = true, body,}) async {
+    token = CancelToken();
+    var head = {
+      'Authorization': MyPref.authToken.val,
+      //'Authorization':"serial eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbeyJjcmVhdGVkQXQiOiIxNS0wMi0yMDIyIDA2OjI3OjEzIiwidXBkYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsImNyZWF0ZWRCeSI6Ik1HUiIsIm1vZGlmaWVkQnkiOiJNR1IiLCJpZCI6MTMsIm5hbWUiOiJST0xFX1VTRVIiLCJkZXNjcmlwdGlvbiI6IlVTRVIgUk9MRSIsImRlZmF1bHQiOnRydWV9XSwiaWQiOjEyMjEsInN1YiI6ImdyZWVuMTBAeW9wbWFpbC5jb20iLCJpYXQiOjE2Njg3NjQ2MTIsImV4cCI6MTcwMDMyMjIxMn0.ITr_SLT4Zqm6G9w0c-H9vphGIhxv8hnZFdYTk0uW91eFVqutAkAZjkfwiSOMA70qZVF2NKfjyMgST7OauUd2gQ"
+    };
+    var link = url;
+    if(sso){
+      if(url.contains("?")){
+        link = '$url&sso_id=${MyPref.userId.val}';
+      }else{
+        link = '$url/?&sso_id=${MyPref.userId.val}';
+      }
+    }
+    try {
+      var request = await _client.request(
+        link,
+        data: body,
+        cancelToken: token,
+        options: Options(method: 'PATCH', headers: hasHeader ? head : null,contentType: "application/json"),
+      );
+      return ApiResponse.response(request);
+    } on DioError catch (e) {
+      return e.toApiError(cancelToken: token);
+    } on SocketException {
+      return ApiResponse(
+        data: null,
+        isSuccessful: false,
+        message: 'No Internet connection',
+      );
+    } on Exception catch (e) {
+      return ApiResponse(
+        data: null,
+        isSuccessful: false,
+        message: e.toString(),
+      );
+    }
+  }
+
   Future<ApiResponse> getData(String url, {bool hasHeader = false,bool sso = true}) async {
     token = CancelToken();
     try {

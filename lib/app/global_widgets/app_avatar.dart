@@ -37,7 +37,7 @@ class AppAvatar extends StatelessWidget {
     if(bytes != null){
       return CircleAvatar(
         radius: radius,
-        backgroundColor: backgroundColor,
+        backgroundColor: AppColors.primary,
         child: ClipOval(
           child: Image.memory(
             bytes!,
@@ -63,13 +63,13 @@ class AppAvatar extends StatelessWidget {
               if(isNotification){
                 return const Icon(
                   IconlyBroken.notification,
-                  color: Colors.black,
+                  color: Colors.white,
                   size: 25,
                 );
               }
               return const Icon(
-                IconlyLight.profile,
-                color: Colors.black,
+                IconlyBroken.profile,
+                color: Colors.white,
                 size: 25,
               );
             },
@@ -78,7 +78,7 @@ class AppAvatar extends StatelessWidget {
       );
     }
     return CircleAvatar(
-      backgroundColor: Colors.grey.shade400,
+      backgroundColor: AppColors.primary,
       radius: radius,
       child: SizedBox(
         width: double.infinity,
@@ -117,13 +117,13 @@ class AppAvatar extends StatelessWidget {
                     if(isNotification){
                       return const Icon(
                         IconlyBroken.notification,
-                        color: Colors.black,
+                        color: Colors.white,
                         size: 25,
                       );
                     }
                     return const Icon(
-                      IconlyLight.profile,
-                      color: Colors.black,
+                      IconlyBroken.profile,
+                      color: Colors.white,
                       size: 25,
                     );
                   },
