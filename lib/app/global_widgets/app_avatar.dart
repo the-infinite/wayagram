@@ -19,6 +19,8 @@ class AppAvatar extends StatelessWidget {
     this.isContact = false,
     this.contactName = "",
     this.isNotification = false,
+    this.isPage = false,
+    this.isGroup = false,
   }) : super(key: key);
 
   final String imgUrl;
@@ -28,6 +30,8 @@ class AppAvatar extends StatelessWidget {
   final Uint8List? bytes;
   final bool isContact;
   final bool isNotification;
+  final bool isPage;
+  final bool isGroup;
   final String contactName;
 
   @override
@@ -63,6 +67,20 @@ class AppAvatar extends StatelessWidget {
               if(isNotification){
                 return const Icon(
                   IconlyBroken.notification,
+                  color: Colors.white,
+                  size: 25,
+                );
+              }
+              if(isPage){
+                return const Icon(
+                  IconlyBroken.document,
+                  color: Colors.white,
+                  size: 25,
+                );
+              }
+              if(isGroup){
+                return const Icon(
+                  Icons.groups_rounded,
                   color: Colors.white,
                   size: 25,
                 );
@@ -112,6 +130,20 @@ class AppAvatar extends StatelessWidget {
                             ),
                           ),
                         ),
+                      );
+                    }
+                    if(isPage){
+                      return const Icon(
+                        IconlyBroken.document,
+                        color: Colors.white,
+                        size: 25,
+                      );
+                    }
+                    if(isGroup){
+                      return const Icon(
+                        Icons.groups_rounded,
+                        color: Colors.white,
+                        size: 25,
                       );
                     }
                     if(isNotification){

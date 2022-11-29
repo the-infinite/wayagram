@@ -84,6 +84,8 @@ class GroupView extends StatelessWidget{
                     icon: AppAvatar(
                       imgUrl: post.imageUrl.toString(),
                       radius: 50,
+                      isGroup: isGroup,
+                      isPage: !isGroup,
                     ),
                     onPressed: null,
                   ),

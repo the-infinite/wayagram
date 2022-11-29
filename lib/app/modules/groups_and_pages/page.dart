@@ -208,6 +208,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                                   padding: EdgeInsets.zero,
                                                   icon: AppAvatar(
                                                     imgUrl: page.imageUrl.toString(),
+                                                    isPage: true,
                                                   ),
                                                   onPressed: () {
                                                     //Get.toNamed(Profile.route);

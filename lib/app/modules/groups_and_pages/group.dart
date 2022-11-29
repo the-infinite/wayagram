@@ -218,6 +218,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                                   padding: EdgeInsets.zero,
                                                   icon: AppAvatar(
                                                     imgUrl: group.imageUrl.toString(),
+                                                    isGroup: true,
                                                   ),
                                                   onPressed: () {
                                                     //Get.toNamed(Profile.route);
@@ -437,7 +438,8 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                   }
                                 },
                                 itemBuilder: (context) => [
-                                  PopupMenuItem(
+                                  if(isUserAMember || isForUser)
+                                    PopupMenuItem(
                                     value: 0,
                                     child: Text(
                                       "Invite",
@@ -457,7 +459,8 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       ),
                                     ),
                                   ),
-                                  PopupMenuItem(
+                                  if(isUserAMember || isForUser)
+                                    PopupMenuItem(
                                     value: 2,
                                     child: Text(
                                       (muted || mutedGroups.contains(group.id.toString())) ? "UnMute" : "Mute",
@@ -467,7 +470,8 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       ),
                                     ),
                                   ),
-                                  PopupMenuItem(
+                                  if(isUserAMember || isForUser)
+                                    PopupMenuItem(
                                     value: 3,
                                     child: Text(
                                       "Report",
@@ -477,7 +481,8 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       ),
                                     ),
                                   ),
-                                  PopupMenuItem(
+                                  if(isUserAMember || isForUser)
+                                    PopupMenuItem(
                                     value: 4,
                                     child: Text(
                                       isForUser ? "Delete":"Exit",
