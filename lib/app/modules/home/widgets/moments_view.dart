@@ -167,7 +167,7 @@ class _MomentsViewState extends State<MomentsView> {
                                   "Create",
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: Get.width * 0.04,
+                                    fontSize: Get.width * 0.035,
                                     fontWeight: FontWeight.normal,
                                   ),
                                   maxLines: 1,
@@ -260,34 +260,42 @@ class _MomentsViewState extends State<MomentsView> {
                               ],
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: Get.width * 0.10,
-                                height: Get.width * 0.10,
-                                child: IconButton(
-                                  icon: AppAvatar(
-                                    imgUrl: list[index].profile!.avatar.toString(),
-                                    radius: Get.width * 0.09,
+                          child: Padding(
+                            padding:  const EdgeInsets.only(bottom: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: Get.width * 0.10,
+                                  height: Get.width * 0.10,
+                                  child: IconButton(
+                                    icon: AppAvatar(
+                                      imgUrl: list[index].profile!.avatar.toString(),
+                                      radius: Get.width * 0.09,
+                                    ),
+                                    onPressed: null,
                                   ),
-                                  onPressed: null,
                                 ),
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.2,
-                                child: Text(
-                                  list[index].profile!.displayName.toString().split(" ")[0],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: Get.width * 0.04,
-                                    fontWeight: FontWeight.normal,
+                                SizedBox(
+                                  width: Get.width * 0.12,
+                                  child: BorderedText(
+                                    strokeWidth: 2.0,
+                                    child: Text(
+                                      (list[index].profile!.displayName.toString().split(" ")[0]),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: Get.width * 0.035,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.start,
+                                    ),
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
