@@ -553,5 +553,9 @@ class AuthController extends GetxController {
       "device_unique": uniqueId
     };
     var response = await userRepo.postData("https://services.staging.wayagram.ng/wayagram-service/notification/device-token-create?profile_id=$profileID&user_id=$userID",body);
+    if(response.isSuccessful) {
+      MyPref.uniqueID.val = uniqueId;
+      MyPref.fcmID.val = token.toString();
+    }
   }
 }

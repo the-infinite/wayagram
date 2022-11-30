@@ -3,6 +3,9 @@ import 'package:get_storage/get_storage.dart';
 class MyPref  {
   static final box = () => GetStorage('MyPref');
 
+  static final uniqueID = ReadWriteValue('wayagram_unique_device_id', '', box);
+  static final fcmID = ReadWriteValue('wayagram_fcm_id', '', box);
+
   static final userId = ReadWriteValue('wayagram_userId', '', box);
   static final profileId = ReadWriteValue('wayagram_profileId', '', box);
   static final authToken = ReadWriteValue('wayagram_auth-token', '', box);

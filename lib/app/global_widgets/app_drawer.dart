@@ -379,6 +379,12 @@ class _AppDrawerState extends State<AppDrawer> {
                                   child: AppButton(
                                     title: 'LOGOUT',
                                     onPressed: () async {
+                                      if(MyPref.uniqueID.val.isNotEmpty){
+                                        var body = {
+                                          "device_token_id": MyPref.uniqueID.val,
+                                        };
+                                        await controller.deleteData(body, "/wayagram-service/notification/delete-device-token");
+                                      }
                                       Get.back();
                                       await MyPref.clearBoxes();
                                       Get.offAllNamed(Multiplexor.route);
