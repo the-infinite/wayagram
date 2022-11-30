@@ -140,6 +140,7 @@ class AuthController extends GetxController {
       }
       Get.snackbar("Account Creation Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
+      await userRepo.resendAuthOTP(personalEmail.text);
       Get.toNamed(VerifyOTP.route);
     }
   }
@@ -165,6 +166,7 @@ class AuthController extends GetxController {
       }
       Get.snackbar("Account Creation Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
+      await userRepo.resendAuthOTP(personalEmail.text);
       Get.toNamed(VerifyOTP.route);
     }
   }
@@ -221,7 +223,6 @@ class AuthController extends GetxController {
 
   Future<void> getUserProfile(String userID) async {
     ApiResponse response = await userRepo.getFullUserProfile(userID);
-    //ApiResponse response = await userRepo.getUserProfile(userID);
     if(!response.isSuccessful){
       MyPref.authToken.val = "";
       AppOverlay.showInfoDialog(
@@ -236,7 +237,6 @@ class AuthController extends GetxController {
     }else{
       var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
-      //getAllUserData();
       Get.offAllNamed(Home.route);
     }
   }
