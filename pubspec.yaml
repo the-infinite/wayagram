@@ -65,6 +65,11 @@ dependencies:
   flutter_screenutil: ^5.5.4
   group_radio_button: ^1.2.0
   url_launcher: ^6.1.7
+  firebase_messaging: ^14.1.2
+  firebase_analytics: ^10.0.6
+  firebase_crashlytics: ^3.0.6
+  firebase_core: ^2.3.0
+  device_info_plus: ^8.0.0
 
 dev_dependencies:
   flutter_test:

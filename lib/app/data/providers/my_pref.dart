@@ -4,6 +4,7 @@ class MyPref  {
   static final box = () => GetStorage('MyPref');
 
   static final userId = ReadWriteValue('wayagram_userId', '', box);
+  static final profileId = ReadWriteValue('wayagram_profileId', '', box);
   static final authToken = ReadWriteValue('wayagram_auth-token', '', box);
   static final logInDetail = ReadWriteValue('wayagram_logInDetail', '', box);
   //static final userProfile = ReadWriteValue('wayagram_userProfile', '', box);

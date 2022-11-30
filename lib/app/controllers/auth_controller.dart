@@ -1,11 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:http/http.dart';
 import 'package:nigerian_states_and_lga/nigerian_states_and_lga.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:wayagram/app/data/model/log_in_model_entity.dart';
@@ -237,6 +241,8 @@ class AuthController extends GetxController {
     }else{
       var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
+      MyPref.profileId.val = data.id.toString();
+      await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
       Get.offAllNamed(Home.route);
     }
   }
@@ -247,11 +253,13 @@ class AuthController extends GetxController {
       MyPref.authToken.val = "";
       Get.snackbar("An Error Occurred", "Please try again",backgroundColor: Colors.red, colorText: Colors.white);
     }else{
-      //var data = response.data as FullUserProfileEntity;
+      var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
+      MyPref.profileId.val = data.id.toString();
       //Get.toNamed(CreatePIN.route);
       //Get.toNamed(Home.route);
       await userRepo.getFollowedByWayaOfficial();
+      await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
       Get.toNamed(Interests.route);
     }
   }
@@ -526,5 +534,24 @@ class AuthController extends GetxController {
     await userRepo.getFullUserProfile(profile.userId.toString());
     Get.offAllNamed(Home.route);
     return response;
+  }
+
+  Future<void> subscribeToFirebaseNotification(String userID, String profileID) async {
+    String uniqueId = "";
+    String? token = await FirebaseMessaging.instance.getToken();
+    final deviceInfoPlugin = DeviceInfoPlugin();
+    if(Platform.isAndroid){
+      AndroidDeviceInfo build = await deviceInfoPlugin.androidInfo;
+      uniqueId = build.id;
+    }else{
+      IosDeviceInfo build = await deviceInfoPlugin.iosInfo;
+      uniqueId = build.identifierForVendor.toString();
+    }
+    var body = {
+      "token": token,
+      "platform": Platform.isAndroid ? "android" : "ios",
+      "device_unique": uniqueId
+    };
+    var response = await userRepo.postData("https://services.staging.wayagram.ng/wayagram-service/notification/device-token-create?profile_id=$profileID&user_id=$userID",body);
   }
 }
