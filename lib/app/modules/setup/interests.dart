@@ -277,6 +277,247 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
       'Wayalink',
       'Love',
       'Karaoke',
+      'Space',
+      'Space Exploration',
+      'Space Travel',
+      'Space Technology',
+      'Space Science',
+      'Space Medicine',
+      'Space Engineering',
+      'Sea',
+      'Ocean',
+      'Ocean Exploration',
+      'Ocean Travel',
+      'Ocean Technology',
+      'Ocean Science',
+      'Ocean Medicine',
+      'Ocean Engineering',
+      'Crickets',
+      'Community service',
+      'Cooking or baking',
+      'Crafts',
+      'Exercising',
+      'Gardening',
+      'Hiking',
+      'Healthcare',
+      'Woodworking',
+      'Writing',
+      'Blogging',
+      'Reading',
+      'Nature',
+      'Theater'
+      'Foreign languages',
+      'Acting',
+
+          "Jewelry making",
+          "Knitting",
+          "Origami",
+          "Painting",
+          "Photography",
+          "Quilling",
+          "Quilting",
+          "Scrapbooking",
+          "Sculpting",
+          "Sewing",
+          "Sketching",
+          "Soap making",
+          "Pottery",
+          "Wood-burning",
+          "Woodcarving",
+          "Woodworking",
+          "Collecting",
+          "Action figures",
+          "Amateur-geology",
+          "Antiques",
+          "Autographs",
+          "Cars",
+          "Coins",
+          "Comic books",
+          "Dolls",
+          "Fine art",
+          "LEGO sets",
+          "Model die cast cars",
+          "Movie memorabilia",
+          "Music memorabilia",
+          "Sports memorabilia",
+          "Sports trading cards",
+          "Stamps",
+          "Vinyl records",
+          "Watches",
+          "Food and drink",
+          "Baking",
+          "Bartending",
+          "Beer tasting",
+          "Brewing",
+          "Coffee roasting",
+          "Cooking",
+          "Grilling",
+          "Doxology",
+          "Mixology",
+          "Sushi making",
+          "Whiskey tasting",
+          "Wine making",
+          "Wine tasting",
+          "Games",
+          "3D games",
+          "Arcade games",
+          "Billiards",
+          "Board games",
+          "Bridge",
+          "Card games",
+          "Chess",
+          "Crossword puzzles",
+          "Dominoes",
+          "Geocaching",
+          "Jigsaw puzzles",
+          "Sudoku",
+          "Table tennis",
+          "Video games",
+          "Word scrambles",
+          "Model, electronic and tech",
+          "App building",
+          "Blogging",
+          "Car restoration",
+          "Model airplanes",
+          "Model cars",
+          "Model railroading",
+          "Model rockets",
+          "Model ships",
+          "Podcasting",
+          "Programming / Coding",
+          "RC boats",
+          "RC cars",
+          "RC helicopters",
+          "RC planes",
+          "Robotics",
+          "Scale miniature building",
+          "Web design",
+          "YouTubing",
+          "Music",
+          "Choir singing",
+          "Composing music",
+          "DJ-ing",
+          "Mashups",
+          "Opera",
+          "Playing a musical instrument",
+          "Rapping",
+          "Singing",
+          "Performing arts",
+          "Acting",
+          "Ballet",
+          "Break-dancing",
+          "Historical reenactments",
+          "Juggling",
+          "Line dancing",
+          "Magic tricks",
+          "Puppetry",
+          "Salsa",
+          "Stand-up comedy",
+          "Swing",
+          "Tango",
+          "Waltz",
+          "Pets and animals",
+          "Animal breeding",
+          "Animal rescue",
+          "Animal training",
+          "Beekeeping",
+          "Dog walking",
+          "Fish-keeping",
+          "Pet fostering",
+          "Pet grooming",
+          "Spiritual and mental",
+          "Astrology",
+          "Freelance writing",
+          "Genealogy",
+          "Journaling",
+          "Languages",
+          "Meditation",
+          "Neurolinguistic programming",
+          "Novel writing",
+          "Online classes",
+          "Play writing",
+          "Poetry",
+          "Reading",
+          "Screenwriting",
+          "Sign language",
+          "Songwriting",
+          "Speed reading",
+          "Volunteering",
+          "Sports and outdoors",
+          "Acrobatics",
+          "Archery",
+          "Badminton",
+          "Backpacking travel",
+          "Base jumping",
+          "Baseball",
+          "Basketball",
+          "Birdwatching",
+          "Bodybuilding",
+          "Bowling",
+          "Boxing",
+          "Camping",
+          "Canoeing",
+          "Croquet",
+          "Cycling",
+          "Darts",
+          "Diving",
+          "Fantasy football",
+          "Fencing",
+          "Figure skating",
+          "Fishing",
+          "Flying",
+          "Football",
+          "Go karting",
+          "Golf",
+          "Gymnastics",
+          "Hang gliding",
+          "Hiking",
+          "Horse racing",
+          "Horseback riding",
+          "Ice skating",
+          "Kayaking",
+          "Marathon running",
+          "Martial arts",
+          "Mountain biking",
+          "Mountaineering",
+          "Paintball",
+          "Paragliding",
+          "Pilates",
+          "Rock climbing",
+          "Running",
+          "RV traveling",
+          "Sailing",
+          "Scuba diving",
+          "Sightseeing",
+          "Skateboarding",
+          "Skiing",
+          "Skydiving",
+          "Snowboarding",
+          "Squash",
+          "Surfing",
+          "Swimming",
+          "Tennis",
+          "Travel",
+          "Water skiing",
+          "Weight training",
+          "Windsurfing",
+          "Yoga",
+      'Animation',
+      'Architecture',
+      'Calligraphy',
+      'Candle making',
+      'Card-making',
+      'Ceramics',
+      'Crocheting',
+      'Drawing',
+      'Embroidery',
+      'Fashion design',
+      'Filmmaking',
+      'Floristry',
+      'Furniture building',
+      'Gardening',
+      'Glass painting',
+      'Home decorating',
     ];
 
     List<String> uniqueInterestList = interestList.toSet().toList();
@@ -366,8 +607,8 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                         fontWeight: FontWeight.w500,
                       ),
                       tabs: const [
-                        Tab(text: 'Your Interests',iconMargin: EdgeInsets.zero,),
                         Tab(text: 'All Interests',iconMargin: EdgeInsets.zero,),
+                        Tab(text: 'Your Interests',iconMargin: EdgeInsets.zero,),
                       ],
                       onTap: (index) {
                         //pagecontroller.userRepoanimateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
@@ -412,140 +653,6 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
           body: TabBarView(
             controller: tabController,
             children: [
-              FutureBuilder<ApiResponse>(
-                  future: controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}"),
-                  builder: (context, snapshot) {
-                    var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
-                    if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                      final posts = InterestsModel.fromJsonList(snapshot.data!.data);
-                      savedPosts.val = jsonEncode(posts);
-                      return ListView.builder(
-                        itemCount: posts.length,
-                        itemBuilder: (context, index) {
-                          var post = posts[index];
-                          if(!chosenInterestList.contains(post.title)){
-                            chosenInterestList.add(post.title.toString());
-                          }
-                          return InkWell(
-                            onTap: (){
-
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: Get.height*0.04,
-                                    width: Get.height*0.04,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
-                                  ),
-                                  const SizedBox(width: 10,),
-                                  Text(post.title.toString(), style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: Get.textScaleFactor * 17,
-                                    fontWeight: FontWeight.w500,
-                                  ),),
-                                  const Spacer(),
-                                  InkWell(
-                                      onTap: (){
-                                        var innerBody = {
-                                          "profileId": fullProfile.id,
-                                          "userInterestId" : post.id.toString()
-                                        };
-                                        controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
-                                          if(value.isSuccessful){
-                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
-                                              if(valueRes.isSuccessful){
-                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
-                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
-                                              }
-                                              chosenInterestList.remove(post.title.toString());
-                                              AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
-                                              controller.update(["interests"]);
-                                            });
-                                          }
-                                        });
-                                      },
-                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    } else if(savedPosts.val.isNotEmpty){
-                      var posts = InterestsModel.fromJsonList(jsonDecode(savedPosts.val));
-                      return ListView.builder(
-                        itemCount: posts.length,
-                        itemBuilder: (context, index) {
-                          var post = posts[index];
-                          if(!chosenInterestList.contains(post.title)){
-                            chosenInterestList.add(post.title.toString());
-                          }
-                          return InkWell(
-                            onTap: (){
-
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: Get.height*0.04,
-                                    width: Get.height*0.04,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
-                                  ),
-                                  const SizedBox(width: 10,),
-                                  Text(post.title.toString(), style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: Get.textScaleFactor * 17,
-                                    fontWeight: FontWeight.w500,
-                                  ),),
-                                  const Spacer(),
-                                  InkWell(
-                                      onTap: (){
-                                        var innerBody = {
-                                          "profileId": fullProfile.id,
-                                          "userInterestId" : post.id.toString()
-                                        };
-                                        controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
-                                          if(value.isSuccessful){
-                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
-                                              if(valueRes.isSuccessful){
-                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
-                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
-                                              }
-                                              chosenInterestList.remove(post.title.toString());
-                                              AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
-                                              controller.update(["interests"]);
-                                            });
-                                          }
-                                        });
-                                      },
-                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }else{
-                      if(snapshot.connectionState == ConnectionState.done){
-                        return const SizedBox.shrink();
-                      }
-                      return const GroupView(isLoading: true);
-                    }
-                  }),
               ListView.builder(
                 itemCount: uniqueInterestList.length,
                 itemBuilder: (context, index) {
@@ -639,6 +746,140 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                   );
                 },
               ),
+              FutureBuilder<ApiResponse>(
+                  future: controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}"),
+                  builder: (context, snapshot) {
+                    var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                    if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                      final posts = InterestsModel.fromJsonList(snapshot.data!.data);
+                      savedPosts.val = jsonEncode(posts);
+                      return ListView.builder(
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          var post = posts[index];
+                          if(!chosenInterestList.contains(post.title)){
+                            chosenInterestList.add(post.title.toString());
+                          }
+                          return InkWell(
+                            onTap: (){
+
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: Get.height*0.04,
+                                    width: Get.height*0.04,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
+                                  ),
+                                  const SizedBox(width: 10,),
+                                  Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: Get.textScaleFactor * 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),),
+                                  const Spacer(),
+                                  InkWell(
+                                      onTap: (){
+                                        var innerBody = {
+                                          "profileId": fullProfile.id,
+                                          "userInterestId" : post.id.toString()
+                                        };
+                                        controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
+                                          if(value.isSuccessful){
+                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                              if(valueRes.isSuccessful){
+                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                              }
+                                              chosenInterestList.remove(post.title.toString());
+                                              AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
+                                              controller.update(["interests"]);
+                                            });
+                                          }
+                                        });
+                                      },
+                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else if(savedPosts.val.isNotEmpty){
+                      var posts = InterestsModel.fromJsonList(jsonDecode(savedPosts.val));
+                      return ListView.builder(
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          var post = posts[index];
+                          if(!chosenInterestList.contains(post.title)){
+                            chosenInterestList.add(post.title.toString());
+                          }
+                          return InkWell(
+                            onTap: (){
+
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: Get.height*0.04,
+                                    width: Get.height*0.04,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
+                                  ),
+                                  const SizedBox(width: 10,),
+                                  Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: Get.textScaleFactor * 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),),
+                                  const Spacer(),
+                                  InkWell(
+                                      onTap: (){
+                                        var innerBody = {
+                                          "profileId": fullProfile.id,
+                                          "userInterestId" : post.id.toString()
+                                        };
+                                        controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
+                                          if(value.isSuccessful){
+                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                              if(valueRes.isSuccessful){
+                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                              }
+                                              chosenInterestList.remove(post.title.toString());
+                                              AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
+                                              controller.update(["interests"]);
+                                            });
+                                          }
+                                        });
+                                      },
+                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }else{
+                      if(snapshot.connectionState == ConnectionState.done){
+                        return const SizedBox.shrink();
+                      }
+                      return const GroupView(isLoading: true);
+                    }
+                  }),
             ],
           ),
         );

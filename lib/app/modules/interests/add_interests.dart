@@ -276,6 +276,247 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
       'Wayalink',
       'Love',
       'Karaoke',
+      'Space',
+      'Space Exploration',
+      'Space Travel',
+      'Space Technology',
+      'Space Science',
+      'Space Medicine',
+      'Space Engineering',
+      'Sea',
+      'Ocean',
+      'Ocean Exploration',
+      'Ocean Travel',
+      'Ocean Technology',
+      'Ocean Science',
+      'Ocean Medicine',
+      'Ocean Engineering',
+      'Crickets',
+      'Community service',
+      'Cooking or baking',
+      'Crafts',
+      'Exercising',
+      'Gardening',
+      'Hiking',
+      'Healthcare',
+      'Woodworking',
+      'Writing',
+      'Blogging',
+      'Reading',
+      'Nature',
+      'Theater'
+          'Foreign languages',
+      'Acting',
+
+      "Jewelry making",
+      "Knitting",
+      "Origami",
+      "Painting",
+      "Photography",
+      "Quilling",
+      "Quilting",
+      "Scrapbooking",
+      "Sculpting",
+      "Sewing",
+      "Sketching",
+      "Soap making",
+      "Pottery",
+      "Wood-burning",
+      "Woodcarving",
+      "Woodworking",
+      "Collecting",
+      "Action figures",
+      "Amateur-geology",
+      "Antiques",
+      "Autographs",
+      "Cars",
+      "Coins",
+      "Comic books",
+      "Dolls",
+      "Fine art",
+      "LEGO sets",
+      "Model die cast cars",
+      "Movie memorabilia",
+      "Music memorabilia",
+      "Sports memorabilia",
+      "Sports trading cards",
+      "Stamps",
+      "Vinyl records",
+      "Watches",
+      "Food and drink",
+      "Baking",
+      "Bartending",
+      "Beer tasting",
+      "Brewing",
+      "Coffee roasting",
+      "Cooking",
+      "Grilling",
+      "Doxology",
+      "Mixology",
+      "Sushi making",
+      "Whiskey tasting",
+      "Wine making",
+      "Wine tasting",
+      "Games",
+      "3D games",
+      "Arcade games",
+      "Billiards",
+      "Board games",
+      "Bridge",
+      "Card games",
+      "Chess",
+      "Crossword puzzles",
+      "Dominoes",
+      "Geocaching",
+      "Jigsaw puzzles",
+      "Sudoku",
+      "Table tennis",
+      "Video games",
+      "Word scrambles",
+      "Model, electronic and tech",
+      "App building",
+      "Blogging",
+      "Car restoration",
+      "Model airplanes",
+      "Model cars",
+      "Model railroading",
+      "Model rockets",
+      "Model ships",
+      "Podcasting",
+      "Programming / Coding",
+      "RC boats",
+      "RC cars",
+      "RC helicopters",
+      "RC planes",
+      "Robotics",
+      "Scale miniature building",
+      "Web design",
+      "YouTubing",
+      "Music",
+      "Choir singing",
+      "Composing music",
+      "DJ-ing",
+      "Mashups",
+      "Opera",
+      "Playing a musical instrument",
+      "Rapping",
+      "Singing",
+      "Performing arts",
+      "Acting",
+      "Ballet",
+      "Break-dancing",
+      "Historical reenactments",
+      "Juggling",
+      "Line dancing",
+      "Magic tricks",
+      "Puppetry",
+      "Salsa",
+      "Stand-up comedy",
+      "Swing",
+      "Tango",
+      "Waltz",
+      "Pets and animals",
+      "Animal breeding",
+      "Animal rescue",
+      "Animal training",
+      "Beekeeping",
+      "Dog walking",
+      "Fish-keeping",
+      "Pet fostering",
+      "Pet grooming",
+      "Spiritual and mental",
+      "Astrology",
+      "Freelance writing",
+      "Genealogy",
+      "Journaling",
+      "Languages",
+      "Meditation",
+      "Neurolinguistic programming",
+      "Novel writing",
+      "Online classes",
+      "Play writing",
+      "Poetry",
+      "Reading",
+      "Screenwriting",
+      "Sign language",
+      "Songwriting",
+      "Speed reading",
+      "Volunteering",
+      "Sports and outdoors",
+      "Acrobatics",
+      "Archery",
+      "Badminton",
+      "Backpacking travel",
+      "Base jumping",
+      "Baseball",
+      "Basketball",
+      "Birdwatching",
+      "Bodybuilding",
+      "Bowling",
+      "Boxing",
+      "Camping",
+      "Canoeing",
+      "Croquet",
+      "Cycling",
+      "Darts",
+      "Diving",
+      "Fantasy football",
+      "Fencing",
+      "Figure skating",
+      "Fishing",
+      "Flying",
+      "Football",
+      "Go karting",
+      "Golf",
+      "Gymnastics",
+      "Hang gliding",
+      "Hiking",
+      "Horse racing",
+      "Horseback riding",
+      "Ice skating",
+      "Kayaking",
+      "Marathon running",
+      "Martial arts",
+      "Mountain biking",
+      "Mountaineering",
+      "Paintball",
+      "Paragliding",
+      "Pilates",
+      "Rock climbing",
+      "Running",
+      "RV traveling",
+      "Sailing",
+      "Scuba diving",
+      "Sightseeing",
+      "Skateboarding",
+      "Skiing",
+      "Skydiving",
+      "Snowboarding",
+      "Squash",
+      "Surfing",
+      "Swimming",
+      "Tennis",
+      "Travel",
+      "Water skiing",
+      "Weight training",
+      "Windsurfing",
+      "Yoga",
+      'Animation',
+      'Architecture',
+      'Calligraphy',
+      'Candle making',
+      'Card-making',
+      'Ceramics',
+      'Crocheting',
+      'Drawing',
+      'Embroidery',
+      'Fashion design',
+      'Filmmaking',
+      'Floristry',
+      'Furniture building',
+      'Gardening',
+      'Glass painting',
+      'Home decorating',
     ];
 
     List<String> uniqueInterestList = interestList.toSet().toList();
@@ -336,8 +577,8 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                         fontWeight: FontWeight.w500,
                       ),
                       tabs: const [
-                        Tab(text: 'Your Interests',iconMargin: EdgeInsets.zero,),
                         Tab(text: 'All Interests',iconMargin: EdgeInsets.zero,),
+                        Tab(text: 'Your Interests',iconMargin: EdgeInsets.zero,),
                       ],
                       onTap: (index) {
                         //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
@@ -362,6 +603,99 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
           body: TabBarView(
             controller: tabController,
             children: [
+              ListView.builder(
+                itemCount: uniqueInterestList.length,
+                itemBuilder: (context, index) {
+                  var currentInterest = uniqueInterestList[index];
+                  if(chosenInterestList.contains(currentInterest)){
+                    return const SizedBox.shrink();
+                  }
+                  return InkWell(
+                    onTap: (){
+
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: Get.height*0.04,
+                            width: Get.height*0.04,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
+                          ),
+                          const SizedBox(width: 10,),
+                          Text(currentInterest, style: TextStyle(
+                            color: Colors.black,
+                            fontSize: Get.textScaleFactor * 17,
+                            fontWeight: FontWeight.w500,
+                          ),),
+                          const Spacer(),
+                          InkWell(
+                              onTap: (){
+                                var body = {
+                                  "title": currentInterest,
+                                  "description" : currentInterest
+                                };
+                                var formData = dio.FormData.fromMap(body);
+                                controller.postData(formData, "/wayagram-service/graph/createInterest").then((value1) {
+                                  if(value1.isSuccessful){
+                                    var res = NewInterestModel.fromJson(value1.data);
+                                    var innerBody = {
+                                      "profileId": fullProfile.id,
+                                      "interestId" : res.id.toString()
+                                    };
+                                    controller.postData(dio.FormData.fromMap(innerBody), "/wayagram-service/graph/user-interest/selectUserInterest").then((value) {
+                                      if(value1.isSuccessful){
+                                        controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                          if(valueRes.isSuccessful){
+                                            var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                            savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                          }
+                                          interestList.remove(currentInterest);
+                                          AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
+                                          controller.update(["add_interests_page"]);
+                                        });
+                                      }
+                                    });
+                                  }else{
+                                    controller.getData("/wayagram-service/graph/search?query=${currentInterest}&filterBy=NAME",true).then((value) {
+                                      if(value.isSuccessful){
+                                        var res = NewInterestModel.fromJsonList(value.data["data"]);
+                                        var innerBody = {
+                                          "profileId": fullProfile.id,
+                                          "interestId" : res[0].id.toString()
+                                        };
+                                        controller.postData(dio.FormData.fromMap(innerBody), "/wayagram-service/graph/user-interest/selectUserInterest").then((value) {
+                                          if(value.isSuccessful){
+                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                              if(valueRes.isSuccessful){
+                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                              }
+                                              interestList.remove(currentInterest);
+                                              AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
+                                              controller.update(["add_interests_page"]);
+                                            });
+                                          }else{
+                                            AppOverlay.showErrorSnackBar(content: "Something went wrong, please try again later");
+                                          }
+                                        });
+                                      }
+                                    });
+                                  }
+                                });
+                              }, child: const Icon(Icons.add_circle, color: AppColors.primary,)
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
               FutureBuilder<ApiResponse>(
                   future: controller.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}", true),
                   builder: (context, snapshot) {
@@ -394,7 +728,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                     child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                                   ),
                                   const SizedBox(width: 10,),
-                                  Text(post.title.toString(), style: TextStyle(
+                                  Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
                                     color: Colors.black,
                                     fontSize: Get.textScaleFactor * 17,
                                     fontWeight: FontWeight.w500,
@@ -455,7 +789,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                     child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                                   ),
                                   const SizedBox(width: 10,),
-                                  Text(post.title.toString(), style: TextStyle(
+                                  Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
                                     color: Colors.black,
                                     fontSize: Get.textScaleFactor * 17,
                                     fontWeight: FontWeight.w500,
@@ -496,99 +830,6 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                       return const GroupView(isLoading: true);
                     }
                   }),
-              ListView.builder(
-                itemCount: uniqueInterestList.length,
-                itemBuilder: (context, index) {
-                  var currentInterest = uniqueInterestList[index];
-                  if(chosenInterestList.contains(currentInterest)){
-                    return const SizedBox.shrink();
-                  }
-                  return InkWell(
-                    onTap: (){
-
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: Get.height*0.04,
-                            width: Get.height*0.04,
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
-                          ),
-                          const SizedBox(width: 10,),
-                          Text(currentInterest, style: TextStyle(
-                            color: Colors.black,
-                            fontSize: Get.textScaleFactor * 17,
-                            fontWeight: FontWeight.w500,
-                          ),),
-                          const Spacer(),
-                          InkWell(
-                            onTap: (){
-                              var body = {
-                                "title": currentInterest,
-                                "description" : currentInterest
-                              };
-                              var formData = dio.FormData.fromMap(body);
-                              controller.postData(formData, "/wayagram-service/graph/createInterest").then((value1) {
-                                if(value1.isSuccessful){
-                                  var res = NewInterestModel.fromJson(value1.data);
-                                  var innerBody = {
-                                    "profileId": fullProfile.id,
-                                    "interestId" : res.id.toString()
-                                  };
-                                  controller.postData(dio.FormData.fromMap(innerBody), "/wayagram-service/graph/user-interest/selectUserInterest").then((value) {
-                                    if(value1.isSuccessful){
-                                      controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
-                                        if(valueRes.isSuccessful){
-                                          var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
-                                          savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
-                                        }
-                                        interestList.remove(currentInterest);
-                                        AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
-                                        controller.update(["add_interests_page"]);
-                                      });
-                                    }
-                                  });
-                                }else{
-                                  controller.getData("/wayagram-service/graph/search?query=${currentInterest}&filterBy=NAME",true).then((value) {
-                                    if(value.isSuccessful){
-                                      var res = NewInterestModel.fromJsonList(value.data["data"]);
-                                      var innerBody = {
-                                        "profileId": fullProfile.id,
-                                        "interestId" : res[0].id.toString()
-                                      };
-                                      controller.postData(dio.FormData.fromMap(innerBody), "/wayagram-service/graph/user-interest/selectUserInterest").then((value) {
-                                        if(value.isSuccessful){
-                                          controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
-                                            if(valueRes.isSuccessful){
-                                              var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
-                                              savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
-                                            }
-                                            interestList.remove(currentInterest);
-                                            AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
-                                            controller.update(["add_interests_page"]);
-                                          });
-                                        }else{
-                                          AppOverlay.showErrorSnackBar(content: "Something went wrong, please try again later");
-                                        }
-                                      });
-                                    }
-                                  });
-                                }
-                              });
-                            }, child: const Icon(Icons.add_circle, color: AppColors.primary,)
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
             ],
           ),
         );
