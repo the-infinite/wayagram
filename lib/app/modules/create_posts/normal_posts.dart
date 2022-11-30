@@ -166,6 +166,7 @@ class _CreatePostsState extends State<CreatePosts> {
                               await controller.getPosts;
                               controller.update(['profile_page','home_tab','home']);
                               Get.back();
+                              AppOverlay.showSuccessSnackBar(content: "Post quoted successfully");
                             }else{
                               AppOverlay.showErrorSnackBar(content: "An error occurred, please try again later");
                             }
@@ -179,7 +180,7 @@ class _CreatePostsState extends State<CreatePosts> {
                               'description': textController.text,
                               'profile_id': fullProfile.id,
                               'type': 'user',
-                              'hashtags': hashtags.join(","),
+                              //'hashtags': hashtags.join(","),
                             };
                             if(controller.groupToPost != null){
                               body['group_id'] = controller.groupToPost!.id;
@@ -217,9 +218,13 @@ class _CreatePostsState extends State<CreatePosts> {
                                 controller.update(['profile_page','home_tab','home','group_screen','page_screen']);
                                 //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                                 Get.back();
+                                AppOverlay.showSuccessSnackBar(content: "Post created successfully");
                               }
                             }else{
-                              response = await controller.postData(formData, "/wayagram-service/all-posts/create");
+                              var postBody = body;
+                              postBody['hashtags'] = hashtags.join(",");
+                              var postFormData = dio.FormData.fromMap(postBody);
+                              response = await controller.postData(postFormData, "/wayagram-service/all-posts/create");
                               if(response.isSuccessful){
                                 if(images.isNotEmpty){
                                   images.removeAt(0);
@@ -242,6 +247,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                   controller.update(['profile_page','home_tab','home','group_screen','page_screen']);
                                   //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                                   Get.back();
+                                  AppOverlay.showSuccessSnackBar(content: "Post created successfully");
                                 }
                               }else{
                                 AppOverlay.showInfoDialog(title: 'Error', content: response.message);

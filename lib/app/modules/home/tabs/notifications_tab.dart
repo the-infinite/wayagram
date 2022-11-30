@@ -104,8 +104,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                   thickness: 0.5,
                   color: Colors.grey,
                 ),
-                SizedBox(
-                  height: Get.height*0.71,
+                Expanded(
                   child: TabBarView(
                       controller: tabController,
                       children: [
@@ -1247,7 +1246,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                         ),
                       ]
                   ),
-                )
+                ),
               ],
             ),
           ],

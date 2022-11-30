@@ -28,6 +28,7 @@ class OnboardingItem extends StatelessWidget {
               'assets/images/${onboardingModel.image}.png',
               height: Get.width * 0.25,
               width: Get.height*0.25,
+              //package: 'wayagram',
             ),
           ),
           Expanded(

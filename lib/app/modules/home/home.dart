@@ -139,6 +139,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
             ),
               body: SizedBox(
               width: Get.width,
+                //padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
               child: Column(
                 children: [
                   if(controller.currentBottomNavPage.value == 2)
@@ -247,10 +248,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                       ),
                     ),
                   ),
+                  if(controller.currentBottomNavPage.value != 1)
+                    const SizedBox(height: kBottomNavigationBarHeight),
                 ],
               ),
             ),
               drawer: const AppDrawer(),
+              extendBody: controller.currentBottomNavPage.value == 1 ? false : true,
               bottomNavigationBar: BottomNavigationBar(
                 backgroundColor: AppColors.background,
                 showSelectedLabels: true,

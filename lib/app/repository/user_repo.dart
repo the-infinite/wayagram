@@ -99,7 +99,6 @@ class UserRepository {
   }
   Future<ApiResponse> getAccountNumber() async {
     var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-    print(profile.userId);
     final response = await api.getData('/account-service/account/getAccounts/${profile.userId}',hasHeader: true);
     print(response.message);
     if(response.isSuccessful){

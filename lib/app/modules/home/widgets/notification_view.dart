@@ -81,12 +81,15 @@ class _NotificationViewState extends State<NotificationView> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    post.title.toString().capitalizeFirst.toString(),
-                    style: const TextStyle(
-                      color: Colors.black ,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                  SizedBox(
+                    width: Get.width*0.8,
+                    child: Text(
+                      post.title.toString().capitalizeFirst.toString(),
+                      style: const TextStyle(
+                        color: Colors.black ,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   SizedBox(
