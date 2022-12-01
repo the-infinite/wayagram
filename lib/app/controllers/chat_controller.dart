@@ -37,6 +37,7 @@ class ChatController extends GetxController {
   ChatController(this.userRepo);
 
   ChatListOverView? chatListOverView;
+  final jsonEncoder = const JsonEncoder();
 
   void connectToSocket(){
     setUpMessagesScreen();
@@ -81,9 +82,14 @@ class ChatController extends GetxController {
       chatListOverView = ChatListOverView.fromJson(data);
       MyPref.chatOverView.val = jsonEncode(data);
       update(['chats_overview']);
+      if (kDebugMode) {
+        print('socket_load_chat_overview: $data');
+      }
     });
     userRepo.api.listenToEvent('load_previous_chats', (data) {
-
+      if (kDebugMode) {
+        print('socket_load_previous_chats: $data');
+      }
     });
     userRepo.api.listenToEvent('user_chat_error', (data) {
 
@@ -120,6 +126,8 @@ class ChatController extends GetxController {
     });
 
     userRepo.api.emitEvent('chat_overview', {});
+    var string = {"otherId": "492bbb2c-4fc2-4ef4-9c65-ca449575e2b7"};
+    userRepo.api.emitEvent('previous_chats', jsonEncode(string));
   }
 
   void emitMessages(){

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -539,14 +538,7 @@ class AuthController extends GetxController {
   Future<void> subscribeToFirebaseNotification(String userID, String profileID) async {
     String uniqueId = "";
     String? token = await FirebaseMessaging.instance.getToken();
-    final deviceInfoPlugin = DeviceInfoPlugin();
-    if(Platform.isAndroid){
-      AndroidDeviceInfo build = await deviceInfoPlugin.androidInfo;
-      uniqueId = build.id;
-    }else{
-      IosDeviceInfo build = await deviceInfoPlugin.iosInfo;
-      uniqueId = build.identifierForVendor.toString();
-    }
+    uniqueId = userID + profileID + token.toString() + DateTime.now().toString();
     var body = {
       "token": token,
       "platform": Platform.isAndroid ? "android" : "ios",
@@ -557,5 +549,6 @@ class AuthController extends GetxController {
       MyPref.uniqueID.val = uniqueId;
       MyPref.fcmID.val = token.toString();
     }
+    print(response.message);
   }
 }

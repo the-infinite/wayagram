@@ -26,6 +26,8 @@ import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/app_button.dart';
 
 import 'package:dio/dio.dart' as dio;
+import 'dart:math' as math;
+
 
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
@@ -47,8 +49,18 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  FocusNode inputNode = FocusNode();
+  var chatTextController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
   var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+
+  void openKeyboard(BuildContext context){
+    FocusScope.of(context).requestFocus(inputNode);
+  }
+
+  void closeKeyboard(BuildContext context){
+    FocusScope.of(context).unfocus();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +155,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                   ),
                                     SizedBox(
-                                      width: Get.width*0.5,
+                                      width: Get.width*0.4,
                                       child: Text(membersString, style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: Get.textScaleFactor * 15,
@@ -236,6 +248,79 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   ],
                 ),
+              ),
+            ),
+            bottomNavigationBar: Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    color: const Color(0xffEDEAEA),
+                    height: 1.0,
+                  ),
+                  SizedBox(height: Get.height*0.008),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.02),
+                        child: SizedBox(
+                          width: Get.width * 0.8,
+                          child: AppInput(
+                            hintText: 'Write a message...',
+                            controller: chatTextController,
+                            borderRadius: 100,
+                            filledColor: Colors.grey.shade300,
+                            borderSide: BorderSide.none,
+                            hintColor: Colors.grey.shade500,
+                            maxLines: 1,
+                            keyboardType: TextInputType.text,
+                            focusNode: inputNode,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+
+                              },
+                              icon: Transform.rotate(
+                                angle: 45 * math.pi / 180,
+                                child: const Icon(
+                                  Icons.attach_file_rounded,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              chatController.update(['chats_screen']);
+                            },
+                          ),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.only(right: Get.width*0.02),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: IconButton(
+                            onPressed: () {
+
+                            },
+                            icon: Icon(
+                              chatTextController.text.isEmpty
+                                  ? Icons.mic_rounded
+                                  : Icons.send_rounded,
+                              color: AppColors.background,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: Get.height*0.008),
+                ],
               ),
             ),
           );
