@@ -45,6 +45,11 @@ class MyPref  {
   static final groupsCreated = ReadWriteValue('wayagram_groups_created', '', box);
   static final groupsFollowed = ReadWriteValue('wayagram_groups_followed', '', box);
   static final groupCategories = ReadWriteValue('wayagram_group_categories', '', box);
+
+
+  //Chats and Calls boxes
+  static final chatOverView = ReadWriteValue('wayagram_chat_overview', '', box);
+  static final callOverView = ReadWriteValue('wayagram_call_overview', '', box);
   
   static Future<void> clearBoxes() async {
     await box().erase();

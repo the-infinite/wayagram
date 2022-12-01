@@ -17,6 +17,7 @@ import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
+import '../../controllers/chat_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/log_in_model_entity.dart';
@@ -41,6 +42,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with TickerProviderStateMixin{
   var homeController = Get.find<HomeController>();
+  var chatXController = Get.find<ChatController>();
   late TabController shopController;
   late TabController notificationController;
   late TabController chatController;
@@ -73,13 +75,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
       sound: true,
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
 
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-      }
     });
+    chatXController.connectToSocket();
   }
 
   @override

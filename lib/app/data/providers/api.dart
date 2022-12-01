@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:socket_io_client/socket_io_client.dart';
 
 import '../model/full_user_profile_entity.dart';
 import '../model/profile_model_entity.dart';
@@ -235,6 +236,60 @@ class Api {
         isSuccessful: false,
         message: e.toString(),
       );
+    }
+  }
+
+  //Real Time Connection
+  Socket? socket;
+  var isConnected = false;
+  void connectToServer({Function? onConnect, Function? onDisconnect, Function(dynamic)? onError,Function? onConnectError}){
+    var url = "wss://chats.staging.wayagram.ng/?token=${MyPref.authToken.val}";
+    socket = io(url, <String, dynamic>{
+      'transports': ['websocket'],
+      'EIO': 4,
+      'autoConnect': true,
+    });
+    socket!.onConnect((_) {
+      isConnected = true;
+      if(onConnect != null){
+        onConnect();
+      }
+    });
+    socket!.onDisconnect((_) {
+      isConnected = false;
+      if(onDisconnect != null){
+        onDisconnect();
+      }
+    });
+    socket!.onConnectError((val){
+      isConnected = false;
+      if(onConnectError != null){
+        onConnectError();
+      }
+    });
+    socket!.onError((data){
+      if(onError != null){
+        onError(data);
+      }
+    });
+    //socket!.connect();
+  }
+
+  void listenToEvent(String event, Function(dynamic) callback){
+    if(socket != null){
+      socket!.on(event, (data) => callback(data));
+    }
+  }
+
+  void emitEvent(String event, dynamic data){
+    if(socket != null){
+      socket!.emit(event, data);
+    }
+  }
+
+  void disconnect(){
+    if(socket != null){
+      socket!.disconnect();
     }
   }
 }
