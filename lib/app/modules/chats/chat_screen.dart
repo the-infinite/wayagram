@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_chat_list/chat_list.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
@@ -22,6 +25,7 @@ import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../data/socket_models/chat_list_over_view.dart';
+import '../../data/socket_models/previous_chat_model.dart' as normal_chat;
 import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/app_button.dart';
 
@@ -39,6 +43,8 @@ import '../home/widgets/posts_view.dart' as post_view;
 
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../search/search.dart';
+
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key, required this.chatOverview}) : super(key: key);
@@ -49,10 +55,22 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  bool canScrollDown = true;
+  final ScrollController _scrollController = ScrollController();
+
+  normal_chat.PreviousChatModel? previousChatModel;
+  List<normal_chat.PreviousChat> previousChat = [];
+
   FocusNode inputNode = FocusNode();
   var chatTextController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
   var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   void openKeyboard(BuildContext context){
     FocusScope.of(context).requestFocus(inputNode);
@@ -62,19 +80,31 @@ class _ChatScreenState extends State<ChatScreen> {
     FocusScope.of(context).unfocus();
   }
 
+  void _scrollDown() {
+    if (_scrollController.hasClients && canScrollDown){
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.fastOutSlowIn,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var post = widget.chatOverview;
-    var avater = "";
+    var id = "";
+    var avatar = "";
     var name = "";
     var time = "";
     var lastMessage = "";
     var membersString = "";
     if(post.isGroup == true){
-      avater = post.group!.groupImageUrl.toString();
+      avatar = post.group!.groupImageUrl.toString();
       name = post.group!.groupName.toString();
       time = timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(post.time.toString())));
       lastMessage = post.message.toString();
+      id = post.group!.id.toString();
       if(post.members != null){
         for(int i = 0; i < post.members!.length; i++){
           if(i == 0){
@@ -86,9 +116,10 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     }else{
       name = post.otherDisplayName.toString();
-      avater = post.otherImageURL.toString();
+      avatar = post.otherImageURL.toString();
       time = timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(post.time.toString())));
       lastMessage = post.message.toString();
+      id = post.otherId.toString();
     }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -100,6 +131,37 @@ class _ChatScreenState extends State<ChatScreen> {
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<ChatController>(id:'chats_screen',builder: (chatController) {
+        var chatNormalInfo = {"otherId": id};
+        var chatGroupInfo = {"groupId":id};
+        if(mounted){
+          if(post.isGroup == true){
+
+          }else{
+            chatController.listenToCustomEvent('load_previous_chats',(chatData){
+              previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
+              if(previousChatModel!.previousChat != null){
+                if(previousChat.isNotEmpty){
+                  previousChat.clear();
+                  previousChat.addAll(previousChatModel!.previousChat!);
+                  previousChat.sort((a,b) {
+                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                  });
+                }else{
+                  previousChat.addAll(previousChatModel!.previousChat!);
+                  previousChat.sort((a,b) {
+                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                  });
+                }
+              }
+              if (kDebugMode) {
+                //print('socket_load_previous_chats: $chatData');
+              }
+              chatController.update(['chats_screen']);
+              _scrollDown();
+            });
+            chatController.emitMessages('previous_chats', chatNormalInfo);
+          }
+        }
         return  GetBuilder<HomeController>(builder: (controller) {
           return Scaffold(
             appBar: AppBar(
@@ -122,7 +184,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             borderRadius: BorderRadius.circular(100),
                           ),
                           child: AppAvatar(
-                            imgUrl: avater,
+                            imgUrl: avatar,
                             isGroup: post.isGroup == true,
                           ),
                         ),
@@ -239,14 +301,79 @@ class _ChatScreenState extends State<ChatScreen> {
                   systemNavigationBarIconBrightness: Brightness.dark
               ),
             ),
-            body: SizedBox(
+            body: Container(
               width: double.infinity,
+              height: double.infinity,
+              color: Colors.grey.shade200,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: Get.height*0.01),
-                child: Column(
-                  children: [
-
-                  ],
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+                      canScrollDown = true;
+                    }else if(scrollInfo.metrics.pixels < scrollInfo.metrics.maxScrollExtent){
+                      canScrollDown = false;
+                    }
+                    return false;
+                  },
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    child: Column(
+                      children: [
+                        if(previousChatModel != null && post.isGroup != true)
+                          ListView.builder(
+                            itemCount: previousChat.length,
+                            shrinkWrap: true,
+                            reverse: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              var chat = previousChat[index];
+                              return Container(
+                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                child: Column(
+                                  crossAxisAlignment: chat.senderId == fullProfile.id ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: Get.height*0.005),
+                                    Container(
+                                      width: Get.width*0.5,
+                                      decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
+                                        color: AppColors.button,
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(0),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                                      ) : const BoxDecoration(
+                                        color: AppColors.background,
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                                      ),
+                                      child: Padding(
+                                          padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
+                                          child: HashTagText(
+                                            text: chat.message.toString(),
+                                            decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                              color: Colors.blue,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            basicStyle: AppTextStyle.bodyText1.copyWith(
+                                              color: chat.senderId == fullProfile.id ? Colors.white :Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            onTap: (text) {
+                                              controller.defaultSearchValue = text;
+                                              Get.to(() => const Search());
+                                            },
+                                            decorateAtSign: true,
+                                          )
+                                      ),
+                                    ),
+                                    SizedBox(height: Get.height*0.005),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

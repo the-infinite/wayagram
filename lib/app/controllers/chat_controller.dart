@@ -28,6 +28,7 @@ import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
 import '../data/providers/my_pref.dart';
 import '../data/socket_models/chat_list_over_view.dart';
+import '../data/socket_models/previous_chat_model.dart';
 import '../modules/home/tabs/home_tab.dart';
 import '../modules/home/tabs/notifications_tab.dart';
 import '../repository/user_repo.dart';
@@ -37,6 +38,7 @@ class ChatController extends GetxController {
   ChatController(this.userRepo);
 
   ChatListOverView? chatListOverView;
+  Map<String,PreviousChatModel> previousChatMap = {};
   final jsonEncoder = const JsonEncoder();
 
   void connectToSocket(){
@@ -87,8 +89,9 @@ class ChatController extends GetxController {
       }
     });
     userRepo.api.listenToEvent('load_previous_chats', (data) {
+      //var previousChats = PreviousChatModel.fromJson(data);
       if (kDebugMode) {
-        print('socket_load_previous_chats: $data');
+        //print('socket_load_previous_chats: $data');
       }
     });
     userRepo.api.listenToEvent('user_chat_error', (data) {
@@ -127,10 +130,16 @@ class ChatController extends GetxController {
 
     userRepo.api.emitEvent('chat_overview', {});
     var string = {"otherId": "492bbb2c-4fc2-4ef4-9c65-ca449575e2b7"};
-    userRepo.api.emitEvent('previous_chats', jsonEncode(string));
+    //userRepo.api.emitEvent('previous_chats', jsonEncode(string));
   }
 
-  void emitMessages(){
+  void emitMessages(String eventName,Map<String,dynamic> data){
+    userRepo.api.emitEvent(eventName, jsonEncode(data));
+  }
 
+  void listenToCustomEvent(String eventName, Function(dynamic) callback){
+    userRepo.api.listenToEvent(eventName, (data) {
+      callback(data);
+    });
   }
 }
