@@ -114,6 +114,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                 }
               }),
           Container(
+
             color: Colors.blue.shade50,
             width: Get.width,
             padding: const EdgeInsets.all(8),
