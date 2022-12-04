@@ -88,12 +88,12 @@ class ChatController extends GetxController {
         print('socket_load_chat_overview: $data');
       }
     });
-    userRepo.api.listenToEvent('load_previous_chats', (data) {
+    /*userRepo.api.listenToEvent('load_previous_chats', (data) {
       //var previousChats = PreviousChatModel.fromJson(data);
       if (kDebugMode) {
         //print('socket_load_previous_chats: $data');
       }
-    });
+    });*/
     userRepo.api.listenToEvent('user_chat_error', (data) {
 
     });
@@ -141,5 +141,9 @@ class ChatController extends GetxController {
     userRepo.api.listenToEvent(eventName, (data) {
       callback(data);
     });
+  }
+
+  void stopListeningToEvent(String eventName){
+    userRepo.api.removeCustomListener(eventName);
   }
 }

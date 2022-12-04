@@ -385,6 +385,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                         };
                                         await controller.deleteData(body, "/wayagram-service/notification/delete-device-token");
                                       }
+                                      controller.userRepo.api.disconnect();
                                       Get.back();
                                       await MyPref.clearBoxes();
                                       Get.offAllNamed(Multiplexor.route);

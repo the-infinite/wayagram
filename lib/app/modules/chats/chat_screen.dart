@@ -26,6 +26,7 @@ import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../data/socket_models/chat_list_over_view.dart';
 import '../../data/socket_models/previous_chat_model.dart' as normal_chat;
+import '../../data/socket_models/send_message_response.dart';
 import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/app_button.dart';
 
@@ -55,6 +56,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  var chatController = Get.find<ChatController>();
   bool canScrollDown = true;
   final ScrollController _scrollController = ScrollController();
 
@@ -80,13 +82,19 @@ class _ChatScreenState extends State<ChatScreen> {
     FocusScope.of(context).unfocus();
   }
 
-  void _scrollDown() {
+  void _scrollDown({bool animate = true}) {
     if (_scrollController.hasClients && canScrollDown){
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.fastOutSlowIn,
-      );
+      if(animate){
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.fastOutSlowIn,
+        );
+      }else{
+        _scrollController.jumpTo(
+          _scrollController.position.maxScrollExtent,
+        );
+      }
     }
   }
 
@@ -146,22 +154,23 @@ class _ChatScreenState extends State<ChatScreen> {
                   previousChat.sort((a,b) {
                     return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
                   });
+                  chatController.update(['chats_screen']);
+                  _scrollDown();
                 }else{
                   previousChat.addAll(previousChatModel!.previousChat!);
                   previousChat.sort((a,b) {
                     return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
                   });
+                  chatController.update(['chats_screen']);
+                  _scrollDown(animate: false);
                 }
               }
-              if (kDebugMode) {
-                //print('socket_load_previous_chats: $chatData');
-              }
-              chatController.update(['chats_screen']);
-              _scrollDown();
             });
             chatController.emitMessages('previous_chats', chatNormalInfo);
           }
         }
+        //callMessage
+        //fileMessage
         return  GetBuilder<HomeController>(builder: (controller) {
           return Scaffold(
             appBar: AppBar(
@@ -306,7 +315,7 @@ class _ChatScreenState extends State<ChatScreen> {
               height: double.infinity,
               color: Colors.grey.shade200,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: Get.height*0.01),
+                padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: 0),
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (ScrollNotification scrollInfo) {
                     if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
@@ -314,65 +323,109 @@ class _ChatScreenState extends State<ChatScreen> {
                     }else if(scrollInfo.metrics.pixels < scrollInfo.metrics.maxScrollExtent){
                       canScrollDown = false;
                     }
+                    chatController.update(['chats_screen']);
                     return false;
                   },
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    child: Column(
-                      children: [
-                        if(previousChatModel != null && post.isGroup != true)
-                          ListView.builder(
-                            itemCount: previousChat.length,
-                            shrinkWrap: true,
-                            reverse: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              var chat = previousChat[index];
-                              return Container(
-                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                                child: Column(
-                                  crossAxisAlignment: chat.senderId == fullProfile.id ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(height: Get.height*0.005),
-                                    Container(
-                                      width: Get.width*0.5,
-                                      decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
-                                        color: AppColors.button,
-                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(0),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
-                                      ) : const BoxDecoration(
-                                        color: AppColors.background,
-                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
-                                      ),
-                                      child: Padding(
-                                          padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
-                                          child: HashTagText(
-                                            text: chat.message.toString(),
-                                            decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                                              color: Colors.blue,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                            basicStyle: AppTextStyle.bodyText1.copyWith(
-                                              color: chat.senderId == fullProfile.id ? Colors.white :Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                            onTap: (text) {
-                                              controller.defaultSearchValue = text;
-                                              Get.to(() => const Search());
-                                            },
-                                            decorateAtSign: true,
-                                          )
-                                      ),
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          children: [
+                            if(previousChatModel != null && post.isGroup != true)
+                              ListView.builder(
+                                itemCount: previousChat.length,
+                                shrinkWrap: true,
+                                reverse: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  var chat = previousChat[index];
+                                  print("${chat.messageType} ${chat.message}");
+                                  if(chat.senderId == fullProfile.id){
+                                    if(chat.deleted == true){
+                                      return Container();
+                                    }
+                                    if(chat.deletedForSender == true){
+                                      return Container();
+                                    }
+                                  }
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                    child: Column(
+                                      crossAxisAlignment: chat.senderId == fullProfile.id ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: Get.height*0.005),
+                                        Container(
+                                          width: Get.width*0.5,
+                                          decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
+                                            color: AppColors.button,
+                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(0),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                                          ) : const BoxDecoration(
+                                            color: AppColors.background,
+                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                                          ),
+                                          child: Padding(
+                                              padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
+                                              child: HashTagText(
+                                                text: chat.deleted == true ? "This message was deleted" : chat.message.toString(),
+                                                decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                  color: chat.senderId != fullProfile.id ?  Colors.blue : AppColors.primary,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                                basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                  color: chat.deleted == true ? Colors.blue : chat.senderId == fullProfile.id ? Colors.white :Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
+                                                ),
+                                                onTap: (text) {
+                                                  controller.defaultSearchValue = text;
+                                                  Get.to(() => const Search());
+                                                },
+                                                decorateAtSign: true,
+                                              )
+                                          ),
+                                        ),
+                                        SizedBox(height: Get.height*0.005),
+                                      ],
                                     ),
-                                    SizedBox(height: Get.height*0.005),
-                                  ],
-                                ),
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                          ],
+                        ),
+                      ),
+                      if(!canScrollDown)
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: 0),
+                            child: Container(
+                              width: Get.width*0.1,
+                              height: Get.height*0.1,
+                              decoration: const BoxDecoration(
+                                color: AppColors.background,
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () async {
+                                  await _scrollController.animateTo(
+                                    _scrollController.position.maxScrollExtent,
+                                    duration: const Duration(milliseconds: 200),
+                                    curve: Curves.easeOut,
+                                  );
+                                  chatController.update(['chats_screen']);
+                                  canScrollDown = true;
+                                },
+                                icon: const Icon(FeatherIcons.arrowDown, color: Colors.black,),
+                              ),
+                            ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
                 ),
               ),
@@ -433,7 +486,28 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                           child: IconButton(
                             onPressed: () {
-
+                              if(post.isGroup == true){
+                                var chatGroupInfo = {"groupId":id};
+                              }else {
+                                if(chatTextController.text.isNotEmpty){
+                                  var message = {
+                                    "receiverId":post.otherId.toString(),
+                                    "chatId":post.chatId.toString(),
+                                    "message":chatTextController.text.toString(),
+                                    "forwardMessage":false,
+                                    "messageType": "textMessage"
+                                  };
+                                  chatController.listenToCustomEvent('notify_user',(data){
+                                    SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
+                                    if(sendMessageResponse.status == true){
+                                      chatTextController.clear();
+                                      chatController.update(['chats_screen']);
+                                    }
+                                    chatController.stopListeningToEvent("notify_user");
+                                  });
+                                  chatController.emitMessages("send_message", message);
+                                }
+                              }
                             },
                             icon: Icon(
                               chatTextController.text.isEmpty
@@ -454,5 +528,11 @@ class _ChatScreenState extends State<ChatScreen> {
         });
       }),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    chatController.stopListeningToEvent("load_previous_chats");
   }
 }

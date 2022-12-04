@@ -281,6 +281,12 @@ class Api {
     }
   }
 
+  void removeCustomListener(String event){
+    if(socket != null){
+      socket!.off(event);
+    }
+  }
+
   void emitEvent(String event, dynamic data){
     if(socket != null){
       socket!.emit(event, data);
