@@ -18,6 +18,7 @@ import '../../controllers/auth_controller.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_avatar.dart';
+import '../home/widgets/bottom_sheet.dart';
 import '../profile/profile.dart';
 import '../profile/update_profile.dart';
 import 'inner_pages/login_information.dart';
@@ -134,7 +135,7 @@ class Settings extends GetView<HomeController>{
                 child: AppButton(
                   title: 'Wallet Balance',
                   onPressed: () {
-
+                    Get.bottomSheet(const WalletBottomSheet(),isScrollControlled: true);
                   },
                   borderRadius: 10,
                   fontColor: Colors.white,

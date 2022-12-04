@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/create_posts/go_live.dart';
@@ -19,6 +20,7 @@ import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../data/model/posts_model_entity.dart';
+import '../../../data/model/wallet_model.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/horizontal_item_tile.dart';
@@ -27,6 +29,7 @@ import '../../create_posts/events.dart';
 import '../../create_posts/polls.dart';
 import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
+import 'notification_view.dart';
 
 class WayaBottomSheet extends StatelessWidget {
   const WayaBottomSheet({Key? key}) : super(key: key);
@@ -324,6 +327,127 @@ class BottomSheetButton extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class WalletBottomSheet extends StatelessWidget {
+  const WalletBottomSheet({Key? key,this.title = "Wallet",this.onTap}) : super(key: key);
+
+  final Function(WalletModel wallet)? onTap;
+  final String title;
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: AppColors.background1,
+          systemNavigationBarIconBrightness: Brightness.dark
+      ),
+      child: GetBuilder<HomeController>(id:"wallet_bottom_sheet",builder: (controller) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppColors.background1,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: Get.height * 0.020, bottom: Get.height * 0.015),
+                child: Text(
+                  title,
+                  style: AppTextStyle.subtitle1.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: Get.width * 0.045,
+                  ),
+                ),
+              ),
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: Get.height * 0.50,
+                ),
+                child: FutureBuilder<ApiResponse>(
+                    future: controller.getData("temporal-service/api/v1/wallet/accounts/${controller.profile.userId}", true),
+                    builder: (context, snapshot) {
+                      var savedPosts = ReadWriteValue('wayagram_wallets', '', MyPref.box);
+                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                        final posts = WalletModel.listFromJson(snapshot.data!.data);
+                        savedPosts.val = jsonEncode(posts);
+                        if(posts.isEmpty){
+                          return SizedBox(
+                              height: Get.height*0.3,
+                              child: const Center(child: Text('No Wallets Available'),));
+                        }
+                        return ListView.builder(
+                          itemCount: posts.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            var post = posts[index];
+                            return BottomSheetButton(
+                                icon: Icons.money_rounded,
+                                title: post.accountNo.toString(),
+                                subtitle: "${post.acctCrncyCode} ${post.clrBalAmt}",
+                                onTap: () {
+                                  if(onTap != null){
+                                    Get.back();
+                                    onTap!(post);
+                                  }
+                                }
+                            );
+                          },
+                        );
+                      }
+                      else if(savedPosts.val.isNotEmpty){
+                        var posts = WalletModel.listFromJson(jsonDecode(savedPosts.val));
+                        if(posts.isEmpty){
+                          return SizedBox(
+                              height: Get.height*0.3,
+                              child: const Center(child: Text('No Wallets Available'),));
+                        }
+                        return ListView.builder(
+                          itemCount: posts.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            var post = posts[index];
+                            return BottomSheetButton(
+                                icon: Icons.money_rounded,
+                                title: post.accountNo.toString(),
+                                subtitle: "${post.acctCrncyCode} ${post.clrBalAmt}",
+                                onTap: () {
+                                  if(onTap != null){
+                                    Get.back();
+                                    onTap!(post);
+                                  }
+                                }
+                            );
+                          },
+                        );
+                      }else{
+                        if(snapshot.connectionState == ConnectionState.done){
+                          return SizedBox(
+                              height: Get.height*0.3,
+                              child: const Center(child: Text('No Wallets Available'),));
+                        }
+                        return const NotificationView(isLoading: true);
+                      }
+                    }),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
