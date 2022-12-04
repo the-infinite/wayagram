@@ -29,6 +29,7 @@ import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_input.dart';
 import '../home/widgets/posts_view.dart';
+import '../promotion/promote_post.dart';
 
 class PostAnalytics extends StatefulWidget {
   const PostAnalytics({Key? key,required this.post}) : super(key: key);
@@ -156,7 +157,7 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                       child: AppButton(
                         title: 'Promote this Post',
                         onPressed: () {
-
+                          Get.to(() => PromotePost(post: widget.post));
                         },
                         borderRadius: 10,
                         fontColor: AppColors.primary,
