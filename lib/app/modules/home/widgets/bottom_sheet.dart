@@ -261,78 +261,8 @@ class RepostBottomSheet extends StatelessWidget {
   }
 }
 
-class BottomSheetButton extends StatelessWidget {
-  const BottomSheetButton({
-    Key? key,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  }) : super(key: key);
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Function onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: (){
-        onTap();
-      },
-      child: Padding(
-        padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025, top: Get.height*0.01, bottom: Get.height*0.01),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(Get.width*0.030),
-              decoration: BoxDecoration(
-                color: AppColors.fadedBlue,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Icon(
-                icon,
-                color: AppColors.purple,
-                size: Get.width*0.040,
-              ),
-            ),
-            SizedBox(width: Get.width*0.025),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTextStyle.subtitle1.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: Get.width * 0.04,
-                  ),
-                ),
-                SizedBox(
-                  width: Get.width*0.80,
-                  child: Text(
-                    subtitle,
-                    style: AppTextStyle.subtitle1.copyWith(
-                      color: Colors.grey,
-                      fontSize: Get.width*0.035,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class WalletBottomSheet extends StatelessWidget {
-  const WalletBottomSheet({Key? key,this.title = "Wallet",this.onTap}) : super(key: key);
+  const WalletBottomSheet({Key? key,this.title = "Wallet List",this.onTap}) : super(key: key);
 
   final Function(WalletModel wallet)? onTap;
   final String title;
@@ -448,6 +378,76 @@ class WalletBottomSheet extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+}
+
+class BottomSheetButton extends StatelessWidget {
+  const BottomSheetButton({
+    Key? key,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  }) : super(key: key);
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Function onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: (){
+        onTap();
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025, top: Get.height*0.01, bottom: Get.height*0.01),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(Get.width*0.030),
+              decoration: BoxDecoration(
+                color: AppColors.fadedBlue,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Icon(
+                icon,
+                color: AppColors.purple,
+                size: Get.width*0.040,
+              ),
+            ),
+            SizedBox(width: Get.width*0.025),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTextStyle.subtitle1.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: Get.width * 0.04,
+                  ),
+                ),
+                SizedBox(
+                  width: Get.width*0.80,
+                  child: Text(
+                    subtitle,
+                    style: AppTextStyle.subtitle1.copyWith(
+                      color: Colors.grey,
+                      fontSize: Get.width*0.035,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
