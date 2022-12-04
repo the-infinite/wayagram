@@ -34,6 +34,7 @@ class AppInput extends StatefulWidget {
     ),
     this.borderRadius = 10,
     this.hintColor = const Color(0xFFC4C4C4),
+    this.onTap,
   }) : super(key: key);
 
   final String? label;
@@ -58,6 +59,7 @@ class AppInput extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final AutovalidateMode? autovalidateMode;
+  final Function()? onTap;
 
   @override
   State<AppInput> createState() => _AppInputState();
@@ -101,6 +103,7 @@ class _AppInputState extends State<AppInput> {
           height: widget.label != null ? 3 : 0,
         ),
         TextFormField(
+          onTap: widget.onTap,
           maxLengthEnforcement: MaxLengthEnforcement.enforced,
           onFieldSubmitted: widget.onFieldSubmitted,
           onChanged: widget.onChanged,

@@ -5,6 +5,7 @@ class AppColors {
 
   static const Color primary = Color(0xFFFF4400);
   static const Color button = Color(0xFF064A72);
+  static const Color onBackground = Color(0xFF000000);
   static const Color background = Color(0xFFFAFAFA);
   static const Color background1 = Color(0xFFFCFCFC);
   static const Color fadedPrimary = Color(0xFFFFCFBB);

@@ -16,9 +16,11 @@ class PageDropButton extends StatelessWidget {
     this.bckgrndColor,
     this.style,
     this.isCompulsory = false,
+    this.isMultiple = false,
   }) : super(key: key);
 
   final bool isCompulsory;
+  final bool isMultiple;
   final TextStyle? style;
   final String label;
   final String hint;
@@ -89,9 +91,11 @@ class AppDropdownButton<T> extends StatelessWidget {
     this.validator,
     this.items,
     this.onChanged,
+    this.isMultiple = false,
     this.value,
   }) : super(key: key);
 
+  final bool isMultiple;
   final EdgeInsets padding;
   final double borderRadius;
   final String hint;

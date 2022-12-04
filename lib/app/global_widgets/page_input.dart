@@ -28,6 +28,7 @@ class PageInput extends StatelessWidget {
     this.hintColor = const Color(0xFFC4C4C4),
     this.contentPadding = const EdgeInsets.fromLTRB(15, 10, 19, 10),
     this.borderRadius = 10,
+    this.onTap,
   }) : super(key: key);
 
   final String hint;
@@ -48,6 +49,7 @@ class PageInput extends StatelessWidget {
   final Color? hintColor;
   final EdgeInsetsGeometry? contentPadding;
   final double borderRadius;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +131,7 @@ class PageInput extends StatelessWidget {
                   onChanged: onChanged,
                   hintColor: hintColor,
                   maxLength: 11,
+                  onTap: onTap,
                   contentPadding: contentPadding,
                   borderRadius: borderRadius,
                 ),
@@ -137,6 +140,7 @@ class PageInput extends StatelessWidget {
         ),
         if(!isPhoneNumber)
           AppInput(
+            onTap: onTap,
             hintText: hint,
             keyboardType: keyboardType,
             controller: controller,
