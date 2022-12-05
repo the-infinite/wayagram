@@ -21,6 +21,7 @@ import '../../../global_widgets/app_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../global_widgets/newsfeed_multiple_imageview.dart';
+import '../../products/buy_product.dart';
 
 class ProductView extends StatelessWidget{
   const ProductView({
@@ -226,10 +227,13 @@ class ProductView extends StatelessWidget{
                       if(showBuyButton)
                         AppButton(
                           title: "Buy",
-                          onPressed: (){},
-                          bckgrndColor: AppColors.background,
-                          fontColor: AppColors.primary,
+                          onPressed: (){
+                            Get.to(() => BuyProduct(post: post));
+                          },
+                          bckgrndColor: AppColors.primary,
+                          fontColor: AppColors.background,
                           width: Get.width * 0.2,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                         ),
                     ],
                   )

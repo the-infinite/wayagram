@@ -237,7 +237,7 @@ class _DonateScreenState extends State<DonateScreen> {
                                 "amount": priceTextController.text,
                                 "debitAccountNumber": walletModel!.accountNo,
                               };
-                              //https://services.staging.wayagram.ng/auth-service/api/v1/pin/validate-pin/1111
+                              
                               var validatePin = await controller.getData("/auth-service/api/v1/pin/validate-pin/${pinTextController.text}", false);
                               if(validatePin.isSuccessful){
                                 var res = await  controller.postData(body,"/wayagram-service/all-posts/donate?profile_id=${fullProfile.id}");
