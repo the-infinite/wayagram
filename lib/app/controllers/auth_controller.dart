@@ -549,6 +549,5 @@ class AuthController extends GetxController {
       MyPref.uniqueID.val = uniqueId;
       MyPref.fcmID.val = token.toString();
     }
-    print(response.message);
   }
 }

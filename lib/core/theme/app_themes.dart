@@ -13,6 +13,16 @@ class AppThemes {
     primaryColor: AppColors.primary,
     platform: TargetPlatform.iOS,
     bottomSheetTheme: const BottomSheetThemeData(backgroundColor: AppColors.background),
+    sliderTheme: SliderThemeData(
+      activeTrackColor: AppColors.primary,
+      inactiveTrackColor: AppColors.primary.withOpacity(0.5),
+      trackHeight: 4.0,
+      thumbColor: AppColors.primary,
+      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
+      overlayColor: AppColors.primary.withOpacity(0.2),
+      overlayShape: const RoundSliderOverlayShape(overlayRadius: 28.0),
+      valueIndicatorColor: AppColors.primary,
+    ),
     appBarTheme: AppBarTheme(
       centerTitle: true,
       backgroundColor: AppColors.background,

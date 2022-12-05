@@ -18,6 +18,8 @@ import '../../controllers/home_controller.dart';
 import '../../data/model/CommentModel.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
+import '../../data/model/promotion_pricing_model.dart';
+import '../../data/model/wallet_model.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_avatar.dart';
@@ -32,6 +34,7 @@ import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
+import '../home/widgets/bottom_sheet.dart';
 import '../home/widgets/posts_view.dart';
 
 class PromotePost extends StatefulWidget {
@@ -45,18 +48,34 @@ class PromotePost extends StatefulWidget {
 
 class _PromotePostState extends State<PromotePost> {
   FocusNode inputNode = FocusNode();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  PageController pageController = PageController();
+
   var impressionsController = TextEditingController(text: '0');
   var selectedStatesTextController = TextEditingController();
   var selectedInterestsTextController = TextEditingController();
   var selectedGoalsTextController = TextEditingController();
   var genderTextController = TextEditingController(text: 'Any Gender');
   var engagementsController = TextEditingController(text: '0');
+  var intervalTextController = TextEditingController();
+  var reachTextController = TextEditingController();
+  var ageTextController = TextEditingController();
+  var quantityTextController = TextEditingController(text: "1");
   var parentID = "";
   var usernameToReplyTo = "";
+
+  WalletModel? walletModel;
+  var accountTextController = TextEditingController();
+  var pinTextController = TextEditingController();
+
+  RangeValues currentRangeValues = const RangeValues(0, 100);
+
 
   List<String> selectedStates = [];
   List<String> chosenGoals = [];
   List<String> chosenInterestList = [];
+
+  List<PromotionPricingModel> promotionPricingModelList = [];
 
   void openKeyboard(){
     FocusScope.of(context).requestFocus(inputNode);
@@ -68,6 +87,8 @@ class _PromotePostState extends State<PromotePost> {
 
   @override
   Widget build(BuildContext context) {
+    var savedPosts = ReadWriteValue('wayagram_promotion_pricing_model', '', MyPref.box);
+
     List<String> interestList = [
       'School',
       'Football',
@@ -556,6 +577,24 @@ class _PromotePostState extends State<PromotePost> {
       }
     }
 
+    if(savedPosts.val.isNotEmpty){
+      promotionPricingModelList = PromotionPricingModel.listFromJson(jsonDecode(savedPosts.val));
+    }
+
+    List<String> interval = promotionPricingModelList.map((e) => e.interval.toString().trim()).toList().toSet().toList();
+    intervalTextController.text = interval.first;
+    Map<String,List<String>> priceMap = {};
+    for (var element in interval) {
+      List<String> reach = [];
+      for (var e in promotionPricingModelList) {
+        if(e.interval.toString().trim() == element){
+          reach.add(e.price.toString());
+        }
+      }
+      priceMap[element] = reach.toSet().toList();
+    }
+    reachTextController.text = priceMap[interval.first]!.first;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -602,259 +641,664 @@ class _PromotePostState extends State<PromotePost> {
           ),
           body: SizedBox(
             width: double.infinity,
-            child: Padding(
-              padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    /*Post(
-                      post: widget.post,
-                      fullProfile: fullProfile,
-                      homeController: controller,
-                      showActions: false,
-                      decoration: BoxDecoration(
-                        color: AppColors.background,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: const Color(0xffEDEAEA), width: 1),
-                      ),
-                    ),*/
-                    const SizedBox(height: 10,),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Text(
-                        "Customize Your Audience",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: Get.textScaleFactor * 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Text(
-                        "Promote your post to reach more people and boost engagements",
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                          fontSize: Get.textScaleFactor * 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(height: Get.height*0.04),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: PageInput(
-                        hint: 'Click to select one or more states',
-                        label: 'Select Location To Target',
-                        validator: (val){
-                          if(val!.isEmpty){
-                            return 'Please select one or more states';
-                          }
-                          return null;
-                        },
-                        isCompulsory: true,
-                        controller: selectedStatesTextController,
-                        readOnly: true,
-                        onTap: (){
-                          DropDownState(
-                            DropDown(
-                              bottomSheetTitle: const Text(
-                                "Select State",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0,
-                                  color: AppColors.onBackground
-                                ),
+            height: double.infinity,
+            child: PageView(
+              controller: pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          /*Post(
+                            post: widget.post,
+                            fullProfile: fullProfile,
+                            homeController: controller,
+                            showActions: false,
+                            decoration: BoxDecoration(
+                              color: AppColors.background,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                            ),
+                          ),*/
+                          const SizedBox(height: 10,),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Text(
+                              "Customize Your Audience",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: Get.textScaleFactor * 16,
+                                fontWeight: FontWeight.bold,
                               ),
-                              submitButtonChild: const Text(
-                                'Done',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Text(
+                              "Promote your post to reach more people and boost engagements",
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.5),
+                                fontSize: Get.textScaleFactor * 16,
+                                fontWeight: FontWeight.normal,
                               ),
-                              data: NigerianStatesAndLGA.allStates.map<SelectedListItem>((String value) {
-                                return SelectedListItem(name: value,isSelected: selectedStates.contains(value));
-                              }).toList(),
-                              selectedItems: (List<dynamic> selectedList) {
-                                List<String> list = [];
-                                for(var item in selectedList) {
-                                  if(item is SelectedListItem) {
-                                    list.add(item.name);
-                                  }
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          SizedBox(height: Get.height*0.04),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: PageInput(
+                              hint: 'Click to select one or more states',
+                              label: 'Select Location To Target',
+                              validator: (val){
+                                if(val!.isEmpty){
+                                  return 'Please select one or more states';
                                 }
-                                list.sort();
-                                selectedStates.clear();
-                                selectedStates.addAll(list.reversed);
-                                selectedStatesTextController.text = list.join(', ');
+                                return null;
+                              },
+                              isCompulsory: true,
+                              controller: selectedStatesTextController,
+                              readOnly: true,
+                              onTap: (){
+                                DropDownState(
+                                  DropDown(
+                                    bottomSheetTitle: const Text(
+                                      "Select State",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0,
+                                        color: AppColors.onBackground
+                                      ),
+                                    ),
+                                    submitButtonChild: const Text(
+                                      'Done',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    data: NigerianStatesAndLGA.allStates.map<SelectedListItem>((String value) {
+                                      return SelectedListItem(name: value,isSelected: selectedStates.contains(value));
+                                    }).toList(),
+                                    selectedItems: (List<dynamic> selectedList) {
+                                      List<String> list = [];
+                                      for(var item in selectedList) {
+                                        if(item is SelectedListItem) {
+                                          list.add(item.name);
+                                        }
+                                      }
+                                      list.sort();
+                                      selectedStates.clear();
+                                      selectedStates.addAll(list.reversed);
+                                      selectedStatesTextController.text = list.join(', ');
+                                      controller.update(['promote_page']);
+                                    },
+                                    enableMultipleSelection: true,
+                                  ),
+                                ).showModal(context);
+                              },
+                            ),
+                          ),
+                          SizedBox(height: Get.height * 0.025),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: PageDropButton(
+                              label: "Select Gender To Target",
+                              hint: 'Select Gender',
+                              padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                              onChanged: (val) {
+                                genderTextController.text = val;
+                              },
+                              value: 'Any Gender',
+                              items: ["Male","Female",'Any Gender'].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          SizedBox(height: Get.height * 0.025),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: PageInput(
+                              hint: 'Click to select promotion goals',
+                              label: 'Goals',
+                              validator: (val){
+                                if(val!.isEmpty){
+                                  return 'Please select one or more goals';
+                                }
+                                return null;
+                              },
+                              isCompulsory: true,
+                              controller: selectedGoalsTextController,
+                              readOnly: true,
+                              onTap: (){
+                                DropDownState(
+                                  DropDown(
+                                    bottomSheetTitle: const Text(
+                                      "Select Interest",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20.0,
+                                          color: AppColors.onBackground
+                                      ),
+                                    ),
+                                    submitButtonChild: const Text(
+                                      'Done',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    data: ["More Messages","More Likes and Comments","More Profile Visits","More Sales","More Website Visits"].map<SelectedListItem>((String value) {
+                                      return SelectedListItem(name: value,isSelected: chosenGoals.contains(value));
+                                    }).toList(),
+                                    selectedItems: (List<dynamic> selectedList) {
+                                      List<String> list = [];
+                                      for(var item in selectedList) {
+                                        if(item is SelectedListItem) {
+                                          list.add(item.name);
+                                        }
+                                      }
+                                      list.sort();
+                                      chosenGoals.clear();
+                                      chosenGoals.addAll(list.reversed);
+                                      selectedGoalsTextController.text = list.join(', ');
+                                      controller.update(['promote_page']);
+                                    },
+                                    enableMultipleSelection: true,
+                                  ),
+                                ).showModal(context);
+                              },
+                            ),
+                          ),
+                          SizedBox(height: Get.height * 0.025),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: PageInput(
+                              hint: 'Click to select promotion interests',
+                              label: 'Select Interests',
+                              validator: (val){
+                                if(val!.isEmpty){
+                                  return 'Please select one or more interests';
+                                }
+                                return null;
+                              },
+                              isCompulsory: true,
+                              controller: selectedInterestsTextController,
+                              readOnly: true,
+                              onTap: (){
+                                DropDownState(
+                                  DropDown(
+                                      bottomSheetTitle: const Text(
+                                        "Select Interest",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20.0,
+                                            color: AppColors.onBackground
+                                        ),
+                                      ),
+                                      submitButtonChild: const Text(
+                                        'Done',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      data: uniqueInterestList.map<SelectedListItem>((String value) {
+                                        return SelectedListItem(name: value,isSelected: chosenInterestList.contains(value));
+                                      }).toList(),
+                                      selectedItems: (List<dynamic> selectedList) {
+                                        List<String> list = [];
+                                        for(var item in selectedList) {
+                                          if(item is SelectedListItem) {
+                                            list.add(item.name);
+                                          }
+                                        }
+                                        list.sort();
+                                        chosenInterestList.clear();
+                                        chosenInterestList.addAll(list.reversed);
+                                        selectedInterestsTextController.text = list.join(', ');
+                                        controller.update(['promote_page']);
+                                      },
+                                      enableMultipleSelection: true,
+
+                                  ),
+                                ).showModal(context);
+                              },
+                            ),
+                          ),
+                          SizedBox(height: Get.height * 0.025),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: PageDropButton(
+                              label: "Select Interval",
+                              hint: 'Select Interval',
+                              padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                              onChanged: (val) {
+                                intervalTextController.text = val.toString();
+                                reachTextController.text = priceMap[intervalTextController.text]!.first.toString();
                                 controller.update(['promote_page']);
                               },
-                              enableMultipleSelection: true,
-                            ),
-                          ).showModal(context);
-                        },
-                      ),
-                    ),
-                    SizedBox(height: Get.height * 0.025),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: PageDropButton(
-                        label: "Select Gender To Target",
-                        hint: 'Select Gender',
-                        padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
-                        onChanged: (val) {
-                          genderTextController.text = val;
-                        },
-                        value: 'Any Gender',
-                        items: ["Male","Female",'Any Gender'].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    SizedBox(height: Get.height * 0.025),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: PageInput(
-                        hint: 'Click to select promotion goals',
-                        label: 'Goals',
-                        validator: (val){
-                          if(val!.isEmpty){
-                            return 'Please select one or more goals';
-                          }
-                          return null;
-                        },
-                        isCompulsory: true,
-                        controller: selectedGoalsTextController,
-                        readOnly: true,
-                        onTap: (){
-                          DropDownState(
-                            DropDown(
-                              bottomSheetTitle: const Text(
-                                "Select Interest",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0,
-                                    color: AppColors.onBackground
-                                ),
-                              ),
-                              submitButtonChild: const Text(
-                                'Done',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              data: ["More Messages","More Likes and Comments","More Profile Visits","More Sales","More Website Visits"].map<SelectedListItem>((String value) {
-                                return SelectedListItem(name: value,isSelected: chosenGoals.contains(value));
+                              value: interval.first,
+                              items: interval.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
                               }).toList(),
-                              selectedItems: (List<dynamic> selectedList) {
-                                List<String> list = [];
-                                for(var item in selectedList) {
-                                  if(item is SelectedListItem) {
-                                    list.add(item.name);
-                                  }
-                                }
-                                list.sort();
-                                chosenGoals.clear();
-                                chosenGoals.addAll(list.reversed);
-                                selectedGoalsTextController.text = list.join(', ');
-                                controller.update(['promote_page']);
+                            ),
+                          ),
+                          SizedBox(height: Get.height * 0.025),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: PageDropButton(
+                              label: "Select Interval",
+                              hint: 'Select Interval',
+                              padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                              onChanged: (val) {
+                                reachTextController.text = val.toString();
                               },
-                              enableMultipleSelection: true,
+                              value: priceMap[intervalTextController.text]!.isNotEmpty ? priceMap[intervalTextController.text]!.first : null,
+                              items: priceMap[intervalTextController.text]!.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text("$value ${intervalTextController.text}"),
+                                );
+                              }).toList(),
                             ),
-                          ).showModal(context);
-                        },
-                      ),
-                    ),
-                    SizedBox(height: Get.height * 0.025),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: PageInput(
-                        hint: 'Click to select promotion interests',
-                        label: 'Select Interests',
-                        validator: (val){
-                          if(val!.isEmpty){
-                            return 'Please select one or more interests';
-                          }
-                          return null;
-                        },
-                        isCompulsory: true,
-                        controller: selectedInterestsTextController,
-                        readOnly: true,
-                        onTap: (){
-                          DropDownState(
-                            DropDown(
-                                bottomSheetTitle: const Text(
-                                  "Select Interest",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.0,
-                                      color: AppColors.onBackground
-                                  ),
-                                ),
-                                submitButtonChild: const Text(
-                                  'Done',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                data: uniqueInterestList.map<SelectedListItem>((String value) {
-                                  return SelectedListItem(name: value,isSelected: chosenInterestList.contains(value));
-                                }).toList(),
-                                selectedItems: (List<dynamic> selectedList) {
-                                  List<String> list = [];
-                                  for(var item in selectedList) {
-                                    if(item is SelectedListItem) {
-                                      list.add(item.name);
-                                    }
-                                  }
-                                  list.sort();
-                                  chosenInterestList.clear();
-                                  chosenInterestList.addAll(list.reversed);
-                                  selectedInterestsTextController.text = list.join(', ');
-                                  controller.update(['promote_page']);
-                                },
-                                enableMultipleSelection: true,
-
+                          ),
+                          SizedBox(height: Get.height * 0.025),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: PageInput(
+                              hint: '',
+                              label: 'Quantity',
+                              validator: (val){
+                                var value = int.tryParse(val.toString());
+                                if(value == null){
+                                  return 'Please enter a valid number';
+                                }
+                                if(val!.isEmpty){
+                                  return 'Please enter needed quantity';
+                                }else if(int.parse(val) > 100){
+                                  return 'Please enter a quantity less than 100';
+                                }else if(int.parse(val) < 1){
+                                  return 'Please enter a quantity greater than 0';
+                                }
+                                return null;
+                              },
+                              isCompulsory: true,
+                              controller: quantityTextController,
+                              readOnly: false,
+                              keyboardType: TextInputType.number,
                             ),
-                          ).showModal(context);
-                        },
+                          ),
+                          SizedBox(height: Get.height * 0.025),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 13),
+                            child: Text(
+                              "Select Age Range",
+                              style: AppTextStyle.bodyText2.copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFF828282),
+                              ),
+                            ),
+                          ),
+                          RangeSlider(
+                            values: currentRangeValues,
+                            max: 100,
+                            divisions: 100,
+                            labels: RangeLabels(
+                              currentRangeValues.start.round().toString(),
+                              currentRangeValues.end.round().toString(),
+                            ),
+                            onChanged: (RangeValues values) {
+                              currentRangeValues = values;
+                              controller.update(['promote_page']);
+                            },
+                          ),
+
+                          const SizedBox(height: 40),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: AppButton(
+                              title: 'Next',
+                              onPressed: () {
+                                if(formKey.currentState!.validate()){
+                                  pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                }
+                              },
+                              borderRadius: 10,
+                              fontColor: AppColors.background,
+                              bckgrndColor: AppColors.primary,
+                              width: double.infinity,
+                              fontSize: Get.textScaleFactor * 18,
+                              border: Border.all(color: AppColors.primary, width: 1),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                          const SizedBox(height: 5,),
+                        ],
                       ),
                     ),
-
-                    const SizedBox(height: 40),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: AppButton(
-                        title: 'Next',
-                        onPressed: () {
-
-                        },
-                        borderRadius: 10,
-                        fontColor: AppColors.background,
-                        bckgrndColor: AppColors.primary,
-                        width: double.infinity,
-                        fontSize: Get.textScaleFactor * 18,
-                        border: Border.all(color: AppColors.primary, width: 1),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                    const SizedBox(height: 5,),
-                  ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 10,),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            "Promotion Post Review",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: Get.textScaleFactor * 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            "Review your promotion post",
+                            style: TextStyle(
+                              color: Colors.black.withOpacity(0.5),
+                              fontSize: Get.textScaleFactor * 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(height: Get.height*0.04),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            "Overview",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: Get.textScaleFactor * 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                        OverViewWidget(
+                            title: "Price: ",
+                            subtitle: "NGN ${int.parse(reachTextController.text)*int.parse(quantityTextController.text)} over ${quantityTextController.text} day"
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            "Estimated reach of ${promotionPricingModelList.firstWhere((element) => element.interval == intervalTextController.text).totalReach} persons per day",
+                            style: TextStyle(
+                              color: AppColors.onBackground,
+                              fontSize: Get.textScaleFactor * 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.black.withOpacity(0.5),
+                          thickness: 1,
+                        ),
+                        SizedBox(height: Get.height*0.02),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            "Audience",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: Get.textScaleFactor * 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                        OverViewWidget(
+                            title: "Location: ",
+                            subtitle: selectedStatesTextController.text
+                        ),
+                        OverViewWidget(
+                            title: "Age Range: ",
+                            subtitle: "${currentRangeValues.start.round()} to ${currentRangeValues.end.round()} years"
+                        ),
+                        OverViewWidget(
+                            title: "Gender: ",
+                            subtitle: genderTextController.text
+                        ),
+                        Divider(
+                          color: Colors.black.withOpacity(0.5),
+                          thickness: 1,
+                        ),
+                        SizedBox(height: Get.height*0.02),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            "Promotion Goals",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: Get.textScaleFactor * 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                        OverViewWidget(
+                            title: "Goals: ",
+                            subtitle: selectedGoalsTextController.text
+                        ),
+
+                        SizedBox(height: Get.height*0.04),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: AppButton(
+                            title: 'Continue to Payment',
+                            onPressed: () {
+                              pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                            },
+                            borderRadius: 10,
+                            fontColor: AppColors.background,
+                            bckgrndColor: AppColors.primary,
+                            width: double.infinity,
+                            fontSize: Get.textScaleFactor * 18,
+                            border: Border.all(color: AppColors.primary, width: 1),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: 10,),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Text(
+                              "Payment Overview",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: Get.textScaleFactor * 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+
+                          SizedBox(height: Get.height*0.04),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Text(
+                              "Overview",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: Get.textScaleFactor * 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                          OverViewWidget(
+                              title: "Price: ",
+                              subtitle: "NGN ${int.parse(reachTextController.text)*int.parse(quantityTextController.text)}",
+                            width: Get.width*0.3,
+                          ),
+                          OverViewWidget(
+                              title: "Description: ",
+                              subtitle: "Sponsored Content",
+                            width: Get.width*0.3,
+                          ),
+                          OverViewWidget(
+                              title: "Transaction Fee: ",
+                              subtitle: "NGN 0.00",
+                            width: Get.width*0.3,
+                          ),
+
+                          SizedBox(height: Get.height*0.01),
+                          Divider(
+                            color: Colors.black.withOpacity(0.5),
+                            thickness: 1,
+                          ),
+                          SizedBox(height: Get.height*0.02),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Text(
+                              "Account Details",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: Get.textScaleFactor * 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                          SizedBox(height: Get.height*0.02),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                            child: PageInput(
+                              hint: 'Click to select account',
+                              label: 'Account To Debit',
+                              validator: (val){
+                                if(val!.isEmpty){
+                                  return 'Please select an account to debit';
+                                }else{
+                                  if(walletModel!.clrBalAmt!.toInt() < int.parse(reachTextController.text)*int.parse(quantityTextController.text)){
+                                    return 'Insufficient funds';
+                                  }
+                                }
+                                return null;
+                              },
+                              isCompulsory: true,
+                              controller: accountTextController,
+                              readOnly: true,
+                              onTap: (){
+                                Get.bottomSheet(WalletBottomSheet(
+                                  title: 'Select Account',
+                                  onTap: (val){
+                                    walletModel = val;
+                                    accountTextController.text = val.accountNo.toString() + ' - ' + "${val.acctCrncyCode} ${val.clrBalAmt}";
+                                  },
+                                ),isScrollControlled: true);
+                              },
+                            ),
+                          ),
+                          SizedBox(height: Get.height*0.02),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                            child: PageInput(
+                              hint: 'Enter account pin',
+                              label: 'PIN',
+                              validator: (val){
+                                if(val!.isEmpty){
+                                  return 'Please enter your account pin';
+                                }else{
+                                  if(val.length < 4){
+                                    return 'Invalid pin';
+                                  }
+
+                                  if(GetUtils.isNumericOnly(val) == false){
+                                    return 'Invalid pin';
+                                  }
+                                }
+                                return null;
+                              },
+                              isCompulsory: true,
+                              controller: pinTextController,
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+
+                          const SizedBox(height: 40),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: AppButton(
+                              title: 'Confirm Payment',
+                              onPressed: () {
+                                if(formKey.currentState!.validate()){
+
+                                }
+                              },
+                              borderRadius: 10,
+                              fontColor: AppColors.background,
+                              bckgrndColor: AppColors.primary,
+                              width: double.infinity,
+                              fontSize: Get.textScaleFactor * 18,
+                              border: Border.all(color: AppColors.primary, width: 1),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
         );
@@ -920,5 +1364,57 @@ class _PromotePostState extends State<PromotePost> {
                       ),
                     ),
                   );
+  }
+}
+
+class OverViewWidget extends StatelessWidget {
+  const OverViewWidget({
+    Key? key,
+    required this.subtitle,
+    required this.title,
+    this.width
+  }) : super(key: key);
+
+  final String title;
+  final String subtitle;
+  final double? width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: width ?? Get.width*0.2,
+            child: Text(
+              title,
+              style: TextStyle(
+                color: AppColors.primary,
+                fontSize: Get.textScaleFactor * 16,
+                fontWeight: FontWeight.normal,
+              ),
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+            ),
+          ),
+          SizedBox(
+            width: Get.width*0.6,
+            child: Text(
+              subtitle,
+              style: TextStyle(
+                color: AppColors.onBackground,
+                fontSize: Get.textScaleFactor * 16,
+                fontWeight: FontWeight.normal,
+              ),
+              softWrap: true,
+              textAlign: TextAlign.start,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

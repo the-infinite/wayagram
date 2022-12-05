@@ -17,6 +17,7 @@ import '../../controllers/home_controller.dart';
 import '../../data/model/CommentModel.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
+import '../../data/model/promotion_pricing_model.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_avatar.dart';
@@ -156,8 +157,33 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: AppButton(
                         title: 'Promote this Post',
-                        onPressed: () {
-                          Get.to(() => PromotePost(post: widget.post));
+                        onPressed: () async {
+                          //https://services.staging.wayagram.ng/wayagram-service/all-posts/get-promotion-pricing-configs?page=1&limit=50&sso_id=639
+                          var res = await  controller.getData("/wayagram-service/all-posts/get-promotion-pricing-configs?page=1&limit=50", true);
+                          if(Get.currentRoute == "/PostAnalytics"){
+                            var savedPosts = ReadWriteValue('wayagram_promotion_pricing_model', '', MyPref.box);
+                            if(res.isSuccessful || savedPosts.val.isNotEmpty){
+                              List<PromotionPricingModel> promotionPricingModelList = [];
+                              if(res.isSuccessful){
+                                promotionPricingModelList = PromotionPricingModel.listFromJson(res.data['data']);
+                                savedPosts.val = jsonEncode(res.data['data']);
+
+                                if(promotionPricingModelList.isEmpty){
+                                  AppOverlay.showErrorSnackBar(title : "Promotion Error",content: "No promotion plans available now, please check back later");
+                                }else{
+                                  Get.to(() => PromotePost(post: widget.post));
+                                }
+                              }else{
+                                if(savedPosts.val.isEmpty){
+                                  AppOverlay.showErrorSnackBar(title : "Promotion Error",content: "No promotion plans available now, please check back later");
+                                }else{
+                                  Get.to(() => PromotePost(post: widget.post));
+                                }
+                              }
+                            }else{
+                              AppOverlay.showErrorSnackBar(title : "Promotion Error",content: "Error getting promotion configuration");
+                            }
+                          }
                         },
                         borderRadius: 10,
                         fontColor: AppColors.primary,

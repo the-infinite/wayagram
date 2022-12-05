@@ -59,6 +59,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
     homeController.checkPermissionStatus();
     homeController.getAllUserData().then((value) => homeController.update());
 
+    subscribeToFirebaseNotification(homeController.profile.userId.toString(), homeController.profile.id.toString());
     setUpMessaging();
   }
 
@@ -74,9 +75,31 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
       sound: true,
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-
+      AppOverlay.showSuccessSnackBar(title: message.notification!.title.toString(),content: message.notification!.body!.toString());
     });
     chatXController.connectToSocket();
+  }
+
+  Future<void> subscribeToFirebaseNotification(String userID, String profileID) async {
+    String uniqueId = "";
+    String? token = await FirebaseMessaging.instance.getToken();
+    uniqueId = userID + profileID + token.toString() + DateTime.now().toString();
+    var body = {
+      "token": token,
+      "platform": Platform.isAndroid ? "android" : "ios",
+      "device_unique": uniqueId
+    };
+    if(MyPref.uniqueID.val.isNotEmpty){
+      var body = {
+        "device_token_id": MyPref.uniqueID.val,
+      };
+      await homeController.deleteData(body, "/wayagram-service/notification/delete-device-token");
+    }
+    var response = await homeController.userRepo.postData("https://services.staging.wayagram.ng/wayagram-service/notification/device-token-create?profile_id=$profileID&user_id=$userID",body);
+    if(response.isSuccessful) {
+      MyPref.uniqueID.val = uniqueId;
+      MyPref.fcmID.val = token.toString();
+    }
   }
 
   @override
