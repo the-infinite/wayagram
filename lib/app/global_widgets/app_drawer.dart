@@ -24,6 +24,7 @@ import '../modules/events/all_events.dart';
 import '../modules/groups_and_pages/groups_and_pages.dart';
 import '../modules/interests/add_interests.dart';
 import '../modules/profile/profile.dart';
+import '../modules/promotion/promotion_analytics.dart';
 import '../modules/settings/settings.dart';
 import '../modules/support/support.dart';
 import 'app_avatar.dart';
@@ -309,6 +310,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                   text: "Post Promotion Analytics",
                                   onPressed: () {
                                     controller.imagePaths.clear();
+                                    Get.back();
+                                    Get.to(() => const PromotionAnalytics());
                                   },
                                 ),
 

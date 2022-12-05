@@ -1254,6 +1254,7 @@ class _PromotePostState extends State<PromotePost> {
                             child: PageInput(
                               hint: 'Enter account pin',
                               label: 'PIN',
+                              obscureText: true,
                               validator: (val){
                                 if(val!.isEmpty){
                                   return 'Please enter your account pin';
@@ -1279,9 +1280,38 @@ class _PromotePostState extends State<PromotePost> {
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: AppButton(
                               title: 'Confirm Payment',
-                              onPressed: () {
+                              onPressed: () async {
                                 if(formKey.currentState!.validate()){
-
+                                  var gender = "any";
+                                  if(genderTextController.text == "Male"){
+                                    gender = "male";
+                                  }else if(genderTextController.text == "Female"){
+                                    gender = "female";
+                                  }
+                                  var body = {
+                                    "profile_id": fullProfile.id,
+                                    "promotion_pricing_id": promotionPricingModelList.firstWhere((element) => element.interval == intervalTextController.text).id.toString(),
+                                    "post_id": widget.post.id.toString(),
+                                    "qty": quantityTextController.text,
+                                    "age": promotionPricingModelList.firstWhere((element) => element.interval == intervalTextController.text).lengthOfDays.toString(),
+                                    "debitAccountNumber": walletModel!.accountNo.toString(),
+                                    "interests": chosenInterestList,
+                                    "age_range": [
+                                      currentRangeValues.start.toInt(),
+                                      currentRangeValues.end.toInt()
+                                    ],
+                                    "goals": chosenGoals,
+                                    "location": selectedGoalsTextController.text,
+                                    "gender": gender,
+                                  };
+                                  var res = await controller.postData(body, "wayagram-service/all-posts/promotion-create");
+                                  if(Get.currentRoute == "/PromotePost"){
+                                    if(res.isSuccessful){
+                                      Navigator.popUntil(Get.context!, (route) => Get.currentRoute == "/PostAnalytics");
+                                    }else{
+                                      AppOverlay.showErrorSnackBar(title:"Post Promotion",content: "Unable to promote post, please try again later");
+                                    }
+                                  }
                                 }
                               },
                               borderRadius: 10,
