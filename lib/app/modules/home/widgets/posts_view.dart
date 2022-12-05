@@ -31,6 +31,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../global_widgets/helpers/size.dart';
 import '../../../global_widgets/newsfeed_multiple_imageview.dart';
+import '../../donate/donate.dart';
 import '../../profile/other_profile.dart';
 import '../../profile/post_profile.dart';
 import '../../profile/profile.dart';
@@ -628,10 +629,12 @@ class _PostState extends State<Post> {
                       ),
                     ],
                   ),
-                  if(!isCurrentUserPost)
+                  if(!isCurrentUserPost && widget.showActions)
                     AppButton(
                     title: "Donate",
-                    onPressed: (){},
+                    onPressed: (){
+                      Get.to(()=> DonateScreen(post: widget.post));
+                    },
                     bckgrndColor: AppColors.primary,
                     fontColor: AppColors.background,
                     width: Get.width * 0.2,

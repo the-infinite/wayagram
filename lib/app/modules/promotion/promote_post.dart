@@ -1304,13 +1304,18 @@ class _PromotePostState extends State<PromotePost> {
                                     "location": selectedGoalsTextController.text,
                                     "gender": gender,
                                   };
-                                  var res = await controller.postData(body, "wayagram-service/all-posts/promotion-create");
-                                  if(Get.currentRoute == "/PromotePost"){
-                                    if(res.isSuccessful){
-                                      Navigator.popUntil(Get.context!, (route) => Get.currentRoute == "/PostAnalytics");
-                                    }else{
-                                      AppOverlay.showErrorSnackBar(title:"Post Promotion",content: "Unable to promote post, please try again later");
+                                  var validatePin = await controller.getData("/auth-service/api/v1/pin/validate-pin/${pinTextController.text}", false);
+                                  if(validatePin.isSuccessful){
+                                    var res = await controller.postData(body, "wayagram-service/all-posts/promotion-create");
+                                    if(Get.currentRoute == "/PromotePost"){
+                                      if(res.isSuccessful){
+                                        Navigator.popUntil(Get.context!, (route) => Get.currentRoute == "/PostAnalytics");
+                                      }else{
+                                        AppOverlay.showErrorSnackBar(title:"Post Promotion",content: "Unable to promote post, please try again later");
+                                      }
                                     }
+                                  }else{
+                                    AppOverlay.showErrorSnackBar(content: "Invalid pin");
                                   }
                                 }
                               },
