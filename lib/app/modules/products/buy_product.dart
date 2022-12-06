@@ -80,7 +80,7 @@ class _BuyProductState extends State<BuyProduct> {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id: "donate_page",builder: (controller) {
+      child: GetBuilder<HomeController>(id: "buy_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
@@ -190,7 +190,7 @@ class _BuyProductState extends State<BuyProduct> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: AppButton(
-                          title: 'Donate',
+                          title: 'Buy',
                           onPressed: () async {
                             if(formKey.currentState!.validate()){
                               var body = {

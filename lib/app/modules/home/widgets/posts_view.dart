@@ -32,6 +32,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import '../../../global_widgets/helpers/size.dart';
 import '../../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../donate/donate.dart';
+import '../../polls_payment/poll_payment.dart';
 import '../../profile/other_profile.dart';
 import '../../profile/post_profile.dart';
 import '../../profile/profile.dart';
@@ -201,8 +202,18 @@ class Post extends StatefulWidget{
 }
 
 class _PostState extends State<Post> {
+  List<String> votedPolls = [];
+  var totalPersonalVotes = 0;
   @override
   Widget build(BuildContext context) {
+    var homeController = widget.homeController;
+    var savedVotedPolls = ReadWriteValue('wayagram_saved_voted_polls', '', MyPref.box);
+    if(savedVotedPolls.val.isNotEmpty){
+      votedPolls = savedVotedPolls.val.split(',');
+    }
+    if(widget.post.originalOwner == null && widget.post.isRepost == true){
+      return const SizedBox.shrink();
+    }
     if(widget.post.kind == 'product'){
       return const SizedBox.shrink();
     }
@@ -242,19 +253,26 @@ class _PostState extends State<Post> {
     var pollEnded = false;
     if(endPollTime != null){
       if(endPollTime.isBefore(DateTime.now())){
-        pollEnded = true;
+        //pollEnded = true;
       }
     }
-    if(widget.post.isPoll == true && widget.post.poll!.pollOptions!.length >= 2){
+    if(widget.post.isPoll == true){
       for (var element in widget.post.poll!.pollOptions!) {
+        var pollVoteID = widget.post.id.toString()+element.id.toString();
+        var currentPollVoted = element.userVoted == true || votedPolls.contains(pollVoteID);
+        if(currentPollVoted){
+          totalPersonalVotes = totalPersonalVotes + 1;
+        }
         if(element.mediaUrl != null){
           pollImageUrls.add(element.mediaUrl.toString());
         }
       }
     }
     if(widget.userID!=null){
-      if(widget.post.profile!.userId != widget.fullProfile.userId){
-        return const SizedBox.shrink();
+      if(widget.post.profile != null){
+        if(widget.post.profile!.userId != widget.fullProfile.userId){
+          return const SizedBox.shrink();
+        }
       }
     }
     if(widget.post.profile == null) {
@@ -281,140 +299,141 @@ class _PostState extends State<Post> {
         amountRaised = donation.amountRaised!.toInt();
       }
     }
-    return Container(
-      margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-      decoration: widget.hasBorder ? decoration : null,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: (){
-                  if(widget.fullProfile.userId!=null){
-                    if(widget.post.profile!.userId == widget.fullProfile.userId) {
-                      Get.to(() => const Profile());
+    return GetBuilder<HomeController>(id: widget.post.id.toString(),builder: (controller) {
+      return Container(
+        margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+        decoration: widget.hasBorder ? decoration : null,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: (){
+                    if(widget.fullProfile.userId!=null){
+                      if(widget.post.profile!.userId == widget.fullProfile.userId) {
+                        Get.to(() => const Profile());
+                      }else{
+                        Get.to(() => const PostProfile(), arguments: widget.post);
+                      }
                     }else{
                       Get.to(() => const PostProfile(), arguments: widget.post);
                     }
-                  }else{
-                    Get.to(() => const PostProfile(), arguments: widget.post);
-                  }
-                },
-                child: SizedBox(
-                  width: Get.width * 0.13,
-                  height: Get.width * 0.13,
-                  child: IconButton(
-                    icon: AppAvatar(
-                      imgUrl: widget.post.profile!= null ?  widget.post.profile!.avatar.toString() : "",
-                      radius: 45,
+                  },
+                  child: SizedBox(
+                    width: Get.width * 0.13,
+                    height: Get.width * 0.13,
+                    child: IconButton(
+                      icon: AppAvatar(
+                        imgUrl: widget.post.profile!= null ?  widget.post.profile!.avatar.toString() : "",
+                        radius: 45,
+                      ),
+                      onPressed: null,
                     ),
-                    onPressed: null,
                   ),
                 ),
-              ),
-              InkWell(
-                onTap: (){
+                InkWell(
+                  onTap: (){
 
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.post.profile!.displayName.toString(),
-                      style: AppTextStyle.bodyText1.copyWith(
-                        color: Colors.black ,
-                        fontSize: Get.width * 0.04,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      "@${widget.post.profile!.username}",
-                      style: AppTextStyle.bodyText1.copyWith(
-                        color: Colors.grey,
-                        fontSize: Get.width * 0.035,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Wrap(
-                  alignment: WrapAlignment.end,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    Text(
-                      timeago.format(time),
-                      style: AppTextStyle.bodyText1.copyWith(
-                        color: Colors.grey,
-                        fontSize: Get.width * 0.03,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    if(widget.showActions)
-                      PopupMenuButton(
-                        color: Colors.white,
-                        icon: const Icon(
-                          FeatherIcons.moreHorizontal,
-                          color: Colors.black,
-                          size: 20,
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.post.profile!.displayName.toString(),
+                        style: AppTextStyle.bodyText1.copyWith(
+                          color: Colors.black ,
+                          fontSize: Get.width * 0.04,
+                          fontWeight: FontWeight.w600,
                         ),
-                        onSelected: (value) {
-                          if (value == 0) {
-                            var body = {
-                              "postId": widget.post.id,
-                            };
-                            widget.homeController.postData(body, "/wayagram-service/all-posts/create-bookmark?profileId=${widget.fullProfile.id}",updatePages: false).then((value){
-                              if(value.isSuccessful){
-                                AppOverlay.showSuccessSnackBar(title: "Bookmark",content: "Post bookmarked successfully");
-                              }else{
-                                AppOverlay.showErrorSnackBar(title: "Bookmark",content: value.message != null ? value.message.toString() : "Something went wrong");
-                              }
-                            });
-                          } else if (value == 1) {
-                            Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
-                          } else if (value == 2) {
-                            //Get.to(() => const Followers());
-                          }else if (value == 3) {
-                            var body = {
-                              "post_id": widget.post.id,
-                            };
-                            widget.homeController.deleteData(body, "/wayagram-service/all-posts/delete?profile_id=${widget.fullProfile.id}",updatePages: true).then((value){
-                              if(value.isSuccessful){
-                                AppOverlay.showSuccessSnackBar(title: "Delete",content: "Post deleted successfully");
-                              }else{
-                                AppOverlay.showErrorSnackBar(title: "Delete",content: value.message != null ? value.message.toString() : "Something went wrong");
-                              }
-                            });
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            value: 0,
-                            child: Text(
-                              Get.currentRoute == "/BookmarksPage" ? "Remove" : "Bookmark",
-                              style: AppTextStyle.bodyText1.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              ),
+                      ),
+                      Text(
+                        "@${widget.post.profile!.username}",
+                        style: AppTextStyle.bodyText1.copyWith(
+                          color: Colors.grey,
+                          fontSize: Get.width * 0.035,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Wrap(
+                    alignment: WrapAlignment.end,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                        timeago.format(time),
+                        style: AppTextStyle.bodyText1.copyWith(
+                          color: Colors.grey,
+                          fontSize: Get.width * 0.03,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      if(widget.showActions)
+                        PopupMenuButton(
+                            color: Colors.white,
+                            icon: const Icon(
+                              FeatherIcons.moreHorizontal,
+                              color: Colors.black,
+                              size: 20,
                             ),
-                          ),
-                          PopupMenuItem(
-                            value: 1,
-                            child: Text(
-                              "Share",
-                              style: AppTextStyle.bodyText1.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
+                            onSelected: (value) {
+                              if (value == 0) {
+                                var body = {
+                                  "postId": widget.post.id,
+                                };
+                                widget.homeController.postData(body, "/wayagram-service/all-posts/create-bookmark?profileId=${widget.fullProfile.id}",updatePages: false).then((value){
+                                  if(value.isSuccessful){
+                                    AppOverlay.showSuccessSnackBar(title: "Bookmark",content: "Post bookmarked successfully");
+                                  }else{
+                                    AppOverlay.showErrorSnackBar(title: "Bookmark",content: value.message != null ? value.message.toString() : "Something went wrong");
+                                  }
+                                });
+                              } else if (value == 1) {
+                                Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
+                              } else if (value == 2) {
+                                //Get.to(() => const Followers());
+                              }else if (value == 3) {
+                                var body = {
+                                  "post_id": widget.post.id,
+                                };
+                                widget.homeController.deleteData(body, "/wayagram-service/all-posts/delete?profile_id=${widget.fullProfile.id}",updatePages: true).then((value){
+                                  if(value.isSuccessful){
+                                    AppOverlay.showSuccessSnackBar(title: "Delete",content: "Post deleted successfully");
+                                  }else{
+                                    AppOverlay.showErrorSnackBar(title: "Delete",content: value.message != null ? value.message.toString() : "Something went wrong");
+                                  }
+                                });
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 0,
+                                child: Text(
+                                  Get.currentRoute == "/BookmarksPage" ? "Remove" : "Bookmark",
+                                  style: AppTextStyle.bodyText1.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          /*if(isCurrentUserPost)
+                              PopupMenuItem(
+                                value: 1,
+                                child: Text(
+                                  "Share",
+                                  style: AppTextStyle.bodyText1.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              /*if(isCurrentUserPost)
                             PopupMenuItem(
                               value: 2,
                               child: Text(
@@ -425,143 +444,247 @@ class _PostState extends State<Post> {
                                 ),
                               ),
                             ),*/
-                          if(isCurrentUserPost)
-                            PopupMenuItem(
-                              value: 3,
-                              child: Text(
-                                "Delete",
-                                style: AppTextStyle.bodyText1.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
+                              if(isCurrentUserPost)
+                                PopupMenuItem(
+                                  value: 3,
+                                  child: Text(
+                                    "Delete",
+                                    style: AppTextStyle.bodyText1.copyWith(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                        ]),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Divider(
-            height: 1.5,
-            thickness: 1.5,
-            color: widget.showActions ? const Color(0xffF2F2F2) : Colors.transparent,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          if(donation != null)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10,bottom: 0),
-                    child: HashTagText(
-                      text: donation.title.toString(),
-                      decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                        color: Colors.blue,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      basicStyle: AppTextStyle.bodyText1.copyWith(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      onTap: (text) {
-                        widget.homeController.defaultSearchValue = text;
-                        Get.to(() => const Search());
-                      },
-                      decorateAtSign: true,
-                    )
+                            ]),
+                    ],
+                  ),
                 ),
               ],
             ),
-          Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
-              child: HashTagText(
-                text: widget.post.description.toString(),
-                decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                  color: Colors.blue,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                ),
-                basicStyle: AppTextStyle.bodyText1.copyWith(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                ),
-                onTap: (text) {
-                  widget.homeController.defaultSearchValue = text;
-                  Get.to(() => const Search());
-                },
-                decorateAtSign: true,
-              )
-          ),
-          if(imageUrls.isNotEmpty)
-            SizedBox(
-              height: Get.height * 0.18,
-              child: NewsfeedMultipleImageView(
-                imageUrls: imageUrls,
-                marginLeft: 10.0,
-                marginRight: 10.0,
-                marginBottom: 0,
-                marginTop: 0,
-              ),
+            Divider(
+              height: 1.5,
+              thickness: 1.5,
+              color: widget.showActions ? const Color(0xffF2F2F2) : Colors.transparent,
             ),
-          if(pollImageUrls.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  constraints: BoxConstraints(maxHeight: Get.height * 0.20),
-                  child: ListView.builder(
-                    itemCount: pollImageUrls.length,
-                    shrinkWrap: false,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, i) {
-                      return Container(
-                        margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
-                        padding: const EdgeInsets.all(0),
-                        constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.grey.withOpacity(.5),
+            const SizedBox(
+              height: 10,
+            ),
+            if(donation != null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10,bottom: 0),
+                      child: HashTagText(
+                        text: donation.title.toString(),
+                        decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                          color: Colors.blue,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            ClipRRect(
+                        basicStyle: AppTextStyle.bodyText1.copyWith(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        onTap: (text) {
+                          widget.homeController.defaultSearchValue = text;
+                          Get.to(() => const Search());
+                        },
+                        decorateAtSign: true,
+                      )
+                  ),
+                ],
+              ),
+            Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
+                child: HashTagText(
+                  text: widget.post.description.toString(),
+                  decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                    color: Colors.blue,
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  basicStyle: AppTextStyle.bodyText1.copyWith(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  onTap: (text) {
+                    widget.homeController.defaultSearchValue = text;
+                    Get.to(() => const Search());
+                  },
+                  decorateAtSign: true,
+                )
+            ),
+            if(imageUrls.isNotEmpty)
+              SizedBox(
+                height: Get.height * 0.18,
+                child: NewsfeedMultipleImageView(
+                  imageUrls: imageUrls,
+                  marginLeft: 10.0,
+                  marginRight: 10.0,
+                  marginBottom: 0,
+                  marginTop: 0,
+                ),
+              ),
+            if(pollImageUrls.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                      constraints: BoxConstraints(maxHeight: Get.height * 0.20),
+                      child: ListView.builder(
+                        itemCount: pollImageUrls.length,
+                        shrinkWrap: false,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, i) {
+                          return Container(
+                            margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
+                            padding: const EdgeInsets.all(0),
+                            constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              child: CachedNetworkImage(
-                                imageUrl: pollImageUrls[i],
-                                fit: BoxFit.cover,
-                                errorWidget: (context, url, error) {
-                                  return const Icon(
-                                    IconlyLight.profile,
-                                    color: Colors.black,
-                                    size: 25,
-                                  );
-                                },
-                                width: Get.width * 0.3,
-                                height: Get.height * 0.20,
+                              color: Colors.grey.withOpacity(.5),
+                            ),
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: CachedNetworkImage(
+                                    imageUrl: pollImageUrls[i],
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) {
+                                      return const Icon(
+                                        IconlyLight.profile,
+                                        color: Colors.black,
+                                        size: 25,
+                                      );
+                                    },
+                                    width: Get.width * 0.3,
+                                    height: Get.height * 0.20,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: BorderedText(
+                                    strokeWidth: 2.0,
+                                    child: Text(
+                                      (i+1).toString(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: Get.width * 0.04,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )),
+                ),
+              ),
+            if(widget.post.isPoll == true)
+              Padding(
+                padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: ListView.builder(
+                    itemCount: widget.post.poll!.pollOptions!.length,
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(0),
+                    scrollDirection: Axis.vertical,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, i) {
+                      var allowedVotes = widget.post.poll!.voteLimit!.toInt();
+                      var pollVoteID = widget.post.id.toString()+widget.post.poll!.pollOptions![i].id.toString();
+                      var currentPollVoted = widget.post.poll!.pollOptions![i].userVoted == true || votedPolls.contains(pollVoteID);
+                      return Padding(
+                        padding: EdgeInsets.only(top: i==0 ? 0:10, bottom: 0, left: 0,right: 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Radio(
+                              value: widget.post.poll!.pollOptions![i].option.toString(),
+                              groupValue: currentPollVoted ? widget.post.poll!.pollOptions![i].option.toString() : null,
+                              onChanged: (String? value) {
+                                if(!pollEnded){
+                                  var price = widget.post.poll!.amount!.toInt();
+                                  if(price > 0){
+                                    var postToUse = widget.post;
+                                    postToUse.poll!.pollOptions![i].userVoted = true;
+                                    Get.to(()=> PollPaymentScreen(post: postToUse),arguments: widget.post.poll!.pollOptions![i].id.toString());
+                                  }else{
+                                    if(!currentPollVoted && totalPersonalVotes <= allowedVotes){
+                                      votedPolls.add(pollVoteID);
+                                      savedVotedPolls.val = votedPolls.join(',');
+                                      setState(() {
+
+                                      });
+                                      var body = {
+                                        "profile_id": widget.fullProfile.id.toString(),
+                                        "poll_option_id": widget.post.poll!.pollOptions![i].id.toString(),
+                                        "millisecCreatedAt": 0,
+                                      };
+                                      homeController.postData(body, "/wayagram-service/all-posts/vote").then((value){
+                                        if(value.isSuccessful){
+                                          controller.update([widget.post.id.toString()]);
+                                          AppOverlay.showSuccessSnackBar(content: "Poll voted successfully");
+                                        }else{
+                                          votedPolls.remove(pollVoteID);
+                                          if(votedPolls.isEmpty){
+                                            savedVotedPolls.val = "";
+                                          }else{
+                                            savedVotedPolls.val = votedPolls.join(',');
+                                          }
+                                          setState(() {
+
+                                          });
+                                          AppOverlay.showErrorSnackBar(content: "Unable to vote, please try again later");
+                                        }
+                                      });
+                                    }
+                                  }
+                                }
+                              },
+                              activeColor: AppColors.primary,
+                              fillColor: pollEnded ? MaterialStateProperty.all(currentPollVoted ? AppColors.primary:Colors.grey) :MaterialStateProperty.all(!(!currentPollVoted && totalPersonalVotes >= allowedVotes) ? AppColors.primary : Colors.grey),
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              visualDensity: const VisualDensity(
+                                horizontal: VisualDensity.minimumDensity,
+                                vertical: VisualDensity.minimumDensity,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: BorderedText(
-                                strokeWidth: 2.0,
-                                child: Text(
-                                  (i+1).toString(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: Get.width * 0.04,
-                                    fontWeight: FontWeight.normal,
+                            const SizedBox(width: 10,),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                height: Get.height * 0.045,
+                                margin: const EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: AppColors.onBackground,width: 1),
+                                ),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    widget.post.poll!.pollOptions![i].option.toString(),
+                                    style: TextStyle(
+                                      color: AppColors.onBackground,
+                                      fontSize: Get.width * 0.035,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -569,10 +692,91 @@ class _PostState extends State<Post> {
                         ),
                       );
                     },
-                  )),
+                  ),
+                ),
               ),
-            ),
-          if(widget.post.isPoll == true && widget.post.poll!.pollOptions!.length >= 2)
+            if(widget.post.isPoll == true)
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10,top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if(!isCurrentUserPost)
+                      Row(
+                        children: [
+                          Text(
+                            "N${widget.post.poll!.amount!.toInt()} per vote",
+                            style: const TextStyle(
+                              color: AppColors.onBackground,
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+
+                          const Text(
+                            " - ",
+                            style: TextStyle(
+                              color: AppColors.onBackground,
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+
+                          Text(
+                            "${widget.post.poll!.voteLimit!.toInt()} votes allowed",
+                            style: const TextStyle(
+                              color: AppColors.onBackground,
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+
+                          const Text(
+                            " - ",
+                            style: TextStyle(
+                              color: AppColors.onBackground,
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+
+                          Text(
+                            "${widget.post.poll!.totalVotesCountPoll!.toInt()} voted",
+                            style: const TextStyle(
+                              color: AppColors.onBackground,
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    if(isCurrentUserPost && widget.post.poll!.showResult != true)
+                      AppButton(
+                        title: "View Results",
+                        onPressed: (){
+
+                        },
+                        bckgrndColor: AppColors.primary,
+                        fontColor: AppColors.background,
+                        width: Get.width * 0.25,
+                        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                      ),
+                    if(!isCurrentUserPost && widget.post.poll!.showResult == true)
+                      AppButton(
+                        title: "View Results",
+                        onPressed: (){
+
+                        },
+                        bckgrndColor: AppColors.primary,
+                        fontColor: AppColors.background,
+                        width: Get.width * 0.25,
+                        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                      ),
+                  ],
+                ),
+              ),
+            /*if(widget.post.isPoll == true && widget.post.poll!.pollOptions!.length >= 2)
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: FlutterPolls(
@@ -595,32 +799,104 @@ class _PostState extends State<Post> {
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
                 )),
-                pollEnded: pollEnded,
+                //pollEnded: pollEnded,
+                pollEnded: false,
               ),
-            ),
-          if(widget.post.isRepost == true)
-            InnerPost(outerPost: widget.post,homeController: widget.homeController),
-          if(donation != null)
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10,top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+            ),*/
+            if(widget.post.isRepost == true)
+              InnerPost(outerPost: widget.post,homeController: widget.homeController),
+            if(donation != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10,top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if(!isCurrentUserPost)
+                      Row(
+                        children: [
+                          //tag icon
+                          const Icon(
+                            Icons.money_rounded,
+                            color: AppColors.primary,
+                            size: 20,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "₦${donation.estimatedAmount}",
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    if(!isCurrentUserPost && widget.showActions)
+                      AppButton(
+                        title: "Donate",
+                        onPressed: (){
+                          Get.to(()=> DonateScreen(post: widget.post));
+                        },
+                        bckgrndColor: AppColors.primary,
+                        fontColor: AppColors.background,
+                        width: Get.width * 0.2,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                    if(isCurrentUserPost)
+                      Text(
+                        "₦$amountRaised raised of ₦${donation.estimatedAmount}",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: Get.textScaleFactor * 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            if(donation != null && isCurrentUserPost)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if(!isCurrentUserPost)
-                    Row(
+                  Padding(
+                    padding: const EdgeInsets.only(left: 11, right: 11,top: 0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        backgroundColor: AppColors.primary.withOpacity(0.2),
+                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                        value: amountRaised / donation.estimatedAmount!,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(
+              height: 10,
+            ),
+            if(widget.showActions)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  //Comment
+                  Row(
                     children: [
-                      //tag icon
+                      const SizedBox(
+                        width: 10,
+                      ),
                       const Icon(
-                        Icons.money_rounded,
-                        color: AppColors.primary,
+                        FeatherIcons.messageCircle,
+                        color: Colors.grey,
                         size: 20,
                       ),
                       const SizedBox(
-                        width: 5,
+                        width: 2,
                       ),
                       Text(
-                        "₦${donation.estimatedAmount}",
+                        widget.post.commentCount.toString(),
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -629,234 +905,164 @@ class _PostState extends State<Post> {
                       ),
                     ],
                   ),
-                  if(!isCurrentUserPost && widget.showActions)
-                    AppButton(
-                    title: "Donate",
-                    onPressed: (){
-                      Get.to(()=> DonateScreen(post: widget.post));
-                    },
-                    bckgrndColor: AppColors.primary,
-                    fontColor: AppColors.background,
-                    width: Get.width * 0.2,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  if(isCurrentUserPost)
-                    Text(
-                      "₦$amountRaised raised of ₦${donation.estimatedAmount}",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: Get.textScaleFactor * 16,
-                        fontWeight: FontWeight.normal,
+                  //Heart
+                  Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
                       ),
-                    ),
-                ],
-              ),
-            ),
-          if(donation != null && isCurrentUserPost)
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 11, right: 11,top: 0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: LinearProgressIndicator(
-                      backgroundColor: AppColors.primary.withOpacity(0.2),
-                      valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
-                      value: amountRaised / donation.estimatedAmount!,
-                    ),
+                      if(widget.post.isLiked == true)
+                        InkWell(
+                          onTap: () async {
+                            var formerCount = widget.post.likeCount;
+                            var body = {
+                              "post_id": widget.post.id,
+                              "profile_id": widget.fullProfile.id,
+                              "type": "user",
+                            };
+                            var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/unlike-post",updatePages: false);
+                            widget.post.isLiked = false;
+                            widget.post.likeCount = widget.post.likeCount! - 1;
+                            setState(() {
+
+                            });
+                            if(response.isSuccessful){
+                              widget.homeController.getPosts.then((value) {
+                                //widget.homeController.update(["home_tab"]);
+                              });
+                            }else{
+                              widget.post.isLiked = false;
+                              widget.post.likeCount = formerCount;
+                              setState(() {
+
+                              });
+                              AppOverlay.showErrorSnackBar(content: "Unable to un-like post, please try again later");
+                            }
+                          },
+                          child: const Icon(
+                            Icons.favorite,
+                            color: AppColors.primary,
+                            size: 20,
+                          ),
+                        ),
+                      if(widget.post.isLiked == false || widget.post.isLiked == null)
+                        InkWell(
+                          onTap: () async {
+                            var formerCount = widget.post.likeCount;
+                            var body = {
+                              "post_id": widget.post.id,
+                              "profile_id": widget.fullProfile.id,
+                              "type": "user",
+                            };
+                            var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/like-post",updatePages: false);
+                            widget.post.isLiked = true;
+                            widget.post.likeCount = widget.post.likeCount! + 1;
+                            setState(() {
+
+                            });
+                            if(response.isSuccessful){
+                              widget.homeController.getPosts.then((value) {
+                                //widget.homeController.update(["home_tab"]);
+                              });
+                            }else{
+                              widget.post.isLiked = true;
+                              widget.post.likeCount = formerCount;
+                              setState(() {
+
+                              });
+                              AppOverlay.showErrorSnackBar(content: "Unable to like post, please try again later");
+                            }
+                          },
+                          child: const Icon(
+                            FeatherIcons.heart,
+                            color: Colors.grey,
+                            size: 20,
+                          ),
+                        ),
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      Text(
+                        widget.post.likeCount.toString().split(".")[0],
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          const SizedBox(
-            height: 10,
-          ),
-          if(widget.showActions)
-            Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              //Comment
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Icon(
-                    FeatherIcons.messageCircle,
-                    color: Colors.grey,
-                    size: 20,
-                  ),
-                  const SizedBox(
-                    width: 2,
-                  ),
-                  Text(
-                    widget.post.commentCount.toString(),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-              //Heart
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  if(widget.post.isLiked == true)
+                  //Repost
+                  if(donation == null)
                     InkWell(
-                      onTap: () async {
-                        var formerCount = widget.post.likeCount;
-                        var body = {
-                          "post_id": widget.post.id,
-                          "profile_id": widget.fullProfile.id,
-                          "type": "user",
-                        };
-                        var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/unlike-post",updatePages: false);
-                        widget.post.isLiked = false;
-                        widget.post.likeCount = widget.post.likeCount! - 1;
-                        setState(() {
-
-                        });
-                        if(response.isSuccessful){
-                          widget.homeController.getPosts.then((value) {
-                            //widget.homeController.update(["home_tab"]);
-                          });
-                        }else{
-                          widget.post.isLiked = false;
-                          widget.post.likeCount = formerCount;
-                          setState(() {
-
-                          });
-                          AppOverlay.showErrorSnackBar(content: "Unable to un-like post, please try again later");
-                        }
+                      onTap: (){
+                        Get.bottomSheet(RepostBottomSheet(post: widget.post));
                       },
-                      child: const Icon(
-                        Icons.favorite,
-                        color: AppColors.primary,
-                        size: 20,
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          if(widget.post.isRepost == true)
+                            const Icon(
+                              FeatherIcons.repeat,
+                              color: AppColors.primary,
+                              size: 20,
+                            ),
+                          if(widget.post.isRepost == false || widget.post.isRepost == null)
+                            const Icon(
+                              FeatherIcons.repeat,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            widget.post.repostCount.toString(),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  if(widget.post.isLiked == false || widget.post.isLiked == null)
-                    InkWell(
-                      onTap: () async {
-                        var formerCount = widget.post.likeCount;
-                        var body = {
-                          "post_id": widget.post.id,
-                          "profile_id": widget.fullProfile.id,
-                          "type": "user",
-                        };
-                        var response = await widget.homeController.postData(body, "/wayagram-service/all-posts/like-post",updatePages: false);
-                        widget.post.isLiked = true;
-                        widget.post.likeCount = widget.post.likeCount! + 1;
-                        setState(() {
-
-                        });
-                        if(response.isSuccessful){
-                          widget.homeController.getPosts.then((value) {
-                            //widget.homeController.update(["home_tab"]);
-                          });
-                        }else{
-                          widget.post.isLiked = true;
-                          widget.post.likeCount = formerCount;
-                          setState(() {
-
-                          });
-                          AppOverlay.showErrorSnackBar(content: "Unable to like post, please try again later");
-                        }
-                      },
-                      child: const Icon(
-                        FeatherIcons.heart,
-                        color: Colors.grey,
-                        size: 20,
-                      ),
-                    ),
-                  const SizedBox(
-                    width: 2,
+                  SizedBox(
+                    width: donation == null ? 60 : Get.width * 0.5,
                   ),
-                  Text(
-                    widget.post.likeCount.toString().split(".")[0],
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                    ),
+                  //Analytics
+                  Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      InkWell(
+                        onTap: isCurrentUserPost ? (){
+                          Get.to(() => PostAnalytics(post: widget.post));
+                        } : null,
+                        child: Icon(
+                          Icons.bar_chart,
+                          color: isCurrentUserPost ? Colors.grey : Colors.white.withOpacity(0.8),
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
                   ),
                 ],
               ),
-              //Repost
-              if(donation == null)
-                InkWell(
-                onTap: (){
-                  Get.bottomSheet(RepostBottomSheet(post: widget.post));
-                },
-                child: Row(
-                  children: [
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    if(widget.post.isRepost == true)
-                      const Icon(
-                        FeatherIcons.repeat,
-                        color: AppColors.primary,
-                        size: 20,
-                      ),
-                    if(widget.post.isRepost == false || widget.post.isRepost == null)
-                      const Icon(
-                        FeatherIcons.repeat,
-                        color: Colors.grey,
-                        size: 20,
-                      ),
-                    const SizedBox(
-                      width: 2,
-                    ),
-                    Text(
-                      widget.post.repostCount.toString(),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
+            if(widget.showActions)
+              const SizedBox(
+                height: 10,
               ),
-              SizedBox(
-                width: donation == null ? 60 : Get.width * 0.5,
-              ),
-              //Analytics
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  InkWell(
-                    onTap: isCurrentUserPost ? (){
-                      Get.to(() => PostAnalytics(post: widget.post));
-                    } : null,
-                    child: Icon(
-                      Icons.bar_chart,
-                      color: isCurrentUserPost ? Colors.grey : Colors.white.withOpacity(0.8),
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          if(widget.showActions)
-            const SizedBox(
-            height: 10,
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 
