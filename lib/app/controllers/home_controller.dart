@@ -31,7 +31,7 @@ import '../modules/home/tabs/home_tab.dart';
 import '../modules/home/tabs/notifications_tab.dart';
 import '../repository/user_repo.dart';
 
-class HomeController extends GetxController {
+class HomeControllerWayagram extends GetxController {
   final UserRepository userRepo;
 
   var defaultSearchValue = "";
@@ -49,7 +49,7 @@ class HomeController extends GetxController {
 
   String getCommentID = "";
 
-  HomeController(this.userRepo);
+  HomeControllerWayagram(this.userRepo);
 
   AllPostsEntity? postToQuote;
   GroupModelEntity? groupToPost;

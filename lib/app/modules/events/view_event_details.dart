@@ -57,7 +57,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
       attendeeCount = widget.event.eventParticipants!.length;
     }
 
-    return  GetBuilder<HomeController>(
+    return  GetBuilder<HomeControllerWayagram>(
       builder: (controller){
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 

@@ -1,6 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:wayagram/app/data/providers/my_pref.dart';
 import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/app/modules/sign_up/sign_up.dart';
@@ -8,19 +11,42 @@ import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
+import '../../../firebase_options.dart';
 import '../../bindings/wayagram_binding.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 
-class Multiplexor extends StatelessWidget {
+class Multiplexor extends StatefulWidget {
   const Multiplexor({Key? key,this.anotherApp = false}) : super(key: key);
 
   static const route = '/multiplexor';
   final bool anotherApp;
 
   @override
+  State<Multiplexor> createState() => _MultiplexorState();
+}
+
+class _MultiplexorState extends State<Multiplexor> {
+
+  @override
+  void initState() {
+    super.initState();
+    if(widget.anotherApp){
+      initFirebase();
+    }
+  }
+
+  Future<void> initFirebase() async {
+    await GetStorage.init('MyPref');
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    MyPref.anotherApp.val = anotherApp;
+    MyPref.anotherApp.val = widget.anotherApp;
     return Scaffold(
       body: Container(
         color: AppColors.background,
@@ -93,4 +119,8 @@ class Multiplexor extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+
 }

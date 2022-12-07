@@ -19,7 +19,7 @@ import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart'
 import '../profile/create_pin.dart';
 import '../profile/update_profile.dart';
 
-class EnterOTP extends GetView<AuthController> {
+class EnterOTP extends GetView<AuthControllerWayagram> {
   const EnterOTP({Key? key}) : super(key: key);
 
   static const route = '/verifyOTP';

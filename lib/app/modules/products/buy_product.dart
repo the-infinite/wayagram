@@ -80,7 +80,7 @@ class _BuyProductState extends State<BuyProduct> {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id: "buy_page",builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(id: "buy_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(

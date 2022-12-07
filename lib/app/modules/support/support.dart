@@ -23,14 +23,14 @@ import '../../global_widgets/app_avatar.dart';
 import '../profile/profile.dart';
 import '../profile/update_profile.dart';
 
-class Support extends GetView<HomeController>{
+class Support extends GetView<HomeControllerWayagram>{
   const Support({Key? key}) : super(key: key);
 
   static const route = '/support';
 
   @override
   Widget build(BuildContext context) {
-    return  GetBuilder<HomeController>(
+    return  GetBuilder<HomeControllerWayagram>(
       id: 'support',
       builder: (controller){
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));

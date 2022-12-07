@@ -23,7 +23,7 @@ class ChatsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return GetBuilder<ChatController>(id:'chats_overview',builder: (chatController) {
+    return GetBuilder<ChatControllerWayagram>(id:'chats_overview',builder: (chatController) {
       List<ChatOverview> chatOverview = [];
       if(chatController.chatListOverView!=null){
         if(chatController.chatListOverView!.chatOverview!=null){
@@ -31,7 +31,7 @@ class ChatsTab extends StatelessWidget {
           chatOverview = chatController.chatListOverView!.chatOverview!;
         }
       }
-      return GetBuilder<HomeController>(builder: (controller) {
+      return GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return SizedBox(
           width: Get.width,
           height: Get.height*0.78,

@@ -88,7 +88,7 @@ class _PollPaymentScreenState extends State<PollPaymentScreen> {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id: "poll_payment_page",builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(id: "poll_payment_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(

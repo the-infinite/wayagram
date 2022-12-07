@@ -81,7 +81,7 @@ class EditGroup extends StatelessWidget {
     var publicController = TextEditingController(text: editInfo.isPublic == true ? 'Public' : 'Private');
     var muteController = TextEditingController(text: editInfo.mute == true ? 'UnMute' : 'Mute');
 
-    return  GetBuilder<HomeController>(
+    return  GetBuilder<HomeControllerWayagram>(
         builder: (controller) {
           List<PageCategoriesModel> categories = [];
           if(MyPref.groupCategories.val.isNotEmpty){

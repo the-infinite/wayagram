@@ -90,7 +90,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(
+      child: GetBuilder<HomeControllerWayagram>(
           id: 'other_profile_page',
           builder: (controller) {
             var followers = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));

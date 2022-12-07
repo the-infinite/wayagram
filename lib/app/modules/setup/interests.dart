@@ -558,7 +558,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
       '🤷',
       '👍'
     ];*/
-    return  GetBuilder<AuthController>(
+    return  GetBuilder<AuthControllerWayagram>(
       id: 'interests',
       builder: (controller){
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));

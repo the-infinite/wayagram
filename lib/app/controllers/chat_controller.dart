@@ -33,9 +33,9 @@ import '../modules/home/tabs/home_tab.dart';
 import '../modules/home/tabs/notifications_tab.dart';
 import '../repository/user_repo.dart';
 
-class ChatController extends GetxController {
+class ChatControllerWayagram extends GetxController {
   final UserRepository userRepo;
-  ChatController(this.userRepo);
+  ChatControllerWayagram(this.userRepo);
 
   ChatListOverView? chatListOverView;
   Map<String,PreviousChatModel> previousChatMap = {};

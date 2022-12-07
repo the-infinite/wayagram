@@ -18,7 +18,7 @@ import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
-class UpdateProfile extends GetView<HomeController> {
+class UpdateProfile extends GetView<HomeControllerWayagram> {
   const UpdateProfile({Key? key}) : super(key: key);
 
   static const route = '/updateProfile';
@@ -34,7 +34,7 @@ class UpdateProfile extends GetView<HomeController> {
 
     var private = fullProfile.notPublic;
 
-    return  GetBuilder<HomeController>(
+    return  GetBuilder<HomeControllerWayagram>(
         builder: (controller) {
         return Scaffold(
           appBar: AppBar(

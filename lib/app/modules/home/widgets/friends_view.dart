@@ -96,7 +96,7 @@ class _FriendsViewState extends State<FriendsView> {
                 isFollowing = following.following!.any((element) => element.username == person.username);
               }
 
-              return GetBuilder<HomeController>(
+              return GetBuilder<HomeControllerWayagram>(
                   builder: (controller) {
                     return InkWell(
                       onTap: (){

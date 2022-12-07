@@ -39,7 +39,7 @@ class PaymentSettings extends StatelessWidget {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(

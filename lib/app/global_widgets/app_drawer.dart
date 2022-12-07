@@ -40,7 +40,7 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawerState extends State<AppDrawer> {
-  var homeController = Get.find<HomeController>();
+  var homeController = Get.find<HomeControllerWayagram>();
 
   @override
   void initState() {
@@ -84,7 +84,7 @@ class _AppDrawerState extends State<AppDrawer> {
       following = follow.following!.length;
     }
 
-    var controller = Get.find<HomeController>();
+    var controller = Get.find<HomeControllerWayagram>();
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
             statusBarColor: AppColors.background,
@@ -93,7 +93,7 @@ class _AppDrawerState extends State<AppDrawer> {
             systemNavigationBarColor: AppColors.background,
             systemNavigationBarIconBrightness: Brightness.dark
         ),
-        child: GetBuilder<HomeController>(
+        child: GetBuilder<HomeControllerWayagram>(
             builder: (controller) {
               var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 

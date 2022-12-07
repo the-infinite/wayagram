@@ -30,7 +30,7 @@ import '../modules/setup/interests.dart';
 import '../modules/verify_otp/verify_otp.dart';
 import '../repository/user_repo.dart';
 
-class AuthController extends GetxController {
+class AuthControllerWayagram extends GetxController {
   final UserRepository userRepo;
 
   TextEditingController emailOrPhone = TextEditingController();
@@ -70,7 +70,7 @@ class AuthController extends GetxController {
   var interests = <String>[];
   var cities = NigerianStatesAndLGA.abiaLGAs;
 
-  AuthController(this.userRepo);
+  AuthControllerWayagram(this.userRepo);
 
   toggleBusiness(int index) {
     if(index == 0) {

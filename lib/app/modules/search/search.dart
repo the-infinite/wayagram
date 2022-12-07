@@ -40,7 +40,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> with TickerProviderStateMixin{
-  var homeController = Get.find<HomeController>();
+  var homeController = Get.find<HomeControllerWayagram>();
   var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
   var searchController = TextEditingController();
   var searchedPosts = "";
@@ -65,7 +65,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return  GetBuilder<HomeController>(
+    return  GetBuilder<HomeControllerWayagram>(
         id: 'search',
         builder: (controller) {
           return Scaffold(

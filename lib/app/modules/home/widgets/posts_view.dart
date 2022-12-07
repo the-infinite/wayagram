@@ -61,7 +61,7 @@ class PostsView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-    var homeController = Get.find<HomeController>();
+    var homeController = Get.find<HomeControllerWayagram>();
 
     return ListView.builder(
       itemCount: isLoading ? 5 : posts!.length,
@@ -125,7 +125,7 @@ class CommentPostsView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-    var homeController = Get.find<HomeController>();
+    var homeController = Get.find<HomeControllerWayagram>();
 
     return ListView.builder(
       itemCount: isLoading ? 5 : posts!.length,
@@ -187,7 +187,7 @@ class Post extends StatefulWidget{
   }) : super(key: key);
 
   final FullUserProfileEntity fullProfile;
-  final HomeController homeController;
+  final HomeControllerWayagram homeController;
   final AllPostsEntity post;
   final String? userID;
   final bool hasBorder;
@@ -304,7 +304,7 @@ class _PostState extends State<Post> {
         amountRaised = donation.amountRaised!.toInt();
       }
     }
-    return GetBuilder<HomeController>(id: widget.post.id.toString(),builder: (controller) {
+    return GetBuilder<HomeControllerWayagram>(id: widget.post.id.toString(),builder: (controller) {
       return Container(
         margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
         decoration: widget.hasBorder ? decoration : null,
@@ -1156,7 +1156,7 @@ class InnerPost extends StatelessWidget{
   }) : super(key: key);
 
   final AllPostsEntity outerPost;
-  final HomeController homeController;
+  final HomeControllerWayagram homeController;
   @override
   Widget build(BuildContext context) {
     List<String> votedPolls = [];
@@ -1467,7 +1467,7 @@ class CommentPost extends StatefulWidget{
   }) : super(key: key);
 
   final FullUserProfileEntity fullProfile;
-  final HomeController homeController;
+  final HomeControllerWayagram homeController;
   final comment.CommentModel post;
   final String? userID;
   final bool hasBorder;
@@ -1828,7 +1828,7 @@ class CommentPostReply extends StatefulWidget{
   }) : super(key: key);
 
   final FullUserProfileEntity fullProfile;
-  final HomeController homeController;
+  final HomeControllerWayagram homeController;
   final comment.CommentModel post;
   final String? userID;
   final bool hasBorder;

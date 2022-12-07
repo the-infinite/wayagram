@@ -19,7 +19,7 @@ import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
-class UpdateProfileSignUp extends GetView<AuthController> {
+class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
   const UpdateProfileSignUp({Key? key}) : super(key: key);
 
   @override
@@ -33,7 +33,7 @@ class UpdateProfileSignUp extends GetView<AuthController> {
 
     var private = fullProfile.notPublic;
 
-    return  GetBuilder<AuthController>(
+    return  GetBuilder<AuthControllerWayagram>(
         builder: (controller) {
         return Scaffold(
           appBar: AppBar(

@@ -23,7 +23,7 @@ class CreateLiveVideo extends StatelessWidget {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppColors.background,

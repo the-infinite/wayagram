@@ -49,7 +49,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
   @override
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-    return GetBuilder<HomeController>(id:"notification_tab",builder: (controller) {
+    return GetBuilder<HomeControllerWayagram>(id:"notification_tab",builder: (controller) {
       return SizedBox(
         width: Get.width,
         height: Get.height*0.78,

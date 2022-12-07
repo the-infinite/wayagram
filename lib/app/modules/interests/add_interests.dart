@@ -530,7 +530,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id: "add_interests_page",builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(id: "add_interests_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(

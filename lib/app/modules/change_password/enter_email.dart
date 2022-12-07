@@ -16,7 +16,7 @@ import '../../repository/user_repo.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
-class EnterEmail extends GetView<AuthController> {
+class EnterEmail extends GetView<AuthControllerWayagram> {
   const EnterEmail(this.email, this.phone, {Key? key}) : super(key: key);
 
   final String? email;
@@ -25,7 +25,7 @@ class EnterEmail extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(()=>AuthController(UserRepository(Api())));
+    Get.lazyPut(()=>AuthControllerWayagram(UserRepository(Api())));
     List<String> items = [];
     if(email != null) {
       items.add(email!);
@@ -53,7 +53,7 @@ class EnterEmail extends GetView<AuthController> {
             'assets/images/wayagram.png', width: Get.width * 0.3,
           ),
         ),
-        body: GetBuilder<AuthController>(builder: (controller) {
+        body: GetBuilder<AuthControllerWayagram>(builder: (controller) {
           return SizedBox(
             width: Get.width,
             child: SingleChildScrollView(

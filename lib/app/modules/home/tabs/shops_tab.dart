@@ -20,7 +20,7 @@ class ShopsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomeController>(builder: (controller) {
+    return GetBuilder<HomeControllerWayagram>(builder: (controller) {
       return SizedBox(
         width: Get.width,
         height: Get.height*0.75,

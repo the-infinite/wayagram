@@ -20,7 +20,7 @@ import '../profile/create_pin.dart';
 import '../profile/update_profile.dart';
 import 'enter_new_password.dart';
 
-class EnterChangeOTP extends GetView<AuthController> {
+class EnterChangeOTP extends GetView<AuthControllerWayagram> {
   const EnterChangeOTP({Key? key}) : super(key: key);
 
   static const route = '/verifyOTP';

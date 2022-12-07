@@ -92,7 +92,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(
+      child: GetBuilder<HomeControllerWayagram>(
           id: 'group_screen',
           builder: (controller) {
             var buttonText = 'Join Group';

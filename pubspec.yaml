@@ -56,7 +56,7 @@ dependencies:
   intl: ^0.17.0
   flutter_contacts: ^1.1.5+1
   permission_handler: ^10.2.0
-  share_plus: ^6.3.0
+  share_plus:
   bordered_text: ^2.0.0
   flutter_dialogs: ^3.0.0
   chewie: ^1.3.5
@@ -72,7 +72,7 @@ dependencies:
   socket_io_client: ^2.0.0
   flutter_chat_list: ^1.0.6
   voice_message_package: ^0.0.74
-  file_picker: ^5.2.3
+  file_picker:
   mime: ^1.0.3
 
 dev_dependencies:

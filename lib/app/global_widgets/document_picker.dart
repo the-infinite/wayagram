@@ -65,8 +65,8 @@ class DocumentPicker extends StatefulWidget {
   final double renderWidth;
   final String actionWord;
   final double radius;
-  final HomeController? controller;
-  final AuthController? controller2;
+  final HomeControllerWayagram? controller;
+  final AuthControllerWayagram? controller2;
 
   /// if [networkImage] is not null,
   /// then [DocumentPicker] will display the

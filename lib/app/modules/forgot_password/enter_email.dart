@@ -14,7 +14,7 @@ import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart'
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
-class EnterEmail extends GetView<AuthController> {
+class EnterEmail extends GetView<AuthControllerWayagram> {
   const EnterEmail({Key? key}) : super(key: key);
 
   static const route = '/enterEmail';
@@ -39,7 +39,7 @@ class EnterEmail extends GetView<AuthController> {
             'assets/images/wayagram.png', width: Get.width * 0.3,
           ),
         ),
-        body: GetBuilder<AuthController>(builder: (controller) {
+        body: GetBuilder<AuthControllerWayagram>(builder: (controller) {
           return SizedBox(
             width: Get.width,
             child: SingleChildScrollView(

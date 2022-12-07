@@ -75,7 +75,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(
+      child: GetBuilder<HomeControllerWayagram>(
           id: 'profile_page',
           builder: (controller) {
             //

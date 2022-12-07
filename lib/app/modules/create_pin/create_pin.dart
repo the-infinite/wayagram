@@ -17,7 +17,7 @@ import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart'
 import '../profile/create_pin.dart';
 import '../profile/update_profile.dart';
 
-class CreatePIN extends GetView<AuthController> {
+class CreatePIN extends GetView<AuthControllerWayagram> {
   const CreatePIN({Key? key}) : super(key: key);
 
   static const route = '/createPIN';

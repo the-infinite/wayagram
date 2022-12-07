@@ -75,7 +75,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(
+      child: GetBuilder<HomeControllerWayagram>(
           id: 'post_profile_page',
           builder: (controller) {
             var friends = FriendsModelEntity.fromJson(jsonDecode(MyPref.friends.val));

@@ -32,7 +32,7 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-    return GetBuilder<HomeController>(
+    return GetBuilder<HomeControllerWayagram>(
         id: 'home_tab',
         builder: (controller) {
       return Column(

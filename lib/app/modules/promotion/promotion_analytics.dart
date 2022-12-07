@@ -49,7 +49,7 @@ class PromotionAnalytics extends StatefulWidget {
 
 class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProviderStateMixin {
   late TabController tabController;
-  var controller = Get.find<HomeController>();
+  var controller = Get.find<HomeControllerWayagram>();
 
   @override
   void initState() {
@@ -109,7 +109,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id: "promotion_analytics_log",builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(id: "promotion_analytics_log",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         var savedPosts = ReadWriteValue('wayagram_promotion_analytics_log', '', MyPref.box);
         var currentPage = ReadWriteValue('wayagram_promotion_analytics_log_current_page', 1, MyPref.box);

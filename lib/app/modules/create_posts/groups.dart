@@ -29,7 +29,7 @@ class CreateGroup extends StatefulWidget {
 }
 
 class _CreateGroupState extends State<CreateGroup> {
-  var homeController = Get.find<HomeController>();
+  var homeController = Get.find<HomeControllerWayagram>();
   var currentPage = 0;
   var pageController = PageController();
   var formKey1 = GlobalKey<FormState>();
@@ -108,7 +108,7 @@ class _CreateGroupState extends State<CreateGroup> {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         List<PageCategoriesModel> categories = [];
         if(MyPref.groupCategories.val.isNotEmpty){
           categories = PageCategoriesModel.listFromJson(jsonDecode(MyPref.groupCategories.val));

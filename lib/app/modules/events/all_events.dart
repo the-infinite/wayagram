@@ -45,7 +45,7 @@ class _AllEventsState extends State<AllEvents> {
   @override
   Widget build(BuildContext context) {
 
-    return  GetBuilder<HomeController>(
+    return  GetBuilder<HomeControllerWayagram>(
       builder: (controller){
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 

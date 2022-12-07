@@ -9,8 +9,8 @@ import '../repository/user_repo.dart';
 class WayagramBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AuthController>(() => AuthController(UserRepository(Api())));
-    Get.lazyPut<HomeController>(() => HomeController(UserRepository(Api())));
-    Get.lazyPut<ChatController>(() => ChatController(UserRepository(Api())));
+    Get.lazyPut<AuthControllerWayagram>(() => AuthControllerWayagram(UserRepository(Api())));
+    Get.lazyPut<HomeControllerWayagram>(() => HomeControllerWayagram(UserRepository(Api())));
+    Get.lazyPut<ChatControllerWayagram>(() => ChatControllerWayagram(UserRepository(Api())));
   }
 }

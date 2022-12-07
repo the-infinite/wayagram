@@ -69,7 +69,7 @@ class _CreateDonationState extends State<CreateDonation> {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id: "create_donation",builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(id: "create_donation",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(

@@ -13,7 +13,7 @@ import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart'
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
-class EnterNewChangedPassword extends GetView<AuthController> {
+class EnterNewChangedPassword extends GetView<AuthControllerWayagram> {
   const EnterNewChangedPassword({Key? key}) : super(key: key);
 
   static const route = '/enterNewPassword';
@@ -38,7 +38,7 @@ class EnterNewChangedPassword extends GetView<AuthController> {
             'assets/images/wayagram.png', width: Get.width * 0.3,
           ),
         ),
-        body: GetBuilder<AuthController>(builder: (controller) {
+        body: GetBuilder<AuthControllerWayagram>(builder: (controller) {
           return SizedBox(
             width: Get.width,
             child: SingleChildScrollView(

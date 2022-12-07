@@ -81,7 +81,7 @@ class EditPage extends StatelessWidget {
     var muteController = TextEditingController(text: editInfo.mute == true ? 'UnMute' : 'Mute');
 
     print(editInfo.categoryId);
-    return  GetBuilder<HomeController>(
+    return  GetBuilder<HomeControllerWayagram>(
         builder: (controller) {
           List<PageCategoriesModel> categories = [];
           if(MyPref.groupCategories.val.isNotEmpty){

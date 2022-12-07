@@ -42,8 +42,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin{
-  var homeController = Get.find<HomeController>();
-  var chatXController = Get.find<ChatController>();
+  var homeController = Get.find<HomeControllerWayagram>();
+  var chatXController = Get.find<ChatControllerWayagram>();
   late TabController shopController;
   late TabController notificationController;
   late TabController chatController;
@@ -114,7 +114,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(
+      child: GetBuilder<HomeControllerWayagram>(
           id: 'home',
           builder: (controller) {
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));

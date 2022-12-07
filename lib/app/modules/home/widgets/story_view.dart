@@ -37,7 +37,7 @@ class Story extends StatelessWidget {
           systemNavigationBarColor: Colors.black,
           systemNavigationBarIconBrightness: Brightness.light
       ),
-      child: GetBuilder<HomeController>(builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Scaffold(
           body: StoryView(
               storyItems: storyItems,

@@ -37,7 +37,7 @@ class DiscoverTab extends StatefulWidget {
 class _DiscoverTabState extends State<DiscoverTab> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomeController>(builder: (controller) {
+    return GetBuilder<HomeControllerWayagram>(builder: (controller) {
       var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
       return Column(

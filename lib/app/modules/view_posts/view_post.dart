@@ -65,7 +65,7 @@ class _ViewPostState extends State<ViewPost> {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id: "comment_page",builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(id: "comment_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(

@@ -64,7 +64,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  var chatController = Get.find<ChatController>();
+  var chatController = Get.find<ChatControllerWayagram>();
   bool canScrollDown = true;
   final ScrollController _scrollController = ScrollController();
 
@@ -146,7 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<ChatController>(id:'chats_screen',builder: (chatController) {
+      child: GetBuilder<ChatControllerWayagram>(id:'chats_screen',builder: (chatController) {
         var chatNormalInfo = {"otherId": id};
         var chatGroupInfo = {"groupId":id};
         if(mounted){
@@ -180,7 +180,7 @@ class _ChatScreenState extends State<ChatScreen> {
         }
         //callMessage
         //fileMessage
-        return  GetBuilder<HomeController>(builder: (controller) {
+        return  GetBuilder<HomeControllerWayagram>(builder: (controller) {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: AppColors.background,

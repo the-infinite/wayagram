@@ -44,7 +44,7 @@ class _ContactState extends State<Contact> {
     //
     RefreshController refreshController = RefreshController(initialRefresh: false);
 
-    return  GetBuilder<HomeController>(
+    return  GetBuilder<HomeControllerWayagram>(
         id: 'contact',
         builder: (controller) {
           var followers = FollowersModelEntity.fromJson(jsonDecode(MyPref.followers.val));

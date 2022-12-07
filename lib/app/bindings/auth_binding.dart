@@ -7,8 +7,8 @@ import '../repository/user_repo.dart';
 class AuthBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AuthController>(
-      () => AuthController(UserRepository(Api())),
+    Get.lazyPut<AuthControllerWayagram>(
+      () => AuthControllerWayagram(UserRepository(Api())),
     );
   }
 }

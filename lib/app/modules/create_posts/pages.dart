@@ -30,7 +30,7 @@ class CreatePage extends StatefulWidget {
 }
 
 class _CreatePageState extends State<CreatePage> {
-  var homeController = Get.find<HomeController>();
+  var homeController = Get.find<HomeControllerWayagram>();
   var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
   var nameController = TextEditingController();
   var descriptionController = TextEditingController();
@@ -69,7 +69,7 @@ class _CreatePageState extends State<CreatePage> {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         List<PageCategoriesModel> categories = [];
         if(MyPref.pageCategories.val.isNotEmpty){
           categories = PageCategoriesModel.listFromJson(jsonDecode(MyPref.pageCategories.val));

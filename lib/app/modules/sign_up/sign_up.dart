@@ -18,7 +18,7 @@ import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart'
 import '../sign_in/sign_in.dart';
 import '../verify_otp/verify_otp.dart';
 
-class SignUp extends GetView<AuthController> {
+class SignUp extends GetView<AuthControllerWayagram> {
   const SignUp({Key? key}) : super(key: key);
 
   static const route = '/signUp';
@@ -84,7 +84,7 @@ class SignUp extends GetView<AuthController> {
             width: Get.width * 0.3,
           ),
         ),
-        body: GetBuilder<AuthController>(builder: (controller) {
+        body: GetBuilder<AuthControllerWayagram>(builder: (controller) {
           return SizedBox(
             width: Get.width,
             height: Get.height,

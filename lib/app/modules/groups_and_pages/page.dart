@@ -88,7 +88,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(
+      child: GetBuilder<HomeControllerWayagram>(
           id: 'page_screen',
           builder: (controller) {
             var memberCount = 0;

@@ -24,14 +24,14 @@ import '../profile/profile.dart';
 import '../profile/update_profile.dart';
 import 'inner_pages/login_information.dart';
 
-class Settings extends GetView<HomeController>{
+class Settings extends GetView<HomeControllerWayagram>{
   const Settings({Key? key}) : super(key: key);
 
   static const route = '/settings';
 
   @override
   Widget build(BuildContext context) {
-    return  GetBuilder<HomeController>(
+    return  GetBuilder<HomeControllerWayagram>(
       id: 'settings',
       builder: (controller){
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));

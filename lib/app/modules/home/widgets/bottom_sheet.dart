@@ -49,7 +49,7 @@ class WayaBottomSheet extends StatelessWidget {
           systemNavigationBarColor: AppColors.background1,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Container(
           //height: Get.height * 0.65,
           decoration: const BoxDecoration(
@@ -200,7 +200,7 @@ class RepostBottomSheet extends StatelessWidget {
           systemNavigationBarColor: AppColors.background1,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Container(
           //height: Get.height * 0.65,
           decoration: const BoxDecoration(
@@ -280,7 +280,7 @@ class WalletBottomSheet extends StatelessWidget {
           systemNavigationBarColor: AppColors.background1,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id:"wallet_bottom_sheet",builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(id:"wallet_bottom_sheet",builder: (controller) {
         return Container(
           decoration: const BoxDecoration(
             color: AppColors.background1,

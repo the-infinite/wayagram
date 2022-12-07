@@ -61,7 +61,7 @@ class _ReportUserState extends State<ReportUser> {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id: "report_profile_page",builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(id: "report_profile_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(

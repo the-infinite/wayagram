@@ -66,7 +66,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id: "activity_log",builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(id: "activity_log",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         var savedPosts = ReadWriteValue('wayagram_activity_logs', '', MyPref.box);
         var currentPage = ReadWriteValue('wayagram_activity_logs_current_page', 1, MyPref.box);

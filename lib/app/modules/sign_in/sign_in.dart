@@ -15,7 +15,7 @@ import '../forgot_password/enter_email.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
-class SignIn extends GetView<AuthController> {
+class SignIn extends GetView<AuthControllerWayagram> {
   const SignIn({Key? key}) : super(key: key);
 
   static const route = '/signIn';
@@ -41,7 +41,7 @@ class SignIn extends GetView<AuthController> {
           ),
 
         ),
-        body: GetBuilder<AuthController>(builder: (controller) {
+        body: GetBuilder<AuthControllerWayagram>(builder: (controller) {
           return SizedBox(
             width: Get.width,
             child: SingleChildScrollView(

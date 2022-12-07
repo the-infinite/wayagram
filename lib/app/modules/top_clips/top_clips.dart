@@ -50,7 +50,7 @@ class _TopClipsState extends State<TopClips> {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeController>(id: "bookmark_page",builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(id: "bookmark_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(

@@ -53,7 +53,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
     var personalGroupTextController = TextEditingController(text: "0");
     var personalPagesTextController = TextEditingController(text: "0");
 
-    return  GetBuilder<HomeController>(
+    return  GetBuilder<HomeControllerWayagram>(
       builder: (controller){
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
