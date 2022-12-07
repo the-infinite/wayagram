@@ -566,7 +566,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                     filename: file.path.split('/').last,
                                     contentType: http_parser.MediaType.parse(contentType!),
                                   );
-                                  //https://services.staging.wayagram.ng/social-file-resource/aws-upload-file?&sso_id=121
                                   controller.postData(dio.FormData.fromMap(body), "/social-file-resource/aws-upload-file?").then((value){
                                     if(value.isSuccessful){
                                       var message = {
