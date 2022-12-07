@@ -9,8 +9,10 @@ import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
+import '../../bindings/wayagram_binding.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../profile/update_profile.dart';
 import '../setup/interests.dart';
 
@@ -34,14 +36,14 @@ class ConfirmPIN extends StatelessWidget {
                 SizedBox(
                   height: Get.height * 0.05,
                 ),
-                SvgPicture.asset(
+                ImageHelper.svgImage(
                   'assets/images/wayagram2.svg',
                   color: AppColors.background,
                 ),
                 SizedBox(
                   height: Get.height * 0.1,
                 ),
-                Image.asset(
+                ImageHelper.normalImage(
                   'assets/images/otp.png',
                   width: Get.width * 0.4,
                   height: Get.width * 0.4,
@@ -71,9 +73,8 @@ class ConfirmPIN extends StatelessWidget {
                 AppButton(
                   title: 'Next',
                   onPressed: () {
-                    Get.toNamed(Interests.route);
-                    // Get.toNamed(UpdateProfile.route);
-                    //Get.toNamed(SignUp.route);
+                    Get.to(() => const Interests(),binding: WayagramBinding());
+
                   },
                   borderRadius: 10,
                 ),

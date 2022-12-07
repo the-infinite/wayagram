@@ -15,6 +15,7 @@ import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 import 'package:voice_message_package/voice_message_package.dart';
 import 'package:wayagram/app/global_widgets/app_input.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
@@ -33,6 +34,7 @@ import '../../data/socket_models/previous_chat_model.dart' as normal_chat;
 import '../../data/socket_models/send_message_response.dart';
 import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/app_button.dart';
+import 'package:http_parser/http_parser.dart' as http_parser;
 
 import 'package:dio/dio.dart' as dio;
 import 'dart:math' as math;
@@ -42,6 +44,7 @@ import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/person_view.dart';
 import '../../global_widgets/smart_image.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../home/widgets/HashTagView.dart';
 import '../home/widgets/group_view.dart';
 
@@ -557,9 +560,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                 if (result != null) {
                                   File file = File(result.files.single.path!);
                                   Map<String,dynamic> body = {};
+                                  var contentType = lookupMimeType(result.files.single.path!);
                                   body['file'] = await dio.MultipartFile.fromFile(
                                     file.path,
                                     filename: file.path.split('/').last,
+                                    contentType: http_parser.MediaType.parse(contentType!),
                                   );
                                   //https://services.staging.wayagram.ng/social-file-resource/aws-upload-file?&sso_id=121
                                   controller.postData(dio.FormData.fromMap(body), "/social-file-resource/aws-upload-file?").then((value){
@@ -672,7 +677,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(
+                      ImageHelper.svgImage(
                         failed,
                       ),
                       const SizedBox(

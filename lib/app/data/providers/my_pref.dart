@@ -2,6 +2,7 @@ import 'package:get_storage/get_storage.dart';
 
 class MyPref  {
   static final box = () => GetStorage('MyPref');
+  static final anotherApp = ReadWriteValue('wayagram_another_app', false, box);
 
   static final uniqueID = ReadWriteValue('wayagram_unique_device_id', '', box);
   static final fcmID = ReadWriteValue('wayagram_fcm_id', '', box);

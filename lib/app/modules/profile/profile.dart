@@ -20,6 +20,7 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../../core/utils/validator.dart';
+import '../../bindings/wayagram_binding.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/all_posts_entity.dart';
@@ -252,7 +253,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                         imgUrl: (fullProfile.avatar as String?).toString(),
                                                       ),
                                                       onPressed: () {
-                                                        //Get.toNamed(Profile.route);
+
                                                       },
                                                     ),
                                                   ),
@@ -266,7 +267,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                       title: 'Edit',
                                                       onPressed: () {
                                                         controller.imagePaths.clear();
-                                                        Get.toNamed(UpdateProfile.route);
+                                                        Get.to(() => const UpdateProfile(),binding: WayagramBinding());
                                                       },
                                                       borderRadius: 10,
                                                       fontColor: AppColors.primary,

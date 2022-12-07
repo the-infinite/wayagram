@@ -14,6 +14,7 @@ import 'package:wayagram/app/modules/settings/inner_pages/security.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
+import '../../bindings/wayagram_binding.dart';
 import '../../controllers/auth_controller.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/my_pref.dart';
@@ -80,7 +81,7 @@ class Settings extends GetView<HomeController>{
                       imgUrl: (fullProfile.avatar as String?).toString(),
                     ),
                     onPressed: () {
-                      Get.toNamed(Profile.route);
+                      Get.to(() => const Profile(),binding: WayagramBinding());
                     },
                   ),
                 ),
@@ -155,7 +156,7 @@ class Settings extends GetView<HomeController>{
                           subtitle: "Update your profile",
                           onPressed: (){
                             controller.imagePaths.clear();
-                            Get.toNamed(UpdateProfile.route);
+                            Get.to(() => const UpdateProfile(),binding: WayagramBinding());
                           }
                       ),
                       SizedBox(height: Get.height*0.02),

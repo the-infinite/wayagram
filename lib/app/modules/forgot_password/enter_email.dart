@@ -6,9 +6,11 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../../core/utils/validator.dart';
+import '../../bindings/wayagram_binding.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
@@ -33,7 +35,7 @@ class EnterEmail extends GetView<AuthController> {
               Get.back();
             },
           ),
-          title: Image.asset(
+          title: ImageHelper.normalImage(
             'assets/images/wayagram.png', width: Get.width * 0.3,
           ),
         ),
@@ -102,7 +104,7 @@ class EnterEmail extends GetView<AuthController> {
                         title:
                         'Don\'t have an account? Sign Up',
                         onPressed: () {
-                          Get.toNamed(SignUp.route);
+                          Get.to(() => const SignUp(),binding: WayagramBinding());
                         },
                         borderRadius: 10,
                         bckgrndColor: AppColors.background,

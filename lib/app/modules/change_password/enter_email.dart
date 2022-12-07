@@ -11,6 +11,7 @@ import '../../data/providers/api.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../../repository/user_repo.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
@@ -48,7 +49,7 @@ class EnterEmail extends GetView<AuthController> {
               Get.back();
             },
           ),
-          title: Image.asset(
+          title: ImageHelper.normalImage(
             'assets/images/wayagram.png', width: Get.width * 0.3,
           ),
         ),

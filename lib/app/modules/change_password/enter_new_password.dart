@@ -9,6 +9,7 @@ import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
@@ -33,7 +34,7 @@ class EnterNewChangedPassword extends GetView<AuthController> {
               Get.back();
             },
           ),
-          title: Image.asset(
+          title: ImageHelper.normalImage(
             'assets/images/wayagram.png', width: Get.width * 0.3,
           ),
         ),

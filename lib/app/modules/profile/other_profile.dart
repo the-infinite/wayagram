@@ -258,7 +258,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                                       imgUrl: userImage,
                                                     ),
                                                     onPressed: () {
-                                                      //Get.toNamed(Profile.route);
+
                                                     },
                                                   ),
                                                 ),

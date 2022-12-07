@@ -73,6 +73,7 @@ dependencies:
   flutter_chat_list: ^1.0.6
   voice_message_package: ^0.0.74
   file_picker: ^5.2.3
+  mime: ^1.0.3
 
 dev_dependencies:
   flutter_test:

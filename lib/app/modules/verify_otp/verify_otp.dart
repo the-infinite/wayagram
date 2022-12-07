@@ -14,6 +14,7 @@ import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../profile/create_pin.dart';
 import '../profile/update_profile.dart';
 
@@ -37,14 +38,14 @@ class VerifyOTP extends GetView<AuthController> {
                 SizedBox(
                   height: Get.height * 0.05,
                 ),
-                SvgPicture.asset(
+                ImageHelper.svgImage(
                   'assets/images/wayagram2.svg',
                   color: AppColors.background,
                 ),
                 SizedBox(
                   height: Get.height * 0.1,
                 ),
-                Image.asset(
+                ImageHelper.normalImage(
                   'assets/images/otp.png',
                   width: Get.width * 0.3,
                   height: Get.width * 0.3,

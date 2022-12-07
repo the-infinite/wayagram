@@ -15,6 +15,7 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../../core/utils/validator.dart';
+import '../../bindings/wayagram_binding.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/chat_controller.dart';
 import '../../controllers/home_controller.dart';
@@ -25,6 +26,7 @@ import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/app_drawer.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../contacts/contact.dart';
 import '../search/search.dart';
 import '../setup/interests.dart';
@@ -147,9 +149,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   ),
                 ],
               ),
-                title: Image.asset(
-                'assets/images/wayagram_new.png', width: Get.width * 0.25,
-              ),
+                title: ImageHelper.normalImage(
+                  'assets/images/wayagram_new.png', width: Get.width * 0.25,
+                ),
                 actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 10.0),
@@ -157,7 +159,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     width: 45,
                     height: 45,
                     child: IconButton(
-                      icon: Image.asset(
+                      icon: ImageHelper.normalImage(
                         showSearchIcon ? 'assets/images/search.png' : 'assets/images/follow_new_users.png',
                         color: Colors.black,
                         width: showSearchIcon ? Get.width*0.05 : Get.width*0.07,
@@ -165,9 +167,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                       ),
                       onPressed: () {
                         if (showSearchIcon) {
-                          Get.toNamed(Search.route);
+                          Get.to(() => const Search(),binding: WayagramBinding());
                         } else {
-                          Get.toNamed(Contact.route);
+                          Get.to(() => const Contact(),binding: WayagramBinding());
                         }
                       },
                     ),
@@ -308,7 +310,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 type: BottomNavigationBarType.fixed,
                 items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                  icon: Image.asset(
+                  icon: ImageHelper.normalImage(
                     'assets/images/u_home-alt.png',
                     width: 25,
                     color: controller.currentBottomNavPage.value == 0 ? AppColors.primary : AppColors.grey,
@@ -317,7 +319,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   backgroundColor: AppColors.background,
                 ),
                 BottomNavigationBarItem(
-                  icon: Image.asset(
+                  icon: ImageHelper.normalImage(
                     'assets/images/u_compass.png',
                     width: 25,
                     color: controller.currentBottomNavPage.value == 1 ? AppColors.primary : AppColors.grey,
@@ -331,7 +333,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   label: 'Shops',
                 ),
                 BottomNavigationBarItem(
-                  icon: Image.asset(
+                  icon: ImageHelper.normalImage(
                     'assets/images/mdi_notifications_none.png',
                     width: 25,
                     color: controller.currentBottomNavPage.value == 3 ? AppColors.primary : AppColors.grey,
@@ -339,7 +341,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   label: 'Notifications',
                 ),
                 BottomNavigationBarItem(
-                  icon: Image.asset(
+                  icon: ImageHelper.normalImage(
                     'assets/images/message-outline.png',
                     width: 25,
                     color: controller.currentBottomNavPage.value == 4 ? AppColors.primary : AppColors.grey,

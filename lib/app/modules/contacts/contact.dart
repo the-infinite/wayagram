@@ -26,6 +26,8 @@ import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
+
 class Contact extends StatefulWidget {
   const Contact({Key? key}) : super(key: key);
 
@@ -156,7 +158,9 @@ class _ContactState extends State<Contact> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset('assets/images/invite_image.png',height: Get.height*0.3,width: Get.width*0.8,fit: BoxFit.cover,),
+                        ImageHelper.normalImage(
+                          'assets/images/invite_image.png',height: Get.height*0.3,width: Get.width*0.8,fit: BoxFit.cover,
+                        )
                       ],
                     ),
                   ],

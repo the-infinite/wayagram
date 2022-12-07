@@ -15,6 +15,7 @@ import 'package:wayagram/app/data/model/log_in_model_entity.dart';
 import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
+import '../bindings/wayagram_binding.dart';
 import '../data/model/full_user_profile_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
@@ -144,7 +145,7 @@ class AuthController extends GetxController {
       Get.snackbar("Account Creation Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       await userRepo.resendAuthOTP(personalEmail.text);
-      Get.toNamed(VerifyOTP.route);
+      Get.to(() => const VerifyOTP(),binding: WayagramBinding());
     }
   }
 
@@ -170,7 +171,7 @@ class AuthController extends GetxController {
       Get.snackbar("Account Creation Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       await userRepo.resendAuthOTP(personalEmail.text);
-      Get.toNamed(VerifyOTP.route);
+      Get.to(() => const VerifyOTP(),binding: WayagramBinding());
     }
   }
 
@@ -242,7 +243,7 @@ class AuthController extends GetxController {
       MyPref.fullProfile.val = jsonEncode(response.data);
       MyPref.profileId.val = data.id.toString();
       await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
-      Get.offAllNamed(Home.route);
+      Get.offAll(() => const Home(),binding: WayagramBinding());
     }
   }
 
@@ -255,11 +256,9 @@ class AuthController extends GetxController {
       var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
       MyPref.profileId.val = data.id.toString();
-      //Get.toNamed(CreatePIN.route);
-      //Get.toNamed(Home.route);
       await userRepo.getFollowedByWayaOfficial();
       await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
-      Get.toNamed(Interests.route);
+      Get.to(() => const Interests(),binding: WayagramBinding());
     }
   }
 
@@ -278,11 +277,10 @@ class AuthController extends GetxController {
       Get.snackbar("OTP Verification Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       await signInFirst();
-      //Get.toNamed(CreatePIN.route);
-      //Get.toNamed(SignIn.route);
     }
   }
   Future<void> resendOTP() async {
+    print("Email is ${personalEmail.text}");
     ApiResponse response = await userRepo.resendAuthOTP(personalEmail.text);
     var message = "";
     var buttonMessage = "";
@@ -329,8 +327,7 @@ class AuthController extends GetxController {
         },
       );
     }else{
-      Get.toNamed(ConfirmPIN.route);
-      //Get.toNamed(SignIn.route);
+      Get.to(() => const ConfirmPIN(),binding: WayagramBinding());
     }
   }
 
@@ -401,7 +398,7 @@ class AuthController extends GetxController {
       password.clear();
       otp.clear();
       emailOrPhone.clear();
-      Navigator.popUntil(Get.context!, (route) => Get.currentRoute == SignIn.route);
+      Navigator.popUntil(Get.context!, (route) => Get.currentRoute == "/SignIn");
     }
   }
 
@@ -531,7 +528,8 @@ class AuthController extends GetxController {
     final response = await userRepo.updateProfile(body);
     var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     await userRepo.getFullUserProfile(profile.userId.toString());
-    Get.offAllNamed(Home.route);
+    Get.offAll(() => const Home(),binding: WayagramBinding());
+
     return response;
   }
 

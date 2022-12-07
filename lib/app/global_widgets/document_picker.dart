@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:wayagram/app/global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
@@ -150,7 +151,7 @@ class _DocumentPickerState extends State<DocumentPicker> {
                           ),
                           height: widget.renderHeight,
                           width: widget.renderWidth,
-                          errorWidget: (context, url, error) => Image.asset(
+                          errorWidget: (context, url, error) => ImageHelper.normalImage(
                             "assets/images/no_image.jpg",
                             height: widget.renderHeight,
                             fit: widget.fit,

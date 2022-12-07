@@ -17,6 +17,7 @@ import '../../../data/model/posts_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/horizontal_item_tile.dart';
+import '../../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
 
@@ -197,7 +198,9 @@ class HomeTab extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: AppColors.grayColor.withOpacity(.3),
                   ),
-                  child: SvgPicture.asset(icon ?? wayapayIconSvg),
+                  child: ImageHelper.svgImage(
+                      icon ?? wayapayIconSvg
+                  ),
                 ),
                 Text(title ?? '',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -237,7 +240,7 @@ class HomeTab extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(
+                      ImageHelper.svgImage(
                         failed,
                       ),
                       const SizedBox(

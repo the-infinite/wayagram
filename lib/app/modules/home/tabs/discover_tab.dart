@@ -9,6 +9,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wayagram/app/data/model/TrendingHashtagsModel.dart';
 
 import '../../../../core/theme/app_styles.dart';
+import '../../../bindings/wayagram_binding.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_events_entity.dart';
 import '../../../data/model/all_posts_entity.dart';
@@ -81,7 +82,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     subtitle: subtitle,
                     onClick: (title, subtitle) {
                       controller.defaultSearchValue = title;
-                      Get.toNamed(Search.route);
+                      Get.to(() => const Search(),binding: WayagramBinding());
                     },
                   );
                 } else if(savedPosts.val.isNotEmpty){
@@ -103,7 +104,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     subtitle: subtitle,
                     onClick: (title, subtitle) {
                       controller.defaultSearchValue = title;
-                      Get.toNamed(Search.route);
+                      Get.to(() => const Search(),binding: WayagramBinding());
                     },
                   );
                 }else{

@@ -45,7 +45,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () {
-                          Get.toNamed(Multiplexor.route);
+                          Get.to(() => const Multiplexor());
                         },
                         child: Text(
                           'Skip',
@@ -125,7 +125,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       onPressed: (){
                         buttonCarouselController.nextPage();
                         if (currentIndex == 6) {
-                          Get.toNamed(Multiplexor.route);
+                          Get.to(() => const Multiplexor());
                         }
                       },
                       borderRadius: 360,

@@ -239,7 +239,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                       imgUrl: (post.profile!.avatar as String?).toString(),
                                                     ),
                                                     onPressed: () {
-                                                      //Get.toNamed(Profile.route);
+
                                                     },
                                                   ),
                                                 ),

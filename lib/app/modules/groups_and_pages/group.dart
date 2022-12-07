@@ -221,7 +221,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                                     isGroup: true,
                                                   ),
                                                   onPressed: () {
-                                                    //Get.toNamed(Profile.route);
+
                                                   },
                                                 ),
                                               ),

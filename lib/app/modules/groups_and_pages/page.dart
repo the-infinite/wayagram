@@ -211,7 +211,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                                     isPage: true,
                                                   ),
                                                   onPressed: () {
-                                                    //Get.toNamed(Profile.route);
+
                                                   },
                                                 ),
                                               ),

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import 'onboarding.dart';
 
 class OnboardingItem extends StatelessWidget {
@@ -24,11 +25,10 @@ class OnboardingItem extends StatelessWidget {
         children: [
           Expanded(
             flex: 2,
-            child: Image.asset(
+            child: ImageHelper.normalImage(
               'assets/images/${onboardingModel.image}.png',
               height: Get.width * 0.25,
               width: Get.height*0.25,
-              //package: 'wayagram',
             ),
           ),
           Expanded(

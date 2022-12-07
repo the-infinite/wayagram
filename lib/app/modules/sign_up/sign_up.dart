@@ -9,10 +9,12 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../../core/utils/validator.dart';
+import '../../bindings/wayagram_binding.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../sign_in/sign_in.dart';
 import '../verify_otp/verify_otp.dart';
 
@@ -77,7 +79,7 @@ class SignUp extends GetView<AuthController> {
               Get.back();
             },
           ),
-          title: Image.asset(
+          title: ImageHelper.normalImage(
             'assets/images/wayagram.png',
             width: Get.width * 0.3,
           ),
@@ -221,10 +223,9 @@ class SignUp extends GetView<AuthController> {
                                         borderRadius: 10,
                                       ),
                                       AppButton(
-                                        title:
-                                            'Already have an account?  Login Now',
+                                        title: 'Already have an account?  Login Now',
                                         onPressed: () {
-                                          Get.toNamed(SignIn.route);
+                                          Get.to(() => const SignIn(),binding: WayagramBinding());
                                         },
                                         borderRadius: 10,
                                         bckgrndColor: AppColors.background,
@@ -335,7 +336,7 @@ class SignUp extends GetView<AuthController> {
                                         title:
                                         'Already have an account?  Login Now',
                                         onPressed: () {
-                                          Get.toNamed(SignIn.route);
+                                          Get.to(() => const SignIn(),binding: WayagramBinding());
                                         },
                                         borderRadius: 10,
                                         bckgrndColor: AppColors.background,
@@ -537,7 +538,7 @@ class SignUp extends GetView<AuthController> {
                                       AppButton(
                                         title: 'Have an Account? Login',
                                         onPressed: () {
-                                          Get.toNamed(SignIn.route);
+                                          Get.to(() => const SignIn(),binding: WayagramBinding());
                                         },
                                         borderRadius: 10,
                                         bckgrndColor: AppColors.background,

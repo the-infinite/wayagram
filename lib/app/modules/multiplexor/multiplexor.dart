@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/app/data/providers/my_pref.dart';
 import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
+import '../../bindings/wayagram_binding.dart';
 import '../../global_widgets/app_button.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 
 class Multiplexor extends StatelessWidget {
-  const Multiplexor({Key? key}) : super(key: key);
+  const Multiplexor({Key? key,this.anotherApp = false}) : super(key: key);
 
   static const route = '/multiplexor';
+  final bool anotherApp;
 
   @override
   Widget build(BuildContext context) {
+    MyPref.anotherApp.val = anotherApp;
     return Scaffold(
       body: Container(
         color: AppColors.background,
@@ -28,13 +33,13 @@ class Multiplexor extends StatelessWidget {
               SizedBox(
                 height: Get.height * 0.05,
               ),
-              SvgPicture.asset(
+              ImageHelper.svgImage(
                 'assets/images/wayagram2.svg',
               ),
               SizedBox(
                 height: Get.height * 0.08,
               ),
-              Image.asset(
+              ImageHelper.normalImage(
                 'assets/images/multiplexor.png',
                 width: Get.height * 0.38,
                 height: Get.height * 0.38,
@@ -61,7 +66,7 @@ class Multiplexor extends StatelessWidget {
               AppButton(
                 title: 'Get Started',
                 onPressed: () {
-                  Get.toNamed(SignUp.route);
+                  Get.to(() => const SignUp(),binding: WayagramBinding());
                 },
                 borderRadius: 300,
                 padding: EdgeInsets.symmetric(
@@ -74,7 +79,7 @@ class Multiplexor extends StatelessWidget {
                 bckgrndColor: Colors.white,
                 fontColor: AppColors.primary,
                 onPressed: () {
-                  Get.toNamed(SignIn.route);
+                  Get.to(() => const SignIn(),binding: WayagramBinding());
                 },
                 borderRadius: 300,
                 border: Border.all(color: AppColors.primary),

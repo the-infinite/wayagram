@@ -391,7 +391,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                       controller.userRepo.api.disconnect();
                                       Get.back();
                                       await MyPref.clearBoxes();
-                                      Get.offAllNamed(Multiplexor.route);
+                                      Get.offAll(() => const Multiplexor());
                                     },
                                     borderRadius: 10,
                                     fontColor: AppColors.primary,
