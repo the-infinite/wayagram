@@ -15,11 +15,12 @@ class ApiResponse {
   dynamic profiles;
   dynamic interests;
   dynamic groups;
+  dynamic url;
   final bool isSuccessful;
   String? message;
   String? token;
 
-  ApiResponse({this.code, this.message, this.data, required this.isSuccessful, this.token,this.suggestion,this.profiles,this.interests,this.groups,this.id});
+  ApiResponse({this.code, this.message, this.data, required this.isSuccessful, this.token,this.suggestion,this.profiles,this.interests,this.groups,this.id,this.url});
 
   static ApiResponse response(Response response) {
     var json = response.data;
@@ -33,6 +34,7 @@ class ApiResponse {
       profiles: json['Profiles'],
       interests: json['interests'],
       groups: json['groups'],
+      url: json['url'],
     );
   }
 
@@ -47,6 +49,7 @@ class ApiResponse {
       profiles: jsonD['Profiles'],
       interests: jsonD['interests'],
       groups: jsonD['groups'],
+      url: jsonD['url'],
     );
   }
 

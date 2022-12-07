@@ -240,6 +240,15 @@ class _PostState extends State<Post> {
       decoration = widget.decoration;
     }
     var isCurrentUserPost = false;
+    if(widget.fullProfile.userId!=null){
+      if(widget.post.profile!=null){
+        if(widget.post.profile!.userId == widget.fullProfile.userId) {
+          isCurrentUserPost = true;
+        }
+      }else{
+        return const SizedBox.shrink();
+      }
+    }
     var time = DateTime.parse(widget.post.createdAt!);
     var endPollTime = (widget.post.isPoll == true) ? DateTime.parse(widget.post.poll!.endDate.toString()) : null;
     List<String> imageUrls = [];
@@ -259,6 +268,7 @@ class _PostState extends State<Post> {
     if(widget.post.isPoll == true){
       for (var element in widget.post.poll!.pollOptions!) {
         var pollVoteID = widget.post.id.toString()+element.id.toString();
+        //print(widget.post.poll!.id.toString() + ' ' + widget.post.description.toString());
         var currentPollVoted = element.userVoted == true || votedPolls.contains(pollVoteID);
         if(currentPollVoted){
           totalPersonalVotes = totalPersonalVotes + 1;
@@ -278,12 +288,7 @@ class _PostState extends State<Post> {
     if(widget.post.profile == null) {
       return const SizedBox.shrink();
     }
-    if(widget.fullProfile.userId!=null){
-      if(widget.post.profile!.userId == widget.fullProfile.userId) {
-        isCurrentUserPost = true;
-      }
-    }
-
+    
     DonationsModel? donation;
     var amountRaised = 0;
     //var amountNeeded = 0;
@@ -591,6 +596,10 @@ class _PostState extends State<Post> {
                       )),
                 ),
               ),
+            if(pollImageUrls.isNotEmpty)
+              const SizedBox(
+                height: 10,
+              ),
             if(widget.post.isPoll == true)
               Padding(
                 padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
@@ -603,89 +612,160 @@ class _PostState extends State<Post> {
                     scrollDirection: Axis.vertical,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, i) {
+                      var votePercentage = 0.0;
+                      var totalVote = widget.post.poll!.totalVotesCountPoll!.toInt();
+                      var totalVoteOption = widget.post.poll!.pollOptions![i].totalVotesCountPollOption!.toInt();
+
+                      if(totalVoteOption / totalVote > 0){
+                        votePercentage = totalVoteOption / totalVote;
+                      }
+                      
                       var allowedVotes = widget.post.poll!.voteLimit!.toInt();
                       var pollVoteID = widget.post.id.toString()+widget.post.poll!.pollOptions![i].id.toString();
                       var currentPollVoted = widget.post.poll!.pollOptions![i].userVoted == true || votedPolls.contains(pollVoteID);
+                      var progressColor = AppColors.primary.withOpacity(0.2);
+                      progressColor = pollEnded ? currentPollVoted ? AppColors.primary.withOpacity(0.2):Colors.grey.withOpacity(.2) : !(!currentPollVoted && totalPersonalVotes >= allowedVotes) ? AppColors.primary.withOpacity(0.2) : Colors.grey.withOpacity(0.2);
+
                       return Padding(
                         padding: EdgeInsets.only(top: i==0 ? 0:10, bottom: 0, left: 0,right: 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Radio(
-                              value: widget.post.poll!.pollOptions![i].option.toString(),
-                              groupValue: currentPollVoted ? widget.post.poll!.pollOptions![i].option.toString() : null,
-                              onChanged: (String? value) {
-                                if(!pollEnded){
-                                  var price = widget.post.poll!.amount!.toInt();
-                                  if(price > 0){
-                                    var postToUse = widget.post;
-                                    postToUse.poll!.pollOptions![i].userVoted = true;
-                                    Get.to(()=> PollPaymentScreen(post: postToUse),arguments: widget.post.poll!.pollOptions![i].id.toString());
-                                  }else{
-                                    if(!currentPollVoted && totalPersonalVotes <= allowedVotes){
-                                      votedPolls.add(pollVoteID);
-                                      savedVotedPolls.val = votedPolls.join(',');
-                                      setState(() {
+                            SizedBox(
+                              height: Get.height * 0.045,
+                              child: Radio(
+                                value: widget.post.poll!.pollOptions![i].option.toString(),
+                                groupValue: currentPollVoted ? widget.post.poll!.pollOptions![i].option.toString() : null,
+                                onChanged: (String? value) {
+                                  if(!pollEnded){
+                                    var price = widget.post.poll!.amount!.toInt();
+                                    if(price > 0){
+                                      var postToUse = widget.post;
+                                      postToUse.poll!.pollOptions![i].userVoted = true;
+                                      Get.to(()=> PollPaymentScreen(post: postToUse),arguments: widget.post.poll!.pollOptions![i].id.toString());
+                                    }else{
+                                      if(!currentPollVoted && totalPersonalVotes <= allowedVotes){
+                                        votedPolls.add(pollVoteID);
+                                        savedVotedPolls.val = votedPolls.join(',');
+                                        setState(() {
 
-                                      });
-                                      var body = {
-                                        "profile_id": widget.fullProfile.id.toString(),
-                                        "poll_option_id": widget.post.poll!.pollOptions![i].id.toString(),
-                                        "millisecCreatedAt": 0,
-                                      };
-                                      homeController.postData(body, "/wayagram-service/all-posts/vote").then((value){
-                                        if(value.isSuccessful){
-                                          controller.update([widget.post.id.toString()]);
-                                          AppOverlay.showSuccessSnackBar(content: "Poll voted successfully");
-                                        }else{
-                                          votedPolls.remove(pollVoteID);
-                                          if(votedPolls.isEmpty){
-                                            savedVotedPolls.val = "";
+                                        });
+                                        var body = {
+                                          "profile_id": widget.fullProfile.id.toString(),
+                                          "poll_option_id": widget.post.poll!.pollOptions![i].id.toString(),
+                                          "millisecCreatedAt": 0,
+                                        };
+                                        homeController.postData(body, "/wayagram-service/all-posts/vote").then((value){
+                                          if(value.isSuccessful){
+                                            controller.update([widget.post.id.toString()]);
+                                            AppOverlay.showSuccessSnackBar(content: "Poll voted successfully");
                                           }else{
-                                            savedVotedPolls.val = votedPolls.join(',');
-                                          }
-                                          setState(() {
+                                            votedPolls.remove(pollVoteID);
+                                            if(votedPolls.isEmpty){
+                                              savedVotedPolls.val = "";
+                                            }else{
+                                              savedVotedPolls.val = votedPolls.join(',');
+                                            }
+                                            setState(() {
 
-                                          });
-                                          AppOverlay.showErrorSnackBar(content: "Unable to vote, please try again later");
-                                        }
-                                      });
+                                            });
+                                            AppOverlay.showErrorSnackBar(content: "Unable to vote, please try again later");
+                                          }
+                                        });
+                                      }
                                     }
                                   }
-                                }
-                              },
-                              activeColor: AppColors.primary,
-                              fillColor: pollEnded ? MaterialStateProperty.all(currentPollVoted ? AppColors.primary:Colors.grey) :MaterialStateProperty.all(!(!currentPollVoted && totalPersonalVotes >= allowedVotes) ? AppColors.primary : Colors.grey),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              visualDensity: const VisualDensity(
-                                horizontal: VisualDensity.minimumDensity,
-                                vertical: VisualDensity.minimumDensity,
+                                },
+                                activeColor: AppColors.primary,
+                                fillColor: pollEnded ? MaterialStateProperty.all(currentPollVoted ? AppColors.primary:Colors.grey) :MaterialStateProperty.all(!(!currentPollVoted && totalPersonalVotes >= allowedVotes) ? AppColors.primary : Colors.grey),
+                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                visualDensity: const VisualDensity(
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 10,),
                             Expanded(
-                              child: Container(
-                                padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
-                                height: Get.height * 0.045,
-                                margin: const EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: AppColors.onBackground,width: 1),
-                                ),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    widget.post.poll!.pollOptions![i].option.toString(),
-                                    style: TextStyle(
-                                      color: AppColors.onBackground,
-                                      fontSize: Get.width * 0.035,
-                                      fontWeight: FontWeight.normal,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
+                                    height: Get.height * 0.045,
+                                    margin: const EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(11),
+                                      border: Border.all(color: currentPollVoted ? AppColors.primary :AppColors.onBackground,width: 1),
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
+                                    child: Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              widget.post.poll!.pollOptions![i].option.toString(),
+                                              style: TextStyle(
+                                                color: AppColors.onBackground,
+                                                fontSize: Get.width * 0.035,
+                                                fontWeight: currentPollVoted ? FontWeight.bold : FontWeight.normal,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ),
+                                        if(widget.post.poll!.showResult == true)
+                                          Padding(
+                                          padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              "${(votePercentage*100).toStringAsFixed(2)}%",
+                                              style: TextStyle(
+                                                color: AppColors.onBackground,
+                                                fontSize: Get.width * 0.035,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ),
+                                        if(widget.post.poll!.showResult == true)
+                                          SizedBox(
+                                          height: Get.height * 0.045,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(10),
+                                            child: LinearProgressIndicator(
+                                              value: votePercentage,
+                                              valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                                              backgroundColor: Colors.transparent,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(height: 5,),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                    child: Text(
+                                      widget.post.poll!.pollOptions![i].shortDesc.toString(),
+                                      style: TextStyle(
+                                        color: AppColors.onBackground,
+                                        fontSize: Get.width * 0.035,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      softWrap: true,
+                                      textAlign: TextAlign.start,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -732,7 +812,8 @@ class _PostState extends State<Post> {
                             ),
                           ),
 
-                          const Text(
+                          if(widget.post.poll!.showResult == true)
+                            const Text(
                             " - ",
                             style: TextStyle(
                               color: AppColors.onBackground,
@@ -741,7 +822,8 @@ class _PostState extends State<Post> {
                             ),
                           ),
 
-                          Text(
+                          if(widget.post.poll!.showResult == true)
+                            Text(
                             "${widget.post.poll!.totalVotesCountPoll!.toInt()} voted",
                             style: const TextStyle(
                               color: AppColors.onBackground,
@@ -751,7 +833,7 @@ class _PostState extends State<Post> {
                           ),
                         ],
                       ),
-                    if(isCurrentUserPost && widget.post.poll!.showResult != true)
+                    /*if(isCurrentUserPost && widget.post.poll!.showResult != true)
                       AppButton(
                         title: "View Results",
                         onPressed: (){
@@ -772,7 +854,7 @@ class _PostState extends State<Post> {
                         fontColor: AppColors.background,
                         width: Get.width * 0.25,
                         padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
-                      ),
+                      ),*/
                   ],
                 ),
               ),
@@ -1077,7 +1159,15 @@ class InnerPost extends StatelessWidget{
   final HomeController homeController;
   @override
   Widget build(BuildContext context) {
+    List<String> votedPolls = [];
+    var totalPersonalVotes = 0;
 
+    var savedVotedPolls = ReadWriteValue('wayagram_saved_voted_polls', '', MyPref.box);
+    if(savedVotedPolls.val.isNotEmpty){
+      votedPolls = savedVotedPolls.val.split(',');
+    }
+    
+    
     var uniqueId = UniqueKey().toString();
     var post = outerPost.originalOwner!;
     var pollEnded = false;
@@ -1184,7 +1274,7 @@ class InnerPost extends StatelessWidget{
                 marginTop: 0,
               ),
             ),
-          if(pollImageUrls.isNotEmpty)
+          /*if(pollImageUrls.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
               child: ClipRRect(
@@ -1272,7 +1362,89 @@ class InnerPost extends StatelessWidget{
                 )),
                 pollEnded: pollEnded,
               ),
-            ),
+            ),*/
+            /*Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10,top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if(!isCurrentUserPost)
+                    Row(
+                      children: [
+                        Text(
+                          "N${post.poll!.amount!.toInt()} per vote",
+                          style: const TextStyle(
+                            color: AppColors.onBackground,
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+
+                        const Text(
+                          " - ",
+                          style: TextStyle(
+                            color: AppColors.onBackground,
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+
+                        Text(
+                          "${post.poll!.voteLimit!.toInt()} votes allowed",
+                          style: const TextStyle(
+                            color: AppColors.onBackground,
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+
+                        if(post.poll!.showResult == true)
+                          const Text(
+                            " - ",
+                            style: TextStyle(
+                              color: AppColors.onBackground,
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+
+                        if(post.poll!.showResult == true)
+                          Text(
+                            "${post.poll!.totalVotesCountPoll!.toInt()} voted",
+                            style: const TextStyle(
+                              color: AppColors.onBackground,
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                      ],
+                    ),
+                  *//*if(isCurrentUserPost && post.poll!.showResult != true)
+                      AppButton(
+                        title: "View Results",
+                        onPressed: (){
+
+                        },
+                        bckgrndColor: AppColors.primary,
+                        fontColor: AppColors.background,
+                        width: Get.width * 0.25,
+                        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                      ),
+                    if(!isCurrentUserPost && post.poll!.showResult == true)
+                      AppButton(
+                        title: "View Results",
+                        onPressed: (){
+
+                        },
+                        bckgrndColor: AppColors.primary,
+                        fontColor: AppColors.background,
+                        width: Get.width * 0.25,
+                        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                      ),*//*
+                ],
+              ),
+            ),*/
           const SizedBox(
             height: 10,
           ),

@@ -71,6 +71,8 @@ dependencies:
   firebase_core: ^2.3.0
   socket_io_client: ^2.0.0
   flutter_chat_list: ^1.0.6
+  voice_message_package: ^0.0.74
+  file_picker: ^5.2.3
 
 dev_dependencies:
   flutter_test:

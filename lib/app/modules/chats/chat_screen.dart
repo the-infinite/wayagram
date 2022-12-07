@@ -1,17 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart' as dio;
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_list/chat_list.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:voice_message_package/voice_message_package.dart';
 import 'package:wayagram/app/global_widgets/app_input.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/core/utils/validator.dart';
@@ -37,6 +41,7 @@ import 'dart:math' as math;
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/person_view.dart';
+import '../../global_widgets/smart_image.dart';
 import '../home/widgets/HashTagView.dart';
 import '../home/widgets/group_view.dart';
 
@@ -165,6 +170,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   _scrollDown(animate: false);
                 }
               }
+              chatController.stopListeningToEvent("load_previous_chats");
             });
             chatController.emitMessages('previous_chats', chatNormalInfo);
           }
@@ -288,8 +294,12 @@ class _ChatScreenState extends State<ChatScreen> {
               actions: [
                 Row(
                   children: [
-                    IconButton(onPressed: (){}, icon: const Icon(Icons.videocam_rounded, color: Colors.black,size: 24)),
-                    IconButton(onPressed: (){}, icon: const Icon(Icons.call_rounded, color: Colors.black,size: 20,)),
+                    IconButton(onPressed: (){
+                      comingSoon();
+                    }, icon: const Icon(Icons.videocam_rounded, color: Colors.black,size: 24)),
+                    IconButton(onPressed: (){
+                      comingSoon();
+                    }, icon: const Icon(Icons.call_rounded, color: Colors.black,size: 20,)),
                     IconButton(onPressed: (){}, icon: const Icon(FeatherIcons.moreVertical, color: Colors.black,size: 20)),
                   ],
                 )
@@ -340,7 +350,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   var chat = previousChat[index];
-                                  print("${chat.messageType} ${chat.message}");
+                                  bool isFile = false;
+                                  if(chat.messageType == "fileMessage"){
+                                    isFile = true;
+                                    print("${chat.messageType} ${chat.fileUrl}");
+                                  }
                                   if(chat.senderId == fullProfile.id){
                                     if(chat.deleted == true){
                                       return Container();
@@ -356,7 +370,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       children: [
                                         SizedBox(height: Get.height*0.005),
                                         Container(
-                                          width: Get.width*0.5,
+                                          width: isFile ? Get.width*0.6 :Get.width*0.55,
                                           decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
                                             color: AppColors.button,
                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(0),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
@@ -365,25 +379,103 @@ class _ChatScreenState extends State<ChatScreen> {
                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
                                           ),
                                           child: Padding(
-                                              padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10,top: 10),
-                                              child: HashTagText(
-                                                text: chat.deleted == true ? "This message was deleted" : chat.message.toString(),
-                                                decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                                                  color: chat.senderId != fullProfile.id ?  Colors.blue : AppColors.primary,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                                basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                  color: chat.deleted == true ? Colors.blue : chat.senderId == fullProfile.id ? Colors.white :Colors.black,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
-                                                ),
-                                                onTap: (text) {
-                                                  controller.defaultSearchValue = text;
-                                                  Get.to(() => const Search());
-                                                },
-                                                decorateAtSign: true,
+                                              padding: EdgeInsets.only(
+                                                  left: getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile ? 0 : 10,
+                                                  right: getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile ? 0 : 10,
+                                                  bottom: getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile ? 0 : 10,
+                                                  top: getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile ? 0 : 10),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  if(!isFile)
+                                                    HashTagText(
+                                                    text: chat.deleted == true ? "This message was deleted" : chat.message.toString(),
+                                                    decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                      color: chat.senderId != fullProfile.id ?  Colors.blue : AppColors.primary,
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.normal,
+                                                    ),
+                                                    basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                      color: chat.deleted == true ? Colors.blue : chat.senderId == fullProfile.id ? Colors.white :Colors.black,
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.normal,
+                                                      fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
+                                                    ),
+                                                    onTap: (text) {
+                                                      controller.defaultSearchValue = text;
+                                                      Get.to(() => const Search());
+                                                    },
+                                                    decorateAtSign: true,
+                                                  ),
+                                                  if((getUrlType(chat.fileUrl.toString()) == UrlType.VIDEO || getUrlType(chat.fileUrl.toString()) == UrlType.IMAGE) && isFile)
+                                                    SizedBox(
+                                                      height: Get.height * 0.18,
+                                                      child: NewsfeedMultipleImageView(
+                                                        imageUrls: [chat.fileUrl.toString()],
+                                                        marginLeft: 0.0,
+                                                        marginRight: 0.0,
+                                                        marginBottom: 0,
+                                                        marginTop: 0,
+                                                        radius: 12,
+                                                      ),
+                                                    ),
+                                                  if(getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile)
+                                                    VoiceMessage(
+                                                      audioSrc: chat.fileUrl.toString(),
+                                                      played: false, // To show played badge or not.
+                                                      me: chat.senderId == fullProfile.id, // Set message side.
+                                                      onPlay: () {},
+                                                      meBgColor: AppColors.button,
+                                                      contactBgColor: AppColors.background,
+                                                      contactPlayIconColor: AppColors.background,
+                                                    ),
+                                                  if(getUrlType(chat.fileUrl.toString()) != UrlType.AUDIO && getUrlType(chat.fileUrl.toString()) != UrlType.VIDEO && getUrlType(chat.fileUrl.toString()) != UrlType.IMAGE && isFile)
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                            decoration: BoxDecoration(
+                                                            color: chat.senderId == fullProfile.id ? AppColors.background : AppColors.button,
+                                                            borderRadius: BorderRadius.circular(10),
+                                                          ),
+                                                          height: Get.height*0.04,
+                                                          width: Get.width*0.08,
+                                                            child: Icon(Icons.attach_file, color: chat.senderId == fullProfile.id ? Colors.black : Colors.white,),
+                                                        ),
+                                                        SizedBox(width: Get.width*0.01),
+                                                        Column(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: Get.width*0.4,
+                                                              child: Text(
+                                                                chat.fileUrl.toString().split("/").last,
+                                                                style: AppTextStyle.bodyText1.copyWith(
+                                                                  color: chat.senderId == fullProfile.id ? Colors.white :Colors.black,
+                                                                  fontSize: 16,
+                                                                  fontWeight: FontWeight.normal,
+                                                                ),
+                                                                maxLines: 1,
+                                                                overflow: TextOverflow.ellipsis,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: Get.width*0.4,
+                                                              child: Text(
+                                                                chat.fileUrl.toString().split(".").last.toUpperCase(),
+                                                                style: AppTextStyle.bodyText1.copyWith(
+                                                                  color: chat.senderId == fullProfile.id ? AppColors.primary :AppColors.button,
+                                                                  fontSize: 14,
+                                                                  fontWeight: FontWeight.normal,
+                                                                ),
+                                                                maxLines: 1,
+                                                                overflow: TextOverflow.ellipsis,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                ],
                                               )
                                           ),
                                         ),
@@ -459,8 +551,39 @@ class _ChatScreenState extends State<ChatScreen> {
                             keyboardType: TextInputType.text,
                             focusNode: inputNode,
                             suffixIcon: IconButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                FilePickerResult? result = await FilePicker.platform.pickFiles();
 
+                                if (result != null) {
+                                  File file = File(result.files.single.path!);
+                                  Map<String,dynamic> body = {};
+                                  body['file'] = await dio.MultipartFile.fromFile(
+                                    file.path,
+                                    filename: file.path.split('/').last,
+                                  );
+                                  //https://services.staging.wayagram.ng/social-file-resource/aws-upload-file?&sso_id=121
+                                  controller.postData(dio.FormData.fromMap(body), "/social-file-resource/aws-upload-file?").then((value){
+                                    if(value.isSuccessful){
+                                      var message = {
+                                        "receiverId":post.otherId.toString(),
+                                        "chatId":post.chatId.toString(),
+                                        "message":"file",
+                                        "forwardMessage":false,
+                                        "messageType": "fileMessage",
+                                        "fileUrl": value.url.toString(),
+                                      };
+                                      chatController.listenToCustomEvent('notify_user',(data){
+                                        SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
+                                        if(sendMessageResponse.status == true){
+                                          chatTextController.clear();
+                                          chatController.update(['chats_screen']);
+                                        }
+                                        chatController.stopListeningToEvent("notify_user");
+                                      });
+                                      chatController.emitMessages("send_message", message);
+                                    }
+                                  });
+                                }
                               },
                               icon: Transform.rotate(
                                 angle: 45 * math.pi / 180,
@@ -510,9 +633,9 @@ class _ChatScreenState extends State<ChatScreen> {
                               }
                             },
                             icon: Icon(
-                              chatTextController.text.isEmpty
-                                  ? Icons.mic_rounded
-                                  : Icons.send_rounded,
+                              //chatTextController.text.isEmpty
+                                //  ? Icons.mic_rounded:
+                            Icons.send_rounded,
                               color: AppColors.background,
                             ),
                           ),
@@ -528,6 +651,39 @@ class _ChatScreenState extends State<ChatScreen> {
         });
       }),
     );
+  }
+
+  void comingSoon() {
+    const String failed = "assets/images/failed.svg";
+    showDialog(
+        context: Get.context!,
+        builder: (_) => AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Builder(
+            builder: (context) {
+              // Get available height and width of the build area of this widget. Make a choice depending on the size.
+              var height = MediaQuery.of(context).size.height;
+              var width = MediaQuery.of(context).size.width;
+
+              return SizedBox(
+                  height: height * 0.15,
+                  width: width * 0.5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        failed,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text('Coming soon')
+                    ],
+                  ));
+            },
+          ),
+        ));
   }
 
   @override

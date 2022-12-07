@@ -159,16 +159,23 @@ class _SmartImageState extends State<SmartImage> {
 }
 
 
-enum UrlType { IMAGE, VIDEO, UNKNOWN }
+enum UrlType { IMAGE, VIDEO, AUDIO,UNKNOWN }
 UrlType getUrlType(String url) {
   Uri uri = Uri.parse(url);
   String typeString = uri.pathSegments.last.split('.').last;
   if (typeString == "jpg" || typeString == "png" || typeString == "gif" || typeString == "bmp" || typeString == "jpeg" || typeString == "webp" ) {
     return UrlType.IMAGE;
   }
-  if (typeString == "mp4" || typeString == "avi" || typeString == "mov" || typeString == "mkv" || typeString == "flv" || typeString == "wmv" || typeString == "3gp" || typeString == "webm" ) {
+
+
+  if (typeString == "mp4" || typeString == "avi" || typeString == "mov" || typeString == "mkv" || typeString == "flv" || typeString == "wmv" || typeString == "3gp") {
     return UrlType.VIDEO;
-  } else {
-    return UrlType.UNKNOWN;
   }
+
+  //add audio type
+  if(typeString == "webm" || typeString == "mp3" || typeString == "wav" || typeString == "aac" || typeString == "ogg" || typeString == "wma" || typeString == "flac" || typeString == "m4a" || typeString == "m4p" || typeString == "m4b" || typeString == "m4r" || typeString == "m4v" || typeString == "m4a" || typeString == "m4p" || typeString == "m4b" || typeString == "m4r" || typeString == "m4v" || typeString == "m4a" || typeString == "m4p" || typeString == "m4b" || typeString == "m4r" || typeString == "m4v" || typeString == "m4a" || typeString == "m4p" || typeString == "m4b" || typeString == "m4r" || typeString == "m4v" || typeString == "m4a" || typeString == "m4p" || typeString == "m4b" || typeString == "m4r" || typeString == "m4v" || typeString == "m4a" || typeString == "m4p" || typeString == "m4b" || typeString == "m4r" || typeString == "m4v" || typeString == "m4a" || typeString == "m4p" || typeString == "m4b" || typeString == "m4r" || typeString == "m4v" || typeString == "m4a" || typeString == "m4p" || typeString == "m4b" || typeString == "m4r" || typeString == "m4v" || typeString == "m4a" || typeString == "m4p" || typeString == "m4b" || typeString == "m4r" || typeString == "m4v" || typeString == "m4a" || typeString == "m4p" || typeString == "m4b" || typeString == "m4r" || typeString == "m4v"){
+    return UrlType.AUDIO;
+  }
+
+  return UrlType.UNKNOWN;
 }
