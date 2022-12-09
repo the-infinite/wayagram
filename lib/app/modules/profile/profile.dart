@@ -506,7 +506,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                 duration: const Duration(milliseconds: 300),
                                 opacity: scrolled ? 1.0 : 0.0,
                                 child: Text(
-                                  '${controller.logInDetails.user!.firstName!.capitalizeFirst} ${controller.logInDetails.user!.lastName!.capitalizeFirst}',
+                                  '${controller.profile.displayName} ',
                                   style: AppTextStyle.subtitle1.copyWith(
                                     color: const Color(0xff4F4F4F),
                                     fontSize: Get.textScaleFactor * 18,

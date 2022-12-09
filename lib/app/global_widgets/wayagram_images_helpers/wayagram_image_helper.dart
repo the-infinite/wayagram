@@ -13,7 +13,7 @@ class ImageHelper {
       width: width,
       height: height,
       color: color,
-      package: (currentApp != "wayagram") ? 'wayagram' : null,
+      package: (currentApp == "wayagram") ? null : 'wayagram',
       fit: fit ?? BoxFit.contain,
     );
   }
@@ -26,7 +26,7 @@ class ImageHelper {
       width: width,
       height: height,
       color: color,
-      package: (currentApp != "wayagram") ? 'wayagram' : null,
+      package: (currentApp == "wayagram") ? null : 'wayagram',
       fit: fit,
     );
   }

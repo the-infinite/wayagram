@@ -44,7 +44,7 @@ class _CreatePageState extends State<CreatePage> {
   @override
   void initState() {
     super.initState();
-    homeController.userRepo.getFullUserProfile(homeController.logInDetails.user!.id.toString()).then((value) {
+    homeController.userRepo.getFullUserProfile(homeController.profile.userId.toString()).then((value) {
       if(value.isSuccessful){
         homeController.userRepo.getPageCategories().then((value) {
           if(mounted){

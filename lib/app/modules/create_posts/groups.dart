@@ -49,7 +49,7 @@ class _CreateGroupState extends State<CreateGroup> {
   @override
   void initState() {
     super.initState();
-    homeController.userRepo.getFullUserProfile(homeController.logInDetails.user!.id.toString()).then((value) {
+    homeController.userRepo.getFullUserProfile(homeController.profile.userId.toString()).then((value) {
       if(value.isSuccessful){
         homeController.userRepo.getGroupCategories().then((value) {
           if(mounted){

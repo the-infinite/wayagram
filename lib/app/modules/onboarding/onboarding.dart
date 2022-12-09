@@ -9,6 +9,7 @@ import '../../../app/global_widgets/app_button.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
+import '../../bindings/wayagram_binding.dart';
 import 'onboarding_item.dart';
 
 CarouselController buttonCarouselController = CarouselController();
@@ -45,7 +46,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () {
-                          Get.to(() => const Multiplexor());
+                          Get.to(() => const Multiplexor(),binding: WayagramBinding());
                         },
                         child: Text(
                           'Skip',
@@ -125,7 +126,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       onPressed: (){
                         buttonCarouselController.nextPage();
                         if (currentIndex == 6) {
-                          Get.to(() => const Multiplexor());
+                          Get.to(() => const Multiplexor(),binding: WayagramBinding());
                         }
                       },
                       borderRadius: 360,

@@ -16,6 +16,7 @@ import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../bindings/wayagram_binding.dart';
+import '../data/model/ValidateUserModel.dart';
 import '../data/model/full_user_profile_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
@@ -204,6 +205,7 @@ class AuthControllerWayagram extends GetxController {
       var data = response.data as LogInModelEntity;
       MyPref.authToken.val = data.token.toString();
       MyPref.logInDetail.val = jsonEncode(response.data);
+      MyPref.referenceCode.val = data.user!.referenceCode.toString();
       MyPref.userId.val = data.user!.id.toString();
       await getUserProfile(data.user!.id.toString());
     }
@@ -225,26 +227,32 @@ class AuthControllerWayagram extends GetxController {
     }
   }
 
-  Future<void> getUserProfile(String userID) async {
+  Future<void> getUserProfile(String userID,{bool showError = false}) async {
     ApiResponse response = await userRepo.getFullUserProfile(userID);
     if(!response.isSuccessful){
       MyPref.authToken.val = "";
-      AppOverlay.showInfoDialog(
-        title: 'Sign In Failed',
-        content: "An Error Occurred",
-        buttonText: "Okay",
-        onPressed: () {
-          Get.back();
-        },
-      );
-      Get.snackbar("Sign In Failed", "An Error Occured",backgroundColor: Colors.red, colorText: Colors.white);
+      if(showError){
+        Get.snackbar("Sign In Failed", "An Error Occurred",backgroundColor: Colors.red, colorText: Colors.white);
+      }
     }else{
       var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
       MyPref.profileId.val = data.id.toString();
       await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
-      Get.offAll(() => const Home(),binding: WayagramBinding());
+      await Get.offAll(() => const Home(),binding: WayagramBinding());
     }
+  }
+
+  Future<ApiResponse> validateUser(String token) async {
+    MyPref.authToken.val = token;
+    ApiResponse response = await userRepo.postData("/auth-service/api/v1/auth/validate-user",null,hasHeader: true,sso: false);
+    if(response.isSuccessful){
+      ValidateUserModel data = ValidateUserModel.fromJson(response.data);
+      MyPref.userId.val = data.id.toString();
+      MyPref.referenceCode.val = data.referenceCode.toString();
+      await getUserProfile(data.id.toString(),showError: true);
+    }
+    return response;
   }
 
   Future<void> getUserProfileFirst(String userID) async {

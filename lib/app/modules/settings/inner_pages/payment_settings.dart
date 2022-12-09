@@ -99,9 +99,9 @@ class PaymentSettings extends StatelessWidget {
                 SizedBox(
                   width: Get.width*0.5,
                   child: AppButton(
-                    title: controller.logInDetails.user!.referenceCode.toString(),
+                    title: MyPref.referenceCode.val,
                     onPressed: () {
-                      Clipboard.setData(ClipboardData(text: controller.logInDetails.user!.referenceCode.toString())).then((_){
+                      Clipboard.setData(ClipboardData(text: MyPref.referenceCode.val)).then((_){
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
                       });
                     },

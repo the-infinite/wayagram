@@ -11,6 +11,7 @@ import 'package:wayagram/app/modules/top_clips/top_clips.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
+import '../bindings/wayagram_binding.dart';
 import '../controllers/home_controller.dart';
 import '../data/model/followers_model_entity.dart';
 import '../data/model/following_model_entity.dart';
@@ -135,7 +136,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "${controller.logInDetails.user!.firstName} ${controller.logInDetails.user!.lastName}",
+                                        "${controller.profile.displayName}",
                                         style: AppTextStyle.headline4.copyWith(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -391,7 +392,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                       controller.userRepo.api.disconnect();
                                       Get.back();
                                       await MyPref.clearBoxes();
-                                      Get.offAll(() => const Multiplexor());
+                                      Get.offAll(() => const Multiplexor(),binding: WayagramBinding());
                                     },
                                     borderRadius: 10,
                                     fontColor: AppColors.primary,

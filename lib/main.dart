@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //var initial = const OnboardingPage(key: Key('wayagram_onboarding'));
     var initial = MyPref.authToken.val.isNotEmpty ? const Home(key: Key('wayagram_home')) : const OnboardingPage(key: Key('wayagram_onboarding'));
+    MyPref.currentApp.val = 'wayagram';
     return GetMaterialApp(
       theme: AppThemes.lightTheme,
       themeMode: ThemeMode.light,

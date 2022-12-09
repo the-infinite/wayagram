@@ -76,7 +76,7 @@ class HomeControllerWayagram extends GetxController {
   bool hasContactPermission = false;
 
   var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-  var logInDetails = LogInModelEntity.fromJson(jsonDecode(MyPref.logInDetail.val));
+  //var logInDetails = LogInModelEntity.fromJson(jsonDecode(MyPref.logInDetail.val));
 
   Future<void> checkPermissionStatus() async{
     var status = await Permission.contacts.status;
