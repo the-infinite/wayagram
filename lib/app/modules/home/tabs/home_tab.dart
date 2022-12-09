@@ -145,13 +145,13 @@ class HomeTab extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  otherBusinessWidget(Get.context!, title: "Wayabank", onOptionsTap: () {
+                  otherBusinessWidget(Get.context!, title: "WayaBank", onOptionsTap: () {
                     onWayaBankTap();
                   }, description: "Free internet banking \nand bills payment", icon: wayabankIconSvg),
-                  otherBusinessWidget(Get.context!, title: "Wayapay", onOptionsTap: () {
+                  otherBusinessWidget(Get.context!, title: "WayaQuick", onOptionsTap: () {
                         onWayaQuickTap();
                       }, description: "Accept Payment anytime, anywhere.", icon: wayapayIconSvg),
-                  otherBusinessWidget(Get.context!, title: "Wayapos", onOptionsTap: () {
+                  otherBusinessWidget(Get.context!, title: "WayaPos", onOptionsTap: () {
                     onWayaPosTap();
                   }, description: "Start accepting instant payment with Wayapos Terminal Device", icon: wayaposIconSvg),
                 ],
