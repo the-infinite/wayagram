@@ -17,10 +17,11 @@ import '../../global_widgets/app_button.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 
 class Multiplexor extends StatefulWidget {
-  const Multiplexor({Key? key,this.anotherApp = false,this.token = ""}) : super(key: key);
+  const Multiplexor({Key? key,this.anotherApp = false,this.token = "",this.currentApp = "wayagram"}) : super(key: key);
 
   static const route = '/multiplexor';
   final bool anotherApp;
+  final String currentApp;
   final String token;
 
   @override
@@ -48,6 +49,8 @@ class _MultiplexorState extends State<Multiplexor> {
   @override
   Widget build(BuildContext context) {
     MyPref.anotherApp.val = widget.anotherApp;
+    MyPref.currentApp.val = widget.currentApp;
+
     return Scaffold(
       body: Container(
         color: AppColors.background,

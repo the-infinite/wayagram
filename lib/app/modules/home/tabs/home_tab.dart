@@ -250,7 +250,7 @@ class HomeTab extends StatelessWidget {
                     ],
                   ));
             },
-          ),
+          )
         ));
   }
 }
