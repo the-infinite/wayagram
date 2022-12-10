@@ -2,15 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:better_player/better_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:transparent_image/transparent_image.dart';
-import 'package:video_player/video_player.dart';
 
 import 'helpers/size.dart';
 
@@ -31,96 +27,74 @@ class SmartImage extends StatefulWidget {
 }
 
 class _SmartImageState extends State<SmartImage> {
-  var aspectRatio = 1.0;
-  bool videoLoaded = false;
-  late VideoPlayerController controller;
-  late ChewieController _chewieController;
-
+  double aspectRatio = 16 / 9;
+  late BetterPlayerController _betterPlayerController;
   bool networkImage() => widget.src.startsWith('https');
   bool isVideo() => getUrlType(widget.src) == UrlType.VIDEO;
   bool base64() => widget.src.contains('[]');
 
   @override
   void initState() {
+    super.initState();
     if(isVideo()){
       if(networkImage()){
-        controller = VideoPlayerController.network(widget.src);
-        _chewieController = ChewieController(
-          videoPlayerController: controller,
-          autoInitialize: true,
-          autoPlay: false,
-          allowFullScreen: false,
-          aspectRatio: aspectRatio,
-          showControls: widget.isSlideShow,
-          deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
-          materialProgressColors: ChewieProgressColors(
-            playedColor: Colors.purple,
-            handleColor: Colors.purple,
-            backgroundColor: Colors.grey,
-            bufferedColor: Colors.purple[100]!,
-          ),
-          placeholder: Container(
-            color: Colors.black,
+        BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+          BetterPlayerDataSourceType.network,
+          widget.src,
+          cacheConfiguration: BetterPlayerCacheConfiguration(
+            useCache: true,
+            preCacheSize: 10 * 1024 * 1024,
+            maxCacheSize: 10 * 1024 * 1024,
+            maxCacheFileSize: 10 * 1024 * 1024,
+            key: widget.src,
           ),
         );
-        videoLoaded = true;
-      }else{
-        controller = VideoPlayerController.file(File(widget.src));
-        _chewieController = ChewieController(
-          videoPlayerController: controller,
-          autoInitialize: true,
-          autoPlay: false,
-          allowFullScreen: false,
-          aspectRatio: aspectRatio,
-          showControls: widget.isSlideShow,
-          deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
-          materialProgressColors: ChewieProgressColors(
-            playedColor: Colors.purple,
-            handleColor: Colors.purple,
-            backgroundColor: Colors.grey,
-            bufferedColor: Colors.purple[100]!,
-          ),
-          placeholder: Container(
-            color: Colors.black,
-          ),
-        );
-        videoLoaded = true;
+        _betterPlayerController = BetterPlayerController(const BetterPlayerConfiguration(), betterPlayerDataSource: betterPlayerDataSource);
       }
     }
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if(isVideo() && videoLoaded){
+    if(isVideo()){
       if(widget.isSlideShow){
-        return Chewie(
-          controller: _chewieController,
-        );
+        if(networkImage()){
+          return AspectRatio(
+            aspectRatio: 16 / 9,
+            child: BetterPlayer(
+              controller: _betterPlayerController,
+            ),
+          );
+        }else {
+          return BetterPlayer.file(
+            widget.src,
+            betterPlayerConfiguration: const BetterPlayerConfiguration(
+              aspectRatio: 16 / 9,
+            ),
+          );
+        }
       }
-      if(!widget.useAspectRatio){
-        return FittedBox(
-          fit: BoxFit.cover,
-          child: Chewie(
-            controller: _chewieController,
-          ),
-        );
-      }
+
       return MeasureSize(
         onChange: (size) {
           aspectRatio = size.width / size.height;
-          _chewieController = _chewieController.copyWith(
-            aspectRatio: aspectRatio,
-            showControls: widget.isSlideShow,
-          );
           setState(() {
           });
         },
-        child: Chewie(
-          controller: _chewieController,
+        child: networkImage() ? AspectRatio(
+          aspectRatio: aspectRatio,
+          child: BetterPlayer(
+            controller: _betterPlayerController,
+          ),
+        ) : BetterPlayer.file(
+          widget.src,
+          betterPlayerConfiguration: BetterPlayerConfiguration(
+            aspectRatio: aspectRatio,
+          ),
         ),
       );
     }
+
     return networkImage() ? CachedNetworkImage(
       imageUrl: widget.src, placeholder: (context, url) => Container(
       color: Colors.transparent,
@@ -147,8 +121,6 @@ class _SmartImageState extends State<SmartImage> {
 
   @override
   void dispose() {
-    controller.dispose();
-    _chewieController.dispose();
     super.dispose();
   }
 

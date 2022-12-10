@@ -250,7 +250,7 @@ class AuthControllerWayagram extends GetxController {
       ValidateUserModel data = ValidateUserModel.fromJson(response.data);
       MyPref.userId.val = data.id.toString();
       MyPref.referenceCode.val = data.referenceCode.toString();
-      await getUserProfile(data.id.toString(),showError: true);
+      await getUserProfile(data.id.toString(),showError: false);
     }
     return response;
   }

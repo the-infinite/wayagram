@@ -50,6 +50,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
+  better_player:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: Issue1057
+      resolved-ref: e45f447b6d3ae6a3404ddfd9663f8aeae864ddec
+      url: "https://github.com/matthewrice345/betterplayer.git"
+    source: git
+    version: "0.0.83"
   boolean_selector:
     dependency: transitive
     description:
@@ -113,13 +122,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  chewie:
-    dependency: "direct main"
-    description:
-      name: chewie
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.5"
   cli_util:
     dependency: transitive
     description:
@@ -499,6 +501,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_widget_from_html_core:
+    dependency: transitive
+    description:
+      name: flutter_widget_from_html_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.5+3"
+  fwfh_text_style:
+    dependency: transitive
+    description:
+      name: fwfh_text_style
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.22.08+1"
   get:
     dependency: "direct main"
     description:
@@ -1177,7 +1193,7 @@ packages:
     source: hosted
     version: "2.1.2"
   video_player:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: video_player
       url: "https://pub.dartlang.org"
@@ -1211,13 +1227,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.12"
-  video_thumbnail:
-    dependency: "direct main"
+  visibility_detector:
+    dependency: transitive
     description:
-      name: video_thumbnail
+      name: visibility_detector
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.3"
+    version: "0.3.3"
   voice_message_package:
     dependency: "direct main"
     description:
@@ -1290,4 +1306,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.17.5 <3.0.0"
-  flutter: ">=3.0.0"
+  flutter: ">=3.1.0-0"
