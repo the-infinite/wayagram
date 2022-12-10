@@ -53,6 +53,7 @@ class PostProfile extends StatefulWidget {
 }
 
 class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin{
+  List<String> savedFollowingList = [];
   var page = 0;
   late TabController tabController;
   PageController pageController = PageController(initialPage: 0, keepPage: true);
@@ -64,6 +65,10 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    final savedFollowing = ReadWriteValue('wayagram_saved_following', "", MyPref.box);
+    if(savedFollowing.val.isNotEmpty){
+      savedFollowingList = savedFollowing.val.split(",");
+    }
     var top = 0.0;
     var post = Get.arguments as AllPostsEntity;
 
@@ -87,11 +92,25 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
             var isAFollower = followers.followers!.any((element) => element.username == post.profile!.username);
-            var isFollowing = following.following!.any((element) => element.username == post.profile!.username);
+            var isFollowing = following.following!.any((element) => element.username == post.profile!.username) || savedFollowingList.contains(post.profile!.id);
             var isBlocked = blocked.any((element) => element.username == post.profile!.username);
             var isMuted = muted.any((element) => element.username == post.profile!.username);
 
+            if(isFollowing){
+              if(!savedFollowingList.contains(post.profile!.id.toString())){
+                savedFollowingList.add(post.profile!.id.toString());
+                savedFollowing.val = savedFollowingList.join(",");
+              }
+            }else{
+              if(savedFollowingList.contains(post.profile!.id.toString())){
+                isFollowing = true;
+              }else{
+                isFollowing = false;
+              }
+            }
+
             var postListID = post.profile!.id;
+            var privateUser = post.profile!.notPublic == true;
             var tabs = [
               SingleChildScrollView(
                 key: const ValueKey('posts'),
@@ -250,7 +269,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                 right: 20,
                                                 child: SizedBox(
                                                   child: AppButton(
-                                                    title: isFollowing ? 'Following' : 'Follow',
+                                                    title: isFollowing ? 'Following' : privateUser ? 'Send Request' : 'Follow',
                                                     onPressed: () async {
                                                       var body = {
                                                         "user_id": post.profile!.userId,
@@ -261,10 +280,13 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                         if(response.isSuccessful){
                                                           if(response.message.toString().toLowerCase().contains("request")){
                                                             AppOverlay.showSuccessSnackBar(content :"Friend request sent successfully");
+                                                          }else{
+                                                            AppOverlay.showSuccessSnackBar(content :"User Followed successfully");
+                                                            savedFollowingList.add(post.profile!.id.toString());
+                                                            savedFollowing.val = savedFollowingList.join(",");
+                                                            controller.getFollowing;
+                                                            controller.update(['post_profile_page']);
                                                           }
-                                                          await controller.getFollowing;
-                                                          //await controller.getPosts;
-                                                          controller.update(['post_profile_page']);
                                                         }else{
                                                           if(response.message.toString().toLowerCase().contains("request")){
                                                             AppOverlay.showSuccessSnackBar(content :"Friend request sent successfully");
@@ -275,8 +297,11 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                       }else{
                                                         var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
                                                         if(response.isSuccessful){
-                                                          await controller.getFollowing;
-                                                          //await controller.getPosts;
+                                                          following.following!.removeWhere((element) => element.userId == post.profile!.userId.toString());
+                                                          MyPref.following.val = jsonEncode(following);
+                                                          savedFollowingList.remove(post.profile!.id.toString());
+                                                          savedFollowing.val = savedFollowingList.join(",");
+                                                          controller.getFollowing;
                                                           controller.update(['post_profile_page']);
                                                         }
                                                       }
@@ -287,7 +312,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                     border: Border.all(color: isFollowing ? AppColors.primary : AppColors.background, width: 1),
                                                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                                     fontSize: Get.width * 0.04,
-                                                    width: Get.width * 0.3,
+                                                    width: Get.width * 0.32,
                                                   ),
                                                 ),
                                               ),
@@ -701,46 +726,49 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                 preferredSize: Size(Get.width, Get.height * 0.06),
                                 child: Column(
                                   children: [
-                                    AnimatedOpacity(
-                                      duration: const Duration(milliseconds: 300),
-                                      opacity: scrolled ? 1.0 : 0.0,
-                                      child: const Divider(
+                                    if(!privateUser || isFollowing)
+                                      AnimatedOpacity(
+                                        duration: const Duration(milliseconds: 300),
+                                        opacity: scrolled ? 1.0 : 0.0,
+                                        child: const Divider(
+                                          height: 0.5,
+                                          thickness: 0.5,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    if(!privateUser || isFollowing)
+                                      TabBar(
+                                        controller: tabController,
+                                        padding: EdgeInsets.zero,
+                                        labelColor: Colors.black,
+                                        unselectedLabelColor: const Color(0xff9A9A9A),
+                                        indicatorColor: AppColors.primary,
+                                        indicatorSize: TabBarIndicatorSize.tab,
+                                        labelStyle: TextStyle(
+                                          fontSize: Get.width*0.035,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        unselectedLabelStyle: TextStyle(
+                                          fontSize: Get.width*0.035,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        tabs: const [
+                                          Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                          Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
+                                          Tab(text: 'Polls',iconMargin: EdgeInsets.zero,),
+                                          Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
+                                        ],
+                                        onTap: (index) {
+                                          //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                          //controller.update(['profile_page']);
+                                        },
+                                      ),
+                                    if(!privateUser || isFollowing)
+                                      const Divider(
                                         height: 0.5,
                                         thickness: 0.5,
                                         color: Colors.grey,
                                       ),
-                                    ),
-                                    TabBar(
-                                      controller: tabController,
-                                      padding: EdgeInsets.zero,
-                                      labelColor: Colors.black,
-                                      unselectedLabelColor: const Color(0xff9A9A9A),
-                                      indicatorColor: AppColors.primary,
-                                      indicatorSize: TabBarIndicatorSize.tab,
-                                      labelStyle: TextStyle(
-                                        fontSize: Get.width*0.035,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      unselectedLabelStyle: TextStyle(
-                                        fontSize: Get.width*0.035,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      tabs: const [
-                                        Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Polls',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
-                                      ],
-                                      onTap: (index) {
-                                        //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                                        //controller.update(['profile_page']);
-                                      },
-                                    ),
-                                    const Divider(
-                                      height: 0.5,
-                                      thickness: 0.5,
-                                      color: Colors.grey,
-                                    ),
                                   ],
                                 )),
                           );
@@ -749,7 +777,22 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                     ),
                   ];
                 },
-                body: TabBarView(
+                body:  (privateUser && !isFollowing) ? SizedBox(
+                  width: Get.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: Get.height*0.25,),
+                      Icon(Icons.lock,size: Get.width*0.2,color: Colors.grey,),
+                      SizedBox(height: Get.height*0.02,),
+                      Text("This profile is private",style: AppTextStyle.bodyText1.copyWith(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                        fontSize: Get.textScaleFactor*18,
+                      ),),
+                    ],
+                  ),
+                ) : TabBarView(
                   controller: tabController,
                   children: tabs.map((widget) {
                     return SafeArea(

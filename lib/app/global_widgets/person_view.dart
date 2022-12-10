@@ -57,7 +57,8 @@ class PersonView extends StatefulWidget {
     this.onReportClick, this.iDs,
     this.showButton = false,
     this.buttonName = "Invite",
-    this.onButtonClick
+    this.onButtonClick,
+    this.privateUser
   }) : super(key: key);
 
   final bool isLoading;
@@ -69,6 +70,7 @@ class PersonView extends StatefulWidget {
   final List<String> profilePic;
   final List<String> userIDs;
   final List<String>? iDs;
+  final List<String>? privateUser;
   final List<BlockedAccountsEntity>? blocked;
   final List<FollowingModelFollowing>? following;
   final List<FollowersModelFollowers>? followers;
@@ -124,6 +126,7 @@ class _PersonViewState extends State<PersonView> {
             var bio = '';
             var coverImage = '';
             var id = '';
+            var privateUser = "false";
             if(widget.blocked!=null){
               bio = widget.blocked![index].bio ?? '';
               postCount = widget.blocked![index].posts.toString();
@@ -131,6 +134,7 @@ class _PersonViewState extends State<PersonView> {
               followingCount = widget.blocked![index].followings.toString();
               coverImage = widget.blocked![index].coverImage ?? '';
               id = widget.blocked![index].id ?? '';
+              privateUser = widget.blocked![index].notPublic == true ? "true" : "false";
             }else if(widget.following!=null) {
               bio = widget.following![index].bio ?? '';
               postCount = widget.following![index].posts.toString();
@@ -138,6 +142,7 @@ class _PersonViewState extends State<PersonView> {
               followingCount = widget.following![index].followings.toString();
               coverImage = widget.following![index].coverImage ?? '';
               id = widget.following![index].id ?? '';
+              privateUser = widget.following![index].notPublic == true ? "true" : "false";
             }else if(widget.followers!=null) {
               bio = widget.followers![index].bio ?? '';
               postCount = widget.followers![index].posts.toString();
@@ -145,8 +150,12 @@ class _PersonViewState extends State<PersonView> {
               followingCount = widget.followers![index].followings.toString();
               coverImage = widget.followers![index].coverImage ?? '';
               id = widget.followers![index].id ?? '';
+              privateUser = widget.followers![index].notPublic == true ? "true" : "false";
             }else if(widget.iDs != null){
               id = widget.iDs![index].toString();
+              if(widget.privateUser != null){
+                privateUser = widget.privateUser![index];
+              }
             }
             if(widget.onClick!=null){widget.onClick!(Person(
                 displayName: displayName,
@@ -160,7 +169,7 @@ class _PersonViewState extends State<PersonView> {
               id: id
               ));
             }else{
-              Get.to(() => const OtherProfile(),arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,id]);
+              Get.to(() => const OtherProfile(),arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,id,privateUser]);
             }
           },
           child: Container(

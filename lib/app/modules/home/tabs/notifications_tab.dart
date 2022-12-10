@@ -143,7 +143,8 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.followers.toString(),
                                                 post.profile!.followings.toString(),
                                                 post.profile!.coverImage.toString(),
-                                                post.profile!.id.toString()
+                                                post.profile!.id.toString(),
+                                                post.profile!.notPublic == true ? "true" : "false"
                                               ]);
                                             },
                                             child: Container(
@@ -271,7 +272,8 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.followers.toString(),
                                                 post.profile!.followings.toString(),
                                                 post.profile!.coverImage.toString(),
-                                                post.profile!.id.toString()
+                                                post.profile!.id.toString(),
+                                                post.profile!.notPublic == true ? "true" : "false"
                                               ]);
                                             },
                                             child: Container(
@@ -421,7 +423,8 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.followers.toString(),
                                                 post.profile!.followings.toString(),
                                                 post.profile!.coverImage.toString(),
-                                                post.profile!.id.toString()
+                                                post.profile!.id.toString(),
+                                                post.profile!.notPublic == true ? "true" : "false"
                                               ]);
                                             },
                                             child: Container(
@@ -549,7 +552,8 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.followers.toString(),
                                                 post.profile!.followings.toString(),
                                                 post.profile!.coverImage.toString(),
-                                                post.profile!.id.toString()
+                                                post.profile!.id.toString(),
+                                                post.profile!.notPublic == true ? "true" : "false"
                                               ]);
                                             },
                                             child: Container(
@@ -699,7 +703,8 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.followers.toString(),
                                                 post.profile!.followings.toString(),
                                                 post.profile!.coverImage.toString(),
-                                                post.profile!.id.toString()
+                                                post.profile!.id.toString(),
+                                                post.profile!.notPublic == true ? "true" : "false"
                                               ]);
                                             },
                                             child: Container(
@@ -833,7 +838,8 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.followers.toString(),
                                                 post.profile!.followings.toString(),
                                                 post.profile!.coverImage.toString(),
-                                                post.profile!.id.toString()
+                                                post.profile!.id.toString(),
+                                                post.profile!.notPublic == true ? "true" : "false"
                                               ]);
                                             },
                                             child: Container(
@@ -989,7 +995,8 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.followers.toString(),
                                                 post.profile!.followings.toString(),
                                                 post.profile!.coverImage.toString(),
-                                                post.profile!.id.toString()
+                                                post.profile!.id.toString(),
+                                                post.profile!.notPublic == true ? "true" : "false"
                                               ]);
                                             },
                                             child: Container(
@@ -1123,7 +1130,8 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.followers.toString(),
                                                 post.profile!.followings.toString(),
                                                 post.profile!.coverImage.toString(),
-                                                post.profile!.id.toString()
+                                                post.profile!.id.toString(),
+                                                post.profile!.notPublic == true ? "true" : "false"
                                               ]);
                                             },
                                             child: Container(

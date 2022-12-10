@@ -32,7 +32,6 @@ import '../../data/model/products_model_entity.dart';
 import '../../data/model/profile_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
-import '../../global_widgets/app_button.dart';
 import '../../global_widgets/app_drawer.dart';
 import '../../global_widgets/page_input.dart';
 import '../../global_widgets/person_view.dart';
@@ -53,6 +52,7 @@ class OtherProfile extends StatefulWidget {
 }
 
 class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMixin{
+  List<String> savedFollowingList = [];
   var page = 0;
   late TabController tabController;
   PageController pageController = PageController(initialPage: 0, keepPage: true);
@@ -66,6 +66,10 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final savedFollowing = ReadWriteValue('wayagram_saved_following', "", MyPref.box);
+    if(savedFollowing.val.isNotEmpty){
+      savedFollowingList = savedFollowing.val.split(",");
+    }
     var top = 0.0;
     var arguments = Get.arguments as List<String>;
     var userId = arguments[3];
@@ -78,8 +82,12 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
     var displayName = arguments[0];
     var coverImage = arguments[8];
     var id = "";
+    var privateUser = false;
     if(arguments.length > 9){
       id = arguments[9];
+    }
+    if(arguments.length > 10){
+      privateUser = arguments[10] == "true";
     }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -101,10 +109,22 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
             var isAFollower = followers.followers!.any((element) => element.username == userName);
-            var isFollowing = following.following!.any((element) => element.username == userName);
+            var isFollowing = following.following!.any((element) => element.username == userName) || savedFollowingList.contains(id);
             var isBlocked = blocked.any((element) => element.username == userName);
             var isMuted = muted.any((element) => element.username == userName);
 
+            if(isFollowing){
+              if(!savedFollowingList.contains(id)){
+                savedFollowingList.add(id);
+                savedFollowing.val = savedFollowingList.join(",");
+              }
+            }else{
+              if(savedFollowingList.contains(id)){
+                isFollowing = true;
+              }else{
+                isFollowing = false;
+              }
+            }
 
             var postListID = id;
             var tabs = [
@@ -269,7 +289,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                                 right: 20,
                                                 child: SizedBox(
                                                   child: AppButton(
-                                                    title: isFollowing ? 'Following' : 'Follow',
+                                                    title: isFollowing ? 'Following' : privateUser ? 'Send Request' : 'Follow',
                                                     onPressed: () async {
                                                       var body = {
                                                         "user_id": userId,
@@ -279,11 +299,14 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                                         var response = await controller.postData(body, "wayagram-service/graph/friend/follow");
                                                         if(response.isSuccessful){
                                                           if(response.message.toString().toLowerCase().contains("request")){
-                                                            AppOverlay.showSuccessSnackBar(content :"Friend request sent successfully");
+                                                            AppOverlay.showSuccessSnackBar(content :"Follow request sent successfully");
+                                                          }else{
+                                                            AppOverlay.showSuccessSnackBar(content :"User Followed successfully");
+                                                            savedFollowingList.add(id);
+                                                            savedFollowing.val = savedFollowingList.join(",");
+                                                            controller.getFollowing;
+                                                            controller.update(['other_profile_page']);
                                                           }
-                                                          await controller.getFollowing;
-                                                          //await controller.getPosts;
-                                                          controller.update(['other_profile_page']);
                                                         }else{
                                                           if(response.message.toString().toLowerCase().contains("request")){
                                                             AppOverlay.showSuccessSnackBar(content :"Friend request sent successfully");
@@ -294,9 +317,14 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                                       }else{
                                                         var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
                                                         if(response.isSuccessful){
-                                                          await controller.getFollowing;
-                                                          //await controller.getPosts;
+                                                          following.following!.removeWhere((element) => element.userId == userId);
+                                                          MyPref.following.val = jsonEncode(following);
+                                                          savedFollowingList.remove(id);
+                                                          savedFollowing.val = savedFollowingList.join(",");
+                                                          controller.getFollowing;
                                                           controller.update(['other_profile_page']);
+                                                        }else{
+                                                          AppOverlay.showErrorSnackBar();
                                                         }
                                                       }
                                                     },
@@ -306,7 +334,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                                     border: Border.all(color: isFollowing ? AppColors.primary : AppColors.background, width: 1),
                                                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                                     fontSize: Get.width * 0.04,
-                                                    width: Get.width * 0.3,
+                                                    width: Get.width * 0.32,
                                                   ),
                                                 ),
                                               ),
@@ -710,7 +738,8 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                 preferredSize: Size(Get.width, Get.height * 0.06),
                                 child: Column(
                                   children: [
-                                    AnimatedOpacity(
+                                    if(!privateUser || isFollowing)
+                                      AnimatedOpacity(
                                       duration: const Duration(milliseconds: 300),
                                       opacity: scrolled ? 1.0 : 0.0,
                                       child: const Divider(
@@ -719,7 +748,8 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         color: Colors.grey,
                                       ),
                                     ),
-                                    TabBar(
+                                    if(!privateUser || isFollowing)
+                                      TabBar(
                                       controller: tabController,
                                       padding: EdgeInsets.zero,
                                       labelColor: Colors.black,
@@ -745,11 +775,13 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         //controller.update(['profile_page']);
                                       },
                                     ),
-                                    const Divider(
+                                    if(!privateUser || isFollowing)
+                                      const Divider(
                                       height: 0.5,
                                       thickness: 0.5,
                                       color: Colors.grey,
                                     ),
+
                                   ],
                                 )),
                           );
@@ -758,7 +790,22 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                     ),
                   ];
                 },
-                body: TabBarView(
+                body: (privateUser && !isFollowing) ? SizedBox(
+                  width: Get.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: Get.height*0.25,),
+                      Icon(Icons.lock,size: Get.width*0.2,color: Colors.grey,),
+                      SizedBox(height: Get.height*0.02,),
+                      Text("This profile is private",style: AppTextStyle.bodyText1.copyWith(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                        fontSize: Get.textScaleFactor*18,
+                      ),),
+                    ],
+                  ),
+                ) :TabBarView(
                   controller: tabController,
                   children: tabs.map((widget) {
                     return SafeArea(

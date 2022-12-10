@@ -224,6 +224,8 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   profilePic: posts.map((e) => e.avatar.toString()).toList(),
                                   length: posts.length,
                                   userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                  iDs: posts.map((e) => e.id.toString()).toList(),
+                                  privateUser: posts.map((e) => e.notPublic == true ? "true" : "false").toList(),
                                 );
                               } else if(searchedPeople.isNotEmpty){
                                 var posts = SearchPeopleModel.getService(jsonDecode(searchedPeople));
@@ -233,6 +235,8 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   profilePic: posts.map((e) => e.avatar.toString()).toList(),
                                   length: posts.length,
                                   userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                  iDs: posts.map((e) => e.id.toString()).toList(),
+                                  privateUser: posts.map((e) => e.notPublic == true ? "true" : "false").toList(),
                                 );
                               }else{
                                 if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
