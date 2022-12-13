@@ -32,13 +32,14 @@ class CreatePoll extends StatelessWidget {
     var titleController = TextEditingController();
     var questionController = TextEditingController();
     var descriptionController = TextEditingController();
-    var isTextPoll = true;
+    var isTextPoll = false;
     var pos = 0;
 
     var option = "";
     var description = "";
-    List<String>? options = [];
-    List<String>? descriptions = [];
+    List<String> options = [];
+    List<String> images = [];
+    List<String> descriptions = [];
 
     var formKey1 = GlobalKey<FormState>();
     var formKey2 = GlobalKey<FormState>();
@@ -164,7 +165,7 @@ class CreatePoll extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: Get.width*0.03, vertical: 0),
                     child: SizedBox(
-                      height: Get.height*0.8,
+                      height: Get.height * 0.9,
                       child: PageView(
                         controller: pageController,
                         physics: const NeverScrollableScrollPhysics(),
@@ -367,12 +368,17 @@ class CreatePoll extends StatelessWidget {
                                             controller: descriptionController,
                                           ),
                                         ),
+                                        if(!isTextPoll)
+                                          AppButton(
+                                              title: "Choose File",
+                                            width: Get.width*0.8,
+                                          )
                                       ],
                                     ),
                                   ),
                                   IconButton(
                                       onPressed: (){
-                                        if(options.length < 11){
+                                        if(options.length < 31){
                                           if(formKey3.currentState!.validate()){
                                             options.add(option);
                                             descriptions.add(description);
@@ -394,11 +400,13 @@ class CreatePoll extends StatelessWidget {
                               ),
                               SizedBox(height: Get.height*0.025),
                               SizedBox(height: Get.height*0.025),
-                              Expanded(
+                              SizedBox(
+                                height: Get.height*0.5,
                                 child: ListView.builder(
                                   itemCount: options.length,
-                                  physics: const NeverScrollableScrollPhysics(),
+                                  //physics: const NeverScrollableScrollPhysics(),
                                   padding: const EdgeInsets.all(0),
+                                  //shrinkWrap: true,
                                   itemBuilder: (context, index){
                                     return Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
