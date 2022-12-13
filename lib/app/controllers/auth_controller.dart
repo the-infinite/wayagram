@@ -227,7 +227,7 @@ class AuthControllerWayagram extends GetxController {
     }
   }
 
-  Future<void> getUserProfile(String userID,{bool showError = false}) async {
+  Future<void> getUserProfile(String userID,{bool showError = true}) async {
     ApiResponse response = await userRepo.getFullUserProfile(userID);
     if(!response.isSuccessful){
       MyPref.authToken.val = "";
