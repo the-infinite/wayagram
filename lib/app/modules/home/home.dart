@@ -249,7 +249,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
 
                       },
                     ),
-                  if(controller.currentBottomNavPage.value == 4)
+                  /*if(controller.currentBottomNavPage.value == 4)
                     Divider(
                       height: 0.5,
                       thickness: 0.5,
@@ -278,7 +278,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                       onTap: (index) {
 
                       },
-                    ),
+                    ),*/
                   Divider(
                     height: 0.5,
                     thickness: 0.45,

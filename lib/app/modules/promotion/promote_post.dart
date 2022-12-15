@@ -558,24 +558,6 @@ class _PromotePostState extends State<PromotePost> {
     List<String> uniqueInterestList = interestList.toSet().toList();
     uniqueInterestList.sort();
     uniqueInterestList.add('Others');
-    int impressions = 0;
-    int likes = 0;
-    int reposts = 0;
-    int comments = 0;
-    if(widget.post.engagement != null){
-      if(widget.post.engagement!.viewCount != null){
-        impressions = widget.post.engagement!.viewCount!.toInt();
-      }
-      if(widget.post.engagement!.likeCount != null){
-        likes = widget.post.engagement!.likeCount!.toInt();
-      }
-      if(widget.post.engagement!.repostCount != null){
-        reposts = widget.post.engagement!.repostCount!.toInt();
-      }
-      if(widget.post.engagement!.commentCount != null){
-        comments = widget.post.engagement!.commentCount!.toInt();
-      }
-    }
 
     if(savedPosts.val.isNotEmpty){
       promotionPricingModelList = PromotionPricingModel.listFromJson(jsonDecode(savedPosts.val));
@@ -989,7 +971,7 @@ class _PromotePostState extends State<PromotePost> {
                               padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
                           ),
-                          const SizedBox(height: 5,),
+                          SizedBox(height: Get.height * 0.050),
                         ],
                       ),
                     ),
@@ -1139,6 +1121,8 @@ class _PromotePostState extends State<PromotePost> {
                             padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
                         ),
+
+                        SizedBox(height: Get.height * 0.050),
                       ],
                     ),
                   ),
@@ -1328,6 +1312,7 @@ class _PromotePostState extends State<PromotePost> {
                               padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
                           ),
+                          SizedBox(height: Get.height * 0.050),
                         ],
                       ),
                     ),
