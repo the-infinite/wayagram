@@ -38,6 +38,7 @@ class ChatControllerWayagram extends GetxController {
   ChatControllerWayagram(this.userRepo);
 
   ChatListOverView? chatListOverView;
+  List<String> userOnline = [];
   Map<String,PreviousChatModel> previousChatMap = {};
   final jsonEncoder = const JsonEncoder();
 
@@ -69,13 +70,21 @@ class ChatControllerWayagram extends GetxController {
 
   void listenToMessages(){
     userRepo.api.listenToEvent('user_connected', (data) {
-
+      userOnline.add(data.toString());
+      update(['chats_screen']);
+      if (kDebugMode) {
+        print('socket_user_connected: $data');
+      }
     });
     userRepo.api.listenToEvent('message', (data) {
-
+      if (kDebugMode) {
+        print('socket_message: $data');
+      }
     });
     userRepo.api.listenToEvent('new_message', (data) {
-
+      if (kDebugMode) {
+        print('socket_new_message: $data');
+      }
     });
     userRepo.api.listenToEvent('notify_user', (data) {
 
@@ -104,16 +113,22 @@ class ChatControllerWayagram extends GetxController {
 
     });
     userRepo.api.listenToEvent('is_online_group_members', (data) {
-
+      if (kDebugMode) {
+        print('socket_is_online_group_members: $data');
+      }
     });
     userRepo.api.listenToEvent('load_group_chat_overview', (data) {
-
+      if (kDebugMode) {
+        print('socket_group_chat_overview: $data');
+      }
     });
     userRepo.api.listenToEvent('load_previous_group_chats', (data) {
 
     });
     userRepo.api.listenToEvent('is_user_typing', (data) {
-
+      if (kDebugMode) {
+        print('socket_is_user_typing: $data');
+      }
     });
     userRepo.api.listenToEvent('message_deleted', (data) {
 
@@ -125,11 +140,14 @@ class ChatControllerWayagram extends GetxController {
 
     });
     userRepo.api.listenToEvent('is_user_online', (data) {
-
+      if (kDebugMode) {
+        print('socket_is_user_online: $data');
+      }
     });
 
     userRepo.api.emitEvent('chat_overview', {});
-    var string = {"otherId": "492bbb2c-4fc2-4ef4-9c65-ca449575e2b7"};
+    //userRepo.api.emitEvent("is_user_online", {});
+    //var string = {"otherId": "492bbb2c-4fc2-4ef4-9c65-ca449575e2b7"};
     //userRepo.api.emitEvent('previous_chats', jsonEncode(string));
   }
 

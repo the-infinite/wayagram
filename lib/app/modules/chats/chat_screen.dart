@@ -116,6 +116,7 @@ class _ChatScreenState extends State<ChatScreen> {
     var time = "";
     var lastMessage = "";
     var membersString = "";
+    var username = "";
     if(post.isGroup == true){
       avatar = post.group!.groupImageUrl.toString();
       name = post.group!.groupName.toString();
@@ -134,6 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }else{
       name = post.otherDisplayName.toString();
       avatar = post.otherImageURL.toString();
+      username = post.otherUserName.toString();
       time = timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(post.time.toString())));
       lastMessage = post.message.toString();
       id = post.otherId.toString();
@@ -269,8 +271,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  Text("Offline", style: TextStyle(
-                                      color: Colors.grey,
+                                  Text(chatController.userOnline.contains(username) ? "Online" : "Offline", style: TextStyle(
+                                      color: chatController.userOnline.contains(username) ? AppColors.primary : Colors.grey,
                                       fontSize: Get.textScaleFactor * 15,
                                       fontWeight: FontWeight.w500,
                                   ),),

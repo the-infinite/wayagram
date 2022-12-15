@@ -339,31 +339,35 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                   onRefresh: () async {
                     //https://services.staging.wayagram.ng/wayagram-service/all-posts/get-user-promotions?page=1&limit=20?&sso_id=121
                     var response = await controller.getData("/wayagram-service/all-posts/get-user-promotions?page=${1}&limit=1", true);
-                    final posts = PromotionListModel.fromJsonList(response.data['data']);
-                    if(posts.isNotEmpty){
-                      if(allPosts.isNotEmpty){
-                        var firstPost = allPosts.first;
-                        var currentFirstPost = posts.first;
-                        if(firstPost.id != currentFirstPost.id){
-                          var newList = posts + allPosts;
-                          allPosts = newList;
-                          savedPosts.val = jsonEncode(allPosts);
+                    if(response.isSuccessful){
+                      final posts = PromotionListModel.fromJsonList(response.data['data']);
+                      if(posts.isNotEmpty){
+                        if(allPosts.isNotEmpty){
+                          var firstPost = allPosts.first;
+                          var currentFirstPost = posts.first;
+                          if(firstPost.id != currentFirstPost.id){
+                            var newList = posts + allPosts;
+                            allPosts = newList;
+                            savedPosts.val = jsonEncode(allPosts);
+                          }
+                        }else{
+                          allPosts = posts;
                         }
-                      }else{
-                        allPosts = posts;
                       }
+                      refreshController.refreshCompleted();
+                      controller.update(["promotion_analytics_log"]);
                     }
-                    refreshController.refreshCompleted();
-                    controller.update(["promotion_analytics_log"]);
                   },
                   onLoading: () async {
                     var response = await controller.getData("/wayagram-service/all-posts/get-user-promotions?page=${currentPage.val}&limit=10", true);
-                    final posts = PromotionListModel.fromJsonList(response.data['data']);
-                    allPosts.addAll(posts);
-                    savedPosts.val = jsonEncode(allPosts);
-                    currentPage.val = currentPage.val + 1;
-                    refreshController.loadComplete();
-                    controller.update(["promotion_analytics_log"]);
+                    if(response.isSuccessful){
+                      final posts = PromotionListModel.fromJsonList(response.data['data']);
+                      allPosts.addAll(posts);
+                      savedPosts.val = jsonEncode(allPosts);
+                      currentPage.val = currentPage.val + 1;
+                      refreshController.loadComplete();
+                      controller.update(["promotion_analytics_log"]);
+                    }
                   },
                   controller: refreshController,
                   child: SingleChildScrollView(
@@ -443,6 +447,26 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                             savedPosts.val = jsonEncode(posts);
                             allPosts.addAll(posts);
                             currentPage.val = 2;
+                            if(posts.isEmpty){
+                              return SizedBox(
+                                width: Get.width,
+                                height: Get.height,
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: Get.height*0.2,),
+                                      Icon(Icons.analytics_rounded, color: AppColors.primary, size: Get.height*0.1,),
+                                      const SizedBox(height: 20,),
+                                      Text("No Promoted Posts Yet", style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: Get.textScaleFactor * 17,
+                                        fontWeight: FontWeight.w500,
+                                      ),),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
                             return ListView.builder(
                               itemCount: allPosts.length,
                               shrinkWrap: true,
@@ -510,6 +534,26 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                             );
                           } else if(savedPosts.val.isNotEmpty){
                             var posts = PromotionListModel.fromJsonList(jsonDecode(savedPosts.val));
+                            if(posts.isEmpty){
+                              return SizedBox(
+                                width: Get.width,
+                                height: Get.height,
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: Get.height*0.2,),
+                                      Icon(Icons.analytics_rounded, color: AppColors.primary, size: Get.height*0.1,),
+                                      const SizedBox(height: 20,),
+                                      Text("No Promoted Posts Yet", style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: Get.textScaleFactor * 17,
+                                        fontWeight: FontWeight.w500,
+                                      ),),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
                             return ListView.builder(
                               itemCount: posts.length,
                               shrinkWrap: true,
@@ -577,7 +621,24 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                             );
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
-                              return const SizedBox.shrink();
+                              return SizedBox(
+                                width: Get.width,
+                                height: Get.height,
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: Get.height*0.2,),
+                                      Icon(Icons.analytics_rounded, color: AppColors.primary, size: Get.height*0.1,),
+                                      const SizedBox(height: 20,),
+                                      Text("No Promoted Posts Yet", style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: Get.textScaleFactor * 17,
+                                        fontWeight: FontWeight.w500,
+                                      ),),
+                                    ],
+                                  ),
+                                ),
+                              );
                             }
                             return const GroupView(isLoading: true);
                           }
@@ -600,6 +661,9 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
 }
 
 String shortenCount(String amount){
+  if(amount == "null" || amount.isEmpty){
+    return "0";
+  }
   if(amount.length > 6){
     return "${amount.substring(0, amount.length-6)}M";
   }

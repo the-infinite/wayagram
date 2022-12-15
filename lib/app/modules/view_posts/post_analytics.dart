@@ -15,6 +15,7 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/CommentModel.dart';
+import '../../data/model/DonationsModel.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/promotion_pricing_model.dart';
@@ -31,6 +32,7 @@ import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_input.dart';
 import '../home/widgets/posts_view.dart';
 import '../promotion/promote_post.dart';
+import 'donation_analytics.dart';
 
 class PostAnalytics extends StatefulWidget {
   const PostAnalytics({Key? key,required this.post}) : super(key: key);
@@ -209,6 +211,74 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                         textAlign: TextAlign.center,
                       ),
                     ),
+                    const SizedBox(height: 40),
+                    if(widget.post.kind == 'donation')
+                      Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: AppButton(
+                        title: 'View Donation Analytics',
+                        onPressed: () async {
+                          //https://services.staging.wayagram.ng/wayagram-service/all-posts/get-donation-statistics?donation_id=4471087b-2328-457f-bafa-151989595898&sso_id=639
+                          if(Get.currentRoute == "/PostAnalytics"){
+                            var donation = DonationsModel.fromJson(widget.post.donation);
+                            var res = await  controller.getData("/wayagram-service/all-posts/get-donation-statistics?donation_id=${donation.id}", true);
+                            var savedPosts = ReadWriteValue('wayagram_donation_statistics_${donation.id}', '', MyPref.box);
+
+                            if(res.isSuccessful){
+                              savedPosts.val = jsonEncode(res.data);
+                              Get.to(() => const DonationAnalytics(),arguments: donation);
+                            }else{
+                              if(savedPosts.val.isNotEmpty){
+                                Get.to(() => const DonationAnalytics(),arguments: donation);
+                              }else{
+                                AppOverlay.showErrorSnackBar(content: "Error getting donation statistics");
+                              }
+                            }
+                          }
+                        },
+                        borderRadius: 10,
+                        fontColor: AppColors.onPrimary,
+                        bckgrndColor: AppColors.primary,
+                        width: double.infinity,
+                        fontSize: Get.textScaleFactor * 18,
+                        border: Border.all(color: AppColors.primary, width: 1),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                    if(widget.post.isPoll == true)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: AppButton(
+                          title: 'View Poll Analytics',
+                          onPressed: () async {
+                            //https://services.staging.wayagram.ng/wayagram-service/all-posts/get-donation-statistics?donation_id=4471087b-2328-457f-bafa-151989595898&sso_id=639
+                            if(Get.currentRoute == "/PostAnalytics"){
+                              var donation = DonationsModel.fromJson(widget.post.donation);
+                              var res = await  controller.getData("/wayagram-service/all-posts/get-donation-statistics?donation_id=${donation.id}", true);
+                              var savedPosts = ReadWriteValue('wayagram_donation_statistics_${donation.id}', '', MyPref.box);
+
+                              if(res.isSuccessful){
+                                savedPosts.val = jsonEncode(res.data);
+                                Get.to(() => const DonationAnalytics(),arguments: donation);
+                              }else{
+                                if(savedPosts.val.isNotEmpty){
+                                  Get.to(() => const DonationAnalytics(),arguments: donation);
+                                }else{
+                                  AppOverlay.showErrorSnackBar(content: "Error getting donation statistics");
+                                }
+                              }
+                            }
+                          },
+                          borderRadius: 10,
+                          fontColor: AppColors.onPrimary,
+                          bckgrndColor: AppColors.primary,
+                          width: double.infinity,
+                          fontSize: Get.textScaleFactor * 18,
+                          border: Border.all(color: AppColors.primary, width: 1),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                      ),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),
