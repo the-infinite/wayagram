@@ -10,6 +10,7 @@ import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/app/modules/view_posts/poll_analytics.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
@@ -251,20 +252,29 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                         child: AppButton(
                           title: 'View Poll Analytics',
                           onPressed: () async {
-                            //https://services.staging.wayagram.ng/wayagram-service/all-posts/get-donation-statistics?donation_id=4471087b-2328-457f-bafa-151989595898&sso_id=639
                             if(Get.currentRoute == "/PostAnalytics"){
-                              var donation = DonationsModel.fromJson(widget.post.donation);
-                              var res = await  controller.getData("/wayagram-service/all-posts/get-donation-statistics?donation_id=${donation.id}", true);
-                              var savedPosts = ReadWriteValue('wayagram_donation_statistics_${donation.id}', '', MyPref.box);
+                              var res = await  controller.getData("/wayagram-service/all-posts/get-single-poll?poll_id=${widget.post.poll!.id}", true);
+                              var savedPosts = ReadWriteValue('wayagram_poll_statistics_${widget.post.poll!.id}', '', MyPref.box);
+                              var savedVotes = ReadWriteValue('wayagram_poll_votes_${widget.post.poll!.id}', '', MyPref.box);
 
                               if(res.isSuccessful){
-                                savedPosts.val = jsonEncode(res.data);
-                                Get.to(() => const DonationAnalytics(),arguments: donation);
+                                var response = await  controller.getData("/wayagram-service/all-posts/get-poll-votes?poll_id=${widget.post.poll!.id}", true);
+                                if(response.isSuccessful){
+                                  savedPosts.val = jsonEncode(res.data);
+                                  savedVotes.val = jsonEncode(response.data['data']);
+                                  Get.to(() => const PollAnalytics(),arguments: widget.post.poll!);
+                                }else{
+                                  if(savedVotes.val.isNotEmpty){
+                                    Get.to(() => const PollAnalytics(),arguments: widget.post.poll!);
+                                  }else{
+                                    AppOverlay.showErrorSnackBar(content: "Error getting poll statistics");
+                                  }
+                                }
                               }else{
                                 if(savedPosts.val.isNotEmpty){
-                                  Get.to(() => const DonationAnalytics(),arguments: donation);
+                                  Get.to(() => const PollAnalytics(),arguments: widget.post.poll!);
                                 }else{
-                                  AppOverlay.showErrorSnackBar(content: "Error getting donation statistics");
+                                  AppOverlay.showErrorSnackBar(content: "Error getting poll statistics");
                                 }
                               }
                             }

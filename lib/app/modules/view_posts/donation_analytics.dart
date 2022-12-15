@@ -291,7 +291,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                     child: peopleWhoDonated.isEmpty ?
                     SizedBox(
                       width: Get.width,
-                      height: Get.height,
+                      height: Get.height * 0.5,
                       child: Center(
                         child: Column(
                           children: [
