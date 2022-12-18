@@ -36,6 +36,7 @@ import '../../polls_payment/poll_payment.dart';
 import '../../profile/other_profile.dart';
 import '../../profile/post_profile.dart';
 import '../../profile/profile.dart';
+import '../../report/report_post.dart';
 import '../../search/search.dart';
 import '../../view_posts/post_analytics.dart';
 import '../../view_posts/view_post.dart';
@@ -204,6 +205,7 @@ class Post extends StatefulWidget{
 class _PostState extends State<Post> {
   List<String> votedPolls = [];
   var totalPersonalVotes = 0;
+
   @override
   Widget build(BuildContext context) {
     var homeController = widget.homeController;
@@ -400,11 +402,14 @@ class _PostState extends State<Post> {
                                     AppOverlay.showErrorSnackBar(title: "Bookmark",content: value.message != null ? value.message.toString() : "Something went wrong");
                                   }
                                 });
-                              } else if (value == 1) {
+                              }
+                              else if (value == 1) {
                                 Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
-                              } else if (value == 2) {
+                              }
+                              else if (value == 2) {
                                 //Get.to(() => const Followers());
-                              }else if (value == 3) {
+                              }
+                              else if (value == 3) {
                                 var body = {
                                   "post_id": widget.post.id,
                                 };
@@ -415,6 +420,9 @@ class _PostState extends State<Post> {
                                     AppOverlay.showErrorSnackBar(title: "Delete",content: value.message != null ? value.message.toString() : "Something went wrong");
                                   }
                                 });
+                              }
+                              else if (value == 4) {
+                                Get.to(() => ReportPost(post: widget.post,isPost: true));
                               }
                             },
                             itemBuilder: (context) => [
@@ -454,6 +462,17 @@ class _PostState extends State<Post> {
                                   value: 3,
                                   child: Text(
                                     "Delete",
+                                    style: AppTextStyle.bodyText1.copyWith(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              if(!isCurrentUserPost)
+                                PopupMenuItem(
+                                  value: 4,
+                                  child: Text(
+                                    "Report",
                                     style: AppTextStyle.bodyText1.copyWith(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w500,
