@@ -164,7 +164,7 @@ class WayaBottomSheet extends StatelessWidget {
                     Get.to(() => const CreatePosts());
                   }
               ),
-              BottomSheetButton(
+              /*BottomSheetButton(
                   icon: Icons.video_camera_back_rounded,
                   title: "GO LIVE",
                   subtitle: "Go live on Wayagram",
@@ -173,7 +173,7 @@ class WayaBottomSheet extends StatelessWidget {
                     Get.back();
                     Get.to(() => const CreateLiveVideo());
                   }
-              ),
+              ),*/
             ],
           ),
         );
