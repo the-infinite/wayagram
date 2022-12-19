@@ -25,17 +25,19 @@ import 'my_pref.dart';
 //Account Service https://services.wayagram.ng/account-service/swagger-ui/index.html#/
 
 class Api {
-  static const String baseUrl = 'https://services.wayagram.ng/';
-  //static const String baseUrl = 'https://services.staging.wayagram.ng/';
+  //static const String baseUrl = 'https://services.wayagram.ng/';
+  static const String baseUrl = 'https://services.staging.wayagram.ng/';
   CancelToken token = CancelToken();
 
-  final Dio _client = Dio(BaseOptions(
-    baseUrl: baseUrl,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    receiveTimeout: 100000,
-  ));
+  final Dio _client = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        receiveTimeout: 100000,
+      )
+  );
 
   Future<ApiResponse> postData(String url, {bool hasHeader = false, bool sso = true, body}) async {
     token = CancelToken();
