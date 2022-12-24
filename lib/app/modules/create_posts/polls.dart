@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/app/global_widgets/overlays.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
@@ -15,36 +17,41 @@ import '../../global_widgets/date_button.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 
-class CreatePoll extends StatelessWidget {
+class CreatePoll extends StatefulWidget {
   const CreatePoll({Key? key}) : super(key: key);
 
   @override
+  State<CreatePoll> createState() => _CreatePollState();
+}
+
+class _CreatePollState extends State<CreatePoll> {
+  final ImagePicker _imagePicker = ImagePicker();
+
+  var pageController = PageController();
+  var votesController = TextEditingController(text: '1');
+  var chargeController = TextEditingController(text: '0');
+
+  var startTimeController = TextEditingController();
+  var startDateController = TextEditingController();
+  var endTimeController = TextEditingController();
+  var endDateController = TextEditingController();
+
+  var titleController = TextEditingController();
+  var questionController = TextEditingController();
+  var descriptionController = TextEditingController();
+  var isTextPoll = true;
+  var pos = 0;
+
+  List<TextEditingController> allTextOptions = [];
+  List<String> images = [];
+  List<String> descriptions = [];
+
+  var formKey1 = GlobalKey<FormState>();
+  var formKey2 = GlobalKey<FormState>();
+  var formKey3 = GlobalKey<FormState>();
+
+  @override
   Widget build(BuildContext context) {
-    var pageController = PageController();
-    var votesController = TextEditingController(text: '1');
-    var chargeController = TextEditingController(text: '0');
-
-    var startTimeController = TextEditingController();
-    var startDateController = TextEditingController();
-    var endTimeController = TextEditingController();
-    var endDateController = TextEditingController();
-
-    var titleController = TextEditingController();
-    var questionController = TextEditingController();
-    var descriptionController = TextEditingController();
-    var isTextPoll = false;
-    var pos = 0;
-
-    var option = "";
-    var description = "";
-    List<TextEditingController> allTextOptions = [];
-    //List<String> options = [];
-    List<String> images = [];
-    List<String> descriptions = [];
-
-    var formKey1 = GlobalKey<FormState>();
-    var formKey2 = GlobalKey<FormState>();
-    var formKey3 = GlobalKey<FormState>();
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -344,6 +351,7 @@ class CreatePoll extends StatelessWidget {
                                       if(allTextOptions.length < 31){
                                         var optionController = TextEditingController();
                                         allTextOptions.add(optionController);
+                                        images.add("");
                                         controller.update();
                                       } else {
                                         Get.snackbar('Poll Limit Reached', 'You can only add 30 options',backgroundColor: AppColors.primary);
@@ -370,20 +378,55 @@ class CreatePoll extends StatelessWidget {
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                SizedBox(
-                                                  width: Get.width*0.8,
+                                                Expanded(
                                                   child: PageInput(
-                                                    hint: "",
+                                                    hint: "Enter Option ${index+1}",
                                                     label: '',
                                                     validator: (val){
                                                       if(val!.isEmpty){
-                                                        return 'Option cannot be empty';
+                                                        return 'Option ${index+1} cannot be empty';
+                                                      }else if(images[index].isEmpty && !isTextPoll){
+                                                        return 'Please add an image for Option ${index+1}';
                                                       }
                                                       return null;
                                                     },
                                                     isCompulsory: false,
-                                                    hintColor: Colors.black,
                                                     controller: allTextOptions[index],
+                                                    suffix: isTextPoll ? null : InkWell(
+                                                      onTap: () async {
+                                                        final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
+                                                        if (pickedFile != null) {
+                                                          images[index] = pickedFile.path;
+                                                          controller.update();
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        width: Get.width*0.3,
+                                                        decoration: BoxDecoration(
+                                                          color: AppColors.background,
+                                                          border: Border.all(color: const Color(0xFF828282)),
+                                                          borderRadius: const BorderRadius.only(
+                                                            bottomRight: Radius.circular(10),
+                                                            topRight: Radius.circular(10),
+                                                          ),
+                                                        ),
+                                                        child: Center(
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(2.0),
+                                                            child: Text(
+                                                              images[index].isEmpty ? 'Pick Image' : images[index].split('/').last,
+                                                              style: AppTextStyle.subtitle1.copyWith(
+                                                              color: const Color(0xff4F4F4F),
+                                                              fontSize: Get.textScaleFactor * 12,
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
+                                                              overflow: TextOverflow.ellipsis,
+                                                              maxLines: 1,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                                 Padding(
@@ -391,6 +434,7 @@ class CreatePoll extends StatelessWidget {
                                                   child: IconButton(
                                                       onPressed: (){
                                                         allTextOptions.removeAt(index);
+                                                        images.removeAt(index);
                                                         controller.update();
                                                       },
                                                       icon: Center(child: Icon(Icons.cancel_outlined, color: Colors.black, size: Get.width*0.055))
