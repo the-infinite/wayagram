@@ -37,7 +37,8 @@ class CreatePoll extends StatelessWidget {
 
     var option = "";
     var description = "";
-    List<String> options = [];
+    List<TextEditingController> allTextOptions = [];
+    //List<String> options = [];
     List<String> images = [];
     List<String> descriptions = [];
 
@@ -78,7 +79,9 @@ class CreatePoll extends StatelessWidget {
                         pos = 1;
                         controller.update();
                       } else {
-                        if(formKey2.currentState!.validate()) {
+                        formKey2.currentState!.validate();
+                        formKey3.currentState!.validate();
+                        if(formKey2.currentState!.validate() && formKey3.currentState!.validate()) {
                           var body = {
                             'description': titleController.text,
                             "type": "user",
@@ -108,18 +111,18 @@ class CreatePoll extends StatelessWidget {
                           if(response.isSuccessful){
                             var id = response.data['id'] as String;
                             ApiResponse? innerResponse;
-                            for (var element in options) {
+                            for (var element in allTextOptions) {
                               var innerBody = {
                                 'pollId': id,
-                                "option": element,
-                                "position": options.indexOf(element)+1,
+                                "option": element.text,
+                                "position": allTextOptions.indexOf(element)+1,
                               };
-                              if(descriptions[options.indexOf(element)].isNotEmpty){
+                              /*if(descriptions[options.indexOf(element)].isNotEmpty){
                                 innerBody['short_desc'] = descriptions[options.indexOf(element)];
-                              }
+                              }*/
                               innerResponse = await controller.postData(innerBody, "/wayagram-service/all-posts/poll-option-create");
                               if(innerResponse.isSuccessful) {
-                                if(options.indexOf(element) == options.length - 1) {
+                                if(allTextOptions.indexOf(element) == allTextOptions.length - 1) {
                                   await controller.getPosts;
                                   controller.update(['home']);
                                   Get.back();
@@ -314,7 +317,7 @@ class CreatePoll extends StatelessWidget {
                                   validator: (val){
                                     if(val!.isEmpty){
                                       return 'Please enter your question';
-                                    }else if(options.length < 2){
+                                    }else if(allTextOptions.length < 2){
                                       return 'Please add at least 2 poll options below';
                                     }
                                     return null;
@@ -323,128 +326,87 @@ class CreatePoll extends StatelessWidget {
                                   controller: titleController,
                                 ),
                               ),
-                              SizedBox(height: Get.height*0.025),
+                              SizedBox(height: Get.height*0.02),
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Form(
-                                    key: formKey3,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          width: Get.width*0.8,
-                                          child: PageInput(
-                                            hint: '',
-                                            label: 'Add Poll Option',
-                                            validator: (val){
-                                              if(val!.isEmpty){
-                                                return 'Please enter your question';
-                                              }else if(options.contains(val)){
-                                                return 'This option already exists';
-                                              }
-                                              return null;
-                                            },
-                                            isCompulsory: true,
-                                            onChanged: (val) {
-                                              option = val;
-                                            },
-                                            controller: questionController,
-                                          ),
-                                        ),
-                                        SizedBox(height: Get.height*0.025),
-                                        SizedBox(
-                                          width: Get.width*0.8,
-                                          child: PageInput(
-                                            hint: '',
-                                            label: 'Enter Description',
-                                            validator: (val){
-                                              return null;
-                                            },
-                                            isCompulsory: false,
-                                            onChanged: (val) {
-                                              description = val;
-                                            },
-                                            controller: descriptionController,
-                                          ),
-                                        ),
-                                        if(!isTextPoll)
-                                          AppButton(
-                                              title: "Choose File",
-                                            width: Get.width*0.8,
-                                          )
-                                      ],
-                                    ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: Get.width*0.02,bottom: Get.height*0.008),
+                                    child: Text('Add Option', style: AppTextStyle.subtitle1.copyWith(
+                                      color: const Color(0xff4F4F4F),
+                                      fontSize: Get.textScaleFactor * 14,
+                                      fontWeight: FontWeight.bold,
+                                    )),
                                   ),
                                   IconButton(
-                                      onPressed: (){
-                                        if(options.length < 31){
-                                          if(formKey3.currentState!.validate()){
-                                            options.add(option);
-                                            descriptions.add(description);
-
-                                            option = '';
-                                            description = '';
-
-                                            questionController.clear();
-                                            descriptionController.clear();
-                                            controller.update();
-                                          }
-                                        } else {
-                                          Get.snackbar('Poll Limit Reached', 'You can only add 10 options',backgroundColor: AppColors.primary);
-                                        }
-                                      },
-                                      icon: Center(child: Icon(Icons.add_circle_outline, color: AppColors.primary, size: Get.width*0.065)),
+                                    onPressed: (){
+                                      if(allTextOptions.length < 31){
+                                        var optionController = TextEditingController();
+                                        allTextOptions.add(optionController);
+                                        controller.update();
+                                      } else {
+                                        Get.snackbar('Poll Limit Reached', 'You can only add 30 options',backgroundColor: AppColors.primary);
+                                      }
+                                    },
+                                    icon: Center(child: Icon(Icons.add_circle_outline, color: AppColors.button, size: Get.width*0.055)),
                                   )
                                 ],
                               ),
-                              SizedBox(height: Get.height*0.025),
-                              SizedBox(height: Get.height*0.025),
-                              SizedBox(
-                                height: Get.height*0.5,
-                                child: ListView.builder(
-                                  itemCount: options.length,
-                                  //physics: const NeverScrollableScrollPhysics(),
-                                  padding: const EdgeInsets.all(0),
-                                  //shrinkWrap: true,
-                                  itemBuilder: (context, index){
-                                    return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.end,
+                              SizedBox(height: Get.height*0.01),
+                              Form(
+                                key: formKey3,
+                                child: Expanded(
+                                  child: ListView.builder(
+                                    itemCount: allTextOptions.length,
+                                    padding: const EdgeInsets.all(0),
+                                    itemBuilder: (context, index){
+                                      return Padding(
+                                        padding: EdgeInsets.only(bottom: Get.height*0.02),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            SizedBox(
-                                              width: Get.width*0.8,
-                                              child: PageInput(
-                                                hint: options[index],
-                                                label: '',
-                                                validator: (val){
-                                                  return null;
-                                                },
-                                                isCompulsory: false,
-                                                readOnly: true,
-                                                hintColor: Colors.black,
-                                              ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  width: Get.width*0.8,
+                                                  child: PageInput(
+                                                    hint: "",
+                                                    label: '',
+                                                    validator: (val){
+                                                      if(val!.isEmpty){
+                                                        return 'Option cannot be empty';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    isCompulsory: false,
+                                                    hintColor: Colors.black,
+                                                    controller: allTextOptions[index],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: Get.height*0.008),
+                                                  child: IconButton(
+                                                      onPressed: (){
+                                                        allTextOptions.removeAt(index);
+                                                        controller.update();
+                                                      },
+                                                      icon: Center(child: Icon(Icons.cancel_outlined, color: Colors.black, size: Get.width*0.055))
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            IconButton(
-                                                onPressed: (){
-                                                  options.removeAt(index);
-                                                  descriptions.removeAt(index);
-                                                  controller.update();
-                                                },
-                                                icon: Center(child: Icon(Icons.remove_circle_outline_rounded, color: Colors.black, size: Get.width*0.055))
-                                            )
+                                            /*Padding(
+                                              padding: EdgeInsets.only(left: Get.width*0.025),
+                                              child: Text(allTextOptions[index].text, style: TextStyle(fontSize: Get.width*0.035, fontWeight: FontWeight.w400)),
+                                            ),*/
                                           ],
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: Get.width*0.025),
-                                          child: Text(descriptions[index], style: TextStyle(fontSize: Get.width*0.035, fontWeight: FontWeight.w400)),
-                                        ),
-                                      ],
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
