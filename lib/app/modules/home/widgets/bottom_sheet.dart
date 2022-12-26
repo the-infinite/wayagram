@@ -24,6 +24,8 @@ import '../../../data/model/wallet_model.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/horizontal_item_tile.dart';
+import '../../chats/new_chat.dart';
+import '../../chats/new_group_chat.dart';
 import '../../create_posts/donations.dart';
 import '../../create_posts/events.dart';
 import '../../create_posts/polls.dart';
@@ -201,7 +203,7 @@ class WayaBottomSheet extends StatelessWidget {
                         controller.postToQuote = null;
                         controller.imagePaths.clear();
                         Get.back();
-
+                        Get.to(()=> const NewChat());
                       }
                   ),
                   BottomSheetButton(
@@ -211,7 +213,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-
+                        Get.to(()=> const NewGroupChat());
                       }
                   ),
                 ],

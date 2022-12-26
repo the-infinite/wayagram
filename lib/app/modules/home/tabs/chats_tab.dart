@@ -27,16 +27,17 @@ class ChatsTab extends StatelessWidget {
       List<ChatOverview> chatOverview = [];
       if(chatController.chatListOverView!=null){
         if(chatController.chatListOverView!.chatOverview!=null){
-          print('chatOverview: ${chatController.chatListOverView!.chatOverview!.length}');
+          //print('chatOverview: ${chatController.chatListOverView!.chatOverview!.length}');
           chatOverview = chatController.chatListOverView!.chatOverview!;
         }
       }
       return GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return SizedBox(
           width: Get.width,
-          height: Get.height*0.78,
+          height: Get.height*0.82,
           child: TabBarView(
             controller: controller.chatController,
+            physics: const NeverScrollableScrollPhysics(),
             children: [
               SingleChildScrollView(
                 child: Column(

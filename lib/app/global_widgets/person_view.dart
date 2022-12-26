@@ -40,7 +40,16 @@ class Person{
     required this.coverImage,
     this.id
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Person && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
+
 class PersonView extends StatefulWidget {
   const PersonView({
     Key? key,
@@ -58,12 +67,18 @@ class PersonView extends StatefulWidget {
     this.showButton = false,
     this.buttonName = "Invite",
     this.onButtonClick,
-    this.privateUser
+    this.privateUser,
+    this.showCheckBox = false,
+    this.isChecked = false,
+    this.onChecked,
+    this.chosenPersonList
   }) : super(key: key);
 
   final bool isLoading;
   final bool showReport;
   final bool showButton;
+  final bool showCheckBox;
+  final bool isChecked;
   final String buttonName;
   final List<String> name;
   final List<String> username;
@@ -77,6 +92,8 @@ class PersonView extends StatefulWidget {
   final Function(Person person)? onClick;
   final Function(Person person)? onReportClick;
   final Function(Person person)? onButtonClick;
+  final Function(Person person)? onChecked;
+  final List<Person>? chosenPersonList;
   final int length;
 
   @override
@@ -87,6 +104,10 @@ class _PersonViewState extends State<PersonView> {
 
   @override
   Widget build(BuildContext context) {
+    List<Person> chosenPersonList = [];
+    if(widget.chosenPersonList != null){
+      chosenPersonList = widget.chosenPersonList!;
+    }
     var isLoading = widget.isLoading;
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     return ListView.builder(
@@ -114,6 +135,53 @@ class _PersonViewState extends State<PersonView> {
             ),
           );
         }
+        var displayName = widget.name[index];
+        var username = widget.username[index];
+        var profilePic = widget.profilePic[index];
+        var userID = widget.userIDs[index];
+        var postCount = "0";
+        var followersCount = "0";
+        var followingCount = "0";
+        var bio = '';
+        var coverImage = '';
+        var id = '';
+        if(widget.blocked!=null){
+          bio = widget.blocked![index].bio ?? '';
+          postCount = widget.blocked![index].posts.toString();
+          followersCount = widget.blocked![index].followers.toString();
+          followingCount = widget.blocked![index].followings.toString();
+          coverImage = widget.blocked![index].coverImage ?? '';
+          id = widget.blocked![index].id ?? '';
+        }else if(widget.following!=null) {
+          bio = widget.following![index].bio ?? '';
+          postCount = widget.following![index].posts.toString();
+          followersCount = widget.following![index].followers.toString();
+          followingCount = widget.following![index].followings.toString();
+          coverImage = widget.following![index].coverImage ?? '';
+          id = widget.following![index].id ?? '';
+        }else if(widget.followers!=null) {
+          bio = widget.followers![index].bio ?? '';
+          postCount = widget.followers![index].posts.toString();
+          followersCount = widget.followers![index].followers.toString();
+          followingCount = widget.followers![index].followings.toString();
+          coverImage = widget.followers![index].coverImage ?? '';
+          id = widget.followers![index].id ?? '';
+        }else if(widget.iDs != null){
+          id = widget.iDs![index].toString();
+        }
+
+        var person = Person(
+          displayName: displayName,
+          username: username,
+          profilePic: profilePic,
+          userID: userID,
+          followersCount: followersCount,
+          followingCount: followingCount,
+          bio: bio,
+          coverImage: coverImage,
+          id: id,
+        );
+
         return InkWell(
           onTap: (){
             var displayName = widget.name[index];
@@ -294,13 +362,74 @@ class _PersonViewState extends State<PersonView> {
                       )
                   ],
                 ),
-                if(widget.showButton)
-                  SizedBox(
-                  width: Get.width*0.3,
-                    child: AppButton(
-                      title: widget.buttonName,
-                      onPressed: ()async{
-                        if(widget.onButtonClick != null){
+                Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if(widget.showButton)
+                        SizedBox(
+                          width: Get.width*0.3,
+                          child: AppButton(
+                          title: widget.buttonName,
+                          onPressed: ()async{
+                            if(widget.onButtonClick != null){
+                              var displayName = widget.name[index];
+                              var username = widget.username[index];
+                              var profilePic = widget.profilePic[index];
+                              var userID = widget.userIDs[index];
+                              var postCount = "0";
+                              var followersCount = "0";
+                              var followingCount = "0";
+                              var bio = '';
+                              var coverImage = '';
+                              var id = '';
+                              if(widget.blocked!=null){
+                                bio = widget.blocked![index].bio ?? '';
+                                postCount = widget.blocked![index].posts.toString();
+                                followersCount = widget.blocked![index].followers.toString();
+                                followingCount = widget.blocked![index].followings.toString();
+                                coverImage = widget.blocked![index].coverImage ?? '';
+                                id = widget.blocked![index].id ?? '';
+                              }else if(widget.following!=null) {
+                                bio = widget.following![index].bio ?? '';
+                                postCount = widget.following![index].posts.toString();
+                                followersCount = widget.following![index].followers.toString();
+                                followingCount = widget.following![index].followings.toString();
+                                coverImage = widget.following![index].coverImage ?? '';
+                                id = widget.following![index].id ?? '';
+                              }else if(widget.followers!=null) {
+                                bio = widget.followers![index].bio ?? '';
+                                postCount = widget.followers![index].posts.toString();
+                                followersCount = widget.followers![index].followers.toString();
+                                followingCount = widget.followers![index].followings.toString();
+                                coverImage = widget.followers![index].coverImage ?? '';
+                                id = widget.followers![index].id ?? '';
+                              }else if(widget.iDs != null){
+                                id = widget.iDs![index].toString();
+                              }
+                              await widget.onButtonClick!(Person(
+                                displayName: displayName,
+                                username: username,
+                                profilePic: profilePic,
+                                userID: userID,
+                                followersCount: followersCount,
+                                followingCount: followingCount,
+                                bio: bio,
+                                coverImage: coverImage,
+                                id: id,
+                              ));
+                            }
+                          },
+                          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          fontColor: AppColors.primary,
+                          bckgrndColor: AppColors.background,
+                          border: Border.all(color: AppColors.primary),
+                        )
+                        ),
+                      if(widget.showCheckBox)
+                        Checkbox(
+                            value: chosenPersonList.contains(person),
+                            onChanged: (val) async {
+                        if(widget.onChecked != null){
                           var displayName = widget.name[index];
                           var username = widget.username[index];
                           var profilePic = widget.profilePic[index];
@@ -335,7 +464,7 @@ class _PersonViewState extends State<PersonView> {
                           }else if(widget.iDs != null){
                             id = widget.iDs![index].toString();
                           }
-                          await widget.onButtonClick!(Person(
+                          await widget.onChecked!(Person(
                             displayName: displayName,
                             username: username,
                             profilePic: profilePic,
@@ -347,13 +476,10 @@ class _PersonViewState extends State<PersonView> {
                             id: id,
                           ));
                         }
-                      },
-                      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                      fontColor: AppColors.primary,
-                      bckgrndColor: AppColors.background,
-                      border: Border.all(color: AppColors.primary),
-                    )
-                ),
+                      }
+                      )
+                    ],
+                  ),
               ],
             ),
           ),
