@@ -1716,7 +1716,7 @@ class _CommentPostState extends State<CommentPost> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           //Heart
-                          Row(
+                          /*Row(
                             children: [
                               const SizedBox(
                                 width: 10,
@@ -1785,7 +1785,7 @@ class _CommentPostState extends State<CommentPost> {
                                 ),
                               ),
                             ],
-                          ),
+                          ),*/
                           SizedBox(width: Get.width * 0.05,),
                           //Comment
                           InkWell(
