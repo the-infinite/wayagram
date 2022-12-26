@@ -51,6 +51,17 @@ class Followers extends StatelessWidget {
               icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
+            bottom: PreferredSize(
+                preferredSize: Size(Get.width, 0.5),
+                child: Column(
+                  children: const [
+                    Divider(
+                      height: 0.5,
+                      thickness: 0.5,
+                      color: Colors.grey,
+                    ),
+                  ],
+                )),
             systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: AppColors.background,
                 statusBarIconBrightness: Brightness.dark,

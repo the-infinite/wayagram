@@ -187,7 +187,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
             ),
               body: SizedBox(
               width: Get.width,
-                //padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
               child: Column(
                 children: [
                   if(controller.currentBottomNavPage.value == 2)
@@ -360,7 +359,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  Get.bottomSheet(const WayaBottomSheet(),isScrollControlled: true);
+                  Get.bottomSheet(
+                      WayaBottomSheet(
+                        isChat: controller.currentBottomNavPage.value == 4,
+                      ),
+                      isScrollControlled: true
+                  );
                 },
                 backgroundColor: AppColors.primary,
                 child: const Icon(Icons.add,color: Colors.white),

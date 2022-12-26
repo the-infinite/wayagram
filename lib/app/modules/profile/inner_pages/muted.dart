@@ -46,6 +46,17 @@ class Muted extends StatelessWidget {
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
+            bottom: PreferredSize(
+                preferredSize: Size(Get.width, 0.5),
+                child: Column(
+                  children: const [
+                    Divider(
+                      height: 0.5,
+                      thickness: 0.5,
+                      color: Colors.grey,
+                    ),
+                  ],
+                )),
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),

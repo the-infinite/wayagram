@@ -23,7 +23,7 @@ import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/notification_view.dart';
 
-class Following extends StatelessWidget {
+class Following extends StatelessWidget{
   const Following({Key? key}) : super(key: key);
 
   @override
@@ -51,6 +51,17 @@ class Following extends StatelessWidget {
               icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
+            bottom: PreferredSize(
+                preferredSize: Size(Get.width, 0.5),
+                child: Column(
+                  children: const [
+                    Divider(
+                      height: 0.5,
+                      thickness: 0.5,
+                      color: Colors.grey,
+                    ),
+                  ],
+                )),
             systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: AppColors.background,
                 statusBarIconBrightness: Brightness.dark,

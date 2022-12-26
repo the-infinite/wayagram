@@ -32,8 +32,9 @@ import '../widgets/posts_view.dart';
 import 'notification_view.dart';
 
 class WayaBottomSheet extends StatelessWidget {
-  const WayaBottomSheet({Key? key}) : super(key: key);
+  const WayaBottomSheet({Key? key, this.isChat = false}) : super(key: key);
 
+  final bool isChat;
   @override
   Widget build(BuildContext context) {
 
@@ -64,7 +65,8 @@ class WayaBottomSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               //Create text
-              Padding(
+              if(!isChat)
+                Padding(
                 padding: EdgeInsets.only(top: Get.height * 0.020, left: Get.width*0.15, right: 20,bottom: Get.height * 0.015),
                 child: Text(
                   'Create',
@@ -75,94 +77,99 @@ class WayaBottomSheet extends StatelessWidget {
                   ),
                 ),
               ),
-              BottomSheetButton(
-                  icon: Icons.post_add_rounded,
-                  title: "POST",
-                  subtitle: "Share a post or write what is on your mind",
-                  onTap: () {
-                    controller.isProductPost = false;
-                    controller.pageToPost = null;
-                    controller.groupToPost = null;
-                    controller.postToQuote = null;
-                    controller.imagePaths.clear();
-                    Get.back();
-                    Get.to(() => const CreatePosts());
-                  }
-              ),
+              if(!isChat)
+                Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  BottomSheetButton(
+                      icon: Icons.post_add_rounded,
+                      title: "POST",
+                      subtitle: "Share a post or write what is on your mind",
+                      onTap: () {
+                        controller.isProductPost = false;
+                        controller.pageToPost = null;
+                        controller.groupToPost = null;
+                        controller.postToQuote = null;
+                        controller.imagePaths.clear();
+                        Get.back();
+                        Get.to(() => const CreatePosts());
+                      }
+                  ),
+                  BottomSheetButton(
+                      icon: Icons.poll,
+                      title: "POLLS",
+                      subtitle: "Create paid or free polls for users",
+                      onTap: () {
+                        controller.imagePaths.clear();
+                        Get.back();
+                        Get.to(() => const CreatePoll());
+                      }
+                  ),
+                  BottomSheetButton(
+                      icon: Icons.book_rounded,
+                      title: "PAGES",
+                      subtitle: "Create a page for your business or brand",
+                      onTap: () {
+                        controller.imagePaths.clear();
+                        Get.back();
+                        Get.to(() => const CreatePage());
+                      }
+                  ),
 
-              BottomSheetButton(
-                  icon: Icons.poll,
-                  title: "POLLS",
-                  subtitle: "Create paid or free polls for users",
-                  onTap: () {
-                    controller.imagePaths.clear();
-                    Get.back();
-                    Get.to(() => const CreatePoll());
-                  }
-              ),
+                  SizedBox(
+                    height: Get.height * 0.015,
+                  ),
 
-              BottomSheetButton(
-                  icon: Icons.book_rounded,
-                  title: "PAGES",
-                  subtitle: "Create a page for your business or brand",
-                  onTap: () {
-                    controller.imagePaths.clear();
-                    Get.back();
-                    Get.to(() => const CreatePage());
-                  }
-              ),
+                  BottomSheetButton(
+                      icon: Icons.people_alt_rounded,
+                      title: "GROUP",
+                      subtitle: "Create a private or public group of interest",
+                      onTap: () {
+                        controller.imagePaths.clear();
+                        Get.back();
+                        Get.to(() => const CreateGroup());
+                      }
+                  ),
+                  BottomSheetButton(
+                      icon: Icons.calendar_today_rounded,
+                      title: "EVENTS",
+                      subtitle: "Bring people together with public or private events",
+                      onTap: () {
+                        controller.imagePaths.clear();
+                        Get.back();
+                        Get.to(() => const CreateEvent());
+                      }
+                  ),
+                  BottomSheetButton(
+                      icon: Icons.people_alt_rounded,
+                      title: "DONATION",
+                      subtitle: "Create a donation page for a cause",
+                      onTap: () {
+                        controller.imagePaths.clear();
+                        Get.back();
+                        Get.to(() => const CreateDonation());
+                      }
+                  ),
 
-              SizedBox(
-                height: Get.height * 0.015,
-              ),
-
-              BottomSheetButton(
-                  icon: Icons.people_alt_rounded,
-                  title: "GROUP",
-                  subtitle: "Create a private or public group of interest",
-                  onTap: () {
-                    controller.imagePaths.clear();
-                    Get.back();
-                    Get.to(() => const CreateGroup());
-                  }
-              ),
-              BottomSheetButton(
-                  icon: Icons.calendar_today_rounded,
-                  title: "EVENTS",
-                  subtitle: "Bring people together with public or private events",
-                  onTap: () {
-                    controller.imagePaths.clear();
-                    Get.back();
-                    Get.to(() => const CreateEvent());
-                  }
-              ),
-              BottomSheetButton(
-                  icon: Icons.people_alt_rounded,
-                  title: "DONATION",
-                  subtitle: "Create a donation page for a cause",
-                  onTap: () {
-                    controller.imagePaths.clear();
-                    Get.back();
-                    Get.to(() => const CreateDonation());
-                  }
-              ),
-
-              SizedBox(
-                height: Get.height * 0.015,
-              ),
-              BottomSheetButton(
-                  icon: Icons.shopping_cart,
-                  title: "PRODUCT",
-                  subtitle: "Create and online display products for users to purchase",
-                  onTap: () {
-                    controller.isProductPost = true;
-                    controller.pageToPost = null;
-                    controller.groupToPost = null;
-                    controller.postToQuote = null;
-                    controller.imagePaths.clear();
-                    Get.back();
-                    Get.to(() => const CreatePosts());
-                  }
+                  SizedBox(
+                    height: Get.height * 0.015,
+                  ),
+                  BottomSheetButton(
+                      icon: Icons.shopping_cart,
+                      title: "PRODUCT",
+                      subtitle: "Create and online display products for users to purchase",
+                      onTap: () {
+                        controller.isProductPost = true;
+                        controller.pageToPost = null;
+                        controller.groupToPost = null;
+                        controller.postToQuote = null;
+                        controller.imagePaths.clear();
+                        Get.back();
+                        Get.to(() => const CreatePosts());
+                      }
+                  ),
+                ],
               ),
               /*BottomSheetButton(
                   icon: Icons.video_camera_back_rounded,
@@ -174,6 +181,41 @@ class WayaBottomSheet extends StatelessWidget {
                     Get.to(() => const CreateLiveVideo());
                   }
               ),*/
+
+              if(isChat)
+                Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    height: Get.height * 0.01,
+                  ),
+                  BottomSheetButton(
+                      icon: Icons.person_rounded,
+                      title: "NEW CHAT",
+                      subtitle: "Start a chat with a wayagram user",
+                      onTap: () {
+                        controller.isProductPost = false;
+                        controller.pageToPost = null;
+                        controller.groupToPost = null;
+                        controller.postToQuote = null;
+                        controller.imagePaths.clear();
+                        Get.back();
+
+                      }
+                  ),
+                  BottomSheetButton(
+                      icon: Icons.group_rounded,
+                      title: "NEW GROUP",
+                      subtitle: "Start a group chat with multiple wayagram users",
+                      onTap: () {
+                        controller.imagePaths.clear();
+                        Get.back();
+
+                      }
+                  ),
+                ],
+              ),
             ],
           ),
         );
