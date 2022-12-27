@@ -26,7 +26,9 @@ import 'my_pref.dart';
 
 class Api {
   //static const String baseUrl = 'https://services.wayagram.ng/';
+  //static const String baseSocketUrl = 'wss://chats.wayagram.ng/';
   static const String baseUrl = 'https://services.staging.wayagram.ng/';
+  static const String baseSocketUrl = 'wss://chats.staging.wayagram.ng/';
   CancelToken token = CancelToken();
 
   final Dio _client = Dio(
@@ -242,11 +244,10 @@ class Api {
     }
   }
 
-  //Real Time Connection
   Socket? socket;
   var isConnected = false;
   void connectToServer({Function? onConnect, Function? onDisconnect, Function(dynamic)? onError,Function? onConnectError}){
-    var url = "wss://chats.staging.wayagram.ng/?token=${MyPref.authToken.val}";
+    var url = "$baseSocketUrl?token=${MyPref.authToken.val}";
     socket = io(url, <String, dynamic>{
       'transports': ['websocket'],
       'EIO': 4,

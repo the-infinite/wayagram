@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
@@ -16,18 +18,47 @@ import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../data/model/posts_model_entity.dart';
+import '../../../data/model/sms_notification_response.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/app_button.dart';
 import '../../../global_widgets/horizontal_item_tile.dart';
+import '../../../global_widgets/overlays.dart';
 import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/notification_view.dart';
 
-class NotificationsSettings extends StatelessWidget {
+class NotificationsSettings extends StatefulWidget {
   const NotificationsSettings({Key? key}) : super(key: key);
 
   @override
+  State<NotificationsSettings> createState() => _NotificationsSettingsState();
+}
+
+class _NotificationsSettingsState extends State<NotificationsSettings> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var controller = Get.find<HomeControllerWayagram>();
+    final pushNotification = ReadWriteValue('wayagram_settings_push_notification', false, MyPref.box);
+    final smsNotification = ReadWriteValue('wayagram_settings_sms_notification', false, MyPref.box);
+    final emailNotification = ReadWriteValue('wayagram_settings_email_notification', false, MyPref.box);
+    final messagesNotification = ReadWriteValue('wayagram_settings_messages_notification', false, MyPref.box);
+    final postPerformanceNotification = ReadWriteValue('wayagram_settings_post_performance_notification', false, MyPref.box);
+    final productsAndUpdatesNotification = ReadWriteValue('wayagram_settings_products_and_updates_notification', false, MyPref.box);
+    final interestRecommendationNotification = ReadWriteValue('wayagram_settings_interest_recommendations_notification', false, MyPref.box);
+    
+    controller.getData("/auth-service/api/v1/profile/sms-alert/status/${controller.profile.phone.toString()}", false).then((value){
+      if(value.isSuccessful){
+        SmsNotificationResponse smsNotificationResponse = SmsNotificationResponse.fromJson(value.data);
+        smsNotification.val = smsNotificationResponse.active == true;
+        if(mounted) setState(() {});
+      }
+    });
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -37,7 +68,10 @@ class NotificationsSettings extends StatelessWidget {
           systemNavigationBarColor: AppColors.background,
           systemNavigationBarIconBrightness: Brightness.dark
       ),
-      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
+      child: GetBuilder<HomeControllerWayagram>(
+        id: 'notifications_settings', builder: (controller) {
+       // final pushNotification = ReadWriteValue('wayagram_settings_push_notification', "wayagram", MyPref.box);
+
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppColors.background,
@@ -58,24 +92,6 @@ class NotificationsSettings extends StatelessWidget {
                 systemNavigationBarColor: AppColors.background,
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
-              actions: [
-                Center(
-                  child: SizedBox(
-                    child: AppButton(
-                      title: 'Save',
-                      onPressed: () async {
-
-                      },
-                      borderRadius: 10,
-                      width: Get.width * 0.2,
-                      fontColor: AppColors.button,
-                      bckgrndColor: AppColors.background,
-                      border: Border.all(color: AppColors.background, width: 1),
-                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-                    ),
-                  ),
-                )
-              ]
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -85,57 +101,83 @@ class NotificationsSettings extends StatelessWidget {
                 SizedBox(height: Get.height*0.02),
                 _SwitchButton(
                   text: "Push Notifications",
+                  value: pushNotification.val,
                   onChanged: (val){
-
+                    pushNotification.val = val;
+                    if(mounted) setState(() {});
                   },
                 ),
                 SizedBox(height: Get.height*0.02),
                 _SwitchButton(
                   text: "SMS Notifications",
+                  value: smsNotification.val,
                   onChanged: (val){
-
+                    var body = {
+                      "phoneNumber": controller.profile.phone.toString(),
+                    };
+                    controller.postData(body, "/auth-service/api/v1/profile/sms-alert").then((value){
+                      if(value.isSuccessful){
+                        SmsNotificationResponse smsNotificationResponse = SmsNotificationResponse.fromJson(value.data);
+                        smsNotification.val = smsNotificationResponse.active == true;
+                        if(mounted) setState(() {});
+                      }else{
+                        AppOverlay.showErrorSnackBar();
+                      }
+                    });
                   },
                 ),
                 SizedBox(height: Get.height*0.02),
                 _SwitchButton(
-                  text: "Push Notifications",
+                  text: "Email Notifications",
+                  value: emailNotification.val,
                   onChanged: (val){
-
+                    emailNotification.val = val;
+                    if(mounted) setState(() {});
                   },
                 ),
-                SizedBox(height: Get.height*0.02),
+
+                /*SizedBox(height: Get.height*0.02),
                 _SwitchButton(
                   text: "New Notifications",
                   onChanged: (val){
 
                   },
-                ),
+                ),*/
+
                 SizedBox(height: Get.height*0.02),
                 _SwitchButton(
                   text: "Messages",
+                  value: messagesNotification.val,
                   onChanged: (val){
-
+                    messagesNotification.val = val;
+                    if(mounted) setState(() {});
                   },
                 ),
                 SizedBox(height: Get.height*0.02),
                 _SwitchButton(
                   text: "Post Performance Updates",
+                  value: postPerformanceNotification.val,
                   onChanged: (val){
-
+                    postPerformanceNotification.val = val;
+                    if(mounted) setState(() {});
                   },
                 ),
                 SizedBox(height: Get.height*0.02),
                 _SwitchButton(
                   text: "Products and Updates",
+                  value: productsAndUpdatesNotification.val,
                   onChanged: (val){
-
+                    productsAndUpdatesNotification.val = val;
+                    if(mounted) setState(() {});
                   },
                 ),
                 SizedBox(height: Get.height*0.02),
                 _SwitchButton(
                   text: "Interest Recommendations",
+                  value: interestRecommendationNotification.val,
                   onChanged: (val){
-
+                    interestRecommendationNotification.val = val;
+                    if(mounted) setState(() {});
                   },
                 ),
               ],
