@@ -9,9 +9,11 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
+import 'package:wayagram/app/global_widgets/overlays.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
 import '../../../../core/theme/app_styles.dart';
+import '../../../bindings/wayagram_binding.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
@@ -26,6 +28,7 @@ import '../../../global_widgets/person_view.dart';
 import '../../../repository/user_repo.dart';
 import '../../change_password/enter_email.dart';
 import '../../home/widgets/notification_view.dart';
+import '../../multiplexor/multiplexor.dart';
 
 class SecuritySettings extends StatelessWidget {
   const SecuritySettings({Key? key}) : super(key: key);
@@ -75,20 +78,41 @@ class SecuritySettings extends StatelessWidget {
                       Get.to(() => EnterEmail(controller.profile.email, controller.profile.phone));
                     }
                 ),
-                SizedBox(height: Get.height*0.02),
+                /*SizedBox(height: Get.height*0.02),
                 _TextButton(
                     text: "Reset PIN",
                     subtitle: "Reset your transaction PIN",
                     onPressed: (){
 
                     }
-                ),
+                ),*/
                 SizedBox(height: Get.height*0.02),
                 _TextButton(
                     text: "Delete Account",
                     subtitle: "Delete your account from Wayagram",
                     onPressed: (){
-
+                      AppOverlay.showDeviceDialog(
+                        title: "Delete Account",
+                        content: "Are you sure you want to delete your account?",
+                        onPositivePressed: () async {
+                          ApiResponse response = await controller.deleteData({}, "/auth-service/api/v1/user/delete/${controller.profile.userId}");
+                          if(response.isSuccessful){
+                            AppOverlay.showSuccessSnackBar(content: "Account deleted successfully");
+                            if(MyPref.uniqueID.val.isNotEmpty){
+                              var body = {
+                                "device_token_id": MyPref.uniqueID.val,
+                              };
+                              controller.deleteData(body, "/wayagram-service/notification/delete-device-token");
+                            }
+                            controller.userRepo.api.disconnect();
+                            Get.back();
+                            MyPref.clearBoxes();
+                            Get.offAll(() => const Multiplexor(),binding: WayagramBinding());
+                          }else{
+                            AppOverlay.showErrorSnackBar(content: response.message?? "Error deleting account");
+                          }
+                        },
+                      );
                     }
                 ),
               ],
