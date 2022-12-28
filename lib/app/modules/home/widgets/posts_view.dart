@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:bordered_text/bordered_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -939,7 +940,11 @@ class _PostState extends State<Post> {
                       AppButton(
                         title: "Donate",
                         onPressed: (){
-                          Get.to(()=> DonateScreen(post: widget.post));
+                          if(Platform.isIOS) {
+                            controller.launchURL("https://app.staging.wayagram.ng/post/${widget.post.id}");
+                          }else{
+                            Get.to(()=> DonateScreen(post: widget.post));
+                          }
                         },
                         bckgrndColor: AppColors.primary,
                         fontColor: AppColors.background,
