@@ -364,7 +364,7 @@ class ProductRealView extends StatelessWidget{
                                 width: 5,
                               ),
                               Text(
-                                "₦${post.amount}",
+                                "NGN ${post.amount}",
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,

@@ -162,7 +162,7 @@ class _PollPaymentScreenState extends State<PollPaymentScreen> {
                               }
                               var min = 0;
                               if(int.parse(val) < min){
-                                return 'Invalid amount, at least ₦$min is required';
+                                return 'Invalid amount, at least NGN $min is required';
                               }
                             }
                             return null;
@@ -184,7 +184,7 @@ class _PollPaymentScreenState extends State<PollPaymentScreen> {
                               return 'Please select an account to debit';
                             }else{
                               if(walletModel!.clrBalAmt!.toInt() < price){
-                                return 'Insufficient funds, at least ₦$price is required';
+                                return 'Insufficient funds, at least NGN $price is required';
                               }
                             }
                             return null;

@@ -175,7 +175,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                             Get.to(() => const SecuritySettings());
                           }
                       ),
-                      SizedBox(height: Get.height*0.02),
+                      //SizedBox(height: Get.height*0.02),
                       /*_TextButton(
                           text: "Payment Settings",
                           subtitle: "Manage your payments settings",

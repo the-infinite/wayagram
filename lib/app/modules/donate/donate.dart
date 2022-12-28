@@ -154,7 +154,7 @@ class _DonateScreenState extends State<DonateScreen> {
                                 min = donation.minimumAmount!.toInt();
                               }
                               if(int.parse(val) < min){
-                                return 'Invalid amount, at least ₦$min is required';
+                                return 'Invalid amount, at least NGN $min is required';
                               }
                             }
                             return null;
@@ -179,7 +179,7 @@ class _DonateScreenState extends State<DonateScreen> {
                                 min = donation.minimumAmount!.toInt();
                               }
                               if(walletModel!.clrBalAmt!.toInt() < min){
-                                return 'Insufficient funds, at least ₦$min is required';
+                                return 'Insufficient funds, at least NGN $min is required';
                               }
                             }
                             return null;

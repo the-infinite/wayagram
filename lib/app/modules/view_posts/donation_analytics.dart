@@ -258,7 +258,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          "₦ ${shortenCount(donationStatistics.amountRaised.toString())}",
+                          "NGN  ${shortenCount(donationStatistics.amountRaised.toString())}",
                           style: TextStyle(
                             color: AppColors.primary,
                             fontSize: Get.textScaleFactor * 18,
@@ -371,7 +371,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                                         decorateAtSign: true,
                                       ),
                                     ),
-                                    Text("₦${post.amount.toString()}", style: TextStyle(
+                                    Text("NGN ${post.amount.toString()}", style: TextStyle(
                                       color: AppColors.primary,
                                       fontSize: Get.textScaleFactor * 15,
                                       fontWeight: FontWeight.w500,

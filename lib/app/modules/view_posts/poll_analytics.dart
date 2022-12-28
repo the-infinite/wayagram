@@ -260,7 +260,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          pollStatistics.isPaid == true ?  "₦ ${shortenCount(total.toString())}" : "Free",
+                          pollStatistics.isPaid == true ?  "NGN  ${shortenCount(total.toString())}" : "Free",
                           style: TextStyle(
                             color: AppColors.primary,
                             fontSize: Get.textScaleFactor * 18,
@@ -378,7 +378,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                                       fontSize: Get.textScaleFactor * 15,
                                       fontWeight: FontWeight.w500,
                                     ),),
-                                   /* Text("₦${pollStatistics.amount!.toString()}", style: TextStyle(
+                                   /* Text("NGN ${pollStatistics.amount!.toString()}", style: TextStyle(
                                       color: AppColors.primary,
                                       fontSize: Get.textScaleFactor * 15,
                                       fontWeight: FontWeight.w500,

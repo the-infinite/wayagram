@@ -927,7 +927,7 @@ class _PostState extends State<Post> {
                             width: 5,
                           ),
                           Text(
-                            "₦${donation.estimatedAmount}",
+                            "NGN ${donation.estimatedAmount}",
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -953,7 +953,7 @@ class _PostState extends State<Post> {
                       ),
                     if(isCurrentUserPost)
                       Text(
-                        "₦$amountRaised raised of ₦${donation.estimatedAmount}",
+                        "NGN $amountRaised raised of NGN ${donation.estimatedAmount}",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: Get.textScaleFactor * 16,

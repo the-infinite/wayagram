@@ -316,7 +316,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          "₦ ${shortenCount(spent)}",
+                          "NGN  ${shortenCount(spent)}",
                           style: TextStyle(
                             color: AppColors.primary,
                             fontSize: Get.textScaleFactor * 18,
@@ -421,7 +421,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                 decorateAtSign: true,
                                               ),
                                             ),
-                                            Text("₦${post.userBudget}", style: TextStyle(
+                                            Text("NGN ${post.userBudget}", style: TextStyle(
                                               color: AppColors.primary,
                                               fontSize: Get.textScaleFactor * 15,
                                               fontWeight: FontWeight.w500,
@@ -513,7 +513,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                 decorateAtSign: true,
                                               ),
                                             ),
-                                            Text("₦${post.userBudget}", style: TextStyle(
+                                            Text("NGN ${post.userBudget}", style: TextStyle(
                                               color: AppColors.primary,
                                               fontSize: Get.textScaleFactor * 15,
                                               fontWeight: FontWeight.w500,
@@ -600,7 +600,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                 decorateAtSign: true,
                                               ),
                                             ),
-                                            Text("₦${post.userBudget}", style: TextStyle(
+                                            Text("NGN ${post.userBudget}", style: TextStyle(
                                               color: AppColors.primary,
                                               fontSize: Get.textScaleFactor * 15,
                                               fontWeight: FontWeight.w500,

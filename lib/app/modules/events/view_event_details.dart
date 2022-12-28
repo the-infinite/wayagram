@@ -171,7 +171,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                       SizedBox(height: Get.height*0.01),
                       _TextButton(
                         leading: Icon(FeatherIcons.tag, color: Colors.black.withOpacity(0.5)),
-                        text: widget.event.isPaid != true ? "Free to attend" : "Paid to attend: ₦${widget.event.amount.toString()}",
+                        text: widget.event.isPaid != true ? "Free to attend" : "Paid to attend: NGN ${widget.event.amount.toString()}",
                         onPressed: () {
                         },
                       ),
