@@ -53,6 +53,7 @@ import '../home/widgets/posts_view.dart' as post_view;
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../search/search.dart';
+import '../send_money/send_money.dart';
 
 class ChatProfile extends StatefulWidget {
   const ChatProfile({Key? key, required this.chatOverview}) : super(key: key);
@@ -343,7 +344,17 @@ class _ChatProfileState extends State<ChatProfile> {
                       title: "Send Money",
                       icon: Icons.money_rounded,
                       onTap: (){
-
+                        var id = "";
+                        if(post.senderUserId == fullProfile.userId){
+                          id = post.receiverUserId;
+                        }else{
+                          id = post.senderUserId;
+                        }
+                        Get.to(() => SendMoney(
+                          userIDToSendTo: id,
+                          userDisplayName: name,
+                          post: post,
+                        ));
                       },
                     ),
                     ChatProfileAction(
@@ -444,7 +455,7 @@ class ChatProfileAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-
+        onTap();
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
