@@ -1294,6 +1294,8 @@ class _PromotePostState extends State<PromotePost> {
                                     if(Get.currentRoute == "/PromotePost"){
                                       if(res.isSuccessful){
                                         Navigator.popUntil(Get.context!, (route) => Get.currentRoute == "/PostAnalytics");
+                                        controller.update();
+                                        AppOverlay.showSuccessSnackBar(title:"Post Promotion",content: "Post Promoted Successfully");
                                       }else{
                                         AppOverlay.showErrorSnackBar(title:"Post Promotion",content: "Unable to promote post, please try again later");
                                       }

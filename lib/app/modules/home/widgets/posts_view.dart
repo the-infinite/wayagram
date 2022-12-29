@@ -314,6 +314,22 @@ class _PostState extends State<Post> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if(widget.post.isPromoted == true )
+              Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(width: 10),
+                Icon(Icons.compare_arrows_rounded, color: Colors.black.withOpacity(.7), size: 20,),
+                Text(
+                  "Promoted",
+                  style: AppTextStyle.bodyText1.copyWith(
+                    color: Colors.black.withOpacity(.7) ,
+                    fontSize: Get.width * 0.03,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -633,8 +649,16 @@ class _PostState extends State<Post> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, i) {
                       var votePercentage = 0.0;
-                      var totalVote = widget.post.poll!.totalVotesCountPoll!.toInt();
-                      var totalVoteOption = widget.post.poll!.pollOptions![i].totalVotesCountPollOption!.toInt();
+                      var totalVote = 0;
+                      var totalVoteOption = 0;
+
+                      if(widget.post.poll!.totalVotesCountPoll != null){
+                        totalVote = widget.post.poll!.totalVotesCountPoll!.toInt();
+                      }
+
+                      if(widget.post.poll!.pollOptions![i].totalVotesCountPollOption != null){
+                        totalVoteOption = widget.post.poll!.pollOptions![i].totalVotesCountPollOption!.toInt();
+                      }
 
                       if(totalVoteOption / totalVote > 0){
                         votePercentage = totalVoteOption / totalVote;
