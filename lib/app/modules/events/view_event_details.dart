@@ -32,6 +32,7 @@ import '../home/widgets/group_view.dart';
 import '../home/widgets/notification_view.dart';
 import '../profile/profile.dart';
 import '../profile/update_profile.dart';
+import '../view_posts/event_analytics.dart';
 
 class ViewEventDetails extends StatefulWidget{
   const ViewEventDetails({Key? key, required this.event}) : super(key: key);
@@ -79,6 +80,21 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                 Get.back();
               },
             ),
+            actions: [
+              if(widget.event.profile!.id == fullProfile.id)
+                InkWell(
+                onTap: (){
+                  Get.to(() => const EventAnalytics(),arguments: widget.event);
+                },
+                child: const Icon(
+                  Icons.bar_chart,
+                  color: Colors.black,
+                  size: 24,
+                ),
+              ),
+              if(widget.event.profile!.id == fullProfile.id)
+                const SizedBox(width: 15)
+            ],
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(0.5),
               child: Container(
