@@ -75,7 +75,15 @@ class _CreatePollState extends State<CreatePoll> {
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                if(pageController.page?.toInt() == 1){
+                  pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                  pos = 0;
+                  controller.update();
+                }else{
+                  Navigator.pop(context);
+                }
+              },
             ),
             actions: [
               Center(
@@ -87,7 +95,8 @@ class _CreatePollState extends State<CreatePoll> {
                         pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.ease);
                         pos = 1;
                         controller.update();
-                      } else {
+                      }
+                      else {
                         formKey2.currentState!.validate();
                         formKey3.currentState!.validate();
                         if(formKey2.currentState!.validate() && formKey3.currentState!.validate()) {

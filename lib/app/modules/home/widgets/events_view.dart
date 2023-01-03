@@ -6,6 +6,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
@@ -311,9 +312,11 @@ class _EventsViewState extends State<EventsView> {
                             SizedBox(
                               height: Get.height*0.03,
                               child: InkWell(
-                                onTap: (){
+                                onTap: () async {
                                   if(widget.onActionClick != null){
                                     widget.onActionClick!(list[index]);
+                                  }else{
+                                    await Share.share('https://app.staging.wayagram.ng/events/${list[index].id}"?from=shared"', subject: 'Invite');
                                   }
                                 },
                                 child: Icon(
