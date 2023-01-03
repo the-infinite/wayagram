@@ -83,15 +83,16 @@ class CreateMoment extends StatelessWidget {
                               controller.update(['home_tab']);
                               if(Get.currentRoute == "/CreateMoment"){
                                 Get.back();
+                                AppOverlay.showSuccessSnackBar(content: "Moment Created Successfully");
                               }
                             }else{
                               if(Get.currentRoute == "/CreateMoment"){
-                                AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                                AppOverlay.showErrorSnackBar(title: 'Error', content: response.message?? "An Error Occurred");
                               }
                             }
                           }else{
                             if(Get.currentRoute == "/CreateMoment"){
-                              AppOverlay.showInfoDialog(
+                              AppOverlay.showErrorSnackBar(
                                   title: 'Error',
                                   content: "Please select an image"
                               );
@@ -108,15 +109,18 @@ class CreateMoment extends StatelessWidget {
                               controller.imagePaths.clear();
                               if(Get.currentRoute == "/CreateMoment"){
                                 Get.back();
+                                AppOverlay.showSuccessSnackBar(content: "Moment Created Successfully");
                               }
                             }else{
                               if(Get.currentRoute == "/CreateMoment"){
-                                AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                                if(Get.currentRoute == "/CreateMoment"){
+                                  AppOverlay.showErrorSnackBar(title: 'Error', content: response.message?? "An Error Occurred");
+                                }
                               }
                             }
                           }else{
                             if(Get.currentRoute == "/CreateMoment"){
-                              AppOverlay.showInfoDialog(
+                              AppOverlay.showErrorSnackBar(
                                   title: 'Error',
                                   content: "Please enter some text"
                               );

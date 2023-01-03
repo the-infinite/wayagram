@@ -56,7 +56,7 @@ class PollAnalytics extends StatefulWidget {
 
 class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateMixin {
   late TabController tabController;
-  List<String> closedDonations = [];
+  List<String> closedPoll = [];
   bool moneyRequested = false;
   var controller = Get.find<HomeControllerWayagram>();
 
@@ -71,7 +71,8 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
     var poll = Get.arguments as AllPostsPoll;
     bool closed = false;
     RefreshController refreshController = RefreshController(initialRefresh: false);
-    var savedAnalytics = ReadWriteValue('wayagram_post_promotion_overview', '', MyPref.box);
+    var savedClosedPoll = ReadWriteValue('wayagram_closed_poll${poll.id}', '', MyPref.box);
+    var savedMoneyRequested = ReadWriteValue('wayagram_poll_money_requested${poll.id}', false, MyPref.box);
 
     var savedPollAnalytics = ReadWriteValue('wayagram_poll_statistics_${poll.id}', '', MyPref.box);
     var savedVotes = ReadWriteValue('wayagram_poll_votes_${poll.id}', '', MyPref.box);
@@ -85,6 +86,15 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
     if(pollStatistics.pollVotes != null){
       if(pollStatistics.isPaid == true){
         total = int.parse((pollStatistics.pollVotes!.length * pollStatistics.amount!).toString());
+      }
+    }
+
+    moneyRequested = savedMoneyRequested.val;
+    if(savedClosedPoll.val.isNotEmpty){
+      closedPoll.clear();
+      closedPoll = savedClosedPoll.val.split(',');
+      if(closedPoll.contains(poll.id.toString())){
+        closed = true;
       }
     }
 
@@ -419,17 +429,18 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                 onPressed: () async {
                   var body = {
                     "action": "close",
-                    ////"donation_id": donation.id
+                    "poll_id": poll.id
                   };
-                  var response = await controller.patchData(body, "/wayagram-service/all-posts/manage-donation");
+                  //https://services.staging.wayagram.ng/wayagram-service/all-posts/manage-poll-post?sso_id=313
+                  var response = await controller.patchData(body, "/wayagram-service/all-posts/manage-poll-post");
                   if(response.isSuccessful){
-                    //closedDonations.add(donation.id.toString());
-                    //savedClosedDonation.val = closedDonations.join(",");
+                    closedPoll.add(poll.id.toString());
+                    savedClosedPoll.val = closedPoll.join(",");
                     closed = true;
                     controller.update(['donation_analytics']);
-                    AppOverlay.showSuccessSnackBar(content: "Donation Closed Successfully");
+                    AppOverlay.showSuccessSnackBar(content: "Poll Closed Successfully");
                   }else{
-                    AppOverlay.showErrorSnackBar(content: "Unable to close donation post, please try again later");
+                    AppOverlay.showErrorSnackBar(content: "Unable to close poll, please try again later");
                   }
                 },
                 width: Get.width*0.9,
@@ -441,8 +452,8 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                   title: "Retrieve Money",
                   onPressed: () async {
                     var body = {
-                      "item_type": "Donation",
-                      //"item_id": donation.id
+                      "item_type": "Poll",
+                      "item_id": poll.id
                     };
                     var response = await controller.postData(body, "/wayagram-serviceall-posts/receive-money");
                     if(response.isSuccessful){

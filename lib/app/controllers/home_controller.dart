@@ -217,20 +217,14 @@ class HomeControllerWayagram extends GetxController {
     final response = await userRepo.updateProfile(body);
     await userRepo.getFullUserProfile(profile.userId.toString());
     update(['profile_page','home','settings','app_drawer']);
-    AppOverlay.showInfoDialog(
-        title: response.isSuccessful ? 'Success' : 'Error',
-        content: response.message,
-        onPressed: () async {
-          if(Get.currentRoute == '/updateProfile') {
-            if(response.isSuccessful) {
-              Get.back();
-              Get.back();
-            }else{
-              Get.back();
-            }
-          }
-        }
-    );
+    if(response.isSuccessful) {
+      if(Get.currentRoute == '/UpdateProfile') {
+        Get.back();
+      }
+      AppOverlay.showSuccessSnackBar(content: "Profile Updated Successfully");
+    }else{
+      AppOverlay.showErrorSnackBar(content: response.message.toString());
+    }
     return response;
   }
 
