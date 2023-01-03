@@ -68,16 +68,63 @@ class _CreatePostsState extends State<CreatePosts> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppColors.background,
-            title: Text(
-              controller.isProductPost ? "Create Product" : controller.postToQuote == null ? "Create Post" : "Quote Post",
-              style: TextStyle(
-                color: const Color(0xff4F4F4F),
-                fontSize: Get.textScaleFactor * 18,
-                fontWeight: FontWeight.bold,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  controller.isProductPost ? "Create Product" : controller.postToQuote == null ? "Create Post" : "Quote Post",
+                  style: TextStyle(
+                    color: const Color(0xff4F4F4F),
+                    fontSize: Get.textScaleFactor * 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+                if(controller.groupToPost != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'To Group: ',
+                        style: TextStyle(
+                          color: const Color(0xff4F4F4F),
+                          fontSize: Get.textScaleFactor * 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      Text(
+                        controller.groupToPost!.name.toString(),
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: Get.textScaleFactor * 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                if(controller.pageToPost != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'To Page: ',
+                        style: TextStyle(
+                          color: const Color(0xff4F4F4F),
+                          fontSize: Get.textScaleFactor * 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      Text(
+                        controller.pageToPost!.name.toString(),
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: Get.textScaleFactor * 14,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
             ),
             leading: IconButton(
               padding: EdgeInsets.zero,
@@ -290,46 +337,6 @@ class _CreatePostsState extends State<CreatePosts> {
                 key: formKey,
                 child: Column(
                   children: [
-                    if(controller.groupToPost != null)
-                      Row(
-                        children: [
-                          Text(
-                            'To Group: ',
-                            style: TextStyle(
-                              color: const Color(0xff4F4F4F),
-                              fontSize: Get.textScaleFactor * 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                          Text(
-                            controller.groupToPost!.name.toString(),
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: Get.textScaleFactor * 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    if(controller.pageToPost != null)
-                      Row(
-                        children: [
-                          Text(
-                            'To Page: ',
-                            style: TextStyle(
-                              color: const Color(0xff4F4F4F),
-                              fontSize: Get.textScaleFactor * 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                          Text(
-                            controller.pageToPost!.name.toString(),
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: Get.textScaleFactor * 16,
-                            ),
-                          ),
-                        ],
-                      ),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,

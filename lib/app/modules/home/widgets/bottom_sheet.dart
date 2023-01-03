@@ -104,6 +104,8 @@ class WayaBottomSheet extends StatelessWidget {
                       subtitle: "Create paid or free polls for users",
                       onTap: () {
                         controller.imagePaths.clear();
+                        controller.pageToPost = null;
+                        controller.groupToPost = null;
                         Get.back();
                         Get.to(() => const CreatePoll());
                       }
@@ -218,6 +220,86 @@ class WayaBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class GroupAndPageBottomSheet extends StatelessWidget {
+  const GroupAndPageBottomSheet({Key? key, this.isChat = false}) : super(key: key);
+
+  final bool isChat;
+  @override
+  Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: AppColors.background1,
+          systemNavigationBarIconBrightness: Brightness.dark
+      ),
+      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
+        return Container(
+          //height: Get.height * 0.65,
+          decoration: const BoxDecoration(
+            color: AppColors.background1,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+                Padding(
+                  padding: EdgeInsets.only(top: Get.height * 0.020, left: Get.width*0.15, right: 20,bottom: Get.height * 0.015),
+                  child: Text(
+                    'Create',
+                    style: AppTextStyle.subtitle1.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: Get.width * 0.045,
+                    ),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    BottomSheetButton(
+                        icon: Icons.post_add_rounded,
+                        title: "POST",
+                        subtitle: "Share a post or write what is on your mind",
+                        onTap: () {
+                          controller.isProductPost = false;
+                          controller.postToQuote = null;
+                          controller.imagePaths.clear();
+                          Get.back();
+                          Get.to(() => const CreatePosts());
+                        }
+                    ),
+                    BottomSheetButton(
+                        icon: Icons.poll,
+                        title: "POLLS",
+                        subtitle: "Create paid or free polls for users",
+                        onTap: () {
+                          controller.imagePaths.clear();
+                          Get.back();
+                          Get.to(() => const CreatePoll());
+                        }
+                    ),
+                  ],
+                ),
             ],
           ),
         );

@@ -67,11 +67,58 @@ class _CreatePollState extends State<CreatePoll> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppColors.background,
-            title: Text('Create Poll', style: AppTextStyle.subtitle1.copyWith(
-              color: const Color(0xff4F4F4F),
-              fontSize: Get.textScaleFactor * 18,
-              fontWeight: FontWeight.bold,
-            )),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('Create Poll', style: AppTextStyle.subtitle1.copyWith(
+                  color: const Color(0xff4F4F4F),
+                  fontSize: Get.textScaleFactor * 18,
+                  fontWeight: FontWeight.bold,
+                )),
+                if(controller.groupToPost != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'To Group: ',
+                        style: TextStyle(
+                          color: const Color(0xff4F4F4F),
+                          fontSize: Get.textScaleFactor * 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      Text(
+                        controller.groupToPost!.name.toString(),
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: Get.textScaleFactor * 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                if(controller.pageToPost != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'To Page: ',
+                        style: TextStyle(
+                          color: const Color(0xff4F4F4F),
+                          fontSize: Get.textScaleFactor * 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      Text(
+                        controller.pageToPost!.name.toString(),
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: Get.textScaleFactor * 14,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
@@ -103,8 +150,8 @@ class _CreatePollState extends State<CreatePoll> {
                           var body = {
                             'description': titleController.text,
                             "type": "user",
-                            "page_id": null,
-                            "group_id": null,
+                            "page_id": controller.pageToPost == null ? null : controller.pageToPost!.id.toString(),
+                            "group_id": controller.groupToPost == null ? null : controller.groupToPost!.id.toString(),
                             "parent_id": null,
                             "pollCategory": isTextPoll ? "text" : "image",
                             "showResult": true,
@@ -125,6 +172,12 @@ class _CreatePollState extends State<CreatePoll> {
 
                             ]
                           };
+                          if(controller.pageToPost != null){
+                            body['type'] = "page";
+                          }
+                          if(controller.groupToPost != null){
+                            body['type'] = "group";
+                          }
                           var response = await controller.postData(body, "/wayagram-service/all-posts/poll-create");
                           if(response.isSuccessful){
                             var id = response.data['id'] as String;
@@ -151,7 +204,7 @@ class _CreatePollState extends State<CreatePoll> {
                               if(innerResponse.isSuccessful) {
                                 if(allTextOptions.indexOf(element) == allTextOptions.length - 1) {
                                   await controller.getPosts;
-                                  controller.update(['home']);
+                                  controller.update(['profile_page','home_tab','home','group_screen','page_screen']);
                                   Get.back();
                                   AppOverlay.showSuccessSnackBar(content: "Poll Created Successfully");
                                 }

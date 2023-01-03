@@ -585,7 +585,13 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                   controller.groupToPost = null;
                   controller.pageToPost = page;
                   controller.imagePaths.clear();
-                  Get.to(() => const CreatePosts());
+                  //Get.to(() => const CreatePosts());
+                  Get.bottomSheet(
+                      GroupAndPageBottomSheet(
+                        isChat: controller.currentBottomNavPage.value == 4,
+                      ),
+                      isScrollControlled: true
+                  );
                 },
                 backgroundColor: AppColors.primary,
                 child: const Icon(Icons.add,color: Colors.white),
