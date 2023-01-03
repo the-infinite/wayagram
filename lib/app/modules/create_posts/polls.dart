@@ -17,6 +17,9 @@ import '../../global_widgets/date_button.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 
+import 'package:dio/dio.dart' as dio;
+
+
 class CreatePoll extends StatefulWidget {
   const CreatePoll({Key? key}) : super(key: key);
 
@@ -52,7 +55,6 @@ class _CreatePollState extends State<CreatePoll> {
 
   @override
   Widget build(BuildContext context) {
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: AppColors.background,
@@ -95,7 +97,7 @@ class _CreatePollState extends State<CreatePoll> {
                             "page_id": null,
                             "group_id": null,
                             "parent_id": null,
-                            "pollCategory": "text",
+                            "pollCategory": isTextPoll ? "text" : "image",
                             "showResult": true,
                             "schedule": true,
                             "millisecCreatedAt": "0",
@@ -127,12 +129,22 @@ class _CreatePollState extends State<CreatePoll> {
                               /*if(descriptions[options.indexOf(element)].isNotEmpty){
                                 innerBody['short_desc'] = descriptions[options.indexOf(element)];
                               }*/
-                              innerResponse = await controller.postData(innerBody, "/wayagram-service/all-posts/poll-option-create");
+                              if(isTextPoll){
+                                innerResponse = await controller.postData(innerBody, "/wayagram-service/all-posts/poll-option-create");
+                              }else{
+                                body['image'] = await dio.MultipartFile.fromFile(
+                                  images[allTextOptions.indexOf(element)],
+                                  filename: images[allTextOptions.indexOf(element)].split('/').last,
+                                );
+                                var formData = dio.FormData.fromMap(body);
+                                innerResponse = await controller.postData(formData, "/wayagram-service/all-posts/poll-option-create");
+                              }
                               if(innerResponse.isSuccessful) {
                                 if(allTextOptions.indexOf(element) == allTextOptions.length - 1) {
                                   await controller.getPosts;
                                   controller.update(['home']);
                                   Get.back();
+                                  AppOverlay.showSuccessSnackBar(content: "Poll Created Successfully");
                                 }
                               } else {
                                 AppOverlay.showInfoDialog(title: 'Error', content: innerResponse.message);
@@ -246,7 +258,7 @@ class _CreatePollState extends State<CreatePoll> {
                                         if(date == null){
                                           return 'Required';
                                         }
-                                        startDateController.text = '${date.day}/${date.month}/${date.year}';
+                                        startDateController.text = '${date.month}/${date.day}/${date.year}';
                                         return null;
                                       },
                                     ),
@@ -276,7 +288,7 @@ class _CreatePollState extends State<CreatePoll> {
                                         if(date == null){
                                           return 'Required';
                                         }
-                                        endDateController.text = '${date.day}/${date.month}/${date.year}';
+                                        endDateController.text = '${date.month}/${date.day}/${date.year}';
                                         return null;
                                       },
                                     ),
