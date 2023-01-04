@@ -156,7 +156,6 @@ class NewChat extends StatelessWidget{
                                 showButton: true,
                                 buttonName: "Message",
                                 onButtonClick: (person) async{
-                                  print(person.userID.toString().hashCode.toString());
                                   ChatOverview chatOverview = ChatOverview();
                                   chatOverview.id = person.id.toString();
                                   chatOverview.chatId = "${fullProfile.userId}_${person.id.toString().hashCode}";
@@ -186,7 +185,6 @@ class NewChat extends StatelessWidget{
                                   showButton: true,
                                   buttonName: "Message",
                                   onButtonClick: (person) async{
-                                    print(person.userID.toString().hashCode.toString());
                                       ChatOverview chatOverview = ChatOverview();
                                       chatOverview.id = person.id.toString();
                                       chatOverview.chatId = "${fullProfile.userId}_${person.id.toString().hashCode}";

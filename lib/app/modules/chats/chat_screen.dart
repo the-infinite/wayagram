@@ -161,6 +161,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
           }else{
             chatController.listenToCustomEvent('load_previous_chats',(chatData){
+              chatController.userRepo.api.emitEvent('chat_overview', {});
               previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
               if(previousChatModel!.previousChat != null){
                 if(previousChat.isNotEmpty){
