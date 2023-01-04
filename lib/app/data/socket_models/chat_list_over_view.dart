@@ -295,6 +295,11 @@ ChatOverview copyWith({  String? id,
   members: members ?? _members,
   group: group ?? _group,
 );
+
+  set id(String? value) {
+    _id = value;
+  }
+
   String? get id => _id;
   String? get chatId => _chatId;
   dynamic get loggedInProfileId => _loggedInProfileId;
@@ -373,6 +378,137 @@ ChatOverview copyWith({  String? id,
     return map;
   }
 
+  set chatId(String? value) {
+    _chatId = value;
+  }
+
+  set loggedInProfileId(dynamic value) {
+    _loggedInProfileId = value;
+  }
+
+  set senderUserId(dynamic value) {
+    _senderUserId = value;
+  }
+
+  set receiverUserId(dynamic value) {
+    _receiverUserId = value;
+  }
+
+  set otherId(dynamic value) {
+    _otherId = value;
+  }
+
+  set blockerId(dynamic value) {
+    _blockerId = value;
+  }
+
+  set senderIsBlocked(bool? value) {
+    _senderIsBlocked = value;
+  }
+
+  set receiverIsBlocked(bool? value) {
+    _receiverIsBlocked = value;
+  }
+
+  set otherUserName(dynamic value) {
+    _otherUserName = value;
+  }
+
+  set senderUserName(String? value) {
+    _senderUserName = value;
+  }
+
+  set otherDisplayName(dynamic value) {
+    _otherDisplayName = value;
+  }
+
+  set otherImageURL(dynamic value) {
+    _otherImageURL = value;
+  }
+
+  set message(String? value) {
+    _message = value;
+  }
+
+  set fileUrl(dynamic value) {
+    _fileUrl = value;
+  }
+
+  set messageType(dynamic value) {
+    _messageType = value;
+  }
+
+  set deleted(bool? value) {
+    _deleted = value;
+  }
+
+  set deletedForReciever(bool? value) {
+    _deletedForReciever = value;
+  }
+
+  set deletedForSender(bool? value) {
+    _deletedForSender = value;
+  }
+
+  set time(String? value) {
+    _time = value;
+  }
+
+  set chatIdentifier(dynamic value) {
+    _chatIdentifier = value;
+  }
+
+  set fromIdTyping(bool? value) {
+    _fromIdTyping = value;
+  }
+
+  set forwardMessage(bool? value) {
+    _forwardMessage = value;
+  }
+
+  set toIdTyping(bool? value) {
+    _toIdTyping = value;
+  }
+
+  set senderArchived(bool? value) {
+    _senderArchived = value;
+  }
+
+  set receiverArchived(bool? value) {
+    _receiverArchived = value;
+  }
+
+  set v(String? value) {
+    _v = value;
+  }
+
+  set unreadCount(num? value) {
+    _unreadCount = value;
+  }
+
+  set isGroup(bool? value) {
+    _isGroup = value;
+  }
+
+  set groupId(String? value) {
+    _groupId = value;
+  }
+
+  set createdAt(String? value) {
+    _createdAt = value;
+  }
+
+  set updatedAt(String? value) {
+    _updatedAt = value;
+  }
+
+  set members(List<Members>? value) {
+    _members = value;
+  }
+
+  set group(Group? value) {
+    _group = value;
+  }
 }
 
 /// id : "31695fdd-809f-446a-81e6-36ec03bd3540"

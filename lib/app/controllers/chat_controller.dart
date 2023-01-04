@@ -87,7 +87,9 @@ class ChatControllerWayagram extends GetxController {
       }
     });
     userRepo.api.listenToEvent('notify_user', (data) {
-
+      if (kDebugMode) {
+        print('notify_user: $data');
+      }
     });
     userRepo.api.listenToEvent('load_chat_overview', (data) {
       chatListOverView = ChatListOverView.fromJson(data);
@@ -104,7 +106,9 @@ class ChatControllerWayagram extends GetxController {
       }
     });*/
     userRepo.api.listenToEvent('user_chat_error', (data) {
-
+      if (kDebugMode) {
+        print('user_chat_error: $data');
+      }
     });
     userRepo.api.listenToEvent('group_chat_error', (data) {
 

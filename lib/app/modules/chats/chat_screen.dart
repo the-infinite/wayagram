@@ -115,15 +115,15 @@ class _ChatScreenState extends State<ChatScreen> {
     var id = "";
     var avatar = "";
     var name = "";
-    var time = "";
-    var lastMessage = "";
+   // var time = "";
+   // var lastMessage = "";
     var membersString = "";
     var username = "";
     if(post.isGroup == true){
       avatar = post.group!.groupImageUrl.toString();
       name = post.group!.groupName.toString();
-      time = timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(post.time.toString())));
-      lastMessage = post.message.toString();
+     // time = timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(post.time.toString())));
+     // lastMessage = post.message.toString();
       id = post.group!.id.toString();
       if(post.members != null){
         for(int i = 0; i < post.members!.length; i++){
@@ -138,8 +138,8 @@ class _ChatScreenState extends State<ChatScreen> {
       name = post.otherDisplayName.toString();
       avatar = post.otherImageURL.toString();
       username = post.otherUserName.toString();
-      time = timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(post.time.toString())));
-      lastMessage = post.message.toString();
+      //time = timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(post.time.toString())));
+      //lastMessage = post.message.toString();
       id = post.otherId.toString();
     }
 
