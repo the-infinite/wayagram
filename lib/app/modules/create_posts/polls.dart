@@ -194,11 +194,11 @@ class _CreatePollState extends State<CreatePoll> {
                               if(isTextPoll){
                                 innerResponse = await controller.postData(innerBody, "/wayagram-service/all-posts/poll-option-create");
                               }else{
-                                body['image'] = await dio.MultipartFile.fromFile(
+                                innerBody['file'] = await dio.MultipartFile.fromFile(
                                   images[allTextOptions.indexOf(element)],
                                   filename: images[allTextOptions.indexOf(element)].split('/').last,
                                 );
-                                var formData = dio.FormData.fromMap(body);
+                                var formData = dio.FormData.fromMap(innerBody);
                                 innerResponse = await controller.postData(formData, "/wayagram-service/all-posts/poll-option-create");
                               }
                               if(innerResponse.isSuccessful) {
