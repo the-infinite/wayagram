@@ -20,6 +20,7 @@ import '../../../global_widgets/app_avatar.dart';
 import '../../../global_widgets/app_button.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../events/pay_for_event.dart';
 import '../../events/view_event_details.dart';
 
 class EventsView extends StatefulWidget {
@@ -28,7 +29,7 @@ class EventsView extends StatefulWidget {
     this.isLoading = false,
     this.moments,
     this.title = 'Events To Attend',
-    this.buttonText = 'Register',
+    this.buttonText = 'Attend',
     this.actionIcon = Icons.share,
     this.onEventClick,
     this.onActionClick,
@@ -142,6 +143,7 @@ class _EventsViewState extends State<EventsView> {
               var date = DateTime.fromMillisecondsSinceEpoch(int.parse(list[index].eventStart!));
               var time = timeago.format(date);
               var isEnded = date.isBefore(DateTime.now());
+              isEnded = false;
               return Container(
                 margin: EdgeInsets.only(top: Get.height*0.007, left: Get.width*0.02,right: Get.width*0.02,bottom: Get.height*0.007),
                 width: Get.width * 0.5,
@@ -301,6 +303,12 @@ class _EventsViewState extends State<EventsView> {
                                 onPressed: () async {
                                   if(widget.onButtonClick != null){
                                     widget.onButtonClick!(list[index]);
+                                  }else{
+                                    if(list[index].profileId.toString() != profile.id){
+                                      Get.to(PayForEvent(post: list[index]));
+                                    }else{
+
+                                    }
                                   }
                                 },
                                 borderRadius: 10,
