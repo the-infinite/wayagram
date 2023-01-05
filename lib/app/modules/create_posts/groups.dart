@@ -175,8 +175,9 @@ class _CreateGroupState extends State<CreateGroup> {
                         await controller.getSuggestedGroups;
                         controller.update(['home']);
                         Get.back();
+                        AppOverlay.showSuccessSnackBar(content: 'Group created successfully');
                       }else{
-                        AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                        AppOverlay.showErrorSnackBar(title: 'Error', content: response.message ?? 'An error occurred');
                       }
                     }
                   },
