@@ -75,7 +75,15 @@ class CreateEvent extends StatelessWidget {
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                if(currentPage > 0){
+                  pageController.animateToPage(currentPage-1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                  currentPage--;
+                  controller.update();
+                }else{
+                  Navigator.pop(context);
+                }
+              },
             ),
             systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: AppColors.background,

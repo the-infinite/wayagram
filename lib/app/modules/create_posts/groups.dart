@@ -124,7 +124,15 @@ class _CreateGroupState extends State<CreateGroup> {
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
-              onPressed: () => Navigator.pop(context),
+              onPressed: (){
+                if(currentPage == 1){
+                  pageController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                  currentPage = 0;
+                  controller.update();
+                }else{
+                  Navigator.pop(context);
+                }
+              },
             ),
             actions: [
               Center(
