@@ -126,8 +126,9 @@ class _CreatePageState extends State<CreatePage> {
                           await controller.getPosts;
                           controller.update(['home']);
                           Get.back();
+                          AppOverlay.showSuccessSnackBar(content: 'Page created successfully');
                         }else{
-                          AppOverlay.showInfoDialog(title: 'Error', content: response.message);
+                          AppOverlay.showErrorSnackBar(title: 'Error', content: response.message ?? 'Something went wrong');
                         }
                       }
                     },

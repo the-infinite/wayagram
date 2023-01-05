@@ -26,6 +26,7 @@ import '../../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../../global_widgets/overlays.dart';
 import '../../products/buy_product.dart';
 import '../../report/report_product.dart';
+import '../../view_posts/product_analytics.dart';
 
 class ProductView extends StatelessWidget{
   const ProductView({
@@ -386,6 +387,27 @@ class ProductRealView extends StatelessWidget{
                         fontColor: AppColors.background,
                         width: Get.width * 0.2,
                         padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                    if(!showBuyButton && showActions)
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          InkWell(
+                            onTap: isCurrentUserPost ? (){
+                              Get.to(() => ProductAnalytics(post: post));
+                            } : null,
+                            child: Icon(
+                              Icons.bar_chart,
+                              color: isCurrentUserPost ? Colors.grey : Colors.white.withOpacity(0.8),
+                              size: 24,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
                       ),
                   ],
                 )
