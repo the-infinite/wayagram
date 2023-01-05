@@ -368,9 +368,11 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                 onSelected: (value) async {
                                   if (value == 0) {
                                     Get.to(() => InviteToGroupOrPage(group: group,isGroup: true));
-                                  } else if (value == 1) {
+                                  }
+                                  else if (value == 1) {
                                     await Share.share('Join me on this wayagram group https://app.staging.wayagram.ng/wayagram-group/${group.id}?from=shared', subject: 'Wayagram Group');
-                                  } else if (value == 2) {
+                                  }
+                                  else if (value == 2) {
                                     AppOverlay.showDeviceDialog(
                                       title: "Mute Group",
                                       content: "Are you sure you want to mute this group?",
@@ -397,7 +399,8 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                         });
                                       }
                                     );
-                                  }else if (value == 3) {
+                                  }
+                                  else if (value == 3) {
                                     var person = Person(
                                       displayName: group.name.toString(),
                                       username: group.name.toString(),
@@ -410,7 +413,8 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       coverImage: group.headerImageUrl.toString(),
                                     );
                                     Get.to(() => ReportUser(person: person,group: group,isGroup: true,));
-                                  }else if (value == 4) {
+                                  }
+                                  else if (value == 4) {
                                     AppOverlay.showDeviceDialog(
                                         title: isForUser? "Delete Group":"Exit Group",
                                         content: isForUser? "Are you sure you want to delete this group?": "Are you sure you want to leave this group?",
@@ -424,6 +428,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                               if(Get.currentRoute == "/Group"){
                                                 Get.back();
                                               }
+                                              controller.update();
                                               if(isForUser){
                                                 AppOverlay.showSuccessSnackBar(content: "${group.name} Group deleted successfully");
                                               }else{

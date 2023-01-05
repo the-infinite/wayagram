@@ -355,9 +355,11 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                 onSelected: (value) async {
                                   if (value == 0) {
                                     Get.to(() => InviteToGroupOrPage(page: page,isPage: true));
-                                  } else if (value == 1) {
+                                  }
+                                  else if (value == 1) {
                                     await Share.share('Join me on wayagram to follow this page https://app.staging.wayagram.ng/wayagram-page/${page.id}?from=shared', subject: 'Wayagram Page');
-                                  } else if (value == 2) {
+                                  }
+                                  else if (value == 2) {
                                     var person = Person(
                                       displayName: page.name.toString(),
                                       username: page.name.toString(),
@@ -370,6 +372,29 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                       coverImage: page.headerImageUrl.toString(),
                                     );
                                     Get.to(() => ReportUser(person: person,page: page,isPage: true,));
+                                  }
+                                  else if (value == 3) {
+                                    AppOverlay.showDeviceDialog(
+                                        title: "Delete Group",
+                                        content: "Are you sure you want to delete this group?",
+                                        onPositivePressed: (){
+                                          var body = {
+                                            "pageId": page.id,
+                                            "userId": fullProfile.id
+                                          };
+                                          controller.deleteData(body, "/wayagram-service/main/page/admin-delete-page",updatePages: false).then((value){
+                                            if(value.isSuccessful){
+                                              if(Get.currentRoute == "/PageScreen"){
+                                                Get.back();
+                                              }
+                                              controller.update();
+                                              AppOverlay.showSuccessSnackBar(content: "${page.name} Page deleted successfully");
+                                            }else{
+                                              AppOverlay.showErrorSnackBar(content: "An Error Occurred, please try again later");
+                                            }
+                                          });
+                                        }
+                                    );
                                   }
                                 },
                                 itemBuilder: (context) => [
@@ -404,6 +429,17 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                       ),
                                     ),
                                   ),
+                                  if(isForUser)
+                                    PopupMenuItem(
+                                      value: 3,
+                                      child: Text(
+                                        "Delete",
+                                        style: AppTextStyle.bodyText1.copyWith(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
                                 ])
                           ],
                           title: AnimatedOpacity(
