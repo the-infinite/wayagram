@@ -32,6 +32,7 @@ import '../../global_widgets/app_input.dart';
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/wayagram_to_wayabank_widgets/wayagram_to_wayabank_widgets.dart';
 import '../home/widgets/bottom_sheet.dart';
 import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
@@ -224,6 +225,8 @@ class _BuyProductState extends State<BuyProduct> {
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
+                      SizedBox(height: Get.height*0.02),
+                      const FundWalletButton(),
                       const SizedBox(height: 5,),
                     ],
                   ),
@@ -231,6 +234,7 @@ class _BuyProductState extends State<BuyProduct> {
               ),
             ),
           ),
+          bottomNavigationBar: const PinPrompt(),
         );
       }),
     );
