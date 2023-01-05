@@ -153,7 +153,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     }else{
                       Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
                     }
-                  });
+                  },minimum: 5,);
                 } else if(savedPosts.isNotEmpty){
                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
                   return GroupView(posts: posts,onButtonClick: (group) async {
@@ -175,7 +175,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     }else{
                       Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
                     }
-                  });
+                  },minimum: 5,);
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
                     return const SizedBox.shrink();
@@ -249,7 +249,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                         }else{
                           Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
                         }
-                      });
+                      },minimum: 5,);
                 } else if(savedPosts.isNotEmpty){
                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
                   return GroupView(posts: posts,isGroup: false,
@@ -270,7 +270,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                         }else{
                           Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
                         }
-                      });
+                      },minimum: 5,);
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
                     return const SizedBox.shrink();
