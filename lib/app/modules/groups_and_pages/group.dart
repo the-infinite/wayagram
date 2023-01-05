@@ -50,9 +50,10 @@ import 'edit/edit_group.dart';
 import 'invite/invite_to_group_or_pages.dart';
 
 class Group extends StatefulWidget {
-  const Group({Key? key, required this.group}) : super(key: key);
+  const Group({Key? key, required this.group,this.joined = false}) : super(key: key);
 
   final GroupModelEntity group;
+  final bool joined;
 
   @override
   State<Group> createState() => _GroupState();
@@ -108,27 +109,27 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
 
             if(group.numberOfMembers != null) {
               memberCount = group.numberOfMembers!.toInt();
-              isUserAAdmin = group.isUserAdmin == true;
-              isUserAMember = group.isUserAMember == true;
-              isPublic = group.isPublic == true;
-              muted = group.mute == true;
-              userMuted = group.isUserOnMute == true;
-              allowMemberPost = group.allowMemberPost == true;
-              if(groupJoined){
-                isUserAMember = true;
+            }
+            isUserAAdmin = group.isUserAdmin == true;
+            isUserAMember = group.isUserAMember == true;
+            isPublic = group.isPublic == true;
+            muted = group.mute == true;
+            userMuted = group.isUserOnMute == true;
+            allowMemberPost = group.allowMemberPost == true;
+            if(groupJoined){
+              isUserAMember = true;
+            }
+            if(isUserAMember || widget.joined) {
+              if(isUserAAdmin) {
+                buttonText = 'Edit';
+              } else {
+                buttonText = '';
               }
-              if(isUserAMember) {
-                if(isUserAAdmin) {
-                  buttonText = 'Edit';
-                } else {
-                  buttonText = '';
-                }
-              }else{
-                if(isPublic) {
-                  buttonText = 'Join Group';
-                } else {
-                  buttonText = 'Send Request';
-                }
+            }else{
+              if(isPublic) {
+                buttonText = 'Join Group';
+              } else {
+                buttonText = 'Send Request';
               }
             }
 
@@ -443,7 +444,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                   }
                                 },
                                 itemBuilder: (context) => [
-                                  if(isUserAMember || isForUser)
+                                  if(isUserAMember || isForUser || widget.joined)
                                     PopupMenuItem(
                                     value: 0,
                                     child: Text(
@@ -464,7 +465,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       ),
                                     ),
                                   ),
-                                  if(isUserAMember || isForUser)
+                                  if(isUserAMember || isForUser|| widget.joined)
                                     PopupMenuItem(
                                     value: 2,
                                     child: Text(
@@ -475,7 +476,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       ),
                                     ),
                                   ),
-                                  if(isUserAMember || isForUser)
+                                  if(isUserAMember || isForUser || widget.joined)
                                     PopupMenuItem(
                                     value: 3,
                                     child: Text(
@@ -486,7 +487,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       ),
                                     ),
                                   ),
-                                  if(isUserAMember || isForUser)
+                                  if(isUserAMember || isForUser || widget.joined)
                                     PopupMenuItem(
                                     value: 4,
                                     child: Text(
@@ -681,7 +682,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                   ],
                 ),
               ),
-              floatingActionButton: ((isUserAMember && allowMemberPost) || isForUser) ? FloatingActionButton(
+              floatingActionButton: ((isUserAMember && allowMemberPost) || isForUser || widget.joined) ? FloatingActionButton(
               onPressed: () {
                 controller.isProductPost = false;
                 controller.pageToPost = null;

@@ -44,6 +44,17 @@ class GroupModelEntity {
 		}
 	}
 
+	static List<GroupModelEntity> getService2(List<dynamic>? val) {
+		if(val == null) {
+			return [];
+		}
+		try{
+			return val.map((e) => GroupModelEntity.fromJson(e["userGroup"])).toList();
+		}catch(e){
+			return [];
+		}
+	}
+
   @override
   String toString() {
     return jsonEncode(this);

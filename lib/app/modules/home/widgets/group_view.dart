@@ -29,18 +29,26 @@ class GroupView extends StatelessWidget{
     this.isLoading = false,
     this.posts,
     this.isGroup = true,
-    this.isJoined = false, this.onButtonClick,
+    this.isJoined = false, this.onButtonClick, this.minimum = -1,
   }) : super(key: key);
 
   final bool isLoading;
   final bool isGroup;
   final bool isJoined;
+  final int minimum;
   final List<GroupModelEntity>? posts;
   final Function(GroupModelEntity info)? onButtonClick;
+
   @override
   Widget build(BuildContext context) {
+    int count = posts!.length;
+    if(minimum > -1){
+      if(count > minimum){
+        count = minimum;
+      }
+    }
     return ListView.builder(
-      itemCount: isLoading ? 3 : posts!.length,
+      itemCount: isLoading ? 3 : count,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
@@ -67,7 +75,7 @@ class GroupView extends StatelessWidget{
         return InkWell(
           onTap: (){
             if(isGroup) {
-              Get.to(() => Group(group: post,key: ValueKey(post.id)));
+              Get.to(() => Group(group: post,key: ValueKey(post.id),joined: isJoined));
             }else{
               Get.to(() => PageScreen(page: post,key: ValueKey(post.id)));
             }
