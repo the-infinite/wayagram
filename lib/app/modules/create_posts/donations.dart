@@ -607,6 +607,34 @@ class _CreateDonationState extends State<CreateDonation> {
               ),
             ),
           ),
+          bottomNavigationBar: InkWell(
+            onTap: (){
+              controller.launchURL("https://wayagram.ng/terms");
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  color: Colors.grey,
+                ),
+                const SizedBox(height: 10,),
+                Text(
+                  "By creating, you agree with our terms and conditions \nof donation creation",
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: Get.textScaleFactor * 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10,),
+              ],
+            ),
+          ),
         );
       }),
     );

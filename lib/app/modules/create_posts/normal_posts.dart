@@ -665,6 +665,30 @@ class _CreatePostsState extends State<CreatePosts> {
                                           SizedBox(height: Get.height * 0.01),
                                         ],
                                       ),
+                                    ),
+                                  if(controller.isProductPost)
+                                    InkWell(
+                                      onTap: (){
+                                        controller.launchURL("https://wayagram.ng/terms");
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const SizedBox(height: 10,),
+                                          Text(
+                                            "By creating, you agree with our terms and conditions \nof donation product creation",
+                                            style: TextStyle(
+                                              color: AppColors.primary,
+                                              fontSize: Get.textScaleFactor * 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          const SizedBox(height: 10,),
+                                        ],
+                                      ),
                                     )
                                 ],
                               ),
