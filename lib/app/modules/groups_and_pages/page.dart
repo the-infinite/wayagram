@@ -102,24 +102,25 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
             var allowMemberPost = true;
             if(page.numberOfMembers != null) {
               memberCount = page.numberOfMembers!.toInt();
-              isUserAAdmin = page.isUserAdmin == true;
-              isUserAMember = page.isUserAMember == true;
-              isPublic = page.isPublic == true;
-              muted = page.mute == true;
-              userMuted = page.isUserOnMute == true;
-              allowMemberPost = page.allowMemberPost == true;
-              if(isUserAMember) {
-                if(isUserAAdmin) {
-                  buttonText = 'Edit';
-                } else {
-                  buttonText = '';
-                }
-              }else{
-                if(isPublic) {
-                  buttonText = 'Follow Page';
-                } else {
-                  buttonText = 'Send Request';
-                }
+            }
+
+            isUserAAdmin = page.isUserAdmin == true;
+            isUserAMember = page.isUserAMember == true;
+            isPublic = page.isPublic == true;
+            muted = page.mute == true;
+            userMuted = page.isUserOnMute == true;
+            allowMemberPost = page.allowMemberPost == true;
+            if(isUserAMember) {
+              if(isUserAAdmin) {
+                buttonText = 'Edit';
+              } else {
+                buttonText = '';
+              }
+            }else{
+              if(isPublic) {
+                buttonText = 'Follow Page';
+              } else {
+                buttonText = 'Send Request';
               }
             }
 

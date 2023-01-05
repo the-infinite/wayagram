@@ -41,7 +41,7 @@ class GroupView extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    int count = posts!.length;
+    int count = posts == null ? 0 : posts!.length;
     if(minimum > -1){
       if(count > minimum){
         count = minimum;

@@ -38,6 +38,7 @@ class MyPref  {
   static final friendRequests = ReadWriteValue('wayagram_friend_request', '', box);
 
   //Pages boxes
+  static final allPages = ReadWriteValue('wayagram_all_pages', '', box);
   static final suggestedPages = ReadWriteValue('wayagram_suggested_pages', '', box);
   static final pagesCreated = ReadWriteValue('wayagram_pages_created', '', box);
   static final pagesFollowed = ReadWriteValue('wayagram_pages_followed', '', box);

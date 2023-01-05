@@ -185,9 +185,8 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                               future: controller.getData("/wayagram-service/main/group/get-user-groups?pageNumber=1&userId=${fullProfile.id}", true),
                               builder: (context, snapshot) {
                                 //var savedPosts = MyPref.suggestedGroups.val;
-                                print(snapshot.data!.data);
                                 var savedPosts = ReadWriteValue('wayagram_joined_groups', '', MyPref.box);
-                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data?.isSuccessful == true) {
                                   //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
                                   final posts = GroupModelEntity.getService2(snapshot.data!.data);
                                   savedPosts.val = jsonEncode(posts);
@@ -443,7 +442,82 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     }else{
                                       Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
                                     }
-                                  });
+                                  },minimum: 5);
+                                } else if(savedPosts.isNotEmpty){
+                                  var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
+                                  return GroupView(posts: posts,isGroup: false,onButtonClick: (group) async {
+                                    var body = {
+                                      "pageId": group.id,
+                                      "userId": fullProfile.id,
+                                    };
+                                    var response = await controller.putData(body, "/wayagram-service/main/page/follow-or-un-follow");
+                                    if(response.isSuccessful){
+                                      await controller.getSuggestedPages;
+                                      await controller.getPagesFollowed;
+                                      controller.update();
+                                      Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                                    }else{
+                                      Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                                    }
+                                  },minimum: 5);
+                                }else{
+                                  if(snapshot.connectionState == ConnectionState.done){
+                                    return const SizedBox.shrink();
+                                  }
+                                  return const GroupView(isLoading: true,isGroup: false,);
+                                }
+                              }),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10,
+                                top: 10
+                            ),
+                            child: Container(
+                              color: Colors.blue.shade50,
+                              width: Get.width,
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                'All Pages',
+                                style: AppTextStyle.headline4.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ),
+                          //https://services.staging.wayagram.ng/wayagram-service/main/page/get-all-pages?pageNumber=1&userId=c6812b92-b6f8-4953-a9f2-45ef15b15ec7&sso_id=313
+                          FutureBuilder<ApiResponse>(
+                              future: controller.getData("/wayagram-service/main/page/get-all-pages?pageNumber=1&userId=${fullProfile.id}", true),
+                              builder: (context, snapshot) {
+                                var savedPosts = MyPref.allPages.val;
+                                var otherSavedPosts = MyPref.pagesFollowed.val;
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  final posts = GroupModelEntity.getService(snapshot.data!.data);
+                                  MyPref.allPages.val = jsonEncode(posts);
+                                  if(otherSavedPosts.isNotEmpty){
+                                    var otherPosts = GroupModelEntity.getService(jsonDecode(otherSavedPosts));
+                                    for (var e in otherPosts) {
+                                      posts.removeWhere((element) => element.id == e.id);
+                                    }
+                                  }
+                                  return GroupView(posts: posts,isGroup: false,
+                                      onButtonClick: (group) async {
+                                        var body = {
+                                          "pageId": group.id,
+                                          "userId": fullProfile.id,
+                                        };
+                                        var response = await controller.putData(body, "/wayagram-service/main/page/follow-or-un-follow");
+                                        if(response.isSuccessful){
+                                          await controller.getSuggestedPages;
+                                          await controller.getPagesFollowed;
+                                          controller.update();
+                                          Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                                        }else{
+                                          Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                                        }
+                                      });
                                 } else if(savedPosts.isNotEmpty){
                                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts));
                                   return GroupView(posts: posts,isGroup: false,onButtonClick: (group) async {
