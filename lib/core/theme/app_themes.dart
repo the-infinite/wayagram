@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
@@ -11,7 +13,7 @@ class AppThemes {
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: AppColors.background,
     primaryColor: AppColors.primary,
-    platform: TargetPlatform.iOS,
+    platform: Platform.isIOS ? TargetPlatform.iOS : TargetPlatform.android,
     bottomSheetTheme: const BottomSheetThemeData(backgroundColor: AppColors.background),
     sliderTheme: SliderThemeData(
       activeTrackColor: AppColors.primary,

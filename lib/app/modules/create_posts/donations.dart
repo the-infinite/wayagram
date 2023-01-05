@@ -96,34 +96,47 @@ class _CreateDonationState extends State<CreateDonation> {
                           currentPage++;
                           controller.update(['create_donation']);
                         }else{
-                          var body = {
-                            "profile_id":fullProfile.id,
-                            "title": titleController.text,
-                            "description":descriptionController.text,
-                            "amountJustification":tellUsMoreAboutYouController.text,
-                            "impact": "${descriptionOfCauseController.text} ${descriptionOfSolutionController.text}",
-                            "ownerDescription": "${descriptionOfCauseController.text} ${descriptionOfSolutionController.text}",
-                            "estimatedAmount":targetController.text,
-                            "displayTotalDonation": !hideContributions,
-                            "minimumAmount":minimumAmountController.text,
-                            "displayNumberOfDonors":!hideDonors,
-                            "donationExpiresAt":endDate.millisecondsSinceEpoch,
-                          };
-
-                          body['donationImage'] = await dio.MultipartFile.fromFile(
-                            controller.imagePaths[1],
-                            filename: controller.imagePaths[1].split('/').last,
+                          bool create = true;
+                          await AppOverlay.showDeviceDialog(
+                            title: "Payment Information",
+                            content: "Waya will take a commission from the payment and the rest of the money will be paid into your account at the end of post duration or its expiry date.",
+                            onPositivePressed: () {
+                              create = true;
+                            },
+                            onNegativePressed: () {
+                              create = false;
+                            },
                           );
+                          if(create){
+                            var body = {
+                              "profile_id":fullProfile.id,
+                              "title": titleController.text,
+                              "description":descriptionController.text,
+                              "amountJustification":tellUsMoreAboutYouController.text,
+                              "impact": "${descriptionOfCauseController.text} ${descriptionOfSolutionController.text}",
+                              "ownerDescription": "${descriptionOfCauseController.text} ${descriptionOfSolutionController.text}",
+                              "estimatedAmount":targetController.text,
+                              "displayTotalDonation": !hideContributions,
+                              "minimumAmount":minimumAmountController.text,
+                              "displayNumberOfDonors":!hideDonors,
+                              "donationExpiresAt":endDate.millisecondsSinceEpoch,
+                            };
 
-                          var formData = dio.FormData.fromMap(body);
-                          var response = await controller.postData(formData, "/wayagram-service/all-posts/create-donation",updatePages: false);
-                          if(response.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram donation created successfully".toLowerCase()){
-                            await controller.getPosts;
-                            controller.update(['profile_page','home_tab','home']);
-                            Get.back();
-                            AppOverlay.showSuccessSnackBar(content: "Donation Created Successfully");
-                          }else{
-                            AppOverlay.showErrorSnackBar(content: "An Error Occurred, Please try again later");
+                            body['donationImage'] = await dio.MultipartFile.fromFile(
+                              controller.imagePaths[1],
+                              filename: controller.imagePaths[1].split('/').last,
+                            );
+
+                            var formData = dio.FormData.fromMap(body);
+                            var response = await controller.postData(formData, "/wayagram-service/all-posts/create-donation",updatePages: false);
+                            if(response.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram donation created successfully".toLowerCase()){
+                              await controller.getPosts;
+                              controller.update(['profile_page','home_tab','home']);
+                              Get.back();
+                              AppOverlay.showSuccessSnackBar(content: "Donation Created Successfully");
+                            }else{
+                              AppOverlay.showErrorSnackBar(content: "An Error Occurred, Please try again later");
+                            }
                           }
                         }
                       }

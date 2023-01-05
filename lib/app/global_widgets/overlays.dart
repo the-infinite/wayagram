@@ -192,8 +192,8 @@ class AppOverlay {
     Get.snackbar(title, content, backgroundColor: Colors.green, colorText: Colors.white);
   }
 
-  static void showDeviceDialog({String title = "",String content = "",String positiveText = "Confirm",String  negativeText = "Cancel",Function()? onPositivePressed,Function()? onNegativePressed}) {
-    showPlatformDialog(
+  static Future<void> showDeviceDialog({String title = "",String content = "",String positiveText = "Confirm",String  negativeText = "Cancel",Function()? onPositivePressed,Function()? onNegativePressed}) async {
+    await showPlatformDialog(
       context: Get.context!,
       builder: (context) => BasicDialogAlert(
         title: Text(

@@ -142,79 +142,94 @@ class _CreatePollState extends State<CreatePoll> {
                         pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.ease);
                         pos = 1;
                         controller.update();
-                      }
-                      else {
-                        formKey2.currentState!.validate();
-                        formKey3.currentState!.validate();
-                        if(formKey2.currentState!.validate() && formKey3.currentState!.validate()) {
-                          var body = {
-                            'description': titleController.text,
-                            "type": "user",
-                            "page_id": controller.pageToPost == null ? null : controller.pageToPost!.id.toString(),
-                            "group_id": controller.groupToPost == null ? null : controller.groupToPost!.id.toString(),
-                            "parent_id": null,
-                            "pollCategory": isTextPoll ? "text" : "image",
-                            "showResult": true,
-                            "schedule": true,
-                            "millisecCreatedAt": "0",
-                            "millisecUpdatedAt": "0",
-                            "isPaid": false,
-                            'startTime': startTimeController.text,
-                            'startDate': startDateController.text,
-                            'endTime': endTimeController.text,
-                            'endDate': endDateController.text,
-                            'voteLimit': votesController.text,
-                            'amount': chargeController.text,
-                            "hashtags": [
-
-                            ],
-                            "mentions": [
-
-                            ]
-                          };
-                          if(controller.pageToPost != null){
-                            body['type'] = "page";
+                      } else {
+                        formKey2.currentState?.validate();
+                        formKey3.currentState?.validate();
+                        if(formKey2.currentState?.validate() == true && formKey3.currentState?.validate() == true) {
+                          bool create = true;
+                          if(int.parse(chargeController.text) > 0){
+                            create = false;
+                            await AppOverlay.showDeviceDialog(
+                              title: "Payment Information",
+                              content: "All paid votes will be credited into your Wayabank(default wallet) at the end of the post duration. A commission of total payment will be paid to Waya.",
+                              onPositivePressed: () {
+                               create = true;
+                              },
+                              onNegativePressed: () {
+                                create = false;
+                              },
+                            );
                           }
-                          if(controller.groupToPost != null){
-                            body['type'] = "group";
-                          }
-                          var response = await controller.postData(body, "/wayagram-service/all-posts/poll-create");
-                          if(response.isSuccessful){
-                            var id = response.data['id'] as String;
-                            ApiResponse? innerResponse;
-                            for (var element in allTextOptions) {
-                              var innerBody = {
-                                'pollId': id,
-                                "option": element.text,
-                                "position": allTextOptions.indexOf(element)+1,
-                              };
-                              /*if(descriptions[options.indexOf(element)].isNotEmpty){
+                          if(create){
+                            var body = {
+                              'description': titleController.text,
+                              "type": "user",
+                              "page_id": controller.pageToPost == null ? null : controller.pageToPost!.id.toString(),
+                              "group_id": controller.groupToPost == null ? null : controller.groupToPost!.id.toString(),
+                              "parent_id": null,
+                              "pollCategory": isTextPoll ? "text" : "image",
+                              "showResult": true,
+                              "schedule": true,
+                              "millisecCreatedAt": "0",
+                              "millisecUpdatedAt": "0",
+                              "isPaid": int.parse(chargeController.text) > 0 ? true : false,
+                              'startTime': startTimeController.text,
+                              'startDate': startDateController.text,
+                              'endTime': endTimeController.text,
+                              'endDate': endDateController.text,
+                              'voteLimit': votesController.text,
+                              'amount': chargeController.text,
+                              "hashtags": [
+
+                              ],
+                              "mentions": [
+
+                              ]
+                            };
+                            if(controller.pageToPost != null){
+                              body['type'] = "page";
+                            }
+                            if(controller.groupToPost != null){
+                              body['type'] = "group";
+                            }
+                            var response = await controller.postData(body, "/wayagram-service/all-posts/poll-create");
+                            if(response.isSuccessful){
+                              var id = response.data['id'] as String;
+                              ApiResponse? innerResponse;
+                              for (var element in allTextOptions) {
+                                var innerBody = {
+                                  'pollId': id,
+                                  "option": element.text,
+                                  "position": allTextOptions.indexOf(element)+1,
+                                };
+                                /*if(descriptions[options.indexOf(element)].isNotEmpty){
                                 innerBody['short_desc'] = descriptions[options.indexOf(element)];
                               }*/
-                              if(isTextPoll){
-                                innerResponse = await controller.postData(innerBody, "/wayagram-service/all-posts/poll-option-create");
-                              }else{
-                                innerBody['file'] = await dio.MultipartFile.fromFile(
-                                  images[allTextOptions.indexOf(element)],
-                                  filename: images[allTextOptions.indexOf(element)].split('/').last,
-                                );
-                                var formData = dio.FormData.fromMap(innerBody);
-                                innerResponse = await controller.postData(formData, "/wayagram-service/all-posts/poll-option-create");
-                              }
-                              if(innerResponse.isSuccessful) {
-                                if(allTextOptions.indexOf(element) == allTextOptions.length - 1) {
-                                  await controller.getPosts;
-                                  controller.update(['profile_page','home_tab','home','group_screen','page_screen']);
-                                  Get.back();
-                                  AppOverlay.showSuccessSnackBar(content: "Poll Created Successfully");
+                                if(isTextPoll){
+                                  innerResponse = await controller.postData(innerBody, "/wayagram-service/all-posts/poll-option-create");
+                                }else{
+                                  innerBody['file'] = await dio.MultipartFile.fromFile(
+                                    images[allTextOptions.indexOf(element)],
+                                    filename: images[allTextOptions.indexOf(element)].split('/').last,
+                                  );
+                                  var formData = dio.FormData.fromMap(innerBody);
+                                  innerResponse = await controller.postData(formData, "/wayagram-service/all-posts/poll-option-create");
                                 }
-                              } else {
-                                AppOverlay.showInfoDialog(title: 'Error', content: innerResponse.message);
-                                break;
+                                if(innerResponse.isSuccessful) {
+                                  if(allTextOptions.indexOf(element) == allTextOptions.length - 1) {
+                                    await controller.getPosts;
+                                    controller.update(['profile_page','home_tab','home','group_screen','page_screen']);
+                                    Get.back();
+                                    AppOverlay.showSuccessSnackBar(content: "Poll Created Successfully");
+                                  }
+                                } else {
+                                  AppOverlay.showInfoDialog(title: 'Error', content: innerResponse.message);
+                                  break;
+                                }
                               }
+                            }else{
+                              AppOverlay.showErrorSnackBar(title: 'Error', content: response.message ?? "Something went wrong");
                             }
-                          }else{
-                            AppOverlay.showInfoDialog(title: 'Error', content: response.message);
                           }
                         }
                       }
@@ -288,6 +303,8 @@ class _CreatePollState extends State<CreatePoll> {
                                   validator: (val){
                                     if(val!.isEmpty){
                                       return 'Please enter your minimum vote number per user';
+                                    }else if(int.tryParse(val) == null){
+                                      return 'Please enter a valid number';
                                     }else if(int.parse(val) < 1){
                                       return 'Please enter a value greater than 0';
                                     }
@@ -302,6 +319,9 @@ class _CreatePollState extends State<CreatePoll> {
                                   hint: '',
                                   label: 'Charge Per Vote',
                                   validator: (val){
+                                    if(int.tryParse(val.toString()) == null){
+                                      return 'Please enter a valid number';
+                                    }
                                     return null;
                                   },
                                   isCompulsory: false,
