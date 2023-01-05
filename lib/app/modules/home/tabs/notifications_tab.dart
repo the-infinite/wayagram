@@ -55,7 +55,6 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
         height: Get.height*0.78,
         child: TabBarView(
           controller: controller.notificationController,
-          //physics: const NeverScrollableScrollPhysics(),
           children: [
             SingleChildScrollView(
               child: Column(
