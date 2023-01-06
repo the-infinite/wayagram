@@ -108,7 +108,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
             title: Text(
               "Event Analytics",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -169,7 +169,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                         Text(
                           "Attendee",
                           style: TextStyle(
-                            color: Color(0xff4F4F4F),
+                            color: getAppColor(Color(0xff4F4F4F)),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -212,7 +212,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                         Text(
                           "Ending Date",
                           style: TextStyle(
-                            color: Color(0xff4F4F4F),
+                            color: getAppColor(Color(0xff4F4F4F)),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -255,7 +255,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                         Text(
                           "Amount",
                           style: TextStyle(
-                            color: Color(0xff4F4F4F),
+                            color: getAppColor(Color(0xff4F4F4F)),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -396,7 +396,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                 Text(
                   "Money Requested Already",
                   style: TextStyle(
-                    color: Color(0xff4F4F4F),
+                    color: getAppColor(Color(0xff4F4F4F)),
                     fontSize: Get.textScaleFactor * 16,
                     fontWeight: FontWeight.bold,
                   ),

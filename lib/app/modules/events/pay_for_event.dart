@@ -91,7 +91,7 @@ class _PayForEventState extends State<PayForEvent> {
             title: Text(
               "Attend Event",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -337,7 +337,7 @@ class _PayForEventState extends State<PayForEvent> {
               Text(
                 amount,
                 style: TextStyle(
-                  color: Color(0xff4F4F4F),
+                  color: getAppColor(Color(0xff4F4F4F)),
                   fontSize: Get.textScaleFactor * 15,
                   fontWeight: FontWeight.normal,
                 ),

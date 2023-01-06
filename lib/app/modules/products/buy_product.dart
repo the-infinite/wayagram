@@ -90,7 +90,7 @@ class _BuyProductState extends State<BuyProduct> {
             title: Text(
               "Buy Product",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -286,7 +286,7 @@ class _BuyProductState extends State<BuyProduct> {
               Text(
                 amount,
                 style: TextStyle(
-                  color: Color(0xff4F4F4F),
+                  color: getAppColor(Color(0xff4F4F4F)),
                   fontSize: Get.textScaleFactor * 15,
                   fontWeight: FontWeight.normal,
                 ),

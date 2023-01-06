@@ -507,7 +507,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                             child: Text(
                               group.name.toString(),
                               style: AppTextStyle.subtitle1.copyWith(
-                                color: Color(0xff4F4F4F),
+                                color: getAppColor(Color(0xff4F4F4F)),
                                 fontWeight: FontWeight.bold,
                                 fontSize: Get.textScaleFactor * 18,
                               ),

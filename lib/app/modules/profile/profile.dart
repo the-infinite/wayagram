@@ -246,7 +246,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                     height: Get.width*0.2,
                                                     decoration: BoxDecoration(
                                                       shape: BoxShape.circle,
-                                                      border: Border.all(color: Colors.white, width: 2),
+                                                      border: Border.all(color: getAppColor(Colors.white), width: 2),
                                                     ),
                                                     child: IconButton(
                                                       padding: EdgeInsets.zero,
@@ -292,7 +292,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                 Text(
                                                   '${fullProfile.displayName}',
                                                   style: TextStyle(
-                                                    color: Colors.black,
+                                                    color: getAppColor(Colors.black),
                                                     fontSize: Get.width*0.04,
                                                     fontWeight: FontWeight.w600,
                                                   ),
@@ -311,7 +311,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                   Text(
                                                     fullProfile.bio.toString(),
                                                     style: TextStyle(
-                                                      color: Colors.black,
+                                                      color: getAppColor(Colors.black),
                                                       fontSize: Get.width*0.04,
                                                       fontWeight: FontWeight.w400,
                                                     ),
@@ -335,7 +335,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                       Text(
                                                         followersCount.toString(),
                                                         style: TextStyle(
-                                                          color: Colors.black,
+                                                          color: getAppColor(Colors.black),
                                                           fontSize: Get.width*0.035,
                                                           fontWeight: FontWeight.w500,
                                                         ),
@@ -362,7 +362,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                       Text(
                                                         followingCount.toString(),
                                                         style: TextStyle(
-                                                          color: Colors.black,
+                                                          color: getAppColor(Colors.black),
                                                           fontSize: Get.width*0.035,
                                                           fontWeight: FontWeight.w500,
                                                         ),
@@ -383,7 +383,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                 Text(
                                                   fullProfile.posts.toString(),
                                                   style: TextStyle(
-                                                    color: Colors.black,
+                                                    color: getAppColor(Colors.black),
                                                     fontSize: Get.width*0.035,
                                                     fontWeight: FontWeight.w500,
                                                   ),
@@ -424,7 +424,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                     padding: EdgeInsets.zero,
                                     icon: Icon(
                                       FeatherIcons.arrowLeft,
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                     ),
                                     onPressed: () {
                                       Get.back();
@@ -436,7 +436,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                             ),
                             actions: [
                               PopupMenuButton(
-                                  color: Colors.white,
+                                  color: getAppColor(Colors.white),
                                   iconSize: Get.width * 0.2,
                                   onSelected: (value) {
                                     if (value == 0) {
@@ -453,7 +453,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                       child: Text(
                                         "View Muted Users",
                                         style: AppTextStyle.bodyText1.copyWith(
-                                          color: Colors.black,
+                                          color: getAppColor(Colors.black),
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -463,7 +463,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                       child: Text(
                                         "View Blocked Users",
                                         style: AppTextStyle.bodyText1.copyWith(
-                                          color: Colors.black,
+                                          color: getAppColor(Colors.black),
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -473,7 +473,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                       child: Text(
                                         "Share",
                                         style: AppTextStyle.bodyText1.copyWith(
-                                          color: Colors.black,
+                                          color: getAppColor(Colors.black),
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -493,7 +493,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                           padding: EdgeInsets.zero,
                                           icon: Icon(
                                             Icons.more_vert,
-                                            color: Colors.black,
+                                            color: getAppColor(Colors.black),
                                           ),
                                           onPressed: null,
                                           iconSize: Get.width * 0.06,
@@ -509,7 +509,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                 child: Text(
                                   '${controller.profile.displayName} ',
                                   style: AppTextStyle.subtitle1.copyWith(
-                                    color: Color(0xff4F4F4F),
+                                    color: getAppColor(getAppColor(Color(0xff4F4F4F))),
                                     fontSize: Get.textScaleFactor * 18,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -541,7 +541,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                     TabBar(
                                       controller: tabController,
                                       padding: EdgeInsets.zero,
-                                      labelColor: Colors.black,
+                                      labelColor: getAppColor(Colors.black),
                                       unselectedLabelColor: Color(0xff9A9A9A),
                                       indicatorColor: AppColors.primary,
                                       indicatorSize: TabBarIndicatorSize.tab,

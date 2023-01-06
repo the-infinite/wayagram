@@ -97,7 +97,7 @@ class _PostAnalyticsState extends State<PostAnalytics> {
             title: Text(
               "Post Activity",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -345,7 +345,7 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                             Text(
                               amount,
                               style: TextStyle(
-                                color: Color(0xff4F4F4F),
+                                color: getAppColor(Color(0xff4F4F4F)),
                                 fontSize: Get.textScaleFactor * 15,
                                 fontWeight: FontWeight.normal,
                               ),

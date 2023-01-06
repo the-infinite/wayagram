@@ -594,7 +594,7 @@ class _PromotePostState extends State<PromotePost> {
             title: Text(
               "Promote Post",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -1374,7 +1374,7 @@ class _PromotePostState extends State<PromotePost> {
                             Text(
                               amount,
                               style: TextStyle(
-                                color: Color(0xff4F4F4F),
+                                color: getAppColor(Color(0xff4F4F4F)),
                                 fontSize: Get.textScaleFactor * 15,
                                 fontWeight: FontWeight.normal,
                               ),

@@ -74,7 +74,7 @@ class _ViewPostState extends State<ViewPost> {
             title: Text(
               "Post",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),

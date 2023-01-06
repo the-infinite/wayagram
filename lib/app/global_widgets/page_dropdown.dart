@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
+import 'helpers/dark_mode_helper.dart';
 
 class PageDropButton extends StatelessWidget {
   PageDropButton({
@@ -46,7 +47,7 @@ class PageDropButton extends StatelessWidget {
                   label,
                   style: AppTextStyle.bodyText2.copyWith(
                     fontWeight: FontWeight.w400,
-                    color: Color(0xFF828282),
+                    color:getAppColor( Color(0xFF828282)),
                   ),
                 ),
               if(isCompulsory)
@@ -69,7 +70,7 @@ class PageDropButton extends StatelessWidget {
           hint: hint,
           borderSide: BorderSide(
             width: 1,
-            color: Color(0xFF828282),
+            color:getAppColor( Color(0xFF828282)),
           ),
           validator: validator,
           padding: padding,
@@ -119,15 +120,15 @@ class AppDropdownButton<T> extends StatelessWidget {
       items: items,
       isExpanded: true,
       hint: Center(child: Text(hint)),
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(color: getAppColor(Colors.black)),
       alignment: AlignmentDirectional.center,
       decoration: InputDecoration(
           enabledBorder: outlineInputBorder,
           border: outlineInputBorder,
           contentPadding: padding
       ),
-      icon:  Icon(Icons.arrow_drop_down,color: Colors.black,),
-      dropdownColor: Colors.white,
+      icon:  Icon(Icons.arrow_drop_down,color: getAppColor(Colors.black),),
+      dropdownColor: getAppColor(Colors.white),
     );
   }
 }

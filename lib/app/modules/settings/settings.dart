@@ -41,7 +41,7 @@ class Settings extends GetView<HomeControllerWayagram>{
           appBar: AppBar(
             elevation: 0,
             title: Text('Settings', style: AppTextStyle.subtitle1.copyWith(
-              color: Color(0xff4F4F4F),
+              color: getAppColor(Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -49,7 +49,7 @@ class Settings extends GetView<HomeControllerWayagram>{
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.black,
+                color: getAppColor(Colors.black),
               ),
               onPressed: () {
                 Get.back();
@@ -60,7 +60,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                 child: Divider(
                   height: 0.5,
                   thickness: 0.5,
-                  color: Colors.grey,
+                  color: getAppColor(Colors.grey),
                 )),
           ),
           body: Column(
@@ -74,7 +74,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                   height: Get.width*0.2,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
+                    border: Border.all(color: getAppColor(Colors.white), width: 2),
                   ),
                   child: IconButton(
                     padding: EdgeInsets.zero,
@@ -91,7 +91,7 @@ class Settings extends GetView<HomeControllerWayagram>{
               Text(
                 '${fullProfile.displayName}',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: getAppColor(Colors.black),
                   fontSize: Get.width*0.04,
                   fontWeight: FontWeight.w600,
                 ),
@@ -99,7 +99,7 @@ class Settings extends GetView<HomeControllerWayagram>{
               Text(
                 "@${fullProfile.username}",
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: getAppColor(Colors.grey),
                   fontSize: Get.width*0.035,
                   fontWeight: FontWeight.w400,
                 ),
@@ -108,7 +108,7 @@ class Settings extends GetView<HomeControllerWayagram>{
               Text(
                 "Your Referral Code:",
                 style: TextStyle(
-                  color: Colors.black,
+                  color: getAppColor(Colors.black),
                   fontSize: Get.width*0.035,
                   fontWeight: FontWeight.w400,
                 ),
@@ -140,7 +140,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                     Get.bottomSheet(WalletBottomSheet(),isScrollControlled: true);
                   },
                   borderRadius: 10,
-                  fontColor: Colors.white,
+                  fontColor: getAppColor(Colors.white),
                   bckgrndColor: AppColors.primary,
                   fontSize: Get.width*0.04,
                   border: Border.all(color: AppColors.primary, width: 1),
@@ -230,14 +230,14 @@ class _TextButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: getAppColor(Colors.grey).withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 5,
                 offset: Offset(0, 3), // changes position of shadow
               ),
             ],
-            border: Border.all(color: Colors.white, width: 1),
-            color: Colors.white,
+            border: Border.all(color: getAppColor(Colors.white), width: 1),
+            color: getAppColor(Colors.white),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -257,7 +257,7 @@ class _TextButton extends StatelessWidget {
                       text,
                       maxLines: 1,
                       overflow: TextOverflow.clip,
-                      style: AppTextStyle.subtitle1.copyWith(color: Colors.black,fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
+                      style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black),fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
                     ),
                         SizedBox(
                           height: Get.height*0.01,
@@ -266,7 +266,7 @@ class _TextButton extends StatelessWidget {
                       subtitle,
                       maxLines: 1,
                       overflow: TextOverflow.clip,
-                      style: AppTextStyle.subtitle1.copyWith(color: Colors.black),
+                      style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black)),
                     ),
                         SizedBox(
                           height: Get.height*0.01,
@@ -279,7 +279,7 @@ class _TextButton extends StatelessWidget {
               IconButton(
                   onPressed: onPressed,
                   padding: EdgeInsets.zero,
-                  icon: Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: Get.width*0.04,)
+                  icon: Icon(Icons.arrow_forward_ios_rounded, color: getAppColor(Colors.black), size: Get.width*0.04,)
               )
             ],
           ),

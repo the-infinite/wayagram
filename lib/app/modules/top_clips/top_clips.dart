@@ -59,7 +59,7 @@ class _TopClipsState extends State<TopClips> {
             title: Text(
               "Top Clips",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),

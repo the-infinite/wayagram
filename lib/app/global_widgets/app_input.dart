@@ -3,6 +3,7 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../core/theme/theme.dart';
+import 'helpers/dark_mode_helper.dart';
 
 
 class AppInput extends StatefulWidget {
@@ -21,17 +22,14 @@ class AppInput extends StatefulWidget {
     this.isRounded = false,
     this.counterText,
     this.controller,
-    this.filledColor = AppColors.background,
+    this.filledColor,
     this.readOnly = false,
     this.maxLines = 1,
     this.validator,
     this.autovalidateMode,
     this.prefexIcon,
     this.contentPadding = const EdgeInsets.fromLTRB(15, 10, 19, 10),
-    this.borderSide = const BorderSide(
-      width: 1,
-      color: Color(0xFF828282),
-    ),
+    this.borderSide = null,
     this.borderRadius = 10,
     this.hintColor = const Color(0xFFC4C4C4),
     this.onTap,
@@ -44,7 +42,7 @@ class AppInput extends StatefulWidget {
   final bool obscureText;
   final bool readOnly;
   final EdgeInsetsGeometry? contentPadding;
-  final Color filledColor;
+  final Color? filledColor;
   final Color? hintColor;
   final Widget? suffixIcon;
   final Widget? prefexIcon;
@@ -52,7 +50,7 @@ class AppInput extends StatefulWidget {
   final FocusNode? focusNode;
   final Function(String)? onFieldSubmitted;
   final Function(String)? onChanged;
-  final BorderSide borderSide;
+  final BorderSide? borderSide;
   final double borderRadius;
   final TextAlign textAlign;
   final int? maxLength, maxLines;
@@ -84,7 +82,10 @@ class _AppInputState extends State<AppInput> {
   Widget build(BuildContext context) {
     OutlineInputBorder outlineInputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(widget.borderRadius),
-      borderSide: widget.borderSide,
+      borderSide: widget.borderSide ?? BorderSide(
+        width: 1,
+        color: getAppColor(Color(0xFF828282)),
+      ),
     );
 
     return Column(
@@ -95,7 +96,7 @@ class _AppInputState extends State<AppInput> {
                 widget.label!,
                 style: AppTextStyle.bodyText2.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF828282),
+                  color: getAppColor(getAppColor(Color(0xFF828282))),
                 ),
               )
             : SizedBox.shrink(),
@@ -119,15 +120,16 @@ class _AppInputState extends State<AppInput> {
           keyboardType: widget.keyboardType,
           style: AppTextStyle.bodyText2.copyWith(
             fontWeight: FontWeight.w500,
+            color: getAppColor(AppColors.onBackground),
           ),
-          cursorColor: AppColors.spanishGray,
+          cursorColor: getAppColor(AppColors.spanishGray),
           decoration: InputDecoration(
             suffixIcon: widget.obscureText == true
                 ? GestureDetector(
                     onTap: _onObscureText,
                     child: Icon(
                       obscureText ? FeatherIcons.eyeOff : FeatherIcons.eye,
-                      color: AppColors.spanishGray,
+                      color: getAppColor(AppColors.spanishGray),
                       size: 19,
                     ),
                   )
@@ -137,11 +139,11 @@ class _AppInputState extends State<AppInput> {
             hintText: widget.hintText,
             counterText: widget.counterText,
             border: outlineInputBorder,
-            fillColor: widget.filledColor,
+            fillColor: widget.filledColor ?? getAppColor(AppColors.background),
             filled: true,
-            focusColor: AppColors.spanishGray,
+            focusColor: getAppColor(AppColors.spanishGray),
             hintStyle: AppTextStyle.bodyText2.copyWith(
-              color: widget.hintColor,
+              color: getAppColor(widget.hintColor ?? AppColors.spanishGray),
             ),
             focusedBorder: outlineInputBorder,
             enabledBorder: outlineInputBorder,

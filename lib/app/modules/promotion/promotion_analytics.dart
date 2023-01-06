@@ -121,7 +121,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
             title: Text(
               "Post Promotion Analytics",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -179,7 +179,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                         Text(
                           "Created",
                           style: TextStyle(
-                            color: Color(0xff4F4F4F),
+                            color: getAppColor(Color(0xff4F4F4F)),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -222,7 +222,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                         Text(
                           "Ended",
                           style: TextStyle(
-                            color: Color(0xff4F4F4F),
+                            color: getAppColor(Color(0xff4F4F4F)),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -265,7 +265,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                         Text(
                           "Live",
                           style: TextStyle(
-                            color: Color(0xff4F4F4F),
+                            color: getAppColor(Color(0xff4F4F4F)),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -308,7 +308,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                         Text(
                           "Spent",
                           style: TextStyle(
-                            color: Color(0xff4F4F4F),
+                            color: getAppColor(Color(0xff4F4F4F)),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),

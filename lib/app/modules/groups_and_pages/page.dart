@@ -450,7 +450,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                             child: Text(
                               '${page.name}',
                               style: AppTextStyle.subtitle1.copyWith(
-                                color: Color(0xff4F4F4F),
+                                color: getAppColor(Color(0xff4F4F4F)),
                                 fontSize: Get.textScaleFactor * 18,
                                 fontWeight: FontWeight.bold,
                               ),

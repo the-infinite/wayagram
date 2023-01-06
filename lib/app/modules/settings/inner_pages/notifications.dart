@@ -77,13 +77,13 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
             title: Text('Notification Settings', style: AppTextStyle.subtitle1.copyWith(
-              color: Color(0xff4F4F4F),
+              color: getAppColor(Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
               onPressed: () => Navigator.pop(context),
             ),
             systemOverlayStyle: SystemUiOverlayStyle(
@@ -225,14 +225,14 @@ class _SwitchButtonState extends State<_SwitchButton> {
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: getAppColor(Colors.grey).withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 5,
                 offset: Offset(0, 3), // changes position of shadow
               ),
             ],
-            border: Border.all(color: Colors.white, width: 1),
-            color: Colors.white,
+            border: Border.all(color: getAppColor(Colors.white), width: 1),
+            color: getAppColor(Colors.white),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -252,7 +252,7 @@ class _SwitchButtonState extends State<_SwitchButton> {
                           widget.text,
                           maxLines: 1,
                           overflow: TextOverflow.clip,
-                          style: AppTextStyle.subtitle1.copyWith(color: value ? Colors.black : Colors.black.withOpacity(.5),fontSize: Get.width*0.038,fontWeight: FontWeight.w500),
+                          style: AppTextStyle.subtitle1.copyWith(color: value ? getAppColor(Colors.black) : getAppColor(Colors.black).withOpacity(.5),fontSize: Get.width*0.038,fontWeight: FontWeight.w500),
                         ),
                         SizedBox(
                           height: Get.height*0.01,
@@ -274,8 +274,8 @@ class _SwitchButtonState extends State<_SwitchButton> {
                 },
                 activeTrackColor: AppColors.primary.withOpacity(0.5),
                 activeColor: AppColors.primary,
-                inactiveTrackColor: Colors.grey.withOpacity(0.5),
-                inactiveThumbColor: Colors.grey,
+                inactiveTrackColor: getAppColor(Colors.grey).withOpacity(0.5),
+                inactiveThumbColor: getAppColor(Colors.grey),
               ),
             ],
           ),

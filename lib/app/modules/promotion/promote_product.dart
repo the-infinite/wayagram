@@ -595,7 +595,7 @@ class _PromoteProductState extends State<PromoteProduct> {
             title: Text(
               "Promote Product",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -1377,7 +1377,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                             Text(
                               amount,
                               style: TextStyle(
-                                color: Color(0xff4F4F4F),
+                                color: getAppColor(Color(0xff4F4F4F)),
                                 fontSize: Get.textScaleFactor * 15,
                                 fontWeight: FontWeight.normal,
                               ),

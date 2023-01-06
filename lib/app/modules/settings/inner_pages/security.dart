@@ -49,13 +49,13 @@ class SecuritySettings extends StatelessWidget {
           appBar: AppBar(
               backgroundColor: getAppColor(AppColors.background),
               title: Text('Security Settings', style: AppTextStyle.subtitle1.copyWith(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               )),
               centerTitle: true,
               leading: IconButton(
-                icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+                icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
                 onPressed: () => Navigator.pop(context),
               ),
               systemOverlayStyle: SystemUiOverlayStyle(
@@ -142,14 +142,14 @@ class _TextButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: getAppColor(Colors.grey).withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 5,
                 offset: Offset(0, 3), // changes position of shadow
               ),
             ],
-            border: Border.all(color: Colors.white, width: 1),
-            color: Colors.white,
+            border: Border.all(color: getAppColor(Colors.white), width: 1),
+            color: getAppColor(Colors.white),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,7 +169,7 @@ class _TextButton extends StatelessWidget {
                           text,
                           maxLines: 1,
                           overflow: TextOverflow.clip,
-                          style: AppTextStyle.subtitle1.copyWith(color: Colors.black,fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
+                          style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black),fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
                           height: Get.height*0.01,
@@ -178,7 +178,7 @@ class _TextButton extends StatelessWidget {
                           subtitle,
                           maxLines: 1,
                           overflow: TextOverflow.clip,
-                          style: AppTextStyle.subtitle1.copyWith(color: Colors.black),
+                          style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black)),
                         ),
                         SizedBox(
                           height: Get.height*0.01,
@@ -191,7 +191,7 @@ class _TextButton extends StatelessWidget {
               IconButton(
                   onPressed: onPressed,
                   padding: EdgeInsets.zero,
-                  icon: Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: Get.width*0.04,)
+                  icon: Icon(Icons.arrow_forward_ios_rounded, color: getAppColor(Colors.black), size: Get.width*0.04,)
               )
             ],
           ),

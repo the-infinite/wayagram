@@ -6,6 +6,7 @@ import 'package:wayagram/app/global_widgets/page_dropdown.dart';
 
 import '../../core/theme/theme.dart';
 import 'app_input.dart';
+import 'helpers/dark_mode_helper.dart';
 
 class PageInput extends StatelessWidget {
   PageInput({
@@ -66,7 +67,7 @@ class PageInput extends StatelessWidget {
                 label,
                 style: AppTextStyle.bodyText2.copyWith(
                   fontWeight: FontWeight.w400,
-                  color: Color(0xFF828282),
+                  color: getAppColor(Color(0xFF828282)),
                 ),
               ),
               if(isCompulsory)
@@ -103,7 +104,7 @@ class PageInput extends StatelessWidget {
                     return DropdownMenuItem<Country>(
                       value: value,
                       child: Container(
-                        color: Colors.white,
+                        color: getAppColor(Colors.white),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

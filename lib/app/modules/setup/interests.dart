@@ -569,7 +569,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
             title: Text(
               "Interests",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),

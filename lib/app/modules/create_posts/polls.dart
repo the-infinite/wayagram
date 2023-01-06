@@ -72,7 +72,7 @@ class _CreatePollState extends State<CreatePoll> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text('Create Poll', style: AppTextStyle.subtitle1.copyWith(
-                  color: Color(0xff4F4F4F),
+                  color: getAppColor(Color(0xff4F4F4F)),
                   fontSize: Get.textScaleFactor * 18,
                   fontWeight: FontWeight.bold,
                 )),
@@ -83,7 +83,7 @@ class _CreatePollState extends State<CreatePoll> {
                       Text(
                         'To Group: ',
                         style: TextStyle(
-                          color: Color(0xff4F4F4F),
+                          color: getAppColor(Color(0xff4F4F4F)),
                           fontSize: Get.textScaleFactor * 14,
                           fontWeight: FontWeight.normal,
                         ),
@@ -104,7 +104,7 @@ class _CreatePollState extends State<CreatePoll> {
                       Text(
                         'To Page: ',
                         style: TextStyle(
-                          color: Color(0xff4F4F4F),
+                          color: getAppColor(Color(0xff4F4F4F)),
                           fontSize: Get.textScaleFactor * 14,
                           fontWeight: FontWeight.normal,
                         ),
@@ -436,7 +436,7 @@ class _CreatePollState extends State<CreatePoll> {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.02,bottom: Get.height*0.008),
                                     child: Text('Add Option', style: AppTextStyle.subtitle1.copyWith(
-                                      color: Color(0xff4F4F4F),
+                                      color: getAppColor(Color(0xff4F4F4F)),
                                       fontSize: Get.textScaleFactor * 14,
                                       fontWeight: FontWeight.bold,
                                     )),
@@ -511,7 +511,7 @@ class _CreatePollState extends State<CreatePoll> {
                                                             child: Text(
                                                               images[index].isEmpty ? 'Pick Image' : images[index].split('/').last,
                                                               style: AppTextStyle.subtitle1.copyWith(
-                                                              color: Color(0xff4F4F4F),
+                                                              color: getAppColor(Color(0xff4F4F4F)),
                                                               fontSize: Get.textScaleFactor * 12,
                                                               fontWeight: FontWeight.bold,
                                                             ),

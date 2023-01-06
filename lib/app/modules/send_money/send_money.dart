@@ -94,7 +94,7 @@ class _SendMoneyState extends State<SendMoney> {
                 Text(
                   "Send Money",
                   style: TextStyle(
-                    color: Color(0xff4F4F4F),
+                    color: getAppColor(Color(0xff4F4F4F)),
                     fontSize: Get.textScaleFactor * 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -105,7 +105,7 @@ class _SendMoneyState extends State<SendMoney> {
                 Text(
                   "Send money to ${widget.userDisplayName}",
                   style: TextStyle(
-                    color: Color(0xff4F4F4F),
+                    color: getAppColor(Color(0xff4F4F4F)),
                     fontSize: Get.textScaleFactor * 14,
                     fontWeight: FontWeight.normal,
                   ),
@@ -348,7 +348,7 @@ class _SendMoneyState extends State<SendMoney> {
               Text(
                 amount,
                 style: TextStyle(
-                  color: Color(0xff4F4F4F),
+                  color: getAppColor(Color(0xff4F4F4F)),
                   fontSize: Get.textScaleFactor * 15,
                   fontWeight: FontWeight.normal,
                 ),

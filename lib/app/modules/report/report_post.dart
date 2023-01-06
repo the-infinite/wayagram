@@ -73,7 +73,7 @@ class _ReportPostState extends State<ReportPost> {
             title: Text(
               title,
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),

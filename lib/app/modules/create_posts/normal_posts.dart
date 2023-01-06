@@ -75,7 +75,7 @@ class _CreatePostsState extends State<CreatePosts> {
                 Text(
                   controller.isProductPost ? "Create Product" : controller.postToQuote == null ? "Create Post" : "Quote Post",
                   style: TextStyle(
-                    color: Color(0xff4F4F4F),
+                    color: getAppColor(Color(0xff4F4F4F)),
                     fontSize: Get.textScaleFactor * 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -90,7 +90,7 @@ class _CreatePostsState extends State<CreatePosts> {
                       Text(
                         'To Group: ',
                         style: TextStyle(
-                          color: Color(0xff4F4F4F),
+                          color: getAppColor(Color(0xff4F4F4F)),
                           fontSize: Get.textScaleFactor * 14,
                           fontWeight: FontWeight.normal,
                         ),
@@ -111,7 +111,7 @@ class _CreatePostsState extends State<CreatePosts> {
                       Text(
                         'To Page: ',
                         style: TextStyle(
-                          color: Color(0xff4F4F4F),
+                          color: getAppColor(Color(0xff4F4F4F)),
                           fontSize: Get.textScaleFactor * 14,
                           fontWeight: FontWeight.normal,
                         ),

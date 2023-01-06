@@ -46,7 +46,7 @@ class PaymentSettings extends StatelessWidget {
           appBar: AppBar(
               backgroundColor: getAppColor(AppColors.background),
               title: Text('Payment Settings', style: AppTextStyle.subtitle1.copyWith(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               )),

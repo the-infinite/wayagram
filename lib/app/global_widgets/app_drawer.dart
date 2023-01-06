@@ -139,7 +139,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                       Text(
                                         "${controller.profile.displayName}",
                                         style: AppTextStyle.headline4.copyWith(
-                                          color: Colors.black,
+                                          color: getAppColor(Colors.black),
                                           fontWeight: FontWeight.bold,
                                           fontSize: Get.width*0.035,
                                         ),
@@ -157,7 +157,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                           Text(
                                             " followers",
                                             style: AppTextStyle.headline4.copyWith(
-                                              color: Colors.black,
+                                              color: getAppColor(Colors.black),
                                               fontWeight: FontWeight.normal,
                                               fontSize: Get.width*0.034,
                                             ),
@@ -177,7 +177,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                           Text(
                                             " following",
                                             style: AppTextStyle.headline4.copyWith(
-                                              color: Colors.black,
+                                              color: getAppColor(Colors.black),
                                               fontWeight: FontWeight.normal,
                                               fontSize: Get.width*0.034,
                                             ),
@@ -204,7 +204,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                     Text(
                                       "Acct: ",
                                       style: AppTextStyle.headline4.copyWith(
-                                        color: Colors.black,
+                                        color: getAppColor(Colors.black),
                                         fontWeight: FontWeight.normal,
                                         fontSize: Get.width*0.04,
                                       ),
@@ -240,7 +240,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _TextButton(
-                                  leading: Icon(Icons.person, color: Colors.black),
+                                  leading: Icon(Icons.person, color: getAppColor(Colors.black)),
                                   text: "My Account",
                                   onPressed: () {
                                     controller.imagePaths.clear();
@@ -250,7 +250,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 ),
 
                                 /*_TextButton(
-                            leading: Icon(Icons.person_add, color: Colors.black),
+                            leading: Icon(Icons.person_add, color: getAppColor(Colors.black)),
                             text: "Discover People",
                             onPressed: () {
 
@@ -258,7 +258,7 @@ class _AppDrawerState extends State<AppDrawer> {
                           ),*/
 
                                 _TextButton(
-                                  leading: Icon(Icons.people, color: Colors.black),
+                                  leading: Icon(Icons.people, color: getAppColor(Colors.black)),
                                   text: "Groups & Pages",
                                   onPressed: () {
                                     controller.imagePaths.clear();
@@ -268,7 +268,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 ),
 
                                 _TextButton(
-                                  leading: Icon(Icons.bookmark, color: Colors.black),
+                                  leading: Icon(Icons.bookmark, color: getAppColor(Colors.black)),
                                   text: "Bookmarks",
                                   onPressed: () {
                                     controller.imagePaths.clear();
@@ -278,7 +278,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 ),
 
                                 _TextButton(
-                                  leading: Icon(Icons.account_tree_sharp, color: Colors.black),
+                                  leading: Icon(Icons.account_tree_sharp, color: getAppColor(Colors.black)),
                                   text: "Top Clips",
                                   onPressed: () {
                                     controller.imagePaths.clear();
@@ -288,7 +288,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 ),
 
                                 _TextButton(
-                                  leading: Icon(Icons.interests, color: Colors.black),
+                                  leading: Icon(Icons.interests, color: getAppColor(Colors.black)),
                                   text: "Interests",
                                   onPressed: () {
                                     controller.imagePaths.clear();
@@ -298,7 +298,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 ),
 
                                 _TextButton(
-                                  leading: Icon(Icons.calendar_month, color: Colors.black),
+                                  leading: Icon(Icons.calendar_month, color: getAppColor(Colors.black)),
                                   text: "Events",
                                   onPressed: () {
                                     controller.imagePaths.clear();
@@ -308,7 +308,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 ),
 
                                 _TextButton(
-                                  leading: Icon(Icons.analytics, color: Colors.black),
+                                  leading: Icon(Icons.analytics, color: getAppColor(Colors.black)),
                                   text: "Post Promotion Analytics",
                                   onPressed: () {
                                     controller.imagePaths.clear();
@@ -318,7 +318,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 ),
 
                                 _TextButton(
-                                  leading: Icon(Icons.local_activity, color: Colors.black),
+                                  leading: Icon(Icons.local_activity, color: getAppColor(Colors.black)),
                                   text: "Activity Log",
                                   onPressed: () {
                                     controller.imagePaths.clear();
@@ -328,7 +328,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 ),
 
                                 _TextButton(
-                                  leading: Icon(Icons.settings, color: Colors.black),
+                                  leading: Icon(Icons.settings, color: getAppColor(Colors.black)),
                                   text: "Settings",
                                   onPressed: () {
                                     controller.imagePaths.clear();
@@ -338,7 +338,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                 ),
 
                                 _TextButton(
-                                  leading: Icon(Icons.support_agent, color: Colors.black),
+                                  leading: Icon(Icons.support_agent, color: getAppColor(Colors.black)),
                                   text: "Support",
                                   onPressed: () {
                                     controller.imagePaths.clear();
@@ -435,7 +435,7 @@ class _TextButton extends StatelessWidget {
               text,
               maxLines: 1,
               overflow: TextOverflow.clip,
-              style: AppTextStyle.subtitle1.copyWith(color: Colors.black),
+              style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black)),
             ),
           ),
         ]),

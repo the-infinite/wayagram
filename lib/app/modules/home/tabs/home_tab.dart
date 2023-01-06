@@ -16,6 +16,7 @@ import '../../../data/model/moments_model_entity.dart';
 import '../../../data/model/posts_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
+import '../../../global_widgets/helpers/dark_mode_helper.dart';
 import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../widgets/moments_view.dart';
@@ -113,7 +114,7 @@ class HomeTab extends StatelessWidget {
         width: Get.width,
         //height: 0.21 * Get.height,
         decoration: BoxDecoration(
-            color: AppColors.lightGrayColor,
+            color: getAppColor(AppColors.lightGrayColor),
             borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +124,7 @@ class HomeTab extends StatelessWidget {
               child: Text("What more can your app do!",
                   style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppColors.black,
+                    color: getAppColor(AppColors.black),
                   )),
             ),
             Padding(
@@ -178,10 +179,10 @@ class HomeTab extends StatelessWidget {
             width: 0.30 * Get.width,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
-                color: AppColors.white,
+                color: getAppColor(AppColors.white),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.grayColor.withOpacity(0.2),
+                    color: getAppColor(AppColors.grayColor).withOpacity(0.2),
                     spreadRadius: 1,
                     blurRadius: 4,
                     offset: Offset(0, 2), // changes position of shadow
@@ -196,7 +197,7 @@ class HomeTab extends StatelessWidget {
                   padding: EdgeInsets.all(6.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.grayColor.withOpacity(.3),
+                    color: getAppColor(AppColors.grayColor).withOpacity(.3),
                   ),
                   child: ImageHelper.svgImage(
                       icon ?? wayapayIconSvg
@@ -205,7 +206,7 @@ class HomeTab extends StatelessWidget {
                 Text(title ?? '',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppColors.black,
+                      color: getAppColor(AppColors.black),
                     )),
                 SizedBox(
                   height: 0.01 * Get.width,
@@ -214,7 +215,7 @@ class HomeTab extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 8 * Get.textScaleFactor,
-                      color: AppColors.black,
+                      color: getAppColor(AppColors.black),
                     )),
               ],
             ),

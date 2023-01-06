@@ -42,14 +42,14 @@ class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.black,
+                color: getAppColor(Colors.black),
               ),
               onPressed: () {
                 Get.back();
               },
             ),
             title: Text('Set Up Profile', style: AppTextStyle.subtitle1.copyWith(
-              color: Color(0xff4F4F4F),
+              color: getAppColor(getAppColor(Color(0xff4F4F4F))),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -139,7 +139,7 @@ class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
                                           AndroidUiSettings(
                                               toolbarTitle: 'Crop Cover Photo',
                                               toolbarColor: Colors.white,
-                                              toolbarWidgetColor: Colors.black,
+                                              toolbarWidgetColor: getAppColor(Colors.black),
                                               activeControlsWidgetColor: AppColors.primary,
                                               cropGridColor: AppColors.primary,
                                               initAspectRatio: CropAspectRatioPreset.ratio16x9,
@@ -209,7 +209,7 @@ class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
                                       AndroidUiSettings(
                                           toolbarTitle: 'Crop Profile Photo',
                                           toolbarColor: Colors.white,
-                                          toolbarWidgetColor: Colors.black,
+                                          toolbarWidgetColor: getAppColor(Colors.black),
                                           activeControlsWidgetColor: AppColors.primary,
                                           cropGridColor: AppColors.primary,
                                           initAspectRatio: CropAspectRatioPreset.square,
@@ -277,7 +277,7 @@ class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
                             },
                             isCompulsory: true,
                             controller: usernameController,
-                            prefix: Icon(Icons.alternate_email, color: Colors.black,size: Get.width*0.05),
+                            prefix: Icon(Icons.alternate_email, color: getAppColor(Colors.black),size: Get.width*0.05),
                             contentPadding: EdgeInsets.only(left: 0),
                           ),
                           SizedBox(

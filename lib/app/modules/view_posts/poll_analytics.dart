@@ -118,7 +118,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
             title: Text(
               "Poll Analytics",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -176,7 +176,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                         Text(
                           "Votes",
                           style: TextStyle(
-                            color: Color(0xff4F4F4F),
+                            color: getAppColor(Color(0xff4F4F4F)),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -219,7 +219,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                         Text(
                           "End Date",
                           style: TextStyle(
-                            color: Color(0xff4F4F4F),
+                            color: getAppColor(Color(0xff4F4F4F)),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -262,7 +262,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                         Text(
                           "Amount",
                           style: TextStyle(
-                            color: Color(0xff4F4F4F),
+                            color: getAppColor(Color(0xff4F4F4F)),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -479,7 +479,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                 Text(
                   "Money Requested Already",
                   style: TextStyle(
-                    color: Color(0xff4F4F4F),
+                    color: getAppColor(Color(0xff4F4F4F)),
                     fontSize: Get.textScaleFactor * 16,
                     fontWeight: FontWeight.bold,
                   ),
