@@ -506,7 +506,7 @@ class _PostState extends State<Post> {
             Divider(
               height: 1.5,
               thickness: 1.5,
-              color: widget.showActions ? Color(0xffF2F2F2) : Colors.transparent,
+              color: widget.showActions ? getAppColor(Color(0xffF2F2F2)) : Colors.transparent,
             ),
             SizedBox(
               height: 10,
