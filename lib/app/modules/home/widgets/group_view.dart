@@ -58,15 +58,15 @@ class GroupView extends StatelessWidget{
             height: Get.height * 0.08,
             width: Get.width * 0.35,
             child: Shimmer.fromColors(
-              baseColor: Colors.grey.withOpacity(0.8),
-              highlightColor: Colors.grey.withOpacity(0.2),
+              baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+              highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
               child: Container(
                 margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                 height: Get.height * 0.18,
                 width: Get.width * 0.35,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey.withOpacity(.5),
+                  color: getAppColor(Colors.grey).withOpacity(.5),
                 ),
               ),
             ),
@@ -105,7 +105,7 @@ class GroupView extends StatelessWidget{
                     Text(
                       post.name.toString(),
                       style: TextStyle(
-                        color: Colors.black ,
+                        color: getAppColor(Colors.black) ,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -115,7 +115,7 @@ class GroupView extends StatelessWidget{
                       child: Text(
                         post.description.toString(),
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: getAppColor(Colors.grey),
                           fontSize: 16,
                           fontWeight: FontWeight.normal,
                         ),

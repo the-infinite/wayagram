@@ -67,13 +67,13 @@ class _EventsViewState extends State<EventsView> {
         Padding(
           padding: EdgeInsets.only(bottom: 10),
           child: Container(
-            color: Colors.blue.shade50,
+            color: getAppColor(Colors.blue.shade50),
             width: Get.width,
             padding: EdgeInsets.all(8),
             child: Text(
               widget.title,
               style: AppTextStyle.headline4.copyWith(
-                color: Colors.black,
+                color: getAppColor(Colors.black),
                 fontWeight: FontWeight.bold,
                 fontSize: Get.textScaleFactor * 15,
               ),
@@ -96,15 +96,15 @@ class _EventsViewState extends State<EventsView> {
                   height: Get.height * 0.18,
                   width: Get.width * 0.35,
                   child: Shimmer.fromColors(
-                    baseColor: Colors.grey.withOpacity(0.8),
-                    highlightColor: Colors.grey.withOpacity(0.2),
+                    baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+                    highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
                     child: Container(
                       margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                       height: Get.height * 0.18,
                       width: Get.width * 0.35,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey.withOpacity(.5),
+                        color: getAppColor(Colors.grey).withOpacity(.5),
                       ),
                     ),
                   ),
@@ -150,10 +150,10 @@ class _EventsViewState extends State<EventsView> {
                 width: Get.width * 0.5,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
+                  color: getAppColor(Colors.white),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.4),
+                      color: getAppColor(Colors.grey).withOpacity(0.4),
                       spreadRadius: 1,
                       blurRadius: 1,
                       offset: Offset(0, 1), // changes position of shadow
@@ -176,7 +176,7 @@ class _EventsViewState extends State<EventsView> {
                         width: Get.width * 0.5,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.grey[200],
+                          color: getAppColor(Colors.grey[200]!),
                         ),
                         child: Stack(
                           children: [
@@ -189,7 +189,7 @@ class _EventsViewState extends State<EventsView> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
-                                    color: Colors.white,
+                                    color: getAppColor(Colors.white),
                                     width: 1,
                                   ),
                                 ),
@@ -198,11 +198,11 @@ class _EventsViewState extends State<EventsView> {
                                   child: CachedNetworkImage(
                                     imageUrl: list[index].eventPoster.toString(), placeholder: (context, url) => Container(
                                     color: Colors.transparent,
-                                    child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.04),
+                                    child: Icon(Icons.image_rounded,color: getAppColor(Colors.grey),size: Get.height*0.04),
                                   ),
                                     errorWidget: (context, url, error) => Container(
                                         color: Colors.transparent,
-                                        child: Icon(Icons.event_rounded,color: Colors.grey,size: Get.height*0.04)
+                                        child: Icon(Icons.event_rounded,color: getAppColor(Colors.grey),size: Get.height*0.04)
                                     ),
                                     fit: BoxFit.cover,
                                   ),
@@ -229,7 +229,7 @@ class _EventsViewState extends State<EventsView> {
                                         child: IconButton(
                                           icon: Icon(
                                             isLiked ?  Icons.favorite : FeatherIcons.heart,
-                                            color: isLiked ? AppColors.primary : Colors.black,
+                                            color: isLiked ? AppColors.primary : getAppColor(Colors.black),
                                             size: 15,
                                           ),
                                           onPressed: (){},
@@ -248,7 +248,7 @@ class _EventsViewState extends State<EventsView> {
                         child: Text(
                           time.capitalizeFirst.toString(),
                           style: TextStyle(
-                            color: Colors.grey.shade600,
+                            color: getAppColor(Colors.grey.shade600),
                             fontSize: Get.height * 0.018,
                             fontWeight: FontWeight.normal,
                           ),
@@ -259,7 +259,7 @@ class _EventsViewState extends State<EventsView> {
                         child: Text(
                           list[index].eventName.toString(),
                           style: TextStyle(
-                            color: Colors.black,
+                            color: getAppColor(Colors.black),
                             fontSize: Get.height * 0.018,
                             fontWeight: FontWeight.bold,
                           ),
@@ -272,7 +272,7 @@ class _EventsViewState extends State<EventsView> {
                         child: Text(
                           list[index].details.toString(),
                           style: TextStyle(
-                            color: Colors.grey.shade600,
+                            color: getAppColor(Colors.grey.shade600),
                             fontSize: Get.height * 0.017,
                             fontWeight: FontWeight.normal,
                           ),
@@ -285,7 +285,7 @@ class _EventsViewState extends State<EventsView> {
                         child: Text(
                           "$interested Interested $going Going",
                           style: TextStyle(
-                            color: Colors.grey.shade600,
+                            color: getAppColor(Colors.grey.shade600),
                             fontSize: Get.height * 0.017,
                             fontWeight: FontWeight.normal,
                           ),
@@ -315,7 +315,7 @@ class _EventsViewState extends State<EventsView> {
                                 borderRadius: 10,
                                 padding: EdgeInsets.symmetric(vertical: 5),
                                 fontSize: Get.height * 0.018,
-                                bckgrndColor: (isEnded && (widget.buttonText != 'Delete')) ? Colors.grey : AppColors.primary,
+                                bckgrndColor: (isEnded && (widget.buttonText != 'Delete')) ? getAppColor(Colors.grey) : AppColors.primary,
                               ),
                             ),
                             SizedBox(
@@ -330,7 +330,7 @@ class _EventsViewState extends State<EventsView> {
                                 },
                                 child: Icon(
                                   widget.actionIcon,
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   size: Get.width*0.05,
                                 ),
                               ),

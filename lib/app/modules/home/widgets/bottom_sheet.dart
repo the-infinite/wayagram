@@ -74,7 +74,7 @@ class WayaBottomSheet extends StatelessWidget {
                 child: Text(
                   'Create',
                   style: AppTextStyle.subtitle1.copyWith(
-                    color: Colors.black,
+                    color: getAppColor(Colors.black),
                     fontWeight: FontWeight.w600,
                     fontSize: Get.width * 0.045,
                   ),
@@ -267,7 +267,7 @@ class GroupAndPageBottomSheet extends StatelessWidget {
                   child: Text(
                     'Create',
                     style: AppTextStyle.subtitle1.copyWith(
-                      color: Colors.black,
+                      color: getAppColor(Colors.black),
                       fontWeight: FontWeight.w600,
                       fontSize: Get.width * 0.045,
                     ),
@@ -425,7 +425,7 @@ class WalletBottomSheet extends StatelessWidget {
                 child: Text(
                   title,
                   style: AppTextStyle.subtitle1.copyWith(
-                    color: Colors.black,
+                    color: getAppColor(Colors.black),
                     fontWeight: FontWeight.w600,
                     fontSize: Get.width * 0.045,
                   ),
@@ -553,7 +553,7 @@ class BottomSheetButton extends StatelessWidget {
                 Text(
                   title,
                   style: AppTextStyle.subtitle1.copyWith(
-                    color: Colors.black,
+                    color: getAppColor(Colors.black),
                     fontWeight: FontWeight.w600,
                     fontSize: Get.width * 0.04,
                   ),
