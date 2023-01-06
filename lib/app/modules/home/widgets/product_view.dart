@@ -56,15 +56,15 @@ class ProductView extends StatelessWidget{
               height: Get.height * 0.18,
               width: Get.width * 0.35,
               child: Shimmer.fromColors(
-                baseColor: Colors.grey.withOpacity(0.8),
-                highlightColor: Colors.grey.withOpacity(0.2),
+                baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+                highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
                 child: Container(
                   margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                   height: Get.height * 0.18,
                   width: Get.width * 0.35,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey.withOpacity(.5),
+                    color: getAppColor(Colors.grey).withOpacity(.5),
                   ),
                 ),
               ),
@@ -109,7 +109,7 @@ class ProductRealView extends StatelessWidget{
       return Container(
         margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(.8),
+          color: getAppColor(Colors.white).withOpacity(.8),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -135,7 +135,7 @@ class ProductRealView extends StatelessWidget{
                     Text(
                       post.profile!.displayName.toString(),
                       style: TextStyle(
-                        color: Colors.black ,
+                        color: getAppColor(Colors.black) ,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -143,7 +143,7 @@ class ProductRealView extends StatelessWidget{
                     Text(
                       "@${post.profile!.username}",
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: getAppColor(Colors.grey),
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                       ),
@@ -158,7 +158,7 @@ class ProductRealView extends StatelessWidget{
                       Text(
                         timeago.format(time),
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: getAppColor(Colors.grey),
                           fontSize: Get.textScaleFactor * 12,
                           fontWeight: FontWeight.normal,
                         ),
@@ -168,10 +168,10 @@ class ProductRealView extends StatelessWidget{
                       ),
                       if(showActions)
                         PopupMenuButton(
-                            color: Colors.white,
+                            color: getAppColor(Colors.white),
                             icon: Icon(
                               FeatherIcons.moreHorizontal,
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               size: 20,
                             ),
                             onSelected: (value) {
@@ -235,7 +235,7 @@ class ProductRealView extends StatelessWidget{
                                     child: Text(
                                       Get.currentRoute == "/BookmarksPage" ? "Remove" : "Bookmark",
                                       style: AppTextStyle.bodyText1.copyWith(
-                                        color: Colors.black,
+                                        color: getAppColor(Colors.black),
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -245,7 +245,7 @@ class ProductRealView extends StatelessWidget{
                                 child: Text(
                                   "Share",
                                   style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -256,7 +256,7 @@ class ProductRealView extends StatelessWidget{
                               child: Text(
                                 "Edit",
                                 style: AppTextStyle.bodyText1.copyWith(
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -267,7 +267,7 @@ class ProductRealView extends StatelessWidget{
                                   child: Text(
                                     "Delete",
                                     style: AppTextStyle.bodyText1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -278,7 +278,7 @@ class ProductRealView extends StatelessWidget{
                                   child: Text(
                                     "Report",
                                     style: AppTextStyle.bodyText1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -328,7 +328,7 @@ class ProductRealView extends StatelessWidget{
                               fontWeight: FontWeight.w500,
                             ),
                             basicStyle: TextStyle(
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
@@ -345,7 +345,7 @@ class ProductRealView extends StatelessWidget{
                               fontWeight: FontWeight.normal,
                             ),
                             basicStyle: TextStyle(
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
                             ),
@@ -368,7 +368,7 @@ class ProductRealView extends StatelessWidget{
                               Text(
                                 "NGN ${post.amount}",
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   fontSize: 16,
                                   fontWeight: FontWeight.normal,
                                 ),
@@ -401,7 +401,7 @@ class ProductRealView extends StatelessWidget{
                             } : null,
                             child: Icon(
                               Icons.bar_chart,
-                              color: isCurrentUserPost ? Colors.grey : Colors.white.withOpacity(0.8),
+                              color: isCurrentUserPost ? getAppColor(Colors.grey) : getAppColor(Colors.white).withOpacity(0.8),
                               size: 24,
                             ),
                           ),

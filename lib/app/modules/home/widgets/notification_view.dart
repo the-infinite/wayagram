@@ -87,7 +87,7 @@ class _NotificationViewState extends State<NotificationView> {
                     child: Text(
                       post.title.toString().capitalizeFirst.toString(),
                       style: TextStyle(
-                        color: Colors.black ,
+                        color: getAppColor(Colors.black) ,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
