@@ -47,7 +47,7 @@ class _FriendsViewState extends State<FriendsView> {
         Padding(
           padding: EdgeInsets.only(bottom: 10),
           child: Container(
-            color: Colors.blue.shade50,
+            color: getAppColor(Colors.blue.shade50),
             width: Get.width,
             padding: EdgeInsets.all(8),
             child: Text(

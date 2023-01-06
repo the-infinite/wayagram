@@ -152,7 +152,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 ],
               ),
                 title: ImageHelper.normalImage(
-                  'assets/images/wayagram_new.png', width: Get.width * 0.25,
+                  'assets/images/wayagram_new.png', width: Get.width * 0.25, color:getAppColor(Color(0xff4F4F4F),),
                 ),
                 actions: [
                 Padding(
@@ -163,7 +163,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     child: IconButton(
                       icon: ImageHelper.normalImage(
                         showSearchIcon ? 'assets/images/search.png' : 'assets/images/follow_new_users.png',
-                        color: getAppColor(AppColors.background),
+                        color: getAppColor(AppColors.onBackground),
                         width: showSearchIcon ? Get.width*0.05 : Get.width*0.07,
                         height: showSearchIcon ? Get.width*0.05 : Get.width*0.07,
                       ),
@@ -174,6 +174,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                           Get.to(() => Contact(),binding: WayagramBinding());
                         }
                       },
+                      color: getAppColor(AppColors.background),
                     ),
                   ),
                 )
@@ -193,15 +194,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 children: [
                   if(controller.currentBottomNavPage.value == 2)
                     Divider(
-                    color: Colors.grey.shade400,
+                    color: getAppColor(Colors.grey.shade400),
                     thickness: 0.3,
                   ),
                   if(controller.currentBottomNavPage.value == 2)
                     TabBar(
                       controller: shopController,
                       padding: EdgeInsets.zero,
-                      labelColor: getAppColor(AppColors.background),
-                      unselectedLabelColor: Color(0xff9A9A9A),
+                      labelColor: getAppColor(AppColors.onBackground),
+                      unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: TextStyle(
@@ -224,14 +225,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     Divider(
                       height: 0.5,
                       thickness: 0.5,
-                      color: Colors.grey.shade400,
+                      color: getAppColor(Colors.grey.shade400),
                     ),
                   if(controller.currentBottomNavPage.value == 3)
                     TabBar(
                       controller: notificationController,
                       padding: EdgeInsets.zero,
-                      labelColor: getAppColor(AppColors.background),
-                      unselectedLabelColor: Color(0xff9A9A9A),
+                      labelColor: getAppColor(AppColors.onBackground),
+                      unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: TextStyle(
@@ -254,14 +255,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     Divider(
                       height: 0.5,
                       thickness: 0.5,
-                      color: Colors.grey.shade400,
+                      color: getAppColor(Colors.grey.shade400),
                     ),
                   if(controller.currentBottomNavPage.value == 4)
                     TabBar(
                       controller: shopController,
                       padding: EdgeInsets.zero,
                       labelColor: getAppColor(AppColors.background),
-                      unselectedLabelColor: Color(0xff9A9A9A),
+                      unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: TextStyle(
@@ -283,7 +284,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   Divider(
                     height: 0.5,
                     thickness: 0.45,
-                    color: Colors.grey.shade400,
+                    color: getAppColor(Colors.grey.shade400),
                   ),
                   Expanded(
                     child: SingleChildScrollView(

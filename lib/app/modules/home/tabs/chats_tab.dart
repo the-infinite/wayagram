@@ -15,6 +15,7 @@ import '../../../global_widgets/app_avatar.dart';
 
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../../global_widgets/helpers/dark_mode_helper.dart';
 import '../../chats/chat_screen.dart';
 
 class ChatsTab extends StatelessWidget {
@@ -104,7 +105,7 @@ class ChatsTab extends StatelessWidget {
                                                 fontSize: Get.textScaleFactor * 17,
                                                 fontWeight: FontWeight.w600,
                                               ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                color: Colors.black,
+                                                color: getAppColor(Colors.black),
                                                 fontSize: Get.textScaleFactor * 17,
                                                 fontWeight: FontWeight.w600,),
                                                 softWrap: true,
@@ -127,7 +128,7 @@ class ChatsTab extends StatelessWidget {
                                                   fontSize: Get.textScaleFactor * 17,
                                                   fontWeight: FontWeight.w600,
                                                 ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                  color: Colors.black,
+                                                  color: getAppColor(Colors.black),
                                                   fontSize: Get.textScaleFactor * 17,
                                                   fontWeight: FontWeight.w600,),
                                                   softWrap: true,

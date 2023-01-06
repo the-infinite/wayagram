@@ -19,6 +19,7 @@ import '../../../data/model/group_model_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
+import '../../../global_widgets/helpers/dark_mode_helper.dart';
 import '../../search/search.dart';
 import '../widgets/HashTagView.dart';
 import '../widgets/events_view.dart';
@@ -45,13 +46,13 @@ class _DiscoverTabState extends State<DiscoverTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            color: Colors.blue.shade50,
+            color: getAppColor(Colors.blue.shade50),
             width: Get.width,
             padding: EdgeInsets.all(8),
             child: Text(
               'Trending',
               style: AppTextStyle.headline4.copyWith(
-                color: Colors.black,
+                color: getAppColor(Colors.black),
                 fontWeight: FontWeight.normal,
                 fontSize: Get.textScaleFactor * 14,
               ),
@@ -115,13 +116,13 @@ class _DiscoverTabState extends State<DiscoverTab> {
                 }
               }),
           Container(
-            color: Colors.blue.shade50,
+            color: getAppColor(Colors.blue.shade50),
             width: Get.width,
             padding: EdgeInsets.all(8),
             child: Text(
               'Groups To Join',
               style: AppTextStyle.headline4.copyWith(
-                color: Colors.black,
+                color: getAppColor(Colors.black),
                 fontWeight: FontWeight.normal,
                 fontSize: Get.textScaleFactor * 14,
               ),
@@ -211,13 +212,13 @@ class _DiscoverTabState extends State<DiscoverTab> {
                 top: 10
             ),
             child: Container(
-              color: Colors.blue.shade50,
+              color: getAppColor(Colors.blue.shade50),
               width: Get.width,
               padding: EdgeInsets.all(8),
               child: Text(
                 'Pages To Follow',
                 style: AppTextStyle.headline4.copyWith(
-                  color: Colors.black,
+                  color: getAppColor(Colors.black),
                   fontWeight: FontWeight.normal,
                   fontSize: Get.textScaleFactor * 14,
                 ),
