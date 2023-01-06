@@ -60,7 +60,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
     homeController.shopController = shopController;
     homeController.notificationController = notificationController;
     homeController.chatController = chatController;
-    homeController.checkPermissionStatus();
+    if(Platform.isAndroid){
+      homeController.checkPermissionStatus();
+    }
     homeController.getAllUserData().then((value) => homeController.update());
 
     subscribeToFirebaseNotification(homeController.profile.userId.toString(), homeController.profile.id.toString());
@@ -162,13 +164,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     height: 45,
                     child: IconButton(
                       icon: ImageHelper.normalImage(
-                        showSearchIcon ? 'assets/images/search.png' : 'assets/images/follow_new_users.png',
+                        (showSearchIcon && Platform.isAndroid) ? 'assets/images/search.png' : 'assets/images/follow_new_users.png',
                         color: getAppColor(AppColors.onBackground),
-                        width: showSearchIcon ? Get.width*0.05 : Get.width*0.07,
-                        height: showSearchIcon ? Get.width*0.05 : Get.width*0.07,
+                        width: (showSearchIcon && Platform.isAndroid) ? Get.width*0.05 : Get.width*0.07,
+                        height: (showSearchIcon && Platform.isAndroid) ? Get.width*0.05 : Get.width*0.07,
                       ),
                       onPressed: () {
-                        if (showSearchIcon) {
+                        if (showSearchIcon && Platform.isAndroid) {
                           Get.to(() => Search(),binding: WayagramBinding());
                         } else {
                           Get.to(() => Contact(),binding: WayagramBinding());
