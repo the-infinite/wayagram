@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../core/utils/validator.dart';
@@ -23,7 +24,7 @@ import 'package:dio/dio.dart' as dio;
 
 
 class CreateDonation extends StatefulWidget {
-  const CreateDonation({Key? key}) : super(key: key);
+  CreateDonation({Key? key}) : super(key: key);
 
   @override
   State<CreateDonation> createState() => _CreateDonationState();
@@ -47,8 +48,8 @@ class _CreateDonationState extends State<CreateDonation> {
 
   DateTime startDate = DateTime.now();
   TimeOfDay startTime = TimeOfDay.now();
-  DateTime endDate = DateTime.now().add(const Duration(days: 1));
-  TimeOfDay endTime = const TimeOfDay(hour: 23, minute: 59);
+  DateTime endDate = DateTime.now().add(Duration(days: 1));
+  TimeOfDay endTime = TimeOfDay(hour: 23, minute: 59);
 
   var hideContributions = false;
   var hideDonors = false;
@@ -62,29 +63,29 @@ class _CreateDonationState extends State<CreateDonation> {
   Widget build(BuildContext context) {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "create_donation",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text('Create Donation', style: AppTextStyle.subtitle1.copyWith(
-              color: const Color(0xff4F4F4F),
+              color: Color(0xff4F4F4F),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
                 onPressed: () {
                   if(currentPage > 0){
-                    pageController.animateToPage(currentPage-1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                    pageController.animateToPage(currentPage-1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                     currentPage--;
                     controller.update();
                   }else{
@@ -100,7 +101,7 @@ class _CreateDonationState extends State<CreateDonation> {
                     onPressed: () async {
                       if(formKey1.currentState!.validate()) {
                         if(currentPage < 3){
-                          pageController.animateToPage(currentPage+1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                          pageController.animateToPage(currentPage+1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                           currentPage++;
                           controller.update(['create_donation']);
                         }else{
@@ -151,22 +152,22 @@ class _CreateDonationState extends State<CreateDonation> {
                     },
                     borderRadius: 10,
                     fontColor: AppColors.button,
-                    bckgrndColor: AppColors.background,
-                    border: Border.all(color: AppColors.background, width: 1),
-                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    bckgrndColor: getAppColor(AppColors.background),
+                    border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                   ),
                 ),
               )
             ],
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
-            bottom: const PreferredSize(
+            bottom: PreferredSize(
               preferredSize: Size.fromHeight(0.5),
               child: Divider(
                 height: 0.5,
@@ -184,10 +185,10 @@ class _CreateDonationState extends State<CreateDonation> {
                   height: Get.height * 0.8,
                   child: PageView(
                     controller: pageController,
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     children: [
                       Column(
-                        key: const Key('page1'),
+                        key: Key('page1'),
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -255,7 +256,7 @@ class _CreateDonationState extends State<CreateDonation> {
                         ],
                       ),
                       Column(
-                        key: const Key('page2'),
+                        key: Key('page2'),
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -308,7 +309,7 @@ class _CreateDonationState extends State<CreateDonation> {
                         ],
                       ),
                       Column(
-                        key: const Key('page3'),
+                        key: Key('page3'),
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -336,7 +337,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             hint: 'How much are you trying to raise?',
                             label: 'Target',
                             validator: Validator.moneyValidation,
-                            keyboardType: const TextInputType.numberWithOptions(decimal: false, signed: false),
+                            keyboardType: TextInputType.numberWithOptions(decimal: false, signed: false),
                             isCompulsory: true,
                             controller: targetController,
                           ),
@@ -344,7 +345,7 @@ class _CreateDonationState extends State<CreateDonation> {
                           PageDropButton(
                             label: "Hide or display contributions in real time",
                             hint: '',
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                             onChanged: (val) {
                               hideContributions = val == "Hide Contributions";
                             },
@@ -404,7 +405,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             children: [
                               DateButton<DateTime>(
                                 label: 'End Date',
-                                date: DateTime.now().add(const Duration(days: 1)),
+                                date: DateTime.now().add(Duration(days: 1)),
                                 initialValue: DateTime.now(),
                                 validator: (date){
                                   if(date == null){
@@ -420,8 +421,8 @@ class _CreateDonationState extends State<CreateDonation> {
                               ),
                               DateButton<TimeOfDay>(
                                 label: 'End Time',
-                                time: const TimeOfDay(hour: 23, minute: 59),
-                                initialValue: const TimeOfDay(hour: 23, minute: 59),
+                                time: TimeOfDay(hour: 23, minute: 59),
+                                initialValue: TimeOfDay(hour: 23, minute: 59),
                                 validator: (date){
                                   if(date == null){
                                     return 'Required';
@@ -450,7 +451,7 @@ class _CreateDonationState extends State<CreateDonation> {
                                   hint: 'Minimum amount a user can donate',
                                   label: 'Minimum amount a \nuser can donate',
                                   validator: Validator.moneyValidation,
-                                  keyboardType: const TextInputType.numberWithOptions(decimal: false, signed: false),
+                                  keyboardType: TextInputType.numberWithOptions(decimal: false, signed: false),
                                   isCompulsory: true,
                                   controller: minimumAmountController,
                                 ),
@@ -460,7 +461,7 @@ class _CreateDonationState extends State<CreateDonation> {
                                 child: PageDropButton(
                                   label: "Hide or display donors \nname in real time",
                                   hint: '',
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   onChanged: (val) {
                                     hideDonors = val == "Hide Donors";
                                   },
@@ -478,7 +479,7 @@ class _CreateDonationState extends State<CreateDonation> {
                         ],
                       ),
                       Column(
-                        key: const Key('page4'),
+                        key: Key('page4'),
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -514,7 +515,7 @@ class _CreateDonationState extends State<CreateDonation> {
                                           uiSettings: [
                                             AndroidUiSettings(
                                                 toolbarTitle: 'Crop Event Photo',
-                                                toolbarColor: AppColors.background,
+                                                toolbarColor: getAppColor(AppColors.background),
                                                 toolbarWidgetColor: Colors.black,
                                                 activeControlsWidgetColor: AppColors.primary,
                                                 cropGridColor: AppColors.primary,
@@ -562,7 +563,7 @@ class _CreateDonationState extends State<CreateDonation> {
                                         padding: EdgeInsets.only(top: Get.height*0.01),
                                         child: Row(
                                           children: [
-                                            const Icon(
+                                            Icon(
                                               Icons.error,
                                               color: Colors.red,
                                               size: 16,
@@ -636,12 +637,12 @@ class _CreateDonationState extends State<CreateDonation> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Divider(
+                Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
                 ),
-                const SizedBox(height: 10,),
+                SizedBox(height: 10,),
                 Text(
                   "By creating, you agree with our terms and conditions \nof donation creation",
                   style: TextStyle(
@@ -652,7 +653,7 @@ class _CreateDonationState extends State<CreateDonation> {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10,),
+                SizedBox(height: 10,),
               ],
             ),
           ),
@@ -666,7 +667,7 @@ class _TextButton extends StatelessWidget {
   final String title;
   final String text;
   final Function() onPressed;
-  const _TextButton({required this.text, required this.onPressed, required this.title});
+  _TextButton({required this.text, required this.onPressed, required this.title});
 
   @override
   Widget build(BuildContext context) {

@@ -11,6 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -29,7 +30,7 @@ import '../../report/report_product.dart';
 import '../../view_posts/product_analytics.dart';
 
 class ProductView extends StatelessWidget{
-  const ProductView({
+  ProductView({
     Key? key,
     this.isLoading = false,
     this.posts,
@@ -48,7 +49,7 @@ class ProductView extends StatelessWidget{
         itemCount: isLoading ? 5 : posts!.length,
         shrinkWrap: true,
         padding: EdgeInsets.zero,
-        physics: const NeverScrollableScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           if(isLoading){
             return SizedBox(
@@ -58,7 +59,7 @@ class ProductView extends StatelessWidget{
                 baseColor: Colors.grey.withOpacity(0.8),
                 highlightColor: Colors.grey.withOpacity(0.2),
                 child: Container(
-                  margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                  margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                   height: Get.height * 0.18,
                   width: Get.width * 0.35,
                   decoration: BoxDecoration(
@@ -82,7 +83,7 @@ class ProductView extends StatelessWidget{
 }
 
 class ProductRealView extends StatelessWidget{
-  const ProductRealView({
+  ProductRealView({
     Key? key,
     this.isLoading = false,
     required this.post,
@@ -106,7 +107,7 @@ class ProductRealView extends StatelessWidget{
       var isCurrentUserPost = controller.profile.id == post.profile!.id;
 
       return Container(
-        margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+        margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(.8),
           borderRadius: BorderRadius.circular(10),
@@ -133,7 +134,7 @@ class ProductRealView extends StatelessWidget{
                   children: [
                     Text(
                       post.profile!.displayName.toString(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.black ,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -141,7 +142,7 @@ class ProductRealView extends StatelessWidget{
                     ),
                     Text(
                       "@${post.profile!.username}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.grey,
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
@@ -162,13 +163,13 @@ class ProductRealView extends StatelessWidget{
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      const SizedBox(
+                      SizedBox(
                         width: 10,
                       ),
                       if(showActions)
                         PopupMenuButton(
                             color: Colors.white,
-                            icon: const Icon(
+                            icon: Icon(
                               FeatherIcons.moreHorizontal,
                               color: Colors.black,
                               size: 20,
@@ -190,7 +191,7 @@ class ProductRealView extends StatelessWidget{
                                   Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
                                 }
                                 else if (value == 2) {
-                                  //Get.to(() => const Followers());
+                                  //Get.to(() => Followers());
                                 }
                                 else if (value == 3) {
                                   var body = {
@@ -283,7 +284,7 @@ class ProductRealView extends StatelessWidget{
                                   ),
                                 ),
                             ]),
-                      const SizedBox(
+                      SizedBox(
                         width: 10,
                       ),
                     ],
@@ -291,7 +292,7 @@ class ProductRealView extends StatelessWidget{
                 ),
               ],
             ),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             if(imageUrls.isNotEmpty)
@@ -305,11 +306,11 @@ class ProductRealView extends StatelessWidget{
                   marginTop: 0,
                 ),
               ),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
+                padding: EdgeInsets.only(left: 10, right: 10,bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -321,12 +322,12 @@ class ProductRealView extends StatelessWidget{
                         children: [
                           HashTagText(
                             text: post.name.toString(),
-                            decoratedStyle: const TextStyle(
+                            decoratedStyle: TextStyle(
                               color: Colors.blue,
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
-                            basicStyle: const TextStyle(
+                            basicStyle: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -338,12 +339,12 @@ class ProductRealView extends StatelessWidget{
                           ),
                           HashTagText(
                             text: post.description.toString(),
-                            decoratedStyle: const TextStyle(
+                            decoratedStyle: TextStyle(
                               color: Colors.blue,
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
                             ),
-                            basicStyle: const TextStyle(
+                            basicStyle: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
@@ -356,17 +357,17 @@ class ProductRealView extends StatelessWidget{
                           Row(
                             children: [
                               //tag icon
-                              const Icon(
+                              Icon(
                                 FeatherIcons.tag,
                                 color: AppColors.primary,
                                 size: 20,
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 5,
                               ),
                               Text(
                                 "NGN ${post.amount}",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
                                   fontWeight: FontWeight.normal,
@@ -384,14 +385,14 @@ class ProductRealView extends StatelessWidget{
                           Get.to(() => BuyProduct(post: post));
                         },
                         bckgrndColor: AppColors.primary,
-                        fontColor: AppColors.background,
+                        fontColor: getAppColor(AppColors.background),
                         width: Get.width * 0.2,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.symmetric(vertical: 10),
                       ),
                     if(!showBuyButton && showActions)
                       Row(
                         children: [
-                          const SizedBox(
+                          SizedBox(
                             width: 10,
                           ),
                           InkWell(
@@ -404,7 +405,7 @@ class ProductRealView extends StatelessWidget{
                               size: 24,
                             ),
                           ),
-                          const SizedBox(
+                          SizedBox(
                             width: 10,
                           ),
                         ],

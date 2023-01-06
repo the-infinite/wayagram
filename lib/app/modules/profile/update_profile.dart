@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../core/theme/app_styles.dart';
@@ -19,7 +20,7 @@ import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
 class UpdateProfile extends GetView<HomeControllerWayagram> {
-  const UpdateProfile({Key? key}) : super(key: key);
+  UpdateProfile({Key? key}) : super(key: key);
 
   static const route = '/updateProfile';
 
@@ -40,7 +41,7 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
           appBar: AppBar(
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
                 color: Colors.black,
               ),
@@ -49,7 +50,7 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
               },
             ),
             title: Text('Update Profile', style: AppTextStyle.subtitle1.copyWith(
-              color: const Color(0xff4F4F4F),
+              color: Color(0xff4F4F4F),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -94,9 +95,9 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
                       },
                       borderRadius: 10,
                       fontColor: AppColors.button,
-                      bckgrndColor: AppColors.background,
-                      border: Border.all(color: AppColors.background, width: 1),
-                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                      bckgrndColor: getAppColor(AppColors.background),
+                      border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                       width: Get.width * 0.2,
                     ),
                   ),
@@ -277,7 +278,7 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
                             isCompulsory: true,
                             controller: usernameController,
                             prefix: Icon(Icons.alternate_email, color: Colors.black,size: Get.width*0.05),
-                            contentPadding: const EdgeInsets.only(left: 0),
+                            contentPadding: EdgeInsets.only(left: 0),
                           ),
                           SizedBox(
                             height: Get.height * 0.025,
@@ -310,7 +311,7 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
                           PageDropButton(
                             label: "Choose Privacy",
                             hint: '',
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                             onChanged: (val) {
                               if(val == "Public") {
                                 isPrivate = false;

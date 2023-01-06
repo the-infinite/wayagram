@@ -17,13 +17,13 @@ import 'overlays.dart';
 /// DocumentSaver saves [File] found on filepath to
 /// the platform document directory.
 class DocumentSaver {
-  static const String eventImagePath = "/events";
-  static const String idImagePath = "/ids";
+  static String eventImagePath = "/events";
+  static String idImagePath = "/ids";
 
   /// [savePermanently] permanently saves the file found in [filepath]
   /// into the Platform's Document directory, like this:
   /// PlatformDocumentDirectory/savePath/renameTo.fileExtension.
-  /// [savePath] can be any of the static const String in [DocumentSaver].
+  /// [savePath] can be any of the static String in [DocumentSaver].
   /// [storageKey] is any of [StorageKey] static members,
   /// to specify the key with which this file can be accessed
   /// If [savePath] is empty, the document is saved in the root of Platform's Document directory.
@@ -84,7 +84,7 @@ class DocumentPicker extends StatefulWidget {
     String base64Image,
   ) onSelected;
 
-  const DocumentPicker({
+  DocumentPicker({
     this.networkImage,
     required this.renderHeight,
     required this.renderWidth,
@@ -182,7 +182,7 @@ class _DocumentPickerState extends State<DocumentPicker> {
                   color: Colors.white.withOpacity(0.0)
               ),
               child: Padding(
-                padding: const EdgeInsets.all(2.0),
+                padding: EdgeInsets.all(2.0),
                 child: Icon(Icons.add_a_photo_rounded, color: Colors.white.withOpacity(1), size: 30),
               ),
             )

@@ -6,7 +6,7 @@ import '../../core/theme/app_styles.dart';
 import 'date_item_button.dart';
 
 class DateButton<T> extends StatefulWidget {
-  const DateButton({
+  DateButton({
     Key? key,
     this.validator,
     this.initialValue,
@@ -41,7 +41,7 @@ class _DateButtonState<T> extends State<DateButton<T>> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 5),
+                padding: EdgeInsets.only(left: 5),
                 child: Text(
                   widget.label,
                   style: AppTextStyle.bodyText2.copyWith(
@@ -49,7 +49,7 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               InkWell(
                 onTap: () {
                   if (widget.date != null) {
@@ -108,14 +108,14 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                         ],
                       ),
               ),
-              const SizedBox(height: 5.0),
+              SizedBox(height: 5.0),
               field.hasError
                   ? Text(
                       field.errorText!,
                       style: TextStyle(
                           color: Colors.redAccent.shade700, fontSize: 12.0),
                     )
-                  : const SizedBox.shrink(),
+                  : SizedBox.shrink(),
             ],
           );
         });

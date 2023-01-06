@@ -9,6 +9,7 @@ import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -18,10 +19,11 @@ import '../../../global_widgets/app_button.dart';
 import '../../../global_widgets/document_picker.dart';
 import 'package:dio/dio.dart' as dio;
 
+import '../../../global_widgets/helpers/dark_mode_helper.dart';
 import '../../../global_widgets/overlays.dart';
 
 class CreateMoment extends StatelessWidget {
-  const CreateMoment({Key? key}) : super(key: key);
+  CreateMoment({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,30 +33,30 @@ class CreateMoment extends StatelessWidget {
     PageController pageController = PageController(initialPage: 0, keepPage: true);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text('Moment', style: AppTextStyle.subtitle1.copyWith(
-              color: Colors.black,
+              color: getAppColor(AppColors.background),
             )),
             centerTitle: false,
             leading: IconButton(
-              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(AppColors.background)),
               onPressed: () => Navigator.pop(context),
             ),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle:  SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
               actions: [
@@ -130,9 +132,9 @@ class CreateMoment extends StatelessWidget {
                       },
                       borderRadius: 10,
                       fontColor: AppColors.primary,
-                      bckgrndColor: AppColors.background,
-                      border: Border.all(color: AppColors.background, width: 1),
-                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                      bckgrndColor: getAppColor(AppColors.background),
+                      border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
                       width: Get.width * 0.3,
                     ),
                   ),
@@ -252,40 +254,40 @@ class CreateMoment extends StatelessWidget {
                   minWidth: Get.width * 0.5,
                   initialLabelIndex: currentStep,
                   totalSwitches: 2,
-                  inactiveBgColor: AppColors.background,
-                  activeBgColor: const [AppColors.background, AppColors.background],
+                  inactiveBgColor: getAppColor(AppColors.background),
+                  activeBgColor: [getAppColor(AppColors.background), getAppColor(AppColors.background)],
                   activeBorders: [
                     //Bottom Border
                     Border.all(
-                      color: AppColors.background,
+                      color: getAppColor(AppColors.background),
                       width: 3.0,
                     ),
                     Border.all(
-                      color: AppColors.background,
+                      color: getAppColor(AppColors.background),
                       width: 3.0,
                     ),
                   ],
                   radiusStyle: true,
                   cornerRadius: 10.0,
-                  labels: const ['Image', 'Text'],
+                  labels: ['Image', 'Text'],
                   customTextStyles: [
                     AppTextStyle.bodyText1.copyWith(
-                      color: currentStep == 0 ? AppColors.primary : const Color(0xff064A72),
+                      color: currentStep == 0 ? AppColors.primary : Color(0xff064A72),
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
                     AppTextStyle.bodyText1.copyWith(
-                      color: currentStep == 1 ? AppColors.primary : const Color(0xff064A72),
+                      color: currentStep == 1 ? AppColors.primary : Color(0xff064A72),
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
                   ],
                   onToggle: (index) {
                     if (index == 0) {
-                      pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                      pageController.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                       currentStep = 0;
                     } else {
-                      pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                      pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                       currentStep = 1;
                     }
                     controller.update();

@@ -10,12 +10,13 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../bindings/wayagram_binding.dart';
+import '../../global_widgets/helpers/dark_mode_helper.dart';
 import 'onboarding_item.dart';
 
 CarouselController buttonCarouselController = CarouselController();
 
 class OnboardingPage extends StatefulWidget {
-  const OnboardingPage({Key? key}) : super(key: key);
+  OnboardingPage({Key? key}) : super(key: key);
   static const route = '/onboarding';
 
   @override
@@ -27,26 +28,26 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
-            statusBarColor: AppColors.background,
+        value: SystemUiOverlayStyle(
+            statusBarColor: getAppColor(AppColors.background),
             statusBarIconBrightness: Brightness.dark,
             statusBarBrightness: Brightness.dark,
-            systemNavigationBarColor: AppColors.background,
+            systemNavigationBarColor: getAppColor(AppColors.background),
             systemNavigationBarIconBrightness: Brightness.dark
         ),
         child: Scaffold(
           body: SafeArea(
             child: Container(
-              color: AppColors.background,
+              color: getAppColor(AppColors.background),
               child: Padding(
-                padding: const EdgeInsets.all(AppThemes.appPaddingVal),
+                padding: EdgeInsets.all(AppThemes.appPaddingVal),
                 child: Column(
                   children: [
                     Align(
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () {
-                          Get.to(() => const Multiplexor(),binding: WayagramBinding());
+                          Get.to(() => Multiplexor(),binding: WayagramBinding());
                         },
                         child: Text(
                           'Skip',
@@ -54,7 +55,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 20,
                     ),
                     Expanded(
@@ -112,7 +113,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ),
                           ],
                         ),
-                        separatorBuilder: (context, index) => const SizedBox(
+                        separatorBuilder: (context, index) => SizedBox(
                           width: 5,
                         ),
                         itemCount: 7,
@@ -126,7 +127,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       onPressed: (){
                         buttonCarouselController.nextPage();
                         if (currentIndex == 6) {
-                          Get.to(() => const Multiplexor(),binding: WayagramBinding());
+                          Get.to(() => Multiplexor(),binding: WayagramBinding());
                         }
                       },
                       borderRadius: 360,

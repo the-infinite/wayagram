@@ -9,6 +9,7 @@ import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
@@ -24,7 +25,7 @@ import '../../groups_and_pages/group.dart';
 import '../../groups_and_pages/page.dart';
 
 class HashTagView extends StatelessWidget{
-  const HashTagView({
+  HashTagView({
     Key? key,
     this.isLoading = false,
     required this.title, required this.subtitle, required this.onClick,
@@ -40,7 +41,7 @@ class HashTagView extends StatelessWidget{
     return ListView.builder(
       itemCount: isLoading ? 3 : title.length,
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         if(isLoading){
           return SizedBox(
@@ -50,7 +51,7 @@ class HashTagView extends StatelessWidget{
               baseColor: Colors.grey.withOpacity(0.8),
               highlightColor: Colors.grey.withOpacity(0.2),
               child: Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                 height: Get.height * 0.18,
                 width: Get.width * 0.35,
                 decoration: BoxDecoration(
@@ -67,7 +68,7 @@ class HashTagView extends StatelessWidget{
             onClick(title[index],subtitle[index]);
           },
           child: Container(
-            margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+            margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -77,7 +78,7 @@ class HashTagView extends StatelessWidget{
                   children: [
                     Text(
                       title[index],
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.black ,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -87,7 +88,7 @@ class HashTagView extends StatelessWidget{
                       width: Get.width*0.5,
                       child: Text(
                         subtitle[index],
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.grey,
                           fontSize: 16,
                           fontWeight: FontWeight.normal,

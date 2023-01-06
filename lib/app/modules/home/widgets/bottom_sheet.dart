@@ -23,6 +23,7 @@ import '../../../data/model/posts_model_entity.dart';
 import '../../../data/model/wallet_model.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
+import '../../../global_widgets/helpers/dark_mode_helper.dart';
 import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../chats/new_chat.dart';
 import '../../chats/new_group_chat.dart';
@@ -34,29 +35,29 @@ import '../widgets/posts_view.dart';
 import 'notification_view.dart';
 
 class WayaBottomSheet extends StatelessWidget {
-  const WayaBottomSheet({Key? key, this.isChat = false}) : super(key: key);
+  WayaBottomSheet({Key? key, this.isChat = false}) : super(key: key);
 
   final bool isChat;
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background1,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Container(
           //height: Get.height * 0.65,
-          decoration: const BoxDecoration(
-            color: AppColors.background1,
+          decoration: BoxDecoration(
+            color: getAppColor(AppColors.background),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
@@ -95,7 +96,7 @@ class WayaBottomSheet extends StatelessWidget {
                         controller.postToQuote = null;
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => const CreatePosts());
+                        Get.to(() => CreatePosts());
                       }
                   ),
                   BottomSheetButton(
@@ -107,7 +108,7 @@ class WayaBottomSheet extends StatelessWidget {
                         controller.pageToPost = null;
                         controller.groupToPost = null;
                         Get.back();
-                        Get.to(() => const CreatePoll());
+                        Get.to(() => CreatePoll());
                       }
                   ),
                   BottomSheetButton(
@@ -117,7 +118,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => const CreatePage());
+                        Get.to(() => CreatePage());
                       }
                   ),
 
@@ -132,7 +133,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => const CreateGroup());
+                        Get.to(() => CreateGroup());
                       }
                   ),
                   BottomSheetButton(
@@ -142,7 +143,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => const CreateEvent());
+                        Get.to(() => CreateEvent());
                       }
                   ),
                   BottomSheetButton(
@@ -152,7 +153,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => const CreateDonation());
+                        Get.to(() => CreateDonation());
                       }
                   ),
 
@@ -170,7 +171,7 @@ class WayaBottomSheet extends StatelessWidget {
                         controller.postToQuote = null;
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => const CreatePosts());
+                        Get.to(() => CreatePosts());
                       }
                   ),
                 ],
@@ -182,7 +183,7 @@ class WayaBottomSheet extends StatelessWidget {
                   onTap: () {
                     controller.imagePaths.clear();
                     Get.back();
-                    Get.to(() => const CreateLiveVideo());
+                    Get.to(() => CreateLiveVideo());
                   }
               ),*/
 
@@ -205,7 +206,7 @@ class WayaBottomSheet extends StatelessWidget {
                         controller.postToQuote = null;
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(()=> const NewChat());
+                        Get.to(()=> NewChat());
                       }
                   ),
                   BottomSheetButton(
@@ -215,7 +216,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(()=> const NewGroupChat());
+                        Get.to(()=> NewGroupChat());
                       }
                   ),
                 ],
@@ -229,29 +230,29 @@ class WayaBottomSheet extends StatelessWidget {
 }
 
 class GroupAndPageBottomSheet extends StatelessWidget {
-  const GroupAndPageBottomSheet({Key? key, this.isChat = false}) : super(key: key);
+  GroupAndPageBottomSheet({Key? key, this.isChat = false}) : super(key: key);
 
   final bool isChat;
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background1,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Container(
           //height: Get.height * 0.65,
-          decoration: const BoxDecoration(
-            color: AppColors.background1,
+          decoration: BoxDecoration(
+            color: getAppColor(AppColors.background),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
@@ -285,7 +286,7 @@ class GroupAndPageBottomSheet extends StatelessWidget {
                           controller.postToQuote = null;
                           controller.imagePaths.clear();
                           Get.back();
-                          Get.to(() => const CreatePosts());
+                          Get.to(() => CreatePosts());
                         }
                     ),
                     BottomSheetButton(
@@ -295,7 +296,7 @@ class GroupAndPageBottomSheet extends StatelessWidget {
                         onTap: () {
                           controller.imagePaths.clear();
                           Get.back();
-                          Get.to(() => const CreatePoll());
+                          Get.to(() => CreatePoll());
                         }
                     ),
                   ],
@@ -309,28 +310,28 @@ class GroupAndPageBottomSheet extends StatelessWidget {
 }
 
 class RepostBottomSheet extends StatelessWidget {
-  const RepostBottomSheet({Key? key, required this.post}) : super(key: key);
+  RepostBottomSheet({Key? key, required this.post}) : super(key: key);
   final AllPostsEntity post;
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background1,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Container(
           //height: Get.height * 0.65,
-          decoration: const BoxDecoration(
-            color: AppColors.background1,
+          decoration: BoxDecoration(
+            color: getAppColor(AppColors.background),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
@@ -376,7 +377,7 @@ class RepostBottomSheet extends StatelessWidget {
                     controller.postToQuote = post;
                     controller.imagePaths.clear();
                     Get.back();
-                    Get.to(() => const CreatePosts());
+                    Get.to(() => CreatePosts());
                   }
               ),
             ],
@@ -388,28 +389,28 @@ class RepostBottomSheet extends StatelessWidget {
 }
 
 class WalletBottomSheet extends StatelessWidget {
-  const WalletBottomSheet({Key? key,this.title = "Wallet List",this.onTap}) : super(key: key);
+  WalletBottomSheet({Key? key,this.title = "Wallet List",this.onTap}) : super(key: key);
 
   final Function(WalletModel wallet)? onTap;
   final String title;
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background1,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id:"wallet_bottom_sheet",builder: (controller) {
         return Container(
-          decoration: const BoxDecoration(
-            color: AppColors.background1,
+          decoration: BoxDecoration(
+            color: getAppColor(AppColors.background),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
@@ -444,7 +445,7 @@ class WalletBottomSheet extends StatelessWidget {
                         if(posts.isEmpty){
                           return SizedBox(
                               height: Get.height*0.3,
-                              child: const Center(child: Text('No Wallets Available'),));
+                              child: Center(child: Text('No Wallets Available'),));
                         }
                         return ListView.builder(
                           itemCount: posts.length,
@@ -470,7 +471,7 @@ class WalletBottomSheet extends StatelessWidget {
                         if(posts.isEmpty){
                           return SizedBox(
                               height: Get.height*0.3,
-                              child: const Center(child: Text('No Wallets Available'),));
+                              child: Center(child: Text('No Wallets Available'),));
                         }
                         return ListView.builder(
                           itemCount: posts.length,
@@ -494,9 +495,9 @@ class WalletBottomSheet extends StatelessWidget {
                         if(snapshot.connectionState == ConnectionState.done){
                           return SizedBox(
                               height: Get.height*0.3,
-                              child: const Center(child: Text('No Wallets Available'),));
+                              child: Center(child: Text('No Wallets Available'),));
                         }
-                        return const NotificationView(isLoading: true);
+                        return NotificationView(isLoading: true);
                       }
                     }),
               ),
@@ -509,7 +510,7 @@ class WalletBottomSheet extends StatelessWidget {
 }
 
 class BottomSheetButton extends StatelessWidget {
-  const BottomSheetButton({
+  BottomSheetButton({
     Key? key,
     required this.icon,
     required this.title,

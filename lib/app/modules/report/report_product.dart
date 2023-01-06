@@ -13,6 +13,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/app/global_widgets/person_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -36,7 +37,7 @@ import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
 
 class ReportProduct extends StatefulWidget {
-  const ReportProduct({Key? key, this.post, this.group, this.page,this.isGroup = false, this.isPage = false,this.isPost = false,this.isProfile = false}) : super(key: key);
+  ReportProduct({Key? key, this.post, this.group, this.page,this.isGroup = false, this.isPage = false,this.isPost = false,this.isProfile = false}) : super(key: key);
 
   final ProductsModelData? post;
   final GroupModelEntity? group;
@@ -59,22 +60,22 @@ class _ReportProductState extends State<ReportProduct> {
     var title = "Report Product";
     var subtitle = "Why are you reporting this product?";
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "report_user_post",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text(
               title,
               style: TextStyle(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -86,7 +87,7 @@ class _ReportProductState extends State<ReportProduct> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             actions: [
               Center(
@@ -96,14 +97,14 @@ class _ReportProductState extends State<ReportProduct> {
                     onPressed: () async {
                       if(_reason == "Other"){
                         if(formKey.currentState!.validate()){
-                          await Future.delayed(const Duration(seconds: 5));
+                          await Future.delayed(Duration(seconds: 5));
                           AppOverlay.showSuccessSnackBar(content: "Product Reported Successfully");
                           if(Get.currentRoute == "/ReportProduct"){
                             Navigator.pop(context);
                           }
                         }
                       } else{
-                        await Future.delayed(const Duration(seconds: 5));
+                        await Future.delayed(Duration(seconds: 5));
                         AppOverlay.showSuccessSnackBar(content: "Product Reported Successfully");
                         if(Get.currentRoute == "/ReportProduct"){
                           Navigator.pop(context);
@@ -112,9 +113,9 @@ class _ReportProductState extends State<ReportProduct> {
                     },
                     borderRadius: 10,
                     fontColor: AppColors.button,
-                    bckgrndColor: AppColors.background,
-                    border: Border.all(color: AppColors.background, width: 1),
-                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    bckgrndColor: getAppColor(AppColors.background),
+                    border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                     fontSize: Get.textScaleFactor * 18,
                   ),
@@ -122,16 +123,16 @@ class _ReportProductState extends State<ReportProduct> {
               )
             ],
             bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(1.0),
+                preferredSize: Size.fromHeight(1.0),
                 child: Container(
-                  color: const Color(0xffEDEAEA),
+                  color: Color(0xffEDEAEA),
                   height: 1.0,
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -151,7 +152,7 @@ class _ReportProductState extends State<ReportProduct> {
                           showBuyButton: false,
                           showActions: false,
                         ),
-                      const SizedBox(height: 10,),
+                      SizedBox(height: 10,),
                       Padding(
                         padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02),
                         child: Text(
@@ -163,19 +164,19 @@ class _ReportProductState extends State<ReportProduct> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10,),
+                      SizedBox(height: 10,),
                       RadioGroup<String>.builder(
                         groupValue: _reason,
                         onChanged: (value) => setState(() {
                           _reason = value.toString();
                         }),
-                        items: const ["Inappropriate Contents", "Promoting HateFul Conducts", "Abusive", "Fraud", "Other"],
+                        items: ["Inappropriate Contents", "Promoting HateFul Conducts", "Abusive", "Fraud", "Other"],
                         itemBuilder: (item) => RadioButtonBuilder(
                           item,
                         ),
                         activeColor: AppColors.primary,
                       ),
-                      const SizedBox(height: 10,),
+                      SizedBox(height: 10,),
                       if(_reason == "Other")
                         Padding(
                           padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02),

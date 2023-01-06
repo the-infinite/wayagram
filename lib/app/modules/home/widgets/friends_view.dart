@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -44,11 +45,11 @@ class _FriendsViewState extends State<FriendsView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 10),
+          padding: EdgeInsets.only(bottom: 10),
           child: Container(
             color: Colors.blue.shade50,
             width: Get.width,
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             child: Text(
               'People To Follow',
               style: AppTextStyle.headline4.copyWith(
@@ -67,7 +68,7 @@ class _FriendsViewState extends State<FriendsView> {
             itemCount: widget.isLoading ? 5 : widget.data.length,
             shrinkWrap: false,
             scrollDirection: Axis.horizontal,
-            // physics: widget.isLoading ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+            // physics: widget.isLoading ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
             itemBuilder: (context, index) {
               if(widget.isLoading){
                 return SizedBox(
@@ -77,7 +78,7 @@ class _FriendsViewState extends State<FriendsView> {
                     baseColor: Colors.grey.withOpacity(0.8),
                     highlightColor: Colors.grey.withOpacity(0.2),
                     child: Container(
-                      margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                      margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                       height: Get.height * 0.18,
                       width: Get.width * 0.35,
                       decoration: BoxDecoration(
@@ -110,10 +111,10 @@ class _FriendsViewState extends State<FriendsView> {
                         var bio = person.bio.toString();
                         var coverImage = person.coverImage.toString();
 
-                        Get.to(() => const OtherProfile(),arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,person.id.toString(),person.notPublic == true ? "true" : "false"]);
+                        Get.to(() => OtherProfile(),arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,person.id.toString(),person.notPublic == true ? "true" : "false"]);
                       },
                       child: Container(
-                        margin: const EdgeInsets.only(top: 5, bottom: 3.7, left: 5,right: 5),
+                        margin: EdgeInsets.only(top: 5, bottom: 3.7, left: 5,right: 5),
                         width: Get.width * 0.4,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -123,7 +124,7 @@ class _FriendsViewState extends State<FriendsView> {
                               color: Colors.grey.withOpacity(0.4),
                               spreadRadius: 1,
                               blurRadius: 1,
-                              offset: const Offset(0, 1), // changes position of shadow
+                              offset: Offset(0, 1), // changes position of shadow
                             ),
                           ],
                         ),
@@ -202,8 +203,8 @@ class _FriendsViewState extends State<FriendsView> {
                                   }
                                 },
                                 borderRadius: 10,
-                                fontColor: isFollowing ? AppColors.primary : AppColors.background,
-                                bckgrndColor: isFollowing ? AppColors.background : AppColors.primary,
+                                fontColor: isFollowing ? AppColors.primary : getAppColor(AppColors.background),
+                                bckgrndColor: isFollowing ? getAppColor(AppColors.background) : AppColors.primary,
                                 border: Border.all(color: AppColors.primary, width: 1),
                                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: Get.height * 0.01),
                                 fontSize: Get.width * 0.04,

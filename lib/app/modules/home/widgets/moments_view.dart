@@ -13,6 +13,7 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/app/modules/home/widgets/story_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -23,7 +24,7 @@ import '../../../global_widgets/app_avatar.dart';
 import '../tabs/create_moment.dart';
 
 class MomentsView extends StatefulWidget {
-  const MomentsView({
+  MomentsView({
     Key? key,
     this.isLoading = false,
     this.moments,
@@ -55,7 +56,7 @@ class _MomentsViewState extends State<MomentsView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(
+          padding: EdgeInsets.only(
             left: 10,
           ),
           child: Text(
@@ -84,7 +85,7 @@ class _MomentsViewState extends State<MomentsView> {
                     baseColor: Colors.grey.withOpacity(0.8),
                     highlightColor: Colors.grey.withOpacity(0.2),
                     child: Container(
-                      margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                      margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                       height: Get.height * 0.18,
                       width: Get.width * 0.35,
                       decoration: BoxDecoration(
@@ -98,10 +99,10 @@ class _MomentsViewState extends State<MomentsView> {
               if(i == 0){
                 return InkWell(
                   onTap: (){
-                    Get.to(() => const CreateMoment());
+                    Get.to(() => CreateMoment());
                   },
                   child: Container(
-                    margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                    margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                     height: Get.height * 0.15,
                     width: Get.width * 0.28,
                     decoration: BoxDecoration(
@@ -112,7 +113,7 @@ class _MomentsViewState extends State<MomentsView> {
                       alignment: Alignment.bottomLeft,
                       children: [
                         ClipRRect(
-                          borderRadius: const BorderRadius.only(
+                          borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10),
                             bottomLeft: Radius.circular(10),
@@ -125,7 +126,7 @@ class _MomentsViewState extends State<MomentsView> {
                               imageUrl: (fullProfile.avatar as String?).toString(),
                               fit: BoxFit.cover,
                               errorWidget: (context, url, error) {
-                                return const Icon(
+                                return Icon(
                                   IconlyLight.profile,
                                   color: Colors.black,
                                   size: 25,
@@ -153,9 +154,9 @@ class _MomentsViewState extends State<MomentsView> {
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
                                       onPressed: (){
-                                        Get.to(() => const CreateMoment());
+                                        Get.to(() => CreateMoment());
                                       },
-                                      icon: const Icon(Icons.add_circle_rounded),color: Colors.grey.withOpacity(.8),
+                                      icon: Icon(Icons.add_circle_rounded),color: Colors.grey.withOpacity(.8),
                                     iconSize: Get.width * 0.06,
                                   ),
                                 ),
@@ -195,7 +196,7 @@ class _MomentsViewState extends State<MomentsView> {
                             url: element.image.toString(),
                             controller: storyController,
                             imageFit: BoxFit.contain,
-                            duration: const Duration(seconds: 5),
+                            duration: Duration(seconds: 5),
                             caption: element.text,
                           ),
                         );
@@ -213,7 +214,7 @@ class _MomentsViewState extends State<MomentsView> {
                   );
                 },
                 child: Container(
-                  margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                  margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                   height: Get.height * 0.18,
                   width: Get.width * 0.28,
                   decoration: BoxDecoration(

@@ -13,6 +13,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/app/global_widgets/person_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -34,7 +35,7 @@ import '../../global_widgets/page_input.dart';
 import '../home/widgets/posts_view.dart';
 
 class ReportUser extends StatefulWidget {
-  const ReportUser({Key? key, required this.person, this.group, this.page,this.isGroup = false, this.isPage = false}) : super(key: key);
+  ReportUser({Key? key, required this.person, this.group, this.page,this.isGroup = false, this.isPage = false}) : super(key: key);
 
   final Person person;
   final GroupModelEntity? group;
@@ -54,22 +55,22 @@ class _ReportUserState extends State<ReportUser> {
     var title = widget.isGroup ? "Report Group" : widget.isPage ? "Report Page" : "Report User";
     var subtitle = widget.isGroup ? "Why are you reporting this group?" : widget.isPage ? "Why are you reporting this page?" : "Why are you reporting this profile?";
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "report_profile_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text(
               title,
               style: TextStyle(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -81,7 +82,7 @@ class _ReportUserState extends State<ReportUser> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             actions: [
               Center(
@@ -224,9 +225,9 @@ class _ReportUserState extends State<ReportUser> {
                     },
                     borderRadius: 10,
                     fontColor: AppColors.button,
-                    bckgrndColor: AppColors.background,
-                    border: Border.all(color: AppColors.background, width: 1),
-                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    bckgrndColor: getAppColor(AppColors.background),
+                    border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                     fontSize: Get.textScaleFactor * 18,
                   ),
@@ -234,16 +235,16 @@ class _ReportUserState extends State<ReportUser> {
               )
             ],
             bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(1.0),
+                preferredSize: Size.fromHeight(1.0),
                 child: Container(
-                  color: const Color(0xffEDEAEA),
+                  color: Color(0xffEDEAEA),
                   height: 1.0,
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -274,7 +275,7 @@ class _ReportUserState extends State<ReportUser> {
                           children: [
                             Text(
                               widget.person.displayName,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.black ,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -284,7 +285,7 @@ class _ReportUserState extends State<ReportUser> {
                               width: Get.width*0.8,
                               child: Text(
                                 "@${widget.person.username}",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 16,
                                   fontWeight: FontWeight.normal,
@@ -297,7 +298,7 @@ class _ReportUserState extends State<ReportUser> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10,),
+                    SizedBox(height: 10,),
                     Padding(
                       padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02),
                       child: Text(
@@ -309,19 +310,19 @@ class _ReportUserState extends State<ReportUser> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10,),
+                    SizedBox(height: 10,),
                     RadioGroup<String>.builder(
                       groupValue: _reason,
                       onChanged: (value) => setState(() {
                         _reason = value.toString();
                       }),
-                      items: const ["Inappropriate Contents", "Promoting HateFul Conducts", "Abusive", "Fraud", "Other"],
+                      items: ["Inappropriate Contents", "Promoting HateFul Conducts", "Abusive", "Fraud", "Other"],
                       itemBuilder: (item) => RadioButtonBuilder(
                         item,
                       ),
                       activeColor: AppColors.primary,
                     ),
-                    const SizedBox(height: 10,),
+                    SizedBox(height: 10,),
                     if(_reason == "Other")
                       Padding(
                         padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02),

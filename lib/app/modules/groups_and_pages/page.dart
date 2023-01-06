@@ -14,6 +14,7 @@ import 'package:wayagram/app/modules/profile/inner_pages/blocked.dart';
 import 'package:wayagram/app/modules/profile/inner_pages/muted.dart';
 import 'package:wayagram/app/modules/profile/update_profile.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
@@ -48,7 +49,7 @@ import 'edit/edit_page.dart';
 import 'invite/invite_to_group_or_pages.dart';
 
 class PageScreen extends StatefulWidget {
-  const PageScreen({Key? key, required this.page}) : super(key: key);
+  PageScreen({Key? key, required this.page}) : super(key: key);
 
   final GroupModelEntity page;
 
@@ -81,11 +82,11 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(
@@ -163,7 +164,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                           flexibleSpace: LayoutBuilder(
                               builder: (BuildContext context, BoxConstraints constraints) {
                                 return FlexibleSpaceBar(
-                                  stretchModes: const [
+                                  stretchModes: [
                                     StretchMode.zoomBackground,
                                     StretchMode.blurBackground,
                                   ],
@@ -255,7 +256,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                                     },
                                                     borderRadius: 10,
                                                     fontColor: AppColors.primary,
-                                                    bckgrndColor: AppColors.background,
+                                                    bckgrndColor: getAppColor(AppColors.background),
                                                     border: Border.all(color: AppColors.primary, width: 1),
                                                     padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: 5),
                                                     fontSize: Get.width * 0.04,
@@ -268,7 +269,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                       ),
                                       SizedBox(height: Get.height * 0.01),
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 15),
+                                        padding: EdgeInsets.only(left: 15),
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -301,18 +302,18 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                           leading: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(4),
+                                padding: EdgeInsets.all(4),
                                 child: Container(
                                   width: Get.width * 0.1,
                                   height: Get.width * 0.1,
                                   decoration: BoxDecoration(
-                                    color: AppColors.background,
+                                    color: getAppColor(AppColors.background),
                                     borderRadius: BorderRadius.circular(100),
                                   ),
                                   child: Center(
                                     child: IconButton(
                                       padding: EdgeInsets.zero,
-                                      icon: const Icon(
+                                      icon: Icon(
                                         FeatherIcons.arrowLeft,
                                         color: Colors.black,
                                       ),
@@ -330,19 +331,19 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                             PopupMenuButton(
                                 color: Colors.white,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(top: 2.5,right: 5),
+                                  padding: EdgeInsets.only(top: 2.5,right: 5),
                                   child: Column(
                                     children: [
                                       Container(
                                         width: Get.width * 0.1,
                                         height: Get.width * 0.1,
                                         decoration: BoxDecoration(
-                                          color: AppColors.background,
+                                          color: getAppColor(AppColors.background),
                                           borderRadius: BorderRadius.circular(100),
                                         ),
                                         child: IconButton(
                                           padding: EdgeInsets.zero,
-                                          icon: const Icon(
+                                          icon: Icon(
                                             Icons.more_vert,
                                             color: Colors.black,
                                           ),
@@ -444,23 +445,23 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                 ])
                           ],
                           title: AnimatedOpacity(
-                            duration: const Duration(milliseconds: 300),
+                            duration: Duration(milliseconds: 300),
                             opacity: scrolled ? 1.0 : 0.0,
                             child: Text(
                               '${page.name}',
                               style: AppTextStyle.subtitle1.copyWith(
-                                color: const Color(0xff4F4F4F),
+                                color: Color(0xff4F4F4F),
                                 fontSize: Get.textScaleFactor * 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                          backgroundColor: AppColors.background,
+                          backgroundColor: getAppColor(AppColors.background),
                           systemOverlayStyle: SystemUiOverlayStyle(
-                              statusBarColor: scrolled ? AppColors.background : Colors.transparent,
+                              statusBarColor: scrolled ? getAppColor(AppColors.background) : Colors.transparent,
                               statusBarIconBrightness: Brightness.dark,
                               statusBarBrightness: Brightness.dark,
-                              systemNavigationBarColor: AppColors.background,
+                              systemNavigationBarColor: getAppColor(AppColors.background),
                               systemNavigationBarIconBrightness: Brightness.dark
                           ),
                           bottom: PreferredSize(
@@ -468,9 +469,9 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                               child: Column(
                                 children: [
                                   AnimatedOpacity(
-                                    duration: const Duration(milliseconds: 300),
+                                    duration: Duration(milliseconds: 300),
                                     opacity: scrolled ? 1.0 : 0.0,
-                                    child: const Divider(
+                                    child: Divider(
                                       height: 0.5,
                                       thickness: 0.5,
                                       color: Colors.grey,
@@ -480,7 +481,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                     controller: tabController,
                                     padding: EdgeInsets.zero,
                                     labelColor: Colors.black,
-                                    unselectedLabelColor: const Color(0xff9A9A9A),
+                                    unselectedLabelColor: Color(0xff9A9A9A),
                                     indicatorColor: AppColors.primary,
                                     indicatorSize: TabBarIndicatorSize.tab,
                                     labelStyle: TextStyle(
@@ -491,16 +492,16 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                       fontSize: Get.width*0.035,
                                       fontWeight: FontWeight.w500,
                                     ),
-                                    tabs: const [
+                                    tabs: [
                                       Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                                       Tab(text: "Followers",iconMargin: EdgeInsets.zero,),
                                     ],
                                     onTap: (index) {
-                                      //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                      //pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.ease);
                                       //controller.update(['profile_page']);
                                     },
                                   ),
-                                  const Divider(
+                                  Divider(
                                     height: 0.5,
                                     thickness: 0.5,
                                     color: Colors.grey,
@@ -528,9 +529,9 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                             return PostsView(posts: posts);
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
-                              return const SizedBox.shrink();
+                              return SizedBox.shrink();
                             }
-                            return const PostsView(isLoading: true);
+                            return PostsView(isLoading: true);
                           }
                         }),
                     FutureBuilder<ApiResponse>(
@@ -610,7 +611,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                               },
                             );
                           }else{
-                            return const NotificationView(isLoading: true);
+                            return NotificationView(isLoading: true);
                           }
                         }),
                   ],
@@ -622,7 +623,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                   controller.groupToPost = null;
                   controller.pageToPost = page;
                   controller.imagePaths.clear();
-                  //Get.to(() => const CreatePosts());
+                  //Get.to(() => CreatePosts());
                   Get.bottomSheet(
                       GroupAndPageBottomSheet(
                         isChat: controller.currentBottomNavPage.value == 4,
@@ -631,7 +632,7 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                   );
                 },
                 backgroundColor: AppColors.primary,
-                child: const Icon(Icons.add,color: Colors.white),
+                child: Icon(Icons.add,color: Colors.white),
               ) : null,
             );
           }),

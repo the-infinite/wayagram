@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
@@ -16,7 +17,7 @@ import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
 class SignIn extends GetView<AuthControllerWayagram> {
-  const SignIn({Key? key}) : super(key: key);
+  SignIn({Key? key}) : super(key: key);
 
   static const route = '/signIn';
 
@@ -28,7 +29,7 @@ class SignIn extends GetView<AuthControllerWayagram> {
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back,
               color: Colors.black,
             ),
@@ -46,7 +47,7 @@ class SignIn extends GetView<AuthControllerWayagram> {
             width: Get.width,
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(AppThemes.appPaddingVal),
+                padding: EdgeInsets.all(AppThemes.appPaddingVal),
                 child: Form(
                   key: formKey,
                   child: Column(
@@ -107,10 +108,10 @@ class SignIn extends GetView<AuthControllerWayagram> {
                         title:
                         'Forgot Password?',
                         onPressed: () {
-                          Get.to(() => const EnterEmail());
+                          Get.to(() => EnterEmail());
                         },
                         borderRadius: 10,
-                        bckgrndColor: AppColors.background,
+                        bckgrndColor: getAppColor(AppColors.background),
                         fontColor: AppColors.primary,
                       ),
                       SizedBox(height: Get.height * 0.050),
@@ -118,10 +119,10 @@ class SignIn extends GetView<AuthControllerWayagram> {
                         title:
                         'Don\'t have an account? Sign Up',
                         onPressed: () {
-                          Get.to(() => const SignUp(),binding: WayagramBinding());
+                          Get.to(() => SignUp(),binding: WayagramBinding());
                         },
                         borderRadius: 10,
-                        bckgrndColor: AppColors.background,
+                        bckgrndColor: getAppColor(AppColors.background),
                         fontColor: AppColors.primary,
                       ),
                     ],

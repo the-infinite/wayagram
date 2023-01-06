@@ -22,7 +22,7 @@ class NewsfeedMultipleImageView extends StatelessWidget {
   final bool useAspectRatio;
   final bool isSlideShow;
 
-  const NewsfeedMultipleImageView({
+  NewsfeedMultipleImageView({
     Key? key,
     this.marginLeft = 0,
     this.marginTop = 0,
@@ -67,14 +67,14 @@ class NewsfeedMultipleImageView extends StatelessWidget {
 
 class ImageViewer extends StatelessWidget {
   final List<String> imageUrls;
-  const ImageViewer({Key? key,
+  ImageViewer({Key? key,
     required this.imageUrls,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
           statusBarColor: Colors.black,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.light,

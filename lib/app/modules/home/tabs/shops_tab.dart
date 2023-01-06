@@ -16,7 +16,7 @@ import '../../../data/providers/my_pref.dart';
 import '../widgets/posts_view.dart';
 
 class ShopsTab extends StatelessWidget {
-  const ShopsTab({Key? key}) : super(key: key);
+  ShopsTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +44,9 @@ class ShopsTab extends StatelessWidget {
                           return ProductView(posts: posts.data!);
                         }else{
                           if(snapshot.connectionState == ConnectionState.done){
-                            return const SizedBox.shrink();
+                            return SizedBox.shrink();
                           }
-                          return const ProductView(isLoading: true);
+                          return ProductView(isLoading: true);
                         }
                       }),
                 ],
@@ -69,9 +69,9 @@ class ShopsTab extends StatelessWidget {
                           return ProductView(posts: posts.data!,showBuyButton: false);
                         }else{
                           if(snapshot.connectionState == ConnectionState.done){
-                            return const SizedBox.shrink();
+                            return SizedBox.shrink();
                           }
-                          return const ProductView(isLoading: true,showBuyButton: false);
+                          return ProductView(isLoading: true,showBuyButton: false);
                         }
                       }),
                 ],

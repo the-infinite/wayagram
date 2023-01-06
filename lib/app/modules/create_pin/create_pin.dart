@@ -8,6 +8,7 @@ import 'package:wayagram/app/global_widgets/overlays.dart';
 import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
@@ -18,7 +19,7 @@ import '../profile/create_pin.dart';
 import '../profile/update_profile.dart';
 
 class CreatePIN extends GetView<AuthControllerWayagram> {
-  const CreatePIN({Key? key}) : super(key: key);
+  CreatePIN({Key? key}) : super(key: key);
 
   static const route = '/createPIN';
 
@@ -26,10 +27,10 @@ class CreatePIN extends GetView<AuthControllerWayagram> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: AppColors.background,
+        color: getAppColor(AppColors.background),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(AppThemes.appPaddingVal),
+            padding: EdgeInsets.all(AppThemes.appPaddingVal),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,7 +40,7 @@ class CreatePIN extends GetView<AuthControllerWayagram> {
                 ),
                 ImageHelper.svgImage(
                   'assets/images/wayagram2.svg',
-                  color: AppColors.background,
+                  color: getAppColor(AppColors.background),
                 ),
                 SizedBox(
                   height: Get.height * 0.1,
@@ -78,7 +79,7 @@ class CreatePIN extends GetView<AuthControllerWayagram> {
                   length: 6,
                   width: MediaQuery.of(context).size.width,
                   fieldWidth: Get.width * 0.1,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 17
                   ),
                   textFieldAlignment: MainAxisAlignment.spaceAround,
@@ -105,10 +106,10 @@ class CreatePIN extends GetView<AuthControllerWayagram> {
                   },
                   borderRadius: 10,
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30),
                 AppButton(
                   title: 'Did not get OTP?',
-                  bckgrndColor: AppColors.background,
+                  bckgrndColor: getAppColor(AppColors.background),
                   fontColor: AppColors.primary,
                   onPressed: () {
 

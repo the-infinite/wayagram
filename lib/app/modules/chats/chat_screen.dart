@@ -20,6 +20,7 @@ import 'package:voice_message_package/voice_message_package.dart';
 import 'package:wayagram/app/global_widgets/app_input.dart';
 import 'package:wayagram/app/modules/chats/chat_profile.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../../core/theme/app_styles.dart';
@@ -58,7 +59,7 @@ import '../search/search.dart';
 import '../send_money/send_money.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key, required this.chatOverview}) : super(key: key);
+  ChatScreen({Key? key, required this.chatOverview}) : super(key: key);
 
   final ChatOverview chatOverview;
   @override
@@ -98,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
       if(animate){
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 200),
+          duration: Duration(milliseconds: 200),
           curve: Curves.fastOutSlowIn,
         );
       }else{
@@ -148,11 +149,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<ChatControllerWayagram>(id:'chats_screen',builder: (chatController) {
@@ -191,7 +192,7 @@ class _ChatScreenState extends State<ChatScreen> {
         return  GetBuilder<HomeControllerWayagram>(builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: AppColors.background,
+              backgroundColor: getAppColor(AppColors.background),
               title: InkWell(
                 onTap: (){
                   Get.to(() => ChatProfile(chatOverview: widget.chatOverview));
@@ -214,7 +215,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             isGroup: post.isGroup == true,
                           ),
                         ),
-                        const SizedBox(width: 10,),
+                        SizedBox(width: 10,),
                         Stack(
                           alignment: Alignment.topRight,
                           children: [
@@ -226,11 +227,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                   SizedBox(
                                     width: Get.width*0.4,
                                     child: HashTagText(text: name, decoratedStyle: TextStyle(
-                                      color: Colors.black,
+                                      color: getAppColor(AppColors.background),
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w600,
                                     ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(AppColors.background),
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w600,),
                                       softWrap: true,
@@ -260,11 +261,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                   SizedBox(
                                     width: Get.width*0.4,
                                     child: HashTagText(text: name, decoratedStyle: TextStyle(
-                                      color: Colors.black,
+                                      color: getAppColor(AppColors.background),
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w600,
                                     ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(AppColors.background),
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w600,),
                                       softWrap: true,
@@ -293,9 +294,9 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               leading: IconButton(
                 padding: EdgeInsets.zero,
-                icon: const Icon(
+                icon: Icon(
                   FeatherIcons.arrowLeft,
-                  color: Colors.black,
+                  color: getAppColor(AppColors.background),
                 ),
                 onPressed: () {
                   Get.back();
@@ -307,20 +308,20 @@ class _ChatScreenState extends State<ChatScreen> {
                   children: [
                     IconButton(onPressed: (){
                       comingSoon();
-                    }, icon: const Icon(Icons.videocam_rounded, color: Colors.black,size: 24)),
+                    }, icon: Icon(Icons.videocam_rounded, color: getAppColor(AppColors.background),size: 24)),
                     IconButton(onPressed: (){
                       comingSoon();
-                    }, icon: const Icon(Icons.call_rounded, color: Colors.black,size: 20,)),
+                    }, icon: Icon(Icons.call_rounded, color: getAppColor(AppColors.background),size: 20,)),
                     PopupMenuButton(
                       color: Colors.white,
-                      icon: const Icon(Icons.more_vert,color: Colors.black,),
+                      icon: Icon(Icons.more_vert,color: getAppColor(AppColors.background),),
                       itemBuilder: (context) => [
                         PopupMenuItem(
                           value: 0,
                           child: Text(
                             post.isGroup == true ? "Invite To Group" : "Send Money",
                             style: AppTextStyle.bodyText1.copyWith(
-                              color: Colors.black,
+                              color: getAppColor(AppColors.background),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -330,7 +331,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Text(
                             "Clear Chat",
                             style: AppTextStyle.bodyText1.copyWith(
-                              color: Colors.black,
+                              color: getAppColor(AppColors.background),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -363,16 +364,16 @@ class _ChatScreenState extends State<ChatScreen> {
               centerTitle: false,
               titleSpacing: 0,
               bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(1.0),
+                  preferredSize: Size.fromHeight(1.0),
                   child: Container(
-                    color: const Color(0xffEDEAEA),
+                    color: Color(0xffEDEAEA),
                     height: 1.0,
                   )),
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarColor: AppColors.background,
+              systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: getAppColor(AppColors.background),
                   statusBarIconBrightness: Brightness.dark,
                   statusBarBrightness: Brightness.dark,
-                  systemNavigationBarColor: AppColors.background,
+                  systemNavigationBarColor: getAppColor(AppColors.background),
                   systemNavigationBarIconBrightness: Brightness.dark
               ),
             ),
@@ -403,7 +404,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 itemCount: previousChat.length,
                                 shrinkWrap: true,
                                 reverse: true,
-                                physics: const NeverScrollableScrollPhysics(),
+                                physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   var chat = previousChat[index];
                                   PreviousChat? repliedChat;
@@ -427,14 +428,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                     right: 10,
                                   );
                                   if(getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile){
-                                    padding= const EdgeInsets.only(
+                                    padding= EdgeInsets.only(
                                         left: 0,
                                         right: 0,
                                         bottom: 0,
                                         top: 0);
                                   }
                                   else if((getUrlType(chat.fileUrl.toString()) == UrlType.VIDEO || getUrlType(chat.fileUrl.toString()) == UrlType.IMAGE) && isFile){
-                                    padding= const EdgeInsets.only(
+                                    padding= EdgeInsets.only(
                                         left: 5,
                                         right: 5,
                                         bottom: 5,
@@ -442,7 +443,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     );
                                   }
                                   else if(isFile){
-                                    padding= const EdgeInsets.only(
+                                    padding= EdgeInsets.only(
                                         left: 10,
                                         right: 10,
                                         bottom: 10,
@@ -459,14 +460,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                   if(repliedChat != null){
                                     isRepliedFile = repliedChat.messageType == "fileMessage";
                                     if(getUrlType(repliedChat.fileUrl.toString()) == UrlType.AUDIO && isRepliedFile){
-                                      repliedPadding= const EdgeInsets.only(
+                                      repliedPadding= EdgeInsets.only(
                                           left: 0,
                                           right: 0,
                                           bottom: 0,
                                           top: 0);
                                     }
                                     else if((getUrlType(repliedChat.fileUrl.toString()) == UrlType.VIDEO || getUrlType(repliedChat.fileUrl.toString()) == UrlType.IMAGE) && isRepliedFile){
-                                      repliedPadding= const EdgeInsets.only(
+                                      repliedPadding= EdgeInsets.only(
                                           left: 5,
                                           right: 5,
                                           bottom: 5,
@@ -474,7 +475,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       );
                                     }
                                     else if(isRepliedFile){
-                                      repliedPadding= const EdgeInsets.only(
+                                      repliedPadding= EdgeInsets.only(
                                           left: 10,
                                           right: 10,
                                           bottom: 10,
@@ -491,11 +492,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                         SizedBox(height: Get.height*0.005),
                                         Container(
                                           width: isFile ? Get.width*0.65 :Get.width*0.55,
-                                          decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
+                                          decoration: chat.senderId == fullProfile.id ? BoxDecoration(
                                             color: AppColors.button,
                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(0),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
-                                          ) : const BoxDecoration(
-                                            color: AppColors.background,
+                                          ) : BoxDecoration(
+                                            color: getAppColor(AppColors.background),
                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
                                           ),
                                           child: Padding(
@@ -511,10 +512,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                                           Container(
                                                             padding: repliedPadding,
                                                             width: double.infinity,
-                                                            decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
-                                                              color: AppColors.background,
+                                                            decoration: chat.senderId == fullProfile.id ? BoxDecoration(
+                                                              color: getAppColor(AppColors.background),
                                                               borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
-                                                            ) : const BoxDecoration(
+                                                            ) : BoxDecoration(
                                                               color: AppColors.button,
                                                               borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(20)),
                                                             ),
@@ -531,14 +532,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                     fontWeight: FontWeight.normal,
                                                                   ),
                                                                   basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                                    color: chat.deleted == true ? Colors.blue : chat.senderId != fullProfile.id ? Colors.white :Colors.black,
+                                                                    color: chat.deleted == true ? Colors.blue : chat.senderId != fullProfile.id ? Colors.white :getAppColor(AppColors.background),
                                                                     fontSize: 16,
                                                                     fontWeight: FontWeight.normal,
                                                                     fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
                                                                   ),
                                                                   onTap: (text) {
                                                                     controller.defaultSearchValue = text;
-                                                                    Get.to(() => const Search());
+                                                                    Get.to(() => Search());
                                                                   },
                                                                   decorateAtSign: true,
                                                                 ),
@@ -561,20 +562,20 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                     me: repliedChat.senderId == fullProfile.id, // Set message side.
                                                                     onPlay: () {},
                                                                     meBgColor: AppColors.button,
-                                                                    contactBgColor: AppColors.background,
-                                                                    contactPlayIconColor: AppColors.background,
+                                                                    contactBgColor: getAppColor(AppColors.background),
+                                                                    contactPlayIconColor: getAppColor(AppColors.background),
                                                                   ),
                                                                 if(getUrlType(repliedChat.fileUrl.toString()) != UrlType.AUDIO && getUrlType(repliedChat.fileUrl.toString()) != UrlType.VIDEO && getUrlType(repliedChat.fileUrl.toString()) != UrlType.IMAGE && isRepliedFile)
                                                                   Row(
                                                                     children: [
                                                                       Container(
                                                                         decoration: BoxDecoration(
-                                                                          color: repliedChat.senderId == fullProfile.id ? AppColors.background : AppColors.button,
+                                                                          color: repliedChat.senderId == fullProfile.id ? getAppColor(AppColors.background) : AppColors.button,
                                                                           borderRadius: BorderRadius.circular(12),
                                                                         ),
                                                                         height: Get.height*0.04,
                                                                         width: Get.width*0.08,
-                                                                        child: Icon(Icons.attach_file, color: repliedChat.senderId == fullProfile.id ? Colors.black : Colors.white,),
+                                                                        child: Icon(Icons.attach_file, color: repliedChat.senderId == fullProfile.id ? getAppColor(AppColors.background) : Colors.white,),
                                                                       ),
                                                                       SizedBox(width: Get.width*0.01),
                                                                       Column(
@@ -584,7 +585,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                             child: Text(
                                                                               repliedChat.fileUrl.toString().split("/").last,
                                                                               style: AppTextStyle.bodyText1.copyWith(
-                                                                                color: repliedChat.senderId == fullProfile.id ? Colors.white :Colors.black,
+                                                                                color: repliedChat.senderId == fullProfile.id ? Colors.white :getAppColor(AppColors.background),
                                                                                 fontSize: 16,
                                                                                 fontWeight: FontWeight.normal,
                                                                               ),
@@ -621,14 +622,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             fontWeight: FontWeight.normal,
                                                           ),
                                                           basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                            color: chat.deleted == true ? Colors.blue : chat.senderId == fullProfile.id ? Colors.white :Colors.black,
+                                                            color: chat.deleted == true ? Colors.blue : chat.senderId == fullProfile.id ? Colors.white :getAppColor(AppColors.background),
                                                             fontSize: 16,
                                                             fontWeight: FontWeight.normal,
                                                             fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
                                                           ),
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
-                                                            Get.to(() => const Search());
+                                                            Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -651,15 +652,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             me: chat.senderId == fullProfile.id, // Set message side.
                                                             onPlay: () {},
                                                             meBgColor: AppColors.button,
-                                                            contactBgColor: AppColors.background,
-                                                            contactPlayIconColor: AppColors.background,
+                                                            contactBgColor: getAppColor(AppColors.background),
+                                                            contactPlayIconColor: getAppColor(AppColors.background),
                                                           ),
                                                         if(getUrlType(chat.fileUrl.toString()) != UrlType.AUDIO && getUrlType(chat.fileUrl.toString()) != UrlType.VIDEO && getUrlType(chat.fileUrl.toString()) != UrlType.IMAGE && isFile)
                                                           Row(
                                                             children: [
                                                               Container(
                                                                   decoration: BoxDecoration(
-                                                                  color: chat.senderId == fullProfile.id ? AppColors.background : AppColors.button,
+                                                                  color: chat.senderId == fullProfile.id ? getAppColor(AppColors.background) : AppColors.button,
                                                                   borderRadius: BorderRadius.circular(12),
                                                                 ),
                                                                 height: Get.height*0.04,
@@ -772,8 +773,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: Container(
                               width: Get.width*0.1,
                               height: Get.height*0.1,
-                              decoration: const BoxDecoration(
-                                color: AppColors.background,
+                              decoration: BoxDecoration(
+                                color: getAppColor(AppColors.background),
                                 shape: BoxShape.circle,
                               ),
                               child: IconButton(
@@ -781,13 +782,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                 onPressed: () async {
                                   await _scrollController.animateTo(
                                     _scrollController.position.maxScrollExtent,
-                                    duration: const Duration(milliseconds: 200),
+                                    duration: Duration(milliseconds: 200),
                                     curve: Curves.easeOut,
                                   );
                                   chatController.update(['chats_screen']);
                                   canScrollDown = true;
                                 },
-                                icon: const Icon(FeatherIcons.arrowDown, color: Colors.black,),
+                                icon: Icon(FeatherIcons.arrowDown, color: Colors.black,),
                               ),
                             ),
                           ),
@@ -803,7 +804,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    color: const Color(0xffEDEAEA),
+                    color: Color(0xffEDEAEA),
                     height: 1.0,
                   ),
                   SizedBox(height: Get.height*0.008),
@@ -863,7 +864,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               },
                               icon: Transform.rotate(
                                 angle: 45 * math.pi / 180,
-                                child: const Icon(
+                                child: Icon(
                                   Icons.attach_file_rounded,
                                   color: Colors.grey,
                                 ),
@@ -912,7 +913,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               //chatTextController.text.isEmpty
                                 //  ? Icons.mic_rounded:
                             Icons.send_rounded,
-                              color: AppColors.background,
+                              color: getAppColor(AppColors.background),
                             ),
                           ),
                         ),
@@ -930,11 +931,11 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void comingSoon() {
-    const String failed = "assets/images/failed.svg";
+    String failed = "assets/images/failed.svg";
     showDialog(
         context: Get.context!,
         builder: (_) => AlertDialog(
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Builder(
             builder: (context) {
@@ -951,10 +952,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       ImageHelper.svgImage(
                         failed,
                       ),
-                      const SizedBox(
+                      SizedBox(
                         height: 10,
                       ),
-                      const Text('Coming soon')
+                      Text('Coming soon')
                     ],
                   ));
             },

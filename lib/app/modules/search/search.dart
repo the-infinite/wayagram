@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:wayagram/app/data/model/SearhPeopleModel.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../core/theme/app_styles.dart';
@@ -31,7 +32,7 @@ import '../home/widgets/group_view.dart';
 import '../home/widgets/posts_view.dart';
 
 class Search extends StatefulWidget {
-  const Search({Key? key}) : super(key: key);
+  Search({Key? key}) : super(key: key);
 
   static const route = '/search';
 
@@ -72,7 +73,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
             appBar: AppBar(
                 elevation: 0,
                 leading: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back,
                     color: Colors.black,
                   ),
@@ -101,12 +102,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                   controller: tabController,
                   padding: EdgeInsets.zero,
                   labelColor: Colors.black,
-                  unselectedLabelColor: const Color(0xff9A9A9A),
+                  unselectedLabelColor: Color(0xff9A9A9A),
                   indicatorColor: AppColors.primary,
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelPadding: EdgeInsets.only(left: Get.width * 0.02),
                   indicatorPadding: EdgeInsets.zero,
-                  tabs: const [
+                  tabs: [
                     Tab(text: 'Hashtags',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'People',iconMargin: EdgeInsets.zero,),
@@ -114,7 +115,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                     Tab(text: 'Pages',iconMargin: EdgeInsets.zero,),
                   ],
                 ),
-                const Divider(
+                Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
@@ -175,12 +176,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                   return SizedBox(
                                     height: Get.height * 0.7,
-                                    child: const Center(
+                                    child: Center(
                                       child: Text('Enter a search term to search for hashtags'),
                                     ),
                                   );
                                 }
-                                return const GroupView(isLoading: true);
+                                return GroupView(isLoading: true);
                               }
                             }),
                       ),
@@ -201,12 +202,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                   return SizedBox(
                                     height: Get.height * 0.7,
-                                    child: const Center(
+                                    child: Center(
                                       child: Text('Enter a search term to search for posts'),
                                     ),
                                   );
                                 }
-                                return const PostsView(isLoading: true);
+                                return PostsView(isLoading: true);
                               }
                             }),
                       ),
@@ -242,12 +243,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                   return SizedBox(
                                     height: Get.height * 0.7,
-                                    child: const Center(
+                                    child: Center(
                                       child: Text('Enter a search term to search for People'),
                                     ),
                                   );
                                 }
-                                return const GroupView(isLoading: true,isGroup: true,);
+                                return GroupView(isLoading: true,isGroup: true,);
                               }
                             }),
                       ),
@@ -267,12 +268,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                   return SizedBox(
                                     height: Get.height * 0.7,
-                                    child: const Center(
+                                    child: Center(
                                       child: Text('Enter a search term to search for groups'),
                                     ),
                                   );
                                 }
-                                return const GroupView(isLoading: true,isGroup: true,);
+                                return GroupView(isLoading: true,isGroup: true,);
                               }
                             }),
                       ),
@@ -292,12 +293,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                   return SizedBox(
                                     height: Get.height * 0.7,
-                                    child: const Center(
+                                    child: Center(
                                       child: Text('Enter a search term to search for pages'),
                                     ),
                                   );
                                 }
-                                return const GroupView(isLoading: true,isGroup: false,);
+                                return GroupView(isLoading: true,isGroup: false,);
                               }
                             }),
                       ),

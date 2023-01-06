@@ -14,6 +14,7 @@ import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -29,7 +30,7 @@ import '../home/widgets/notification_view.dart';
 
 
 class NewGroupChat extends StatelessWidget{
-  const NewGroupChat({Key? key}) : super(key: key);
+  NewGroupChat({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +39,11 @@ class NewGroupChat extends StatelessWidget{
     List<Person> chosenPersonList = [];
     RefreshController refreshController = RefreshController(initialRefresh: false);
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
@@ -51,9 +52,9 @@ class NewGroupChat extends StatelessWidget{
         var savedPosts = MyPref.following.val;
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text('New Group Chat', style: AppTextStyle.subtitle1.copyWith(
-              color: const Color(0xff4F4F4F),
+              color: Color(0xff4F4F4F),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -70,22 +71,22 @@ class NewGroupChat extends StatelessWidget{
                     },
                     borderRadius: 10,
                     fontColor: AppColors.button,
-                    bckgrndColor: AppColors.background,
-                    border: Border.all(color: AppColors.background, width: 1),
-                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    bckgrndColor: getAppColor(AppColors.background),
+                    border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                   ),
                 ),
               )
             ],
             leading: IconButton(
-              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
                 child: Column(
-                  children: const [
+                  children: [
                     Divider(
                       height: 0.5,
                       thickness: 0.5,
@@ -93,11 +94,11 @@ class NewGroupChat extends StatelessWidget{
                     ),
                   ],
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -319,7 +320,7 @@ class NewGroupChat extends StatelessWidget{
                                       },
                                     );
                                   }
-                                  return const NotificationView(isLoading: true);
+                                  return NotificationView(isLoading: true);
                                 }
                               }),
                         ],

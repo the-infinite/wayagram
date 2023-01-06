@@ -21,13 +21,13 @@ import '../../../global_widgets/wayagram_images_helpers/wayagram_image_helper.da
 import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
 
-const String wayapayIconSvg="assets/images/waya_pay_ic.svg";
-const String wayabankIconSvg="assets/images/waya_bank_ic.svg";
-const String wayaposIconSvg="assets/images/waya_pos_ic.svg";
-const String failed = "assets/images/failed.svg";
+String wayapayIconSvg="assets/images/waya_pay_ic.svg";
+String wayabankIconSvg="assets/images/waya_bank_ic.svg";
+String wayaposIconSvg="assets/images/waya_pos_ic.svg";
+String failed = "assets/images/failed.svg";
 
 class HomeTab extends StatelessWidget {
-  const HomeTab({Key? key}) : super(key: key);
+  HomeTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +62,11 @@ class HomeTab extends StatelessWidget {
                   var posts = MomentsModelEntity.getService(jsonDecode(saved));
                   return MomentsView(moments: posts);
                 }else{
-                  return const MomentsView(isLoading: true);
+                  return MomentsView(isLoading: true);
                 }
               }),
           Padding(
-            padding: const EdgeInsets.only(
+            padding: EdgeInsets.only(
               left: 10,
               top: 15,
             ),
@@ -92,9 +92,9 @@ class HomeTab extends StatelessWidget {
                   return PostsView(posts: posts);
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
-                    return const SizedBox.shrink();
+                    return SizedBox.shrink();
                   }
-                  return const PostsView(isLoading: true);
+                  return PostsView(isLoading: true);
                 }
               }),
         ],
@@ -112,7 +112,7 @@ class HomeTab extends StatelessWidget {
       child: Container(
         width: Get.width,
         //height: 0.21 * Get.height,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
             color: AppColors.lightGrayColor,
             borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Column(
@@ -131,7 +131,7 @@ class HomeTab extends StatelessWidget {
               child: Container(
                 width: 0.070 * Get.width,
                 height: 0.005 * Get.height,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                     color: AppColors.primary,
                     borderRadius: BorderRadius.all(Radius.circular(10))),
               ),
@@ -171,20 +171,20 @@ class HomeTab extends StatelessWidget {
         onTap: onOptionsTap,
         child: FittedBox(
           child: Container(
-            margin: const EdgeInsetsDirectional.only(end: 2, start: 5),
+            margin: EdgeInsetsDirectional.only(end: 2, start: 5),
             padding:
-            const EdgeInsets.only(top: 1.0, bottom: 2, left: 5, right: 5),
+            EdgeInsets.only(top: 1.0, bottom: 2, left: 5, right: 5),
             height: 0.150 * Get.height,
             width: 0.30 * Get.width,
             decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
                 color: AppColors.white,
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.grayColor.withOpacity(0.2),
                     spreadRadius: 1,
                     blurRadius: 4,
-                    offset: const Offset(0, 2), // changes position of shadow
+                    offset: Offset(0, 2), // changes position of shadow
                   ),
                 ]),
             child: Column(
@@ -193,7 +193,7 @@ class HomeTab extends StatelessWidget {
                 Container(
                   height: 0.07 * Get.height,
                   width: 0.07 * Get.width,
-                  padding: const EdgeInsets.all(6.0),
+                  padding: EdgeInsets.all(6.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.grayColor.withOpacity(.3),
@@ -226,7 +226,7 @@ class HomeTab extends StatelessWidget {
     showDialog(
         context: Get.context!,
         builder: (_) => AlertDialog(
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Builder(
             builder: (context) {
@@ -243,10 +243,10 @@ class HomeTab extends StatelessWidget {
                       ImageHelper.svgImage(
                         failed,
                       ),
-                      const SizedBox(
+                      SizedBox(
                         height: 10,
                       ),
-                      const Text('Coming soon')
+                      Text('Coming soon')
                     ],
                   ));
             },

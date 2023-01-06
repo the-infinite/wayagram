@@ -6,6 +6,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -23,7 +24,7 @@ import 'package:dio/dio.dart' as dio;
 import 'normal_posts.dart';
 
 class CreatePage extends StatefulWidget {
-  const CreatePage({Key? key}) : super(key: key);
+  CreatePage({Key? key}) : super(key: key);
 
   @override
   State<CreatePage> createState() => _CreatePageState();
@@ -62,11 +63,11 @@ class _CreatePageState extends State<CreatePage> {
 
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
@@ -76,15 +77,15 @@ class _CreatePageState extends State<CreatePage> {
         }
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text('Create Page', style: AppTextStyle.subtitle1.copyWith(
-              color: const Color(0xff4F4F4F),
+              color: Color(0xff4F4F4F),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
             actions: [
@@ -134,25 +135,25 @@ class _CreatePageState extends State<CreatePage> {
                     },
                     borderRadius: 10,
                     fontColor: AppColors.button,
-                    bckgrndColor: AppColors.background,
-                    border: Border.all(color: AppColors.background, width: 1),
-                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    bckgrndColor: getAppColor(AppColors.background),
+                    border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                   ),
                 ),
               )
             ],
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
           body: Column(
             children: [
-              const Divider(
+              Divider(
                 height: 0.5,
                 thickness: 0.5,
                 color: Colors.grey,
@@ -239,7 +240,7 @@ class _CreatePageState extends State<CreatePage> {
                           PageDropButton(
                             label: "Page Visibility",
                             hint: '',
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                             onChanged: (val) {
                               pageVisibility.text = val;
                             },

@@ -30,9 +30,10 @@ import '../modules/settings/settings.dart';
 import '../modules/support/support.dart';
 import 'app_avatar.dart';
 import 'app_button.dart';
+import 'helpers/dark_mode_helper.dart';
 
 class AppDrawer extends StatefulWidget {
-  const AppDrawer({Key? key}) : super(key: key);
+  AppDrawer({Key? key}) : super(key: key);
 
   static const String route = "/drawer";
 
@@ -87,11 +88,11 @@ class _AppDrawerState extends State<AppDrawer> {
 
     var controller = Get.find<HomeControllerWayagram>();
     return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
-            statusBarColor: AppColors.background,
+        value: SystemUiOverlayStyle(
+            statusBarColor: getAppColor(AppColors.background),
             statusBarIconBrightness: Brightness.dark,
             statusBarBrightness: Brightness.light,
-            systemNavigationBarColor: AppColors.background,
+            systemNavigationBarColor: getAppColor(AppColors.background),
             systemNavigationBarIconBrightness: Brightness.dark
         ),
         child: GetBuilder<HomeControllerWayagram>(
@@ -101,7 +102,7 @@ class _AppDrawerState extends State<AppDrawer> {
               return SizedBox(
                 width: Get.width*0.7,
                 child: Scaffold(
-                    backgroundColor: AppColors.background,
+                    backgroundColor: getAppColor(AppColors.background),
                     body: SafeArea(
                       child: ListView(
                         children: [
@@ -109,7 +110,7 @@ class _AppDrawerState extends State<AppDrawer> {
                             onTap: (){
                               controller.imagePaths.clear();
                               Get.back();
-                              Get.to(() => const Profile());
+                              Get.to(() => Profile());
                             },
                             child: Padding(
                               padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
@@ -128,7 +129,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                       onPressed: () {
                                         controller.imagePaths.clear();
                                         Get.back();
-                                        Get.to(() => const Profile());
+                                        Get.to(() => Profile());
                                       },
                                     ),
                                   ),
@@ -194,7 +195,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               onTap: (){
                                 controller.imagePaths.clear();
                                 Get.back();
-                                Get.to(() => const Profile());
+                                Get.to(() => Profile());
                               },
                               child: Padding(
                                 padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
@@ -229,7 +230,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               ),
                             ),
                           //Divider
-                          const Divider(
+                          Divider(
                             color: Colors.grey,
                             thickness: 0.5,
                           ),
@@ -239,17 +240,17 @@ class _AppDrawerState extends State<AppDrawer> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _TextButton(
-                                  leading: const Icon(Icons.person, color: Colors.black),
+                                  leading: Icon(Icons.person, color: Colors.black),
                                   text: "My Account",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => const Profile());
+                                    Get.to(() => Profile());
                                   },
                                 ),
 
                                 /*_TextButton(
-                            leading: const Icon(Icons.person_add, color: Colors.black),
+                            leading: Icon(Icons.person_add, color: Colors.black),
                             text: "Discover People",
                             onPressed: () {
 
@@ -257,117 +258,117 @@ class _AppDrawerState extends State<AppDrawer> {
                           ),*/
 
                                 _TextButton(
-                                  leading: const Icon(Icons.people, color: Colors.black),
+                                  leading: Icon(Icons.people, color: Colors.black),
                                   text: "Groups & Pages",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => const GroupsAndPages());
+                                    Get.to(() => GroupsAndPages());
                                   },
                                 ),
 
                                 _TextButton(
-                                  leading: const Icon(Icons.bookmark, color: Colors.black),
+                                  leading: Icon(Icons.bookmark, color: Colors.black),
                                   text: "Bookmarks",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => const BookmarksPage());
+                                    Get.to(() => BookmarksPage());
                                   },
                                 ),
 
                                 _TextButton(
-                                  leading: const Icon(Icons.account_tree_sharp, color: Colors.black),
+                                  leading: Icon(Icons.account_tree_sharp, color: Colors.black),
                                   text: "Top Clips",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => const TopClips());
+                                    Get.to(() => TopClips());
                                   },
                                 ),
 
                                 _TextButton(
-                                  leading: const Icon(Icons.interests, color: Colors.black),
+                                  leading: Icon(Icons.interests, color: Colors.black),
                                   text: "Interests",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => const AddInterestPage());
+                                    Get.to(() => AddInterestPage());
                                   },
                                 ),
 
                                 _TextButton(
-                                  leading: const Icon(Icons.calendar_month, color: Colors.black),
+                                  leading: Icon(Icons.calendar_month, color: Colors.black),
                                   text: "Events",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => const AllEvents());
+                                    Get.to(() => AllEvents());
                                   },
                                 ),
 
                                 _TextButton(
-                                  leading: const Icon(Icons.analytics, color: Colors.black),
+                                  leading: Icon(Icons.analytics, color: Colors.black),
                                   text: "Post Promotion Analytics",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => const PromotionAnalytics());
+                                    Get.to(() => PromotionAnalytics());
                                   },
                                 ),
 
                                 _TextButton(
-                                  leading: const Icon(Icons.local_activity, color: Colors.black),
+                                  leading: Icon(Icons.local_activity, color: Colors.black),
                                   text: "Activity Log",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => const ActivityLog());
+                                    Get.to(() => ActivityLog());
                                   },
                                 ),
 
                                 _TextButton(
-                                  leading: const Icon(Icons.settings, color: Colors.black),
+                                  leading: Icon(Icons.settings, color: Colors.black),
                                   text: "Settings",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => const Settings());
+                                    Get.to(() => Settings());
                                   },
                                 ),
 
                                 _TextButton(
-                                  leading: const Icon(Icons.support_agent, color: Colors.black),
+                                  leading: Icon(Icons.support_agent, color: Colors.black),
                                   text: "Support",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => const Support());
+                                    Get.to(() => Support());
                                   },
                                 ),
                               ],
                             ),
                           ),
 
-                          const Divider(
+                          Divider(
                             color: Colors.grey,
                             thickness: 0.5,
                           ),
 
                           _TextButton(
-                              leading: const SizedBox.shrink(),
+                              leading: SizedBox.shrink(),
                               text: "FAQ",
                               onPressed: ()  {
                                 controller.launchURL("https://wayagram.ng/faq");
                               }),
                           _TextButton(
-                              leading: const SizedBox.shrink(),
+                              leading: SizedBox.shrink(),
                               text: "Privacy Policy",
                               onPressed: ()  {
                                 controller.launchURL("https://wayagram.ng/privacy-policy");
                               }),
                           _TextButton(
-                              leading: const SizedBox.shrink(),
+                              leading: SizedBox.shrink(),
                               text: "Terms of Use",
                               onPressed: () {
                                 controller.launchURL("https://wayagram.ng/terms");
@@ -392,11 +393,11 @@ class _AppDrawerState extends State<AppDrawer> {
                                       controller.userRepo.api.disconnect();
                                       Get.back();
                                       await MyPref.clearBoxes();
-                                      Get.offAll(() => const Multiplexor(),binding: WayagramBinding());
+                                      Get.offAll(() => Multiplexor(),binding: WayagramBinding());
                                     },
                                     borderRadius: 10,
                                     fontColor: AppColors.primary,
-                                    bckgrndColor: AppColors.background,
+                                    bckgrndColor: getAppColor(AppColors.background),
                                     fontSize: Get.width*0.045,
                                   ),
                                 ),
@@ -416,7 +417,7 @@ class _TextButton extends StatelessWidget {
   final Widget leading;
   final String text;
   final Function() onPressed;
-  const _TextButton({required this.text, required this.onPressed, required this.leading});
+  _TextButton({required this.text, required this.onPressed, required this.leading});
 
   @override
   Widget build(BuildContext context) {
@@ -426,7 +427,7 @@ class _TextButton extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: Get.height*0.018),
         child: Row(children: [
           leading,
-          const SizedBox(
+          SizedBox(
             width: 15,
           ),
           Expanded(

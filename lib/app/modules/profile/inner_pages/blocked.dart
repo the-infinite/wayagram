@@ -12,6 +12,7 @@ import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/app/data/model/blocked_accounts_entity.dart';
 import 'package:wayagram/app/global_widgets/person_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -25,32 +26,32 @@ import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../home/widgets/notification_view.dart';
 
 class Blocked extends StatelessWidget {
-  const Blocked({Key? key}) : super(key: key);
+  Blocked({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text('Blocked Users', style: AppTextStyle.subtitle1.copyWith(
-              color: const Color(0xff4F4F4F),
+              color: Color(0xff4F4F4F),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
                 child: Column(
-                  children: const [
+                  children: [
                     Divider(
                       height: 0.5,
                       thickness: 0.5,
@@ -60,14 +61,14 @@ class Blocked extends StatelessWidget {
                 )),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -109,7 +110,7 @@ class Blocked extends StatelessWidget {
                           blocked: posts,
                         );
                       }else{
-                        return const NotificationView(isLoading: true);
+                        return NotificationView(isLoading: true);
                       }
                     }),
               ],

@@ -25,13 +25,14 @@ import '../../../data/model/page_invites.dart';
 import '../../../data/model/products_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
+import '../../../global_widgets/helpers/dark_mode_helper.dart';
 import '../../profile/other_profile.dart';
 import '../../search/search.dart';
 import '../widgets/notification_view.dart';
 import '../widgets/product_view.dart';
 
 class NotificationsTab extends StatefulWidget {
-  const NotificationsTab({Key? key}) : super(key: key);
+  NotificationsTab({Key? key}) : super(key: key);
 
   @override
   State<NotificationsTab> createState() => _NotificationsTabState();
@@ -72,7 +73,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                           var posts = NotificationModelEntity.fromJson(jsonDecode(savedPosts));
                           return NotificationView(moments: posts.data!);
                         }else{
-                          return const NotificationView(isLoading: true);
+                          return NotificationView(isLoading: true);
                         }
                       }),
                 ],
@@ -86,19 +87,19 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                   controller: tabController,
                   padding: EdgeInsets.zero,
                   labelColor: Colors.black,
-                  unselectedLabelColor: const Color(0xff9A9A9A),
+                  unselectedLabelColor: Color(0xff9A9A9A),
                   indicatorColor: AppColors.primary,
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelPadding: EdgeInsets.only(left: Get.width * 0.02),
                   indicatorPadding: EdgeInsets.zero,
-                  tabs: const [
+                  tabs: [
                     Tab(text: 'Friend',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Groups',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Pages',iconMargin: EdgeInsets.zero,),
                   ],
                 ),
-                const Divider(
+                Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
@@ -122,17 +123,17 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                           height: Get.height*0.7,
-                                            child: const Center(child: Text('No Friend Requests'),));
+                                            child: Center(child: Text('No Friend Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => const OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(),arguments: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -162,7 +163,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -179,7 +180,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
-                                                            Get.to(() => const Search());
+                                                            Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -219,7 +220,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                             title: "Reject",
                                                             width: Get.width*0.35,
                                                             padding: EdgeInsets.symmetric(vertical: Get.height*0.01),
-                                                            bckgrndColor: AppColors.background,
+                                                            bckgrndColor: getAppColor(AppColors.background),
                                                             border: Border.all(color: AppColors.primary),
                                                             fontColor: AppColors.primary,
                                                             onPressed: () async {
@@ -251,17 +252,17 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Friend Requests'),));
+                                            child: Center(child: Text('No Friend Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => const OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(),arguments: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -291,7 +292,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -308,7 +309,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
-                                                            Get.to(() => const Search());
+                                                            Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -348,7 +349,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                             title: "Reject",
                                                             width: Get.width*0.35,
                                                             padding: EdgeInsets.symmetric(vertical: Get.height*0.01),
-                                                            bckgrndColor: AppColors.background,
+                                                            bckgrndColor: getAppColor(AppColors.background),
                                                             border: Border.all(color: AppColors.primary),
                                                             fontColor: AppColors.primary,
                                                             onPressed: () async {
@@ -379,9 +380,9 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(snapshot.connectionState == ConnectionState.done){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Friend Requests'),));
+                                            child: Center(child: Text('No Friend Requests'),));
                                       }
-                                      return const NotificationView(isLoading: true);
+                                      return NotificationView(isLoading: true);
                                     }
                                   }),
                             ],
@@ -402,17 +403,17 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Events Requests'),));
+                                            child: Center(child: Text('No Events Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => const OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(),arguments: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -442,7 +443,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -459,7 +460,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
-                                                            Get.to(() => const Search());
+                                                            Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -499,7 +500,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                             title: "Reject",
                                                             width: Get.width*0.35,
                                                             padding: EdgeInsets.symmetric(vertical: Get.height*0.01),
-                                                            bckgrndColor: AppColors.background,
+                                                            bckgrndColor: getAppColor(AppColors.background),
                                                             border: Border.all(color: AppColors.primary),
                                                             fontColor: AppColors.primary,
                                                             onPressed: () async {
@@ -531,17 +532,17 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Events Requests'),));
+                                            child: Center(child: Text('No Events Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => const OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(),arguments: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -571,7 +572,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -588,7 +589,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
-                                                            Get.to(() => const Search());
+                                                            Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -628,7 +629,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                             title: "Reject",
                                                             width: Get.width*0.35,
                                                             padding: EdgeInsets.symmetric(vertical: Get.height*0.01),
-                                                            bckgrndColor: AppColors.background,
+                                                            bckgrndColor: getAppColor(AppColors.background),
                                                             border: Border.all(color: AppColors.primary),
                                                             fontColor: AppColors.primary,
                                                             onPressed: () async {
@@ -659,9 +660,9 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(snapshot.connectionState == ConnectionState.done){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Events Requests'),));
+                                            child: Center(child: Text('No Events Requests'),));
                                       }
-                                      return const NotificationView(isLoading: true);
+                                      return NotificationView(isLoading: true);
                                     }
                                   }),
                             ],
@@ -682,17 +683,17 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Group Requests'),));
+                                            child: Center(child: Text('No Group Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => const OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(),arguments: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -722,7 +723,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -739,7 +740,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
-                                                            Get.to(() => const Search());
+                                                            Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -782,7 +783,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                             title: "Reject",
                                                             width: Get.width*0.35,
                                                             padding: EdgeInsets.symmetric(vertical: Get.height*0.01),
-                                                            bckgrndColor: AppColors.background,
+                                                            bckgrndColor: getAppColor(AppColors.background),
                                                             border: Border.all(color: AppColors.primary),
                                                             fontColor: AppColors.primary,
                                                             onPressed: () async {
@@ -817,17 +818,17 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Group Requests'),));
+                                            child: Center(child: Text('No Group Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => const OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(),arguments: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -857,7 +858,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -874,7 +875,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
-                                                            Get.to(() => const Search());
+                                                            Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -917,7 +918,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                             title: "Reject",
                                                             width: Get.width*0.35,
                                                             padding: EdgeInsets.symmetric(vertical: Get.height*0.01),
-                                                            bckgrndColor: AppColors.background,
+                                                            bckgrndColor: getAppColor(AppColors.background),
                                                             border: Border.all(color: AppColors.primary),
                                                             fontColor: AppColors.primary,
                                                             onPressed: () async {
@@ -951,9 +952,9 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(snapshot.connectionState == ConnectionState.done){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Group Requests'),));
+                                            child: Center(child: Text('No Group Requests'),));
                                       }
-                                      return const NotificationView(isLoading: true);
+                                      return NotificationView(isLoading: true);
                                     }
                                   }),
                             ],
@@ -974,17 +975,17 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Page Requests'),));
+                                            child: Center(child: Text('No Page Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => const OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(),arguments: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -1014,7 +1015,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -1031,7 +1032,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
-                                                            Get.to(() => const Search());
+                                                            Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -1074,7 +1075,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                             title: "Reject",
                                                             width: Get.width*0.35,
                                                             padding: EdgeInsets.symmetric(vertical: Get.height*0.01),
-                                                            bckgrndColor: AppColors.background,
+                                                            bckgrndColor: getAppColor(AppColors.background),
                                                             border: Border.all(color: AppColors.primary),
                                                             fontColor: AppColors.primary,
                                                             onPressed: () async {
@@ -1109,17 +1110,17 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Page Requests'),));
+                                            child: Center(child: Text('No Page Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => const OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(),arguments: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -1149,7 +1150,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -1166,7 +1167,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
-                                                            Get.to(() => const Search());
+                                                            Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -1209,7 +1210,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                             title: "Reject",
                                                             width: Get.width*0.35,
                                                             padding: EdgeInsets.symmetric(vertical: Get.height*0.01),
-                                                            bckgrndColor: AppColors.background,
+                                                            bckgrndColor: getAppColor(AppColors.background),
                                                             border: Border.all(color: AppColors.primary),
                                                             fontColor: AppColors.primary,
                                                             onPressed: () async {
@@ -1243,9 +1244,9 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(snapshot.connectionState == ConnectionState.done){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: const Center(child: Text('No Page Requests'),));
+                                            child: Center(child: Text('No Page Requests'),));
                                       }
-                                      return const NotificationView(isLoading: true);
+                                      return NotificationView(isLoading: true);
                                     }
                                   }),
                             ],

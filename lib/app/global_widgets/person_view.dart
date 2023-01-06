@@ -8,6 +8,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../data/model/blocked_accounts_entity.dart';
@@ -51,7 +52,7 @@ class Person{
 }
 
 class PersonView extends StatefulWidget {
-  const PersonView({
+  PersonView({
     Key? key,
     this.isLoading = false,
     required this.name,
@@ -113,7 +114,7 @@ class _PersonViewState extends State<PersonView> {
     return ListView.builder(
       itemCount: isLoading ? 3 : widget.length,
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         if(isLoading){
@@ -124,7 +125,7 @@ class _PersonViewState extends State<PersonView> {
               baseColor: Colors.grey.withOpacity(0.8),
               highlightColor: Colors.grey.withOpacity(0.2),
               child: Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                 height: Get.height * 0.18,
                 width: Get.width * 0.35,
                 decoration: BoxDecoration(
@@ -237,11 +238,11 @@ class _PersonViewState extends State<PersonView> {
               id: id
               ));
             }else{
-              Get.to(() => const OtherProfile(),arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,id,privateUser]);
+              Get.to(() => OtherProfile(),arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,id,privateUser]);
             }
           },
           child: Container(
-            margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+            margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
             child: Stack(
               alignment: Alignment.centerRight,
               children: [
@@ -264,7 +265,7 @@ class _PersonViewState extends State<PersonView> {
                       children: [
                         Text(
                           widget.name[index],
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.black ,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -274,7 +275,7 @@ class _PersonViewState extends State<PersonView> {
                           width: Get.width*0.7,
                           child: Text(
                             "@${widget.username[index]}",
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
@@ -292,7 +293,7 @@ class _PersonViewState extends State<PersonView> {
                           children: [
                             PopupMenuButton(
                               color: Colors.white,
-                              icon: const Icon(Icons.more_vert,color: Colors.black,),
+                              icon: Icon(Icons.more_vert,color: Colors.black,),
                               itemBuilder: (context) => [
                                 PopupMenuItem(
                                   value: 0,
@@ -419,9 +420,9 @@ class _PersonViewState extends State<PersonView> {
                               ));
                             }
                           },
-                          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                           fontColor: AppColors.primary,
-                          bckgrndColor: AppColors.background,
+                          bckgrndColor: getAppColor(AppColors.background),
                           border: Border.all(color: AppColors.primary),
                         )
                         ),

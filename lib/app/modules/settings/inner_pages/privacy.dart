@@ -11,6 +11,7 @@ import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -26,7 +27,7 @@ import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/notification_view.dart';
 
 class PrivacySettings extends StatefulWidget {
-  const PrivacySettings({Key? key}) : super(key: key);
+  PrivacySettings({Key? key}) : super(key: key);
 
   @override
   State<PrivacySettings> createState() => _PrivacySettingsState();
@@ -50,32 +51,32 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
     var mutedTextController = TextEditingController(text: "0");
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-              backgroundColor: AppColors.background,
+              backgroundColor: getAppColor(AppColors.background),
               title: Text('Privacy Settings', style: AppTextStyle.subtitle1.copyWith(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               )),
               centerTitle: true,
               leading: IconButton(
-                icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+                icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
                 onPressed: () => Navigator.pop(context),
               ),
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarColor: AppColors.background,
+              systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: getAppColor(AppColors.background),
                   statusBarIconBrightness: Brightness.dark,
                   statusBarBrightness: Brightness.dark,
-                  systemNavigationBarColor: AppColors.background,
+                  systemNavigationBarColor: getAppColor(AppColors.background),
                   systemNavigationBarIconBrightness: Brightness.dark
               ),
           ),
@@ -83,7 +84,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Divider(
+              Divider(
                 color: Colors.grey,
                 thickness: 0.3,
               ),
@@ -91,7 +92,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
                 controller: tabController,
                 padding: EdgeInsets.zero,
                 labelColor: Colors.black,
-                unselectedLabelColor: const Color(0xff9A9A9A),
+                unselectedLabelColor: Color(0xff9A9A9A),
                 indicatorColor: AppColors.primary,
                 indicatorSize: TabBarIndicatorSize.tab,
                 labelStyle: TextStyle(
@@ -102,7 +103,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
                   fontSize: Get.width*0.035,
                   fontWeight: FontWeight.w500,
                 ),
-                tabs: const [
+                tabs: [
                   Tab(text: 'Muted Users',iconMargin: EdgeInsets.zero,),
                   Tab(text: 'Blocked Users',iconMargin: EdgeInsets.zero,),
                 ],
@@ -110,7 +111,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
 
                 },
               ),
-              const Divider(
+              Divider(
                 height: 0.5,
                 thickness: 0.5,
                 color: Colors.grey,
@@ -157,7 +158,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
                                     blocked: posts,
                                   );
                                 }else{
-                                  return const NotificationView(isLoading: true);
+                                  return NotificationView(isLoading: true);
                                 }
                               }),
                         ],
@@ -203,7 +204,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
                                     blocked: posts,
                                   );
                                 }else{
-                                  return const NotificationView(isLoading: true);
+                                  return NotificationView(isLoading: true);
                                 }
                               }),
                         ],

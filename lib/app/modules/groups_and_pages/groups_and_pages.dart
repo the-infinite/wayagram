@@ -9,6 +9,7 @@ import 'package:wayagram/app/controllers/home_controller.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/app/modules/home/home.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../controllers/auth_controller.dart';
@@ -25,7 +26,7 @@ import '../profile/profile.dart';
 import '../profile/update_profile.dart';
 
 class GroupsAndPages extends StatefulWidget{
-  const GroupsAndPages({Key? key}) : super(key: key);
+  GroupsAndPages({Key? key}) : super(key: key);
 
   static const route = '/groupsAndPages';
 
@@ -67,7 +68,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
                 color: Colors.black,
               ),
@@ -80,7 +81,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Divider(
+              Divider(
                 height: 0.5,
                 thickness: 0.5,
                 color: Colors.grey,
@@ -89,7 +90,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                 controller: tabController,
                 padding: EdgeInsets.zero,
                 labelColor: Colors.black,
-                unselectedLabelColor: const Color(0xff9A9A9A),
+                unselectedLabelColor: Color(0xff9A9A9A),
                 indicatorColor: AppColors.primary,
                 indicatorSize: TabBarIndicatorSize.tab,
                 labelStyle: TextStyle(
@@ -100,7 +101,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                   fontSize: Get.width*0.035,
                   fontWeight: FontWeight.w500,
                 ),
-                tabs: const [
+                tabs: [
                   Tab(text: 'Groups',iconMargin: EdgeInsets.zero,),
                   Tab(text: 'Pages',iconMargin: EdgeInsets.zero,),
                 ],
@@ -108,7 +109,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
 
                 },
               ),
-              const Divider(
+              Divider(
                 height: 0.5,
                 thickness: 0.5,
                 color: Colors.grey,
@@ -122,14 +123,14 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 bottom: 10,
                                 top: 10
                             ),
                             child: Container(
                               color: Colors.blue.shade50,
                               width: Get.width,
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10),
                               child: Text(
                                 'My Created Groups',
                                 style: AppTextStyle.headline4.copyWith(
@@ -158,18 +159,18 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts.val));
                                   return GroupView(posts: posts,isJoined: true);
                                 }else{
-                                  return const GroupView(isLoading: true,isJoined: true);
+                                  return GroupView(isLoading: true,isJoined: true);
                                 }
                               }),
                           Padding(
-                            padding: const EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 bottom: 10,
                                 top: 10
                             ),
                             child: Container(
                               color: Colors.blue.shade50,
                               width: Get.width,
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10),
                               child: Text(
                                 'Joined Groups',
                                 style: AppTextStyle.headline4.copyWith(
@@ -198,18 +199,18 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                   var posts = GroupModelEntity.getService(jsonDecode(savedPosts.val));
                                   return GroupView(posts: posts,isJoined: true);
                                 }else{
-                                  return const GroupView(isLoading: true,isJoined: true);
+                                  return GroupView(isLoading: true,isJoined: true);
                                 }
                               }),
                           Padding(
-                            padding: const EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 bottom: 10,
                                 top: 10
                             ),
                             child: Container(
                               color: Colors.blue.shade50,
                               width: Get.width,
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10),
                               child: Text(
                                 'Groups To Join',
                                 style: AppTextStyle.headline4.copyWith(
@@ -269,18 +270,18 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     }
                                   },minimum: 5,);
                                 }else{
-                                  return const GroupView(isLoading: true);
+                                  return GroupView(isLoading: true);
                                 }
                               }),
                           Padding(
-                            padding: const EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 bottom: 10,
                                 top: 10
                             ),
                             child: Container(
                               color: Colors.blue.shade50,
                               width: Get.width,
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10),
                               child: Text(
                                 'All Groups',
                                 style: AppTextStyle.headline4.copyWith(
@@ -354,7 +355,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     }
                                   });
                                 }else{
-                                  return const GroupView(isLoading: true);
+                                  return GroupView(isLoading: true);
                                 }
                               }),
                         ],
@@ -365,14 +366,14 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 bottom: 10,
                                 top: 10
                             ),
                             child: Container(
                               color: Colors.blue.shade50,
                               width: Get.width,
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10),
                               child: Text(
                                 'My Pages',
                                 style: AppTextStyle.headline4.copyWith(
@@ -396,20 +397,20 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                   return GroupView(posts: posts,isGroup: false,isJoined: true);
                                 }else{
                                   if(snapshot.connectionState == ConnectionState.done){
-                                    return const SizedBox.shrink();
+                                    return SizedBox.shrink();
                                   }
-                                  return const GroupView(isLoading: true);
+                                  return GroupView(isLoading: true);
                                 }
                               }),
                           Padding(
-                            padding: const EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 bottom: 10,
                                 top: 10
                             ),
                             child: Container(
                               color: Colors.blue.shade50,
                               width: Get.width,
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10),
                               child: Text(
                                 'Pages To Follow',
                                 style: AppTextStyle.headline4.copyWith(
@@ -462,20 +463,20 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                   },minimum: 5);
                                 }else{
                                   if(snapshot.connectionState == ConnectionState.done){
-                                    return const SizedBox.shrink();
+                                    return SizedBox.shrink();
                                   }
-                                  return const GroupView(isLoading: true,isGroup: false,);
+                                  return GroupView(isLoading: true,isGroup: false,);
                                 }
                               }),
                           Padding(
-                            padding: const EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 bottom: 10,
                                 top: 10
                             ),
                             child: Container(
                               color: Colors.blue.shade50,
                               width: Get.width,
-                              padding: const EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10),
                               child: Text(
                                 'All Pages',
                                 style: AppTextStyle.headline4.copyWith(
@@ -537,9 +538,9 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                   });
                                 }else{
                                   if(snapshot.connectionState == ConnectionState.done){
-                                    return const SizedBox.shrink();
+                                    return SizedBox.shrink();
                                   }
-                                  return const GroupView(isLoading: true,isGroup: false,);
+                                  return GroupView(isLoading: true,isGroup: false,);
                                 }
                               }),
                         ],

@@ -9,7 +9,7 @@ import '../../core/theme/app_themes.dart';
 import 'app_ratings.dart';
 
 class HorizontalItemTile extends StatelessWidget {
-  const HorizontalItemTile(
+  HorizontalItemTile(
       {Key? key,
       this.onTap,
       this.img = '',
@@ -63,28 +63,28 @@ class HorizontalItemTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 11),
+                SizedBox(height: 11),
                 ist != null
                     ? Text(
                         ist!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )
-                    : const SizedBox.shrink(),
+                    : SizedBox.shrink(),
                 SizedBox(height: ist == null ? 0 : 3),
                 scnd != null
                     ? Text(
                         scnd!,
                         style: AppTextStyle.caption,
                       )
-                    : const SizedBox.shrink(),
+                    : SizedBox.shrink(),
                 SizedBox(height: scnd == null ? 0 : 3),
                 hasRating
                     ? AppRating(
                         onRatingUpdate: (val) {},
                         rating: rating,
                       )
-                    : const SizedBox.shrink(),
+                    : SizedBox.shrink(),
                 SizedBox(height: hasRating ? 3 : 0),
                 fourth != null
                     ? Text(
@@ -92,7 +92,7 @@ class HorizontalItemTile extends StatelessWidget {
                         style: AppTextStyle.caption
                             .copyWith(color: AppColors.bostonUniRed),
                       )
-                    : const SizedBox.shrink(),
+                    : SizedBox.shrink(),
               ],
             ),
           ),
@@ -103,7 +103,7 @@ class HorizontalItemTile extends StatelessWidget {
 }
 
 class HorizontalItemShimmer extends StatelessWidget {
-  const HorizontalItemShimmer({
+  HorizontalItemShimmer({
     Key? key,
     this.height = double.infinity,
     this.width,
@@ -137,7 +137,7 @@ class HorizontalItemShimmer extends StatelessWidget {
 }
 
 class HorizontalItemShimmer2 extends StatelessWidget {
-  const HorizontalItemShimmer2({
+  HorizontalItemShimmer2({
     Key? key,
     this.height = double.infinity,
     this.width,

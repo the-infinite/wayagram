@@ -9,6 +9,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -24,7 +25,7 @@ import '../../events/pay_for_event.dart';
 import '../../events/view_event_details.dart';
 
 class EventsView extends StatefulWidget {
-  const EventsView({
+  EventsView({
     Key? key,
     this.isLoading = false,
     this.moments,
@@ -64,11 +65,11 @@ class _EventsViewState extends State<EventsView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 10),
+          padding: EdgeInsets.only(bottom: 10),
           child: Container(
             color: Colors.blue.shade50,
             width: Get.width,
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             child: Text(
               widget.title,
               style: AppTextStyle.headline4.copyWith(
@@ -88,7 +89,7 @@ class _EventsViewState extends State<EventsView> {
             shrinkWrap: false,
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.zero,
-            // physics: widget.isLoading ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+            // physics: widget.isLoading ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
             itemBuilder: (context, index) {
               if(widget.isLoading){
                 return SizedBox(
@@ -98,7 +99,7 @@ class _EventsViewState extends State<EventsView> {
                     baseColor: Colors.grey.withOpacity(0.8),
                     highlightColor: Colors.grey.withOpacity(0.2),
                     child: Container(
-                      margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                      margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                       height: Get.height * 0.18,
                       width: Get.width * 0.35,
                       decoration: BoxDecoration(
@@ -120,20 +121,20 @@ class _EventsViewState extends State<EventsView> {
                 }
                 if(widget.title.trim() == 'Liked Events'){
                   if(isLiked == false){
-                    return const SizedBox.shrink();
+                    return SizedBox.shrink();
                   }
                 }
               }else{
                 if(widget.title.trim() == 'Liked Events'){
                   if(isLiked == false){
-                    return const SizedBox.shrink();
+                    return SizedBox.shrink();
                   }
                 }
               }
 
               if(widget.title.trim() == 'All Events'){
                 if(list[index].profileId.toString() == profile.id){
-                  return const SizedBox.shrink();
+                  return SizedBox.shrink();
                 }
               }
 
@@ -155,7 +156,7 @@ class _EventsViewState extends State<EventsView> {
                       color: Colors.grey.withOpacity(0.4),
                       spreadRadius: 1,
                       blurRadius: 1,
-                      offset: const Offset(0, 1), // changes position of shadow
+                      offset: Offset(0, 1), // changes position of shadow
                     ),
                   ],
                 ),
@@ -216,11 +217,11 @@ class _EventsViewState extends State<EventsView> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children:  [
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.0),
                                     child: Container(
-                                      decoration: const BoxDecoration(
+                                      decoration: BoxDecoration(
                                         borderRadius: BorderRadius.all(Radius.circular(180)),
-                                        color: AppColors.background,
+                                        color: getAppColor(AppColors.background),
                                       ),
                                       width: 30,
                                       height:30,
@@ -312,7 +313,7 @@ class _EventsViewState extends State<EventsView> {
                                   }
                                 },
                                 borderRadius: 10,
-                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                padding: EdgeInsets.symmetric(vertical: 5),
                                 fontSize: Get.height * 0.018,
                                 bckgrndColor: (isEnded && (widget.buttonText != 'Delete')) ? Colors.grey : AppColors.primary,
                               ),

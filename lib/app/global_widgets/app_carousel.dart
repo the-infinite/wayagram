@@ -7,7 +7,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
 
 class AppCarousel extends StatefulWidget {
-  const AppCarousel({
+  AppCarousel({
     Key? key,
     required this.img,
     this.subtitle,
@@ -35,7 +35,7 @@ class _AppCarouselState extends State<AppCarousel> {
           items: [1, 3, 434]
               .map(
                 (e) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  margin: EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
                       color: AppColors.bostonUniRed,
                       borderRadius: BorderRadius.circular(10),
@@ -61,7 +61,7 @@ class _AppCarouselState extends State<AppCarousel> {
           children: [
             widget.title != null
                 ? Text(widget.title!)
-                : const SizedBox.shrink(),
+                : SizedBox.shrink(),
             SizedBox(height: widget.title != null ? 3 : 0),
             widget.subtitle != null
                 ? Text(
@@ -70,8 +70,8 @@ class _AppCarouselState extends State<AppCarousel> {
                       color: AppColors.onyx,
                     ),
                   )
-                : const SizedBox.shrink(),
-            const SizedBox(height: 10),
+                : SizedBox.shrink(),
+            SizedBox(height: 10),
             SizedBox(
               height: 10,
               child: ListView.separated(
@@ -92,7 +92,7 @@ class _AppCarouselState extends State<AppCarousel> {
                     )
                   ],
                 ),
-                separatorBuilder: (context, index) => const SizedBox(
+                separatorBuilder: (context, index) => SizedBox(
                   width: 5,
                 ),
                 itemCount: 3,

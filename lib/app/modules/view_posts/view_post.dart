@@ -11,6 +11,7 @@ import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -31,7 +32,7 @@ import '../../global_widgets/page_input.dart';
 import '../home/widgets/posts_view.dart';
 
 class ViewPost extends StatefulWidget {
-  const ViewPost({Key? key,required this.post}) : super(key: key);
+  ViewPost({Key? key,required this.post}) : super(key: key);
 
   final AllPostsEntity post;
 
@@ -58,22 +59,22 @@ class _ViewPostState extends State<ViewPost> {
 
     //print(post.id);
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "comment_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text(
               "Post",
               style: TextStyle(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -85,19 +86,19 @@ class _ViewPostState extends State<ViewPost> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(1.0),
+                preferredSize: Size.fromHeight(1.0),
                 child: Container(
-                  color: const Color(0xffEDEAEA),
+                  color: Color(0xffEDEAEA),
                   height: 1.0,
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -133,7 +134,7 @@ class _ViewPostState extends State<ViewPost> {
                                   parentID = "";
                                   usernameToReplyTo = "";
                                   controller.update(["comment_page"]);
-                                  await Future.delayed(const Duration(milliseconds: 300));
+                                  await Future.delayed(Duration(milliseconds: 300));
                                   parentID = id;
                                   usernameToReplyTo = username;
                                   controller.update(["comment_page"]);
@@ -154,7 +155,7 @@ class _ViewPostState extends State<ViewPost> {
                                   parentID = "";
                                   usernameToReplyTo = "";
                                   controller.update(["comment_page"]);
-                                  await Future.delayed(const Duration(milliseconds: 300));
+                                  await Future.delayed(Duration(milliseconds: 300));
                                   parentID = id;
                                   usernameToReplyTo = username;
                                   controller.update(["comment_page"]);
@@ -163,9 +164,9 @@ class _ViewPostState extends State<ViewPost> {
                             );
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
-                              return const SizedBox.shrink();
+                              return SizedBox.shrink();
                             }
-                            return const CommentPostsView(isLoading: true);
+                            return CommentPostsView(isLoading: true);
                           }
                         }),
                   ],
@@ -179,14 +180,14 @@ class _ViewPostState extends State<ViewPost> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  color: const Color(0xffEDEAEA),
+                  color: Color(0xffEDEAEA),
                   height: 1.0,
                 ),
                 SizedBox(height: Get.height*0.008),
                 AnimatedSize(
-                    duration: const Duration(milliseconds: 300),
+                    duration: Duration(milliseconds: 300),
                     curve: Curves.fastOutSlowIn,
-                    child: usernameToReplyTo.isEmpty ? const SizedBox.shrink() : Padding(
+                    child: usernameToReplyTo.isEmpty ? SizedBox.shrink() : Padding(
                       padding: EdgeInsets.symmetric(horizontal: Get.width*0.035),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -212,14 +213,14 @@ class _ViewPostState extends State<ViewPost> {
                               decorateAtSign: true,
                             ),
                           ),
-                          const Spacer(),
+                          Spacer(),
                           InkWell(
                             onTap: (){
                               parentID = "";
                               usernameToReplyTo = "";
                               controller.update(["comment_page"]);
                             },
-                            child: const Icon(Icons.cancel_rounded, color: Colors.grey),
+                            child: Icon(Icons.cancel_rounded, color: Colors.grey),
                           )
                         ],
                       ),
@@ -282,8 +283,8 @@ class _ViewPostState extends State<ViewPost> {
                       },
                       borderRadius: 10,
                       fontColor: AppColors.button,
-                      bckgrndColor: AppColors.background,
-                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                      bckgrndColor: getAppColor(AppColors.background),
+                      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                       width: Get.width * 0.15,
                       fontSize: Get.textScaleFactor * 18,
                     )

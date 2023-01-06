@@ -22,7 +22,7 @@ import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
 
 class Story extends StatelessWidget {
-  const Story({Key? key, required this.storyItems, required this.storyController}) : super(key: key);
+  Story({Key? key, required this.storyItems, required this.storyController}) : super(key: key);
 
   final List<StoryItem> storyItems;
   final StoryController storyController;
@@ -30,7 +30,7 @@ class Story extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
           statusBarColor: Colors.black,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.light,

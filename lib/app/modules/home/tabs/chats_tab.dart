@@ -18,7 +18,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import '../../chats/chat_screen.dart';
 
 class ChatsTab extends StatelessWidget {
-  const ChatsTab({Key? key}) : super(key: key);
+  ChatsTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class ChatsTab extends StatelessWidget {
           height: Get.height*0.82,
           child: TabBarView(
             controller: controller.chatController,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             children: [
               SingleChildScrollView(
                 child: Column(
@@ -48,7 +48,7 @@ class ChatsTab extends StatelessWidget {
                       ListView.builder(
                         itemCount: chatOverview.length,
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           var post = chatOverview[index];
                           var avater = "";
@@ -92,7 +92,7 @@ class ChatsTab extends StatelessWidget {
                                           isGroup: post.isGroup == true,
                                         ),
                                       ),
-                                      const SizedBox(width: 10,),
+                                      SizedBox(width: 10,),
                                       Stack(
                                         alignment: Alignment.topRight,
                                         children: [

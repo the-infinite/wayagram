@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -41,7 +42,7 @@ import '../home/widgets/posts_view.dart';
 import '../search/search.dart';
 
 class PromotionAnalytics extends StatefulWidget {
-  const PromotionAnalytics({Key? key}) : super(key: key);
+  PromotionAnalytics({Key? key}) : super(key: key);
 
   @override
   State<PromotionAnalytics> createState() => _PromotionAnalyticsState();
@@ -102,11 +103,11 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
       }
     });
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "promotion_analytics_log",builder: (controller) {
@@ -116,11 +117,11 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
 
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text(
               "Post Promotion Analytics",
               style: TextStyle(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -132,26 +133,26 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
-                child: const Divider(
+                child: Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
           body: Column(
             children: [
-              const SizedBox(
+              SizedBox(
                 height: 10,
               ),
               Row(
@@ -161,14 +162,14 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                     height: Get.height * 0.06,
                     width: Get.width * 0.22,
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: getAppColor(AppColors.background),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 1,
                           blurRadius: 7,
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),
@@ -178,7 +179,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                         Text(
                           "Created",
                           style: TextStyle(
-                            color: const Color(0xff4F4F4F),
+                            color: Color(0xff4F4F4F),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -204,14 +205,14 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                     height: Get.height * 0.06,
                     width: Get.width * 0.22,
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: getAppColor(AppColors.background),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 1,
                           blurRadius: 7,
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),
@@ -221,7 +222,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                         Text(
                           "Ended",
                           style: TextStyle(
-                            color: const Color(0xff4F4F4F),
+                            color: Color(0xff4F4F4F),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -247,14 +248,14 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                     height: Get.height * 0.06,
                     width: Get.width * 0.22,
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: getAppColor(AppColors.background),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 1,
                           blurRadius: 7,
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),
@@ -264,7 +265,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                         Text(
                           "Live",
                           style: TextStyle(
-                            color: const Color(0xff4F4F4F),
+                            color: Color(0xff4F4F4F),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -290,14 +291,14 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                     height: Get.height * 0.06,
                     width: Get.width * 0.22,
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: getAppColor(AppColors.background),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 1,
                           blurRadius: 7,
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),
@@ -307,7 +308,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                         Text(
                           "Spent",
                           style: TextStyle(
-                            color: const Color(0xff4F4F4F),
+                            color: Color(0xff4F4F4F),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -331,7 +332,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                   ),
                 ],
               ),
-              const SizedBox(
+              SizedBox(
                 height: 10,
               ),
               Expanded(
@@ -378,7 +379,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                             return ListView.builder(
                               itemCount: allPosts.length,
                               shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
+                              physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 var post = allPosts[index];
                                 return InkWell(
@@ -399,7 +400,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                           ),
                                           child: Icon(Icons.analytics_rounded, color: Colors.white, size: Get.height*0.02,),
                                         ),
-                                        const SizedBox(width: 10,),
+                                        SizedBox(width: 10,),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -416,7 +417,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                 softWrap: true,
                                                 onTap: (text) {
                                                   controller.defaultSearchValue = text;
-                                                  Get.to(() => const Search());
+                                                  Get.to(() => Search());
                                                 },
                                                 decorateAtSign: true,
                                               ),
@@ -433,7 +434,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                             ),),
                                           ],
                                         ),
-                                        const Spacer(),
+                                        Spacer(),
                                       ],
                                     ),
                                   ),
@@ -456,7 +457,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                     children: [
                                       SizedBox(height: Get.height*0.2,),
                                       Icon(Icons.analytics_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                                      const SizedBox(height: 20,),
+                                      SizedBox(height: 20,),
                                       Text("No Promoted Posts Yet", style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: Get.textScaleFactor * 17,
@@ -470,7 +471,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                             return ListView.builder(
                               itemCount: allPosts.length,
                               shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
+                              physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 var post = allPosts[index];
                                 return InkWell(
@@ -491,7 +492,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                           ),
                                           child: Icon(Icons.analytics_rounded, color: Colors.white, size: Get.height*0.02,),
                                         ),
-                                        const SizedBox(width: 10,),
+                                        SizedBox(width: 10,),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -508,7 +509,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                 softWrap: true,
                                                 onTap: (text) {
                                                   controller.defaultSearchValue = text;
-                                                  Get.to(() => const Search());
+                                                  Get.to(() => Search());
                                                 },
                                                 decorateAtSign: true,
                                               ),
@@ -525,7 +526,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                             ),),
                                           ],
                                         ),
-                                        const Spacer(),
+                                        Spacer(),
                                       ],
                                     ),
                                   ),
@@ -543,7 +544,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                     children: [
                                       SizedBox(height: Get.height*0.2,),
                                       Icon(Icons.analytics_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                                      const SizedBox(height: 20,),
+                                      SizedBox(height: 20,),
                                       Text("No Promoted Posts Yet", style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: Get.textScaleFactor * 17,
@@ -557,7 +558,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                             return ListView.builder(
                               itemCount: posts.length,
                               shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
+                              physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 var post = posts[index];
                                 return InkWell(
@@ -578,7 +579,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                           ),
                                           child: Icon(Icons.analytics_rounded, color: Colors.white, size: Get.height*0.02,),
                                         ),
-                                        const SizedBox(width: 10,),
+                                        SizedBox(width: 10,),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -595,7 +596,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                 softWrap: true,
                                                 onTap: (text) {
                                                   controller.defaultSearchValue = text;
-                                                  Get.to(() => const Search());
+                                                  Get.to(() => Search());
                                                 },
                                                 decorateAtSign: true,
                                               ),
@@ -612,7 +613,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                             ),),
                                           ],
                                         ),
-                                        const Spacer(),
+                                        Spacer(),
                                       ],
                                     ),
                                   ),
@@ -629,7 +630,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                     children: [
                                       SizedBox(height: Get.height*0.2,),
                                       Icon(Icons.analytics_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                                      const SizedBox(height: 20,),
+                                      SizedBox(height: 20,),
                                       Text("No Promoted Posts Yet", style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: Get.textScaleFactor * 17,
@@ -640,7 +641,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                 ),
                               );
                             }
-                            return const GroupView(isLoading: true);
+                            return GroupView(isLoading: true);
                           }
                         }),
                   ),

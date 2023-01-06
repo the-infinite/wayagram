@@ -15,6 +15,7 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -37,7 +38,7 @@ import '../../home/widgets/notification_view.dart';
 import '../../search/search.dart';
 
 class LoginInformation extends StatefulWidget {
-  const LoginInformation({Key? key}) : super(key: key);
+  LoginInformation({Key? key}) : super(key: key);
 
   @override
   State<LoginInformation> createState() => _LoginInformationState();
@@ -74,11 +75,11 @@ class _LoginInformationState extends State<LoginInformation> {
     });
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
@@ -86,22 +87,22 @@ class _LoginInformationState extends State<LoginInformation> {
         var savedPosts = ReadWriteValue('wayagram_login_history', '', MyPref.box);
         return Scaffold(
           appBar: AppBar(
-              backgroundColor: AppColors.background,
+              backgroundColor: getAppColor(AppColors.background),
               title: Text('Login Information', style: AppTextStyle.subtitle1.copyWith(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               )),
               centerTitle: true,
               leading: IconButton(
-                icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+                icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
                 onPressed: () => Navigator.pop(context),
               ),
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarColor: AppColors.background,
+              systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: getAppColor(AppColors.background),
                   statusBarIconBrightness: Brightness.dark,
                   statusBarBrightness: Brightness.dark,
-                  systemNavigationBarColor: AppColors.background,
+                  systemNavigationBarColor: getAppColor(AppColors.background),
                   systemNavigationBarIconBrightness: Brightness.dark
               ),
           ),
@@ -145,7 +146,7 @@ class _LoginInformationState extends State<LoginInformation> {
                           color: Colors.grey.withOpacity(0.2),
                           spreadRadius: 1,
                           blurRadius: 5,
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
                       border: Border.all(color: Colors.white, width: 1),
@@ -204,7 +205,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                         itemCount: allPosts.length,
                                         shrinkWrap: true,
                                         reverse: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = allPosts[index];
                                           String title = "Logged In";
@@ -227,7 +228,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                     ),
                                                     child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -244,7 +245,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             //controller.defaultSearchValue = text;
-                                                            //Get.to(() => const Search());
+                                                            //Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -256,7 +257,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                       ),),
                                                     ],
                                                   ),
-                                                  const Spacer(),
+                                                  Spacer(),
                                                 ],
                                               ),
                                             ),
@@ -278,7 +279,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                               children: [
                                                 SizedBox(height: Get.height*0.2,),
                                                 Icon(Icons.access_time_filled_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                                                const SizedBox(height: 20,),
+                                                SizedBox(height: 20,),
                                                 Text("Nothing Here Yet", style: TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: Get.textScaleFactor * 17,
@@ -293,7 +294,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                         itemCount: posts.length,
                                         reverse: true,
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           String title = "Logged In";
@@ -316,7 +317,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                     ),
                                                     child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -333,7 +334,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             //controller.defaultSearchValue = text;
-                                                            //Get.to(() => const Search());
+                                                            //Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -345,7 +346,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                       ),),
                                                     ],
                                                   ),
-                                                  const Spacer(),
+                                                  Spacer(),
                                                 ],
                                               ),
                                             ),
@@ -363,7 +364,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                               children: [
                                                 SizedBox(height: Get.height*0.2,),
                                                 Icon(Icons.access_time_filled_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                                                const SizedBox(height: 20,),
+                                                SizedBox(height: 20,),
                                                 Text("Nothing Here Yet", style: TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: Get.textScaleFactor * 17,
@@ -378,7 +379,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                         itemCount: posts.length,
                                         reverse: true,
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           String title = "Logged In";
@@ -401,7 +402,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                     ),
                                                     child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                                   ),
-                                                  const SizedBox(width: 10,),
+                                                  SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -418,7 +419,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             //controller.defaultSearchValue = text;
-                                                            //Get.to(() => const Search());
+                                                            //Get.to(() => Search());
                                                           },
                                                           decorateAtSign: true,
                                                         ),
@@ -430,7 +431,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                       ),),
                                                     ],
                                                   ),
-                                                  const Spacer(),
+                                                  Spacer(),
                                                 ],
                                               ),
                                             ),
@@ -447,7 +448,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                               children: [
                                                 SizedBox(height: Get.height*0.2,),
                                                 Icon(Icons.access_time_filled_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                                                const SizedBox(height: 20,),
+                                                SizedBox(height: 20,),
                                                 Text("Nothing Here Yet", style: TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: Get.textScaleFactor * 17,
@@ -458,7 +459,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                           ),
                                         );
                                       }
-                                      return const GroupView(isLoading: true);
+                                      return GroupView(isLoading: true);
                                     }
                                   }),
                             ),
@@ -481,7 +482,7 @@ class _TextButton extends StatelessWidget {
   final String text;
   final String subtitle;
   final Function() onPressed;
-  const _TextButton({required this.text, required this.onPressed, required this.subtitle});
+  _TextButton({required this.text, required this.onPressed, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -497,7 +498,7 @@ class _TextButton extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 5,
-                offset: const Offset(0, 3), // changes position of shadow
+                offset: Offset(0, 3), // changes position of shadow
               ),
             ],
             border: Border.all(color: Colors.white, width: 1),

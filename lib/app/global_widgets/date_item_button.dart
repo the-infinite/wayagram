@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../core/theme/app_colors.dart';
 
 class DateItemButton extends StatelessWidget {
-  const DateItemButton({
+  DateItemButton({
     Key? key,
     required this.title,
     this.color = Colors.black,
@@ -21,10 +21,10 @@ class DateItemButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Get.theme;
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(
-          color: const Color(0xFF828282),
+          color: Color(0xFF828282),
           width: 1,
         ),
         borderRadius: BorderRadius.circular(10),

@@ -10,7 +10,7 @@ class MultipleImageView extends StatelessWidget {
   final bool useAspectRatio;
   final bool isSlideShow;
 
-  const MultipleImageView({
+  MultipleImageView({
     Key? key,
     required this.imageUrls,
     this.radius = 10,
@@ -84,7 +84,7 @@ class MultipleImageView extends StatelessWidget {
           ),
         ),
       ),
-      const SizedBox(width: 5),
+      SizedBox(width: 5),
       Expanded(
         flex: 1,
         child: ClipRRect(
@@ -122,7 +122,7 @@ class MultipleImageView extends StatelessWidget {
           ),
         ),
       ),
-      const SizedBox(width: 5),
+      SizedBox(width: 5),
       Expanded(
         flex: 1,
         child: Column(
@@ -145,7 +145,7 @@ class MultipleImageView extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: 5),
             Expanded(
               flex: 1,
               child: ClipRRect(
@@ -185,7 +185,7 @@ class MultipleImageView extends StatelessWidget {
           ),
         ),
       ),
-      const SizedBox(width: 5),
+      SizedBox(width: 5),
       Expanded(
         flex: 1,
         child: Column(
@@ -208,7 +208,7 @@ class MultipleImageView extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: 5),
             Expanded(
               flex: 1,
               child: ClipRRect(
@@ -221,7 +221,7 @@ class MultipleImageView extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: 5),
             Expanded(
               flex: 1,
               child: ClipRRect(
@@ -261,7 +261,7 @@ class MultipleImageView extends StatelessWidget {
           ),
         ),
       ),
-      const SizedBox(width: 5),
+      SizedBox(width: 5),
       Expanded(
         flex: 1,
         child: Column(
@@ -284,7 +284,7 @@ class MultipleImageView extends StatelessWidget {
                 ),
               ),
             ),
-           const SizedBox(height: 5),
+           SizedBox(height: 5),
             Expanded(
               flex: 1,
               child: ClipRRect(
@@ -297,7 +297,7 @@ class MultipleImageView extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: 5),
             Expanded(
               flex: 1,
               child: Stack(

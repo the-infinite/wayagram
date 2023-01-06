@@ -6,7 +6,7 @@ import '../../core/theme/theme.dart';
 
 
 class AppInput extends StatefulWidget {
-  const AppInput({
+  AppInput({
     Key? key,
     this.label,
     required this.hintText,
@@ -95,10 +95,10 @@ class _AppInputState extends State<AppInput> {
                 widget.label!,
                 style: AppTextStyle.bodyText2.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF828282),
+                  color: Color(0xFF828282),
                 ),
               )
-            : const SizedBox.shrink(),
+            : SizedBox.shrink(),
         SizedBox(
           height: widget.label != null ? 3 : 0,
         ),

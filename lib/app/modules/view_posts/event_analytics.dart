@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -47,7 +48,7 @@ import '../search/search.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class EventAnalytics extends StatefulWidget {
-  const EventAnalytics({Key? key}) : super(key: key);
+  EventAnalytics({Key? key}) : super(key: key);
 
   @override
   State<EventAnalytics> createState() => _EventAnalyticsState();
@@ -89,11 +90,11 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
     }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "event_analytics",builder: (controller) {
@@ -103,11 +104,11 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
 
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text(
               "Event Analytics",
               style: TextStyle(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -119,29 +120,29 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             actions: [
 
             ],
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
-                child: const Divider(
+                child: Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
           body: Column(
             children: [
-              const SizedBox(
+              SizedBox(
                 height: 10,
               ),
               Row(
@@ -151,14 +152,14 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                     height: Get.height * 0.06,
                     width: Get.width * 0.2,
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: getAppColor(AppColors.background),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 1,
                           blurRadius: 7,
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),
@@ -168,7 +169,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                         Text(
                           "Attendee",
                           style: TextStyle(
-                            color: const Color(0xff4F4F4F),
+                            color: Color(0xff4F4F4F),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -194,14 +195,14 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                     height: Get.height * 0.06,
                     width: Get.width * 0.5,
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: getAppColor(AppColors.background),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 1,
                           blurRadius: 7,
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),
@@ -211,7 +212,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                         Text(
                           "Ending Date",
                           style: TextStyle(
-                            color: const Color(0xff4F4F4F),
+                            color: Color(0xff4F4F4F),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -237,14 +238,14 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                     height: Get.height * 0.06,
                     width: Get.width * 0.2,
                     decoration: BoxDecoration(
-                      color: AppColors.background,
+                      color: getAppColor(AppColors.background),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 1,
                           blurRadius: 7,
-                          offset: const Offset(0, 3), // changes position of shadow
+                          offset: Offset(0, 3), // changes position of shadow
                         ),
                       ],
                     ),
@@ -254,7 +255,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                         Text(
                           "Amount",
                           style: TextStyle(
-                            color: const Color(0xff4F4F4F),
+                            color: Color(0xff4F4F4F),
                             fontSize: Get.textScaleFactor * 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -333,12 +334,12 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Divider(
+              Divider(
                 height: 0.5,
                 thickness: 0.5,
                 color: Colors.grey,
               ),
-              const SizedBox(height: 10,),
+              SizedBox(height: 10,),
               if(!closed)
                 AppButton(
                   title: "Close Event",
@@ -395,7 +396,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                 Text(
                   "Money Requested Already",
                   style: TextStyle(
-                    color: const Color(0xff4F4F4F),
+                    color: Color(0xff4F4F4F),
                     fontSize: Get.textScaleFactor * 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -403,7 +404,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
-              const SizedBox(height: 10,),
+              SizedBox(height: 10,),
             ],
           ),
         );
@@ -437,7 +438,7 @@ class _TextButton extends StatelessWidget {
   final Widget leading;
   final String text;
   final Function() onPressed;
-  const _TextButton({required this.text, required this.onPressed, required this.leading});
+  _TextButton({required this.text, required this.onPressed, required this.leading});
 
   @override
   Widget build(BuildContext context) {
@@ -448,7 +449,7 @@ class _TextButton extends StatelessWidget {
         child: Row(children: [
           SizedBox(width: Get.width*0.01),
           leading,
-          const SizedBox(
+          SizedBox(
             width: 15,
           ),
           Expanded(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TitleBar extends StatelessWidget {
-  const TitleBar({
+  TitleBar({
     Key? key,
     required this.title,
     this.onPressed,
@@ -15,12 +15,12 @@ class TitleBar extends StatelessWidget {
     return Row(
       children: [
         Text(title),
-        const Spacer(),
+        Spacer(),
         /*if(onPressed != null)
           InkWell(
             onTap: onPressed,
             child: Row(
-              children: const [
+              children: [
                 Text('See all'),
               ],
             ),

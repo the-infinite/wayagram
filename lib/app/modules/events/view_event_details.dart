@@ -15,6 +15,7 @@ import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/home.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../controllers/auth_controller.dart';
@@ -35,7 +36,7 @@ import '../profile/update_profile.dart';
 import '../view_posts/event_analytics.dart';
 
 class ViewEventDetails extends StatefulWidget{
-  const ViewEventDetails({Key? key, required this.event}) : super(key: key);
+  ViewEventDetails({Key? key, required this.event}) : super(key: key);
 
   final AllEventsData event;
 
@@ -72,7 +73,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
                 color: Colors.black,
               ),
@@ -84,19 +85,19 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
               if(widget.event.profile!.id == fullProfile.id)
                 InkWell(
                 onTap: (){
-                  Get.to(() => const EventAnalytics(),arguments: widget.event);
+                  Get.to(() => EventAnalytics(),arguments: widget.event);
                 },
-                child: const Icon(
+                child: Icon(
                   Icons.bar_chart,
                   color: Colors.black,
                   size: 24,
                 ),
               ),
               if(widget.event.profile!.id == fullProfile.id)
-                const SizedBox(width: 15)
+                SizedBox(width: 15)
             ],
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(0.5),
+              preferredSize: Size.fromHeight(0.5),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
@@ -138,7 +139,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                     readOnly: true,
                     controller: textController,
                     suffix: IconButton(
-                      icon: const Icon(Icons.copy_rounded, color: Colors.grey),
+                      icon: Icon(Icons.copy_rounded, color: Colors.grey),
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: textController.text));
                         AppOverlay.showSuccessSnackBar(content: 'Copied to clipboard');
@@ -219,7 +220,7 @@ class _TextButton extends StatelessWidget {
   final Widget leading;
   final String text;
   final Function() onPressed;
-  const _TextButton({required this.text, required this.onPressed, required this.leading});
+  _TextButton({required this.text, required this.onPressed, required this.leading});
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +231,7 @@ class _TextButton extends StatelessWidget {
         child: Row(children: [
           SizedBox(width: Get.width*0.01),
           leading,
-          const SizedBox(
+          SizedBox(
             width: 15,
           ),
           Expanded(

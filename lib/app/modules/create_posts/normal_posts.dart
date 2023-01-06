@@ -10,6 +10,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/app/global_widgets/app_input.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../../core/theme/app_styles.dart';
@@ -33,7 +34,7 @@ import '../home/widgets/group_view.dart';
 import '../home/widgets/posts_view.dart' as post_view;
 
 class CreatePosts extends StatefulWidget {
-  const CreatePosts({Key? key}) : super(key: key);
+  CreatePosts({Key? key}) : super(key: key);
 
   @override
   State<CreatePosts> createState() => _CreatePostsState();
@@ -56,25 +57,25 @@ class _CreatePostsState extends State<CreatePosts> {
   Widget build(BuildContext context) {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   controller.isProductPost ? "Create Product" : controller.postToQuote == null ? "Create Post" : "Quote Post",
                   style: TextStyle(
-                    color: const Color(0xff4F4F4F),
+                    color: Color(0xff4F4F4F),
                     fontSize: Get.textScaleFactor * 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -89,7 +90,7 @@ class _CreatePostsState extends State<CreatePosts> {
                       Text(
                         'To Group: ',
                         style: TextStyle(
-                          color: const Color(0xff4F4F4F),
+                          color: Color(0xff4F4F4F),
                           fontSize: Get.textScaleFactor * 14,
                           fontWeight: FontWeight.normal,
                         ),
@@ -110,7 +111,7 @@ class _CreatePostsState extends State<CreatePosts> {
                       Text(
                         'To Page: ',
                         style: TextStyle(
-                          color: const Color(0xff4F4F4F),
+                          color: Color(0xff4F4F4F),
                           fontSize: Get.textScaleFactor * 14,
                           fontWeight: FontWeight.normal,
                         ),
@@ -128,7 +129,7 @@ class _CreatePostsState extends State<CreatePosts> {
             ),
             leading: IconButton(
               padding: EdgeInsets.zero,
-              icon: const Icon(
+              icon: Icon(
                 FeatherIcons.arrowLeft,
                 color: Colors.black,
               ),
@@ -306,9 +307,9 @@ class _CreatePostsState extends State<CreatePosts> {
                     },
                     borderRadius: 10,
                     fontColor: AppColors.button,
-                    bckgrndColor: AppColors.background,
-                    border: Border.all(color: AppColors.background, width: 1),
-                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    bckgrndColor: getAppColor(AppColors.background),
+                    border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                     fontSize: Get.textScaleFactor * 18,
                   ),
@@ -316,16 +317,16 @@ class _CreatePostsState extends State<CreatePosts> {
               )
             ],
             bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(1.0),
+                preferredSize: Size.fromHeight(1.0),
                 child: Container(
-                  color: const Color(0xffEDEAEA),
+                  color: Color(0xffEDEAEA),
                   height: 1.0,
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -347,7 +348,7 @@ class _CreatePostsState extends State<CreatePosts> {
                             height: Get.width*0.13,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              border: Border.all(color: AppColors.background, width: 2),
+                              border: Border.all(color: getAppColor(AppColors.background), width: 2),
                             ),
                             child: IconButton(
                               padding: EdgeInsets.zero,
@@ -422,7 +423,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                                   padding: EdgeInsets.only(top: Get.height*0.01),
                                                   child: Row(
                                                     children: [
-                                                      const Icon(
+                                                      Icon(
                                                         Icons.error,
                                                         color: Colors.red,
                                                         size: 16,
@@ -467,9 +468,9 @@ class _CreatePostsState extends State<CreatePosts> {
                                       homeController: controller,
                                       showActions: false,
                                       decoration: BoxDecoration(
-                                        color: AppColors.background,
+                                        color: getAppColor(AppColors.background),
                                         borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                                        border: Border.all(color: Color(0xffEDEAEA), width: 1),
                                       ),
                                     ),
                                   if(controller.isProductPost)
@@ -477,9 +478,9 @@ class _CreatePostsState extends State<CreatePosts> {
                                       //height: Get.height*0.4,
                                       width: double.infinity,
                                       decoration: BoxDecoration(
-                                        color: AppColors.background,
+                                        color: getAppColor(AppColors.background),
                                         borderRadius: BorderRadius.circular(15),
-                                        border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                                        border: Border.all(color: Color(0xffEDEAEA), width: 1),
                                       ),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -494,7 +495,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                               },
                                               builder: (field) {
                                                 return Padding(
-                                                  padding: const EdgeInsets.only(top: 10, bottom: 0, left: 5,right: 5),
+                                                  padding: EdgeInsets.only(top: 10, bottom: 0, left: 5,right: 5),
                                                   child: Column(
                                                     children: [
                                                       ClipRRect(
@@ -507,8 +508,8 @@ class _CreatePostsState extends State<CreatePosts> {
                                                             scrollDirection: Axis.horizontal,
                                                             itemBuilder: (context, index) {
                                                               return Container(
-                                                                margin: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
-                                                                padding: const EdgeInsets.all(0),
+                                                                margin: EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                                                padding: EdgeInsets.all(0),
                                                                 height: Get.height * 0.15,
                                                                 width: Get.width * 0.3,
                                                                 decoration: BoxDecoration(
@@ -526,7 +527,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                                                         height: Get.height * 0.20,
                                                                         width: Get.width * 0.3,
                                                                         errorBuilder: (context, error, stackTrace) {
-                                                                          return const Icon(Icons.error);
+                                                                          return Icon(Icons.error);
                                                                         },
                                                                       ),
                                                                     ),
@@ -543,7 +544,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                                                         child: Center(
                                                                           child: IconButton(
                                                                             padding: EdgeInsets.zero,
-                                                                            icon: const Icon(Icons.cancel_rounded, color: AppColors.background),
+                                                                            icon: Icon(Icons.cancel_rounded, color: getAppColor(AppColors.background)),
                                                                             onPressed: () {
                                                                               images.removeAt(index);
                                                                               controller.update();
@@ -599,9 +600,9 @@ class _CreatePostsState extends State<CreatePosts> {
                                                               decoration: BoxDecoration(
                                                                 color: Colors.grey.withOpacity(.5),
                                                                 borderRadius: BorderRadius.circular(10),
-                                                                border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                                                                border: Border.all(color: Color(0xffEDEAEA), width: 1),
                                                               ),
-                                                              child: const Center(
+                                                              child: Center(
                                                                 child: Icon(Icons.image_rounded, color: Colors.grey),
                                                               ),
                                                             ),
@@ -613,7 +614,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                                           padding: EdgeInsets.only(top: Get.height*0.01),
                                                           child: Row(
                                                             children: [
-                                                              const Icon(
+                                                              Icon(
                                                                 Icons.error,
                                                                 color: Colors.red,
                                                                 size: 16,
@@ -638,7 +639,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                           ),
                                           SizedBox(height: Get.height * 0.01),
                                           Container(
-                                            color: const Color(0xffEDEAEA),
+                                            color: Color(0xffEDEAEA),
                                             height: 1.0,
                                           ),
                                           AppInput(
@@ -651,7 +652,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                           ),
                                           SizedBox(height: Get.height * 0.01),
                                           Container(
-                                            color: const Color(0xffEDEAEA),
+                                            color: Color(0xffEDEAEA),
                                             height: 1.0,
                                           ),
                                           AppInput(
@@ -675,7 +676,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const SizedBox(height: 10,),
+                                          SizedBox(height: 10,),
                                           Text(
                                             "By creating, you agree with our terms and conditions \nof donation product creation",
                                             style: TextStyle(
@@ -686,7 +687,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.center,
                                           ),
-                                          const SizedBox(height: 10,),
+                                          SizedBox(height: 10,),
                                         ],
                                       ),
                                     )
@@ -710,7 +711,7 @@ class _CreatePostsState extends State<CreatePosts> {
               children: [
                 if(controller.postToQuote == null)
                   Container(
-                  color: const Color(0xffEDEAEA),
+                  color: Color(0xffEDEAEA),
                   height: 1.0,
                 ),
                 if(detectedHashtagController.text.isEmpty && controller.postToQuote == null)
@@ -770,7 +771,7 @@ class _CreatePostsState extends State<CreatePosts> {
                           icon: Icon(Icons.video_camera_back_outlined, color: images.length > 29 ? Colors.grey : Colors.black,size: Get.width*0.065),
                           onPressed: () async {
                             if(images.length <= 29){
-                              final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, maxDuration: const Duration(minutes: 10));
+                              final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, maxDuration: Duration(minutes: 10));
                               if (pickedFile != null) {
                                 images = List.from(images)..add(pickedFile.path);
                                 controller.update();
@@ -833,7 +834,7 @@ class _CreatePostsState extends State<CreatePosts> {
                 ),
                 if(detectedHashtagController.text.isNotEmpty)
                   Container(
-                    color: AppColors.background,
+                    color: getAppColor(AppColors.background),
                     height: Get.height*0.25,
                     child: SingleChildScrollView(
                       child: detectedHashtagController.text.startsWith("#") ?
@@ -863,7 +864,7 @@ class _CreatePostsState extends State<CreatePosts> {
                               if(title.isEmpty){
                                 return SizedBox(
                                   height: Get.height*0.25,
-                                  child: const Center(
+                                  child: Center(
                                     child: Text('No Hashtags Found'),
                                   ),
                                 );
@@ -901,7 +902,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                 if(title.isEmpty){
                                   return SizedBox(
                                     height: Get.height*0.25,
-                                    child: const Center(
+                                    child: Center(
                                       child: Text('No Hashtags Found'),
                                     ),
                                   );
@@ -921,12 +922,12 @@ class _CreatePostsState extends State<CreatePosts> {
                               if(snapshot.connectionState == ConnectionState.done){
                                 return SizedBox(
                                   height: Get.height*0.25,
-                                  child: const Center(
+                                  child: Center(
                                     child: Text('No Hashtags Found'),
                                   ),
                                 );
                               }
-                              return const GroupView(isLoading: true);
+                              return GroupView(isLoading: true);
                             }
                           }) : FutureBuilder<ApiResponse>(
                           future: controller.searchPeople(detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")),
@@ -938,7 +939,7 @@ class _CreatePostsState extends State<CreatePosts> {
                               if(posts.isEmpty){
                                 return SizedBox(
                                   height: Get.height * 0.7,
-                                  child: const Center(
+                                  child: Center(
                                     child: Text('No People Found'),
                                   ),
                                 );
@@ -961,7 +962,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                 if(posts.isEmpty){
                                   return SizedBox(
                                     height: Get.height * 0.7,
-                                    child: const Center(
+                                    child: Center(
                                       child: Text('No People Found'),
                                     ),
                                   );
@@ -982,12 +983,12 @@ class _CreatePostsState extends State<CreatePosts> {
                               if(snapshot.connectionState == ConnectionState.done){
                                 return SizedBox(
                                   height: Get.height * 0.7,
-                                  child: const Center(
+                                  child: Center(
                                     child: Text('No People Found'),
                                   ),
                                 );
                               }
-                              return const GroupView(isLoading: true,isGroup: true,);
+                              return GroupView(isLoading: true,isGroup: true,);
                             }
                           }),
                     ),

@@ -11,6 +11,7 @@ import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -37,7 +38,7 @@ import '../home/widgets/posts_view.dart';
 import '../promotion/promote_post.dart';
 
 class DonateScreen extends StatefulWidget {
-  const DonateScreen({Key? key,required this.post}) : super(key: key);
+  DonateScreen({Key? key,required this.post}) : super(key: key);
 
   final AllPostsEntity post;
 
@@ -71,22 +72,22 @@ class _DonateScreenState extends State<DonateScreen> {
     var donation = DonationsModel.fromJson(widget.post.donation);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "donate_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text(
               "Donate",
               style: TextStyle(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -98,19 +99,19 @@ class _DonateScreenState extends State<DonateScreen> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(1.0),
+                preferredSize: Size.fromHeight(1.0),
                 child: Container(
-                  color: const Color(0xffEDEAEA),
+                  color: Color(0xffEDEAEA),
                   height: 1.0,
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -130,15 +131,15 @@ class _DonateScreenState extends State<DonateScreen> {
                         homeController: controller,
                         showActions: false,
                         decoration: BoxDecoration(
-                          color: AppColors.background,
+                          color: getAppColor(AppColors.background),
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+                          border: Border.all(color: Color(0xffEDEAEA), width: 1),
                         ),
                       ),
-                      const SizedBox(height: 10,),
+                      SizedBox(height: 10,),
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Enter amount to donate',
                           label: 'Amount',
@@ -167,7 +168,7 @@ class _DonateScreenState extends State<DonateScreen> {
                       ),
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Click to select account',
                           label: 'Account To Debit',
@@ -201,7 +202,7 @@ class _DonateScreenState extends State<DonateScreen> {
                       ),
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Enter account pin',
                           label: 'PIN',
@@ -226,9 +227,9 @@ class _DonateScreenState extends State<DonateScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 5),
                         child: AppButton(
                           title: 'Donate',
                           onPressed: () async {
@@ -256,24 +257,24 @@ class _DonateScreenState extends State<DonateScreen> {
                             }
                           },
                           borderRadius: 10,
-                          fontColor: AppColors.background,
+                          fontColor: getAppColor(AppColors.background),
                           bckgrndColor: AppColors.primary,
                           width: double.infinity,
                           fontSize: Get.textScaleFactor * 18,
                           border: Border.all(color: AppColors.primary, width: 1),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
                       SizedBox(height: Get.height*0.02),
-                      const FundWalletButton(),
-                      const SizedBox(height: 5,),
+                      FundWalletButton(),
+                      SizedBox(height: 5,),
                     ],
                   ),
                 ),
               ),
             ),
           ),
-          bottomNavigationBar: const PinPrompt(),
+          bottomNavigationBar: PinPrompt(),
         );
       }),
     );
@@ -281,12 +282,12 @@ class _DonateScreenState extends State<DonateScreen> {
 
   Padding widgetAnalyticsWidget(String title, String subtitle, String amount) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+      padding: EdgeInsets.symmetric(horizontal: 5),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: getAppColor(AppColors.background),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+          border: Border.all(color: Color(0xffEDEAEA), width: 1),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: Get.width*0.025,vertical: Get.height*0.01),
@@ -324,7 +325,7 @@ class _DonateScreenState extends State<DonateScreen> {
               Text(
                 amount,
                 style: TextStyle(
-                  color: const Color(0xff4F4F4F),
+                  color: Color(0xff4F4F4F),
                   fontSize: Get.textScaleFactor * 15,
                   fontWeight: FontWeight.normal,
                 ),

@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/app/modules/home/home.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../bindings/wayagram_binding.dart';
@@ -27,7 +28,7 @@ import '../profile/update_profile_on_sign_up.dart';
 
 
 class Interests extends StatefulWidget{
-  const Interests({Key? key}) : super(key: key);
+  Interests({Key? key}) : super(key: key);
 
   static const route = '/interests';
 
@@ -564,11 +565,11 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text(
               "Interests",
               style: TextStyle(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -580,13 +581,13 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, Get.height * 0.06),
                 child: Column(
                   children: [
-                    const Divider(
+                    Divider(
                       height: 0.5,
                       thickness: 0.5,
                       color: Colors.grey,
@@ -595,7 +596,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                       controller: tabController,
                       padding: EdgeInsets.zero,
                       labelColor: Colors.black,
-                      unselectedLabelColor: const Color(0xff9A9A9A),
+                      unselectedLabelColor: Color(0xff9A9A9A),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: TextStyle(
@@ -606,16 +607,16 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                         fontSize: Get.width*0.035,
                         fontWeight: FontWeight.w500,
                       ),
-                      tabs: const [
+                      tabs: [
                         Tab(text: 'All Interests',iconMargin: EdgeInsets.zero,),
                         Tab(text: 'Your Interests',iconMargin: EdgeInsets.zero,),
                       ],
                       onTap: (index) {
-                        //pagecontroller.userRepoanimateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                        //pagecontroller.userRepoanimateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.ease);
                         //controller.userRepoupdate(['profile_page']);
                       },
                     ),
-                    const Divider(
+                    Divider(
                       height: 0.5,
                       thickness: 0.5,
                       color: Colors.grey,
@@ -629,24 +630,24 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                       title: 'Continue',
                       onPressed: () {
                         //,binding: WayagramBinding()
-                        Get.to(() => const UpdateProfileSignUp());
+                        Get.to(() => UpdateProfileSignUp());
                       },
                       borderRadius: 10,
                       fontColor: AppColors.button,
-                      bckgrndColor: AppColors.background,
-                      border: Border.all(color: AppColors.background, width: 1),
-                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                      bckgrndColor: getAppColor(AppColors.background),
+                      border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                       width: Get.width * 0.2,
                       fontSize: Get.width * 0.04,
                     ),
                   ),
                 )
               ],
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -658,7 +659,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                 itemBuilder: (context, index) {
                   var currentInterest = uniqueInterestList[index];
                   if(chosenInterestList.contains(currentInterest)){
-                    return const SizedBox.shrink();
+                    return SizedBox.shrink();
                   }
                   return InkWell(
                     onTap: (){
@@ -677,13 +678,13 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                             ),
                             child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                           ),
-                          const SizedBox(width: 10,),
+                          SizedBox(width: 10,),
                           Text(currentInterest, style: TextStyle(
                             color: Colors.black,
                             fontSize: Get.textScaleFactor * 17,
                             fontWeight: FontWeight.w500,
                           ),),
-                          const Spacer(),
+                          Spacer(),
                           InkWell(
                               onTap: (){
                                 var body = {
@@ -738,7 +739,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                     });
                                   }
                                 });
-                              }, child: const Icon(Icons.add_circle, color: AppColors.primary,)
+                              }, child: Icon(Icons.add_circle, color: AppColors.primary,)
                           )
                         ],
                       ),
@@ -777,13 +778,13 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                     ),
                                     child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  SizedBox(width: 10,),
                                   Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
                                     color: Colors.black,
                                     fontSize: Get.textScaleFactor * 17,
                                     fontWeight: FontWeight.w500,
                                   ),),
-                                  const Spacer(),
+                                  Spacer(),
                                   InkWell(
                                       onTap: (){
                                         var innerBody = {
@@ -804,7 +805,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                           }
                                         });
                                       },
-                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                      child: Icon(Icons.remove_circle, color: AppColors.primary,)
                                   )
                                 ],
                               ),
@@ -838,13 +839,13 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                     ),
                                     child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  SizedBox(width: 10,),
                                   Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
                                     color: Colors.black,
                                     fontSize: Get.textScaleFactor * 17,
                                     fontWeight: FontWeight.w500,
                                   ),),
-                                  const Spacer(),
+                                  Spacer(),
                                   InkWell(
                                       onTap: (){
                                         var innerBody = {
@@ -865,7 +866,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                           }
                                         });
                                       },
-                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                      child: Icon(Icons.remove_circle, color: AppColors.primary,)
                                   )
                                 ],
                               ),
@@ -875,9 +876,9 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                       );
                     }else{
                       if(snapshot.connectionState == ConnectionState.done){
-                        return const SizedBox.shrink();
+                        return SizedBox.shrink();
                       }
-                      return const GroupView(isLoading: true);
+                      return GroupView(isLoading: true);
                     }
                   }),
             ],

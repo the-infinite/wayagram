@@ -6,6 +6,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -22,7 +23,7 @@ import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
 class CreateGroup extends StatefulWidget {
-  const CreateGroup({Key? key}) : super(key: key);
+  CreateGroup({Key? key}) : super(key: key);
 
   @override
   State<CreateGroup> createState() => _CreateGroupState();
@@ -101,11 +102,11 @@ class _CreateGroupState extends State<CreateGroup> {
     ];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
@@ -115,18 +116,18 @@ class _CreateGroupState extends State<CreateGroup> {
         }
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text('Create Group', style: AppTextStyle.subtitle1.copyWith(
-              color: const Color(0xff4F4F4F),
+              color: Color(0xff4F4F4F),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: (){
                 if(currentPage == 1){
-                  pageController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                  pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                   currentPage = 0;
                   controller.update();
                 }else{
@@ -141,7 +142,7 @@ class _CreateGroupState extends State<CreateGroup> {
                   onPressed: () async {
                     if(currentPage == 0){
                       if(formKey1.currentState!.validate()) {
-                        pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                        pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                         currentPage = 1;
                         controller.update();
                       }
@@ -183,24 +184,24 @@ class _CreateGroupState extends State<CreateGroup> {
                   },
                   borderRadius: 10,
                   fontColor: AppColors.button,
-                  bckgrndColor: AppColors.background,
-                  border: Border.all(color: AppColors.background, width: 1),
-                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                  bckgrndColor: getAppColor(AppColors.background),
+                  border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                   width: Get.width * 0.2,
                 ),
               )
             ],
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
           body: Column(
             children: [
-              const Divider(
+              Divider(
                 height: 0.5,
                 thickness: 0.5,
                 color: Colors.grey,
@@ -213,7 +214,7 @@ class _CreateGroupState extends State<CreateGroup> {
                       height: Get.height*0.8,
                       child: PageView(
                         controller: pageController,
-                        physics: const NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         children: [
                           Form(
                             key: formKey1,
@@ -307,7 +308,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                   PageDropButton(
                                     label: "Other Category",
                                     hint: '',
-                                    padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                    padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
                                     onChanged: (val) {
                                       otherCategory.value = val!;
                                     },
@@ -324,7 +325,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                 PageDropButton(
                                   label: "Choose Privacy",
                                   hint: '',
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   onChanged: (val) {
                                     privacyController.text = val;
                                   },

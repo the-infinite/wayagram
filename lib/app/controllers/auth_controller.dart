@@ -14,6 +14,7 @@ import 'package:otp_text_field/otp_field.dart';
 import 'package:wayagram/app/data/model/log_in_model_entity.dart';
 import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../bindings/wayagram_binding.dart';
 import '../data/model/ValidateUserModel.dart';
@@ -76,10 +77,10 @@ class AuthControllerWayagram extends GetxController {
   toggleBusiness(int index) {
     if(index == 0) {
       isBusiness = false;
-      pageController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+      pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
     } else {
       isBusiness = true;
-      pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+      pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
     }
     update();
   }
@@ -146,7 +147,7 @@ class AuthControllerWayagram extends GetxController {
       Get.snackbar("Account Creation Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       await userRepo.resendAuthOTP(personalEmail.text);
-      Get.to(() => const VerifyOTP(),binding: WayagramBinding());
+      Get.to(() => VerifyOTP(),binding: WayagramBinding());
     }
   }
 
@@ -172,7 +173,7 @@ class AuthControllerWayagram extends GetxController {
       Get.snackbar("Account Creation Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
     }else{
       await userRepo.resendAuthOTP(personalEmail.text);
-      Get.to(() => const VerifyOTP(),binding: WayagramBinding());
+      Get.to(() => VerifyOTP(),binding: WayagramBinding());
     }
   }
 
@@ -239,7 +240,7 @@ class AuthControllerWayagram extends GetxController {
       MyPref.fullProfile.val = jsonEncode(response.data);
       MyPref.profileId.val = data.id.toString();
       await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
-      await Get.offAll(() => const Home(),binding: WayagramBinding());
+      await Get.offAll(() => Home(),binding: WayagramBinding());
     }
   }
 
@@ -266,7 +267,7 @@ class AuthControllerWayagram extends GetxController {
       MyPref.profileId.val = data.id.toString();
       await userRepo.getFollowedByWayaOfficial();
       await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
-      Get.to(() => const Interests(),binding: WayagramBinding());
+      Get.to(() => Interests(),binding: WayagramBinding());
     }
   }
 
@@ -335,7 +336,7 @@ class AuthControllerWayagram extends GetxController {
         },
       );
     }else{
-      Get.to(() => const ConfirmPIN(),binding: WayagramBinding());
+      Get.to(() => ConfirmPIN(),binding: WayagramBinding());
     }
   }
 
@@ -365,7 +366,7 @@ class AuthControllerWayagram extends GetxController {
       if(showOverlay){
         Get.snackbar("Success", "OTP Resent Successfully",backgroundColor: Colors.green, colorText: Colors.white);
       }else{
-        Get.to(() => const EnterOTP());
+        Get.to(() => EnterOTP());
       }
     }
   }
@@ -435,7 +436,7 @@ class AuthControllerWayagram extends GetxController {
       if(showOverlay){
         Get.snackbar("Success", "OTP Resent Successfully",backgroundColor: Colors.green, colorText: Colors.white);
       }else{
-        Get.to(() => const EnterChangeOTP());
+        Get.to(() => EnterChangeOTP());
       }
     }
   }
@@ -510,13 +511,13 @@ class AuthControllerWayagram extends GetxController {
     try {
       await launch(
         url,
-        customTabsOption: const CustomTabsOption(
+        customTabsOption: CustomTabsOption(
           toolbarColor: AppColors.primary,
           enableDefaultShare: true,
           enableUrlBarHiding: true,
           showPageTitle: true,
         ),
-        safariVCOption: const SafariViewControllerOption(
+        safariVCOption: SafariViewControllerOption(
           preferredBarTintColor: AppColors.primary,
           preferredControlTintColor: Colors.white,
           barCollapsingEnabled: true,
@@ -536,7 +537,7 @@ class AuthControllerWayagram extends GetxController {
     final response = await userRepo.updateProfile(body);
     var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     await userRepo.getFullUserProfile(profile.userId.toString());
-    Get.offAll(() => const Home(),binding: WayagramBinding());
+    Get.offAll(() => Home(),binding: WayagramBinding());
 
     return response;
   }

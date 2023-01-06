@@ -28,7 +28,7 @@ import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
 
 class DiscoverTab extends StatefulWidget {
-  const DiscoverTab({Key? key}) : super(key: key);
+  DiscoverTab({Key? key}) : super(key: key);
 
   @override
   State<DiscoverTab> createState() => _DiscoverTabState();
@@ -47,7 +47,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
           Container(
             color: Colors.blue.shade50,
             width: Get.width,
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             child: Text(
               'Trending',
               style: AppTextStyle.headline4.copyWith(
@@ -82,7 +82,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     subtitle: subtitle,
                     onClick: (title, subtitle) {
                       controller.defaultSearchValue = title;
-                      Get.to(() => const Search(),binding: WayagramBinding());
+                      Get.to(() => Search(),binding: WayagramBinding());
                     },
                   );
                 } else if(savedPosts.val.isNotEmpty){
@@ -104,20 +104,20 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     subtitle: subtitle,
                     onClick: (title, subtitle) {
                       controller.defaultSearchValue = title;
-                      Get.to(() => const Search(),binding: WayagramBinding());
+                      Get.to(() => Search(),binding: WayagramBinding());
                     },
                   );
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
-                    return const SizedBox.shrink();
+                    return SizedBox.shrink();
                   }
-                  return const GroupView(isLoading: true);
+                  return GroupView(isLoading: true);
                 }
               }),
           Container(
             color: Colors.blue.shade50,
             width: Get.width,
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             child: Text(
               'Groups To Join',
               style: AppTextStyle.headline4.copyWith(
@@ -178,9 +178,9 @@ class _DiscoverTabState extends State<DiscoverTab> {
                   },minimum: 5,);
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
-                    return const SizedBox.shrink();
+                    return SizedBox.shrink();
                   }
-                  return const GroupView(isLoading: true);
+                  return GroupView(isLoading: true);
                 }
               }),
           FutureBuilder<ApiResponse>(
@@ -189,7 +189,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                   final friendsToFollow = snapshot.data!.data as List<FriendsSuggestionsEntity>;
                   if(friendsToFollow.isEmpty){
-                    return const SizedBox.shrink();
+                    return SizedBox.shrink();
                   }
                   return FriendsView(data: friendsToFollow);
                 } else {
@@ -199,21 +199,21 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     return FriendsView(data: friendsToFollow);
                   }else{
                     if(snapshot.connectionState == ConnectionState.done){
-                      return const SizedBox.shrink();
+                      return SizedBox.shrink();
                     }
-                    return const FriendsView(isLoading: true);
+                    return FriendsView(isLoading: true);
                   }
                 }
               }),
           Padding(
-            padding: const EdgeInsets.only(
+            padding: EdgeInsets.only(
                 bottom: 0,
                 top: 10
             ),
             child: Container(
               color: Colors.blue.shade50,
               width: Get.width,
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
               child: Text(
                 'Pages To Follow',
                 style: AppTextStyle.headline4.copyWith(
@@ -273,9 +273,9 @@ class _DiscoverTabState extends State<DiscoverTab> {
                       },minimum: 5,);
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
-                    return const SizedBox.shrink();
+                    return SizedBox.shrink();
                   }
-                  return const GroupView(isLoading: true,isGroup: false,);
+                  return GroupView(isLoading: true,isGroup: false,);
                 }
               }),
           FutureBuilder<ApiResponse>(
@@ -284,7 +284,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                   final moments = snapshot.data!.data as AllEventsEntity;
                   if(moments.data == null){
-                    return const SizedBox.shrink();
+                    return SizedBox.shrink();
                   }
                   return EventsView(moments: moments.data);
                 } else {
@@ -294,9 +294,9 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     return EventsView(moments: events.data);
                   }else{
                     if(snapshot.connectionState == ConnectionState.done){
-                      return const SizedBox.shrink();
+                      return SizedBox.shrink();
                     }
-                    return const EventsView(isLoading: true);
+                    return EventsView(isLoading: true);
                   }
                 }
               }),

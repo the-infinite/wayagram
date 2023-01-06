@@ -7,9 +7,10 @@ import 'package:get/get_core/src/get_main.dart';
 import 'dart:math' as math;
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 class AppAvatar extends StatelessWidget {
-  const AppAvatar({
+  AppAvatar({
     Key? key,
     this.imgUrl = '',
     this.selectedImg,
@@ -65,27 +66,27 @@ class AppAvatar extends StatelessWidget {
                 );
               }
               if(isNotification){
-                return const Icon(
+                return Icon(
                   IconlyBroken.notification,
                   color: Colors.white,
                   size: 25,
                 );
               }
               if(isPage){
-                return const Icon(
+                return Icon(
                   IconlyBroken.document,
                   color: Colors.white,
                   size: 25,
                 );
               }
               if(isGroup){
-                return const Icon(
+                return Icon(
                   Icons.groups_rounded,
                   color: Colors.white,
                   size: 25,
                 );
               }
-              return const Icon(
+              return Icon(
                 IconlyBroken.profile,
                 color: Colors.white,
                 size: 25,
@@ -120,7 +121,7 @@ class AppAvatar extends StatelessWidget {
                             style: TextStyle(
                               color: fgColor,
                               fontSize: Get.textScaleFactor * 20,
-                              shadows: const [
+                              shadows: [
                                 Shadow(
                                   color: Colors.black,
                                   offset: Offset(0, 0),
@@ -133,27 +134,27 @@ class AppAvatar extends StatelessWidget {
                       );
                     }
                     if(isPage){
-                      return const Icon(
+                      return Icon(
                         IconlyBroken.document,
                         color: Colors.white,
                         size: 25,
                       );
                     }
                     if(isGroup){
-                      return const Icon(
+                      return Icon(
                         Icons.groups_rounded,
                         color: Colors.white,
                         size: 25,
                       );
                     }
                     if(isNotification){
-                      return const Icon(
+                      return Icon(
                         IconlyBroken.notification,
                         color: Colors.white,
                         size: 25,
                       );
                     }
-                    return const Icon(
+                    return Icon(
                       IconlyBroken.profile,
                       color: Colors.white,
                       size: 25,

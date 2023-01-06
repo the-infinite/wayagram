@@ -11,6 +11,7 @@ import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -28,7 +29,7 @@ import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/notification_view.dart';
 
 class InviteToGroupOrPage extends StatelessWidget {
-  const InviteToGroupOrPage({Key? key,this.isGroup = false, this.isPage = false,this.group,this.page}) : super(key: key);
+  InviteToGroupOrPage({Key? key,this.isGroup = false, this.isPage = false,this.group,this.page}) : super(key: key);
 
   final bool isGroup;
   final bool isPage;
@@ -39,33 +40,33 @@ class InviteToGroupOrPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text(isPage ? "Invite To Page" : "Invite To Group", style: AppTextStyle.subtitle1.copyWith(
-              color: const Color(0xff4F4F4F),
+              color: Color(0xff4F4F4F),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -164,7 +165,7 @@ class InviteToGroupOrPage extends StatelessWidget {
                           },
                         );
                       }else{
-                        return const NotificationView(isLoading: true);
+                        return NotificationView(isLoading: true);
                       }
                     }),
               ],

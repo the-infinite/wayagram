@@ -40,7 +40,7 @@ class ChatControllerWayagram extends GetxController {
   ChatListOverView? chatListOverView;
   List<String> userOnline = [];
   Map<String,PreviousChatModel> previousChatMap = {};
-  final jsonEncoder = const JsonEncoder();
+  final jsonEncoder = JsonEncoder();
 
   void connectToSocket(){
     setUpMessagesScreen();

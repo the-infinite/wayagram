@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DetailsMedia extends StatelessWidget {
-  const DetailsMedia({
+  DetailsMedia({
     Key? key,
     required this.image,
   }) : super(key: key);

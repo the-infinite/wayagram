@@ -17,9 +17,9 @@ class AppOverlay {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 26, 26, 25),
+                  color: Color.fromARGB(255, 26, 26, 25),
                   borderRadius: BorderRadius.circular(10)),
               child: LoadingAnimationWidget.staggeredDotsWave(
                 color: AppColors.bostonUniRed,
@@ -48,7 +48,7 @@ class AppOverlay {
             children: [
               Container(
                 width: Get.width * 0.8,
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   vertical: 15,
                   horizontal: 20,
                 ),
@@ -67,7 +67,7 @@ class AppOverlay {
                           fontSize: 17 * Get.textScaleFactor * 0.90,
                           color: Colors.black),
                     ),
-                    const SizedBox(height: 11),
+                    SizedBox(height: 11),
                     Center(
                       child: contentReplacement ??
                           Text(
@@ -79,12 +79,12 @@ class AppOverlay {
                             ),
                           ),
                     ),
-                    const SizedBox(height: 22),
+                    SizedBox(height: 22),
                     SizedBox(
                       width: double.infinity,
                       child: AppButton(
                           title: buttonText ?? "Okay",
-                          /*   padding: const EdgeInsets.symmetric(
+                          /*   padding: EdgeInsets.symmetric(
                               vertical: 10, horizontal: 25), */
                           borderRadius: 100,
                           onPressed: onPressed ?? Get.back),
@@ -158,8 +158,8 @@ class AppOverlay {
                     textAlign: TextAlign.center,
                     style: Get.textTheme.bodyText1!.copyWith(fontWeight: FontWeight.w600, fontSize: 17, color: Colors.black),
                   ),
-                  const SizedBox(height: 20),
-                  if (content == null) contentReplacement ?? const SizedBox(),
+                  SizedBox(height: 20),
+                  if (content == null) contentReplacement ?? SizedBox(),
                   if (content != null)
                     Center(
                       child: Text(
@@ -169,7 +169,7 @@ class AppOverlay {
                             .copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
-                  const SizedBox(height: 20),*/
+                  SizedBox(height: 20),*/
                 /*Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: buttons,

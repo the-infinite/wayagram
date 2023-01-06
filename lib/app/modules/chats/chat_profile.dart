@@ -19,6 +19,7 @@ import 'package:mime/mime.dart';
 import 'package:voice_message_package/voice_message_package.dart';
 import 'package:wayagram/app/global_widgets/app_input.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../../core/theme/app_styles.dart';
@@ -56,7 +57,7 @@ import '../search/search.dart';
 import '../send_money/send_money.dart';
 
 class ChatProfile extends StatefulWidget {
-  const ChatProfile({Key? key, required this.chatOverview}) : super(key: key);
+  ChatProfile({Key? key, required this.chatOverview}) : super(key: key);
 
   final ChatOverview chatOverview;
   @override
@@ -95,7 +96,7 @@ class _ChatProfileState extends State<ChatProfile> {
       if(animate){
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 200),
+          duration: Duration(milliseconds: 200),
           curve: Curves.fastOutSlowIn,
         );
       }else{
@@ -139,11 +140,11 @@ class _ChatProfileState extends State<ChatProfile> {
     }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<ChatControllerWayagram>(id:'chats_screen',builder: (chatController) {
@@ -159,12 +160,12 @@ class _ChatProfileState extends State<ChatProfile> {
         return  GetBuilder<HomeControllerWayagram>(builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: AppColors.background,
+              backgroundColor: getAppColor(AppColors.background),
               leading: IconButton(
                 padding: EdgeInsets.zero,
-                icon: const Icon(
+                icon: Icon(
                   FeatherIcons.arrowLeft,
-                  color: Colors.black,
+                  color: getAppColor(AppColors.background),
                 ),
                 onPressed: () {
                   Get.back();
@@ -173,11 +174,11 @@ class _ChatProfileState extends State<ChatProfile> {
               ),
               centerTitle: false,
               titleSpacing: 0,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarColor: AppColors.background,
+              systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: getAppColor(AppColors.background),
                   statusBarIconBrightness: Brightness.dark,
                   statusBarBrightness: Brightness.dark,
-                  systemNavigationBarColor: AppColors.background,
+                  systemNavigationBarColor: getAppColor(AppColors.background),
                   systemNavigationBarIconBrightness: Brightness.dark
               ),
             ),
@@ -206,11 +207,11 @@ class _ChatProfileState extends State<ChatProfile> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           HashTagText(text: name, decoratedStyle: TextStyle(
-                            color: Colors.black,
+                            color: getAppColor(AppColors.background),
                             fontSize: Get.textScaleFactor * 17,
                             fontWeight: FontWeight.w600,
                           ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                            color: Colors.black,
+                            color: getAppColor(AppColors.background),
                             fontSize: Get.textScaleFactor * 17,
                             fontWeight: FontWeight.w600,),
                             softWrap: true,
@@ -237,11 +238,11 @@ class _ChatProfileState extends State<ChatProfile> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           HashTagText(text: name, decoratedStyle: TextStyle(
-                            color: Colors.black,
+                            color: getAppColor(AppColors.background),
                             fontSize: Get.textScaleFactor * 17,
                             fontWeight: FontWeight.w600,
                           ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                            color: Colors.black,
+                            color: getAppColor(AppColors.background),
                             fontSize: Get.textScaleFactor * 17,
                             fontWeight: FontWeight.w600,),
                             softWrap: true,
@@ -269,7 +270,7 @@ class _ChatProfileState extends State<ChatProfile> {
                           children: [
                             IconButton(onPressed: (){
                               comingSoon();
-                            }, icon: const Icon(Icons.videocam_rounded, color: AppColors.primary,size: 24)),
+                            }, icon: Icon(Icons.videocam_rounded, color: AppColors.primary,size: 24)),
                             Text("Video", style: TextStyle(
                               color: AppColors.primary,
                               fontSize: Get.textScaleFactor * 15,
@@ -283,7 +284,7 @@ class _ChatProfileState extends State<ChatProfile> {
                           children: [
                             IconButton(onPressed: (){
                               comingSoon();
-                            }, icon: const Icon(Icons.call_rounded, color: AppColors.primary,size: 20,)),
+                            }, icon: Icon(Icons.call_rounded, color: AppColors.primary,size: 20,)),
                             Text("Call", style: TextStyle(
                               color: AppColors.primary,
                               fontSize: Get.textScaleFactor * 15,
@@ -295,7 +296,7 @@ class _ChatProfileState extends State<ChatProfile> {
                     ),
                     SizedBox(height: Get.height*0.01),
                     Container(
-                      color: const Color(0xffEDEAEA),
+                      color: Color(0xffEDEAEA),
                       height: 1.0,
                     ),
                     if(post.isGroup == true)
@@ -327,7 +328,7 @@ class _ChatProfileState extends State<ChatProfile> {
                       SizedBox(height: Get.height*0.01),
                     if(post.isGroup == true)
                       Container(
-                      color: const Color(0xffEDEAEA),
+                      color: Color(0xffEDEAEA),
                       height: 1.0,
                     ),
                     SizedBox(height: Get.height*0.01),
@@ -402,11 +403,11 @@ class _ChatProfileState extends State<ChatProfile> {
   }
 
   void comingSoon() {
-    const String failed = "assets/images/failed.svg";
+    String failed = "assets/images/failed.svg";
     showDialog(
         context: Get.context!,
         builder: (_) => AlertDialog(
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Builder(
             builder: (context) {
@@ -423,10 +424,10 @@ class _ChatProfileState extends State<ChatProfile> {
                       ImageHelper.svgImage(
                         failed,
                       ),
-                      const SizedBox(
+                      SizedBox(
                         height: 10,
                       ),
-                      const Text('Coming soon')
+                      Text('Coming soon')
                     ],
                   ));
             },
@@ -441,7 +442,7 @@ class _ChatProfileState extends State<ChatProfile> {
 }
 
 class ChatProfileAction extends StatelessWidget {
-  const ChatProfileAction({
+  ChatProfileAction({
     Key? key, required this.title, required this.onTap, required this.icon,this.textColor = Colors.black,this.bgColor = AppColors.primary,this.iconColor = Colors.white
   }) : super(key: key);
 
@@ -470,13 +471,13 @@ class ChatProfileAction extends StatelessWidget {
               ),
               child: Icon(icon, color: Colors.white, size: Get.height*0.02,),
             ),
-            const SizedBox(width: 10,),
+            SizedBox(width: 10,),
             Text(title, style: TextStyle(
               color: textColor,
               fontSize: Get.textScaleFactor * 17,
               fontWeight: FontWeight.w500,
             ),),
-            const Spacer(),
+            Spacer(),
           ],
         ),
       ),
@@ -485,7 +486,7 @@ class ChatProfileAction extends StatelessWidget {
 }
 
 class PersonProfileAction extends StatelessWidget {
-  const PersonProfileAction({
+  PersonProfileAction({
     Key? key, required this.title, required this.onTap, required this.url,this.textColor = Colors.black,this.bgColor = AppColors.primary,this.iconColor = Colors.white, required this.subtitle
   }) : super(key: key);
 
@@ -518,7 +519,7 @@ class PersonProfileAction extends StatelessWidget {
                 isGroup: false,
               ),
             ),
-            const SizedBox(width: 10,),
+            SizedBox(width: 10,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -534,7 +535,7 @@ class PersonProfileAction extends StatelessWidget {
                 ),),
               ],
             ),
-            const Spacer(),
+            Spacer(),
           ],
         ),
       ),

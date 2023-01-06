@@ -15,6 +15,7 @@ import 'package:wayagram/app/modules/profile/inner_pages/muted.dart';
 import 'package:wayagram/app/modules/profile/report_user.dart';
 import 'package:wayagram/app/modules/profile/update_profile.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
@@ -44,7 +45,7 @@ import 'inner_pages/followers.dart';
 import 'inner_pages/following.dart';
 
 class PostProfile extends StatefulWidget {
-  const PostProfile({Key? key}) : super(key: key);
+  PostProfile({Key? key}) : super(key: key);
 
   static const route = '/postProfile';
 
@@ -74,10 +75,10 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-          statusBarColor: AppColors.background.withOpacity(0.0),
+          statusBarColor: getAppColor(AppColors.background).withOpacity(0.0),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(
@@ -113,7 +114,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
             var privateUser = post.profile!.notPublic == true;
             var tabs = [
               SingleChildScrollView(
-                key: const ValueKey('posts'),
+                key: ValueKey('posts'),
                 child: FutureBuilder<ApiResponse>(
                     future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID&page=1&limit=40", true),
                     builder: (context, snapshot) {
@@ -127,14 +128,14 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                         return PostsView(posts: posts);
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return const SizedBox.shrink();
+                          return SizedBox.shrink();
                         }
-                        return const PostsView(isLoading: true);
+                        return PostsView(isLoading: true);
                       }
                     }),
               ),
               SingleChildScrollView(
-                key: const ValueKey('products'),
+                key: ValueKey('products'),
                 child: FutureBuilder<ApiResponse>(
                     future: controller.getData("/wayagram-service/all-posts/get-user-products?page=1&limit=40&profile_id=$postListID", true),
                     builder: (context, snapshot) {
@@ -148,14 +149,14 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                         return ProductView(posts: posts.data!);
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return const SizedBox.shrink();
+                          return SizedBox.shrink();
                         }
-                        return const ProductView(isLoading: true);
+                        return ProductView(isLoading: true);
                       }
                     }),
               ),
               SingleChildScrollView(
-                key: const ValueKey('polls'),
+                key: ValueKey('polls'),
                 child: FutureBuilder<ApiResponse>(
                     future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID&page=1&limit=40", true),
                     builder: (context, snapshot) {
@@ -169,14 +170,14 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                         return PostsView(posts: posts,userID: fullProfile.userId,isPoll: true);
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return const SizedBox.shrink();
+                          return SizedBox.shrink();
                         }
-                        return const PostsView(isLoading: true);
+                        return PostsView(isLoading: true);
                       }
                     }),
               ),
               SingleChildScrollView(
-                key: const ValueKey('donations'),
+                key: ValueKey('donations'),
                 child: FutureBuilder<ApiResponse>(
                     future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID&page=1&limit=40", true),
                     builder: (context, snapshot) {
@@ -190,9 +191,9 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                         return PostsView(posts: posts,userID: fullProfile.userId,isDonation: true);
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return const SizedBox.shrink();
+                          return SizedBox.shrink();
                         }
-                        return const PostsView(isLoading: true);
+                        return PostsView(isLoading: true);
                       }
                     }),
               ),
@@ -307,10 +308,10 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                       }
                                                     },
                                                     borderRadius: 10,
-                                                    fontColor: isFollowing ? AppColors.primary : AppColors.background,
-                                                    bckgrndColor: isFollowing ? AppColors.background : AppColors.primary,
-                                                    border: Border.all(color: isFollowing ? AppColors.primary : AppColors.background, width: 1),
-                                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                                    fontColor: isFollowing ? AppColors.primary : getAppColor(AppColors.background),
+                                                    bckgrndColor: isFollowing ? getAppColor(AppColors.background) : AppColors.primary,
+                                                    border: Border.all(color: isFollowing ? AppColors.primary : getAppColor(AppColors.background), width: 1),
+                                                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                                     fontSize: Get.width * 0.04,
                                                     width: Get.width * 0.32,
                                                   ),
@@ -321,7 +322,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                         ),
                                         SizedBox(height: Get.height * 0.01),
                                         Padding(
-                                          padding: const EdgeInsets.only(left: 15),
+                                          padding: EdgeInsets.only(left: 15),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
@@ -333,7 +334,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
-                                              const SizedBox(height: 2),
+                                              SizedBox(height: 2),
                                               Text(
                                                 "@${post.profile!.username}",
                                                 style: TextStyle(
@@ -342,7 +343,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
-                                              const SizedBox(height: 2),
+                                              SizedBox(height: 2),
                                               if(post.profile!.bio != "null")
                                                 SizedBox(
                                                   width: Get.width,
@@ -362,14 +363,14 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                         ),
                                         SizedBox(height: Get.height * 0.01),
                                         Padding(
-                                          padding: const EdgeInsets.only(left: 15),
+                                          padding: EdgeInsets.only(left: 15),
                                           child: Row(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             children: [
                                               InkWell(
                                                 onTap: () {
-                                                  //Get.to(() => const Followers());
+                                                  //Get.to(() => Followers());
                                                 },
                                                 child: Row(
                                                   children: [
@@ -392,11 +393,11 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                   ],
                                                 ),
                                               ),
-                                              const SizedBox(width: 10),
+                                              SizedBox(width: 10),
 
                                               InkWell(
                                                 onTap: () {
-                                                  //Get.to(() => const Following());
+                                                  //Get.to(() => Following());
                                                 },
                                                 child: Row(
                                                   children: [
@@ -419,7 +420,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                                   ],
                                                 ),
                                               ),
-                                              const SizedBox(width: 10),
+                                              SizedBox(width: 10),
 
                                               Text(
                                                 (post.profile!.posts!.toInt()).toString(),
@@ -443,7 +444,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                         SizedBox(height: Get.height * 0.01),
                                       ],
                                     ),
-                                      stretchModes: const [
+                                      stretchModes: [
                                         StretchMode.zoomBackground,
                                         StretchMode.blurBackground,
                                       ],
@@ -453,17 +454,17 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                             ),
                             leading: Center(
                               child: Padding(
-                                padding: const EdgeInsets.all(4),
+                                padding: EdgeInsets.all(4),
                                 child: Container(
                                   width: Get.width * 0.1,
                                   height: Get.width * 0.1,
                                   decoration: BoxDecoration(
-                                    color: AppColors.background,
+                                    color: getAppColor(AppColors.background),
                                     borderRadius: BorderRadius.circular(100),
                                   ),
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
-                                    icon: const Icon(
+                                    icon: Icon(
                                       FeatherIcons.arrowLeft,
                                       color: Colors.black,
                                     ),
@@ -479,18 +480,18 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                               PopupMenuButton(
                                   color: Colors.white,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: 2.5,right: 5),
+                                    padding: EdgeInsets.only(top: 2.5,right: 5),
                                     child: Center(
                                       child: Container(
                                         width: Get.width * 0.1,
                                         height: Get.width * 0.1,
                                         decoration: BoxDecoration(
-                                          color: AppColors.background,
+                                          color: getAppColor(AppColors.background),
                                           borderRadius: BorderRadius.circular(100),
                                         ),
                                         child: IconButton(
                                           padding: EdgeInsets.zero,
-                                          icon: const Icon(
+                                          icon: Icon(
                                             Icons.more_vert,
                                             color: Colors.black,
                                           ),
@@ -702,12 +703,12 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                             ],
                             title: Center(
                               child: AnimatedOpacity(
-                                duration: const Duration(milliseconds: 300),
+                                duration: Duration(milliseconds: 300),
                                 opacity: scrolled ? 1.0 : 0.0,
                                 child: Text(
                                   '${post.profile!.displayName}',
                                   style: AppTextStyle.subtitle1.copyWith(
-                                    color: const Color(0xff4F4F4F),
+                                    color: Color(0xff4F4F4F),
                                     fontSize: Get.textScaleFactor * 18,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -716,10 +717,10 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                             ),
                             titleSpacing: 0,
                             systemOverlayStyle: SystemUiOverlayStyle(
-                                statusBarColor: scrolled ? AppColors.background : Colors.transparent,
+                                statusBarColor: scrolled ? getAppColor(AppColors.background) : Colors.transparent,
                                 statusBarIconBrightness: Brightness.dark,
                                 statusBarBrightness: Brightness.dark,
-                                systemNavigationBarColor: AppColors.background,
+                                systemNavigationBarColor: getAppColor(AppColors.background),
                                 systemNavigationBarIconBrightness: Brightness.dark
                             ),
                             bottom: PreferredSize(
@@ -728,9 +729,9 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                   children: [
                                     if(!privateUser || isFollowing)
                                       AnimatedOpacity(
-                                        duration: const Duration(milliseconds: 300),
+                                        duration: Duration(milliseconds: 300),
                                         opacity: scrolled ? 1.0 : 0.0,
-                                        child: const Divider(
+                                        child: Divider(
                                           height: 0.5,
                                           thickness: 0.5,
                                           color: Colors.grey,
@@ -741,7 +742,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                         controller: tabController,
                                         padding: EdgeInsets.zero,
                                         labelColor: Colors.black,
-                                        unselectedLabelColor: const Color(0xff9A9A9A),
+                                        unselectedLabelColor: Color(0xff9A9A9A),
                                         indicatorColor: AppColors.primary,
                                         indicatorSize: TabBarIndicatorSize.tab,
                                         labelStyle: TextStyle(
@@ -752,19 +753,19 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                                           fontSize: Get.width*0.035,
                                           fontWeight: FontWeight.w500,
                                         ),
-                                        tabs: const [
+                                        tabs: [
                                           Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                                           Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
                                           Tab(text: 'Polls',iconMargin: EdgeInsets.zero,),
                                           Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
                                         ],
                                         onTap: (index) {
-                                          //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                          //pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.ease);
                                           //controller.update(['profile_page']);
                                         },
                                       ),
                                     if(!privateUser || isFollowing)
-                                      const Divider(
+                                      Divider(
                                         height: 0.5,
                                         thickness: 0.5,
                                         color: Colors.grey,
@@ -801,7 +802,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                       child: Builder(
                         builder: (BuildContext context) {
                           return CustomScrollView(
-                            physics: const NeverScrollableScrollPhysics(),
+                            physics: NeverScrollableScrollPhysics(),
                             key: PageStorageKey<String>(widget.key.toString()),
                             slivers: <Widget>[
                               SliverOverlapInjector(

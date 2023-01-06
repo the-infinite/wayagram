@@ -8,7 +8,7 @@ import '../../core/theme/theme.dart';
 import 'app_input.dart';
 
 class PageInput extends StatelessWidget {
-  const PageInput({
+  PageInput({
     Key? key,
     required this.hint,
     required this.label,
@@ -57,7 +57,7 @@ class PageInput extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 5),
+          padding: EdgeInsets.only(left: 5),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -66,11 +66,11 @@ class PageInput extends StatelessWidget {
                 label,
                 style: AppTextStyle.bodyText2.copyWith(
                   fontWeight: FontWeight.w400,
-                  color: const Color(0xFF828282),
+                  color: Color(0xFF828282),
                 ),
               ),
               if(isCompulsory)
-                const SizedBox(width: 5),
+                SizedBox(width: 5),
               if(isCompulsory)
                 Text(
                 "*",
@@ -82,7 +82,7 @@ class PageInput extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 5),
+        SizedBox(height: 5),
         if(isPhoneNumber)
           Row(
           crossAxisAlignment: CrossAxisAlignment.start,

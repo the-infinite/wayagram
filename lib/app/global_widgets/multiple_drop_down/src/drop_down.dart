@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/core/theme/theme.dart';
 
 import '../model/selected_list_item.dart';
@@ -61,7 +62,7 @@ class DropDownState {
   void showModal(context) {
     showModalBottomSheet(
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
       ),
       context: context,
@@ -80,7 +81,7 @@ class DropDownState {
 class MainBody extends StatefulWidget {
   final DropDown dropDown;
 
-  const MainBody({required this.dropDown, Key? key}) : super(key: key);
+  MainBody({required this.dropDown, Key? key}) : super(key: key);
 
   @override
   State<MainBody> createState() => _MainBodyState();
@@ -108,7 +109,7 @@ class _MainBodyState extends State<MainBody> {
         return Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
+              padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -135,7 +136,7 @@ class _MainBodyState extends State<MainBody> {
                             widget.dropDown.selectedItems?.call(selectedNameList);
                             _onUnFocusKeyboardAndPop();
                           },
-                          child: widget.dropDown.submitButtonChild ?? const Text('Done'),
+                          child: widget.dropDown.submitButtonChild ?? Text('Done'),
                         ),
                       ),
                     ),
@@ -174,7 +175,7 @@ class _MainBodyState extends State<MainBody> {
                     child: Container(
                       color: widget.dropDown.dropDownBackgroundColor,
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                         child: ListTile(
                           title: widget.dropDown.listBuilder?.call(index) ??
                               Text(
@@ -192,10 +193,10 @@ class _MainBodyState extends State<MainBody> {
                                     });
                                   },
                                   child: isSelected
-                                      ? const Icon(Icons.check_box, color: AppColors.primary)
-                                      : const Icon(Icons.check_box_outline_blank, color: AppColors.primary),
+                                      ? Icon(Icons.check_box, color: AppColors.primary)
+                                      : Icon(Icons.check_box_outline_blank, color: AppColors.primary),
                                 )
-                              : const SizedBox(
+                              : SizedBox(
                                   height: 0.0,
                                   width: 0.0,
                                 ),

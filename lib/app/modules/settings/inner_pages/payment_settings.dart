@@ -10,6 +10,7 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -26,39 +27,39 @@ import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/notification_view.dart';
 
 class PaymentSettings extends StatelessWidget {
-  const PaymentSettings({Key? key}) : super(key: key);
+  PaymentSettings({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-              backgroundColor: AppColors.background,
+              backgroundColor: getAppColor(AppColors.background),
               title: Text('Payment Settings', style: AppTextStyle.subtitle1.copyWith(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               )),
               centerTitle: true,
               leading: IconButton(
-                icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+                icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
                 onPressed: () => Navigator.pop(context),
               ),
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarColor: AppColors.background,
+              systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: getAppColor(AppColors.background),
                   statusBarIconBrightness: Brightness.dark,
                   statusBarBrightness: Brightness.dark,
-                  systemNavigationBarColor: AppColors.background,
+                  systemNavigationBarColor: getAppColor(AppColors.background),
                   systemNavigationBarIconBrightness: Brightness.dark
               ),
           ),
@@ -67,7 +68,7 @@ class PaymentSettings extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 Center(
                   child: Container(
                     width: Get.width*0.2,
@@ -87,7 +88,7 @@ class PaymentSettings extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Text(
                   "Your Referral Code:",
                   style: TextStyle(
@@ -102,19 +103,19 @@ class PaymentSettings extends StatelessWidget {
                     title: MyPref.referenceCode.val,
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: MyPref.referenceCode.val)).then((_){
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
                       });
                     },
                     borderRadius: 10,
                     fontColor: Colors.blue,
                     fontSize: Get.width*0.04,
-                    bckgrndColor: AppColors.background,
-                    border: Border.all(color: AppColors.background, width: 1),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    bckgrndColor: getAppColor(AppColors.background),
+                    border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     leading: Icon(Icons.copy, color: Colors.blue, size: Get.width*0.04),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 _TextButton(
                     text: "Dispute Resolution",
                     subtitle: "View and file disputes",
@@ -159,7 +160,7 @@ class _TextButton extends StatelessWidget {
   final String text;
   final String subtitle;
   final Function() onPressed;
-  const _TextButton({required this.text, required this.onPressed, required this.subtitle});
+  _TextButton({required this.text, required this.onPressed, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +176,7 @@ class _TextButton extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 5,
-                offset: const Offset(0, 3), // changes position of shadow
+                offset: Offset(0, 3), // changes position of shadow
               ),
             ],
             border: Border.all(color: Colors.white, width: 1),

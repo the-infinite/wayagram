@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -39,7 +40,7 @@ import '../home/widgets/posts_view.dart';
 import '../search/search.dart';
 
 class ActivityLog extends StatefulWidget {
-  const ActivityLog({Key? key}) : super(key: key);
+  ActivityLog({Key? key}) : super(key: key);
 
   @override
   State<ActivityLog> createState() => _ActivityLogState();
@@ -59,11 +60,11 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
     List<ActivityLogsModel> allPosts = [];
     RefreshController refreshController = RefreshController(initialRefresh: false);
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "activity_log",builder: (controller) {
@@ -72,11 +73,11 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
         var currentPage = ReadWriteValue('wayagram_activity_logs_current_page', 1, MyPref.box);
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text(
               "Activity Log",
               style: TextStyle(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -88,20 +89,20 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
-                child: const Divider(
+                child: Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -145,7 +146,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                       return ListView.builder(
                         itemCount: allPosts.length,
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           var post = allPosts[index];
                           return InkWell(
@@ -166,7 +167,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                     ),
                                     child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  SizedBox(width: 10,),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -183,7 +184,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                           softWrap: true,
                                           onTap: (text) {
                                           controller.defaultSearchValue = text;
-                                          Get.to(() => const Search());
+                                          Get.to(() => Search());
                                           },
                                           decorateAtSign: true,
                                         ),
@@ -195,7 +196,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                       ),),
                                     ],
                                   ),
-                                  const Spacer(),
+                                  Spacer(),
                                   InkWell(
                                       onTap: () {
                                         var body = {
@@ -211,7 +212,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                           }
                                         });
                                       },
-                                      child: const Icon(Icons.delete, color: AppColors.primary,)
+                                      child: Icon(Icons.delete, color: AppColors.primary,)
                                   )
                                 ],
                               ),
@@ -229,7 +230,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                       return ListView.builder(
                         itemCount: allPosts.length,
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           var post = allPosts[index];
                           return InkWell(
@@ -250,7 +251,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                     ),
                                     child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  SizedBox(width: 10,),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -267,7 +268,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                           softWrap: true,
                                           onTap: (text) {
                                             controller.defaultSearchValue = text;
-                                            Get.to(() => const Search());
+                                            Get.to(() => Search());
                                           },
                                           decorateAtSign: true,
                                         ),
@@ -279,7 +280,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                       ),),
                                     ],
                                   ),
-                                  const Spacer(),
+                                  Spacer(),
                                   InkWell(
                                       onTap: () {
                                         var body = {
@@ -295,7 +296,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                           }
                                         });
                                       },
-                                      child: const Icon(Icons.delete, color: AppColors.primary,)
+                                      child: Icon(Icons.delete, color: AppColors.primary,)
                                   )
                                 ],
                               ),
@@ -308,7 +309,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                       return ListView.builder(
                         itemCount: posts.length,
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           var post = posts[index];
                           return InkWell(
@@ -329,7 +330,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                     ),
                                     child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  SizedBox(width: 10,),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -346,7 +347,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                           softWrap: true,
                                           onTap: (text) {
                                             controller.defaultSearchValue = text;
-                                            Get.to(() => const Search());
+                                            Get.to(() => Search());
                                           },
                                           decorateAtSign: true,
                                         ),
@@ -358,7 +359,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                       ),),
                                     ],
                                   ),
-                                  const Spacer(),
+                                  Spacer(),
                                   InkWell(
                                       onTap: () {
                                         var body = {
@@ -374,7 +375,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                           }
                                         });
                                       },
-                                      child: const Icon(Icons.delete, color: AppColors.primary,)
+                                      child: Icon(Icons.delete, color: AppColors.primary,)
                                   )
                                 ],
                               ),
@@ -384,9 +385,9 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                       );
                     }else{
                       if(snapshot.connectionState == ConnectionState.done){
-                        return const SizedBox.shrink();
+                        return SizedBox.shrink();
                       }
-                      return const GroupView(isLoading: true);
+                      return GroupView(isLoading: true);
                     }
                   }),
             ),

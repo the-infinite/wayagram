@@ -17,6 +17,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
@@ -44,7 +45,7 @@ import '../../view_posts/view_post.dart';
 import 'bottom_sheet.dart';
 
 class PostsView extends StatelessWidget{
-  const PostsView({
+  PostsView({
     Key? key,
     this.isLoading = false,
     this.posts,
@@ -68,23 +69,23 @@ class PostsView extends StatelessWidget{
     return ListView.builder(
       itemCount: isLoading ? 5 : posts!.length,
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(0),
+      physics: NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.all(0),
       itemBuilder: (context, index) {
         if(isLoading){
           return SizedBox(
             height: Get.height * 0.18,
             width: Get.width * 0.35,
             child: Shimmer.fromColors(
-              baseColor: Colors.grey.withOpacity(0.8),
-              highlightColor: Colors.grey.withOpacity(0.2),
+              baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+              highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
               child: Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                 height: Get.height * 0.18,
                 width: Get.width * 0.35,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey.withOpacity(.5),
+                  color: getAppColor(Colors.grey).withOpacity(.5),
                 ),
               ),
             ),
@@ -112,7 +113,7 @@ class PostsView extends StatelessWidget{
 }
 
 class CommentPostsView extends StatelessWidget{
-  const CommentPostsView({
+  CommentPostsView({
     Key? key,
     this.isLoading = false,
     this.posts,
@@ -132,23 +133,23 @@ class CommentPostsView extends StatelessWidget{
     return ListView.builder(
       itemCount: isLoading ? 5 : posts!.length,
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(0),
+      physics: NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.all(0),
       itemBuilder: (context, index) {
         if(isLoading){
           return SizedBox(
             height: Get.height * 0.18,
             width: Get.width * 0.35,
             child: Shimmer.fromColors(
-              baseColor: Colors.grey.withOpacity(0.8),
-              highlightColor: Colors.grey.withOpacity(0.2),
+              baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+              highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
               child: Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                 height: Get.height * 0.18,
                 width: Get.width * 0.35,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey.withOpacity(.5),
+                  color: getAppColor(Colors.grey).withOpacity(.5),
                 ),
               ),
             ),
@@ -174,7 +175,7 @@ class CommentPostsView extends StatelessWidget{
 }
 
 class Post extends StatefulWidget{
-  const Post({
+  Post({
     Key? key,
     required this.fullProfile,
     required this.homeController,
@@ -215,15 +216,15 @@ class _PostState extends State<Post> {
       votedPolls = savedVotedPolls.val.split(',');
     }
     if(widget.post.originalOwner == null && widget.post.isRepost == true){
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
     if(widget.post.kind == 'product'){
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
     if(widget.isDonation != null){
       if(widget.isDonation!){
         if(widget.post.kind != 'donation'){
-          return const SizedBox.shrink();
+          return SizedBox.shrink();
         }
       }
     }
@@ -231,12 +232,12 @@ class _PostState extends State<Post> {
     if(widget.isPoll != null){
       if(widget.isPoll!){
         if(widget.post.isPoll == false){
-          return const SizedBox.shrink();
+          return SizedBox.shrink();
         }
       }
     }
     BoxDecoration? decoration = BoxDecoration(
-      color: Colors.white.withOpacity(.8),
+      color: getAppColor(Colors.white).withOpacity(.8),
       borderRadius: BorderRadius.circular(10),
     );
     if(widget.decoration != null){
@@ -249,7 +250,7 @@ class _PostState extends State<Post> {
           isCurrentUserPost = true;
         }
       }else{
-        return const SizedBox.shrink();
+        return SizedBox.shrink();
       }
     }
     var time = DateTime.parse(widget.post.createdAt!);
@@ -284,12 +285,12 @@ class _PostState extends State<Post> {
     if(widget.userID!=null){
       if(widget.post.profile != null){
         if(widget.post.profile!.userId != widget.fullProfile.userId){
-          return const SizedBox.shrink();
+          return SizedBox.shrink();
         }
       }
     }
     if(widget.post.profile == null) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
     
     DonationsModel? donation;
@@ -309,7 +310,7 @@ class _PostState extends State<Post> {
     }
     return GetBuilder<HomeControllerWayagram>(id: widget.post.id.toString(),builder: (controller) {
       return Container(
-        margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+        margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
         decoration: widget.hasBorder ? decoration : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,12 +319,12 @@ class _PostState extends State<Post> {
               Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(width: 10),
-                Icon(Icons.compare_arrows_rounded, color: Colors.black.withOpacity(.7), size: 20,),
+                SizedBox(width: 10),
+                Icon(Icons.compare_arrows_rounded, color: getAppColor(Colors.black).withOpacity(.7), size: 20,),
                 Text(
                   "Promoted",
                   style: AppTextStyle.bodyText1.copyWith(
-                    color: Colors.black.withOpacity(.7) ,
+                    color: getAppColor(Colors.black).withOpacity(.7) ,
                     fontSize: Get.width * 0.03,
                     fontWeight: FontWeight.w500,
                   ),
@@ -337,12 +338,12 @@ class _PostState extends State<Post> {
                   onTap: (){
                     if(widget.fullProfile.userId!=null){
                       if(widget.post.profile!.userId == widget.fullProfile.userId) {
-                        Get.to(() => const Profile());
+                        Get.to(() => Profile());
                       }else{
-                        Get.to(() => const PostProfile(), arguments: widget.post);
+                        Get.to(() => PostProfile(), arguments: widget.post);
                       }
                     }else{
-                      Get.to(() => const PostProfile(), arguments: widget.post);
+                      Get.to(() => PostProfile(), arguments: widget.post);
                     }
                   },
                   child: SizedBox(
@@ -367,7 +368,7 @@ class _PostState extends State<Post> {
                       Text(
                         widget.post.profile!.displayName.toString(),
                         style: AppTextStyle.bodyText1.copyWith(
-                          color: Colors.black ,
+                          color: getAppColor(Colors.black) ,
                           fontSize: Get.width * 0.04,
                           fontWeight: FontWeight.w600,
                         ),
@@ -375,7 +376,7 @@ class _PostState extends State<Post> {
                       Text(
                         "@${widget.post.profile!.username}",
                         style: AppTextStyle.bodyText1.copyWith(
-                          color: Colors.grey,
+                          color: getAppColor(Colors.grey),
                           fontSize: Get.width * 0.035,
                           fontWeight: FontWeight.normal,
                         ),
@@ -391,20 +392,20 @@ class _PostState extends State<Post> {
                       Text(
                         timeago.format(time),
                         style: AppTextStyle.bodyText1.copyWith(
-                          color: Colors.grey,
+                          color: getAppColor(Colors.grey),
                           fontSize: Get.width * 0.03,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      const SizedBox(
+                      SizedBox(
                         width: 10,
                       ),
                       if(widget.showActions)
                         PopupMenuButton(
-                            color: Colors.white,
-                            icon: const Icon(
+                            color: getAppColor(Colors.white),
+                            icon: Icon(
                               FeatherIcons.moreHorizontal,
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               size: 20,
                             ),
                             onSelected: (value) {
@@ -424,7 +425,7 @@ class _PostState extends State<Post> {
                                 Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
                               }
                               else if (value == 2) {
-                                //Get.to(() => const Followers());
+                                //Get.to(() => Followers());
                               }
                               else if (value == 3) {
                                 var body = {
@@ -448,7 +449,7 @@ class _PostState extends State<Post> {
                                 child: Text(
                                   Get.currentRoute == "/BookmarksPage" ? "Remove" : "Bookmark",
                                   style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -458,7 +459,7 @@ class _PostState extends State<Post> {
                                 child: Text(
                                   "Share",
                                   style: AppTextStyle.bodyText1.copyWith(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -469,7 +470,7 @@ class _PostState extends State<Post> {
                               child: Text(
                                 "Edit",
                                 style: AppTextStyle.bodyText1.copyWith(
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -480,7 +481,7 @@ class _PostState extends State<Post> {
                                   child: Text(
                                     "Delete",
                                     style: AppTextStyle.bodyText1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -491,7 +492,7 @@ class _PostState extends State<Post> {
                                   child: Text(
                                     "Report",
                                     style: AppTextStyle.bodyText1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -505,9 +506,9 @@ class _PostState extends State<Post> {
             Divider(
               height: 1.5,
               thickness: 1.5,
-              color: widget.showActions ? const Color(0xffF2F2F2) : Colors.transparent,
+              color: widget.showActions ? Color(0xffF2F2F2) : Colors.transparent,
             ),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             if(donation != null)
@@ -515,22 +516,22 @@ class _PostState extends State<Post> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10,bottom: 0),
+                      padding: EdgeInsets.only(left: 10, right: 10,bottom: 0),
                       child: HashTagText(
                         text: donation.title.toString(),
                         decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                          color: Colors.blue,
+                          color: getAppColor(Colors.blue),
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                         basicStyle: AppTextStyle.bodyText1.copyWith(
-                          color: Colors.black,
+                          color: getAppColor(Colors.black),
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                         onTap: (text) {
                           widget.homeController.defaultSearchValue = text;
-                          Get.to(() => const Search());
+                          Get.to(() => Search());
                         },
                         decorateAtSign: true,
                       )
@@ -538,22 +539,22 @@ class _PostState extends State<Post> {
                 ],
               ),
             Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
+                padding: EdgeInsets.only(left: 10, right: 10,bottom: 10),
                 child: HashTagText(
                   text: widget.post.description.toString(),
                   decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                    color: Colors.blue,
+                    color: getAppColor(Colors.blue),
                     fontSize: 16,
                     fontWeight: FontWeight.normal,
                   ),
                   basicStyle: AppTextStyle.bodyText1.copyWith(
-                    color: Colors.black,
+                    color: getAppColor(Colors.black),
                     fontSize: 16,
                     fontWeight: FontWeight.normal,
                   ),
                   onTap: (text) {
                     widget.homeController.defaultSearchValue = text;
-                    Get.to(() => const Search());
+                    Get.to(() => Search());
                   },
                   decorateAtSign: true,
                 )
@@ -571,7 +572,7 @@ class _PostState extends State<Post> {
               ),
             if(pollImageUrls.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
+                padding: EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Container(
@@ -583,11 +584,11 @@ class _PostState extends State<Post> {
                         itemBuilder: (context, i) {
                           return Container(
                             margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
-                            padding: const EdgeInsets.all(0),
+                            padding: EdgeInsets.all(0),
                             constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey.withOpacity(.5),
+                              color: getAppColor(Colors.grey).withOpacity(.5),
                             ),
                             child: Stack(
                               alignment: Alignment.bottomCenter,
@@ -598,9 +599,9 @@ class _PostState extends State<Post> {
                                     imageUrl: pollImageUrls[i],
                                     fit: BoxFit.cover,
                                     errorWidget: (context, url, error) {
-                                      return const Icon(
+                                      return Icon(
                                         IconlyLight.profile,
-                                        color: Colors.black,
+                                        color: getAppColor(Colors.black),
                                         size: 25,
                                       );
                                     },
@@ -609,13 +610,13 @@ class _PostState extends State<Post> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
+                                  padding: EdgeInsets.only(bottom: 10),
                                   child: BorderedText(
                                     strokeWidth: 2.0,
                                     child: Text(
                                       (i+1).toString(),
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: getAppColor(Colors.white),
                                         fontSize: Get.width * 0.04,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -633,20 +634,20 @@ class _PostState extends State<Post> {
                 ),
               ),
             if(pollImageUrls.isNotEmpty)
-              const SizedBox(
+              SizedBox(
                 height: 10,
               ),
             if(widget.post.isPoll == true)
               Padding(
-                padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
+                padding: EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: ListView.builder(
                     itemCount: widget.post.poll!.pollOptions!.length,
                     shrinkWrap: true,
-                    padding: const EdgeInsets.all(0),
+                    padding: EdgeInsets.all(0),
                     scrollDirection: Axis.vertical,
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, i) {
                       var votePercentage = 0.0;
                       var totalVote = 0;
@@ -668,7 +669,7 @@ class _PostState extends State<Post> {
                       var pollVoteID = widget.post.id.toString()+widget.post.poll!.pollOptions![i].id.toString();
                       var currentPollVoted = widget.post.poll!.pollOptions![i].userVoted == true || votedPolls.contains(pollVoteID);
                       var progressColor = AppColors.primary.withOpacity(0.2);
-                      progressColor = pollEnded ? currentPollVoted ? AppColors.primary.withOpacity(0.2):Colors.grey.withOpacity(.2) : !(!currentPollVoted && totalPersonalVotes >= allowedVotes) ? AppColors.primary.withOpacity(0.2) : Colors.grey.withOpacity(0.2);
+                      progressColor = pollEnded ? currentPollVoted ? AppColors.primary.withOpacity(0.2):getAppColor(Colors.grey).withOpacity(.2) : !(!currentPollVoted && totalPersonalVotes >= allowedVotes) ? AppColors.primary.withOpacity(0.2) : getAppColor(Colors.grey).withOpacity(0.2);
 
                       return Padding(
                         padding: EdgeInsets.only(top: i==0 ? 0:10, bottom: 0, left: 0,right: 0),
@@ -722,37 +723,37 @@ class _PostState extends State<Post> {
                                   }
                                 },
                                 activeColor: AppColors.primary,
-                                fillColor: pollEnded ? MaterialStateProperty.all(currentPollVoted ? AppColors.primary:Colors.grey) :MaterialStateProperty.all(!(!currentPollVoted && totalPersonalVotes >= allowedVotes) ? AppColors.primary : Colors.grey),
+                                fillColor: pollEnded ? MaterialStateProperty.all(currentPollVoted ? AppColors.primary:getAppColor(Colors.grey)) :MaterialStateProperty.all(!(!currentPollVoted && totalPersonalVotes >= allowedVotes) ? AppColors.primary : getAppColor(Colors.grey)),
                                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                visualDensity: const VisualDensity(
+                                visualDensity: VisualDensity(
                                   horizontal: VisualDensity.minimumDensity,
                                   vertical: VisualDensity.minimumDensity,
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10,),
+                            SizedBox(width: 10,),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
+                                    padding: EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
                                     height: Get.height * 0.045,
-                                    margin: const EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
+                                    margin: EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(11),
-                                      border: Border.all(color: currentPollVoted ? AppColors.primary :AppColors.onBackground,width: 1),
+                                      border: Border.all(color: currentPollVoted ? AppColors.primary :getAppColor(AppColors.onBackground),width: 1),
                                     ),
                                     child: Stack(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                          padding: EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               widget.post.poll!.pollOptions![i].option.toString(),
                                               style: TextStyle(
-                                                color: AppColors.onBackground,
+                                                color: getAppColor(AppColors.onBackground),
                                                 fontSize: Get.width * 0.035,
                                                 fontWeight: currentPollVoted ? FontWeight.bold : FontWeight.normal,
                                               ),
@@ -764,13 +765,13 @@ class _PostState extends State<Post> {
                                         ),
                                         if(widget.post.poll!.showResult == true)
                                           Padding(
-                                          padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                          padding: EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
                                           child: Align(
                                             alignment: Alignment.centerRight,
                                             child: Text(
                                               "${(votePercentage*100).toStringAsFixed(2)}%",
                                               style: TextStyle(
-                                                color: AppColors.onBackground,
+                                                color: getAppColor(AppColors.onBackground),
                                                 fontSize: Get.width * 0.035,
                                                 fontWeight: FontWeight.normal,
                                               ),
@@ -795,13 +796,13 @@ class _PostState extends State<Post> {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 5,),
+                                  SizedBox(height: 5,),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                    padding: EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
                                     child: Text(
                                       widget.post.poll!.pollOptions![i].shortDesc.toString(),
                                       style: TextStyle(
-                                        color: AppColors.onBackground,
+                                        color: getAppColor(AppColors.onBackground),
                                         fontSize: Get.width * 0.035,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -821,7 +822,7 @@ class _PostState extends State<Post> {
               ),
             if(widget.post.isPoll == true)
               Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10,top: 10),
+                padding: EdgeInsets.only(left: 10, right: 10,top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -831,17 +832,17 @@ class _PostState extends State<Post> {
                         children: [
                           Text(
                             "N${widget.post.poll!.amount!.toInt()} per vote",
-                            style: const TextStyle(
-                              color: AppColors.onBackground,
+                            style: TextStyle(
+                              color: getAppColor(AppColors.onBackground),
                               fontSize: 13,
                               fontWeight: FontWeight.normal,
                             ),
                           ),
 
-                          const Text(
+                          Text(
                             " - ",
                             style: TextStyle(
-                              color: AppColors.onBackground,
+                              color: getAppColor(AppColors.onBackground),
                               fontSize: 13,
                               fontWeight: FontWeight.normal,
                             ),
@@ -849,18 +850,18 @@ class _PostState extends State<Post> {
 
                           Text(
                             "${widget.post.poll!.voteLimit!.toInt()} votes allowed",
-                            style: const TextStyle(
-                              color: AppColors.onBackground,
+                            style: TextStyle(
+                              color: getAppColor(AppColors.onBackground),
                               fontSize: 13,
                               fontWeight: FontWeight.normal,
                             ),
                           ),
 
                           if(widget.post.poll!.showResult == true)
-                            const Text(
+                            Text(
                             " - ",
                             style: TextStyle(
-                              color: AppColors.onBackground,
+                              color: getAppColor(AppColors.onBackground),
                               fontSize: 13,
                               fontWeight: FontWeight.normal,
                             ),
@@ -869,8 +870,8 @@ class _PostState extends State<Post> {
                           if(widget.post.poll!.showResult == true)
                             Text(
                             "${widget.post.poll!.totalVotesCountPoll!.toInt()} voted",
-                            style: const TextStyle(
-                              color: AppColors.onBackground,
+                            style: TextStyle(
+                              color: getAppColor(AppColors.onBackground),
                               fontSize: 13,
                               fontWeight: FontWeight.normal,
                             ),
@@ -884,9 +885,9 @@ class _PostState extends State<Post> {
 
                         },
                         bckgrndColor: AppColors.primary,
-                        fontColor: AppColors.background,
+                        fontColor: getAppColor(AppColors.background),
                         width: Get.width * 0.25,
-                        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                        padding: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
                       ),
                     if(!isCurrentUserPost && widget.post.poll!.showResult == true)
                       AppButton(
@@ -895,34 +896,34 @@ class _PostState extends State<Post> {
 
                         },
                         bckgrndColor: AppColors.primary,
-                        fontColor: AppColors.background,
+                        fontColor: getAppColor(AppColors.background),
                         width: Get.width * 0.25,
-                        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                        padding: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
                       ),*/
                   ],
                 ),
               ),
             /*if(widget.post.isPoll == true && widget.post.poll!.pollOptions!.length >= 2)
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: FlutterPolls(
                 pollId: widget.post.id.toString(),
                 onVoted: (PollOption pollOption, int newTotalVotes) {
                   return Future(() => true);
                 },
-                pollOptionsSplashColor: Colors.white,
+                pollOptionsSplashColor: getAppColor(Colors.white),
                 votedProgressColor: AppColors.primary,
-                votedBackgroundColor: Colors.grey.withOpacity(0.2),
+                votedBackgroundColor: getAppColor(Colors.grey).withOpacity(0.2),
                 leadingVotedProgessColor: AppColors.primary,
                 pollOptions: widget.post.poll!.pollOptions!.map((e){
                   return PollOption(title: Text(e.option.toString()), votes: e.totalVotesCountPollOption == null ? 0 : e.totalVotesCountPollOption!.toInt());
                 }).toList(),
-                pollTitle: const SizedBox.shrink(),
-                metaWidget: pollEnded ? Text(' • Ended ${timeago.format(endPollTime!,allowFromNow: true)}',style: const TextStyle(
-                  color: Colors.black,
+                pollTitle: SizedBox.shrink(),
+                metaWidget: pollEnded ? Text(' • Ended ${timeago.format(endPollTime!,allowFromNow: true)}',style: TextStyle(
+                  color: getAppColor(Colors.black),
                   fontWeight: FontWeight.w500,
-                )) : Text(' • Ends in ${timeago.format(endPollTime!,allowFromNow: true)}',style: const TextStyle(
-                  color: Colors.black,
+                )) : Text(' • Ends in ${timeago.format(endPollTime!,allowFromNow: true)}',style: TextStyle(
+                  color: getAppColor(Colors.black),
                   fontWeight: FontWeight.w500,
                 )),
                 //pollEnded: pollEnded,
@@ -933,7 +934,7 @@ class _PostState extends State<Post> {
               InnerPost(outerPost: widget.post,homeController: widget.homeController),
             if(donation != null)
               Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10,top: 10),
+                padding: EdgeInsets.only(left: 10, right: 10,top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -942,18 +943,18 @@ class _PostState extends State<Post> {
                       Row(
                         children: [
                           //tag icon
-                          const Icon(
+                          Icon(
                             Icons.money_rounded,
                             color: AppColors.primary,
                             size: 20,
                           ),
-                          const SizedBox(
+                          SizedBox(
                             width: 5,
                           ),
                           Text(
                             "NGN ${donation.estimatedAmount}",
-                            style: const TextStyle(
-                              color: Colors.black,
+                            style: TextStyle(
+                              color: getAppColor(Colors.black),
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
                             ),
@@ -971,15 +972,15 @@ class _PostState extends State<Post> {
                           }
                         },
                         bckgrndColor: AppColors.primary,
-                        fontColor: AppColors.background,
+                        fontColor: getAppColor(AppColors.background),
                         width: Get.width * 0.2,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.symmetric(vertical: 10),
                       ),
                     if(isCurrentUserPost)
                       Text(
                         "NGN $amountRaised raised of NGN ${donation.estimatedAmount}",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: getAppColor(Colors.black),
                           fontSize: Get.textScaleFactor * 16,
                           fontWeight: FontWeight.normal,
                         ),
@@ -992,19 +993,19 @@ class _PostState extends State<Post> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 11, right: 11,top: 0),
+                    padding: EdgeInsets.only(left: 11, right: 11,top: 0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: LinearProgressIndicator(
                         backgroundColor: AppColors.primary.withOpacity(0.2),
-                        valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                         value: amountRaised / donation.estimatedAmount!,
                       ),
                     ),
                   ),
                 ],
               ),
-            const SizedBox(
+            SizedBox(
               height: 10,
             ),
             if(widget.showActions)
@@ -1014,21 +1015,21 @@ class _PostState extends State<Post> {
                   //Comment
                   Row(
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 10,
                       ),
-                      const Icon(
+                      Icon(
                         FeatherIcons.messageCircle,
-                        color: Colors.grey,
+                        color: getAppColor(Colors.grey),
                         size: 20,
                       ),
-                      const SizedBox(
+                      SizedBox(
                         width: 2,
                       ),
                       Text(
                         widget.post.commentCount.toString(),
-                        style: const TextStyle(
-                          color: Colors.black,
+                        style: TextStyle(
+                          color: getAppColor(Colors.black),
                           fontSize: 16,
                           fontWeight: FontWeight.normal,
                         ),
@@ -1038,7 +1039,7 @@ class _PostState extends State<Post> {
                   //Heart
                   Row(
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 10,
                       ),
                       if(widget.post.isLiked == true)
@@ -1069,7 +1070,7 @@ class _PostState extends State<Post> {
                               AppOverlay.showErrorSnackBar(content: "Unable to un-like post, please try again later");
                             }
                           },
-                          child: const Icon(
+                          child: Icon(
                             Icons.favorite,
                             color: AppColors.primary,
                             size: 20,
@@ -1103,19 +1104,19 @@ class _PostState extends State<Post> {
                               AppOverlay.showErrorSnackBar(content: "Unable to like post, please try again later");
                             }
                           },
-                          child: const Icon(
+                          child: Icon(
                             FeatherIcons.heart,
-                            color: Colors.grey,
+                            color: getAppColor(Colors.grey),
                             size: 20,
                           ),
                         ),
-                      const SizedBox(
+                      SizedBox(
                         width: 2,
                       ),
                       Text(
                         widget.post.likeCount.toString().split(".")[0],
-                        style: const TextStyle(
-                          color: Colors.black,
+                        style: TextStyle(
+                          color: getAppColor(Colors.black),
                           fontSize: 16,
                           fontWeight: FontWeight.normal,
                         ),
@@ -1130,28 +1131,28 @@ class _PostState extends State<Post> {
                       },
                       child: Row(
                         children: [
-                          const SizedBox(
+                          SizedBox(
                             width: 10,
                           ),
                           if(widget.post.isRepost == true)
-                            const Icon(
+                            Icon(
                               FeatherIcons.repeat,
                               color: AppColors.primary,
                               size: 20,
                             ),
                           if(widget.post.isRepost == false || widget.post.isRepost == null)
-                            const Icon(
+                            Icon(
                               FeatherIcons.repeat,
-                              color: Colors.grey,
+                              color: getAppColor(Colors.grey),
                               size: 20,
                             ),
-                          const SizedBox(
+                          SizedBox(
                             width: 2,
                           ),
                           Text(
                             widget.post.repostCount.toString(),
-                            style: const TextStyle(
-                              color: Colors.black,
+                            style: TextStyle(
+                              color: getAppColor(Colors.black),
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
                             ),
@@ -1165,7 +1166,7 @@ class _PostState extends State<Post> {
                   //Analytics
                   Row(
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 10,
                       ),
                       InkWell(
@@ -1174,11 +1175,11 @@ class _PostState extends State<Post> {
                         } : null,
                         child: Icon(
                           Icons.bar_chart,
-                          color: isCurrentUserPost ? Colors.grey : Colors.white.withOpacity(0.8),
+                          color: isCurrentUserPost ? getAppColor(Colors.grey) : getAppColor(Colors.white).withOpacity(0.8),
                           size: 24,
                         ),
                       ),
-                      const SizedBox(
+                      SizedBox(
                         width: 10,
                       ),
                     ],
@@ -1186,7 +1187,7 @@ class _PostState extends State<Post> {
                 ],
               ),
             if(widget.showActions)
-              const SizedBox(
+              SizedBox(
                 height: 10,
               ),
           ],
@@ -1197,7 +1198,7 @@ class _PostState extends State<Post> {
 }
 
 class InnerPost extends StatelessWidget{
-  const InnerPost({
+  InnerPost({
     Key? key,
     required this.outerPost,
     required this.homeController,
@@ -1240,12 +1241,12 @@ class InnerPost extends StatelessWidget{
     }
 
     return Container(
-      margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+      margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.8),
+        color: getAppColor(Colors.white).withOpacity(.8),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: Colors.grey.withOpacity(0.5),
+          color: getAppColor(Colors.grey).withOpacity(0.5),
         ),
       ),
       child: Column(
@@ -1270,7 +1271,7 @@ class InnerPost extends StatelessWidget{
                   Text(
                     post.profile!.displayName.toString(),
                     style: AppTextStyle.bodyText1.copyWith(
-                      color: Colors.black ,
+                      color: getAppColor(Colors.black) ,
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
                     ),
@@ -1278,7 +1279,7 @@ class InnerPost extends StatelessWidget{
                   Text(
                     "@${post.profile!.username}",
                     style: AppTextStyle.bodyText1.copyWith(
-                      color: Colors.grey,
+                      color: getAppColor(Colors.grey),
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
                     ),
@@ -1287,26 +1288,26 @@ class InnerPost extends StatelessWidget{
               ),
             ],
           ),
-          const SizedBox(
+          SizedBox(
             height: 10,
           ),
           Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
+              padding: EdgeInsets.only(left: 10, right: 10,bottom: 10),
               child: HashTagText(
                 text: post.description.toString(),
                 decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                  color: Colors.blue,
+                  color: getAppColor(Colors.blue),
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                 ),
                 basicStyle: AppTextStyle.bodyText1.copyWith(
-                  color: Colors.black,
+                  color: getAppColor(Colors.black),
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                 ),
                 onTap: (text) {
                   homeController.defaultSearchValue = text;
-                  Get.to(() => const Search());
+                  Get.to(() => Search());
                 },
                 decorateAtSign: true,
               )
@@ -1324,7 +1325,7 @@ class InnerPost extends StatelessWidget{
             ),
           /*if(pollImageUrls.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
+              padding: EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
@@ -1336,11 +1337,11 @@ class InnerPost extends StatelessWidget{
                       itemBuilder: (context, i) {
                         return Container(
                           margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
-                          padding: const EdgeInsets.all(0),
+                          padding: EdgeInsets.all(0),
                           constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.grey.withOpacity(.5),
+                            color: getAppColor(Colors.grey).withOpacity(.5),
                           ),
                           child: Stack(
                             alignment: Alignment.bottomCenter,
@@ -1351,9 +1352,9 @@ class InnerPost extends StatelessWidget{
                                   imageUrl: pollImageUrls[i],
                                   fit: BoxFit.cover,
                                   errorWidget: (context, url, error) {
-                                    return const Icon(
+                                    return Icon(
                                       IconlyLight.profile,
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       size: 25,
                                     );
                                   },
@@ -1362,13 +1363,13 @@ class InnerPost extends StatelessWidget{
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
+                                padding: EdgeInsets.only(bottom: 10),
                                 child: BorderedText(
                                   strokeWidth: 2.0,
                                   child: Text(
                                     (i+1).toString(),
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: getAppColor(Colors.white),
                                       fontSize: Get.width * 0.04,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -1387,32 +1388,32 @@ class InnerPost extends StatelessWidget{
             ),
           if(post.isPoll == true && post.poll!.pollOptions!.length >= 2)
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: FlutterPolls(
                 pollId: "${post.id} ${post.poll!.id}",
                 onVoted: (PollOption pollOption, int newTotalVotes) {
                   return Future(() => true);
                 },
-                pollOptionsSplashColor: Colors.white,
+                pollOptionsSplashColor: getAppColor(Colors.white),
                 votedProgressColor: AppColors.primary,
-                votedBackgroundColor: Colors.grey.withOpacity(0.2),
+                votedBackgroundColor: getAppColor(Colors.grey).withOpacity(0.2),
                 leadingVotedProgessColor: AppColors.primary,
                 pollOptions: post.poll!.pollOptions!.map((e){
                   return PollOption(title: Text(e.option.toString()), votes: e.totalVotesCountPollOption!.toInt());
                 }).toList(),
-                pollTitle: const SizedBox.shrink(),
-                metaWidget: pollEnded ? Text(' • Ended ${timeago.format(endPollTime!,allowFromNow: true)}',style: const TextStyle(
-                  color: Colors.black,
+                pollTitle: SizedBox.shrink(),
+                metaWidget: pollEnded ? Text(' • Ended ${timeago.format(endPollTime!,allowFromNow: true)}',style: TextStyle(
+                  color: getAppColor(Colors.black),
                   fontWeight: FontWeight.w500,
-                )) : Text(' • Ends in ${timeago.format(endPollTime!,allowFromNow: true)}',style: const TextStyle(
-                  color: Colors.black,
+                )) : Text(' • Ends in ${timeago.format(endPollTime!,allowFromNow: true)}',style: TextStyle(
+                  color: getAppColor(Colors.black),
                   fontWeight: FontWeight.w500,
                 )),
                 pollEnded: pollEnded,
               ),
             ),*/
             /*Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10,top: 10),
+              padding: EdgeInsets.only(left: 10, right: 10,top: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1422,17 +1423,17 @@ class InnerPost extends StatelessWidget{
                       children: [
                         Text(
                           "N${post.poll!.amount!.toInt()} per vote",
-                          style: const TextStyle(
-                            color: AppColors.onBackground,
+                          style: TextStyle(
+                            color: getAppColor(AppColors.onBackground),
                             fontSize: 13,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
 
-                        const Text(
+                        Text(
                           " - ",
                           style: TextStyle(
-                            color: AppColors.onBackground,
+                            color: getAppColor(AppColors.onBackground),
                             fontSize: 13,
                             fontWeight: FontWeight.normal,
                           ),
@@ -1440,18 +1441,18 @@ class InnerPost extends StatelessWidget{
 
                         Text(
                           "${post.poll!.voteLimit!.toInt()} votes allowed",
-                          style: const TextStyle(
-                            color: AppColors.onBackground,
+                          style: TextStyle(
+                            color: getAppColor(AppColors.onBackground),
                             fontSize: 13,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
 
                         if(post.poll!.showResult == true)
-                          const Text(
+                          Text(
                             " - ",
                             style: TextStyle(
-                              color: AppColors.onBackground,
+                              color: getAppColor(AppColors.onBackground),
                               fontSize: 13,
                               fontWeight: FontWeight.normal,
                             ),
@@ -1460,8 +1461,8 @@ class InnerPost extends StatelessWidget{
                         if(post.poll!.showResult == true)
                           Text(
                             "${post.poll!.totalVotesCountPoll!.toInt()} voted",
-                            style: const TextStyle(
-                              color: AppColors.onBackground,
+                            style: TextStyle(
+                              color: getAppColor(AppColors.onBackground),
                               fontSize: 13,
                               fontWeight: FontWeight.normal,
                             ),
@@ -1475,9 +1476,9 @@ class InnerPost extends StatelessWidget{
 
                         },
                         bckgrndColor: AppColors.primary,
-                        fontColor: AppColors.background,
+                        fontColor: getAppColor(AppColors.background),
                         width: Get.width * 0.25,
-                        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                        padding: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
                       ),
                     if(!isCurrentUserPost && post.poll!.showResult == true)
                       AppButton(
@@ -1486,14 +1487,14 @@ class InnerPost extends StatelessWidget{
 
                         },
                         bckgrndColor: AppColors.primary,
-                        fontColor: AppColors.background,
+                        fontColor: getAppColor(AppColors.background),
                         width: Get.width * 0.25,
-                        padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+                        padding: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
                       ),*//*
                 ],
               ),
             ),*/
-          const SizedBox(
+          SizedBox(
             height: 10,
           ),
         ],
@@ -1504,7 +1505,7 @@ class InnerPost extends StatelessWidget{
 }
 
 class CommentPost extends StatefulWidget{
-  const CommentPost({
+  CommentPost({
     Key? key,
     required this.fullProfile,
     required this.homeController,
@@ -1578,10 +1579,10 @@ class _CommentPostState extends State<CommentPost> {
               children: [
                 if(replies.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.only(top: 10),
                     child: Container(
                       width: 1.0,
-                      color: Colors.grey.withOpacity(0.5),
+                      color: getAppColor(Colors.grey).withOpacity(0.5),
                       height: lineHeight,
                     ),
                   ),
@@ -1621,13 +1622,13 @@ class _CommentPostState extends State<CommentPost> {
           ],
         ),
         AnimatedSize(
-            duration: const Duration(milliseconds: 300),
+            duration: Duration(milliseconds: 300),
             curve: Curves.fastOutSlowIn,
-            child: replies.isEmpty ? const SizedBox.shrink() : ListView.builder(
+            child: replies.isEmpty ? SizedBox.shrink() : ListView.builder(
               itemCount: replies.length,
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(0),
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.all(0),
               itemBuilder: (context, index) {
                 var post = replies[index];
                 return CommentPostReply(
@@ -1649,9 +1650,9 @@ class _CommentPostState extends State<CommentPost> {
 
   Container buildCommentContainer(DateTime time) {
     return Container(
-                margin: const EdgeInsets.only(top: 10, bottom: 10, left: 5,right: 5),
+                margin: EdgeInsets.only(top: 10, bottom: 10, left: 5,right: 5),
                 decoration: widget.hasBorder ? BoxDecoration(
-                  color: Colors.grey.shade200,
+                  color: getAppColor(Colors.grey.shade200),
                   borderRadius: BorderRadius.circular(10),
                 ) : null,
                 child: Column(
@@ -1659,7 +1660,7 @@ class _CommentPostState extends State<CommentPost> {
                   children: [
                     SizedBox(height: Get.height * 0.01),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      padding: EdgeInsets.only(left: 10, right: 10),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -1673,7 +1674,7 @@ class _CommentPostState extends State<CommentPost> {
                                 Text(
                                   widget.post.profile!.displayName.toString(),
                                   style: TextStyle(
-                                    color: Colors.black ,
+                                    color: getAppColor(Colors.black) ,
                                     fontSize: Get.width * 0.035,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -1682,7 +1683,7 @@ class _CommentPostState extends State<CommentPost> {
                                 Text(
                                   "@${widget.post.profile!.username}",
                                   style: TextStyle(
-                                    color: Colors.grey,
+                                    color: getAppColor(Colors.grey),
                                     fontSize: Get.width * 0.03,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -1698,12 +1699,12 @@ class _CommentPostState extends State<CommentPost> {
                                 Text(
                                   timeago.format(time),
                                   style: TextStyle(
-                                    color: Colors.grey,
+                                    color: getAppColor(Colors.grey),
                                     fontSize: Get.width * 0.03,
                                     fontWeight: FontWeight.normal,
                                   ),
                                 ),
-                                const SizedBox(
+                                SizedBox(
                                   width: 10,
                                 ),
                               ],
@@ -1712,42 +1713,42 @@ class _CommentPostState extends State<CommentPost> {
                         ],
                       ),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 10,
                     ),
                     Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
+                        padding: EdgeInsets.only(left: 10, right: 10,bottom: 10),
                         child: HashTagText(
                           text: widget.post.comment.toString(),
                           decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                            color: Colors.blue,
+                            color: getAppColor(Colors.blue),
                             fontSize: 15,
                             fontWeight: FontWeight.normal,
                           ),
                           basicStyle: AppTextStyle.bodyText1.copyWith(
-                            color: Colors.black,
+                            color: getAppColor(Colors.black),
                             fontSize: 15,
                             fontWeight: FontWeight.normal,
                           ),
                           onTap: (text) {
                             widget.homeController.defaultSearchValue = text;
-                            Get.to(() => const Search());
+                            Get.to(() => Search());
                           },
                           decorateAtSign: true,
                         )
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 10,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      padding: EdgeInsets.only(left: 10, right: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           //Heart
                           /*Row(
                             children: [
-                              const SizedBox(
+                              SizedBox(
                                 width: 10,
                               ),
                               if(widget.post.isLiked == true)
@@ -1770,7 +1771,7 @@ class _CommentPostState extends State<CommentPost> {
                                       });
                                     }
                                   },
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.favorite,
                                     color: AppColors.primary,
                                     size: 18,
@@ -1796,19 +1797,19 @@ class _CommentPostState extends State<CommentPost> {
                                       });
                                     }
                                   },
-                                  child: const Icon(
+                                  child: Icon(
                                     FeatherIcons.heart,
-                                    color: Colors.grey,
+                                    color: getAppColor(Colors.grey),
                                     size: 18,
                                   ),
                                 ),
-                              const SizedBox(
+                              SizedBox(
                                 width: 2,
                               ),
                               Text(
                                 widget.post.likeCount.toString().split(".")[0],
-                                style: const TextStyle(
-                                  color: Colors.black,
+                                style: TextStyle(
+                                  color: getAppColor(Colors.black),
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
                                 ),
@@ -1825,21 +1826,21 @@ class _CommentPostState extends State<CommentPost> {
                             },
                             child: Row(
                               children: [
-                                const SizedBox(
+                                SizedBox(
                                   width: 10,
                                 ),
-                                const Icon(
+                                Icon(
                                   FeatherIcons.messageCircle,
-                                  color: Colors.grey,
+                                  color: getAppColor(Colors.grey),
                                   size: 18,
                                 ),
-                                const SizedBox(
+                                SizedBox(
                                   width: 2,
                                 ),
                                 Text(
                                   replies.length.toString(),
-                                  style: const TextStyle(
-                                    color: Colors.black,
+                                  style: TextStyle(
+                                    color: getAppColor(Colors.black),
                                     fontSize: 14,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -1848,13 +1849,13 @@ class _CommentPostState extends State<CommentPost> {
                             ),
                           ),
 
-                          const SizedBox(
+                          SizedBox(
                             width: 10,
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       height: 10,
                     ),
                   ],
@@ -1864,7 +1865,7 @@ class _CommentPostState extends State<CommentPost> {
 }
 
 class CommentPostReply extends StatefulWidget{
-  const CommentPostReply({
+  CommentPostReply({
     Key? key,
     required this.fullProfile,
     required this.homeController,
@@ -1904,16 +1905,16 @@ class _CommentPostReplyState extends State<CommentPostReply> {
             children: [
               if(!widget.lastReply)
                 Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: EdgeInsets.only(top: 10),
                 child: Container(
                   width: 1.0,
-                  color: Colors.grey.withOpacity(0.5),
+                  color: getAppColor(Colors.grey).withOpacity(0.5),
                   height: lineHeight,
                 ),
               ),
               RoundedBorderOnSomeSidesWidget(
-                borderColor: Colors.grey.withOpacity(0.5),
-                contentBackgroundColor: AppColors.background,
+                borderColor: getAppColor(Colors.grey).withOpacity(0.5),
+                contentBackgroundColor: getAppColor(AppColors.background),
                 borderRadius: 10,
                 borderWidth: 1.0,
                 bottomLeft: true,
@@ -1960,9 +1961,9 @@ class _CommentPostReplyState extends State<CommentPostReply> {
 
   Container buildReplyContainer(DateTime time) {
     return Container(
-            margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+            margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
             decoration: widget.hasBorder ? BoxDecoration(
-              color: Colors.grey.shade200,
+              color: getAppColor(Colors.grey.shade200),
               borderRadius: BorderRadius.circular(10),
             ) : null,
             child: Column(
@@ -1970,7 +1971,7 @@ class _CommentPostReplyState extends State<CommentPostReply> {
               children: [
                 SizedBox(height: Get.height * 0.01),
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  padding: EdgeInsets.only(left: 10, right: 10),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -1984,7 +1985,7 @@ class _CommentPostReplyState extends State<CommentPostReply> {
                             Text(
                               widget.post.profile!.displayName.toString(),
                               style: TextStyle(
-                                color: Colors.black ,
+                                color: getAppColor(Colors.black) ,
                                 fontSize: Get.width * 0.035,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -1993,7 +1994,7 @@ class _CommentPostReplyState extends State<CommentPostReply> {
                             Text(
                               "@${widget.post.profile!.username}",
                               style: TextStyle(
-                                color: Colors.grey,
+                                color: getAppColor(Colors.grey),
                                 fontSize: Get.width * 0.03,
                                 fontWeight: FontWeight.normal,
                               ),
@@ -2009,12 +2010,12 @@ class _CommentPostReplyState extends State<CommentPostReply> {
                             Text(
                               timeago.format(time),
                               style: TextStyle(
-                                color: Colors.grey,
+                                color: getAppColor(Colors.grey),
                                 fontSize: Get.width * 0.03,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),
-                            const SizedBox(
+                            SizedBox(
                               width: 10,
                             ),
                           ],
@@ -2023,31 +2024,31 @@ class _CommentPostReplyState extends State<CommentPostReply> {
                     ],
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 10,
                 ),
                 Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
+                    padding: EdgeInsets.only(left: 10, right: 10,bottom: 10),
                     child: HashTagText(
                       text: widget.post.comment.toString(),
                       decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                        color: Colors.blue,
+                        color: getAppColor(Colors.blue),
                         fontSize: 15,
                         fontWeight: FontWeight.normal,
                       ),
                       basicStyle: AppTextStyle.bodyText1.copyWith(
-                        color: Colors.black,
+                        color: getAppColor(Colors.black),
                         fontSize: 15,
                         fontWeight: FontWeight.normal,
                       ),
                       onTap: (text) {
                         widget.homeController.defaultSearchValue = text;
-                        Get.to(() => const Search());
+                        Get.to(() => Search());
                       },
                       decorateAtSign: true,
                     )
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 10,
                 ),
               ],

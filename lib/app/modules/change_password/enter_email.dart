@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
@@ -17,7 +18,7 @@ import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
 class EnterEmail extends GetView<AuthControllerWayagram> {
-  const EnterEmail(this.email, this.phone, {Key? key}) : super(key: key);
+  EnterEmail(this.email, this.phone, {Key? key}) : super(key: key);
 
   final String? email;
   final String? phone;
@@ -41,7 +42,7 @@ class EnterEmail extends GetView<AuthControllerWayagram> {
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back,
               color: Colors.black,
             ),
@@ -58,7 +59,7 @@ class EnterEmail extends GetView<AuthControllerWayagram> {
             width: Get.width,
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(AppThemes.appPaddingVal),
+                padding: EdgeInsets.all(AppThemes.appPaddingVal),
                 child: Form(
                   key: formKey,
                   child: Column(
@@ -91,7 +92,7 @@ class EnterEmail extends GetView<AuthControllerWayagram> {
                       PageDropButton(
                         label: "OTP will be sent to",
                         hint: '',
-                        padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                        padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
                         onChanged: (val) {
                           controller.emailOrPhone.text = val;
                         },

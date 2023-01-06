@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
@@ -25,6 +26,7 @@ import '../../data/model/profile_model_entity.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/app_drawer.dart';
+
 import '../../global_widgets/page_input.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../contacts/contact.dart';
@@ -33,7 +35,7 @@ import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   static const route = '/home';
 
@@ -107,11 +109,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(
@@ -130,7 +132,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   Builder(
                     builder: (context1) {
                       return Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
+                        padding: EdgeInsets.only(left: 10.0),
                         child: SizedBox(
                           width: 45,
                           height: 45,
@@ -154,34 +156,34 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 ),
                 actions: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
+                  padding: EdgeInsets.only(right: 10.0),
                   child: SizedBox(
                     width: 45,
                     height: 45,
                     child: IconButton(
                       icon: ImageHelper.normalImage(
                         showSearchIcon ? 'assets/images/search.png' : 'assets/images/follow_new_users.png',
-                        color: Colors.black,
+                        color: getAppColor(AppColors.background),
                         width: showSearchIcon ? Get.width*0.05 : Get.width*0.07,
                         height: showSearchIcon ? Get.width*0.05 : Get.width*0.07,
                       ),
                       onPressed: () {
                         if (showSearchIcon) {
-                          Get.to(() => const Search(),binding: WayagramBinding());
+                          Get.to(() => Search(),binding: WayagramBinding());
                         } else {
-                          Get.to(() => const Contact(),binding: WayagramBinding());
+                          Get.to(() => Contact(),binding: WayagramBinding());
                         }
                       },
                     ),
                   ),
                 )
               ],
-                backgroundColor: AppColors.background,
-                systemOverlayStyle: const SystemUiOverlayStyle(
-                    statusBarColor: AppColors.background,
+                backgroundColor: getAppColor(AppColors.background),
+                systemOverlayStyle: SystemUiOverlayStyle(
+                    statusBarColor: getAppColor(AppColors.background),
                     statusBarIconBrightness: Brightness.dark,
                     statusBarBrightness: Brightness.dark,
-                    systemNavigationBarColor: AppColors.background,
+                    systemNavigationBarColor: getAppColor(AppColors.background),
                     systemNavigationBarIconBrightness: Brightness.dark
                 ),
             ),
@@ -198,8 +200,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     TabBar(
                       controller: shopController,
                       padding: EdgeInsets.zero,
-                      labelColor: Colors.black,
-                      unselectedLabelColor: const Color(0xff9A9A9A),
+                      labelColor: getAppColor(AppColors.background),
+                      unselectedLabelColor: Color(0xff9A9A9A),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: TextStyle(
@@ -210,7 +212,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                         fontSize: Get.width*0.035,
                         fontWeight: FontWeight.w500,
                       ),
-                      tabs: const [
+                      tabs: [
                         Tab(text: 'All Products',iconMargin: EdgeInsets.zero,),
                         Tab(text: 'My Products',iconMargin: EdgeInsets.zero,),
                       ],
@@ -228,8 +230,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     TabBar(
                       controller: notificationController,
                       padding: EdgeInsets.zero,
-                      labelColor: Colors.black,
-                      unselectedLabelColor: const Color(0xff9A9A9A),
+                      labelColor: getAppColor(AppColors.background),
+                      unselectedLabelColor: Color(0xff9A9A9A),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: TextStyle(
@@ -240,7 +242,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                         fontSize: Get.width*0.035,
                         fontWeight: FontWeight.w500,
                       ),
-                      tabs: const [
+                      tabs: [
                         Tab(text: 'All',iconMargin: EdgeInsets.zero,),
                         Tab(text: 'Requests',iconMargin: EdgeInsets.zero,),
                       ],
@@ -258,8 +260,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     TabBar(
                       controller: shopController,
                       padding: EdgeInsets.zero,
-                      labelColor: Colors.black,
-                      unselectedLabelColor: const Color(0xff9A9A9A),
+                      labelColor: getAppColor(AppColors.background),
+                      unselectedLabelColor: Color(0xff9A9A9A),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: TextStyle(
@@ -270,7 +272,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                         fontSize: Get.width*0.035,
                         fontWeight: FontWeight.w500,
                       ),
-                      tabs: const [
+                      tabs: [
                         Tab(text: 'Chats',iconMargin: EdgeInsets.zero,),
                         Tab(text: 'Calls',iconMargin: EdgeInsets.zero,),
                       ],
@@ -285,7 +287,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   ),
                   Expanded(
                     child: SingleChildScrollView(
-                      physics: (controller.currentBottomNavPage.value == 2 || controller.currentBottomNavPage.value == 3 || controller.currentBottomNavPage.value == 4) ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+                      physics: (controller.currentBottomNavPage.value == 2 || controller.currentBottomNavPage.value == 3 || controller.currentBottomNavPage.value == 4) ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -296,14 +298,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     ),
                   ),
                   if(controller.currentBottomNavPage.value != 1)
-                    const SizedBox(height: kBottomNavigationBarHeight),
+                    SizedBox(height: kBottomNavigationBarHeight),
                 ],
               ),
             ),
-              drawer: const AppDrawer(),
+              drawer: AppDrawer(),
               extendBody: controller.currentBottomNavPage.value == 1 ? false : true,
               bottomNavigationBar: BottomNavigationBar(
-                backgroundColor: AppColors.background,
+                backgroundColor: getAppColor(AppColors.background),
                 showSelectedLabels: true,
                 showUnselectedLabels: true,
                 type: BottomNavigationBarType.fixed,
@@ -315,7 +317,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     color: controller.currentBottomNavPage.value == 0 ? AppColors.primary : AppColors.grey,
                   ),
                   label: 'Home',
-                  backgroundColor: AppColors.background,
+                  backgroundColor: getAppColor(AppColors.background),
                 ),
                 BottomNavigationBarItem(
                   icon: ImageHelper.normalImage(
@@ -367,7 +369,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   );
                 },
                 backgroundColor: AppColors.primary,
-                child: const Icon(Icons.add,color: Colors.white),
+                child: Icon(Icons.add,color: Colors.white),
           ),
             );
           }),

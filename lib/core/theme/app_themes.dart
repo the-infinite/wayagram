@@ -2,32 +2,33 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../app/global_widgets/helpers/dark_mode_helper.dart';
 import 'app_colors.dart';
 import 'app_styles.dart';
 
 class AppThemes {
   AppThemes._();
 
-  static const double appPaddingVal = 16;
+  static double appPaddingVal = 16;
 
   static final ThemeData lightTheme = ThemeData(
-    scaffoldBackgroundColor: AppColors.background,
+    scaffoldBackgroundColor: getAppColor(AppColors.background),
     primaryColor: AppColors.primary,
     platform: Platform.isIOS ? TargetPlatform.iOS : TargetPlatform.android,
-    bottomSheetTheme: const BottomSheetThemeData(backgroundColor: AppColors.background),
+    bottomSheetTheme: BottomSheetThemeData(backgroundColor: getAppColor(AppColors.background)),
     sliderTheme: SliderThemeData(
       activeTrackColor: AppColors.primary,
       inactiveTrackColor: AppColors.primary.withOpacity(0.5),
       trackHeight: 4.0,
       thumbColor: AppColors.primary,
-      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
+      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
       overlayColor: AppColors.primary.withOpacity(0.2),
-      overlayShape: const RoundSliderOverlayShape(overlayRadius: 28.0),
+      overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
       valueIndicatorColor: AppColors.primary,
     ),
     appBarTheme: AppBarTheme(
       centerTitle: true,
-      backgroundColor: AppColors.background,
+      backgroundColor: getAppColor(AppColors.background),
       foregroundColor: Colors.black,
       titleTextStyle: AppTextStyle.headline4.copyWith(
         fontWeight: FontWeight.w500,
@@ -44,7 +45,7 @@ class AppThemes {
         fontWeight: FontWeight.w600,
       ),
       labelColor: AppColors.primary,
-      labelPadding: const EdgeInsets.symmetric(horizontal: AppThemes.appPaddingVal),
+      labelPadding: EdgeInsets.symmetric(horizontal: AppThemes.appPaddingVal),
       unselectedLabelColor: AppColors.onyx,
       unselectedLabelStyle: AppTextStyle.subtitle1.copyWith(
         fontWeight: FontWeight.w500,
@@ -61,13 +62,13 @@ class AppThemes {
       button: AppTextStyle.button,
       headline4: AppTextStyle.headline4,
     ),
-    colorScheme: const ColorScheme(
+    colorScheme: ColorScheme(
       primary: AppColors.primary,
       primaryVariant: AppColors.bostonUniRed,
       secondary: AppColors.bostonUniRed,
       secondaryVariant: Color(0xFFD9222A),
-      surface: AppColors.background,
-      background: AppColors.background,
+      surface: getAppColor(AppColors.background),
+      background: getAppColor(AppColors.background),
       error: Colors.red,
       onPrimary: Colors.white,
       onSecondary: AppColors.bostonUniRed,

@@ -5,12 +5,12 @@ import 'package:flutter/widgets.dart';
 class InvertColors extends StatelessWidget {
   final Widget child;
 
-  const InvertColors({super.key, required this.child});
+  InvertColors({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
     return ColorFiltered(
-      colorFilter: const ColorFilter.matrix([
+      colorFilter: ColorFilter.matrix([
         -1, //RED
         0,
         0,

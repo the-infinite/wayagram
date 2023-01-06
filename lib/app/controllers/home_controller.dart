@@ -60,7 +60,7 @@ class HomeControllerWayagram extends GetxController {
 
   bool isProductPost = false;
 
-  List<Widget> pages = const [
+  List<Widget> pages = [
     HomeTab(),
     DiscoverTab(),
     ShopsTab(),
@@ -328,13 +328,13 @@ class HomeControllerWayagram extends GetxController {
     try {
       await launch(
         url,
-        customTabsOption: const CustomTabsOption(
+        customTabsOption: CustomTabsOption(
           toolbarColor: AppColors.primary,
           enableDefaultShare: true,
           enableUrlBarHiding: true,
           showPageTitle: true,
         ),
-        safariVCOption: const SafariViewControllerOption(
+        safariVCOption: SafariViewControllerOption(
           preferredBarTintColor: AppColors.primary,
           preferredControlTintColor: Colors.white,
           barCollapsingEnabled: true,

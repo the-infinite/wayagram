@@ -11,6 +11,7 @@ import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/chat_controller.dart';
@@ -39,7 +40,7 @@ import '../home/widgets/posts_view.dart';
 import '../promotion/promote_post.dart';
 
 class SendMoney extends StatefulWidget {
-  const SendMoney({Key? key,required this.userIDToSendTo, required this.userDisplayName, this.post}) : super(key: key);
+  SendMoney({Key? key,required this.userIDToSendTo, required this.userDisplayName, this.post}) : super(key: key);
 
   final String userIDToSendTo;
   final String userDisplayName;
@@ -76,24 +77,24 @@ class _SendMoneyState extends State<SendMoney> {
     nameController.text = widget.userDisplayName;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "donate_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Column(
               children: [
                 Text(
                   "Send Money",
                   style: TextStyle(
-                    color: const Color(0xff4F4F4F),
+                    color: Color(0xff4F4F4F),
                     fontSize: Get.textScaleFactor * 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -104,7 +105,7 @@ class _SendMoneyState extends State<SendMoney> {
                 Text(
                   "Send money to ${widget.userDisplayName}",
                   style: TextStyle(
-                    color: const Color(0xff4F4F4F),
+                    color: Color(0xff4F4F4F),
                     fontSize: Get.textScaleFactor * 14,
                     fontWeight: FontWeight.normal,
                   ),
@@ -118,19 +119,19 @@ class _SendMoneyState extends State<SendMoney> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(1.0),
+                preferredSize: Size.fromHeight(1.0),
                 child: Container(
-                  color: const Color(0xffEDEAEA),
+                  color: Color(0xffEDEAEA),
                   height: 1.0,
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -146,7 +147,7 @@ class _SendMoneyState extends State<SendMoney> {
                     children: [
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Enter amount to send',
                           label: 'Amount',
@@ -164,7 +165,7 @@ class _SendMoneyState extends State<SendMoney> {
                       ),
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Add description(optional)',
                           label: 'Description',
@@ -175,7 +176,7 @@ class _SendMoneyState extends State<SendMoney> {
                       ),
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Click to select account',
                           label: 'Account To Debit',
@@ -205,7 +206,7 @@ class _SendMoneyState extends State<SendMoney> {
                       ),
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Enter account pin',
                           label: 'PIN',
@@ -230,9 +231,9 @@ class _SendMoneyState extends State<SendMoney> {
                         ),
                       ),
 
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 5),
                         child: AppButton(
                           title: 'Send Money',
                           onPressed: () async {
@@ -282,15 +283,15 @@ class _SendMoneyState extends State<SendMoney> {
                             }
                           },
                           borderRadius: 10,
-                          fontColor: AppColors.background,
+                          fontColor: getAppColor(AppColors.background),
                           bckgrndColor: AppColors.primary,
                           width: double.infinity,
                           fontSize: Get.textScaleFactor * 18,
                           border: Border.all(color: AppColors.primary, width: 1),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
-                      const SizedBox(height: 5,),
+                      SizedBox(height: 5,),
                     ],
                   ),
                 ),
@@ -304,12 +305,12 @@ class _SendMoneyState extends State<SendMoney> {
 
   Padding widgetAnalyticsWidget(String title, String subtitle, String amount) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+      padding: EdgeInsets.symmetric(horizontal: 5),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: getAppColor(AppColors.background),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: const Color(0xffEDEAEA), width: 1),
+          border: Border.all(color: Color(0xffEDEAEA), width: 1),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: Get.width*0.025,vertical: Get.height*0.01),
@@ -347,7 +348,7 @@ class _SendMoneyState extends State<SendMoney> {
               Text(
                 amount,
                 style: TextStyle(
-                  color: const Color(0xff4F4F4F),
+                  color: Color(0xff4F4F4F),
                   fontSize: Get.textScaleFactor * 15,
                   fontWeight: FontWeight.normal,
                 ),

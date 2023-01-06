@@ -18,7 +18,7 @@ class SmartImage extends StatefulWidget {
   final bool useAspectRatio;
   final bool isSlideShow;
 
-  const SmartImage(this.src,
+  SmartImage(this.src,
       {Key? key, this.fit, this.isPost = false, this.radius, this.useAspectRatio = false, this.isSlideShow = false})
       : super(key: key);
 
@@ -49,7 +49,7 @@ class _SmartImageState extends State<SmartImage> {
             key: widget.src,
           ),
         );
-        _betterPlayerController = BetterPlayerController(const BetterPlayerConfiguration(), betterPlayerDataSource: betterPlayerDataSource);
+        _betterPlayerController = BetterPlayerController(BetterPlayerConfiguration(), betterPlayerDataSource: betterPlayerDataSource);
       }
     }
   }
@@ -68,7 +68,7 @@ class _SmartImageState extends State<SmartImage> {
         }else {
           return BetterPlayer.file(
             widget.src,
-            betterPlayerConfiguration: const BetterPlayerConfiguration(
+            betterPlayerConfiguration: BetterPlayerConfiguration(
               aspectRatio: 16 / 9,
             ),
           );

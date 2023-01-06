@@ -8,6 +8,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../../core/theme/app_styles.dart';
@@ -23,7 +24,7 @@ import 'package:dio/dio.dart' as dio;
 
 
 class CreateEvent extends StatelessWidget {
-  const CreateEvent({Key? key}) : super(key: key);
+  CreateEvent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,33 +52,33 @@ class CreateEvent extends StatelessWidget {
 
     DateTime startDate = DateTime.now();
     TimeOfDay startTime = TimeOfDay.now();
-    DateTime endDate = DateTime.now().add(const Duration(days: 1));
-    TimeOfDay endTime = const TimeOfDay(hour: 23, minute: 59);
+    DateTime endDate = DateTime.now().add(Duration(days: 1));
+    TimeOfDay endTime = TimeOfDay(hour: 23, minute: 59);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id:'create_event',builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text('Create Event', style: AppTextStyle.subtitle1.copyWith(
-              color: const Color(0xff4F4F4F),
+              color: Color(0xff4F4F4F),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () {
                 if(currentPage > 0){
-                  pageController.animateToPage(currentPage-1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                  pageController.animateToPage(currentPage-1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                   currentPage--;
                   controller.update();
                 }else{
@@ -85,11 +86,11 @@ class CreateEvent extends StatelessWidget {
                 }
               },
             ),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
             actions: [
@@ -100,7 +101,7 @@ class CreateEvent extends StatelessWidget {
                     onPressed: () async {
                       if(formKey1.currentState!.validate()) {
                         if(currentPage < 3){
-                          pageController.animateToPage(currentPage+1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+                          pageController.animateToPage(currentPage+1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
                           currentPage++;
                           controller.update(['create_event']);
                         }else{
@@ -139,9 +140,9 @@ class CreateEvent extends StatelessWidget {
                     },
                     borderRadius: 10,
                     fontColor: AppColors.button,
-                    bckgrndColor: AppColors.background,
-                    border: Border.all(color: AppColors.background, width: 1),
-                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    bckgrndColor: getAppColor(AppColors.background),
+                    border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                   ),
                 ),
@@ -150,7 +151,7 @@ class CreateEvent extends StatelessWidget {
           ),
           body: Column(
             children: [
-              const Divider(
+              Divider(
                 height: 0.5,
                 thickness: 0.5,
                 color: Colors.grey,
@@ -165,10 +166,10 @@ class CreateEvent extends StatelessWidget {
                         height: Get.height*0.8,
                         child: PageView(
                           controller: pageController,
-                          physics: const NeverScrollableScrollPhysics(),
+                          physics: NeverScrollableScrollPhysics(),
                           children: [
                             Column(
-                              key: const Key('page1'),
+                              key: Key('page1'),
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -219,7 +220,7 @@ class CreateEvent extends StatelessWidget {
                                 PageDropButton(
                                   label: "Is the event private or public?",
                                   hint: '',
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   onChanged: (val) {
                                     privacyController.text = val;
                                   },
@@ -245,7 +246,7 @@ class CreateEvent extends StatelessWidget {
                               ],
                             ),
                             Column(
-                              key: const Key('page2'),
+                              key: Key('page2'),
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -271,7 +272,7 @@ class CreateEvent extends StatelessWidget {
                                 PageDropButton(
                                   label: "Event Type",
                                   hint: '',
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   onChanged: (val) {
                                     eventsTypeController.text = val;
                                     controller.update(['create_event']);
@@ -308,7 +309,7 @@ class CreateEvent extends StatelessWidget {
                                 PageDropButton(
                                   label: "Free to attend or paid event?",
                                   hint: '',
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   onChanged: (val) {
                                     freeOrPaidController.text = val;
                                     controller.update(['create_event']);
@@ -354,7 +355,7 @@ class CreateEvent extends StatelessWidget {
                               ],
                             ),
                             Column(
-                              key: const Key('page3'),
+                              key: Key('page3'),
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -424,7 +425,7 @@ class CreateEvent extends StatelessWidget {
                                   children: [
                                     DateButton<DateTime>(
                                       label: 'End Date',
-                                      date: DateTime.now().add(const Duration(days: 1)),
+                                      date: DateTime.now().add(Duration(days: 1)),
                                       initialValue: DateTime.now(),
                                       validator: (date){
                                         if(date == null){
@@ -440,8 +441,8 @@ class CreateEvent extends StatelessWidget {
                                     ),
                                     DateButton<TimeOfDay>(
                                       label: 'End Time',
-                                      time: const TimeOfDay(hour: 23, minute: 59),
-                                      initialValue: const TimeOfDay(hour: 23, minute: 59),
+                                      time: TimeOfDay(hour: 23, minute: 59),
+                                      initialValue: TimeOfDay(hour: 23, minute: 59),
                                       validator: (date){
                                         if(date == null){
                                           return 'Required';
@@ -463,7 +464,7 @@ class CreateEvent extends StatelessWidget {
                               ],
                             ),
                             Column(
-                              key: const Key('page4'),
+                              key: Key('page4'),
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -499,7 +500,7 @@ class CreateEvent extends StatelessWidget {
                                                 uiSettings: [
                                                   AndroidUiSettings(
                                                       toolbarTitle: 'Crop Event Photo',
-                                                      toolbarColor: AppColors.background,
+                                                      toolbarColor: getAppColor(AppColors.background),
                                                       toolbarWidgetColor: Colors.black,
                                                       activeControlsWidgetColor: AppColors.primary,
                                                       cropGridColor: AppColors.primary,
@@ -547,7 +548,7 @@ class CreateEvent extends StatelessWidget {
                                               padding: EdgeInsets.only(top: Get.height*0.01),
                                               child: Row(
                                                 children: [
-                                                  const Icon(
+                                                  Icon(
                                                     Icons.error,
                                                     color: Colors.red,
                                                     size: 16,
@@ -636,7 +637,7 @@ class _TextButton extends StatelessWidget {
   final Widget leading;
   final String text;
   final Function() onPressed;
-  const _TextButton({required this.text, required this.onPressed, required this.leading});
+  _TextButton({required this.text, required this.onPressed, required this.leading});
 
   @override
   Widget build(BuildContext context) {
@@ -646,7 +647,7 @@ class _TextButton extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: Get.height*0.018),
         child: Row(children: [
           leading,
-          const SizedBox(
+          SizedBox(
             width: 15,
           ),
           Expanded(

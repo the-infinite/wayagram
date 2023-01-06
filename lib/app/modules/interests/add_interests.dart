@@ -11,6 +11,7 @@ import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
@@ -34,7 +35,7 @@ import '../home/widgets/group_view.dart';
 import '../home/widgets/posts_view.dart';
 
 class AddInterestPage extends StatefulWidget {
-  const AddInterestPage({Key? key}) : super(key: key);
+  AddInterestPage({Key? key}) : super(key: key);
 
   @override
   State<AddInterestPage> createState() => _AddInterestPageState();
@@ -523,22 +524,22 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
     uniqueInterestList.sort();
     uniqueInterestList.add('Others');
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "add_interests_page",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.background,
+            backgroundColor: getAppColor(AppColors.background),
             title: Text(
               "Interests",
               style: TextStyle(
-                color: const Color(0xff4F4F4F),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -550,13 +551,13 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, Get.height * 0.06),
                 child: Column(
                   children: [
-                    const Divider(
+                    Divider(
                       height: 0.5,
                       thickness: 0.5,
                       color: Colors.grey,
@@ -565,7 +566,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                       controller: tabController,
                       padding: EdgeInsets.zero,
                       labelColor: Colors.black,
-                      unselectedLabelColor: const Color(0xff9A9A9A),
+                      unselectedLabelColor: Color(0xff9A9A9A),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: TextStyle(
@@ -576,27 +577,27 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                         fontSize: Get.width*0.035,
                         fontWeight: FontWeight.w500,
                       ),
-                      tabs: const [
+                      tabs: [
                         Tab(text: 'All Interests',iconMargin: EdgeInsets.zero,),
                         Tab(text: 'Your Interests',iconMargin: EdgeInsets.zero,),
                       ],
                       onTap: (index) {
-                        //pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                        //pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.ease);
                         //controller.update(['profile_page']);
                       },
                     ),
-                    const Divider(
+                    Divider(
                       height: 0.5,
                       thickness: 0.5,
                       color: Colors.grey,
                     ),
                   ],
                 )),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: AppColors.background,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: Brightness.dark,
                 statusBarBrightness: Brightness.dark,
-                systemNavigationBarColor: AppColors.background,
+                systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: Brightness.dark
             ),
           ),
@@ -608,7 +609,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                 itemBuilder: (context, index) {
                   var currentInterest = uniqueInterestList[index];
                   if(chosenInterestList.contains(currentInterest)){
-                    return const SizedBox.shrink();
+                    return SizedBox.shrink();
                   }
                   return InkWell(
                     onTap: (){
@@ -627,13 +628,13 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                             ),
                             child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                           ),
-                          const SizedBox(width: 10,),
+                          SizedBox(width: 10,),
                           Text(currentInterest, style: TextStyle(
                             color: Colors.black,
                             fontSize: Get.textScaleFactor * 17,
                             fontWeight: FontWeight.w500,
                           ),),
-                          const Spacer(),
+                          Spacer(),
                           InkWell(
                               onTap: (){
                                 var body = {
@@ -688,7 +689,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                     });
                                   }
                                 });
-                              }, child: const Icon(Icons.add_circle, color: AppColors.primary,)
+                              }, child: Icon(Icons.add_circle, color: AppColors.primary,)
                           )
                         ],
                       ),
@@ -727,13 +728,13 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                     ),
                                     child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  SizedBox(width: 10,),
                                   Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
                                     color: Colors.black,
                                     fontSize: Get.textScaleFactor * 17,
                                     fontWeight: FontWeight.w500,
                                   ),),
-                                  const Spacer(),
+                                  Spacer(),
                                   InkWell(
                                     onTap: (){
                                       var innerBody = {
@@ -754,7 +755,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                         }
                                       });
                                     },
-                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                      child: Icon(Icons.remove_circle, color: AppColors.primary,)
                                   )
                                 ],
                               ),
@@ -788,13 +789,13 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                     ),
                                     child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  SizedBox(width: 10,),
                                   Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
                                     color: Colors.black,
                                     fontSize: Get.textScaleFactor * 17,
                                     fontWeight: FontWeight.w500,
                                   ),),
-                                  const Spacer(),
+                                  Spacer(),
                                   InkWell(
                                       onTap: (){
                                         var innerBody = {
@@ -815,7 +816,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                           }
                                         });
                                       },
-                                      child: const Icon(Icons.remove_circle, color: AppColors.primary,)
+                                      child: Icon(Icons.remove_circle, color: AppColors.primary,)
                                   )
                                 ],
                               ),
@@ -825,9 +826,9 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                       );
                     }else{
                       if(snapshot.connectionState == ConnectionState.done){
-                        return const SizedBox.shrink();
+                        return SizedBox.shrink();
                       }
-                      return const GroupView(isLoading: true);
+                      return GroupView(isLoading: true);
                     }
                   }),
             ],

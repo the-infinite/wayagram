@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../controllers/home_controller.dart';
 import '../app_button.dart';
+import '../helpers/dark_mode_helper.dart';
 
 class FundWalletButton extends StatelessWidget {
   const FundWalletButton({
@@ -15,7 +16,7 @@ class FundWalletButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.find<HomeControllerWayagram>();
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+      padding: EdgeInsets.symmetric(horizontal: 5),
       child: AppButton(
         title: 'Fund Wallet',
         onPressed: () async {
@@ -24,11 +25,11 @@ class FundWalletButton extends StatelessWidget {
         },
         borderRadius: 10,
         fontColor: AppColors.primary,
-        bckgrndColor: AppColors.background,
+        bckgrndColor: getAppColor(AppColors.background),
         width: double.infinity,
         fontSize: Get.textScaleFactor * 18,
-        border: Border.all(color: AppColors.background, width: 1),
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        border: Border.all(color: getAppColor(AppColors.background), width: 1),
+        padding: EdgeInsets.symmetric(vertical: 12),
       ),
     );
   }
@@ -51,12 +52,12 @@ class PinPrompt extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Divider(
+          Divider(
             height: 0.5,
             thickness: 0.5,
             color: Colors.grey,
           ),
-          const SizedBox(height: 10,),
+          SizedBox(height: 10,),
           Text(
             "Click To Create Or Change Your PIN",
             style: TextStyle(
@@ -68,7 +69,7 @@ class PinPrompt extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 10,),
+          SizedBox(height: 10,),
         ],
       ),
     );

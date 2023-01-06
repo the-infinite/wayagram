@@ -6,7 +6,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_themes.dart';
 
 class AppRefresher extends StatelessWidget {
-  const AppRefresher({
+  AppRefresher({
     Key? key,
     required this.controller,
     required this.child,
@@ -40,7 +40,7 @@ class AppRefresher extends StatelessWidget {
         builder: (context, mode) {
           Widget body;
           if (mode == RefreshStatus.refreshing) {
-            body = const SizedBox(
+            body = SizedBox(
               height: 25,
               width: 25,
               child: CupertinoActivityIndicator(
@@ -48,9 +48,9 @@ class AppRefresher extends StatelessWidget {
               ),
             );
           } else if (mode == RefreshStatus.canRefresh) {
-            body = const Text("Release to refresh");
+            body = Text("Release to refresh");
           } else {
-            body = const Text("");
+            body = Text("");
           }
           return SizedBox(
             height: 55.0,
@@ -62,15 +62,15 @@ class AppRefresher extends StatelessWidget {
         builder: (BuildContext context, LoadStatus? mode) {
           Widget body;
           if (mode == LoadStatus.loading) {
-            body = const CupertinoActivityIndicator(
+            body = CupertinoActivityIndicator(
               color: AppColors.primary,
             );
           } else if (mode == LoadStatus.failed) {
-            body = const Text("An Error Occurred");
+            body = Text("An Error Occurred");
           } else if (mode == LoadStatus.canLoading) {
-            body = const Text("Release to load more");
+            body = Text("Release to load more");
           } else {
-            body = const Text("");
+            body = Text("");
           }
           return SizedBox(
             height: 55.0,
@@ -81,7 +81,7 @@ class AppRefresher extends StatelessWidget {
       child: errMsg == null
           ? child
           : /* Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: AppTheme.appMargin * 1.5,
               ),
               child: Column(
@@ -93,7 +93,7 @@ class AppRefresher extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                   AppButton(
                     title: 'Refresh',
                     borderRadius: 1000,
@@ -103,7 +103,7 @@ class AppRefresher extends StatelessWidget {
               ),
             ), */
           Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: AppThemes.appPaddingVal * 1.5,
               ),
               child: Center(

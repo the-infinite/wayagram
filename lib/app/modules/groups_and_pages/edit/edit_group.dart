@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
 import 'package:dio/dio.dart' as dio;
@@ -23,7 +24,7 @@ import '../../../global_widgets/page_dropdown.dart';
 import '../../../global_widgets/page_input.dart';
 
 class EditGroup extends StatelessWidget {
-  const EditGroup({Key? key, required this.editInfo}) : super(key: key);
+  EditGroup({Key? key, required this.editInfo}) : super(key: key);
 
   final GroupModelEntity editInfo;
 
@@ -91,7 +92,7 @@ class EditGroup extends StatelessWidget {
             appBar: AppBar(
                 elevation: 0,
                 leading: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back,
                     color: Colors.black,
                   ),
@@ -146,7 +147,7 @@ class EditGroup extends StatelessWidget {
                                 final posts = GroupModelEntity.getService(response.groups);
                                 savedPosts.val = jsonEncode(posts);
                               }
-                              await Future.delayed(const Duration(seconds: 1));
+                              await Future.delayed(Duration(seconds: 1));
                               controller.update(['group_screen']);
                               controller.update();
                               Get.back();
@@ -157,9 +158,9 @@ class EditGroup extends StatelessWidget {
                         },
                         borderRadius: 10,
                         fontColor: AppColors.primary,
-                        bckgrndColor: AppColors.background,
-                        border: Border.all(color: AppColors.background, width: 1),
-                        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                        bckgrndColor: getAppColor(AppColors.background),
+                        border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                         width: Get.width * 0.2,
                       ),
                     ),
@@ -359,7 +360,7 @@ class EditGroup extends StatelessWidget {
                               PageDropButton(
                                 label: "Other Category",
                                 hint: '',
-                                padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
                                 onChanged: (val) {
                                   otherCategory.value = val!;
                                 },
@@ -391,7 +392,7 @@ class EditGroup extends StatelessWidget {
                             PageDropButton(
                               label: "Choose Privacy",
                               hint: '',
-                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               onChanged: (val) {
                                 if(val == "Public") {
                                   isPrivate = false;

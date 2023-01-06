@@ -56,7 +56,7 @@ class _ViewPhotosState extends State<ViewPhotos> {
           child: Stack(
         children: [
           PhotoViewGallery.builder(
-            scrollPhysics: const BouncingScrollPhysics(),
+            scrollPhysics: BouncingScrollPhysics(),
             pageController: pageController,
             builder: (BuildContext context, int index) {
               return PhotoViewGalleryPageOptions(

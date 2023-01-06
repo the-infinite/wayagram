@@ -13,6 +13,7 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/chat_controller.dart';
@@ -29,27 +30,27 @@ import 'chat_screen.dart';
 
 
 class NewChat extends StatelessWidget{
-  const NewChat({Key? key}) : super(key: key);
+  NewChat({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     RefreshController refreshController = RefreshController(initialRefresh: false);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-          statusBarColor: AppColors.background,
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark,
-          systemNavigationBarColor: AppColors.background,
+          systemNavigationBarColor: getAppColor(AppColors.background),
           systemNavigationBarIconBrightness: Brightness.dark
       ),
       child: GetBuilder<ChatControllerWayagram>(id:'new_chats_screen',builder: (chatController) {
         return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: const SystemUiOverlayStyle(
-              statusBarColor: AppColors.background,
+          value: SystemUiOverlayStyle(
+              statusBarColor: getAppColor(AppColors.background),
               statusBarIconBrightness: Brightness.dark,
               statusBarBrightness: Brightness.dark,
-              systemNavigationBarColor: AppColors.background,
+              systemNavigationBarColor: getAppColor(AppColors.background),
               systemNavigationBarIconBrightness: Brightness.dark
           ),
           child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
@@ -59,21 +60,21 @@ class NewChat extends StatelessWidget{
             var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
             return Scaffold(
               appBar: AppBar(
-                backgroundColor: AppColors.background,
+                backgroundColor: getAppColor(AppColors.background),
                 title: Text('New Chat', style: AppTextStyle.subtitle1.copyWith(
-                  color: const Color(0xff4F4F4F),
+                  color: Color(0xff4F4F4F),
                   fontSize: Get.textScaleFactor * 18,
                   fontWeight: FontWeight.bold,
                 )),
                 centerTitle: true,
                 leading: IconButton(
-                  icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
+                  icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
                   onPressed: () => Navigator.pop(context),
                 ),
                 bottom: PreferredSize(
                     preferredSize: Size(Get.width, 0.5),
                     child: Column(
-                      children: const [
+                      children: [
                         Divider(
                           height: 0.5,
                           thickness: 0.5,
@@ -81,11 +82,11 @@ class NewChat extends StatelessWidget{
                         ),
                       ],
                     )),
-                systemOverlayStyle: const SystemUiOverlayStyle(
-                    statusBarColor: AppColors.background,
+                systemOverlayStyle: SystemUiOverlayStyle(
+                    statusBarColor: getAppColor(AppColors.background),
                     statusBarIconBrightness: Brightness.dark,
                     statusBarBrightness: Brightness.dark,
-                    systemNavigationBarColor: AppColors.background,
+                    systemNavigationBarColor: getAppColor(AppColors.background),
                     systemNavigationBarIconBrightness: Brightness.dark
                 ),
               ),
@@ -196,7 +197,7 @@ class NewChat extends StatelessWidget{
                                   },
                                 );
                               }
-                              return const NotificationView(isLoading: true);
+                              return NotificationView(isLoading: true);
                             }
                           }),
                     ],

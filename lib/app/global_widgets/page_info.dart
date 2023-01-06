@@ -4,7 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
 
 class PageInfo extends StatelessWidget {
-  const PageInfo({
+  PageInfo({
     Key? key,
     required this.title,
     required this.subtitle,
@@ -24,7 +24,7 @@ class PageInfo extends StatelessWidget {
           title,
           style: AppTextStyle.bodyText2.copyWith(color: AppColors.spanishGray),
         ),
-        const SizedBox(height: 5),
+        SizedBox(height: 5),
         Text(
           subtitle,
           textAlign: TextAlign.justify,
@@ -40,7 +40,7 @@ class PageInfo extends StatelessWidget {
 }
 
 class HorizontalPageInfo extends StatelessWidget {
-  const HorizontalPageInfo({
+  HorizontalPageInfo({
     Key? key,
     required this.title,
     required this.subtitle,
@@ -54,7 +54,7 @@ class HorizontalPageInfo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title),
-        const SizedBox(width: 10),
+        SizedBox(width: 10),
         Text(subtitle),
       ],
     );

@@ -14,6 +14,7 @@ import 'package:wayagram/app/modules/settings/inner_pages/payment_settings.dart'
 import 'package:wayagram/app/modules/settings/inner_pages/privacy.dart';
 import 'package:wayagram/app/modules/settings/inner_pages/security.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
+import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../controllers/auth_controller.dart';
