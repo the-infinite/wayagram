@@ -44,7 +44,7 @@ class EnterEmail extends GetView<AuthControllerWayagram> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: getAppColor(Colors.black),
             ),
             onPressed: () {
               Get.back();
@@ -70,7 +70,7 @@ class EnterEmail extends GetView<AuthControllerWayagram> {
                       Text(
                         'Change Password',
                         style: AppTextStyle.headline4.copyWith(
-                          color: Colors.black,
+                          color: getAppColor(Colors.black),
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                         ),
@@ -81,7 +81,7 @@ class EnterEmail extends GetView<AuthControllerWayagram> {
                         child: Text(
                           'Please choose where you want to receive the OTP code to change your password',
                           style: AppTextStyle.headline4.copyWith(
-                            color: Colors.black.withOpacity(0.5),
+                            color: getAppColor(Colors.black).withOpacity(0.5),
                             fontWeight: FontWeight.w400,
                             fontSize: 16,
                           ),

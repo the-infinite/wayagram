@@ -57,7 +57,7 @@ class EnterChangeOTP extends GetView<AuthControllerWayagram> {
                 Text(
                   'Change your Password',
                   style: AppTextStyle.headline4.copyWith(
-                    color: Colors.black,
+                    color: getAppColor(Colors.black),
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
@@ -68,7 +68,7 @@ class EnterChangeOTP extends GetView<AuthControllerWayagram> {
                   child: Text(
                     'Please Input the OTP sent to your mobile number or email address to change your password',
                     style: AppTextStyle.headline4.copyWith(
-                      color: Colors.black,
+                      color: getAppColor(Colors.black),
                       fontWeight: FontWeight.normal,
                       fontSize: 16,
                     ),
@@ -83,7 +83,7 @@ class EnterChangeOTP extends GetView<AuthControllerWayagram> {
                   fieldWidth: Get.width * 0.1,
                   style: TextStyle(
                     fontSize: 17,
-                    color: Colors.black,
+                    color: getAppColor(Colors.black),
                   ),
                   textFieldAlignment: MainAxisAlignment.spaceAround,
                   fieldStyle: FieldStyle.box,
@@ -96,8 +96,8 @@ class EnterChangeOTP extends GetView<AuthControllerWayagram> {
                     controller.otp.text = value;
                   },
                   otpFieldStyle: OtpFieldStyle(
-                    backgroundColor: Colors.white,
-                    borderColor: AppColors.grey,
+                    backgroundColor: getAppColor(Colors.white),
+                    borderColor: getAppColor(AppColors.grey),
                   ),
                 ),
 
