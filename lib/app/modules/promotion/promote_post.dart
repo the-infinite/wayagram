@@ -606,7 +606,7 @@ class _PromotePostState extends State<PromotePost> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(1.0),
@@ -654,7 +654,7 @@ class _PromotePostState extends State<PromotePost> {
                             child: Text(
                               "Customize Your Audience",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -668,7 +668,7 @@ class _PromotePostState extends State<PromotePost> {
                             child: Text(
                               "Promote your post to reach more people and boost engagements",
                               style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
+                                color: getAppColor(Colors.black).withOpacity(0.5),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.normal,
                               ),
@@ -700,7 +700,7 @@ class _PromotePostState extends State<PromotePost> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20.0,
-                                        color: AppColors.onBackground
+                                        color: getAppColor(AppColors.onBackground)
                                       ),
                                     ),
                                     submitButtonChild: Text(
@@ -774,7 +774,7 @@ class _PromotePostState extends State<PromotePost> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20.0,
-                                          color: AppColors.onBackground
+                                          color: getAppColor(AppColors.onBackground)
                                       ),
                                     ),
                                     submitButtonChild: Text(
@@ -829,7 +829,7 @@ class _PromotePostState extends State<PromotePost> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20.0,
-                                            color: AppColors.onBackground
+                                            color: getAppColor(AppColors.onBackground)
                                         ),
                                       ),
                                       submitButtonChild: Text(
@@ -990,7 +990,7 @@ class _PromotePostState extends State<PromotePost> {
                           child: Text(
                             "Promotion Post Review",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1004,7 +1004,7 @@ class _PromotePostState extends State<PromotePost> {
                           child: Text(
                             "Review your promotion post",
                             style: TextStyle(
-                              color: Colors.black.withOpacity(0.5),
+                              color: getAppColor(Colors.black).withOpacity(0.5),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.normal,
                             ),
@@ -1020,7 +1020,7 @@ class _PromotePostState extends State<PromotePost> {
                           child: Text(
                             "Overview",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1038,7 +1038,7 @@ class _PromotePostState extends State<PromotePost> {
                           child: Text(
                             "Estimated reach of ${promotionPricingModelList.firstWhere((element) => element.interval == intervalTextController.text).totalReach} persons per day",
                             style: TextStyle(
-                              color: AppColors.onBackground,
+                              color: getAppColor(AppColors.onBackground),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.normal,
                             ),
@@ -1048,7 +1048,7 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                         ),
                         Divider(
-                          color: Colors.black.withOpacity(0.5),
+                          color: getAppColor(Colors.black).withOpacity(0.5),
                           thickness: 1,
                         ),
                         SizedBox(height: Get.height*0.02),
@@ -1058,7 +1058,7 @@ class _PromotePostState extends State<PromotePost> {
                           child: Text(
                             "Audience",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1080,7 +1080,7 @@ class _PromotePostState extends State<PromotePost> {
                             subtitle: genderTextController.text
                         ),
                         Divider(
-                          color: Colors.black.withOpacity(0.5),
+                          color: getAppColor(Colors.black).withOpacity(0.5),
                           thickness: 1,
                         ),
                         SizedBox(height: Get.height*0.02),
@@ -1090,7 +1090,7 @@ class _PromotePostState extends State<PromotePost> {
                           child: Text(
                             "Promotion Goals",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1142,7 +1142,7 @@ class _PromotePostState extends State<PromotePost> {
                             child: Text(
                               "Payment Overview",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1158,7 +1158,7 @@ class _PromotePostState extends State<PromotePost> {
                             child: Text(
                               "Overview",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1185,7 +1185,7 @@ class _PromotePostState extends State<PromotePost> {
 
                           SizedBox(height: Get.height*0.01),
                           Divider(
-                            color: Colors.black.withOpacity(0.5),
+                            color: getAppColor(Colors.black).withOpacity(0.5),
                             thickness: 1,
                           ),
                           SizedBox(height: Get.height*0.02),
@@ -1194,7 +1194,7 @@ class _PromotePostState extends State<PromotePost> {
                             child: Text(
                               "Account Details",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1350,7 +1350,7 @@ class _PromotePostState extends State<PromotePost> {
                                 Text(
                                   title,
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontSize: Get.textScaleFactor * 16,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1361,7 +1361,7 @@ class _PromotePostState extends State<PromotePost> {
                                 Text(
                                   subtitle,
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontSize: Get.textScaleFactor * 15,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -1428,7 +1428,7 @@ class OverViewWidget extends StatelessWidget {
             child: Text(
               subtitle,
               style: TextStyle(
-                color: AppColors.onBackground,
+                color: getAppColor(AppColors.onBackground),
                 fontSize: Get.textScaleFactor * 16,
                 fontWeight: FontWeight.normal,
               ),

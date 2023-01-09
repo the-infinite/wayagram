@@ -37,7 +37,7 @@ class DropDown {
   final bool isSearchVisible;
 
   /// This will set the background color to the dropdown.
-  final Color dropDownBackgroundColor;
+  final Color? dropDownBackgroundColor;
 
   DropDown({
     Key? key,
@@ -49,7 +49,7 @@ class DropDown {
     this.submitButtonChild,
     this.searchWidget,
     this.isSearchVisible = true,
-    this.dropDownBackgroundColor = AppColors.background,
+    this.dropDownBackgroundColor = null,
   });
 }
 
@@ -122,7 +122,7 @@ class _MainBodyState extends State<MainBody> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Material(
-                        color: widget.dropDown.dropDownBackgroundColor,
+                        color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
                         child: ElevatedButton(
                           onPressed: () {
                             List<SelectedListItem> selectedList =
@@ -147,7 +147,7 @@ class _MainBodyState extends State<MainBody> {
 
             /// A [TextField] that displays a list of suggestions as the user types with clear button.
             Container(
-              color : widget.dropDown.dropDownBackgroundColor,
+              color : widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
               child: Visibility(
                 visible: widget.dropDown.isSearchVisible,
                 child: widget.dropDown.searchWidget ??
@@ -173,7 +173,7 @@ class _MainBodyState extends State<MainBody> {
                             _onUnFocusKeyboardAndPop();
                           },
                     child: Container(
-                      color: widget.dropDown.dropDownBackgroundColor,
+                      color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                         child: ListTile(
@@ -181,7 +181,7 @@ class _MainBodyState extends State<MainBody> {
                               Text(
                                 mainList[index].name,
                                 style: AppTextStyle.bodyText1.copyWith(
-                                  color: isSelected ? AppColors.primary : AppColors.onBackground,
+                                  color: isSelected ? AppColors.primary : getAppColor(AppColors.onBackground),
                                   fontSize: Get.textScaleFactor * 16,
                                 ),
                               ),

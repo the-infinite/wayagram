@@ -79,7 +79,7 @@ class HashTagView extends StatelessWidget{
                     Text(
                       title[index],
                       style: TextStyle(
-                        color: Colors.black ,
+                        color: getAppColor(Colors.black) ,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),

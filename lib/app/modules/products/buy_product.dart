@@ -102,7 +102,7 @@ class _BuyProductState extends State<BuyProduct> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(1.0),
@@ -262,7 +262,7 @@ class _BuyProductState extends State<BuyProduct> {
                   Text(
                     title,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: getAppColor(Colors.black),
                       fontSize: Get.textScaleFactor * 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -273,7 +273,7 @@ class _BuyProductState extends State<BuyProduct> {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: getAppColor(Colors.black),
                       fontSize: Get.textScaleFactor * 15,
                       fontWeight: FontWeight.normal,
                     ),

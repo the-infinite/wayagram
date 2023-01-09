@@ -109,7 +109,7 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(1.0),
@@ -204,7 +204,7 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                       child: Text(
                         "Promote your post to reach more people and boost engagements",
                         style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
+                          color: getAppColor(Colors.black).withOpacity(0.5),
                           fontSize: Get.textScaleFactor * 16,
                           fontWeight: FontWeight.normal,
                         ),
@@ -321,7 +321,7 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                                 Text(
                                   title,
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontSize: Get.textScaleFactor * 16,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -332,7 +332,7 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                                 Text(
                                   subtitle,
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontSize: Get.textScaleFactor * 15,
                                     fontWeight: FontWeight.normal,
                                   ),

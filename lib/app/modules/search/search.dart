@@ -75,7 +75,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back,
-                    color: Colors.black,
+                    color: getAppColor(Colors.black),
                   ),
                   onPressed: () {
                     Get.back();
@@ -101,7 +101,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                 TabBar(
                   controller: tabController,
                   padding: EdgeInsets.zero,
-                  labelColor: Colors.black,
+                  labelColor: getAppColor(Colors.black),
                   unselectedLabelColor: Color(0xff9A9A9A),
                   indicatorColor: AppColors.primary,
                   indicatorSize: TabBarIndicatorSize.tab,

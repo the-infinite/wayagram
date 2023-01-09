@@ -86,7 +86,7 @@ class _ViewPostState extends State<ViewPost> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(1.0),
@@ -198,7 +198,7 @@ class _ViewPostState extends State<ViewPost> {
                             child: HashTagText(
                               text: "Replying to @$usernameToReplyTo",
                               basicStyle: AppTextStyle.bodyText1.copyWith(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.normal,
                               ),
@@ -240,9 +240,9 @@ class _ViewPostState extends State<ViewPost> {
                           hintText: 'Write a message...',
                           controller: commentController,
                           borderRadius: 100,
-                          filledColor: Colors.grey.shade300,
+                          filledColor: getAppColor(Colors.grey.shade300),
                           borderSide: BorderSide.none,
-                          hintColor: Colors.grey.shade500,
+                          hintColor: getAppColor(Colors.grey.shade500),
                           maxLines: 1,
                           keyboardType: TextInputType.text,
                           focusNode: inputNode,

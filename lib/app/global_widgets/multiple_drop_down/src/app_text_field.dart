@@ -26,8 +26,8 @@ class _AppTextFieldState extends State<AppTextField> {
       padding: EdgeInsets.all(12.0),
       child: TextFormField(
         controller: _editingController,
-        cursorColor: AppColors.onBackground.withOpacity(0.3),
-        style: TextStyle(color: AppColors.onBackground),
+        cursorColor: getAppColor(AppColors.onBackground).withOpacity(0.3),
+        style: TextStyle(color: getAppColor(AppColors.onBackground)),
         onChanged: (value) {
           widget.onTextChanged(value);
         },
@@ -36,7 +36,7 @@ class _AppTextFieldState extends State<AppTextField> {
           fillColor: Colors.black12,
           contentPadding: EdgeInsets.only(left: 0, bottom: 0, top: 0, right: 15),
           hintText: 'Search',
-          hintStyle: TextStyle(color: AppColors.onBackground.withOpacity(0.3)),
+          hintStyle: TextStyle(color: getAppColor(AppColors.onBackground).withOpacity(0.3)),
           border: OutlineInputBorder(
             borderSide: BorderSide(
               width: 0,

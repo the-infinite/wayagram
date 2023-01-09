@@ -701,7 +701,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20.0,
-                                        color: AppColors.onBackground
+                                        color: getAppColor(AppColors.onBackground)
                                       ),
                                     ),
                                     submitButtonChild: Text(
@@ -775,7 +775,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20.0,
-                                          color: AppColors.onBackground
+                                          color: getAppColor(AppColors.onBackground)
                                       ),
                                     ),
                                     submitButtonChild: Text(
@@ -830,7 +830,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20.0,
-                                            color: AppColors.onBackground
+                                            color: getAppColor(AppColors.onBackground)
                                         ),
                                       ),
                                       submitButtonChild: Text(
@@ -1039,7 +1039,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                           child: Text(
                             "Estimated reach of ${promotionPricingModelList.firstWhere((element) => element.interval == intervalTextController.text).totalReach} persons per day",
                             style: TextStyle(
-                              color: AppColors.onBackground,
+                              color: getAppColor(AppColors.onBackground),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.normal,
                             ),
@@ -1431,7 +1431,7 @@ class OverViewWidget extends StatelessWidget {
             child: Text(
               subtitle,
               style: TextStyle(
-                color: AppColors.onBackground,
+                color: getAppColor(AppColors.onBackground),
                 fontSize: Get.textScaleFactor * 16,
                 fontWeight: FontWeight.normal,
               ),
