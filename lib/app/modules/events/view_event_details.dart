@@ -67,7 +67,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
           appBar: AppBar(
             elevation: 0,
             title: Text('Event Details', style: AppTextStyle.subtitle1.copyWith(
-              color: Colors.black,
+              color: getAppColor(Colors.black),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -75,7 +75,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.black,
+                color: getAppColor(Colors.black),
               ),
               onPressed: () {
                 Get.back();
@@ -89,7 +89,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                 },
                 child: Icon(
                   Icons.bar_chart,
-                  color: Colors.black,
+                  color: getAppColor(Colors.black),
                   size: 24,
                 ),
               ),
@@ -156,7 +156,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                       Padding(
                         padding: EdgeInsets.only(left: Get.width*0.01),
                         child: Text(widget.event.eventName.toString(), style: AppTextStyle.subtitle1.copyWith(
-                          color: Colors.black,
+                          color: getAppColor(Colors.black),
                           fontSize: Get.width*0.05,
                           fontWeight: FontWeight.w600,
                         )),
@@ -165,7 +165,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                       Padding(
                         padding: EdgeInsets.only(left: Get.width*0.01),
                         child: Text("${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(int.parse(widget.event.eventStart.toString())))} at  ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(int.parse(widget.event.eventStart.toString())))}", style: AppTextStyle.subtitle1.copyWith(
-                          color: Colors.black.withOpacity(0.5),
+                          color: getAppColor(Colors.black).withOpacity(0.5),
                           fontSize: Get.width*0.04,
                           fontWeight: FontWeight.normal,
                         )),
@@ -173,28 +173,28 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                       SizedBox(height: Get.height*0.01),
                       if(widget.event.eventOrganizer.toString() != "null")
                         _TextButton(
-                         leading: Icon(Icons.people_alt_rounded, color: Colors.black.withOpacity(0.5)),
+                         leading: Icon(Icons.people_alt_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
                           text: widget.event.eventOrganizer.toString(),
                          onPressed: () {
                         },
                         ),
                       SizedBox(height: Get.height*0.01),
                       _TextButton(
-                        leading: Icon(Icons.location_on, color: Colors.black.withOpacity(0.5)),
+                        leading: Icon(Icons.location_on, color: getAppColor(Colors.black).withOpacity(0.5)),
                         text: widget.event.location.toString(),
                         onPressed: () {
                         },
                       ),
                       SizedBox(height: Get.height*0.01),
                       _TextButton(
-                        leading: Icon(FeatherIcons.tag, color: Colors.black.withOpacity(0.5)),
+                        leading: Icon(FeatherIcons.tag, color: getAppColor(Colors.black).withOpacity(0.5)),
                         text: widget.event.isPaid != true ? "Free to attend" : "Paid to attend: NGN ${widget.event.amount.toString()}",
                         onPressed: () {
                         },
                       ),
                       SizedBox(height: Get.height*0.01),
                       _TextButton(
-                        leading: Icon(Icons.perm_contact_calendar_rounded, color: Colors.black.withOpacity(0.5)),
+                        leading: Icon(Icons.perm_contact_calendar_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
                         text: "Registered:  ${attendeeCount.toString()}",
                         onPressed: () {
                         },
@@ -239,7 +239,7 @@ class _TextButton extends StatelessWidget {
               text,
               maxLines: 1,
               overflow: TextOverflow.clip,
-              style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(0.5)),
+              style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black).withOpacity(0.5)),
             ),
           ),
         ]),

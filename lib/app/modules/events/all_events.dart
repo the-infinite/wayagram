@@ -54,7 +54,7 @@ class _AllEventsState extends State<AllEvents> {
           appBar: AppBar(
             elevation: 0,
             title: Text('All Events', style: AppTextStyle.subtitle1.copyWith(
-              color: Colors.black,
+              color: getAppColor(Colors.black),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -62,7 +62,7 @@ class _AllEventsState extends State<AllEvents> {
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.black,
+                color: getAppColor(Colors.black),
               ),
               onPressed: () {
                 Get.back();

@@ -120,7 +120,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             actions: [
 
@@ -288,7 +288,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                     Padding(
                       padding: EdgeInsets.only(left: Get.width*0.01),
                       child: Text(donation.eventName.toString(), style: AppTextStyle.subtitle1.copyWith(
-                        color: Colors.black,
+                        color: getAppColor(Colors.black),
                         fontSize: Get.width*0.05,
                         fontWeight: FontWeight.w600,
                       )),
@@ -297,7 +297,7 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                     Padding(
                       padding: EdgeInsets.only(left: Get.width*0.01),
                       child: Text("${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(int.parse(donation.eventStart.toString())))} at  ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(int.parse(donation.eventStart.toString())))}", style: AppTextStyle.subtitle1.copyWith(
-                        color: Colors.black.withOpacity(0.5),
+                        color: getAppColor(Colors.black).withOpacity(0.5),
                         fontSize: Get.width*0.04,
                         fontWeight: FontWeight.normal,
                       )),
@@ -305,21 +305,21 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                     SizedBox(height: Get.height*0.01),
                     if(donation.eventOrganizer.toString() != "null")
                       _TextButton(
-                        leading: Icon(Icons.people_alt_rounded, color: Colors.black.withOpacity(0.5)),
+                        leading: Icon(Icons.people_alt_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
                         text:donation.eventOrganizer.toString(),
                         onPressed: () {
                         },
                       ),
                     SizedBox(height: Get.height*0.01),
                     _TextButton(
-                      leading: Icon(Icons.location_on, color: Colors.black.withOpacity(0.5)),
+                      leading: Icon(Icons.location_on, color: getAppColor(Colors.black).withOpacity(0.5)),
                       text: donation.location.toString(),
                       onPressed: () {
                       },
                     ),
                     SizedBox(height: Get.height*0.01),
                     _TextButton(
-                      leading: Icon(FeatherIcons.tag, color: Colors.black.withOpacity(0.5)),
+                      leading: Icon(FeatherIcons.tag, color: getAppColor(Colors.black).withOpacity(0.5)),
                       text: donation.isPaid != true ? "Free to attend" : "Paid to attend: NGN ${donation.amount.toString()}",
                       onPressed: () {
                       },
@@ -457,7 +457,7 @@ class _TextButton extends StatelessWidget {
               text,
               maxLines: 1,
               overflow: TextOverflow.clip,
-              style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(0.5)),
+              style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black).withOpacity(0.5)),
             ),
           ),
         ]),

@@ -133,7 +133,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
@@ -411,7 +411,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                 fontSize: Get.textScaleFactor * 17,
                                                 fontWeight: FontWeight.w500,
                                               ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                color: Colors.black,
+                                                color: getAppColor(Colors.black),
                                                 fontSize: Get.textScaleFactor * 17,
                                                 fontWeight: FontWeight.w500,),
                                                 softWrap: true,
@@ -503,7 +503,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                 fontSize: Get.textScaleFactor * 17,
                                                 fontWeight: FontWeight.w500,
                                               ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                color: Colors.black,
+                                                color: getAppColor(Colors.black),
                                                 fontSize: Get.textScaleFactor * 17,
                                                 fontWeight: FontWeight.w500,),
                                                 softWrap: true,
@@ -590,7 +590,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                 fontSize: Get.textScaleFactor * 17,
                                                 fontWeight: FontWeight.w500,
                                               ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                color: Colors.black,
+                                                color: getAppColor(Colors.black),
                                                 fontSize: Get.textScaleFactor * 17,
                                                 fontWeight: FontWeight.w500,),
                                                 softWrap: true,
