@@ -30,16 +30,44 @@ class MyApp extends StatelessWidget {
     //var initial = OnboardingPage(key: Key('wayagram_onboarding'));
     var initial = MyPref.authToken.val.isNotEmpty ? Home(key: Key('wayagram_home')) : OnboardingPage(key: Key('wayagram_onboarding'));
     MyPref.currentApp.val = 'wayagram';
-    return GetMaterialApp(
-      theme: AppThemes.lightTheme,
-      themeMode: ThemeMode.light,
-      debugShowCheckedModeBanner: false,
-      home: initial,
-      initialBinding: WayagramBinding(),
-    );
+    return AppBuilder(builder: (context) {
+      return GetMaterialApp(
+        key: UniqueKey(),
+        theme: AppThemes.lightTheme,
+        themeMode: ThemeMode.light,
+        debugShowCheckedModeBanner: false,
+        home: initial,
+        initialBinding: WayagramBinding(),
+      );
+    });
   }
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
+}
+
+class AppBuilder extends StatefulWidget {
+  final Function(BuildContext) builder;
+
+  const AppBuilder({Key? key, required this.builder}) : super(key: key);
+
+  @override
+  AppBuilderState createState() => AppBuilderState();
+
+  static AppBuilderState? of(BuildContext context) {
+    return context.findRootAncestorStateOfType<AppBuilderState>();
+  }
+}
+
+class AppBuilderState extends State<AppBuilder> {
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.builder(context);
+  }
+
+  void rebuild() {
+    setState(() {});
+  }
 }

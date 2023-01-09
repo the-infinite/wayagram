@@ -11,6 +11,7 @@ import 'package:wayagram/app/modules/top_clips/top_clips.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
+import '../../main.dart';
 import '../bindings/wayagram_binding.dart';
 import '../controllers/home_controller.dart';
 import '../data/model/followers_model_entity.dart';
@@ -373,6 +374,31 @@ class _AppDrawerState extends State<AppDrawer> {
                               onPressed: () {
                                 controller.launchURL("https://wayagram.ng/terms");
                               }),
+                          Stack(
+                            alignment: Alignment.centerRight,
+                            children: [
+                              _TextButton(
+                                  leading: SizedBox.shrink(),
+                                  text: "Dark Mode",
+                                  onPressed: () {
+                                    var darkMode = MyPref.darkMode.val;
+                                    MyPref.darkMode.val = !darkMode;
+                                    AppBuilder.of(context)!.rebuild();
+                                  }),
+
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.018),
+                                child: Switch(
+                                  value: MyPref.darkMode.val,
+                                  onChanged: (val){
+                                  MyPref.darkMode.val = val;
+                                  AppBuilder.of(context)!.rebuild();
+                                },
+                                  activeColor: AppColors.primary,
+                                ),
+                              )
+                            ],
+                          ),
 
                           Padding(
                             padding: EdgeInsets.only(left: Get.width*0.05, right: Get.width*0.05),
@@ -410,6 +436,14 @@ class _AppDrawerState extends State<AppDrawer> {
               );
             })
     );
+  }
+
+  void rebuildUI(BuildContext context){
+    void rebuild(Element e){
+      e.markNeedsBuild();
+      e.visitChildren(rebuild);
+    }
+    (context as Element).visitChildren(rebuild);
   }
 }
 

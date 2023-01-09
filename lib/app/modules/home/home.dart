@@ -110,77 +110,77 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-          statusBarColor: getAppColor(AppColors.background),
-          statusBarIconBrightness: getAppBrightness(),
-          statusBarBrightness: getAppBrightness(),
-          systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: getAppBrightness()
-      ),
-      child: GetBuilder<HomeControllerWayagram>(
-          id: 'home',
-          builder: (controller) {
-            var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
-            var showSearchIcon = controller.currentBottomNavPage.value == 1 || controller.currentBottomNavPage.value == 2;
+    return GetBuilder<HomeControllerWayagram>(
+        id: 'home',
+        builder: (controller) {
+          var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+          var showSearchIcon = controller.currentBottomNavPage.value == 1 || controller.currentBottomNavPage.value == 2;
 
-            return Scaffold(
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
+                statusBarIconBrightness: getAppBrightness(),
+                statusBarBrightness: getAppBrightness(),
+                systemNavigationBarColor: getAppColor(AppColors.background),
+                systemNavigationBarIconBrightness: getAppBrightness()
+            ),
+            child: Scaffold(
               appBar: AppBar(
                 elevation: 0,
                 leading: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Builder(
-                    builder: (context1) {
-                      return Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: SizedBox(
-                          width: 45,
-                          height: 45,
-                          child: IconButton(
-                            icon: AppAvatar(
-                              imgUrl: (fullProfile.avatar as String?).toString(),
-                              radius: 45,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Builder(
+                        builder: (context1) {
+                          return Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: SizedBox(
+                              width: 45,
+                              height: 45,
+                              child: IconButton(
+                                icon: AppAvatar(
+                                  imgUrl: (fullProfile.avatar as String?).toString(),
+                                  radius: 45,
+                                ),
+                                onPressed: () {
+                                  Scaffold.of(context1).openDrawer();
+                                },
+                              ),
                             ),
-                            onPressed: () {
-                              Scaffold.of(context1).openDrawer();
-                            },
-                          ),
-                        ),
-                      );
-                    }
-                  ),
-                ],
-              ),
+                          );
+                        }
+                    ),
+                  ],
+                ),
                 title: ImageHelper.normalImage(
                   'assets/images/wayagram_new.png', width: Get.width * 0.25, color:getAppColor(Color(0xff4F4F4F),),
                 ),
                 actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: SizedBox(
-                    width: 45,
-                    height: 45,
-                    child: IconButton(
-                      icon: ImageHelper.normalImage(
-                        (!showSearchIcon && Platform.isAndroid) ? 'assets/images/follow_new_users.png' : 'assets/images/search.png',
-                        color: getAppColor(AppColors.onBackground),
-                        width: (!showSearchIcon && Platform.isAndroid) ?  Get.width*0.07 : Get.width*0.05,
-                        height: (!showSearchIcon && Platform.isAndroid) ?  Get.width*0.07 : Get.width*0.05,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: SizedBox(
+                      width: 45,
+                      height: 45,
+                      child: IconButton(
+                        icon: ImageHelper.normalImage(
+                          (!showSearchIcon && Platform.isAndroid) ? 'assets/images/follow_new_users.png' : 'assets/images/search.png',
+                          color: getAppColor(AppColors.onBackground),
+                          width: (!showSearchIcon && Platform.isAndroid) ?  Get.width*0.07 : Get.width*0.05,
+                          height: (!showSearchIcon && Platform.isAndroid) ?  Get.width*0.07 : Get.width*0.05,
+                        ),
+                        onPressed: () {
+                          if (!showSearchIcon && Platform.isAndroid) {
+                            Get.to(() => Contact(),binding: WayagramBinding());
+                          } else {
+                            Get.to(() => Search(),binding: WayagramBinding());
+                          }
+                        },
+                        color: getAppColor(AppColors.background),
                       ),
-                      onPressed: () {
-                        if (!showSearchIcon && Platform.isAndroid) {
-                          Get.to(() => Contact(),binding: WayagramBinding());
-                        } else {
-                          Get.to(() => Search(),binding: WayagramBinding());
-                        }
-                      },
-                      color: getAppColor(AppColors.background),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
                 backgroundColor: getAppColor(AppColors.background),
                 systemOverlayStyle: SystemUiOverlayStyle(
                     statusBarColor: getAppColor(AppColors.background),
@@ -189,178 +189,181 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     systemNavigationBarColor: getAppColor(AppColors.background),
                     systemNavigationBarIconBrightness: getAppBrightness()
                 ),
-            ),
-              body: SizedBox(
-              width: Get.width,
-              child: Column(
-                children: [
-                  if(controller.currentBottomNavPage.value == 2)
-                    Divider(
-                    color: getAppColor(Colors.grey.shade400),
-                    thickness: 0.3,
-                  ),
-                  if(controller.currentBottomNavPage.value == 2)
-                    TabBar(
-                      controller: shopController,
-                      padding: EdgeInsets.zero,
-                      labelColor: getAppColor(AppColors.onBackground),
-                      unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
-                      indicatorColor: AppColors.primary,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      labelStyle: TextStyle(
-                        fontSize: Get.width*0.035,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      unselectedLabelStyle: TextStyle(
-                        fontSize: Get.width*0.035,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      tabs: [
-                        Tab(text: 'All Products',iconMargin: EdgeInsets.zero,),
-                        Tab(text: 'My Products',iconMargin: EdgeInsets.zero,),
-                      ],
-                      onTap: (index) {
-
-                      },
-                    ),
-                  if(controller.currentBottomNavPage.value == 3)
-                    Divider(
-                      height: 0.5,
-                      thickness: 0.5,
-                      color: getAppColor(Colors.grey.shade400),
-                    ),
-                  if(controller.currentBottomNavPage.value == 3)
-                    TabBar(
-                      controller: notificationController,
-                      padding: EdgeInsets.zero,
-                      labelColor: getAppColor(AppColors.onBackground),
-                      unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
-                      indicatorColor: AppColors.primary,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      labelStyle: TextStyle(
-                        fontSize: Get.width*0.035,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      unselectedLabelStyle: TextStyle(
-                        fontSize: Get.width*0.035,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      tabs: [
-                        Tab(text: 'All',iconMargin: EdgeInsets.zero,),
-                        Tab(text: 'Requests',iconMargin: EdgeInsets.zero,),
-                      ],
-                      onTap: (index) {
-
-                      },
-                    ),
-                  /*if(controller.currentBottomNavPage.value == 4)
-                    Divider(
-                      height: 0.5,
-                      thickness: 0.5,
-                      color: getAppColor(Colors.grey.shade400),
-                    ),
-                  if(controller.currentBottomNavPage.value == 4)
-                    TabBar(
-                      controller: shopController,
-                      padding: EdgeInsets.zero,
-                      labelColor: getAppColor(AppColors.background),
-                      unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
-                      indicatorColor: AppColors.primary,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      labelStyle: TextStyle(
-                        fontSize: Get.width*0.035,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      unselectedLabelStyle: TextStyle(
-                        fontSize: Get.width*0.035,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      tabs: [
-                        Tab(text: 'Chats',iconMargin: EdgeInsets.zero,),
-                        Tab(text: 'Calls',iconMargin: EdgeInsets.zero,),
-                      ],
-                      onTap: (index) {
-
-                      },
-                    ),*/
-                  Divider(
-                    height: 0.5,
-                    thickness: 0.45,
-                    color: getAppColor(Colors.grey.shade400),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: (controller.currentBottomNavPage.value == 2 || controller.currentBottomNavPage.value == 3 || controller.currentBottomNavPage.value == 4) ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          controller.pages[controller.currentBottomNavPage.value],
-                        ],
-                      ),
-                    ),
-                  ),
-                  if(controller.currentBottomNavPage.value != 1)
-                    SizedBox(height: kBottomNavigationBarHeight),
-                ],
               ),
-            ),
+              body: SizedBox(
+                width: Get.width,
+                child: Container(
+                  color: getAppColor(AppColors.background),
+                  child: Column(
+                    children: [
+                      if(controller.currentBottomNavPage.value == 2)
+                        Divider(
+                          color: getAppColor(Colors.grey.shade400),
+                          thickness: 0.3,
+                        ),
+                      if(controller.currentBottomNavPage.value == 2)
+                        TabBar(
+                          controller: shopController,
+                          padding: EdgeInsets.zero,
+                          labelColor: getAppColor(AppColors.onBackground),
+                          unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
+                          indicatorColor: AppColors.primary,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          labelStyle: TextStyle(
+                            fontSize: Get.width*0.035,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          unselectedLabelStyle: TextStyle(
+                            fontSize: Get.width*0.035,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          tabs: [
+                            Tab(text: 'All Products',iconMargin: EdgeInsets.zero,),
+                            Tab(text: 'My Products',iconMargin: EdgeInsets.zero,),
+                          ],
+                          onTap: (index) {
+
+                          },
+                        ),
+                      if(controller.currentBottomNavPage.value == 3)
+                        Divider(
+                          height: 0.5,
+                          thickness: 0.5,
+                          color: getAppColor(Colors.grey.shade400),
+                        ),
+                      if(controller.currentBottomNavPage.value == 3)
+                        TabBar(
+                          controller: notificationController,
+                          padding: EdgeInsets.zero,
+                          labelColor: getAppColor(AppColors.onBackground),
+                          unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
+                          indicatorColor: AppColors.primary,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          labelStyle: TextStyle(
+                            fontSize: Get.width*0.035,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          unselectedLabelStyle: TextStyle(
+                            fontSize: Get.width*0.035,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          tabs: [
+                            Tab(text: 'All',iconMargin: EdgeInsets.zero,),
+                            Tab(text: 'Requests',iconMargin: EdgeInsets.zero,),
+                          ],
+                          onTap: (index) {
+
+                          },
+                        ),
+                      /*if(controller.currentBottomNavPage.value == 4)
+                      Divider(
+                        height: 0.5,
+                        thickness: 0.5,
+                        color: getAppColor(Colors.grey.shade400),
+                      ),
+                    if(controller.currentBottomNavPage.value == 4)
+                      TabBar(
+                        controller: shopController,
+                        padding: EdgeInsets.zero,
+                        labelColor: getAppColor(AppColors.background),
+                        unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
+                        indicatorColor: AppColors.primary,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        labelStyle: TextStyle(
+                          fontSize: Get.width*0.035,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        unselectedLabelStyle: TextStyle(
+                          fontSize: Get.width*0.035,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        tabs: [
+                          Tab(text: 'Chats',iconMargin: EdgeInsets.zero,),
+                          Tab(text: 'Calls',iconMargin: EdgeInsets.zero,),
+                        ],
+                        onTap: (index) {
+
+                        },
+                      ),*/
+                      Divider(
+                        height: 0.5,
+                        thickness: 0.45,
+                        color: getAppColor(Colors.grey.shade400),
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: (controller.currentBottomNavPage.value == 2 || controller.currentBottomNavPage.value == 3 || controller.currentBottomNavPage.value == 4) ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              controller.pages[controller.currentBottomNavPage.value],
+                            ],
+                          ),
+                        ),
+                      ),
+                      if(controller.currentBottomNavPage.value != 1)
+                        SizedBox(height: kBottomNavigationBarHeight),
+                    ],
+                  ),
+                ),
+              ),
               drawer: AppDrawer(),
               extendBody: controller.currentBottomNavPage.value == 1 ? false : true,
               bottomNavigationBar: BottomNavigationBar(
-                backgroundColor: getAppColor(AppColors.background),
-                showSelectedLabels: true,
-                showUnselectedLabels: true,
-                type: BottomNavigationBarType.fixed,
-                items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: ImageHelper.normalImage(
-                    'assets/images/u_home-alt.png',
-                    width: 25,
-                    color: controller.currentBottomNavPage.value == 0 ? AppColors.primary : AppColors.grey,
-                  ),
-                  label: 'Home',
                   backgroundColor: getAppColor(AppColors.background),
-                ),
-                BottomNavigationBarItem(
-                  icon: ImageHelper.normalImage(
-                    'assets/images/u_compass.png',
-                    width: 25,
-                    color: controller.currentBottomNavPage.value == 1 ? AppColors.primary : AppColors.grey,
-                  ),
-                  label: 'Discover',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                      Icons.shopping_cart, color: controller.currentBottomNavPage.value == 2 ? AppColors.primary : AppColors.grey,
-                  ),
-                  label: 'Shops',
-                ),
-                BottomNavigationBarItem(
-                  icon: ImageHelper.normalImage(
-                    'assets/images/mdi_notifications_none.png',
-                    width: 25,
-                    color: controller.currentBottomNavPage.value == 3 ? AppColors.primary : AppColors.grey,
-                  ),
-                  label: 'Notifications',
-                ),
-                BottomNavigationBarItem(
-                  icon: ImageHelper.normalImage(
-                    'assets/images/message-outline.png',
-                    width: 25,
-                    color: controller.currentBottomNavPage.value == 4 ? AppColors.primary : AppColors.grey,
-                  ),
-                  label: 'Chat',
-                ),
-              ],
-                currentIndex: controller.currentBottomNavPage.value,
-                selectedItemColor: AppColors.primary,
-                unselectedItemColor: Colors.grey,
-                onTap: (index) {
-                  controller.currentBottomNavPage.value = index;
-                  controller.update(['home']);
-                  controller.toggleShop(0,animate: false);
-                }
+                  showSelectedLabels: true,
+                  showUnselectedLabels: true,
+                  type: BottomNavigationBarType.fixed,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: ImageHelper.normalImage(
+                        'assets/images/u_home-alt.png',
+                        width: 25,
+                        color: controller.currentBottomNavPage.value == 0 ? AppColors.primary : AppColors.grey,
+                      ),
+                      label: 'Home',
+                      backgroundColor: getAppColor(AppColors.background),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: ImageHelper.normalImage(
+                        'assets/images/u_compass.png',
+                        width: 25,
+                        color: controller.currentBottomNavPage.value == 1 ? AppColors.primary : AppColors.grey,
+                      ),
+                      label: 'Discover',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.shopping_cart, color: controller.currentBottomNavPage.value == 2 ? AppColors.primary : AppColors.grey,
+                      ),
+                      label: 'Shops',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: ImageHelper.normalImage(
+                        'assets/images/mdi_notifications_none.png',
+                        width: 25,
+                        color: controller.currentBottomNavPage.value == 3 ? AppColors.primary : AppColors.grey,
+                      ),
+                      label: 'Notifications',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: ImageHelper.normalImage(
+                        'assets/images/message-outline.png',
+                        width: 25,
+                        color: controller.currentBottomNavPage.value == 4 ? AppColors.primary : AppColors.grey,
+                      ),
+                      label: 'Chat',
+                    ),
+                  ],
+                  currentIndex: controller.currentBottomNavPage.value,
+                  selectedItemColor: AppColors.primary,
+                  unselectedItemColor: Colors.grey,
+                  onTap: (index) {
+                    controller.currentBottomNavPage.value = index;
+                    controller.update(['home']);
+                    controller.toggleShop(0,animate: false);
+                  }
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
@@ -373,9 +376,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 },
                 backgroundColor: AppColors.primary,
                 child: Icon(Icons.add,color: Colors.white),
-          ),
-            );
-          }),
-    );
+              ),
+            ),
+          );
+        });
   }
 }
