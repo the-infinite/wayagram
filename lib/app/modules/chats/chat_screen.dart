@@ -227,11 +227,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                   SizedBox(
                                     width: Get.width*0.4,
                                     child: HashTagText(text: name, decoratedStyle: TextStyle(
-                                      color: getAppColor(AppColors.background),
+                                      color: getAppColor(Colors.black),
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w600,
                                     ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                      color: getAppColor(AppColors.background),
+                                      color: getAppColor(Colors.black),
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w600,),
                                       softWrap: true,
@@ -261,11 +261,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                   SizedBox(
                                     width: Get.width*0.4,
                                     child: HashTagText(text: name, decoratedStyle: TextStyle(
-                                      color: getAppColor(AppColors.background),
+                                      color: getAppColor(AppColors.onBackground),
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w600,
                                     ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                      color: getAppColor(AppColors.background),
+                                      color: getAppColor(AppColors.onBackground),
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w600,),
                                       softWrap: true,
@@ -296,7 +296,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: EdgeInsets.zero,
                 icon: Icon(
                   FeatherIcons.arrowLeft,
-                  color: getAppColor(AppColors.background),
+                  color: getAppColor(Colors.black),
                 ),
                 onPressed: () {
                   Get.back();
@@ -308,13 +308,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   children: [
                     IconButton(onPressed: (){
                       comingSoon();
-                    }, icon: Icon(Icons.videocam_rounded, color: getAppColor(AppColors.background),size: 24)),
+                    }, icon: Icon(Icons.videocam_rounded, color: getAppColor(Colors.black),size: 24)),
                     IconButton(onPressed: (){
                       comingSoon();
-                    }, icon: Icon(Icons.call_rounded, color: getAppColor(AppColors.background),size: 20,)),
+                    }, icon: Icon(Icons.call_rounded, color: getAppColor(Colors.black),size: 20,)),
                     PopupMenuButton(
                       color: Colors.white,
-                      icon: Icon(Icons.more_vert,color: getAppColor(AppColors.background),),
+                      icon: Icon(Icons.more_vert,color: getAppColor(Colors.black),),
                       itemBuilder: (context) => [
                         PopupMenuItem(
                           value: 0,
@@ -380,7 +380,7 @@ class _ChatScreenState extends State<ChatScreen> {
             body: Container(
               width: double.infinity,
               height: double.infinity,
-              color: Colors.grey.shade200,
+              color: getAppColor(Colors.grey.shade200),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: 0),
                 child: NotificationListener<ScrollNotification>(
@@ -665,7 +665,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                 ),
                                                                 height: Get.height*0.04,
                                                                 width: Get.width*0.08,
-                                                                  child: Icon(Icons.attach_file, color: chat.senderId == fullProfile.id ? Colors.black : Colors.white,),
+                                                                  child: Icon(Icons.attach_file, color: chat.senderId == fullProfile.id ? getAppColor(Colors.black) : Colors.white,),
                                                               ),
                                                               SizedBox(width: Get.width*0.01),
                                                               Column(
@@ -675,7 +675,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                     child: Text(
                                                                       chat.fileUrl.toString().split("/").last,
                                                                       style: AppTextStyle.bodyText1.copyWith(
-                                                                        color: chat.senderId == fullProfile.id ? Colors.white :Colors.black,
+                                                                        color: chat.senderId == fullProfile.id ? Colors.white :getAppColor(Colors.black),
                                                                         fontSize: 16,
                                                                         fontWeight: FontWeight.normal,
                                                                       ),
@@ -711,7 +711,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                         padding: EdgeInsets.zero,
                                                         icon: Icon(
                                                           Icons.arrow_drop_down_rounded,
-                                                          color: chat.senderId == fullProfile.id ? Colors.white : Colors.black,
+                                                          color: chat.senderId == fullProfile.id ? Colors.white : getAppColor(Colors.black),
                                                           size: 22,
                                                         ),
                                                         onSelected: (value) {
@@ -723,7 +723,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             child: Text(
                                                               "Reply",
                                                               style: AppTextStyle.bodyText1.copyWith(
-                                                                color: Colors.black,
+                                                                color: getAppColor(Colors.black),
                                                                 fontWeight: FontWeight.w500,
                                                               ),
                                                             ),
@@ -733,7 +733,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             child: Text(
                                                               "Forward",
                                                               style: AppTextStyle.bodyText1.copyWith(
-                                                                color: Colors.black,
+                                                                color: getAppColor(Colors.black),
                                                                 fontWeight: FontWeight.w500,
                                                               ),
                                                             ),
@@ -743,7 +743,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             child: Text(
                                                               "Delete",
                                                               style: AppTextStyle.bodyText1.copyWith(
-                                                                color: Colors.black,
+                                                                color: getAppColor(Colors.black),
                                                                 fontWeight: FontWeight.w500,
                                                               ),
                                                             ),
@@ -788,7 +788,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   chatController.update(['chats_screen']);
                                   canScrollDown = true;
                                 },
-                                icon: Icon(FeatherIcons.arrowDown, color: Colors.black,),
+                                icon: Icon(FeatherIcons.arrowDown, color: getAppColor(Colors.black),),
                               ),
                             ),
                           ),
@@ -820,9 +820,9 @@ class _ChatScreenState extends State<ChatScreen> {
                             hintText: 'Write a message...',
                             controller: chatTextController,
                             borderRadius: 100,
-                            filledColor: Colors.grey.shade300,
+                            filledColor: getAppColor(Colors.grey.shade300),
                             borderSide: BorderSide.none,
-                            hintColor: Colors.grey.shade500,
+                            hintColor: getAppColor(Colors.grey.shade500),
                             maxLines: 1,
                             keyboardType: TextInputType.text,
                             focusNode: inputNode,
@@ -866,7 +866,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 angle: 45 * math.pi / 180,
                                 child: Icon(
                                   Icons.attach_file_rounded,
-                                  color: Colors.grey,
+                                  color: getAppColor(Colors.grey),
                                 ),
                               ),
                             ),
@@ -913,7 +913,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               //chatTextController.text.isEmpty
                                 //  ? Icons.mic_rounded:
                             Icons.send_rounded,
-                              color: getAppColor(AppColors.background),
+                              color: AppColors.background,
                             ),
                           ),
                         ),

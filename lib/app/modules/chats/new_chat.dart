@@ -68,7 +68,7 @@ class NewChat extends StatelessWidget{
                 )),
                 centerTitle: true,
                 leading: IconButton(
-                  icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+                  icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
                   onPressed: () => Navigator.pop(context),
                 ),
                 bottom: PreferredSize(

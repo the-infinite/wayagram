@@ -80,7 +80,7 @@ class NewGroupChat extends StatelessWidget{
               )
             ],
             leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
               onPressed: () => Navigator.pop(context),
             ),
             bottom: PreferredSize(
@@ -145,7 +145,7 @@ class NewGroupChat extends StatelessWidget{
                                       AndroidUiSettings(
                                           toolbarTitle: 'Crop Profile Photo',
                                           toolbarColor: Colors.white,
-                                          toolbarWidgetColor: Colors.black,
+                                          toolbarWidgetColor: getAppColor(Colors.black),
                                           activeControlsWidgetColor: AppColors.primary,
                                           cropGridColor: AppColors.primary,
                                           initAspectRatio: CropAspectRatioPreset.square,
