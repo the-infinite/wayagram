@@ -46,9 +46,9 @@ class Support extends GetView<HomeControllerWayagram>{
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
-                color: Colors.black,
+                color: getAppColor(Colors.black),
               ),
               onPressed: () {
                 Get.back();
@@ -72,7 +72,7 @@ class Support extends GetView<HomeControllerWayagram>{
                   child: Column(
                     children: [
                       _TextButton(
-                          leading: Icon(Icons.messenger_rounded, color: Colors.black.withOpacity(0.5)),
+                          leading: Icon(Icons.messenger_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
                           text: "Send us a message",
                           subtitle: "Talk to a customer service representative",
                           onPressed: () async {
@@ -84,7 +84,7 @@ class Support extends GetView<HomeControllerWayagram>{
                       ),
                       SizedBox(height: Get.height*0.02),
                       _TextButton(
-                          leading: Icon(Icons.call_rounded, color: Colors.black.withOpacity(0.5)),
+                          leading: Icon(Icons.call_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
                           text: "Make a phone call",
                           subtitle: "Call customer service directly",
                           onPressed: () async {
@@ -132,8 +132,8 @@ class _TextButton extends StatelessWidget {
                 offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
-            border: Border.all(color: Colors.white, width: 1),
-            color: Colors.white,
+            border: Border.all(color: getAppColor(Colors.white), width: 1),
+            color: getAppColor(Colors.white),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,7 +155,7 @@ class _TextButton extends StatelessWidget {
                       text,
                       maxLines: 1,
                       overflow: TextOverflow.clip,
-                      style: AppTextStyle.subtitle1.copyWith(color: Colors.black,fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
+                      style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black),fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
                     ),
                         SizedBox(
                           height: Get.height*0.01,
@@ -164,7 +164,7 @@ class _TextButton extends StatelessWidget {
                       subtitle,
                       maxLines: 1,
                       overflow: TextOverflow.clip,
-                      style: AppTextStyle.subtitle1.copyWith(color: Colors.black),
+                      style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black)),
                     ),
                         SizedBox(
                           height: Get.height*0.01,
@@ -177,7 +177,7 @@ class _TextButton extends StatelessWidget {
               IconButton(
                   onPressed: onPressed,
                   padding: EdgeInsets.zero,
-                  icon: Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: Get.width*0.04,)
+                  icon: Icon(Icons.arrow_forward_ios_rounded, color: getAppColor(Colors.black), size: Get.width*0.04,)
               )
             ],
           ),
