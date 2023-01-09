@@ -14,7 +14,7 @@ Brightness getAppBrightness(){
   if(darkMode){
     return Brightness.light;
   }
-  return getAppBrightness();
+  return Brightness.dark;
 }
 
 Color invert(Color color) {
