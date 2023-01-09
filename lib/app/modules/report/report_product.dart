@@ -62,10 +62,10 @@ class _ReportProductState extends State<ReportProduct> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: Brightness.dark
+          systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "report_user_post",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
@@ -130,10 +130,10 @@ class _ReportProductState extends State<ReportProduct> {
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarColor: getAppColor(AppColors.background),
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.dark,
+                statusBarIconBrightness: getAppBrightness(),
+                statusBarBrightness: getAppBrightness(),
                 systemNavigationBarColor: getAppColor(AppColors.background),
-                systemNavigationBarIconBrightness: Brightness.dark
+                systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
           body: SizedBox(

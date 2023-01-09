@@ -64,10 +64,10 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: Brightness.dark
+          systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<HomeControllerWayagram>(
         id: 'notifications_settings', builder: (controller) {
@@ -88,10 +88,10 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
             ),
             systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarColor: getAppColor(AppColors.background),
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.dark,
+                statusBarIconBrightness: getAppBrightness(),
+                statusBarBrightness: getAppBrightness(),
                 systemNavigationBarColor: getAppColor(AppColors.background),
-                systemNavigationBarIconBrightness: Brightness.dark
+                systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
           body: SingleChildScrollView(

@@ -645,10 +645,10 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
               ],
             systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarColor: getAppColor(AppColors.background),
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.dark,
+                statusBarIconBrightness: getAppBrightness(),
+                statusBarBrightness: getAppBrightness(),
                 systemNavigationBarColor: getAppColor(AppColors.background),
-                systemNavigationBarIconBrightness: Brightness.dark
+                systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
           body: TabBarView(

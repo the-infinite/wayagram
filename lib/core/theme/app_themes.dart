@@ -75,7 +75,7 @@ class AppThemes {
       onSurface: Colors.white,
       onBackground: AppColors.bostonUniRed,
       onError: AppColors.bostonUniRed,
-      brightness: Brightness.dark,
+      brightness: getAppBrightness(),
     ),
   );
 }

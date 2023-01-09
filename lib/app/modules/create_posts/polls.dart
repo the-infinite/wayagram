@@ -59,10 +59,10 @@ class _CreatePollState extends State<CreatePoll> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: Brightness.dark
+          systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Scaffold(
@@ -247,10 +247,10 @@ class _CreatePollState extends State<CreatePoll> {
             ],
             systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarColor: getAppColor(AppColors.background),
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.dark,
+                statusBarIconBrightness: getAppBrightness(),
+                statusBarBrightness: getAppBrightness(),
                 systemNavigationBarColor: getAppColor(AppColors.background),
-                systemNavigationBarIconBrightness: Brightness.dark
+                systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
           body: Column(

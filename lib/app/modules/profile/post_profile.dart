@@ -76,10 +76,10 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background).withOpacity(0.0),
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: Brightness.dark
+          systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<HomeControllerWayagram>(
           id: 'post_profile_page',
@@ -718,10 +718,10 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                             titleSpacing: 0,
                             systemOverlayStyle: SystemUiOverlayStyle(
                                 statusBarColor: scrolled ? getAppColor(AppColors.background) : Colors.transparent,
-                                statusBarIconBrightness: Brightness.dark,
-                                statusBarBrightness: Brightness.dark,
+                                statusBarIconBrightness: getAppBrightness(),
+                                statusBarBrightness: getAppBrightness(),
                                 systemNavigationBarColor: getAppColor(AppColors.background),
-                                systemNavigationBarIconBrightness: Brightness.dark
+                                systemNavigationBarIconBrightness: getAppBrightness()
                             ),
                             bottom: PreferredSize(
                                 preferredSize: Size(Get.width, Get.height * 0.06),

@@ -9,6 +9,14 @@ Color getAppColor(Color color){
   return color;
 }
 
+Brightness getAppBrightness(){
+  var darkMode = MyPref.darkMode.val;
+  if(darkMode){
+    return Brightness.light;
+  }
+  return getAppBrightness();
+}
+
 Color invert(Color color) {
   final r = 255 - color.red;
   final g = 255 - color.green;

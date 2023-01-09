@@ -53,10 +53,10 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: Brightness.dark
+          systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
         return Scaffold(
@@ -74,10 +74,10 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
               ),
               systemOverlayStyle: SystemUiOverlayStyle(
                   statusBarColor: getAppColor(AppColors.background),
-                  statusBarIconBrightness: Brightness.dark,
-                  statusBarBrightness: Brightness.dark,
+                  statusBarIconBrightness: getAppBrightness(),
+                  statusBarBrightness: getAppBrightness(),
                   systemNavigationBarColor: getAppColor(AppColors.background),
-                  systemNavigationBarIconBrightness: Brightness.dark
+                  systemNavigationBarIconBrightness: getAppBrightness()
               ),
           ),
           body: Column(

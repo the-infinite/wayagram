@@ -89,10 +89,10 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: Brightness.dark
+          systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<HomeControllerWayagram>(
           id: 'group_screen',
@@ -516,10 +516,10 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                           backgroundColor: getAppColor(AppColors.background),
                           systemOverlayStyle: SystemUiOverlayStyle(
                               statusBarColor: scrolled ? getAppColor(AppColors.background) : Colors.transparent,
-                              statusBarIconBrightness: Brightness.dark,
-                              statusBarBrightness: Brightness.dark,
+                              statusBarIconBrightness: getAppBrightness(),
+                              statusBarBrightness: getAppBrightness(),
                               systemNavigationBarColor: getAppColor(AppColors.background),
-                              systemNavigationBarIconBrightness: Brightness.dark
+                              systemNavigationBarIconBrightness: getAppBrightness()
                           ),
                           bottom: PreferredSize(
                               preferredSize: Size(Get.width, Get.height * 0.06),

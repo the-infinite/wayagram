@@ -84,10 +84,10 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: Brightness.dark
+          systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<HomeControllerWayagram>(
           id: 'page_screen',
@@ -459,10 +459,10 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                           backgroundColor: getAppColor(AppColors.background),
                           systemOverlayStyle: SystemUiOverlayStyle(
                               statusBarColor: scrolled ? getAppColor(AppColors.background) : Colors.transparent,
-                              statusBarIconBrightness: Brightness.dark,
-                              statusBarBrightness: Brightness.dark,
+                              statusBarIconBrightness: getAppBrightness(),
+                              statusBarBrightness: getAppBrightness(),
                               systemNavigationBarColor: getAppColor(AppColors.background),
-                              systemNavigationBarIconBrightness: Brightness.dark
+                              systemNavigationBarIconBrightness: getAppBrightness()
                           ),
                           bottom: PreferredSize(
                               preferredSize: Size(Get.width, Get.height * 0.06),

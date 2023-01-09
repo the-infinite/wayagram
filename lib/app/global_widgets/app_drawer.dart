@@ -90,10 +90,10 @@ class _AppDrawerState extends State<AppDrawer> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
             statusBarColor: getAppColor(AppColors.background),
-            statusBarIconBrightness: Brightness.dark,
+            statusBarIconBrightness: getAppBrightness(),
             statusBarBrightness: Brightness.light,
             systemNavigationBarColor: getAppColor(AppColors.background),
-            systemNavigationBarIconBrightness: Brightness.dark
+            systemNavigationBarIconBrightness: getAppBrightness()
         ),
         child: GetBuilder<HomeControllerWayagram>(
             builder: (controller) {

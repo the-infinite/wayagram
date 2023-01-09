@@ -105,10 +105,10 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: Brightness.dark
+          systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<HomeControllerWayagram>(id: "promotion_analytics_log",builder: (controller) {
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
@@ -144,10 +144,10 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
                 statusBarColor: getAppColor(AppColors.background),
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.dark,
+                statusBarIconBrightness: getAppBrightness(),
+                statusBarBrightness: getAppBrightness(),
                 systemNavigationBarColor: getAppColor(AppColors.background),
-                systemNavigationBarIconBrightness: Brightness.dark
+                systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
           body: Column(

@@ -142,10 +142,10 @@ class _ChatProfileState extends State<ChatProfile> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: Brightness.dark
+          systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<ChatControllerWayagram>(id:'chats_screen',builder: (chatController) {
         var chatNormalInfo = {"otherId": id};
@@ -165,7 +165,7 @@ class _ChatProfileState extends State<ChatProfile> {
                 padding: EdgeInsets.zero,
                 icon: Icon(
                   FeatherIcons.arrowLeft,
-                  color: getAppColor(AppColors.background),
+                  color: getAppColor(AppColors.onBackground),
                 ),
                 onPressed: () {
                   Get.back();
@@ -176,10 +176,10 @@ class _ChatProfileState extends State<ChatProfile> {
               titleSpacing: 0,
               systemOverlayStyle: SystemUiOverlayStyle(
                   statusBarColor: getAppColor(AppColors.background),
-                  statusBarIconBrightness: Brightness.dark,
-                  statusBarBrightness: Brightness.dark,
+                  statusBarIconBrightness: getAppBrightness(),
+                  statusBarBrightness: getAppBrightness(),
                   systemNavigationBarColor: getAppColor(AppColors.background),
-                  systemNavigationBarIconBrightness: Brightness.dark
+                  systemNavigationBarIconBrightness: getAppBrightness()
               ),
             ),
             body: SizedBox(
@@ -225,7 +225,7 @@ class _ChatProfileState extends State<ChatProfile> {
                           SizedBox(
                             width: Get.width*0.8,
                             child: Text(membersString, style: TextStyle(
-                              color: Colors.grey,
+                              color: getAppColor(Colors.grey),
                               fontSize: Get.textScaleFactor * 15,
                               fontWeight: FontWeight.w500,
                             ),overflow: TextOverflow.ellipsis,maxLines: 1,textAlign: TextAlign.center,),
@@ -254,7 +254,7 @@ class _ChatProfileState extends State<ChatProfile> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text("Offline", style: TextStyle(
-                            color: Colors.grey,
+                            color: getAppColor(Colors.grey),
                             fontSize: Get.textScaleFactor * 15,
                             fontWeight: FontWeight.w500,
                           ),),
@@ -443,13 +443,13 @@ class _ChatProfileState extends State<ChatProfile> {
 
 class ChatProfileAction extends StatelessWidget {
   ChatProfileAction({
-    Key? key, required this.title, required this.onTap, required this.icon,this.textColor = Colors.black,this.bgColor = AppColors.primary,this.iconColor = Colors.white
+    Key? key, required this.title, required this.onTap, required this.icon,this.textColor,this.bgColor = AppColors.primary,this.iconColor = Colors.white
   }) : super(key: key);
 
   final String title;
   final Function() onTap;
   final IconData icon;
-  final Color textColor;
+  final Color? textColor;
   final Color bgColor;
   final Color iconColor;
   @override
@@ -473,7 +473,7 @@ class ChatProfileAction extends StatelessWidget {
             ),
             SizedBox(width: 10,),
             Text(title, style: TextStyle(
-              color: textColor,
+              color: textColor??getAppColor(Colors.black),
               fontSize: Get.textScaleFactor * 17,
               fontWeight: FontWeight.w500,
             ),),
@@ -487,14 +487,14 @@ class ChatProfileAction extends StatelessWidget {
 
 class PersonProfileAction extends StatelessWidget {
   PersonProfileAction({
-    Key? key, required this.title, required this.onTap, required this.url,this.textColor = Colors.black,this.bgColor = AppColors.primary,this.iconColor = Colors.white, required this.subtitle
+    Key? key, required this.title, required this.onTap, required this.url,this.textColor,this.bgColor = AppColors.primary,this.iconColor = Colors.white, required this.subtitle
   }) : super(key: key);
 
   final String title;
   final String url;
   final String subtitle;
   final Function() onTap;
-  final Color textColor;
+  final Color? textColor;
   final Color bgColor;
   final Color iconColor;
   @override
@@ -524,12 +524,12 @@ class PersonProfileAction extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: TextStyle(
-                  color: textColor,
+                  color: textColor ?? getAppColor(Colors.black),
                   fontSize: Get.textScaleFactor * 17,
                   fontWeight: FontWeight.w500,
                 ),),
                 Text(subtitle, style: TextStyle(
-                  color: AppColors.grey,
+                  color: getAppColor(Colors.grey),
                   fontSize: Get.textScaleFactor * 12,
                   fontWeight: FontWeight.w500,
                 ),),
