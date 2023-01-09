@@ -551,7 +551,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, Get.height * 0.06),
@@ -565,7 +565,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                     TabBar(
                       controller: tabController,
                       padding: EdgeInsets.zero,
-                      labelColor: Colors.black,
+                      labelColor: getAppColor(Colors.black),
                       unselectedLabelColor: Color(0xff9A9A9A),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
@@ -630,7 +630,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                           ),
                           SizedBox(width: 10,),
                           Text(currentInterest, style: TextStyle(
-                            color: Colors.black,
+                            color: getAppColor(Colors.black),
                             fontSize: Get.textScaleFactor * 17,
                             fontWeight: FontWeight.w500,
                           ),),
@@ -730,7 +730,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                   ),
                                   SizedBox(width: 10,),
                                   Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontSize: Get.textScaleFactor * 17,
                                     fontWeight: FontWeight.w500,
                                   ),),
@@ -791,7 +791,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                   ),
                                   SizedBox(width: 10,),
                                   Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontSize: Get.textScaleFactor * 17,
                                     fontWeight: FontWeight.w500,
                                   ),),
