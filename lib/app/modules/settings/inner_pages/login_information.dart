@@ -60,7 +60,9 @@ class _LoginInformationState extends State<LoginInformation> {
       LastLoginResponse lastLoginResponse = LastLoginResponse.fromJson(jsonDecode(savedLoginTime.val));
       location = "${lastLoginResponse.city}, ${lastLoginResponse.country}";
       device = lastLoginResponse.device.toString();
-      time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))}";
+      if(lastLoginResponse.loginDate != null){
+        time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))}";
+      }
     }
 
     controller.getData("/auth-service/api/v1/history/my-last-login", false).then((value){
@@ -315,7 +317,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                       color: AppColors.primary,
                                                       borderRadius: BorderRadius.circular(100),
                                                     ),
-                                                    child: Icon(Icons.access_time_filled_outlined, color: getAppColor(Colors.white), size: Get.height*0.02,),
+                                                    child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                                   ),
                                                   SizedBox(width: 10,),
                                                   Column(
@@ -400,7 +402,7 @@ class _LoginInformationState extends State<LoginInformation> {
                                                       color: AppColors.primary,
                                                       borderRadius: BorderRadius.circular(100),
                                                     ),
-                                                    child: Icon(Icons.access_time_filled_outlined, color: getAppColor(Colors.white), size: Get.height*0.02,),
+                                                    child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                                   ),
                                                   SizedBox(width: 10,),
                                                   Column(

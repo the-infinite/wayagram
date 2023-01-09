@@ -69,7 +69,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
               )),
               centerTitle: true,
               leading: IconButton(
-                icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+                icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
                 onPressed: () => Navigator.pop(context),
               ),
               systemOverlayStyle: SystemUiOverlayStyle(
@@ -91,7 +91,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
               TabBar(
                 controller: tabController,
                 padding: EdgeInsets.zero,
-                labelColor: Colors.black,
+                labelColor: getAppColor(Colors.black),
                 unselectedLabelColor: Color(0xff9A9A9A),
                 indicatorColor: AppColors.primary,
                 indicatorSize: TabBarIndicatorSize.tab,

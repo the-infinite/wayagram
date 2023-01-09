@@ -266,7 +266,7 @@ class _PersonViewState extends State<PersonView> {
                         Text(
                           widget.name[index],
                           style: TextStyle(
-                            color: Colors.black ,
+                            color: getAppColor(Colors.black) ,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -293,14 +293,14 @@ class _PersonViewState extends State<PersonView> {
                           children: [
                             PopupMenuButton(
                               color: Colors.white,
-                              icon: Icon(Icons.more_vert,color: Colors.black,),
+                              icon: Icon(Icons.more_vert,color: getAppColor(Colors.black),),
                               itemBuilder: (context) => [
                                 PopupMenuItem(
                                   value: 0,
                                   child: Text(
                                     "Report",
                                     style: AppTextStyle.bodyText1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
