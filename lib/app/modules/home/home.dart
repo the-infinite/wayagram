@@ -158,22 +158,22 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 ),
                 actions: [
                 Padding(
-                  padding: EdgeInsets.only(right: 10.0),
+                  padding: const EdgeInsets.only(right: 10.0),
                   child: SizedBox(
                     width: 45,
                     height: 45,
                     child: IconButton(
                       icon: ImageHelper.normalImage(
-                        (showSearchIcon && Platform.isAndroid) ? 'assets/images/search.png' : 'assets/images/follow_new_users.png',
+                        (!showSearchIcon && Platform.isAndroid) ? 'assets/images/follow_new_users.png' : 'assets/images/search.png',
                         color: getAppColor(AppColors.onBackground),
-                        width: (showSearchIcon && Platform.isAndroid) ? Get.width*0.05 : Get.width*0.07,
-                        height: (showSearchIcon && Platform.isAndroid) ? Get.width*0.05 : Get.width*0.07,
+                        width: (!showSearchIcon && Platform.isAndroid) ?  Get.width*0.07 : Get.width*0.05,
+                        height: (!showSearchIcon && Platform.isAndroid) ?  Get.width*0.07 : Get.width*0.05,
                       ),
                       onPressed: () {
-                        if (showSearchIcon && Platform.isAndroid) {
-                          Get.to(() => Search(),binding: WayagramBinding());
-                        } else {
+                        if (!showSearchIcon && Platform.isAndroid) {
                           Get.to(() => Contact(),binding: WayagramBinding());
+                        } else {
+                          Get.to(() => Search(),binding: WayagramBinding());
                         }
                       },
                       color: getAppColor(AppColors.background),

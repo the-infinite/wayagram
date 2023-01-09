@@ -62,7 +62,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
           appBar: AppBar(
             elevation: 0,
             title: Text('Groups & Pages', style: AppTextStyle.subtitle1.copyWith(
-              color: Colors.black,
+              color: getAppColor(Colors.black),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -70,7 +70,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.black,
+                color: getAppColor(Colors.black),
               ),
               onPressed: () {
                 Get.back();
@@ -89,7 +89,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
               TabBar(
                 controller: tabController,
                 padding: EdgeInsets.zero,
-                labelColor: Colors.black,
+                labelColor: getAppColor(Colors.black),
                 unselectedLabelColor: Color(0xff9A9A9A),
                 indicatorColor: AppColors.primary,
                 indicatorSize: TabBarIndicatorSize.tab,
@@ -128,13 +128,13 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                 top: 10
                             ),
                             child: Container(
-                              color: Colors.blue.shade50,
+                              color: getAppColor(Colors.blue.shade50),
                               width: Get.width,
                               padding: EdgeInsets.all(10),
                               child: Text(
                                 'My Created Groups',
                                 style: AppTextStyle.headline4.copyWith(
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
                                 ),
@@ -168,13 +168,13 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                 top: 10
                             ),
                             child: Container(
-                              color: Colors.blue.shade50,
+                              color: getAppColor(Colors.blue.shade50),
                               width: Get.width,
                               padding: EdgeInsets.all(10),
                               child: Text(
                                 'Joined Groups',
                                 style: AppTextStyle.headline4.copyWith(
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
                                 ),
@@ -208,13 +208,13 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                 top: 10
                             ),
                             child: Container(
-                              color: Colors.blue.shade50,
+                              color: getAppColor(Colors.blue.shade50),
                               width: Get.width,
                               padding: EdgeInsets.all(10),
                               child: Text(
                                 'Groups To Join',
                                 style: AppTextStyle.headline4.copyWith(
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
                                 ),
@@ -279,13 +279,13 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                 top: 10
                             ),
                             child: Container(
-                              color: Colors.blue.shade50,
+                              color: getAppColor(Colors.blue.shade50),
                               width: Get.width,
                               padding: EdgeInsets.all(10),
                               child: Text(
                                 'All Groups',
                                 style: AppTextStyle.headline4.copyWith(
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
                                 ),
@@ -371,13 +371,13 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                 top: 10
                             ),
                             child: Container(
-                              color: Colors.blue.shade50,
+                              color: getAppColor(Colors.blue.shade50),
                               width: Get.width,
                               padding: EdgeInsets.all(10),
                               child: Text(
                                 'My Pages',
                                 style: AppTextStyle.headline4.copyWith(
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
                                 ),
@@ -408,13 +408,13 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                 top: 10
                             ),
                             child: Container(
-                              color: Colors.blue.shade50,
+                              color: getAppColor(Colors.blue.shade50),
                               width: Get.width,
                               padding: EdgeInsets.all(10),
                               child: Text(
                                 'Pages To Follow',
                                 style: AppTextStyle.headline4.copyWith(
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
                                 ),
@@ -474,13 +474,13 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                 top: 10
                             ),
                             child: Container(
-                              color: Colors.blue.shade50,
+                              color: getAppColor(Colors.blue.shade50),
                               width: Get.width,
                               padding: EdgeInsets.all(10),
                               child: Text(
                                 'All Pages',
                                 style: AppTextStyle.headline4.copyWith(
-                                  color: Colors.black,
+                                  color: getAppColor(Colors.black),
                                   fontWeight: FontWeight.normal,
                                   fontSize: 16,
                                 ),

@@ -71,12 +71,12 @@ class _TopClipsState extends State<TopClips> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(1.0),
                 child: Container(
-                  color: Color(0xffEDEAEA),
+                  color: getAppColor(Color(0xffEDEAEA)),
                   height: 1.0,
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
