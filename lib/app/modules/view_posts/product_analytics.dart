@@ -107,7 +107,7 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(1.0),
@@ -196,7 +196,7 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
                       child: Text(
                         "Promote your product to reach more people and boost engagements",
                         style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
+                          color: getAppColor(Colors.black).withOpacity(0.5),
                           fontSize: Get.textScaleFactor * 16,
                           fontWeight: FontWeight.normal,
                         ),
@@ -237,7 +237,7 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
                   Text(
                     title,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: getAppColor(Colors.black),
                       fontSize: Get.textScaleFactor * 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -248,7 +248,7 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: getAppColor(Colors.black),
                       fontSize: Get.textScaleFactor * 15,
                       fontWeight: FontWeight.normal,
                     ),

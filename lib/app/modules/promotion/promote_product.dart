@@ -607,7 +607,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(1.0),
@@ -655,7 +655,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                             child: Text(
                               "Customize Your Audience",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -669,7 +669,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                             child: Text(
                               "Promote your Product to reach more people and boost engagements",
                               style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
+                                color: getAppColor(Colors.black).withOpacity(0.5),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.normal,
                               ),
@@ -991,7 +991,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                           child: Text(
                             "Product Promotion Review",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1005,7 +1005,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                           child: Text(
                             "Review your product promotion",
                             style: TextStyle(
-                              color: Colors.black.withOpacity(0.5),
+                              color: getAppColor(Colors.black).withOpacity(0.5),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.normal,
                             ),
@@ -1021,7 +1021,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                           child: Text(
                             "Overview",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1049,7 +1049,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                           ),
                         ),
                         Divider(
-                          color: Colors.black.withOpacity(0.5),
+                          color: getAppColor(Colors.black).withOpacity(0.5),
                           thickness: 1,
                         ),
                         SizedBox(height: Get.height*0.02),
@@ -1059,7 +1059,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                           child: Text(
                             "Audience",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1081,7 +1081,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                             subtitle: genderTextController.text
                         ),
                         Divider(
-                          color: Colors.black.withOpacity(0.5),
+                          color: getAppColor(Colors.black).withOpacity(0.5),
                           thickness: 1,
                         ),
                         SizedBox(height: Get.height*0.02),
@@ -1091,7 +1091,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                           child: Text(
                             "Promotion Goals",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: getAppColor(Colors.black),
                               fontSize: Get.textScaleFactor * 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1143,7 +1143,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                             child: Text(
                               "Payment Overview",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1159,7 +1159,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                             child: Text(
                               "Overview",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1186,7 +1186,7 @@ class _PromoteProductState extends State<PromoteProduct> {
 
                           SizedBox(height: Get.height*0.01),
                           Divider(
-                            color: Colors.black.withOpacity(0.5),
+                            color: getAppColor(Colors.black).withOpacity(0.5),
                             thickness: 1,
                           ),
                           SizedBox(height: Get.height*0.02),
@@ -1195,7 +1195,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                             child: Text(
                               "Account Details",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.textScaleFactor * 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1353,7 +1353,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                                 Text(
                                   title,
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontSize: Get.textScaleFactor * 16,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -1364,7 +1364,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                                 Text(
                                   subtitle,
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontSize: Get.textScaleFactor * 15,
                                     fontWeight: FontWeight.normal,
                                   ),
