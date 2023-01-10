@@ -161,7 +161,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                   children: [
                     Container(
                       height: Get.height * 0.06,
-                      width: Get.width * 0.2,
+                      width: Get.width * 0.22,
                       decoration: BoxDecoration(
                         color: getAppColor(AppColors.background),
                         borderRadius: BorderRadius.circular(10),
@@ -204,7 +204,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                     ),
                     Container(
                       height: Get.height * 0.06,
-                      width: Get.width * 0.5,
+                      width: Get.width * 0.48,
                       decoration: BoxDecoration(
                         color: getAppColor(AppColors.background),
                         borderRadius: BorderRadius.circular(10),
@@ -247,7 +247,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                     ),
                     Container(
                       height: Get.height * 0.06,
-                      width: Get.width * 0.2,
+                      width: Get.width * 0.22,
                       decoration: BoxDecoration(
                         color: getAppColor(AppColors.background),
                         borderRadius: BorderRadius.circular(10),
@@ -264,7 +264,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Amount",
+                            "Amount(NGN)",
                             style: TextStyle(
                               color: getAppColor(Color(0xff4F4F4F)),
                               fontSize: Get.textScaleFactor * 12,
@@ -275,7 +275,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                             textAlign: TextAlign.center,
                           ),
                           Text(
-                            pollStatistics.isPaid == true ?  "NGN  ${shortenCount(total.toString())}" : "Free",
+                            pollStatistics.isPaid == true ?  shortenCount(total.toString()) : "Free",
                             style: TextStyle(
                               color: AppColors.primary,
                               fontSize: Get.textScaleFactor * 18,

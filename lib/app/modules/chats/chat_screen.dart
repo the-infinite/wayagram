@@ -800,128 +800,131 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             bottomNavigationBar: Padding(
               padding: MediaQuery.of(context).viewInsets,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    color: Color(0xffEDEAEA),
-                    height: 1.0,
-                  ),
-                  SizedBox(height: Get.height*0.008),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: Get.width*0.02),
-                        child: SizedBox(
-                          width: Get.width * 0.8,
-                          child: AppInput(
-                            hintText: 'Write a message...',
-                            controller: chatTextController,
-                            borderRadius: 100,
-                            filledColor: getAppColor(Colors.grey.shade300),
-                            borderSide: BorderSide.none,
-                            hintColor: getAppColor(Colors.grey.shade500),
-                            maxLines: 1,
-                            keyboardType: TextInputType.text,
-                            focusNode: inputNode,
-                            suffixIcon: IconButton(
-                              onPressed: () async {
-                                FilePickerResult? result = await FilePicker.platform.pickFiles();
+              child: Container(
+                color: getAppColor(AppColors.background),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      color: Color(0xffEDEAEA),
+                      height: 1.0,
+                    ),
+                    SizedBox(height: Get.height*0.008),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: Get.width*0.02),
+                          child: SizedBox(
+                            width: Get.width * 0.8,
+                            child: AppInput(
+                              hintText: 'Write a message...',
+                              controller: chatTextController,
+                              borderRadius: 100,
+                              filledColor: getAppColor(Colors.grey.shade300),
+                              borderSide: BorderSide.none,
+                              hintColor: getAppColor(Colors.grey.shade500),
+                              maxLines: 1,
+                              keyboardType: TextInputType.text,
+                              focusNode: inputNode,
+                              suffixIcon: IconButton(
+                                onPressed: () async {
+                                  FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-                                if (result != null) {
-                                  File file = File(result.files.single.path!);
-                                  Map<String,dynamic> body = {};
-                                  var contentType = lookupMimeType(result.files.single.path!);
-                                  body['file'] = await dio.MultipartFile.fromFile(
-                                    file.path,
-                                    filename: file.path.split('/').last,
-                                    contentType: http_parser.MediaType.parse(contentType!),
-                                  );
-                                  controller.postData(dio.FormData.fromMap(body), "/social-file-resource/aws-upload-file?").then((value){
-                                    if(value.isSuccessful){
-                                      var message = {
-                                        "receiverId":post.otherId.toString(),
-                                        "chatId":post.chatId.toString(),
-                                        "message":"file",
-                                        "forwardMessage":false,
-                                        "messageType": "fileMessage",
-                                        "fileUrl": value.url.toString(),
-                                      };
-                                      chatController.listenToCustomEvent('notify_user',(data){
-                                        SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
-                                        if(sendMessageResponse.status == true){
-                                          chatTextController.clear();
-                                          chatController.update(['chats_screen']);
-                                        }
-                                        chatController.stopListeningToEvent("notify_user");
-                                      });
-                                      chatController.emitMessages("send_message", message);
-                                    }
-                                  });
-                                }
-                              },
-                              icon: Transform.rotate(
-                                angle: 45 * math.pi / 180,
-                                child: Icon(
-                                  Icons.attach_file_rounded,
-                                  color: getAppColor(Colors.grey),
+                                  if (result != null) {
+                                    File file = File(result.files.single.path!);
+                                    Map<String,dynamic> body = {};
+                                    var contentType = lookupMimeType(result.files.single.path!);
+                                    body['file'] = await dio.MultipartFile.fromFile(
+                                      file.path,
+                                      filename: file.path.split('/').last,
+                                      contentType: http_parser.MediaType.parse(contentType!),
+                                    );
+                                    controller.postData(dio.FormData.fromMap(body), "/social-file-resource/aws-upload-file?").then((value){
+                                      if(value.isSuccessful){
+                                        var message = {
+                                          "receiverId":post.otherId.toString(),
+                                          "chatId":post.chatId.toString(),
+                                          "message":"file",
+                                          "forwardMessage":false,
+                                          "messageType": "fileMessage",
+                                          "fileUrl": value.url.toString(),
+                                        };
+                                        chatController.listenToCustomEvent('notify_user',(data){
+                                          SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
+                                          if(sendMessageResponse.status == true){
+                                            chatTextController.clear();
+                                            chatController.update(['chats_screen']);
+                                          }
+                                          chatController.stopListeningToEvent("notify_user");
+                                        });
+                                        chatController.emitMessages("send_message", message);
+                                      }
+                                    });
+                                  }
+                                },
+                                icon: Transform.rotate(
+                                  angle: 45 * math.pi / 180,
+                                  child: Icon(
+                                    Icons.attach_file_rounded,
+                                    color: getAppColor(Colors.grey),
+                                  ),
                                 ),
                               ),
+                              onChanged: (value) {
+                                chatController.update(['chats_screen']);
+                              },
                             ),
-                            onChanged: (value) {
-                              chatController.update(['chats_screen']);
-                            },
                           ),
                         ),
-                      ),
 
-                      Padding(
-                        padding: EdgeInsets.only(right: Get.width*0.02),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: IconButton(
-                            onPressed: () {
-                              if(post.isGroup == true){
-                                var chatGroupInfo = {"groupId":id};
-                              }else {
-                                if(chatTextController.text.isNotEmpty){
-                                  var message = {
-                                    "receiverId":post.otherId.toString(),
-                                    "chatId":post.chatId.toString(),
-                                    "message":chatTextController.text.toString(),
-                                    "forwardMessage":false,
-                                    "messageType": "textMessage"
-                                  };
-                                  chatController.listenToCustomEvent('notify_user',(data){
-                                    SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
-                                    if(sendMessageResponse.status == true){
-                                      chatTextController.clear();
-                                      chatController.update(['chats_screen']);
-                                    }
-                                    chatController.stopListeningToEvent("notify_user");
-                                  });
-                                  chatController.emitMessages("send_message", message);
+                        Padding(
+                          padding: EdgeInsets.only(right: Get.width*0.02),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                if(post.isGroup == true){
+                                  var chatGroupInfo = {"groupId":id};
+                                }else {
+                                  if(chatTextController.text.isNotEmpty){
+                                    var message = {
+                                      "receiverId":post.otherId.toString(),
+                                      "chatId":post.chatId.toString(),
+                                      "message":chatTextController.text.toString(),
+                                      "forwardMessage":false,
+                                      "messageType": "textMessage"
+                                    };
+                                    chatController.listenToCustomEvent('notify_user',(data){
+                                      SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
+                                      if(sendMessageResponse.status == true){
+                                        chatTextController.clear();
+                                        chatController.update(['chats_screen']);
+                                      }
+                                      chatController.stopListeningToEvent("notify_user");
+                                    });
+                                    chatController.emitMessages("send_message", message);
+                                  }
                                 }
-                              }
-                            },
-                            icon: Icon(
-                              //chatTextController.text.isEmpty
-                                //  ? Icons.mic_rounded:
-                            Icons.send_rounded,
-                              color: AppColors.background,
+                              },
+                              icon: Icon(
+                                //chatTextController.text.isEmpty
+                                  //  ? Icons.mic_rounded:
+                              Icons.send_rounded,
+                                color: AppColors.background,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: Get.height*0.008),
-                ],
+                        )
+                      ],
+                    ),
+                    SizedBox(height: Get.height*0.008),
+                  ],
+                ),
               ),
             ),
           );

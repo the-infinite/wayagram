@@ -182,8 +182,10 @@ class _ChatProfileState extends State<ChatProfile> {
                   systemNavigationBarIconBrightness: getAppBrightness()
               ),
             ),
-            body: SizedBox(
-              width: Get.width,
+            body: Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: getAppColor(AppColors.background),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: 0),
                 child:Column(

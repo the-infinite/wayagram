@@ -90,92 +90,67 @@ class NewChat extends StatelessWidget{
                     systemNavigationBarIconBrightness: getAppBrightness()
                 ),
               ),
-              body: AppRefresher(
-                onRefresh: () async {
-                  final response = await controller.getData('/wayagram-service/graph/friend/following?user_id=${profile.userId}&page=1',true);
-                  if(response.isSuccessful){
-                    var posts = FollowingModelEntity.fromJson(response.data);
-                    if(posts.following != null){
-                      if(posts.following!.isNotEmpty && savedPosts.isNotEmpty){
-                        var saved = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
-                        if(saved.following!.isNotEmpty){
-                          var first = saved.following!.first;
-                          var current = posts.following!.first;
-                          if(first.id != current.id){
-                            posts.following = saved.following! + posts.following!;
-                            MyPref.following.val = jsonEncode(posts);
+              body: Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: getAppColor(AppColors.background),
+                child: AppRefresher(
+                  onRefresh: () async {
+                    final response = await controller.getData('/wayagram-service/graph/friend/following?user_id=${profile.userId}&page=1',true);
+                    if(response.isSuccessful){
+                      var posts = FollowingModelEntity.fromJson(response.data);
+                      if(posts.following != null){
+                        if(posts.following!.isNotEmpty && savedPosts.isNotEmpty){
+                          var saved = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
+                          if(saved.following!.isNotEmpty){
+                            var first = saved.following!.first;
+                            var current = posts.following!.first;
+                            if(first.id != current.id){
+                              posts.following = saved.following! + posts.following!;
+                              MyPref.following.val = jsonEncode(posts);
+                            }
+                          }else{
+                            MyPref.following.val = jsonEncode(response.data);
                           }
-                        }else{
-                          MyPref.following.val = jsonEncode(response.data);
                         }
                       }
                     }
-                  }
-                  refreshController.refreshCompleted();
-                  controller.update();
-                },
-                onLoading: () async {
-                  final response = await controller.getData('/wayagram-service/graph/friend/following?user_id=${profile.userId}&page=${currentPage.val}',true);
-                  if(response.isSuccessful){
-                    var posts = FollowingModelEntity.fromJson(response.data);
-                    var saved = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
-                    for (var element in posts.following!) {
-                      saved.following!.removeWhere((e) => e.id == element.id);
+                    refreshController.refreshCompleted();
+                    controller.update();
+                  },
+                  onLoading: () async {
+                    final response = await controller.getData('/wayagram-service/graph/friend/following?user_id=${profile.userId}&page=${currentPage.val}',true);
+                    if(response.isSuccessful){
+                      var posts = FollowingModelEntity.fromJson(response.data);
+                      var saved = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
+                      for (var element in posts.following!) {
+                        saved.following!.removeWhere((e) => e.id == element.id);
+                      }
+                      saved.following!.addAll(posts.following!);
+                      MyPref.following.val = jsonEncode(saved);
+                      if(posts.following!.isNotEmpty){
+                        currentPage.val = currentPage.val + 1;
+                      }
                     }
-                    saved.following!.addAll(posts.following!);
-                    MyPref.following.val = jsonEncode(saved);
-                    if(posts.following!.isNotEmpty){
-                      currentPage.val = currentPage.val + 1;
-                    }
-                  }
-                  refreshController.loadComplete();
-                  controller.update();
-                },
-                controller: refreshController,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FutureBuilder<ApiResponse>(
-                          future: controller.getData('/wayagram-service/graph/friend/following?user_id=${profile.userId}&page=1',true),
-                          builder: (context, snapshot) {
-                            var savedPosts = MyPref.following.val;
-                            if(savedPosts.isNotEmpty){
-                              var posts = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
-                              var names = posts.following!.map((e) => e.displayName.toString()).toList();
-                              var username = posts.following!.map((e) => e.username.toString()).toList();
-                              var profile = posts.following!.map((e) => e.avatar.toString()).toList();
-                              var userIds = posts.following!.map((e) => e.userId.toString()).toList();
-                              return PersonView(
-                                name: names,
-                                username: username,
-                                profilePic: profile,
-                                length: posts.following == null ? 0 : posts.following!.length,
-                                userIDs: userIds,
-                                following: posts.following,
-                                showButton: true,
-                                buttonName: "Message",
-                                onButtonClick: (person) async{
-                                  ChatOverview chatOverview = ChatOverview();
-                                  chatOverview.id = person.id.toString();
-                                  chatOverview.chatId = "${fullProfile.userId}_${person.id.toString().hashCode}";
-                                  chatOverview.otherId = person.id;
-                                  chatOverview.otherImageURL = person.coverImage;
-                                  chatOverview.otherUserName = person.username;
-                                  chatOverview.otherDisplayName = person.displayName;
-                                  Get.to(() => ChatScreen(chatOverview: chatOverview));
-                                },
-                              );
-                            }else{
-                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                var posts = FollowingModelEntity.fromJson(snapshot.data!.data);
+                    refreshController.loadComplete();
+                    controller.update();
+                  },
+                  controller: refreshController,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FutureBuilder<ApiResponse>(
+                            future: controller.getData('/wayagram-service/graph/friend/following?user_id=${profile.userId}&page=1',true),
+                            builder: (context, snapshot) {
+                              var savedPosts = MyPref.following.val;
+                              if(savedPosts.isNotEmpty){
+                                var posts = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
                                 var names = posts.following!.map((e) => e.displayName.toString()).toList();
                                 var username = posts.following!.map((e) => e.username.toString()).toList();
                                 var profile = posts.following!.map((e) => e.avatar.toString()).toList();
                                 var userIds = posts.following!.map((e) => e.userId.toString()).toList();
-                                MyPref.following.val = jsonEncode(posts);
-                                currentPage.val = 2;
                                 return PersonView(
                                   name: names,
                                   username: username,
@@ -186,21 +161,51 @@ class NewChat extends StatelessWidget{
                                   showButton: true,
                                   buttonName: "Message",
                                   onButtonClick: (person) async{
-                                      ChatOverview chatOverview = ChatOverview();
-                                      chatOverview.id = person.id.toString();
-                                      chatOverview.chatId = "${fullProfile.userId}_${person.id.toString().hashCode}";
-                                      chatOverview.otherId = person.id;
-                                      chatOverview.otherImageURL = person.coverImage;
-                                      chatOverview.otherUserName = person.username;
-                                      chatOverview.otherDisplayName = person.displayName;
+                                    ChatOverview chatOverview = ChatOverview();
+                                    chatOverview.id = person.id.toString();
+                                    chatOverview.chatId = "${fullProfile.userId}_${person.id.toString().hashCode}";
+                                    chatOverview.otherId = person.id;
+                                    chatOverview.otherImageURL = person.coverImage;
+                                    chatOverview.otherUserName = person.username;
+                                    chatOverview.otherDisplayName = person.displayName;
                                     Get.to(() => ChatScreen(chatOverview: chatOverview));
                                   },
                                 );
+                              }else{
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  var posts = FollowingModelEntity.fromJson(snapshot.data!.data);
+                                  var names = posts.following!.map((e) => e.displayName.toString()).toList();
+                                  var username = posts.following!.map((e) => e.username.toString()).toList();
+                                  var profile = posts.following!.map((e) => e.avatar.toString()).toList();
+                                  var userIds = posts.following!.map((e) => e.userId.toString()).toList();
+                                  MyPref.following.val = jsonEncode(posts);
+                                  currentPage.val = 2;
+                                  return PersonView(
+                                    name: names,
+                                    username: username,
+                                    profilePic: profile,
+                                    length: posts.following == null ? 0 : posts.following!.length,
+                                    userIDs: userIds,
+                                    following: posts.following,
+                                    showButton: true,
+                                    buttonName: "Message",
+                                    onButtonClick: (person) async{
+                                        ChatOverview chatOverview = ChatOverview();
+                                        chatOverview.id = person.id.toString();
+                                        chatOverview.chatId = "${fullProfile.userId}_${person.id.toString().hashCode}";
+                                        chatOverview.otherId = person.id;
+                                        chatOverview.otherImageURL = person.coverImage;
+                                        chatOverview.otherUserName = person.username;
+                                        chatOverview.otherDisplayName = person.displayName;
+                                      Get.to(() => ChatScreen(chatOverview: chatOverview));
+                                    },
+                                  );
+                                }
+                                return NotificationView(isLoading: true);
                               }
-                              return NotificationView(isLoading: true);
-                            }
-                          }),
-                    ],
+                            }),
+                      ],
+                    ),
                   ),
                 ),
               ),

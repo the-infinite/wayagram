@@ -102,8 +102,10 @@ class _ViewPostState extends State<ViewPost> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: SizedBox(
+          body: Container(
             width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
             child: Padding(
               padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
               child: SingleChildScrollView(
@@ -174,124 +176,127 @@ class _ViewPostState extends State<ViewPost> {
               ),
             ),
           ),
-          bottomNavigationBar: Padding(
-            padding: MediaQuery.of(context).viewInsets,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  color: Color(0xffEDEAEA),
-                  height: 1.0,
-                ),
-                SizedBox(height: Get.height*0.008),
-                AnimatedSize(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.fastOutSlowIn,
-                    child: usernameToReplyTo.isEmpty ? SizedBox.shrink() : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: Get.width*0.035),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: Get.width*0.8,
-                            child: HashTagText(
-                              text: "Replying to @$usernameToReplyTo",
-                              basicStyle: AppTextStyle.bodyText1.copyWith(
-                                color: getAppColor(Colors.black),
-                                fontSize: Get.textScaleFactor * 16,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              decoratedStyle: AppTextStyle.bodyText1.copyWith(
-                                color: Colors.blue,
-                                fontSize: Get.textScaleFactor * 16,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
-                              decorateAtSign: true,
-                            ),
-                          ),
-                          Spacer(),
-                          InkWell(
-                            onTap: (){
-                              parentID = "";
-                              usernameToReplyTo = "";
-                              controller.update(["comment_page"]);
-                            },
-                            child: Icon(Icons.cancel_rounded, color: Colors.grey),
-                          )
-                        ],
-                      ),
-                    )
-                ),
-                if(usernameToReplyTo.isNotEmpty)
+          bottomNavigationBar: Container(
+            color: getAppColor(AppColors.background),
+            child: Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    color: Color(0xffEDEAEA),
+                    height: 1.0,
+                  ),
                   SizedBox(height: Get.height*0.008),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.02),
-                      child: SizedBox(
-                        width: Get.width * 0.8,
-                        child: AppInput(
-                          hintText: 'Write a message...',
-                          controller: commentController,
-                          borderRadius: 100,
-                          filledColor: getAppColor(Colors.grey.shade300),
-                          borderSide: BorderSide.none,
-                          hintColor: getAppColor(Colors.grey.shade500),
-                          maxLines: 1,
-                          keyboardType: TextInputType.text,
-                          focusNode: inputNode,
+                  AnimatedSize(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.fastOutSlowIn,
+                      child: usernameToReplyTo.isEmpty ? SizedBox.shrink() : Padding(
+                        padding: EdgeInsets.symmetric(horizontal: Get.width*0.035),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: Get.width*0.8,
+                              child: HashTagText(
+                                text: "Replying to @$usernameToReplyTo",
+                                basicStyle: AppTextStyle.bodyText1.copyWith(
+                                  color: getAppColor(Colors.black),
+                                  fontSize: Get.textScaleFactor * 16,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                  color: Colors.blue,
+                                  fontSize: Get.textScaleFactor * 16,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start,
+                                decorateAtSign: true,
+                              ),
+                            ),
+                            Spacer(),
+                            InkWell(
+                              onTap: (){
+                                parentID = "";
+                                usernameToReplyTo = "";
+                                controller.update(["comment_page"]);
+                              },
+                              child: Icon(Icons.cancel_rounded, color: Colors.grey),
+                            )
+                          ],
+                        ),
+                      )
+                  ),
+                  if(usernameToReplyTo.isNotEmpty)
+                    SizedBox(height: Get.height*0.008),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.02),
+                        child: SizedBox(
+                          width: Get.width * 0.8,
+                          child: AppInput(
+                            hintText: 'Write a message...',
+                            controller: commentController,
+                            borderRadius: 100,
+                            filledColor: getAppColor(Colors.grey.shade300),
+                            borderSide: BorderSide.none,
+                            hintColor: getAppColor(Colors.grey.shade500),
+                            maxLines: 1,
+                            keyboardType: TextInputType.text,
+                            focusNode: inputNode,
+                          ),
                         ),
                       ),
-                    ),
-                    AppButton(
-                      title: 'Send',
-                      onPressed: () async {
-                        if(commentController.text.isNotEmpty){
-                          var data = {
-                            "post_id": widget.post.id,
-                            "comment": commentController.text,
-                            "profile_id": fullProfile.id,
-                            "type": "user"
-                          };
-                          if(parentID.isNotEmpty){
-                            data["parent_id"] = parentID;
-                          }
-                          var response = await controller.postData(data,"/wayagram-service/all-posts/comment-create");
-                          if(response.isSuccessful){
-                            widget.post.commentCount = (int.parse(widget.post.commentCount.toString()) + 1).toString();
-                            commentController.clear();
+                      AppButton(
+                        title: 'Send',
+                        onPressed: () async {
+                          if(commentController.text.isNotEmpty){
+                            var data = {
+                              "post_id": widget.post.id,
+                              "comment": commentController.text,
+                              "profile_id": fullProfile.id,
+                              "type": "user"
+                            };
                             if(parentID.isNotEmpty){
-                              controller.getCommentID = parentID;
-                              parentID = "";
-                              usernameToReplyTo = "";
+                              data["parent_id"] = parentID;
                             }
-                            controller.update(["comment_page"]);
-                            controller.getPosts.then((value) {
-                              controller.update(["home_tab"]);
-                            });
-                            closeKeyboard();
-                          }else{
-                            AppOverlay.showErrorSnackBar(title: "Error", content: "Unable to comment, please try again later");
+                            var response = await controller.postData(data,"/wayagram-service/all-posts/comment-create");
+                            if(response.isSuccessful){
+                              widget.post.commentCount = (int.parse(widget.post.commentCount.toString()) + 1).toString();
+                              commentController.clear();
+                              if(parentID.isNotEmpty){
+                                controller.getCommentID = parentID;
+                                parentID = "";
+                                usernameToReplyTo = "";
+                              }
+                              controller.update(["comment_page"]);
+                              controller.getPosts.then((value) {
+                                controller.update(["home_tab"]);
+                              });
+                              closeKeyboard();
+                            }else{
+                              AppOverlay.showErrorSnackBar(title: "Error", content: "Unable to comment, please try again later");
+                            }
                           }
-                        }
-                      },
-                      borderRadius: 10,
-                      fontColor: AppColors.button,
-                      bckgrndColor: getAppColor(AppColors.background),
-                      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                      width: Get.width * 0.15,
-                      fontSize: Get.textScaleFactor * 18,
-                    )
-                  ],
-                ),
-                SizedBox(height: Get.height*0.008)
-              ],
+                        },
+                        borderRadius: 10,
+                        fontColor: AppColors.button,
+                        bckgrndColor: getAppColor(AppColors.background),
+                        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                        width: Get.width * 0.15,
+                        fontSize: Get.textScaleFactor * 18,
+                      )
+                    ],
+                  ),
+                  SizedBox(height: Get.height*0.008)
+                ],
+              ),
             ),
           ),
         );
