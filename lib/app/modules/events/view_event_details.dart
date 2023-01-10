@@ -66,6 +66,14 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
         return Scaffold(
           appBar: AppBar(
             elevation: 0,
+            backgroundColor: getAppColor(AppColors.background),
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
+                statusBarIconBrightness: getAppBrightness(),
+                statusBarBrightness: getAppBrightness(),
+                systemNavigationBarColor: getAppColor(AppColors.background),
+                systemNavigationBarIconBrightness: getAppBrightness()
+            ),
             title: Text('Event Details', style: AppTextStyle.subtitle1.copyWith(
               color: getAppColor(Colors.black),
               fontSize: Get.textScaleFactor * 18,
@@ -104,105 +112,110 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025, top: Get.height * 0.02),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.event.eventPoster.toString(),
-                      height: Get.height * 0.23,
-                      width: Get.width,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: Colors.grey[200],
-                        child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.04),
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                          color: Colors.grey[200],
-                          child: Icon(Icons.event_rounded,color: Colors.grey,size: Get.height*0.04)
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: Get.height * 0.01),
-                if(textController.text.isNotEmpty)
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Padding(
-                  padding: EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025, top: Get.height * 0.02),
-                  child: PageInput(
-                    hint: "",
-                    label:"",
-                    readOnly: true,
-                    controller: textController,
-                    suffix: IconButton(
-                      icon: Icon(Icons.copy_rounded, color: Colors.grey),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: textController.text));
-                        AppOverlay.showSuccessSnackBar(content: 'Copied to clipboard');
-                      },
+                    padding: EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025, top: Get.height * 0.02),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.event.eventPoster.toString(),
+                        height: Get.height * 0.23,
+                        width: Get.width,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          color: Colors.grey[200],
+                          child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.04),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                            color: Colors.grey[200],
+                            child: Icon(Icons.event_rounded,color: Colors.grey,size: Get.height*0.04)
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: Get.height * 0.01),
-                Padding(
-                  padding: EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025, top: Get.height * 0.02),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: Get.width*0.01),
-                        child: Text(widget.event.eventName.toString(), style: AppTextStyle.subtitle1.copyWith(
-                          color: getAppColor(Colors.black),
-                          fontSize: Get.width*0.05,
-                          fontWeight: FontWeight.w600,
-                        )),
-                      ),
-                      SizedBox(height: Get.height*0.01),
-                      Padding(
-                        padding: EdgeInsets.only(left: Get.width*0.01),
-                        child: Text("${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(int.parse(widget.event.eventStart.toString())))} at  ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(int.parse(widget.event.eventStart.toString())))}", style: AppTextStyle.subtitle1.copyWith(
-                          color: getAppColor(Colors.black).withOpacity(0.5),
-                          fontSize: Get.width*0.04,
-                          fontWeight: FontWeight.normal,
-                        )),
-                      ),
-                      SizedBox(height: Get.height*0.01),
-                      if(widget.event.eventOrganizer.toString() != "null")
-                        _TextButton(
-                         leading: Icon(Icons.people_alt_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
-                          text: widget.event.eventOrganizer.toString(),
-                         onPressed: () {
-                        },
-                        ),
-                      SizedBox(height: Get.height*0.01),
-                      _TextButton(
-                        leading: Icon(Icons.location_on, color: getAppColor(Colors.black).withOpacity(0.5)),
-                        text: widget.event.location.toString(),
+                  SizedBox(height: Get.height * 0.01),
+                  if(textController.text.isNotEmpty)
+                    Padding(
+                    padding: EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025, top: Get.height * 0.02),
+                    child: PageInput(
+                      hint: "",
+                      label:"",
+                      readOnly: true,
+                      controller: textController,
+                      suffix: IconButton(
+                        icon: Icon(Icons.copy_rounded, color: Colors.grey),
                         onPressed: () {
+                          Clipboard.setData(ClipboardData(text: textController.text));
+                          AppOverlay.showSuccessSnackBar(content: 'Copied to clipboard');
                         },
                       ),
-                      SizedBox(height: Get.height*0.01),
-                      _TextButton(
-                        leading: Icon(FeatherIcons.tag, color: getAppColor(Colors.black).withOpacity(0.5)),
-                        text: widget.event.isPaid != true ? "Free to attend" : "Paid to attend: NGN ${widget.event.amount.toString()}",
-                        onPressed: () {
-                        },
-                      ),
-                      SizedBox(height: Get.height*0.01),
-                      _TextButton(
-                        leading: Icon(Icons.perm_contact_calendar_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
-                        text: "Registered:  ${attendeeCount.toString()}",
-                        onPressed: () {
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(height: Get.height * 0.01),
+                  Padding(
+                    padding: EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025, top: Get.height * 0.02),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: Get.width*0.01),
+                          child: Text(widget.event.eventName.toString(), style: AppTextStyle.subtitle1.copyWith(
+                            color: getAppColor(Colors.black),
+                            fontSize: Get.width*0.05,
+                            fontWeight: FontWeight.w600,
+                          )),
+                        ),
+                        SizedBox(height: Get.height*0.01),
+                        Padding(
+                          padding: EdgeInsets.only(left: Get.width*0.01),
+                          child: Text("${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(int.parse(widget.event.eventStart.toString())))} at  ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(int.parse(widget.event.eventStart.toString())))}", style: AppTextStyle.subtitle1.copyWith(
+                            color: getAppColor(Colors.black).withOpacity(0.5),
+                            fontSize: Get.width*0.04,
+                            fontWeight: FontWeight.normal,
+                          )),
+                        ),
+                        SizedBox(height: Get.height*0.01),
+                        if(widget.event.eventOrganizer.toString() != "null")
+                          _TextButton(
+                           leading: Icon(Icons.people_alt_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
+                            text: widget.event.eventOrganizer.toString(),
+                           onPressed: () {
+                          },
+                          ),
+                        SizedBox(height: Get.height*0.01),
+                        _TextButton(
+                          leading: Icon(Icons.location_on, color: getAppColor(Colors.black).withOpacity(0.5)),
+                          text: widget.event.location.toString(),
+                          onPressed: () {
+                          },
+                        ),
+                        SizedBox(height: Get.height*0.01),
+                        _TextButton(
+                          leading: Icon(FeatherIcons.tag, color: getAppColor(Colors.black).withOpacity(0.5)),
+                          text: widget.event.isPaid != true ? "Free to attend" : "Paid to attend: NGN ${widget.event.amount.toString()}",
+                          onPressed: () {
+                          },
+                        ),
+                        SizedBox(height: Get.height*0.01),
+                        _TextButton(
+                          leading: Icon(Icons.perm_contact_calendar_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
+                          text: "Registered:  ${attendeeCount.toString()}",
+                          onPressed: () {
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );

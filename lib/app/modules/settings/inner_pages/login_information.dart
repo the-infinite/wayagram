@@ -71,7 +71,9 @@ class _LoginInformationState extends State<LoginInformation> {
         savedLoginTime.val = jsonEncode(value.data);
         location = "${lastLoginResponse.city}, ${lastLoginResponse.country}";
         device = lastLoginResponse.device.toString();
-        time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))}";
+        if(lastLoginResponse.loginDate != null){
+          time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))}";
+        }
         controller.update();
       }
     });
@@ -108,371 +110,376 @@ class _LoginInformationState extends State<LoginInformation> {
                   systemNavigationBarIconBrightness: getAppBrightness()
               ),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: Get.height*0.02),
-              _TextButton(
-                  text: "Location",
-                  subtitle: location,
-                  onPressed: (){
-                    controller.imagePaths.clear();
-                  }
-              ),
-              SizedBox(height: Get.height*0.02),
-              _TextButton(
-                  text: "Device",
-                  subtitle: Platform.isAndroid ? "Android" : "iOS",
-                  onPressed: (){
-                    controller.imagePaths.clear();
-                  }
-              ),
-              SizedBox(height: Get.height*0.02),
-              _TextButton(
-                  text: "Time",
-                  subtitle: time,
-                  onPressed: (){
-                    controller.imagePaths.clear();
-                  }
-              ),
-              SizedBox(height: Get.height*0.02),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: Get.width*0.025,right: Get.width*0.025,bottom: Get.height*0.02),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: getAppColor(Colors.grey).withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 5,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                      border: Border.all(color: getAppColor(Colors.white), width: 1),
-                      color: getAppColor(Colors.white),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: Get.height*0.01,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: Get.width*0.025),
-                          child: Text(
-                            "Time Log",
-                            maxLines: 1,
-                            overflow: TextOverflow.clip,
-                            style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black),fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: Get.height*0.02),
+                _TextButton(
+                    text: "Location",
+                    subtitle: location,
+                    onPressed: (){
+                      controller.imagePaths.clear();
+                    }
+                ),
+                SizedBox(height: Get.height*0.02),
+                _TextButton(
+                    text: "Device",
+                    subtitle: Platform.isAndroid ? "Android" : "iOS",
+                    onPressed: (){
+                      controller.imagePaths.clear();
+                    }
+                ),
+                SizedBox(height: Get.height*0.02),
+                _TextButton(
+                    text: "Time",
+                    subtitle: time,
+                    onPressed: (){
+                      controller.imagePaths.clear();
+                    }
+                ),
+                SizedBox(height: Get.height*0.02),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: Get.width*0.025,right: Get.width*0.025,bottom: Get.height*0.02),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: getAppColor(Colors.grey).withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                            offset: Offset(0, 3), // changes position of shadow
                           ),
-                        ),
-                        SizedBox(
-                          height: Get.height*0.01,
-                        ),
-                        Expanded(
-                          child: AppRefresher(
-                            onRefresh: () async {
-                              var response = await controller.getData("/auth-service/api/v1/history/my-history", false);
-                              final posts = LogInHistory.fromJsonList(response.data);
-                              if(posts.isNotEmpty){
-                                if(allPosts.isNotEmpty){
-                                  var firstPost = allPosts.first;
-                                  var currentFirstPost = posts.first;
-                                  if(firstPost.id != currentFirstPost.id){
-                                    var newList = posts + allPosts;
-                                    allPosts = newList;
-                                    savedPosts.val = jsonEncode(allPosts);
-                                  }
-                                }else{
-                                  allPosts = posts;
-                                }
-                              }
-                              refreshController.refreshCompleted();
-                              controller.update();
-                            },
-                            onLoading: () async {
-
-                            },
-                            enablePullUp: false,
-                            controller: refreshController,
-                            child: SingleChildScrollView(
-                              child: FutureBuilder<ApiResponse>(
-                                  future: controller.getData("/auth-service/api/v1/history/my-history", false),
-                                  builder: (context, snapshot){
-                                    if(allPosts.isNotEmpty){
-                                      return ListView.builder(
-                                        itemCount: allPosts.length,
-                                        shrinkWrap: true,
-                                        reverse: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          var post = allPosts[index];
-                                          String title = "Logged In";
-                                          String time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))}";
-                                          return InkWell(
-                                            onTap: (){
-
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    height: Get.height*0.04,
-                                                    width: Get.height*0.04,
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors.primary,
-                                                      borderRadius: BorderRadius.circular(100),
-                                                    ),
-                                                    child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
-                                                  ),
-                                                  SizedBox(width: 10,),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: Get.width*0.7,
-                                                        child: HashTagText(text: title, decoratedStyle: TextStyle(
-                                                          color: Colors.blue,
-                                                          fontSize: Get.textScaleFactor * 17,
-                                                          fontWeight: FontWeight.w500,
-                                                        ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                          color: getAppColor(Colors.black),
-                                                          fontSize: Get.textScaleFactor * 17,
-                                                          fontWeight: FontWeight.w500,),
-                                                          softWrap: true,
-                                                          onTap: (text) {
-                                                            //controller.defaultSearchValue = text;
-                                                            //Get.to(() => Search());
-                                                          },
-                                                          decorateAtSign: true,
-                                                        ),
-                                                      ),
-                                                      Text(time, style: TextStyle(
-                                                        color: getAppColor(Colors.grey),
-                                                        fontSize: Get.textScaleFactor * 15,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),),
-                                                    ],
-                                                  ),
-                                                  Spacer(),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    }
-
-                                    if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                      final posts = LogInHistory.fromJsonList(snapshot.data!.data);
-                                      savedPosts.val = jsonEncode(posts);
-                                      allPosts.addAll(posts);
-                                      if(posts.isEmpty){
-                                        return SizedBox(
-                                          width: Get.width,
-                                          height: Get.height * 0.5,
-                                          child: Center(
-                                            child: Column(
-                                              children: [
-                                                SizedBox(height: Get.height*0.2,),
-                                                Icon(Icons.access_time_filled_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                                                SizedBox(height: 20,),
-                                                Text("Nothing Here Yet", style: TextStyle(
-                                                  color: getAppColor(Colors.grey),
-                                                  fontSize: Get.textScaleFactor * 17,
-                                                  fontWeight: FontWeight.w500,
-                                                ),),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return ListView.builder(
-                                        itemCount: posts.length,
-                                        reverse: true,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          var post = posts[index];
-                                          String title = "Logged In";
-                                          String time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))}";
-                                          return InkWell(
-                                            onTap: (){
-
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    height: Get.height*0.04,
-                                                    width: Get.height*0.04,
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors.primary,
-                                                      borderRadius: BorderRadius.circular(100),
-                                                    ),
-                                                    child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
-                                                  ),
-                                                  SizedBox(width: 10,),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: Get.width*0.7,
-                                                        child: HashTagText(text: title, decoratedStyle: TextStyle(
-                                                          color: Colors.blue,
-                                                          fontSize: Get.textScaleFactor * 17,
-                                                          fontWeight: FontWeight.w500,
-                                                        ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                          color: getAppColor(Colors.black),
-                                                          fontSize: Get.textScaleFactor * 17,
-                                                          fontWeight: FontWeight.w500,),
-                                                          softWrap: true,
-                                                          onTap: (text) {
-                                                            //controller.defaultSearchValue = text;
-                                                            //Get.to(() => Search());
-                                                          },
-                                                          decorateAtSign: true,
-                                                        ),
-                                                      ),
-                                                      Text(time, style: TextStyle(
-                                                        color: getAppColor(Colors.grey),
-                                                        fontSize: Get.textScaleFactor * 15,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),),
-                                                    ],
-                                                  ),
-                                                  Spacer(),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    } else if(savedPosts.val.isNotEmpty){
-                                      final posts = LogInHistory.fromJsonList(jsonDecode(savedPosts.val));
-                                      if(posts.isEmpty){
-                                        return SizedBox(
-                                          width: Get.width,
-                                          height: Get.height * 0.5,
-                                          child: Center(
-                                            child: Column(
-                                              children: [
-                                                SizedBox(height: Get.height*0.2,),
-                                                Icon(Icons.access_time_filled_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                                                SizedBox(height: 20,),
-                                                Text("Nothing Here Yet", style: TextStyle(
-                                                  color: getAppColor(Colors.grey),
-                                                  fontSize: Get.textScaleFactor * 17,
-                                                  fontWeight: FontWeight.w500,
-                                                ),),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return ListView.builder(
-                                        itemCount: posts.length,
-                                        reverse: true,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          var post = posts[index];
-                                          String title = "Logged In";
-                                          String time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))}";
-                                          return InkWell(
-                                            onTap: (){
-
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    height: Get.height*0.04,
-                                                    width: Get.height*0.04,
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors.primary,
-                                                      borderRadius: BorderRadius.circular(100),
-                                                    ),
-                                                    child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
-                                                  ),
-                                                  SizedBox(width: 10,),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: Get.width*0.7,
-                                                        child: HashTagText(text: title, decoratedStyle: TextStyle(
-                                                          color: Colors.blue,
-                                                          fontSize: Get.textScaleFactor * 17,
-                                                          fontWeight: FontWeight.w500,
-                                                        ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                          color: getAppColor(Colors.black),
-                                                          fontSize: Get.textScaleFactor * 17,
-                                                          fontWeight: FontWeight.w500,),
-                                                          softWrap: true,
-                                                          onTap: (text) {
-                                                            //controller.defaultSearchValue = text;
-                                                            //Get.to(() => Search());
-                                                          },
-                                                          decorateAtSign: true,
-                                                        ),
-                                                      ),
-                                                      Text(time, style: TextStyle(
-                                                        color: getAppColor(Colors.grey),
-                                                        fontSize: Get.textScaleFactor * 15,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),),
-                                                    ],
-                                                  ),
-                                                  Spacer(),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    }else{
-                                      if(snapshot.connectionState == ConnectionState.done){
-                                        return SizedBox(
-                                          width: Get.width,
-                                          height: Get.height * 0.5,
-                                          child: Center(
-                                            child: Column(
-                                              children: [
-                                                SizedBox(height: Get.height*0.2,),
-                                                Icon(Icons.access_time_filled_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                                                SizedBox(height: 20,),
-                                                Text("Nothing Here Yet", style: TextStyle(
-                                                  color: getAppColor(Colors.grey),
-                                                  fontSize: Get.textScaleFactor * 17,
-                                                  fontWeight: FontWeight.w500,
-                                                ),),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return GroupView(isLoading: true);
-                                    }
-                                  }),
+                        ],
+                        border: Border.all(color: getAppColor(Colors.white), width: 1),
+                        color: getAppColor(Colors.white),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: Get.height*0.01,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: Get.width*0.025),
+                            child: Text(
+                              "Time Log",
+                              maxLines: 1,
+                              overflow: TextOverflow.clip,
+                              style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black),fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
                             ),
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            height: Get.height*0.01,
+                          ),
+                          Expanded(
+                            child: AppRefresher(
+                              onRefresh: () async {
+                                var response = await controller.getData("/auth-service/api/v1/history/my-history", false);
+                                final posts = LogInHistory.fromJsonList(response.data);
+                                if(posts.isNotEmpty){
+                                  if(allPosts.isNotEmpty){
+                                    var firstPost = allPosts.first;
+                                    var currentFirstPost = posts.first;
+                                    if(firstPost.id != currentFirstPost.id){
+                                      var newList = posts + allPosts;
+                                      allPosts = newList;
+                                      savedPosts.val = jsonEncode(allPosts);
+                                    }
+                                  }else{
+                                    allPosts = posts;
+                                  }
+                                }
+                                refreshController.refreshCompleted();
+                                controller.update();
+                              },
+                              onLoading: () async {
+
+                              },
+                              enablePullUp: false,
+                              controller: refreshController,
+                              child: SingleChildScrollView(
+                                child: FutureBuilder<ApiResponse>(
+                                    future: controller.getData("/auth-service/api/v1/history/my-history", false),
+                                    builder: (context, snapshot){
+                                      if(allPosts.isNotEmpty){
+                                        return ListView.builder(
+                                          itemCount: allPosts.length,
+                                          shrinkWrap: true,
+                                          reverse: true,
+                                          physics: NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            var post = allPosts[index];
+                                            String title = "Logged In";
+                                            String time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))}";
+                                            return InkWell(
+                                              onTap: (){
+
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      height: Get.height*0.04,
+                                                      width: Get.height*0.04,
+                                                      decoration: BoxDecoration(
+                                                        color: AppColors.primary,
+                                                        borderRadius: BorderRadius.circular(100),
+                                                      ),
+                                                      child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
+                                                    ),
+                                                    SizedBox(width: 10,),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: Get.width*0.7,
+                                                          child: HashTagText(text: title, decoratedStyle: TextStyle(
+                                                            color: Colors.blue,
+                                                            fontSize: Get.textScaleFactor * 17,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                            color: getAppColor(Colors.black),
+                                                            fontSize: Get.textScaleFactor * 17,
+                                                            fontWeight: FontWeight.w500,),
+                                                            softWrap: true,
+                                                            onTap: (text) {
+                                                              //controller.defaultSearchValue = text;
+                                                              //Get.to(() => Search());
+                                                            },
+                                                            decorateAtSign: true,
+                                                          ),
+                                                        ),
+                                                        Text(time, style: TextStyle(
+                                                          color: getAppColor(Colors.grey),
+                                                          fontSize: Get.textScaleFactor * 15,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),),
+                                                      ],
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+
+                                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                        final posts = LogInHistory.fromJsonList(snapshot.data!.data);
+                                        savedPosts.val = jsonEncode(posts);
+                                        allPosts.addAll(posts);
+                                        if(posts.isEmpty){
+                                          return SizedBox(
+                                            width: Get.width,
+                                            height: Get.height * 0.5,
+                                            child: Center(
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(height: Get.height*0.2,),
+                                                  Icon(Icons.access_time_filled_rounded, color: AppColors.primary, size: Get.height*0.1,),
+                                                  SizedBox(height: 20,),
+                                                  Text("Nothing Here Yet", style: TextStyle(
+                                                    color: getAppColor(Colors.grey),
+                                                    fontSize: Get.textScaleFactor * 17,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return ListView.builder(
+                                          itemCount: posts.length,
+                                          reverse: true,
+                                          shrinkWrap: true,
+                                          physics: NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            var post = posts[index];
+                                            String title = "Logged In";
+                                            String time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))}";
+                                            return InkWell(
+                                              onTap: (){
+
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      height: Get.height*0.04,
+                                                      width: Get.height*0.04,
+                                                      decoration: BoxDecoration(
+                                                        color: AppColors.primary,
+                                                        borderRadius: BorderRadius.circular(100),
+                                                      ),
+                                                      child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
+                                                    ),
+                                                    SizedBox(width: 10,),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: Get.width*0.7,
+                                                          child: HashTagText(text: title, decoratedStyle: TextStyle(
+                                                            color: Colors.blue,
+                                                            fontSize: Get.textScaleFactor * 17,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                            color: getAppColor(Colors.black),
+                                                            fontSize: Get.textScaleFactor * 17,
+                                                            fontWeight: FontWeight.w500,),
+                                                            softWrap: true,
+                                                            onTap: (text) {
+                                                              //controller.defaultSearchValue = text;
+                                                              //Get.to(() => Search());
+                                                            },
+                                                            decorateAtSign: true,
+                                                          ),
+                                                        ),
+                                                        Text(time, style: TextStyle(
+                                                          color: getAppColor(Colors.grey),
+                                                          fontSize: Get.textScaleFactor * 15,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),),
+                                                      ],
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      } else if(savedPosts.val.isNotEmpty){
+                                        final posts = LogInHistory.fromJsonList(jsonDecode(savedPosts.val));
+                                        if(posts.isEmpty){
+                                          return SizedBox(
+                                            width: Get.width,
+                                            height: Get.height * 0.5,
+                                            child: Center(
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(height: Get.height*0.2,),
+                                                  Icon(Icons.access_time_filled_rounded, color: AppColors.primary, size: Get.height*0.1,),
+                                                  SizedBox(height: 20,),
+                                                  Text("Nothing Here Yet", style: TextStyle(
+                                                    color: getAppColor(Colors.grey),
+                                                    fontSize: Get.textScaleFactor * 17,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return ListView.builder(
+                                          itemCount: posts.length,
+                                          reverse: true,
+                                          shrinkWrap: true,
+                                          physics: NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) {
+                                            var post = posts[index];
+                                            String title = "Logged In";
+                                            String time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(post.loginDate!.toInt()))}";
+                                            return InkWell(
+                                              onTap: (){
+
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      height: Get.height*0.04,
+                                                      width: Get.height*0.04,
+                                                      decoration: BoxDecoration(
+                                                        color: AppColors.primary,
+                                                        borderRadius: BorderRadius.circular(100),
+                                                      ),
+                                                      child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
+                                                    ),
+                                                    SizedBox(width: 10,),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: Get.width*0.7,
+                                                          child: HashTagText(text: title, decoratedStyle: TextStyle(
+                                                            color: Colors.blue,
+                                                            fontSize: Get.textScaleFactor * 17,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                            color: getAppColor(Colors.black),
+                                                            fontSize: Get.textScaleFactor * 17,
+                                                            fontWeight: FontWeight.w500,),
+                                                            softWrap: true,
+                                                            onTap: (text) {
+                                                              //controller.defaultSearchValue = text;
+                                                              //Get.to(() => Search());
+                                                            },
+                                                            decorateAtSign: true,
+                                                          ),
+                                                        ),
+                                                        Text(time, style: TextStyle(
+                                                          color: getAppColor(Colors.grey),
+                                                          fontSize: Get.textScaleFactor * 15,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),),
+                                                      ],
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }else{
+                                        if(snapshot.connectionState == ConnectionState.done){
+                                          return SizedBox(
+                                            width: Get.width,
+                                            height: Get.height * 0.5,
+                                            child: Center(
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(height: Get.height*0.2,),
+                                                  Icon(Icons.access_time_filled_rounded, color: AppColors.primary, size: Get.height*0.1,),
+                                                  SizedBox(height: 20,),
+                                                  Text("Nothing Here Yet", style: TextStyle(
+                                                    color: getAppColor(Colors.grey),
+                                                    fontSize: Get.textScaleFactor * 17,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return GroupView(isLoading: true);
+                                      }
+                                    }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         );
       }),

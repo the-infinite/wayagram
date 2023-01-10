@@ -30,6 +30,8 @@ class EnterChangeOTP extends GetView<AuthControllerWayagram> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         color: getAppColor(AppColors.background),
         child: SingleChildScrollView(
           child: Padding(

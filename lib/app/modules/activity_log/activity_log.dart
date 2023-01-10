@@ -106,290 +106,295 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: AppRefresher(
-            onRefresh: () async {
-              var response = await controller.getData("/wayagram-service/main/get-user-activity-logs?profile_id=${fullProfile.id}&page=${1}&limit=1", true);
-              final posts = ActivityLogsModel.fromJsonList(response.data['data']);
-              if(posts.isNotEmpty){
-                if(allPosts.isNotEmpty){
-                  var firstPost = allPosts.first;
-                  var currentFirstPost = posts.first;
-                  if(firstPost.id != currentFirstPost.id){
-                    var newList = posts + allPosts;
-                    allPosts = newList;
-                    savedPosts.val = jsonEncode(allPosts);
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: AppRefresher(
+              onRefresh: () async {
+                var response = await controller.getData("/wayagram-service/main/get-user-activity-logs?profile_id=${fullProfile.id}&page=${1}&limit=1", true);
+                final posts = ActivityLogsModel.fromJsonList(response.data['data']);
+                if(posts.isNotEmpty){
+                  if(allPosts.isNotEmpty){
+                    var firstPost = allPosts.first;
+                    var currentFirstPost = posts.first;
+                    if(firstPost.id != currentFirstPost.id){
+                      var newList = posts + allPosts;
+                      allPosts = newList;
+                      savedPosts.val = jsonEncode(allPosts);
+                    }
+                  }else{
+                    allPosts = posts;
                   }
-                }else{
-                  allPosts = posts;
                 }
-              }
-              refreshController.refreshCompleted();
-              controller.update(["activity_log"]);
-            },
-            onLoading: () async {
-              var response = await controller.getData("/wayagram-service/main/get-user-activity-logs?profile_id=${fullProfile.id}&page=${currentPage.val}&limit=10", true);
-              final posts = ActivityLogsModel.fromJsonList(response.data['data']);
-              allPosts.addAll(posts);
-              savedPosts.val = jsonEncode(allPosts);
-              currentPage.val = currentPage.val + 1;
-              refreshController.loadComplete();
-              controller.update(["activity_log"]);
-            },
-            controller: refreshController,
-            child: SingleChildScrollView(
-              child: FutureBuilder<ApiResponse>(
-                ///wayagram-service/main/get-user-activity-logs?profile_id=bc63e326-7619-45da-9aab-0876d5e96956&page=1&limit=40&sso_id=639
-                  future: controller.getData("/wayagram-service/main/get-user-activity-logs?profile_id=${fullProfile.id}&page=1&limit=40", true),
-                  builder: (context, snapshot) {
+                refreshController.refreshCompleted();
+                controller.update(["activity_log"]);
+              },
+              onLoading: () async {
+                var response = await controller.getData("/wayagram-service/main/get-user-activity-logs?profile_id=${fullProfile.id}&page=${currentPage.val}&limit=10", true);
+                final posts = ActivityLogsModel.fromJsonList(response.data['data']);
+                allPosts.addAll(posts);
+                savedPosts.val = jsonEncode(allPosts);
+                currentPage.val = currentPage.val + 1;
+                refreshController.loadComplete();
+                controller.update(["activity_log"]);
+              },
+              controller: refreshController,
+              child: SingleChildScrollView(
+                child: FutureBuilder<ApiResponse>(
+                  ///wayagram-service/main/get-user-activity-logs?profile_id=bc63e326-7619-45da-9aab-0876d5e96956&page=1&limit=40&sso_id=639
+                    future: controller.getData("/wayagram-service/main/get-user-activity-logs?profile_id=${fullProfile.id}&page=1&limit=40", true),
+                    builder: (context, snapshot) {
 
-                    if(allPosts.isNotEmpty){
-                      return ListView.builder(
-                        itemCount: allPosts.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          var post = allPosts[index];
-                          return InkWell(
-                            onTap: (){
+                      if(allPosts.isNotEmpty){
+                        return ListView.builder(
+                          itemCount: allPosts.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            var post = allPosts[index];
+                            return InkWell(
+                              onTap: (){
 
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: Get.height*0.04,
-                                    width: Get.height*0.04,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: Get.width*0.7,
-                                        child: HashTagText(text: post.activity.toString(), decoratedStyle: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: Get.textScaleFactor * 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                          color: getAppColor(Colors.black),
-                                          fontSize: Get.textScaleFactor * 17,
-                                          fontWeight: FontWeight.w500,),
-                                          softWrap: true,
-                                          onTap: (text) {
-                                          controller.defaultSearchValue = text;
-                                          Get.to(() => Search());
-                                          },
-                                          decorateAtSign: true,
-                                        ),
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: Get.height*0.04,
+                                      width: Get.height*0.04,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.circular(100),
                                       ),
-                                      Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(post.createdAt.toString())), style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: Get.textScaleFactor * 15,
-                                        fontWeight: FontWeight.w500,
-                                      ),),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  InkWell(
-                                      onTap: () {
-                                        var body = {
-                                          "activity_id": post.id,
-                                        };
-                                        controller.deleteData(body, "/wayagram-service/main/delete-activity-log?profile_id=${fullProfile.id}", updatePages: false).then((value){
-                                          if(value.isSuccessful){
-                                            AppOverlay.showSuccessSnackBar(content: "Activity Log Deleted Successfully");
-                                            allPosts.removeWhere((element) => element.id == post.id);
-                                            controller.update(["activity_log"]);
-                                          }else{
-                                            AppOverlay.showErrorSnackBar(content: "Failed to Delete Activity Log, Please try again");
-                                          }
-                                        });
-                                      },
-                                      child: Icon(Icons.delete, color: AppColors.primary,)
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                      final posts = ActivityLogsModel.fromJsonList(snapshot.data!.data['data']);
-                      savedPosts.val = jsonEncode(posts);
-                      allPosts.addAll(posts);
-                      currentPage.val = 2;
-                      return ListView.builder(
-                        itemCount: allPosts.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          var post = allPosts[index];
-                          return InkWell(
-                            onTap: (){
-
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: Get.height*0.04,
-                                    width: Get.height*0.04,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(100),
+                                      child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                     ),
-                                    child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: Get.width*0.7,
-                                        child: HashTagText(text: post.activity.toString(), decoratedStyle: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: Get.textScaleFactor * 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                          color: getAppColor(Colors.black),
-                                          fontSize: Get.textScaleFactor * 17,
-                                          fontWeight: FontWeight.w500,),
-                                          softWrap: true,
-                                          onTap: (text) {
+                                    SizedBox(width: 10,),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: Get.width*0.7,
+                                          child: HashTagText(text: post.activity.toString(), decoratedStyle: TextStyle(
+                                            color: Colors.blue,
+                                            fontSize: Get.textScaleFactor * 17,
+                                            fontWeight: FontWeight.w500,
+                                          ),basicStyle: AppTextStyle.bodyText1.copyWith(
+                                            color: getAppColor(Colors.black),
+                                            fontSize: Get.textScaleFactor * 17,
+                                            fontWeight: FontWeight.w500,),
+                                            softWrap: true,
+                                            onTap: (text) {
                                             controller.defaultSearchValue = text;
                                             Get.to(() => Search());
-                                          },
-                                          decorateAtSign: true,
+                                            },
+                                            decorateAtSign: true,
+                                          ),
                                         ),
-                                      ),
-                                      Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(post.createdAt.toString())), style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: Get.textScaleFactor * 15,
-                                        fontWeight: FontWeight.w500,
-                                      ),),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  InkWell(
-                                      onTap: () {
-                                        var body = {
-                                          "activity_id": post.id,
-                                        };
-                                        controller.deleteData(body, "/wayagram-service/main/delete-activity-log?profile_id=${fullProfile.id}", updatePages: false).then((value){
-                                          if(value.isSuccessful){
-                                            AppOverlay.showSuccessSnackBar(content: "Activity Log Deleted Successfully");
-                                            allPosts.removeWhere((element) => element.id == post.id);
-                                            controller.update(["activity_log"]);
-                                          }else{
-                                            AppOverlay.showErrorSnackBar(content: "Failed to Delete Activity Log, Please try again");
-                                          }
-                                        });
-                                      },
-                                      child: Icon(Icons.delete, color: AppColors.primary,)
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    } else if(savedPosts.val.isNotEmpty){
-                      var posts = ActivityLogsModel.fromJsonList(jsonDecode(savedPosts.val));
-                      return ListView.builder(
-                        itemCount: posts.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          var post = posts[index];
-                          return InkWell(
-                            onTap: (){
-
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: Get.height*0.04,
-                                    width: Get.height*0.04,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: Get.width*0.7,
-                                        child: HashTagText(text: post.activity.toString(), decoratedStyle: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: Get.textScaleFactor * 17,
+                                        Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(post.createdAt.toString())), style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: Get.textScaleFactor * 15,
                                           fontWeight: FontWeight.w500,
-                                        ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                          color: getAppColor(Colors.black),
-                                          fontSize: Get.textScaleFactor * 17,
-                                          fontWeight: FontWeight.w500,),
-                                          softWrap: true,
-                                          onTap: (text) {
-                                            controller.defaultSearchValue = text;
-                                            Get.to(() => Search());
-                                          },
-                                          decorateAtSign: true,
-                                        ),
-                                      ),
-                                      Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(post.createdAt.toString())), style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: Get.textScaleFactor * 15,
-                                        fontWeight: FontWeight.w500,
-                                      ),),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  InkWell(
-                                      onTap: () {
-                                        var body = {
-                                          "activity_id": post.id,
-                                        };
-                                        controller.deleteData(body, "/wayagram-service/main/delete-activity-log?profile_id=${fullProfile.id}", updatePages: false).then((value){
-                                          if(value.isSuccessful){
-                                            AppOverlay.showSuccessSnackBar(content: "Activity Log Deleted Successfully");
-                                            allPosts.removeWhere((element) => element.id == post.id);
-                                            controller.update(["activity_log"]);
-                                          }else{
-                                            AppOverlay.showErrorSnackBar(content: "Failed to Delete Activity Log, Please try again");
-                                          }
-                                        });
-                                      },
-                                      child: Icon(Icons.delete, color: AppColors.primary,)
-                                  )
-                                ],
+                                        ),),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    InkWell(
+                                        onTap: () {
+                                          var body = {
+                                            "activity_id": post.id,
+                                          };
+                                          controller.deleteData(body, "/wayagram-service/main/delete-activity-log?profile_id=${fullProfile.id}", updatePages: false).then((value){
+                                            if(value.isSuccessful){
+                                              AppOverlay.showSuccessSnackBar(content: "Activity Log Deleted Successfully");
+                                              allPosts.removeWhere((element) => element.id == post.id);
+                                              controller.update(["activity_log"]);
+                                            }else{
+                                              AppOverlay.showErrorSnackBar(content: "Failed to Delete Activity Log, Please try again");
+                                            }
+                                          });
+                                        },
+                                        child: Icon(Icons.delete, color: AppColors.primary,)
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    }else{
-                      if(snapshot.connectionState == ConnectionState.done){
-                        return SizedBox.shrink();
+                            );
+                          },
+                        );
                       }
-                      return GroupView(isLoading: true);
-                    }
-                  }),
+
+                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                        final posts = ActivityLogsModel.fromJsonList(snapshot.data!.data['data']);
+                        savedPosts.val = jsonEncode(posts);
+                        allPosts.addAll(posts);
+                        currentPage.val = 2;
+                        return ListView.builder(
+                          itemCount: allPosts.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            var post = allPosts[index];
+                            return InkWell(
+                              onTap: (){
+
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: Get.height*0.04,
+                                      width: Get.height*0.04,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.circular(100),
+                                      ),
+                                      child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: Get.width*0.7,
+                                          child: HashTagText(text: post.activity.toString(), decoratedStyle: TextStyle(
+                                            color: Colors.blue,
+                                            fontSize: Get.textScaleFactor * 17,
+                                            fontWeight: FontWeight.w500,
+                                          ),basicStyle: AppTextStyle.bodyText1.copyWith(
+                                            color: getAppColor(Colors.black),
+                                            fontSize: Get.textScaleFactor * 17,
+                                            fontWeight: FontWeight.w500,),
+                                            softWrap: true,
+                                            onTap: (text) {
+                                              controller.defaultSearchValue = text;
+                                              Get.to(() => Search());
+                                            },
+                                            decorateAtSign: true,
+                                          ),
+                                        ),
+                                        Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(post.createdAt.toString())), style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: Get.textScaleFactor * 15,
+                                          fontWeight: FontWeight.w500,
+                                        ),),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    InkWell(
+                                        onTap: () {
+                                          var body = {
+                                            "activity_id": post.id,
+                                          };
+                                          controller.deleteData(body, "/wayagram-service/main/delete-activity-log?profile_id=${fullProfile.id}", updatePages: false).then((value){
+                                            if(value.isSuccessful){
+                                              AppOverlay.showSuccessSnackBar(content: "Activity Log Deleted Successfully");
+                                              allPosts.removeWhere((element) => element.id == post.id);
+                                              controller.update(["activity_log"]);
+                                            }else{
+                                              AppOverlay.showErrorSnackBar(content: "Failed to Delete Activity Log, Please try again");
+                                            }
+                                          });
+                                        },
+                                        child: Icon(Icons.delete, color: AppColors.primary,)
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else if(savedPosts.val.isNotEmpty){
+                        var posts = ActivityLogsModel.fromJsonList(jsonDecode(savedPosts.val));
+                        return ListView.builder(
+                          itemCount: posts.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            var post = posts[index];
+                            return InkWell(
+                              onTap: (){
+
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: Get.height*0.04,
+                                      width: Get.height*0.04,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.circular(100),
+                                      ),
+                                      child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          width: Get.width*0.7,
+                                          child: HashTagText(text: post.activity.toString(), decoratedStyle: TextStyle(
+                                            color: Colors.blue,
+                                            fontSize: Get.textScaleFactor * 17,
+                                            fontWeight: FontWeight.w500,
+                                          ),basicStyle: AppTextStyle.bodyText1.copyWith(
+                                            color: getAppColor(Colors.black),
+                                            fontSize: Get.textScaleFactor * 17,
+                                            fontWeight: FontWeight.w500,),
+                                            softWrap: true,
+                                            onTap: (text) {
+                                              controller.defaultSearchValue = text;
+                                              Get.to(() => Search());
+                                            },
+                                            decorateAtSign: true,
+                                          ),
+                                        ),
+                                        Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(post.createdAt.toString())), style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: Get.textScaleFactor * 15,
+                                          fontWeight: FontWeight.w500,
+                                        ),),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    InkWell(
+                                        onTap: () {
+                                          var body = {
+                                            "activity_id": post.id,
+                                          };
+                                          controller.deleteData(body, "/wayagram-service/main/delete-activity-log?profile_id=${fullProfile.id}", updatePages: false).then((value){
+                                            if(value.isSuccessful){
+                                              AppOverlay.showSuccessSnackBar(content: "Activity Log Deleted Successfully");
+                                              allPosts.removeWhere((element) => element.id == post.id);
+                                              controller.update(["activity_log"]);
+                                            }else{
+                                              AppOverlay.showErrorSnackBar(content: "Failed to Delete Activity Log, Please try again");
+                                            }
+                                          });
+                                        },
+                                        child: Icon(Icons.delete, color: AppColors.primary,)
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }else{
+                        if(snapshot.connectionState == ConnectionState.done){
+                          return SizedBox.shrink();
+                        }
+                        return GroupView(isLoading: true);
+                      }
+                    }),
+              ),
             ),
           ),
         );

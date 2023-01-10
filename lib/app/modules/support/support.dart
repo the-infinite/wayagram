@@ -39,6 +39,14 @@ class Support extends GetView<HomeControllerWayagram>{
         return Scaffold(
           appBar: AppBar(
             elevation: 0,
+            backgroundColor: getAppColor(AppColors.background),
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
+                statusBarIconBrightness: getAppBrightness(),
+                statusBarBrightness: getAppBrightness(),
+                systemNavigationBarColor: getAppColor(AppColors.background),
+                systemNavigationBarIconBrightness: getAppBrightness()
+            ),
             title: Text('Support', style: AppTextStyle.subtitle1.copyWith(
               color:getAppColor(Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
@@ -62,45 +70,50 @@ class Support extends GetView<HomeControllerWayagram>{
                   color: Colors.grey,
                 )),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: Get.height * 0.02),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _TextButton(
-                          leading: Icon(Icons.messenger_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
-                          text: "Send us a message",
-                          subtitle: "Talk to a customer service representative",
-                          onPressed: () async {
-                            const url = "https://wa.me/2348066252349?text=Hi, I'm a Wayagram user and i have a complaint";
-                            var encoded = Uri.encodeFull(url);
-                            Uri uri = Uri.parse(url);
-                            controller.launchURL(encoded);
-                          }
-                      ),
-                      SizedBox(height: Get.height*0.02),
-                      _TextButton(
-                          leading: Icon(Icons.call_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
-                          text: "Make a phone call",
-                          subtitle: "Call customer service directly",
-                          onPressed: () async {
-                            var phone = "tel:+2348066252349";
-                            Uri uri = Uri.parse(phone);
-                            if(await canLaunchUrl(uri)){
-                            launchUrl(uri);
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: Get.height * 0.02),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _TextButton(
+                            leading: Icon(Icons.messenger_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
+                            text: "Send us a message",
+                            subtitle: "Talk to a customer service representative",
+                            onPressed: () async {
+                              const url = "https://wa.me/2348066252349?text=Hi, I'm a Wayagram user and i have a complaint";
+                              var encoded = Uri.encodeFull(url);
+                              Uri uri = Uri.parse(url);
+                              controller.launchURL(encoded);
                             }
-                          }
-                      ),
-                      SizedBox(height: Get.height*0.02),
-                    ],
+                        ),
+                        SizedBox(height: Get.height*0.02),
+                        _TextButton(
+                            leading: Icon(Icons.call_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
+                            text: "Make a phone call",
+                            subtitle: "Call customer service directly",
+                            onPressed: () async {
+                              var phone = "tel:+2348066252349";
+                              Uri uri = Uri.parse(phone);
+                              if(await canLaunchUrl(uri)){
+                              launchUrl(uri);
+                              }
+                            }
+                        ),
+                        SizedBox(height: Get.height*0.02),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         );
       },

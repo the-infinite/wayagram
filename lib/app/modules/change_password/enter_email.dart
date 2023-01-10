@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
@@ -41,6 +42,14 @@ class EnterEmail extends GetView<AuthControllerWayagram> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
+          backgroundColor: getAppColor(AppColors.background),
+          systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: getAppColor(AppColors.background),
+              statusBarIconBrightness: getAppBrightness(),
+              statusBarBrightness: getAppBrightness(),
+              systemNavigationBarColor: getAppColor(AppColors.background),
+              systemNavigationBarIconBrightness: getAppBrightness()
+          ),
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
@@ -55,8 +64,10 @@ class EnterEmail extends GetView<AuthControllerWayagram> {
           ),
         ),
         body: GetBuilder<AuthControllerWayagram>(builder: (controller) {
-          return SizedBox(
-            width: Get.width,
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(AppThemes.appPaddingVal),

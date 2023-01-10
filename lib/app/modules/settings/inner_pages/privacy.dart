@@ -80,140 +80,141 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
                   systemNavigationBarIconBrightness: getAppBrightness()
               ),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Divider(
-                color: Colors.grey,
-                thickness: 0.3,
-              ),
-              TabBar(
-                controller: tabController,
-                padding: EdgeInsets.zero,
-                labelColor: getAppColor(Colors.black),
-                unselectedLabelColor: Color(0xff9A9A9A),
-                indicatorColor: AppColors.primary,
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelStyle: TextStyle(
-                  fontSize: Get.width*0.035,
-                  fontWeight: FontWeight.w500,
-                ),
-                unselectedLabelStyle: TextStyle(
-                  fontSize: Get.width*0.035,
-                  fontWeight: FontWeight.w500,
-                ),
-                tabs: [
-                  Tab(text: 'Muted Users',iconMargin: EdgeInsets.zero,),
-                  Tab(text: 'Blocked Users',iconMargin: EdgeInsets.zero,),
-                ],
-                onTap: (index) {
-
-                },
-              ),
-              Divider(
-                height: 0.5,
-                thickness: 0.5,
-                color: Colors.grey,
-              ),
-              Expanded(
-                child: TabBarView(
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TabBar(
                   controller: tabController,
-                  children: [
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          FutureBuilder<ApiResponse>(
-                              future: controller.getMuted,
-                              builder: (context, snapshot) {
-                                var savedPosts = MyPref.mutedAccounts.val;
-                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                  final posts = snapshot.data!.data as List<BlockedAccountsEntity>;
-                                  var names = posts.map((e) => e.displayName.toString()).toList();
-                                  var username = posts.map((e) => e.username.toString()).toList();
-                                  var profile = posts.map((e) => e.avatar.toString()).toList();
-                                  var userIds = posts.map((e) => e.userId.toString()).toList();
-                                  mutedTextController.text = posts.length.toString();
-                                  return PersonView(
-                                    name: names,
-                                    username: username,
-                                    profilePic: profile,
-                                    length: posts.length,
-                                    userIDs: userIds,
-                                    blocked: posts,
-                                  );
-                                } else if(savedPosts.isNotEmpty){
-                                  var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
-                                  var names = posts.map((e) => e.displayName.toString()).toList();
-                                  var username = posts.map((e) => e.username.toString()).toList();
-                                  var profile = posts.map((e) => e.avatar.toString()).toList();
-                                  var userIds = posts.map((e) => e.userId.toString()).toList();
-                                  mutedTextController.text = posts.length.toString();
-                                  return PersonView(
-                                    name: names,
-                                    username: username,
-                                    profilePic: profile,
-                                    length: posts.length,
-                                    userIDs: userIds,
-                                    blocked: posts,
-                                  );
-                                }else{
-                                  return NotificationView(isLoading: true);
-                                }
-                              }),
-                        ],
-                      ),
-                    ),
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          FutureBuilder<ApiResponse>(
-                              future: controller.getBlocked,
-                              builder: (context, snapshot) {
-                                var savedPosts = MyPref.restrictedAccounts.val;
-                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                  final posts = snapshot.data!.data as List<BlockedAccountsEntity>;
-                                  var names = posts.map((e) => e.displayName.toString()).toList();
-                                  var username = posts.map((e) => e.username.toString()).toList();
-                                  var profile = posts.map((e) => e.avatar.toString()).toList();
-                                  var userIds = posts.map((e) => e.userId.toString()).toList();
-                                  blockedTextController.text = posts.length.toString();
-                                  //controller.update();
-                                  return PersonView(
-                                    name: names,
-                                    username: username,
-                                    profilePic: profile,
-                                    length: posts.length,
-                                    userIDs: userIds,
-                                    blocked: posts,
-                                  );
-                                } else if(savedPosts.isNotEmpty){
-                                  var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
-                                  var names = posts.map((e) => e.displayName.toString()).toList();
-                                  var username = posts.map((e) => e.username.toString()).toList();
-                                  var profile = posts.map((e) => e.avatar.toString()).toList();
-                                  var userIds = posts.map((e) => e.userId.toString()).toList();
-                                  blockedTextController.text = posts.length.toString();
-
-                                  return PersonView(
-                                    name: names,
-                                    username: username,
-                                    profilePic: profile,
-                                    length: posts.length,
-                                    userIDs: userIds,
-                                    blocked: posts,
-                                  );
-                                }else{
-                                  return NotificationView(isLoading: true);
-                                }
-                              }),
-                        ],
-                      ),
-                    ),
+                  padding: EdgeInsets.zero,
+                  labelColor: getAppColor(Colors.black),
+                  unselectedLabelColor: Color(0xff9A9A9A),
+                  indicatorColor: AppColors.primary,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelStyle: TextStyle(
+                    fontSize: Get.width*0.035,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  unselectedLabelStyle: TextStyle(
+                    fontSize: Get.width*0.035,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  tabs: [
+                    Tab(text: 'Muted Users',iconMargin: EdgeInsets.zero,),
+                    Tab(text: 'Blocked Users',iconMargin: EdgeInsets.zero,),
                   ],
+                  onTap: (index) {
+
+                  },
                 ),
-              )
-            ],
+                Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  color: Colors.grey,
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            FutureBuilder<ApiResponse>(
+                                future: controller.getMuted,
+                                builder: (context, snapshot) {
+                                  var savedPosts = MyPref.mutedAccounts.val;
+                                  if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                    final posts = snapshot.data!.data as List<BlockedAccountsEntity>;
+                                    var names = posts.map((e) => e.displayName.toString()).toList();
+                                    var username = posts.map((e) => e.username.toString()).toList();
+                                    var profile = posts.map((e) => e.avatar.toString()).toList();
+                                    var userIds = posts.map((e) => e.userId.toString()).toList();
+                                    mutedTextController.text = posts.length.toString();
+                                    return PersonView(
+                                      name: names,
+                                      username: username,
+                                      profilePic: profile,
+                                      length: posts.length,
+                                      userIDs: userIds,
+                                      blocked: posts,
+                                    );
+                                  } else if(savedPosts.isNotEmpty){
+                                    var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
+                                    var names = posts.map((e) => e.displayName.toString()).toList();
+                                    var username = posts.map((e) => e.username.toString()).toList();
+                                    var profile = posts.map((e) => e.avatar.toString()).toList();
+                                    var userIds = posts.map((e) => e.userId.toString()).toList();
+                                    mutedTextController.text = posts.length.toString();
+                                    return PersonView(
+                                      name: names,
+                                      username: username,
+                                      profilePic: profile,
+                                      length: posts.length,
+                                      userIDs: userIds,
+                                      blocked: posts,
+                                    );
+                                  }else{
+                                    return NotificationView(isLoading: true);
+                                  }
+                                }),
+                          ],
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            FutureBuilder<ApiResponse>(
+                                future: controller.getBlocked,
+                                builder: (context, snapshot) {
+                                  var savedPosts = MyPref.restrictedAccounts.val;
+                                  if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                    final posts = snapshot.data!.data as List<BlockedAccountsEntity>;
+                                    var names = posts.map((e) => e.displayName.toString()).toList();
+                                    var username = posts.map((e) => e.username.toString()).toList();
+                                    var profile = posts.map((e) => e.avatar.toString()).toList();
+                                    var userIds = posts.map((e) => e.userId.toString()).toList();
+                                    blockedTextController.text = posts.length.toString();
+                                    //controller.update();
+                                    return PersonView(
+                                      name: names,
+                                      username: username,
+                                      profilePic: profile,
+                                      length: posts.length,
+                                      userIDs: userIds,
+                                      blocked: posts,
+                                    );
+                                  } else if(savedPosts.isNotEmpty){
+                                    var posts = BlockedAccountsEntity.getService(jsonDecode(savedPosts));
+                                    var names = posts.map((e) => e.displayName.toString()).toList();
+                                    var username = posts.map((e) => e.username.toString()).toList();
+                                    var profile = posts.map((e) => e.avatar.toString()).toList();
+                                    var userIds = posts.map((e) => e.userId.toString()).toList();
+                                    blockedTextController.text = posts.length.toString();
+
+                                    return PersonView(
+                                      name: names,
+                                      username: username,
+                                      profilePic: profile,
+                                      length: posts.length,
+                                      userIDs: userIds,
+                                      blocked: posts,
+                                    );
+                                  }else{
+                                    return NotificationView(isLoading: true);
+                                  }
+                                }),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         );
       }),

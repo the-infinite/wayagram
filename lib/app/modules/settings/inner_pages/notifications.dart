@@ -94,94 +94,99 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: Get.height*0.02),
-                _SwitchButton(
-                  text: "Push Notifications",
-                  value: pushNotification.val,
-                  onChanged: (val){
-                    pushNotification.val = val;
-                    if(mounted) setState(() {});
-                  },
-                ),
-                SizedBox(height: Get.height*0.02),
-                _SwitchButton(
-                  text: "SMS Notifications",
-                  value: smsNotification.val,
-                  onChanged: (val){
-                    var body = {
-                      "phoneNumber": controller.profile.phone.toString(),
-                    };
-                    controller.postData(body, "/auth-service/api/v1/profile/sms-alert").then((value){
-                      if(value.isSuccessful){
-                        SmsNotificationResponse smsNotificationResponse = SmsNotificationResponse.fromJson(value.data);
-                        smsNotification.val = smsNotificationResponse.active == true;
-                        if(mounted) setState(() {});
-                      }else{
-                        AppOverlay.showErrorSnackBar();
-                      }
-                    });
-                  },
-                ),
-                SizedBox(height: Get.height*0.02),
-                _SwitchButton(
-                  text: "Email Notifications",
-                  value: emailNotification.val,
-                  onChanged: (val){
-                    emailNotification.val = val;
-                    if(mounted) setState(() {});
-                  },
-                ),
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: Get.height*0.02),
+                  _SwitchButton(
+                    text: "Push Notifications",
+                    value: pushNotification.val,
+                    onChanged: (val){
+                      pushNotification.val = val;
+                      if(mounted) setState(() {});
+                    },
+                  ),
+                  SizedBox(height: Get.height*0.02),
+                  _SwitchButton(
+                    text: "SMS Notifications",
+                    value: smsNotification.val,
+                    onChanged: (val){
+                      var body = {
+                        "phoneNumber": controller.profile.phone.toString(),
+                      };
+                      controller.postData(body, "/auth-service/api/v1/profile/sms-alert").then((value){
+                        if(value.isSuccessful){
+                          SmsNotificationResponse smsNotificationResponse = SmsNotificationResponse.fromJson(value.data);
+                          smsNotification.val = smsNotificationResponse.active == true;
+                          if(mounted) setState(() {});
+                        }else{
+                          AppOverlay.showErrorSnackBar();
+                        }
+                      });
+                    },
+                  ),
+                  SizedBox(height: Get.height*0.02),
+                  _SwitchButton(
+                    text: "Email Notifications",
+                    value: emailNotification.val,
+                    onChanged: (val){
+                      emailNotification.val = val;
+                      if(mounted) setState(() {});
+                    },
+                  ),
 
-                /*SizedBox(height: Get.height*0.02),
-                _SwitchButton(
-                  text: "New Notifications",
-                  onChanged: (val){
+                  /*SizedBox(height: Get.height*0.02),
+                  _SwitchButton(
+                    text: "New Notifications",
+                    onChanged: (val){
 
-                  },
-                ),*/
+                    },
+                  ),*/
 
-                SizedBox(height: Get.height*0.02),
-                _SwitchButton(
-                  text: "Messages",
-                  value: messagesNotification.val,
-                  onChanged: (val){
-                    messagesNotification.val = val;
-                    if(mounted) setState(() {});
-                  },
-                ),
-                SizedBox(height: Get.height*0.02),
-                _SwitchButton(
-                  text: "Post Performance Updates",
-                  value: postPerformanceNotification.val,
-                  onChanged: (val){
-                    postPerformanceNotification.val = val;
-                    if(mounted) setState(() {});
-                  },
-                ),
-                SizedBox(height: Get.height*0.02),
-                _SwitchButton(
-                  text: "Products and Updates",
-                  value: productsAndUpdatesNotification.val,
-                  onChanged: (val){
-                    productsAndUpdatesNotification.val = val;
-                    if(mounted) setState(() {});
-                  },
-                ),
-                SizedBox(height: Get.height*0.02),
-                _SwitchButton(
-                  text: "Interest Recommendations",
-                  value: interestRecommendationNotification.val,
-                  onChanged: (val){
-                    interestRecommendationNotification.val = val;
-                    if(mounted) setState(() {});
-                  },
-                ),
-              ],
+                  SizedBox(height: Get.height*0.02),
+                  _SwitchButton(
+                    text: "Messages",
+                    value: messagesNotification.val,
+                    onChanged: (val){
+                      messagesNotification.val = val;
+                      if(mounted) setState(() {});
+                    },
+                  ),
+                  SizedBox(height: Get.height*0.02),
+                  _SwitchButton(
+                    text: "Post Performance Updates",
+                    value: postPerformanceNotification.val,
+                    onChanged: (val){
+                      postPerformanceNotification.val = val;
+                      if(mounted) setState(() {});
+                    },
+                  ),
+                  SizedBox(height: Get.height*0.02),
+                  _SwitchButton(
+                    text: "Products and Updates",
+                    value: productsAndUpdatesNotification.val,
+                    onChanged: (val){
+                      productsAndUpdatesNotification.val = val;
+                      if(mounted) setState(() {});
+                    },
+                  ),
+                  SizedBox(height: Get.height*0.02),
+                  _SwitchButton(
+                    text: "Interest Recommendations",
+                    value: interestRecommendationNotification.val,
+                    onChanged: (val){
+                      interestRecommendationNotification.val = val;
+                      if(mounted) setState(() {});
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );

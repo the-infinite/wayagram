@@ -40,6 +40,14 @@ class Settings extends GetView<HomeControllerWayagram>{
         return Scaffold(
           appBar: AppBar(
             elevation: 0,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
+                statusBarIconBrightness: getAppBrightness(),
+                statusBarBrightness: getAppBrightness(),
+                systemNavigationBarColor: getAppColor(AppColors.background),
+                systemNavigationBarIconBrightness: getAppBrightness()
+            ),
+            backgroundColor: getAppColor(AppColors.background),
             title: Text('Settings', style: AppTextStyle.subtitle1.copyWith(
               color: getAppColor(Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
@@ -63,149 +71,154 @@ class Settings extends GetView<HomeControllerWayagram>{
                   color: getAppColor(Colors.grey),
                 )),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: Get.height * 0.02),
-              Center(
-                child: Container(
-                  width: Get.width*0.2,
-                  height: Get.width*0.2,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: getAppColor(Colors.white), width: 2),
-                  ),
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: AppAvatar(
-                      imgUrl: (fullProfile.avatar as String?).toString(),
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: Get.height * 0.02),
+                Center(
+                  child: Container(
+                    width: Get.width*0.2,
+                    height: Get.width*0.2,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: getAppColor(Colors.white), width: 2),
                     ),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: AppAvatar(
+                        imgUrl: (fullProfile.avatar as String?).toString(),
+                      ),
+                      onPressed: () {
+                        Get.to(() => Profile(),binding: WayagramBinding());
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  '${fullProfile.displayName}',
+                  style: TextStyle(
+                    color: getAppColor(Colors.black),
+                    fontSize: Get.width*0.04,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  "@${fullProfile.username}",
+                  style: TextStyle(
+                    color: getAppColor(Colors.grey),
+                    fontSize: Get.width*0.035,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Your Referral Code:",
+                  style: TextStyle(
+                    color: getAppColor(Colors.black),
+                    fontSize: Get.width*0.035,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(
+                  width: Get.width*0.5,
+                  child: AppButton(
+                    title: MyPref.referenceCode.val,
                     onPressed: () {
-                      Get.to(() => Profile(),binding: WayagramBinding());
+                      Clipboard.setData(ClipboardData(text: MyPref.referenceCode.val)).then((_){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
+                      });
                     },
+                    borderRadius: 10,
+                    fontColor: Colors.blue,
+                    fontSize: Get.width*0.04,
+                    bckgrndColor: getAppColor(AppColors.background),
+                    border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    leading: Icon(Icons.copy, color: Colors.blue, size: Get.width*0.04),
                   ),
                 ),
-              ),
-              SizedBox(height: 2),
-              Text(
-                '${fullProfile.displayName}',
-                style: TextStyle(
-                  color: getAppColor(Colors.black),
-                  fontSize: Get.width*0.04,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(
-                "@${fullProfile.username}",
-                style: TextStyle(
-                  color: getAppColor(Colors.grey),
-                  fontSize: Get.width*0.035,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                "Your Referral Code:",
-                style: TextStyle(
-                  color: getAppColor(Colors.black),
-                  fontSize: Get.width*0.035,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              SizedBox(
-                width: Get.width*0.5,
-                child: AppButton(
-                  title: MyPref.referenceCode.val,
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: MyPref.referenceCode.val)).then((_){
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
-                    });
-                  },
-                  borderRadius: 10,
-                  fontColor: Colors.blue,
-                  fontSize: Get.width*0.04,
-                  bckgrndColor: getAppColor(AppColors.background),
-                  border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  leading: Icon(Icons.copy, color: Colors.blue, size: Get.width*0.04),
-                ),
-              ),
-              SizedBox(height: 10),
-              SizedBox(
-                width: Get.width*0.4,
-                child: AppButton(
-                  title: 'Wallet Balance',
-                  onPressed: () {
-                    Get.bottomSheet(WalletBottomSheet(),isScrollControlled: true);
-                  },
-                  borderRadius: 10,
-                  fontColor: getAppColor(Colors.white),
-                  bckgrndColor: AppColors.primary,
-                  fontSize: Get.width*0.04,
-                  border: Border.all(color: AppColors.primary, width: 1),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                ),
-              ),
-              SizedBox(height: Get.height*0.05),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _TextButton(
-                          text: "Edit Profile",
-                          subtitle: "Update your profile",
-                          onPressed: (){
-                            controller.imagePaths.clear();
-                            Get.to(() => UpdateProfile(),binding: WayagramBinding());
-                          }
-                      ),
-                      SizedBox(height: Get.height*0.02),
-                      _TextButton(
-                          text: "Notifications",
-                          subtitle: "Manage your notifications",
-                          onPressed: (){
-                            Get.to(() => NotificationsSettings());
-                          }
-                      ),
-                      SizedBox(height: Get.height*0.02),
-                      _TextButton(
-                          text: "Security",
-                          subtitle: "Manage your security settings",
-                          onPressed: (){
-                            Get.to(() => SecuritySettings());
-                          }
-                      ),
-                      //SizedBox(height: Get.height*0.02),
-                      /*_TextButton(
-                          text: "Payment Settings",
-                          subtitle: "Manage your payments settings",
-                          onPressed: (){
-                            Get.to(() => PaymentSettings());
-                          }
-                      ),*/
-                      SizedBox(height: Get.height*0.02),
-                      _TextButton(
-                          text: "Privacy Settings",
-                          subtitle: "Manage your privacy settings",
-                          onPressed: (){
-                            Get.to(() => PrivacySettings());
-                          }
-                      ),
-                      SizedBox(height: Get.height*0.02),
-                      _TextButton(
-                          text: "Login Information",
-                          subtitle: "Location, device, time Of login",
-                          onPressed: (){
-                            Get.to(() => LoginInformation());
-                          }
-                      ),
-                      SizedBox(height: Get.height * 0.02),
-                    ],
+                SizedBox(height: 10),
+                SizedBox(
+                  width: Get.width*0.4,
+                  child: AppButton(
+                    title: 'Wallet Balance',
+                    onPressed: () {
+                      Get.bottomSheet(WalletBottomSheet(),isScrollControlled: true);
+                    },
+                    borderRadius: 10,
+                    fontColor: getAppColor(Colors.white),
+                    bckgrndColor: AppColors.primary,
+                    fontSize: Get.width*0.04,
+                    border: Border.all(color: AppColors.primary, width: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   ),
                 ),
-              )
-            ],
+                SizedBox(height: Get.height*0.05),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _TextButton(
+                            text: "Edit Profile",
+                            subtitle: "Update your profile",
+                            onPressed: (){
+                              controller.imagePaths.clear();
+                              Get.to(() => UpdateProfile(),binding: WayagramBinding());
+                            }
+                        ),
+                        SizedBox(height: Get.height*0.02),
+                        _TextButton(
+                            text: "Notifications",
+                            subtitle: "Manage your notifications",
+                            onPressed: (){
+                              Get.to(() => NotificationsSettings());
+                            }
+                        ),
+                        SizedBox(height: Get.height*0.02),
+                        _TextButton(
+                            text: "Security",
+                            subtitle: "Manage your security settings",
+                            onPressed: (){
+                              Get.to(() => SecuritySettings());
+                            }
+                        ),
+                        //SizedBox(height: Get.height*0.02),
+                        /*_TextButton(
+                            text: "Payment Settings",
+                            subtitle: "Manage your payments settings",
+                            onPressed: (){
+                              Get.to(() => PaymentSettings());
+                            }
+                        ),*/
+                        SizedBox(height: Get.height*0.02),
+                        _TextButton(
+                            text: "Privacy Settings",
+                            subtitle: "Manage your privacy settings",
+                            onPressed: (){
+                              Get.to(() => PrivacySettings());
+                            }
+                        ),
+                        SizedBox(height: Get.height*0.02),
+                        _TextButton(
+                            text: "Login Information",
+                            subtitle: "Location, device, time Of login",
+                            onPressed: (){
+                              Get.to(() => LoginInformation());
+                            }
+                        ),
+                        SizedBox(height: Get.height * 0.02),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         );
       },
