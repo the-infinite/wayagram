@@ -622,9 +622,10 @@ class _PromotePostState extends State<PromotePost> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: SizedBox(
+          body: Container(
             width: double.infinity,
             height: double.infinity,
+            color: getAppColor(AppColors.background),
             child: PageView(
               controller: pageController,
               physics: NeverScrollableScrollPhysics(),

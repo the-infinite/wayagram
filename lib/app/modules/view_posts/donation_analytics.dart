@@ -135,341 +135,349 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: Column(
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    height: Get.height * 0.06,
-                    width: Get.width * 0.2,
-                    decoration: BoxDecoration(
-                      color: getAppColor(AppColors.background),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Donors",
-                          style: TextStyle(
-                            color: getAppColor(Color(0xff4F4F4F)),
-                            fontSize: Get.textScaleFactor * 12,
-                            fontWeight: FontWeight.bold,
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      height: Get.height * 0.06,
+                      width: Get.width * 0.2,
+                      decoration: BoxDecoration(
+                        color: getAppColor(AppColors.background),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          shortenCount(donationStatistics.totalDonates.toString()),
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: Get.height * 0.06,
-                    width: Get.width * 0.5,
-                    decoration: BoxDecoration(
-                      color: getAppColor(AppColors.background),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Expiry Date",
-                          style: TextStyle(
-                            color: getAppColor(Color(0xff4F4F4F)),
-                            fontSize: Get.textScaleFactor * 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(donation.donationExpiresAt!)),allowFromNow: true),
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: Get.height * 0.06,
-                    width: Get.width * 0.2,
-                    decoration: BoxDecoration(
-                      color: getAppColor(AppColors.background),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Raised",
-                          style: TextStyle(
-                            color: getAppColor(Color(0xff4F4F4F)),
-                            fontSize: Get.textScaleFactor * 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          "NGN  ${shortenCount(donationStatistics.amountRaised.toString())}",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: AppRefresher(
-                  onRefresh: () {
-
-                  },
-                  onLoading: () {
-
-                  },
-                  enablePullDown: false,
-                  enablePullUp: false,
-                  controller: refreshController,
-                  child: SingleChildScrollView(
-                    child: peopleWhoDonated.isEmpty ?
-                    SizedBox(
-                      width: Get.width,
-                      height: Get.height * 0.5,
-                      child: Center(
-                        child: Column(
-                          children: [
-                            SizedBox(height: Get.height*0.2,),
-                            Icon(Icons.money_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                            SizedBox(height: 20,),
-                            Text("No Donations Yet", style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: Get.textScaleFactor * 17,
-                              fontWeight: FontWeight.w500,
-                            ),),
-                          ],
-                        ),
+                        ],
                       ),
-                    ) :
-                    ListView.builder(
-                      itemCount: peopleWhoDonated.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        var post = peopleWhoDonated[index];
-                        return InkWell(
-                          onTap: (){
-                            if(post.donatorProfile != null){
-                              var person = post.donatorProfile!;
-                              Get.to(() => OtherProfile(),arguments: [
-                                person.displayName.toString(),
-                                person.username.toString(),
-                                person.avatar.toString(),
-                                person.userId.toString(),
-                                person.bio.toString(),
-                                person.posts.toString(),
-                                person.followers.toString(),
-                                person.followings.toString(),
-                                person.coverImage.toString(),
-                                person.id.toString(),
-                                person.notPublic == true ? "true" : "false"
-                              ]);
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: Get.height*0.04,
-                                  width: Get.height*0.04,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primary,
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: AppAvatar(
-                                    imgUrl: post.donatorProfile!.avatar.toString(),
-                                    radius: 100,
-                                  ),
-                                ),
-                                SizedBox(width: 10,),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: Get.width*0.7,
-                                      child: HashTagText(text: post.donatorProfile!.displayName.toString(), decoratedStyle: TextStyle(
-                                        color: Colors.blue,
-                                        fontSize: Get.textScaleFactor * 17,
-                                        fontWeight: FontWeight.w500,
-                                      ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                        color: Colors.black,
-                                        fontSize: Get.textScaleFactor * 17,
-                                        fontWeight: FontWeight.w500,),
-                                        softWrap: true,
-                                        onTap: (text) {
-                                          controller.defaultSearchValue = text;
-                                          Get.to(() => Search());
-                                        },
-                                        decorateAtSign: true,
-                                      ),
-                                    ),
-                                    Text("NGN ${post.amount.toString()}", style: TextStyle(
-                                      color: AppColors.primary,
-                                      fontSize: Get.textScaleFactor * 15,
-                                      fontWeight: FontWeight.w500,
-                                    ),),
-                                    Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(post.createdAt.toString())), style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: Get.textScaleFactor * 15,
-                                      fontWeight: FontWeight.w500,
-                                    ),),
-                                  ],
-                                ),
-                                Spacer(),
-                              ],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Donors",
+                            style: TextStyle(
+                              color: getAppColor(Color(0xff4F4F4F)),
+                              fontSize: Get.textScaleFactor * 12,
+                              fontWeight: FontWeight.bold,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
                           ),
-                        );
-                      },
+                          Text(
+                            shortenCount(donationStatistics.totalDonates.toString()),
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: Get.height * 0.06,
+                      width: Get.width * 0.5,
+                      decoration: BoxDecoration(
+                        color: getAppColor(AppColors.background),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Expiry Date",
+                            style: TextStyle(
+                              color: getAppColor(Color(0xff4F4F4F)),
+                              fontSize: Get.textScaleFactor * 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(donation.donationExpiresAt!)),allowFromNow: true),
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: Get.height * 0.06,
+                      width: Get.width * 0.2,
+                      decoration: BoxDecoration(
+                        color: getAppColor(AppColors.background),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Raised(NGN)",
+                            style: TextStyle(
+                              color: getAppColor(Color(0xff4F4F4F)),
+                              fontSize: Get.textScaleFactor * 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            shortenCount(donationStatistics.amountRaised.toString()),
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: AppRefresher(
+                    onRefresh: () {
+
+                    },
+                    onLoading: () {
+
+                    },
+                    enablePullDown: false,
+                    enablePullUp: false,
+                    controller: refreshController,
+                    child: SingleChildScrollView(
+                      child: peopleWhoDonated.isEmpty ?
+                      SizedBox(
+                        width: Get.width,
+                        height: Get.height * 0.5,
+                        child: Center(
+                          child: Column(
+                            children: [
+                              SizedBox(height: Get.height*0.2,),
+                              Icon(Icons.money_rounded, color: AppColors.primary, size: Get.height*0.1,),
+                              SizedBox(height: 20,),
+                              Text("No Donations Yet", style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: Get.textScaleFactor * 17,
+                                fontWeight: FontWeight.w500,
+                              ),),
+                            ],
+                          ),
+                        ),
+                      ) :
+                      ListView.builder(
+                        itemCount: peopleWhoDonated.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          var post = peopleWhoDonated[index];
+                          return InkWell(
+                            onTap: (){
+                              if(post.donatorProfile != null){
+                                var person = post.donatorProfile!;
+                                Get.to(() => OtherProfile(),arguments: [
+                                  person.displayName.toString(),
+                                  person.username.toString(),
+                                  person.avatar.toString(),
+                                  person.userId.toString(),
+                                  person.bio.toString(),
+                                  person.posts.toString(),
+                                  person.followers.toString(),
+                                  person.followings.toString(),
+                                  person.coverImage.toString(),
+                                  person.id.toString(),
+                                  person.notPublic == true ? "true" : "false"
+                                ]);
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: Get.height*0.04,
+                                    width: Get.height*0.04,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: AppAvatar(
+                                      imgUrl: post.donatorProfile!.avatar.toString(),
+                                      radius: 100,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: Get.width*0.7,
+                                        child: HashTagText(text: post.donatorProfile!.displayName.toString(), decoratedStyle: TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: Get.textScaleFactor * 17,
+                                          fontWeight: FontWeight.w500,
+                                        ),basicStyle: AppTextStyle.bodyText1.copyWith(
+                                          color: Colors.black,
+                                          fontSize: Get.textScaleFactor * 17,
+                                          fontWeight: FontWeight.w500,),
+                                          softWrap: true,
+                                          onTap: (text) {
+                                            controller.defaultSearchValue = text;
+                                            Get.to(() => Search());
+                                          },
+                                          decorateAtSign: true,
+                                        ),
+                                      ),
+                                      Text("NGN ${post.amount.toString()}", style: TextStyle(
+                                        color: AppColors.primary,
+                                        fontSize: Get.textScaleFactor * 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),),
+                                      Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(post.createdAt.toString())), style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: Get.textScaleFactor * 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          bottomNavigationBar: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Divider(
-                height: 0.5,
-                thickness: 0.5,
-                color: Colors.grey,
-              ),
-              SizedBox(height: 10,),
-              if(!closed)
-                AppButton(
-                title: "Close Donation",
-                onPressed: () async {
-                  var body = {
-                    "action": "close",
-                    "donation_id": donation.id
-                  };
-                  var response = await controller.patchData(body, "/wayagram-service/all-posts/manage-donation");
-                  if(response.isSuccessful){
-                    closedDonations.add(donation.id.toString());
-                    savedClosedDonation.val = closedDonations.join(",");
-                    closed = true;
-                    controller.update(['donation_analytics']);
-                    AppOverlay.showSuccessSnackBar(content: "Donation Closed Successfully");
-                  }else{
-                    AppOverlay.showErrorSnackBar(content: "Unable to close donation post, please try again later");
-                  }
-                },
-                width: Get.width*0.9,
-                borderRadius: 10,
-                fontSize: Get.textScaleFactor * 18,
-              ),
-              if(closed && !moneyRequested)
-                AppButton(
-                  title: "Retrieve Money",
+          bottomNavigationBar: Container(
+            color: getAppColor(AppColors.background),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 10,),
+                if(!closed)
+                  AppButton(
+                  title: "Close Donation",
                   onPressed: () async {
                     var body = {
-                      "item_type": "Donation",
-                      "item_id": donation.id
+                      "action": "close",
+                      "donation_id": donation.id
                     };
-                    var response = await controller.postData(body, "/wayagram-serviceall-posts/receive-money");
+                    var response = await controller.patchData(body, "/wayagram-service/all-posts/manage-donation");
                     if(response.isSuccessful){
-                      savedMoneyRequested.val = true;
-                      moneyRequested = true;
+                      closedDonations.add(donation.id.toString());
+                      savedClosedDonation.val = closedDonations.join(",");
+                      closed = true;
                       controller.update(['donation_analytics']);
-                      AppOverlay.showSuccessSnackBar(content: response.message.toString());
+                      AppOverlay.showSuccessSnackBar(content: "Donation Closed Successfully");
                     }else{
-                      if(response.message == "Payment request has already been sent"){
-                        savedMoneyRequested.val = true;
-                        moneyRequested = true;
-                        controller.update(['donation_analytics']);
-                      }
-                      AppOverlay.showErrorSnackBar(content: response.message.toString());
+                      AppOverlay.showErrorSnackBar(content: "Unable to close donation post, please try again later");
                     }
                   },
                   width: Get.width*0.9,
                   borderRadius: 10,
                   fontSize: Get.textScaleFactor * 18,
                 ),
-              if(closed && moneyRequested)
-                Text(
-                  "Money Requested Already",
-                  style: TextStyle(
-                    color: getAppColor(Color(0xff4F4F4F)),
-                    fontSize: Get.textScaleFactor * 16,
-                    fontWeight: FontWeight.bold,
+                if(closed && !moneyRequested)
+                  AppButton(
+                    title: "Retrieve Money",
+                    onPressed: () async {
+                      var body = {
+                        "item_type": "Donation",
+                        "item_id": donation.id
+                      };
+                      var response = await controller.postData(body, "/wayagram-serviceall-posts/receive-money");
+                      if(response.isSuccessful){
+                        savedMoneyRequested.val = true;
+                        moneyRequested = true;
+                        controller.update(['donation_analytics']);
+                        AppOverlay.showSuccessSnackBar(content: response.message.toString());
+                      }else{
+                        if(response.message == "Payment request has already been sent"){
+                          savedMoneyRequested.val = true;
+                          moneyRequested = true;
+                          controller.update(['donation_analytics']);
+                        }
+                        AppOverlay.showErrorSnackBar(content: response.message.toString());
+                      }
+                    },
+                    width: Get.width*0.9,
+                    borderRadius: 10,
+                    fontSize: Get.textScaleFactor * 18,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-              SizedBox(height: 10,),
-            ],
+                if(closed && moneyRequested)
+                  Text(
+                    "Money Requested Already",
+                    style: TextStyle(
+                      color: getAppColor(Color(0xff4F4F4F)),
+                      fontSize: Get.textScaleFactor * 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                SizedBox(height: 10,),
+              ],
+            ),
           ),
         );
       }),

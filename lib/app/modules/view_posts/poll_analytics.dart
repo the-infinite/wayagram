@@ -147,348 +147,356 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: Column(
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    height: Get.height * 0.06,
-                    width: Get.width * 0.2,
-                    decoration: BoxDecoration(
-                      color: getAppColor(AppColors.background),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Votes",
-                          style: TextStyle(
-                            color: getAppColor(Color(0xff4F4F4F)),
-                            fontSize: Get.textScaleFactor * 12,
-                            fontWeight: FontWeight.bold,
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      height: Get.height * 0.06,
+                      width: Get.width * 0.2,
+                      decoration: BoxDecoration(
+                        color: getAppColor(AppColors.background),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                         shortenCount(pollStatistics.pollVotes == null ? "0" : pollStatistics.pollVotes!.length.toString()),
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: Get.height * 0.06,
-                    width: Get.width * 0.5,
-                    decoration: BoxDecoration(
-                      color: getAppColor(AppColors.background),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "End Date",
-                          style: TextStyle(
-                            color: getAppColor(Color(0xff4F4F4F)),
-                            fontSize: Get.textScaleFactor * 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          timeago.format(DateTime.parse(pollStatistics.endDate.toString()),allowFromNow: true),
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: Get.height * 0.06,
-                    width: Get.width * 0.2,
-                    decoration: BoxDecoration(
-                      color: getAppColor(AppColors.background),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Amount",
-                          style: TextStyle(
-                            color: getAppColor(Color(0xff4F4F4F)),
-                            fontSize: Get.textScaleFactor * 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          pollStatistics.isPaid == true ?  "NGN  ${shortenCount(total.toString())}" : "Free",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: AppRefresher(
-                  onRefresh: () {
-
-                  },
-                  onLoading: () {
-
-                  },
-                  enablePullDown: false,
-                  enablePullUp: false,
-                  controller: refreshController,
-                  child: SingleChildScrollView(
-                    child: pollVotes.isEmpty ?
-                    SizedBox(
-                      width: Get.width,
-                      height: Get.height * 0.5,
-                      child: Center(
-                        child: Column(
-                          children: [
-                            SizedBox(height: Get.height*0.2,),
-                            Icon(Icons.poll_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                            SizedBox(height: 20,),
-                            Text("No Votes Yet", style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: Get.textScaleFactor * 17,
-                              fontWeight: FontWeight.w500,
-                            ),),
-                          ],
-                        ),
+                        ],
                       ),
-                    ) :
-                    ListView.builder(
-                      itemCount: pollVotes.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        var post = pollVotes[index];
-                        var widget =  InkWell(
-                          onTap: (){
-                            if(post.voterProfile != null){
-                              var person = post.voterProfile!;
-                              Get.to(() => OtherProfile(),arguments: [
-                                person.displayName.toString(),
-                                person.username.toString(),
-                                person.avatar.toString(),
-                                person.userId.toString(),
-                                person.bio.toString(),
-                                person.posts.toString(),
-                                person.followers.toString(),
-                                person.followings.toString(),
-                                person.coverImage.toString(),
-                                person.id.toString(),
-                                person.notPublic == true ? "true" : "false"
-                              ]);
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: Get.height*0.04,
-                                  width: Get.height*0.04,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primary,
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: AppAvatar(
-                                    imgUrl: post.voterProfile!.avatar.toString(),
-                                    radius: 100,
-                                  ),
-                                ),
-                                SizedBox(width: 10,),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: Get.width*0.7,
-                                      child: HashTagText(text: post.voterProfile!.displayName.toString(), decoratedStyle: TextStyle(
-                                        color: Colors.blue,
-                                        fontSize: Get.textScaleFactor * 17,
-                                        fontWeight: FontWeight.w500,
-                                      ),basicStyle: AppTextStyle.bodyText1.copyWith(
-                                        color: getAppColor(Colors.black),
-                                        fontSize: Get.textScaleFactor * 17,
-                                        fontWeight: FontWeight.w500,),
-                                        softWrap: true,
-                                        onTap: (text) {
-                                          controller.defaultSearchValue = text;
-                                          Get.to(() => Search());
-                                        },
-                                        decorateAtSign: true,
-                                      ),
-                                    ),
-                                    Text(post.choice.toString(), style: TextStyle(
-                                      color: AppColors.button,
-                                      fontSize: Get.textScaleFactor * 15,
-                                      fontWeight: FontWeight.w500,
-                                    ),),
-                                   /* Text("NGN ${pollStatistics.amount!.toString()}", style: TextStyle(
-                                      color: AppColors.primary,
-                                      fontSize: Get.textScaleFactor * 15,
-                                      fontWeight: FontWeight.w500,
-                                    ),),*/
-                                    Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(post.createdAt.toString())), style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: Get.textScaleFactor * 15,
-                                      fontWeight: FontWeight.w500,
-                                    ),),
-                                  ],
-                                ),
-                                Spacer(),
-                              ],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Votes",
+                            style: TextStyle(
+                              color: getAppColor(Color(0xff4F4F4F)),
+                              fontSize: Get.textScaleFactor * 12,
+                              fontWeight: FontWeight.bold,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
                           ),
-                        );
-                        return widget;
-                      },
+                          Text(
+                           shortenCount(pollStatistics.pollVotes == null ? "0" : pollStatistics.pollVotes!.length.toString()),
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: Get.height * 0.06,
+                      width: Get.width * 0.5,
+                      decoration: BoxDecoration(
+                        color: getAppColor(AppColors.background),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "End Date",
+                            style: TextStyle(
+                              color: getAppColor(Color(0xff4F4F4F)),
+                              fontSize: Get.textScaleFactor * 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            timeago.format(DateTime.parse(pollStatistics.endDate.toString()),allowFromNow: true),
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: Get.height * 0.06,
+                      width: Get.width * 0.2,
+                      decoration: BoxDecoration(
+                        color: getAppColor(AppColors.background),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Amount",
+                            style: TextStyle(
+                              color: getAppColor(Color(0xff4F4F4F)),
+                              fontSize: Get.textScaleFactor * 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            pollStatistics.isPaid == true ?  "NGN  ${shortenCount(total.toString())}" : "Free",
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: AppRefresher(
+                    onRefresh: () {
+
+                    },
+                    onLoading: () {
+
+                    },
+                    enablePullDown: false,
+                    enablePullUp: false,
+                    controller: refreshController,
+                    child: SingleChildScrollView(
+                      child: pollVotes.isEmpty ?
+                      SizedBox(
+                        width: Get.width,
+                        height: Get.height * 0.5,
+                        child: Center(
+                          child: Column(
+                            children: [
+                              SizedBox(height: Get.height*0.2,),
+                              Icon(Icons.poll_rounded, color: AppColors.primary, size: Get.height*0.1,),
+                              SizedBox(height: 20,),
+                              Text("No Votes Yet", style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: Get.textScaleFactor * 17,
+                                fontWeight: FontWeight.w500,
+                              ),),
+                            ],
+                          ),
+                        ),
+                      ) :
+                      ListView.builder(
+                        itemCount: pollVotes.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          var post = pollVotes[index];
+                          var widget =  InkWell(
+                            onTap: (){
+                              if(post.voterProfile != null){
+                                var person = post.voterProfile!;
+                                Get.to(() => OtherProfile(),arguments: [
+                                  person.displayName.toString(),
+                                  person.username.toString(),
+                                  person.avatar.toString(),
+                                  person.userId.toString(),
+                                  person.bio.toString(),
+                                  person.posts.toString(),
+                                  person.followers.toString(),
+                                  person.followings.toString(),
+                                  person.coverImage.toString(),
+                                  person.id.toString(),
+                                  person.notPublic == true ? "true" : "false"
+                                ]);
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: Get.height*0.04,
+                                    width: Get.height*0.04,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: AppAvatar(
+                                      imgUrl: post.voterProfile!.avatar.toString(),
+                                      radius: 100,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: Get.width*0.7,
+                                        child: HashTagText(text: post.voterProfile!.displayName.toString(), decoratedStyle: TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: Get.textScaleFactor * 17,
+                                          fontWeight: FontWeight.w500,
+                                        ),basicStyle: AppTextStyle.bodyText1.copyWith(
+                                          color: getAppColor(Colors.black),
+                                          fontSize: Get.textScaleFactor * 17,
+                                          fontWeight: FontWeight.w500,),
+                                          softWrap: true,
+                                          onTap: (text) {
+                                            controller.defaultSearchValue = text;
+                                            Get.to(() => Search());
+                                          },
+                                          decorateAtSign: true,
+                                        ),
+                                      ),
+                                      Text(post.choice.toString(), style: TextStyle(
+                                        color: AppColors.button,
+                                        fontSize: Get.textScaleFactor * 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),),
+                                     /* Text("NGN ${pollStatistics.amount!.toString()}", style: TextStyle(
+                                        color: AppColors.primary,
+                                        fontSize: Get.textScaleFactor * 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),),*/
+                                      Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(post.createdAt.toString())), style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: Get.textScaleFactor * 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                ],
+                              ),
+                            ),
+                          );
+                          return widget;
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          bottomNavigationBar: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Divider(
-                height: 0.5,
-                thickness: 0.5,
-                color: Colors.grey,
-              ),
-              SizedBox(height: 10,),
-              if(!closed)
-                AppButton(
-                title: "Close Poll",
-                onPressed: () async {
-                  var body = {
-                    "action": "close",
-                    "poll_id": poll.id
-                  };
-                  //https://services.staging.wayagram.ng/wayagram-service/all-posts/manage-poll-post?sso_id=313
-                  var response = await controller.patchData(body, "/wayagram-service/all-posts/manage-poll-post");
-                  if(response.isSuccessful){
-                    closedPoll.add(poll.id.toString());
-                    savedClosedPoll.val = closedPoll.join(",");
-                    closed = true;
-                    controller.update(['donation_analytics']);
-                    AppOverlay.showSuccessSnackBar(content: "Poll Closed Successfully");
-                  }else{
-                    AppOverlay.showErrorSnackBar(content: "Unable to close poll, please try again later");
-                  }
-                },
-                width: Get.width*0.9,
-                borderRadius: 10,
-                fontSize: Get.textScaleFactor * 18,
-              ),
-              if(closed && !moneyRequested)
-                AppButton(
-                  title: "Retrieve Money",
+          bottomNavigationBar: Container(
+            color: getAppColor(AppColors.background),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 10,),
+                if(!closed)
+                  AppButton(
+                  title: "Close Poll",
                   onPressed: () async {
                     var body = {
-                      "item_type": "Poll",
-                      "item_id": poll.id
+                      "action": "close",
+                      "poll_id": poll.id
                     };
-                    var response = await controller.postData(body, "/wayagram-serviceall-posts/receive-money");
+                    //https://services.staging.wayagram.ng/wayagram-service/all-posts/manage-poll-post?sso_id=313
+                    var response = await controller.patchData(body, "/wayagram-service/all-posts/manage-poll-post");
                     if(response.isSuccessful){
-                      //savedMoneyRequested.val = true;
-                      moneyRequested = true;
+                      closedPoll.add(poll.id.toString());
+                      savedClosedPoll.val = closedPoll.join(",");
+                      closed = true;
                       controller.update(['donation_analytics']);
-                      AppOverlay.showSuccessSnackBar(content: response.message.toString());
+                      AppOverlay.showSuccessSnackBar(content: "Poll Closed Successfully");
                     }else{
-                      if(response.message == "Payment request has already been sent"){
-                        //savedMoneyRequested.val = true;
-                        moneyRequested = true;
-                        controller.update(['donation_analytics']);
-                      }
-                      AppOverlay.showErrorSnackBar(content: response.message.toString());
+                      AppOverlay.showErrorSnackBar(content: "Unable to close poll, please try again later");
                     }
                   },
                   width: Get.width*0.9,
                   borderRadius: 10,
                   fontSize: Get.textScaleFactor * 18,
                 ),
-              if(closed && moneyRequested)
-                Text(
-                  "Money Requested Already",
-                  style: TextStyle(
-                    color: getAppColor(Color(0xff4F4F4F)),
-                    fontSize: Get.textScaleFactor * 16,
-                    fontWeight: FontWeight.bold,
+                if(closed && !moneyRequested)
+                  AppButton(
+                    title: "Retrieve Money",
+                    onPressed: () async {
+                      var body = {
+                        "item_type": "Poll",
+                        "item_id": poll.id
+                      };
+                      var response = await controller.postData(body, "/wayagram-serviceall-posts/receive-money");
+                      if(response.isSuccessful){
+                        //savedMoneyRequested.val = true;
+                        moneyRequested = true;
+                        controller.update(['donation_analytics']);
+                        AppOverlay.showSuccessSnackBar(content: response.message.toString());
+                      }else{
+                        if(response.message == "Payment request has already been sent"){
+                          //savedMoneyRequested.val = true;
+                          moneyRequested = true;
+                          controller.update(['donation_analytics']);
+                        }
+                        AppOverlay.showErrorSnackBar(content: response.message.toString());
+                      }
+                    },
+                    width: Get.width*0.9,
+                    borderRadius: 10,
+                    fontSize: Get.textScaleFactor * 18,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-              SizedBox(height: 10,),
-            ],
+                if(closed && moneyRequested)
+                  Text(
+                    "Money Requested Already",
+                    style: TextStyle(
+                      color: getAppColor(Color(0xff4F4F4F)),
+                      fontSize: Get.textScaleFactor * 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                SizedBox(height: 10,),
+              ],
+            ),
           ),
         );
       }),

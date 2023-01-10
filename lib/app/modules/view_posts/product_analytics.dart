@@ -93,7 +93,7 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
             title: Text(
-              "Post Activity",
+              "Product Activity",
               style: TextStyle(
                 color: getAppColor(Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
@@ -123,8 +123,10 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: SizedBox(
+          body: Container(
             width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
             child: Padding(
               padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
               child: SingleChildScrollView(

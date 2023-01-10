@@ -140,272 +140,280 @@ class _EventAnalyticsState extends State<EventAnalytics> with TickerProviderStat
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: Column(
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    height: Get.height * 0.06,
-                    width: Get.width * 0.2,
-                    decoration: BoxDecoration(
-                      color: getAppColor(AppColors.background),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Attendee",
-                          style: TextStyle(
-                            color: getAppColor(Color(0xff4F4F4F)),
-                            fontSize: Get.textScaleFactor * 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          shortenCount(attendeeCount.toString()),
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: Get.height * 0.06,
-                    width: Get.width * 0.5,
-                    decoration: BoxDecoration(
-                      color: getAppColor(AppColors.background),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Ending Date",
-                          style: TextStyle(
-                            color: getAppColor(Color(0xff4F4F4F)),
-                            fontSize: Get.textScaleFactor * 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          timeago.format(date,allowFromNow: true),
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: Get.height * 0.06,
-                    width: Get.width * 0.2,
-                    decoration: BoxDecoration(
-                      color: getAppColor(AppColors.background),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Amount",
-                          style: TextStyle(
-                            color: getAppColor(Color(0xff4F4F4F)),
-                            fontSize: Get.textScaleFactor * 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          donation.isPaid == true ? shortenCount(((attendeeCount - 1) * donation.amount!).toString()) : "Free",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: Get.textScaleFactor * 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: Get.height * 0.01),
-              Padding(
-                padding: EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025, top: Get.height * 0.02),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.01),
-                      child: Text(donation.eventName.toString(), style: AppTextStyle.subtitle1.copyWith(
-                        color: getAppColor(Colors.black),
-                        fontSize: Get.width*0.05,
-                        fontWeight: FontWeight.w600,
-                      )),
+                    Container(
+                      height: Get.height * 0.06,
+                      width: Get.width * 0.2,
+                      decoration: BoxDecoration(
+                        color: getAppColor(AppColors.background),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Attendee",
+                            style: TextStyle(
+                              color: getAppColor(Color(0xff4F4F4F)),
+                              fontSize: Get.textScaleFactor * 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            shortenCount(attendeeCount.toString()),
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: Get.height*0.01),
-                    Padding(
-                      padding: EdgeInsets.only(left: Get.width*0.01),
-                      child: Text("${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(int.parse(donation.eventStart.toString())))} at  ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(int.parse(donation.eventStart.toString())))}", style: AppTextStyle.subtitle1.copyWith(
-                        color: getAppColor(Colors.black).withOpacity(0.5),
-                        fontSize: Get.width*0.04,
-                        fontWeight: FontWeight.normal,
-                      )),
+                    Container(
+                      height: Get.height * 0.06,
+                      width: Get.width * 0.5,
+                      decoration: BoxDecoration(
+                        color: getAppColor(AppColors.background),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Ending Date",
+                            style: TextStyle(
+                              color: getAppColor(Color(0xff4F4F4F)),
+                              fontSize: Get.textScaleFactor * 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            timeago.format(date,allowFromNow: true),
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: Get.height*0.01),
-                    if(donation.eventOrganizer.toString() != "null")
+                    Container(
+                      height: Get.height * 0.06,
+                      width: Get.width * 0.2,
+                      decoration: BoxDecoration(
+                        color: getAppColor(AppColors.background),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Amount",
+                            style: TextStyle(
+                              color: getAppColor(Color(0xff4F4F4F)),
+                              fontSize: Get.textScaleFactor * 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            donation.isPaid == true ? shortenCount(((attendeeCount - 1) * donation.amount!).toString()) : "Free",
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: Get.textScaleFactor * 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: Get.height * 0.01),
+                Padding(
+                  padding: EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025, top: Get.height * 0.02),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.01),
+                        child: Text(donation.eventName.toString(), style: AppTextStyle.subtitle1.copyWith(
+                          color: getAppColor(Colors.black),
+                          fontSize: Get.width*0.05,
+                          fontWeight: FontWeight.w600,
+                        )),
+                      ),
+                      SizedBox(height: Get.height*0.01),
+                      Padding(
+                        padding: EdgeInsets.only(left: Get.width*0.01),
+                        child: Text("${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(int.parse(donation.eventStart.toString())))} at  ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(int.parse(donation.eventStart.toString())))}", style: AppTextStyle.subtitle1.copyWith(
+                          color: getAppColor(Colors.black).withOpacity(0.5),
+                          fontSize: Get.width*0.04,
+                          fontWeight: FontWeight.normal,
+                        )),
+                      ),
+                      SizedBox(height: Get.height*0.01),
+                      if(donation.eventOrganizer.toString() != "null")
+                        _TextButton(
+                          leading: Icon(Icons.people_alt_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
+                          text:donation.eventOrganizer.toString(),
+                          onPressed: () {
+                          },
+                        ),
+                      SizedBox(height: Get.height*0.01),
                       _TextButton(
-                        leading: Icon(Icons.people_alt_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
-                        text:donation.eventOrganizer.toString(),
+                        leading: Icon(Icons.location_on, color: getAppColor(Colors.black).withOpacity(0.5)),
+                        text: donation.location.toString(),
                         onPressed: () {
                         },
                       ),
-                    SizedBox(height: Get.height*0.01),
-                    _TextButton(
-                      leading: Icon(Icons.location_on, color: getAppColor(Colors.black).withOpacity(0.5)),
-                      text: donation.location.toString(),
-                      onPressed: () {
-                      },
-                    ),
-                    SizedBox(height: Get.height*0.01),
-                    _TextButton(
-                      leading: Icon(FeatherIcons.tag, color: getAppColor(Colors.black).withOpacity(0.5)),
-                      text: donation.isPaid != true ? "Free to attend" : "Paid to attend: NGN ${donation.amount.toString()}",
-                      onPressed: () {
-                      },
-                    ),
-                    SizedBox(height: Get.height*0.01),
-                  ],
+                      SizedBox(height: Get.height*0.01),
+                      _TextButton(
+                        leading: Icon(FeatherIcons.tag, color: getAppColor(Colors.black).withOpacity(0.5)),
+                        text: donation.isPaid != true ? "Free to attend" : "Paid to attend: NGN ${donation.amount.toString()}",
+                        onPressed: () {
+                        },
+                      ),
+                      SizedBox(height: Get.height*0.01),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          bottomNavigationBar: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Divider(
-                height: 0.5,
-                thickness: 0.5,
-                color: Colors.grey,
-              ),
-              SizedBox(height: 10,),
-              if(!closed)
-                AppButton(
-                  title: "Close Event",
-                  onPressed: () async {
-                    var body = {
-                      //"action": "close",
-                      "event_id": donation.id
-                    };
-                    //https://services.staging.wayagram.ng/wayagram-service/all-posts/close-event?sso_id=313
-                    var response = await controller.deleteData(body, "/wayagram-service/all-posts/close-event");
-                    if(response.isSuccessful){
-                      closedDonations.add(donation.id.toString());
-                      savedClosedDonation.val = closedDonations.join(",");
-                      closed = true;
-                      controller.update(["event_analytics"]);
-                      AppOverlay.showSuccessSnackBar(content: "Event Closed Successfully");
-                    }else{
-                      AppOverlay.showErrorSnackBar(content: "Unable to close event, please try again later");
-                    }
-                  },
-                  width: Get.width*0.9,
-                  borderRadius: 10,
-                  fontSize: Get.textScaleFactor * 18,
+          bottomNavigationBar: Container(
+            color: getAppColor(AppColors.background),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  color: Colors.grey,
                 ),
-              if(closed && !moneyRequested)
-                AppButton(
-                  title: "Retrieve Money",
-                  onPressed: () async {
-                    var body = {
-                      "item_type": "Event",
-                      "item_id": donation.id
-                    };
-                    //https://services.staging.wayagram.ng/wayagram-serviceall-posts/receive-money?sso_id=313
-                    var response = await controller.postData(body, "/wayagram-serviceall-posts/receive-money");
-                    if(response.isSuccessful){
-                      savedMoneyRequested.val = true;
-                      moneyRequested = true;
-                      controller.update(["event_analytics"]);
-                      AppOverlay.showSuccessSnackBar(content: response.message.toString());
-                    }else{
-                      if(response.message == "Payment request has already been sent"){
+                SizedBox(height: 10,),
+                if(!closed)
+                  AppButton(
+                    title: "Close Event",
+                    onPressed: () async {
+                      var body = {
+                        //"action": "close",
+                        "event_id": donation.id
+                      };
+                      //https://services.staging.wayagram.ng/wayagram-service/all-posts/close-event?sso_id=313
+                      var response = await controller.deleteData(body, "/wayagram-service/all-posts/close-event");
+                      if(response.isSuccessful){
+                        closedDonations.add(donation.id.toString());
+                        savedClosedDonation.val = closedDonations.join(",");
+                        closed = true;
+                        controller.update(["event_analytics"]);
+                        AppOverlay.showSuccessSnackBar(content: "Event Closed Successfully");
+                      }else{
+                        AppOverlay.showErrorSnackBar(content: "Unable to close event, please try again later");
+                      }
+                    },
+                    width: Get.width*0.9,
+                    borderRadius: 10,
+                    fontSize: Get.textScaleFactor * 18,
+                  ),
+                if(closed && !moneyRequested)
+                  AppButton(
+                    title: "Retrieve Money",
+                    onPressed: () async {
+                      var body = {
+                        "item_type": "Event",
+                        "item_id": donation.id
+                      };
+                      //https://services.staging.wayagram.ng/wayagram-serviceall-posts/receive-money?sso_id=313
+                      var response = await controller.postData(body, "/wayagram-serviceall-posts/receive-money");
+                      if(response.isSuccessful){
                         savedMoneyRequested.val = true;
                         moneyRequested = true;
                         controller.update(["event_analytics"]);
+                        AppOverlay.showSuccessSnackBar(content: response.message.toString());
+                      }else{
+                        if(response.message == "Payment request has already been sent"){
+                          savedMoneyRequested.val = true;
+                          moneyRequested = true;
+                          controller.update(["event_analytics"]);
+                        }
+                        AppOverlay.showErrorSnackBar(content: response.message.toString());
                       }
-                      AppOverlay.showErrorSnackBar(content: response.message.toString());
-                    }
-                  },
-                  width: Get.width*0.9,
-                  borderRadius: 10,
-                  fontSize: Get.textScaleFactor * 18,
-                ),
-              if(closed && moneyRequested)
-                Text(
-                  "Money Requested Already",
-                  style: TextStyle(
-                    color: getAppColor(Color(0xff4F4F4F)),
-                    fontSize: Get.textScaleFactor * 16,
-                    fontWeight: FontWeight.bold,
+                    },
+                    width: Get.width*0.9,
+                    borderRadius: 10,
+                    fontSize: Get.textScaleFactor * 18,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-              SizedBox(height: 10,),
-            ],
+                if(closed && moneyRequested)
+                  Text(
+                    "Money Requested Already",
+                    style: TextStyle(
+                      color: getAppColor(Color(0xff4F4F4F)),
+                      fontSize: Get.textScaleFactor * 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                SizedBox(height: 10,),
+              ],
+            ),
           ),
         );
       }),
