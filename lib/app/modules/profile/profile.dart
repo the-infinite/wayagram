@@ -195,412 +195,417 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
               print("User ID ${fullProfile.userId}");
             }
             return Scaffold(
-              body: NestedScrollView(
-                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-                  return <Widget>[
-                    SliverOverlapAbsorber(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                      sliver: SliverLayoutBuilder(
-                        builder: (BuildContext context, constraints) {
-                          final scrolled = constraints.scrollOffset >= ((Get.height * 0.20));
-                          return SliverAppBar(
-                            expandedHeight: Get.height * 0.39,
-                            floating: false,
-                            pinned: true,
-                            flexibleSpace: LayoutBuilder(
-                                builder: (BuildContext context, BoxConstraints constraints) {
-                                  top = constraints.biggest.height;
-                                  return FlexibleSpaceBar(
-                                      background: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            height: Get.height * 0.25,
-                                            child: Stack(
-                                              children: [
-                                                SizedBox(
-                                                  height: Get.height * 0.2,
-                                                  width: Get.width,
-                                                  child: Image.network(
-                                                    (fullProfile.coverImage as String?).toString(),
-                                                    fit: BoxFit.cover,
-                                                    loadingBuilder: (BuildContext context, Widget child,ImageChunkEvent? loadingProgress) {
-                                                      if (loadingProgress == null) return child;
-                                                      return Container(
-                                                        color: Colors.grey[300],
-                                                      );
-                                                    },
-                                                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                                      return Container(
-                                                        color: Colors.grey[300],
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
-                                                //Profile Image
-                                                Positioned(
-                                                  bottom: 0,
-                                                  left: 20,
-                                                  child: Container(
-                                                    width: Get.width*0.2,
-                                                    height: Get.width*0.2,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(color: getAppColor(Colors.white), width: 2),
+              body: Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: getAppColor(AppColors.background),
+                child: NestedScrollView(
+                  headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                    return <Widget>[
+                      SliverOverlapAbsorber(
+                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                        sliver: SliverLayoutBuilder(
+                          builder: (BuildContext context, constraints) {
+                            final scrolled = constraints.scrollOffset >= ((Get.height * 0.20));
+                            return SliverAppBar(
+                              expandedHeight: Get.height * 0.39,
+                              floating: false,
+                              pinned: true,
+                              flexibleSpace: LayoutBuilder(
+                                  builder: (BuildContext context, BoxConstraints constraints) {
+                                    top = constraints.biggest.height;
+                                    return FlexibleSpaceBar(
+                                        background: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              height: Get.height * 0.25,
+                                              child: Stack(
+                                                children: [
+                                                  SizedBox(
+                                                    height: Get.height * 0.2,
+                                                    width: Get.width,
+                                                    child: Image.network(
+                                                      (fullProfile.coverImage as String?).toString(),
+                                                      fit: BoxFit.cover,
+                                                      loadingBuilder: (BuildContext context, Widget child,ImageChunkEvent? loadingProgress) {
+                                                        if (loadingProgress == null) return child;
+                                                        return Container(
+                                                          color: Colors.grey[300],
+                                                        );
+                                                      },
+                                                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                                        return Container(
+                                                          color: Colors.grey[300],
+                                                        );
+                                                      },
                                                     ),
-                                                    child: IconButton(
-                                                      padding: EdgeInsets.zero,
-                                                      icon: AppAvatar(
-                                                        imgUrl: (fullProfile.avatar as String?).toString(),
+                                                  ),
+                                                  //Profile Image
+                                                  Positioned(
+                                                    bottom: 0,
+                                                    left: 20,
+                                                    child: Container(
+                                                      width: Get.width*0.2,
+                                                      height: Get.width*0.2,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(color: getAppColor(Colors.white), width: 2),
                                                       ),
-                                                      onPressed: () {
+                                                      child: IconButton(
+                                                        padding: EdgeInsets.zero,
+                                                        icon: AppAvatar(
+                                                          imgUrl: (fullProfile.avatar as String?).toString(),
+                                                        ),
+                                                        onPressed: () {
 
-                                                      },
+                                                        },
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                //Edit Profile
-                                                Positioned(
-                                                  bottom: 0,
-                                                  right: 20,
-                                                  child: SizedBox(
-                                                    child: AppButton(
-                                                      title: 'Edit',
-                                                      onPressed: () {
-                                                        controller.imagePaths.clear();
-                                                        Get.to(() => UpdateProfile(),binding: WayagramBinding());
-                                                      },
-                                                      borderRadius: 10,
-                                                      fontColor: AppColors.primary,
-                                                      bckgrndColor: getAppColor(AppColors.background),
-                                                      border: Border.all(color: AppColors.primary, width: 1),
-                                                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                                      fontSize: Get.width * 0.04,
-                                                      width: Get.width * 0.2,
+                                                  //Edit Profile
+                                                  Positioned(
+                                                    bottom: 0,
+                                                    right: 20,
+                                                    child: SizedBox(
+                                                      child: AppButton(
+                                                        title: 'Edit',
+                                                        onPressed: () {
+                                                          controller.imagePaths.clear();
+                                                          Get.to(() => UpdateProfile(),binding: WayagramBinding());
+                                                        },
+                                                        borderRadius: 10,
+                                                        fontColor: AppColors.primary,
+                                                        bckgrndColor: getAppColor(AppColors.background),
+                                                        border: Border.all(color: AppColors.primary, width: 1),
+                                                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                                        fontSize: Get.width * 0.04,
+                                                        width: Get.width * 0.2,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(height: Get.height * 0.01),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 15),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '${fullProfile.displayName}',
-                                                  style: TextStyle(
-                                                    color: getAppColor(Colors.black),
-                                                    fontSize: Get.width*0.04,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                SizedBox(height: Get.height*0.002),
-                                                Text(
-                                                  "@${fullProfile.username}",
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: Get.width*0.035,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                                SizedBox(height: Get.height*0.002),
-                                                if(fullProfile.bio.toString() != "null")
+                                            SizedBox(height: Get.height * 0.01),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 15),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
                                                   Text(
-                                                    fullProfile.bio.toString(),
+                                                    '${fullProfile.displayName}',
                                                     style: TextStyle(
                                                       color: getAppColor(Colors.black),
                                                       fontSize: Get.width*0.04,
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: Get.height*0.002),
+                                                  Text(
+                                                    "@${fullProfile.username}",
+                                                    style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: Get.width*0.035,
                                                       fontWeight: FontWeight.w400,
                                                     ),
                                                   ),
-                                              ],
+                                                  SizedBox(height: Get.height*0.002),
+                                                  if(fullProfile.bio.toString() != "null")
+                                                    Text(
+                                                      fullProfile.bio.toString(),
+                                                      style: TextStyle(
+                                                        color: getAppColor(Colors.black),
+                                                        fontSize: Get.width*0.04,
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(height: Get.height * 0.01),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 15),
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                InkWell(
-                                                  onTap: () {
-                                                    Get.to(() => Followers());
-                                                  },
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                        followersCount.toString(),
-                                                        style: TextStyle(
-                                                          color: getAppColor(Colors.black),
-                                                          fontSize: Get.width*0.035,
-                                                          fontWeight: FontWeight.w500,
+                                            SizedBox(height: Get.height * 0.01),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 15),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () {
+                                                      Get.to(() => Followers());
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          followersCount.toString(),
+                                                          style: TextStyle(
+                                                            color: getAppColor(Colors.black),
+                                                            fontSize: Get.width*0.035,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        " Followers",
-                                                        style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: Get.width*0.035,
-                                                          fontWeight: FontWeight.w400,
+                                                        Text(
+                                                          " Followers",
+                                                          style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: Get.width*0.035,
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(width: 10),
+                                                  SizedBox(width: 10),
 
-                                                InkWell(
-                                                  onTap: () {
-                                                    Get.to(() => Following());
-                                                  },
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                        followingCount.toString(),
-                                                        style: TextStyle(
-                                                          color: getAppColor(Colors.black),
-                                                          fontSize: Get.width*0.035,
-                                                          fontWeight: FontWeight.w500,
+                                                  InkWell(
+                                                    onTap: () {
+                                                      Get.to(() => Following());
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          followingCount.toString(),
+                                                          style: TextStyle(
+                                                            color: getAppColor(Colors.black),
+                                                            fontSize: Get.width*0.035,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        " Following",
-                                                        style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: Get.width*0.035,
-                                                          fontWeight: FontWeight.w400,
+                                                        Text(
+                                                          " Following",
+                                                          style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: Get.width*0.035,
+                                                            fontWeight: FontWeight.w400,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(width: 10),
+                                                  SizedBox(width: 10),
 
-                                                Text(
-                                                  fullProfile.posts.toString(),
-                                                  style: TextStyle(
-                                                    color: getAppColor(Colors.black),
-                                                    fontSize: Get.width*0.035,
-                                                    fontWeight: FontWeight.w500,
+                                                  Text(
+                                                    fullProfile.posts.toString(),
+                                                    style: TextStyle(
+                                                      color: getAppColor(Colors.black),
+                                                      fontSize: Get.width*0.035,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
                                                   ),
-                                                ),
-                                                Text(
-                                                  " Posts",
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: Get.width*0.035,
-                                                    fontWeight: FontWeight.w400,
+                                                  Text(
+                                                    " Posts",
+                                                    style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: Get.width*0.035,
+                                                      fontWeight: FontWeight.w400,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(height: Get.height * 0.01),
+                                            SizedBox(height: Get.height * 0.01),
+                                          ],
+                                        ),
+                                        stretchModes: [
+                                          StretchMode.zoomBackground,
+                                          StretchMode.blurBackground,
                                         ],
-                                      ),
-                                      stretchModes: [
-                                        StretchMode.zoomBackground,
-                                        StretchMode.blurBackground,
-                                      ],
-                                      collapseMode: CollapseMode.pin
-                                  );
-                                }
-                            ),
-                            leading: Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(4),
-                                child: Container(
-                                  width: Get.width * 0.1,
-                                  height: Get.width * 0.1,
-                                  decoration: BoxDecoration(
-                                    color: getAppColor(AppColors.background),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    icon: Icon(
-                                      FeatherIcons.arrowLeft,
-                                      color: getAppColor(Colors.black),
+                                        collapseMode: CollapseMode.pin
+                                    );
+                                  }
+                              ),
+                              leading: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(4),
+                                  child: Container(
+                                    width: Get.width * 0.1,
+                                    height: Get.width * 0.1,
+                                    decoration: BoxDecoration(
+                                      color: getAppColor(AppColors.background),
+                                      borderRadius: BorderRadius.circular(100),
                                     ),
-                                    onPressed: () {
-                                      Get.back();
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      icon: Icon(
+                                        FeatherIcons.arrowLeft,
+                                        color: getAppColor(Colors.black),
+                                      ),
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                      iconSize: Get.width * 0.06,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              actions: [
+                                PopupMenuButton(
+                                    color: getAppColor(Colors.white),
+                                    iconSize: Get.width * 0.2,
+                                    onSelected: (value) {
+                                      if (value == 0) {
+                                        Get.to(() => Muted());
+                                      } else if (value == 1) {
+                                        Get.to(() => Blocked());
+                                      } else if (value == 2) {
+                                        //Get.to(() => Followers());
+                                      }
                                     },
-                                    iconSize: Get.width * 0.06,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            actions: [
-                              PopupMenuButton(
-                                  color: getAppColor(Colors.white),
-                                  iconSize: Get.width * 0.2,
-                                  onSelected: (value) {
-                                    if (value == 0) {
-                                      Get.to(() => Muted());
-                                    } else if (value == 1) {
-                                      Get.to(() => Blocked());
-                                    } else if (value == 2) {
-                                      //Get.to(() => Followers());
-                                    }
-                                  },
-                                  itemBuilder: (context) => [
-                                    PopupMenuItem(
-                                      value: 0,
-                                      child: Text(
-                                        "View Muted Users",
-                                        style: AppTextStyle.bodyText1.copyWith(
-                                          color: getAppColor(Colors.black),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 1,
-                                      child: Text(
-                                        "View Blocked Users",
-                                        style: AppTextStyle.bodyText1.copyWith(
-                                          color: getAppColor(Colors.black),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 2,
-                                      child: Text(
-                                        "Share",
-                                        style: AppTextStyle.bodyText1.copyWith(
-                                          color: getAppColor(Colors.black),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 2.5,right: 5),
-                                    child: Center(
-                                      child: Container(
-                                        width: Get.width * 0.1,
-                                        height: Get.width * 0.1,
-                                        decoration: BoxDecoration(
-                                          color: getAppColor(AppColors.background),
-                                          borderRadius: BorderRadius.circular(100),
-                                        ),
-                                        child: IconButton(
-                                          padding: EdgeInsets.zero,
-                                          icon: Icon(
-                                            Icons.more_vert,
+                                    itemBuilder: (context) => [
+                                      PopupMenuItem(
+                                        value: 0,
+                                        child: Text(
+                                          "View Muted Users",
+                                          style: AppTextStyle.bodyText1.copyWith(
                                             color: getAppColor(Colors.black),
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                          onPressed: null,
-                                          iconSize: Get.width * 0.06,
                                         ),
                                       ),
+                                      PopupMenuItem(
+                                        value: 1,
+                                        child: Text(
+                                          "View Blocked Users",
+                                          style: AppTextStyle.bodyText1.copyWith(
+                                            color: getAppColor(Colors.black),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        value: 2,
+                                        child: Text(
+                                          "Share",
+                                          style: AppTextStyle.bodyText1.copyWith(
+                                            color: getAppColor(Colors.black),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 2.5,right: 5),
+                                      child: Center(
+                                        child: Container(
+                                          width: Get.width * 0.1,
+                                          height: Get.width * 0.1,
+                                          decoration: BoxDecoration(
+                                            color: getAppColor(AppColors.background),
+                                            borderRadius: BorderRadius.circular(100),
+                                          ),
+                                          child: IconButton(
+                                            padding: EdgeInsets.zero,
+                                            icon: Icon(
+                                              Icons.more_vert,
+                                              color: getAppColor(Colors.black),
+                                            ),
+                                            onPressed: null,
+                                            iconSize: Get.width * 0.06,
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                              ],
+                              title: Center(
+                                child: AnimatedOpacity(
+                                  duration: Duration(milliseconds: 300),
+                                  opacity: scrolled ? 1.0 : 0.0,
+                                  child: Text(
+                                    '${controller.profile.displayName} ',
+                                    style: AppTextStyle.subtitle1.copyWith(
+                                      color: getAppColor(getAppColor(Color(0xff4F4F4F))),
+                                      fontSize: Get.textScaleFactor * 18,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ))
-                            ],
-                            title: Center(
-                              child: AnimatedOpacity(
-                                duration: Duration(milliseconds: 300),
-                                opacity: scrolled ? 1.0 : 0.0,
-                                child: Text(
-                                  '${controller.profile.displayName} ',
-                                  style: AppTextStyle.subtitle1.copyWith(
-                                    color: getAppColor(getAppColor(Color(0xff4F4F4F))),
-                                    fontSize: Get.textScaleFactor * 18,
-                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                            ),
-                            titleSpacing: 0,
-                            backgroundColor: getAppColor(AppColors.background),
-                            systemOverlayStyle: SystemUiOverlayStyle(
-                                statusBarColor: scrolled ? getAppColor(AppColors.background) : Colors.transparent,
-                                statusBarIconBrightness: getAppBrightness(),
-                                statusBarBrightness: getAppBrightness(),
-                                systemNavigationBarColor: getAppColor(AppColors.background),
-                                systemNavigationBarIconBrightness: getAppBrightness()
-                            ),
-                            bottom: PreferredSize(
-                                preferredSize: Size(Get.width, Get.height * 0.06),
-                                child: Column(
-                                  children: [
-                                    AnimatedOpacity(
-                                      duration: Duration(milliseconds: 300),
-                                      opacity: scrolled ? 1.0 : 0.0,
-                                      child: Divider(
+                              titleSpacing: 0,
+                              backgroundColor: getAppColor(AppColors.background),
+                              systemOverlayStyle: SystemUiOverlayStyle(
+                                  statusBarColor: scrolled ? getAppColor(AppColors.background) : Colors.transparent,
+                                  statusBarIconBrightness: getAppBrightness(),
+                                  statusBarBrightness: getAppBrightness(),
+                                  systemNavigationBarColor: getAppColor(AppColors.background),
+                                  systemNavigationBarIconBrightness: getAppBrightness()
+                              ),
+                              bottom: PreferredSize(
+                                  preferredSize: Size(Get.width, Get.height * 0.06),
+                                  child: Column(
+                                    children: [
+                                      AnimatedOpacity(
+                                        duration: Duration(milliseconds: 300),
+                                        opacity: scrolled ? 1.0 : 0.0,
+                                        child: Divider(
+                                          height: 0.5,
+                                          thickness: 0.5,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      TabBar(
+                                        controller: tabController,
+                                        padding: EdgeInsets.zero,
+                                        labelColor: getAppColor(Colors.black),
+                                        unselectedLabelColor: Color(0xff9A9A9A),
+                                        indicatorColor: AppColors.primary,
+                                        indicatorSize: TabBarIndicatorSize.tab,
+                                        labelStyle: TextStyle(
+                                          fontSize: Get.width*0.035,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        unselectedLabelStyle: TextStyle(
+                                          fontSize: Get.width*0.035,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        tabs: [
+                                          Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                                          Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
+                                          Tab(text: 'Polls',iconMargin: EdgeInsets.zero,),
+                                          Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
+                                        ],
+                                        onTap: (index) {
+                                          //pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.ease);
+                                          //controller.update(['profile_page']);
+                                        },
+                                      ),
+                                      Divider(
                                         height: 0.5,
                                         thickness: 0.5,
                                         color: Colors.grey,
                                       ),
-                                    ),
-                                    TabBar(
-                                      controller: tabController,
-                                      padding: EdgeInsets.zero,
-                                      labelColor: getAppColor(Colors.black),
-                                      unselectedLabelColor: Color(0xff9A9A9A),
-                                      indicatorColor: AppColors.primary,
-                                      indicatorSize: TabBarIndicatorSize.tab,
-                                      labelStyle: TextStyle(
-                                        fontSize: Get.width*0.035,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      unselectedLabelStyle: TextStyle(
-                                        fontSize: Get.width*0.035,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      tabs: [
-                                        Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Polls',iconMargin: EdgeInsets.zero,),
-                                        Tab(text: 'Donation',iconMargin: EdgeInsets.zero,),
-                                      ],
-                                      onTap: (index) {
-                                        //pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.ease);
-                                        //controller.update(['profile_page']);
-                                      },
-                                    ),
-                                    Divider(
-                                      height: 0.5,
-                                      thickness: 0.5,
-                                      color: Colors.grey,
-                                    ),
-                                  ],
-                                )),
-                          );
-                        },
+                                    ],
+                                  )),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ];
-                },
-                body: TabBarView(
-                  controller: tabController,
-                  children: tabs.map((widget) {
-                    return SafeArea(
-                      top: false,
-                      bottom: false,
-                      child: Builder(
-                        builder: (BuildContext context) {
-                          return CustomScrollView(
-                            physics: NeverScrollableScrollPhysics(),
-                            key: PageStorageKey<String>(widget.key.toString()),
-                            slivers: <Widget>[
-                              SliverOverlapInjector(
-                                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                              ),
-                              SliverToBoxAdapter(
-                                  child: widget
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    );
-                  }).toList(),
+                    ];
+                  },
+                  body: TabBarView(
+                    controller: tabController,
+                    children: tabs.map((widget) {
+                      return SafeArea(
+                        top: false,
+                        bottom: false,
+                        child: Builder(
+                          builder: (BuildContext context) {
+                            return CustomScrollView(
+                              physics: NeverScrollableScrollPhysics(),
+                              key: PageStorageKey<String>(widget.key.toString()),
+                              slivers: <Widget>[
+                                SliverOverlapInjector(
+                                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                                ),
+                                SliverToBoxAdapter(
+                                    child: widget
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               floatingActionButton: FloatingActionButton(
