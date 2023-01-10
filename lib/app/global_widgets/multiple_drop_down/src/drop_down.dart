@@ -107,167 +107,170 @@ class _MainBodyState extends State<MainBody> {
       maxChildSize: 0.52,
       expand: false,
       builder: (BuildContext context, ScrollController scrollController) {
-        return Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  /// Bottom sheet title text
-                  Expanded(child: widget.dropDown.bottomSheetTitle ?? Container()),
+        return Container(
+          color: getAppColor(AppColors.background),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    /// Bottom sheet title text
+                    Expanded(child: widget.dropDown.bottomSheetTitle ?? Container()),
 
-                  /// Done button
-                  Visibility(
-                    visible: widget.dropDown.enableMultipleSelection,
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Material(
-                        color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            List<SelectedListItem> selectedList = widget.dropDown.data.where((element) => element.isSelected == true).toList();
-                            List<dynamic> selectedNameList = [];
+                    /// Done button
+                    Visibility(
+                      visible: widget.dropDown.enableMultipleSelection,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Material(
+                          color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              List<SelectedListItem> selectedList = widget.dropDown.data.where((element) => element.isSelected == true).toList();
+                              List<dynamic> selectedNameList = [];
 
-                            for (var element in selectedList) {
-                              selectedNameList.add(element);
-                            }
+                              for (var element in selectedList) {
+                                selectedNameList.add(element);
+                              }
 
-                            widget.dropDown.selectedItems?.call(selectedNameList);
-                            _onUnFocusKeyboardAndPop();
-                          },
-                          child: widget.dropDown.submitButtonChild ?? Text('Done'),
+                              widget.dropDown.selectedItems?.call(selectedNameList);
+                              _onUnFocusKeyboardAndPop();
+                            },
+                            child: widget.dropDown.submitButtonChild ?? Text('Done'),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            /// A [TextField] that displays a list of suggestions as the user types with clear button.
-            Container(
-              color : widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
-              child: Visibility(
-                visible: widget.dropDown.isSearchVisible,
-                child: widget.dropDown.searchWidget ??
-                    AppTextField(
-                      dropDown: widget.dropDown,
-                      onTextChanged: _buildSearchList,
-                    ),
+              /// A [TextField] that displays a list of suggestions as the user types with clear button.
+              Container(
+                color : widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
+                child: Visibility(
+                  visible: widget.dropDown.isSearchVisible,
+                  child: widget.dropDown.searchWidget ??
+                      AppTextField(
+                        dropDown: widget.dropDown,
+                        onTextChanged: _buildSearchList,
+                      ),
+                ),
               ),
-            ),
-            if(widget.dropDown.enableMultipleSelection)
-              InkWell(
-              onTap:() {
-                int index = 0;
-                for (var element in widget.dropDown.data) {
-                  setState(() {
-                    if((selectedList.length == widget.dropDown.data.length)){
-                      mainList[index].isSelected = false;
-                    }else{
-                      mainList[index].isSelected = false;
-                      mainList[index].isSelected = mainList[index].isSelected == true ? false : true;
-                    }
-                  });
-                  index++;
-                }
-              },
-              child: Container(
-                color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: ListTile(
-                    title: Text(
-                          "Select All",
-                          style: AppTextStyle.bodyText1.copyWith(
-                            color: (selectedList.length == widget.dropDown.data.length) ? AppColors.primary : getAppColor(AppColors.onBackground),
-                            fontSize: Get.textScaleFactor * 16,
+              if(widget.dropDown.enableMultipleSelection)
+                InkWell(
+                onTap:() {
+                  int index = 0;
+                  for (var element in widget.dropDown.data) {
+                    setState(() {
+                      if((selectedList.length == widget.dropDown.data.length)){
+                        mainList[index].isSelected = false;
+                      }else{
+                        mainList[index].isSelected = false;
+                        mainList[index].isSelected = mainList[index].isSelected == true ? false : true;
+                      }
+                    });
+                    index++;
+                  }
+                },
+                child: Container(
+                  color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: ListTile(
+                      title: Text(
+                            "Select All",
+                            style: AppTextStyle.bodyText1.copyWith(
+                              color: (selectedList.length == widget.dropDown.data.length) ? AppColors.primary : getAppColor(AppColors.onBackground),
+                              fontSize: Get.textScaleFactor * 16,
+                            ),
                           ),
-                        ),
-                    trailing: widget.dropDown.enableMultipleSelection
-                        ? GestureDetector(
-                      onTap: () {
-                        int index = 0;
-                        for (var element in widget.dropDown.data) {
-                          setState(() {
-                            if((selectedList.length == widget.dropDown.data.length)){
-                              mainList[index].isSelected = false;
-                            }else{
-                              mainList[index].isSelected = false;
-                              mainList[index].isSelected = mainList[index].isSelected == true ? false : true;
-                            }
-                          });
-                          index++;
-                        }
-                      },
-                      child: (selectedList.length == widget.dropDown.data.length)
-                          ? Icon(Icons.check_box, color: AppColors.primary)
-                          : Icon(Icons.check_box_outline_blank, color: AppColors.primary),
-                    )
-                        : SizedBox(
-                      height: 0.0,
-                      width: 0.0,
+                      trailing: widget.dropDown.enableMultipleSelection
+                          ? GestureDetector(
+                        onTap: () {
+                          int index = 0;
+                          for (var element in widget.dropDown.data) {
+                            setState(() {
+                              if((selectedList.length == widget.dropDown.data.length)){
+                                mainList[index].isSelected = false;
+                              }else{
+                                mainList[index].isSelected = false;
+                                mainList[index].isSelected = mainList[index].isSelected == true ? false : true;
+                              }
+                            });
+                            index++;
+                          }
+                        },
+                        child: (selectedList.length == widget.dropDown.data.length)
+                            ? Icon(Icons.check_box, color: AppColors.primary)
+                            : Icon(Icons.check_box_outline_blank, color: AppColors.primary),
+                      )
+                          : SizedBox(
+                        height: 0.0,
+                        width: 0.0,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            /// Listview (list of data with check box for multiple selection & on tile tap single selection)
-            Expanded(
-              child: ListView.builder(
-                controller: scrollController,
-                itemCount: mainList.length,
-                itemBuilder: (context, index) {
-                  bool isSelected = mainList[index].isSelected ?? false;
-                  return InkWell(
-                    onTap: () {
-                      if(!widget.dropDown.enableMultipleSelection){
-                        widget.dropDown.selectedItems?.call([mainList[index]]);
-                        _onUnFocusKeyboardAndPop();
-                      }else{
-                        setState(() {
-                          mainList[index].isSelected = !isSelected;
-                        });
-                      }
-                          },
-                    child: Container(
-                      color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: ListTile(
-                          title: widget.dropDown.listBuilder?.call(index) ??
-                              Text(
-                                mainList[index].name,
-                                style: AppTextStyle.bodyText1.copyWith(
-                                  color: isSelected ? AppColors.primary : getAppColor(AppColors.onBackground),
-                                  fontSize: Get.textScaleFactor * 16,
+              /// Listview (list of data with check box for multiple selection & on tile tap single selection)
+              Expanded(
+                child: ListView.builder(
+                  controller: scrollController,
+                  itemCount: mainList.length,
+                  itemBuilder: (context, index) {
+                    bool isSelected = mainList[index].isSelected ?? false;
+                    return InkWell(
+                      onTap: () {
+                        if(!widget.dropDown.enableMultipleSelection){
+                          widget.dropDown.selectedItems?.call([mainList[index]]);
+                          _onUnFocusKeyboardAndPop();
+                        }else{
+                          setState(() {
+                            mainList[index].isSelected = !isSelected;
+                          });
+                        }
+                            },
+                      child: Container(
+                        color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          child: ListTile(
+                            title: widget.dropDown.listBuilder?.call(index) ??
+                                Text(
+                                  mainList[index].name,
+                                  style: AppTextStyle.bodyText1.copyWith(
+                                    color: isSelected ? AppColors.primary : getAppColor(AppColors.onBackground),
+                                    fontSize: Get.textScaleFactor * 16,
+                                  ),
                                 ),
-                              ),
-                          trailing: widget.dropDown.enableMultipleSelection
-                              ? GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      mainList[index].isSelected = !isSelected;
-                                    });
-                                  },
-                                  child: isSelected
-                                      ? Icon(Icons.check_box, color: AppColors.primary)
-                                      : Icon(Icons.check_box_outline_blank, color: AppColors.primary),
-                                )
-                              : SizedBox(
-                                  height: 0.0,
-                                  width: 0.0,
-                                ),
+                            trailing: widget.dropDown.enableMultipleSelection
+                                ? GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        mainList[index].isSelected = !isSelected;
+                                      });
+                                    },
+                                    child: isSelected
+                                        ? Icon(Icons.check_box, color: AppColors.primary)
+                                        : Icon(Icons.check_box_outline_blank, color: AppColors.primary),
+                                  )
+                                : SizedBox(
+                                    height: 0.0,
+                                    width: 0.0,
+                                  ),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
