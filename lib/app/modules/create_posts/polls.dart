@@ -253,337 +253,343 @@ class _CreatePollState extends State<CreatePoll> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: Column(
-            children: [
-              Divider(
-                height: 0.5,
-                thickness: 0.5,
-                color: Colors.grey,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: Get.width*0.03, vertical: 0),
-                    child: SizedBox(
-                      height: Get.height * 0.9,
-                      child: PageView(
-                        controller: pageController,
-                        physics: NeverScrollableScrollPhysics(),
-                        children: [
-                          Form(
-                            key: formKey1,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: Get.height*0.025),
-                                PageDropButton(
-                                  label: "Poll Category",
-                                  hint: '',
-                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  onChanged: (val) {
-                                    //controller.state.value = ;
-                                    if(val.toString().contains('Text')) {
-                                      isTextPoll = true;
-                                    } else {
-                                      isTextPoll = false;
-                                    }
-                                  },
-                                  value: "Text Poll",
-                                  items: ["Text Poll","Image Poll"].map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                                SizedBox(height: Get.height*0.025),
-                                PageInput(
-                                  hint: '',
-                                  label: 'Votes Per User',
-                                  validator: (val){
-                                    if(val!.isEmpty){
-                                      return 'Please enter your minimum vote number per user';
-                                    }else if(int.tryParse(val) == null){
-                                      return 'Please enter a valid number';
-                                    }else if(int.parse(val) < 1){
-                                      return 'Please enter a value greater than 0';
-                                    }
-                                    return null;
-                                  },
-                                  keyboardType: TextInputType.number,
-                                  isCompulsory: true,
-                                  controller: votesController,
-                                ),
-                                SizedBox(height: Get.height*0.025),
-                                PageInput(
-                                  hint: '',
-                                  label: 'Charge Per Vote',
-                                  validator: (val){
-                                    if(int.tryParse(val.toString()) == null){
-                                      return 'Please enter a valid number';
-                                    }
-                                    return null;
-                                  },
-                                  isCompulsory: false,
-                                  keyboardType: TextInputType.number,
-                                  controller: chargeController,
-                                ),
-                                SizedBox(height: Get.height*0.025),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    DateButton<DateTime>(
-                                      label: 'Start Date',
-                                      date: DateTime.now(),
-                                      initialValue: DateTime.now(),
-                                      validator: (date){
-                                        if(date == null){
-                                          return 'Required';
-                                        }
-                                        startDateController.text = '${date.month}/${date.day}/${date.year}';
-                                        return null;
-                                      },
-                                    ),
-                                    DateButton<TimeOfDay>(
-                                      label: 'Start Time',
-                                      time: TimeOfDay.now(),
-                                      initialValue: TimeOfDay.now(),
-                                      validator: (date){
-                                        if(date == null){
-                                          return 'Required';
-                                        }
-                                        startTimeController.text = Duration(hours: date.hour, minutes: date.minute).inMilliseconds.toString();
-                                        return null;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: Get.height*0.025),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    DateButton<DateTime>(
-                                      label: 'End Date',
-                                      date: DateTime.now().add(Duration(days: 1)),
-                                      initialValue: DateTime.now(),
-                                      validator: (date){
-                                        if(date == null){
-                                          return 'Required';
-                                        }
-                                        endDateController.text = '${date.month}/${date.day}/${date.year}';
-                                        return null;
-                                      },
-                                    ),
-                                    DateButton<TimeOfDay>(
-                                      label: 'End Time',
-                                      time: TimeOfDay(hour: 23, minute: 59),
-                                      initialValue: TimeOfDay(hour: 23, minute: 59),
-                                      validator: (date){
-                                        if(date == null){
-                                          return 'Required';
-                                        }
-                                        endTimeController.text = Duration(hours: date!.hour, minutes: date.minute).inMilliseconds.toString();
-                                        return null;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: Get.height*0.025),
-                                PageDropButton(
-                                  label: "Poll Visibility",
-                                  hint: '',
-                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  onChanged: (val) {
-                                    //controller.state.value = ;
-                                  },
-                                  value: "Public",
-                                  items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            children: [
-                              SizedBox(height: Get.height*0.025),
-                              Form(
-                                key: formKey2,
-                                child: PageInput(
-                                  hint: '',
-                                  label: 'Ask Your Question',
-                                  validator: (val){
-                                    if(val!.isEmpty){
-                                      return 'Please enter your question';
-                                    }else if(allTextOptions.length < 2){
-                                      return 'Please add at least 2 poll options below';
-                                    }
-                                    return null;
-                                  },
-                                  isCompulsory: true,
-                                  controller: titleController,
-                                ),
-                              ),
-                              SizedBox(height: Get.height*0.02),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          body: Container(
+            color: getAppColor(AppColors.background),
+            child: Column(
+              children: [
+                const Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  color: Colors.grey,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width*0.03, vertical: 0),
+                      child: SizedBox(
+                        height: Get.height * 0.9,
+                        child: PageView(
+                          controller: pageController,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: [
+                            Form(
+                              key: formKey1,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(left: Get.width*0.02,bottom: Get.height*0.008),
-                                    child: Text('Add Option', style: AppTextStyle.subtitle1.copyWith(
-                                      color: getAppColor(Color(0xff4F4F4F)),
-                                      fontSize: Get.textScaleFactor * 14,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                                  ),
-                                  IconButton(
-                                    onPressed: (){
-                                      if(allTextOptions.length < 31){
-                                        var optionController = TextEditingController();
-                                        allTextOptions.add(optionController);
-                                        images.add("");
-                                        controller.update();
+                                  SizedBox(height: Get.height*0.025),
+                                  PageDropButton(
+                                    label: "Poll Category",
+                                    hint: '',
+                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    onChanged: (val) {
+                                      //controller.state.value = ;
+                                      if(val.toString().contains('Text')) {
+                                        isTextPoll = true;
                                       } else {
-                                        Get.snackbar('Poll Limit Reached', 'You can only add 30 options',backgroundColor: AppColors.primary);
+                                        isTextPoll = false;
                                       }
                                     },
-                                    icon: Center(child: Icon(Icons.add_circle_outline, color: AppColors.button, size: Get.width*0.055)),
-                                  )
+                                    value: "Text Poll",
+                                    items: ["Text Poll","Image Poll"].map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                  SizedBox(height: Get.height*0.025),
+                                  PageInput(
+                                    hint: '',
+                                    label: 'Votes Per User',
+                                    validator: (val){
+                                      if(val!.isEmpty){
+                                        return 'Please enter your minimum vote number per user';
+                                      }else if(int.tryParse(val) == null){
+                                        return 'Please enter a valid number';
+                                      }else if(int.parse(val) < 1){
+                                        return 'Please enter a value greater than 0';
+                                      }
+                                      return null;
+                                    },
+                                    keyboardType: TextInputType.number,
+                                    isCompulsory: true,
+                                    controller: votesController,
+                                  ),
+                                  SizedBox(height: Get.height*0.025),
+                                  PageInput(
+                                    hint: '',
+                                    label: 'Charge Per Vote',
+                                    validator: (val){
+                                      if(int.tryParse(val.toString()) == null){
+                                        return 'Please enter a valid number';
+                                      }
+                                      return null;
+                                    },
+                                    isCompulsory: false,
+                                    keyboardType: TextInputType.number,
+                                    controller: chargeController,
+                                  ),
+                                  SizedBox(height: Get.height*0.025),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      DateButton<DateTime>(
+                                        label: 'Start Date',
+                                        date: DateTime.now(),
+                                        initialValue: DateTime.now(),
+                                        validator: (date){
+                                          if(date == null){
+                                            return 'Required';
+                                          }
+                                          startDateController.text = '${date.month}/${date.day}/${date.year}';
+                                          return null;
+                                        },
+                                      ),
+                                      DateButton<TimeOfDay>(
+                                        label: 'Start Time',
+                                        time: TimeOfDay.now(),
+                                        initialValue: TimeOfDay.now(),
+                                        validator: (date){
+                                          if(date == null){
+                                            return 'Required';
+                                          }
+                                          startTimeController.text = Duration(hours: date.hour, minutes: date.minute).inMilliseconds.toString();
+                                          return null;
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: Get.height*0.025),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      DateButton<DateTime>(
+                                        label: 'End Date',
+                                        date: DateTime.now().add(Duration(days: 1)),
+                                        initialValue: DateTime.now(),
+                                        validator: (date){
+                                          if(date == null){
+                                            return 'Required';
+                                          }
+                                          endDateController.text = '${date.month}/${date.day}/${date.year}';
+                                          return null;
+                                        },
+                                      ),
+                                      DateButton<TimeOfDay>(
+                                        label: 'End Time',
+                                        time: TimeOfDay(hour: 23, minute: 59),
+                                        initialValue: TimeOfDay(hour: 23, minute: 59),
+                                        validator: (date){
+                                          if(date == null){
+                                            return 'Required';
+                                          }
+                                          endTimeController.text = Duration(hours: date!.hour, minutes: date.minute).inMilliseconds.toString();
+                                          return null;
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: Get.height*0.025),
+                                  PageDropButton(
+                                    label: "Poll Visibility",
+                                    hint: '',
+                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    onChanged: (val) {
+                                      //controller.state.value = ;
+                                    },
+                                    value: "Public",
+                                    items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
                                 ],
                               ),
-                              SizedBox(height: Get.height*0.01),
-                              Form(
-                                key: formKey3,
-                                child: Expanded(
-                                  child: ListView.builder(
-                                    itemCount: allTextOptions.length,
-                                    padding: EdgeInsets.all(0),
-                                    itemBuilder: (context, index){
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: Get.height*0.02),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                  child: PageInput(
-                                                    hint: "Enter Option ${index+1}",
-                                                    label: '',
-                                                    validator: (val){
-                                                      if(val!.isEmpty){
-                                                        return 'Option ${index+1} cannot be empty';
-                                                      }else if(images[index].isEmpty && !isTextPoll){
-                                                        return 'Please add an image for Option ${index+1}';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    isCompulsory: false,
-                                                    controller: allTextOptions[index],
-                                                    suffix: isTextPoll ? null : InkWell(
-                                                      onTap: () async {
-                                                        final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
-                                                        if (pickedFile != null) {
-                                                          images[index] = pickedFile.path;
-                                                          controller.update();
+                            ),
+                            Column(
+                              children: [
+                                SizedBox(height: Get.height*0.025),
+                                Form(
+                                  key: formKey2,
+                                  child: PageInput(
+                                    hint: '',
+                                    label: 'Ask Your Question',
+                                    validator: (val){
+                                      if(val!.isEmpty){
+                                        return 'Please enter your question';
+                                      }else if(allTextOptions.length < 2){
+                                        return 'Please add at least 2 poll options below';
+                                      }
+                                      return null;
+                                    },
+                                    isCompulsory: true,
+                                    controller: titleController,
+                                  ),
+                                ),
+                                SizedBox(height: Get.height*0.02),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: Get.width*0.02,bottom: Get.height*0.008),
+                                      child: Text('Add Option', style: AppTextStyle.subtitle1.copyWith(
+                                        color: getAppColor(Color(0xff4F4F4F)),
+                                        fontSize: Get.textScaleFactor * 14,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                    ),
+                                    IconButton(
+                                      onPressed: (){
+                                        if(allTextOptions.length < 31){
+                                          var optionController = TextEditingController();
+                                          allTextOptions.add(optionController);
+                                          images.add("");
+                                          controller.update();
+                                        } else {
+                                          Get.snackbar('Poll Limit Reached', 'You can only add 30 options',backgroundColor: AppColors.primary);
+                                        }
+                                      },
+                                      icon: Center(child: Icon(Icons.add_circle_outline, color: AppColors.button, size: Get.width*0.055)),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: Get.height*0.01),
+                                Form(
+                                  key: formKey3,
+                                  child: Expanded(
+                                    child: ListView.builder(
+                                      itemCount: allTextOptions.length,
+                                      padding: EdgeInsets.all(0),
+                                      itemBuilder: (context, index){
+                                        return Padding(
+                                          padding: EdgeInsets.only(bottom: Get.height*0.02),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: PageInput(
+                                                      hint: "Enter Option ${index+1}",
+                                                      label: '',
+                                                      validator: (val){
+                                                        if(val!.isEmpty){
+                                                          return 'Option ${index+1} cannot be empty';
+                                                        }else if(images[index].isEmpty && !isTextPoll){
+                                                          return 'Please add an image for Option ${index+1}';
                                                         }
+                                                        return null;
                                                       },
-                                                      child: Container(
-                                                        width: Get.width*0.3,
-                                                        decoration: BoxDecoration(
-                                                          color: getAppColor(AppColors.background),
-                                                          border: Border.all(color: Color(0xFF828282)),
-                                                          borderRadius: BorderRadius.only(
-                                                            bottomRight: Radius.circular(10),
-                                                            topRight: Radius.circular(10),
-                                                          ),
-                                                        ),
-                                                        child: Center(
-                                                          child: Padding(
-                                                            padding: EdgeInsets.all(2.0),
-                                                            child: Text(
-                                                              images[index].isEmpty ? 'Pick Image' : images[index].split('/').last,
-                                                              style: AppTextStyle.subtitle1.copyWith(
-                                                              color: getAppColor(Color(0xff4F4F4F)),
-                                                              fontSize: Get.textScaleFactor * 12,
-                                                              fontWeight: FontWeight.bold,
+                                                      isCompulsory: false,
+                                                      controller: allTextOptions[index],
+                                                      suffix: isTextPoll ? null : InkWell(
+                                                        onTap: () async {
+                                                          final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
+                                                          if (pickedFile != null) {
+                                                            images[index] = pickedFile.path;
+                                                            controller.update();
+                                                          }
+                                                        },
+                                                        child: Container(
+                                                          width: Get.width*0.3,
+                                                          decoration: BoxDecoration(
+                                                            color: getAppColor(AppColors.background),
+                                                            border: Border.all(color: Color(0xFF828282)),
+                                                            borderRadius: BorderRadius.only(
+                                                              bottomRight: Radius.circular(10),
+                                                              topRight: Radius.circular(10),
                                                             ),
-                                                              overflow: TextOverflow.ellipsis,
-                                                              maxLines: 1,
+                                                          ),
+                                                          child: Center(
+                                                            child: Padding(
+                                                              padding: EdgeInsets.all(2.0),
+                                                              child: Text(
+                                                                images[index].isEmpty ? 'Pick Image' : images[index].split('/').last,
+                                                                style: AppTextStyle.subtitle1.copyWith(
+                                                                color: getAppColor(Color(0xff4F4F4F)),
+                                                                fontSize: Get.textScaleFactor * 12,
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                                overflow: TextOverflow.ellipsis,
+                                                                maxLines: 1,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.only(top: Get.height*0.008),
-                                                  child: IconButton(
-                                                      onPressed: (){
-                                                        allTextOptions.removeAt(index);
-                                                        images.removeAt(index);
-                                                        controller.update();
-                                                      },
-                                                      icon: Center(child: Icon(Icons.cancel_outlined, color: getAppColor(Colors.black), size: Get.width*0.055))
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            /*Padding(
-                                              padding: EdgeInsets.only(left: Get.width*0.025),
-                                              child: Text(allTextOptions[index].text, style: TextStyle(fontSize: Get.width*0.035, fontWeight: FontWeight.w400)),
-                                            ),*/
-                                          ],
-                                        ),
-                                      );
-                                    },
+                                                  Padding(
+                                                    padding: EdgeInsets.only(top: Get.height*0.008),
+                                                    child: IconButton(
+                                                        onPressed: (){
+                                                          allTextOptions.removeAt(index);
+                                                          images.removeAt(index);
+                                                          controller.update();
+                                                        },
+                                                        icon: Center(child: Icon(Icons.cancel_outlined, color: getAppColor(Colors.black), size: Get.width*0.055))
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              /*Padding(
+                                                padding: EdgeInsets.only(left: Get.width*0.025),
+                                                child: Text(allTextOptions[index].text, style: TextStyle(fontSize: Get.width*0.035, fontWeight: FontWeight.w400)),
+                                              ),*/
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           bottomNavigationBar: InkWell(
             onTap: (){
               controller.launchURL("https://wayagram.ng/terms");
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Divider(
-                  height: 0.5,
-                  thickness: 0.5,
-                  color: Colors.grey,
-                ),
-                SizedBox(height: 10,),
-                Text(
-                  "By creating, you agree with our terms and conditions \nof poll creation",
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontSize: Get.textScaleFactor * 14,
-                    fontWeight: FontWeight.bold,
+            child: Container(
+              color: getAppColor(AppColors.background),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Divider(
+                    height: 0.5,
+                    thickness: 0.5,
+                    color: Colors.grey,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 10,),
-              ],
+                  SizedBox(height: 10,),
+                  Text(
+                    "By creating, you agree with our terms and conditions \nof poll creation",
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontSize: Get.textScaleFactor * 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10,),
+                ],
+              ),
             ),
           ),
         );

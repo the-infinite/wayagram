@@ -330,8 +330,9 @@ class _CreatePostsState extends State<CreatePosts> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: SizedBox(
+          body: Container(
             width: double.infinity,
+            color: getAppColor(AppColors.background),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: Get.width*0.01, vertical: Get.height*0.01),
               child: Form(
@@ -705,30 +706,95 @@ class _CreatePostsState extends State<CreatePosts> {
           ),
           bottomNavigationBar: Padding(
             padding: MediaQuery.of(context).viewInsets,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if(controller.postToQuote == null)
-                  Container(
-                  color: Color(0xffEDEAEA),
-                  height: 1.0,
-                ),
-                if(detectedHashtagController.text.isEmpty && controller.postToQuote == null)
-                  Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+            child: Container(
+              color: getAppColor(AppColors.background),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if(controller.postToQuote == null)
+                    Container(
+                    color: Color(0xffEDEAEA),
+                    height: 1.0,
+                  ),
+                  if(detectedHashtagController.text.isEmpty && controller.postToQuote == null)
                     Row(
-                      children: [
-                        SizedBox(
-                          width: Get.width*0.025,
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.image_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black)),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: Get.width*0.025,
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.image_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black)),
+                            onPressed: () async {
+                              if(images.length <= 29){
+                                final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
+                                if (pickedFile != null) {
+                                  CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                    sourcePath: pickedFile.path,
+                                    cropStyle: CropStyle.rectangle,
+                                    aspectRatioPresets: [
+                                      CropAspectRatioPreset.square,
+                                      CropAspectRatioPreset.ratio3x2,
+                                      CropAspectRatioPreset.original,
+                                      CropAspectRatioPreset.ratio4x3,
+                                      CropAspectRatioPreset.ratio16x9
+                                    ],
+                                    uiSettings: [
+                                      AndroidUiSettings(
+                                          toolbarTitle: 'Crop Photo',
+                                          toolbarColor: AppColors.primary,
+                                          toolbarWidgetColor: Colors.white,
+                                          activeControlsWidgetColor: AppColors.primary,
+                                          cropGridColor: AppColors.primary,
+                                          initAspectRatio: CropAspectRatioPreset.original,
+                                          lockAspectRatio: false),
+                                      IOSUiSettings(
+                                        title: 'Crop Photo',
+                                      ),
+                                      WebUiSettings(
+                                        context: context,
+                                      ),
+                                    ],
+                                  );
+                                  if(croppedFile!=null){
+                                    images = List.from(images)..add(croppedFile.path);
+                                  }else{
+                                    images = List.from(images)..add(pickedFile.path);
+                                  }
+                                  controller.update();
+                                }
+                              }
+                            },
+                          ),
+                          if(!controller.isProductPost)
+                            IconButton(
+                            icon: Icon(Icons.video_camera_back_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black),size: Get.width*0.065),
+                            onPressed: () async {
+                              if(images.length <= 29){
+                                final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, maxDuration: Duration(minutes: 10));
+                                if (pickedFile != null) {
+                                  images = List.from(images)..add(pickedFile.path);
+                                  controller.update();
+                                }
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: Get.width*0.025),
+                        child: IconButton(
+                          icon: Icon(Icons.camera_alt_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black)),
                           onPressed: () async {
                             if(images.length <= 29){
-                              final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
-                              if (pickedFile != null) {
+                              final pickedFile = await _imagePicker.pickImage(
+                                source: ImageSource.camera,
+                                imageQuality: 30,
+                              );
+                              if (pickedFile != null && pickedFile.path.isNotEmpty) {
                                 CroppedFile? croppedFile = await ImageCropper().cropImage(
                                   sourcePath: pickedFile.path,
                                   cropStyle: CropStyle.rectangle,
@@ -766,123 +832,22 @@ class _CreatePostsState extends State<CreatePosts> {
                             }
                           },
                         ),
-                        if(!controller.isProductPost)
-                          IconButton(
-                          icon: Icon(Icons.video_camera_back_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black),size: Get.width*0.065),
-                          onPressed: () async {
-                            if(images.length <= 29){
-                              final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, maxDuration: Duration(minutes: 10));
-                              if (pickedFile != null) {
-                                images = List.from(images)..add(pickedFile.path);
-                                controller.update();
-                              }
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: Get.width*0.025),
-                      child: IconButton(
-                        icon: Icon(Icons.camera_alt_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black)),
-                        onPressed: () async {
-                          if(images.length <= 29){
-                            final pickedFile = await _imagePicker.pickImage(
-                              source: ImageSource.camera,
-                              imageQuality: 30,
-                            );
-                            if (pickedFile != null && pickedFile.path.isNotEmpty) {
-                              CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                sourcePath: pickedFile.path,
-                                cropStyle: CropStyle.rectangle,
-                                aspectRatioPresets: [
-                                  CropAspectRatioPreset.square,
-                                  CropAspectRatioPreset.ratio3x2,
-                                  CropAspectRatioPreset.original,
-                                  CropAspectRatioPreset.ratio4x3,
-                                  CropAspectRatioPreset.ratio16x9
-                                ],
-                                uiSettings: [
-                                  AndroidUiSettings(
-                                      toolbarTitle: 'Crop Photo',
-                                      toolbarColor: AppColors.primary,
-                                      toolbarWidgetColor: Colors.white,
-                                      activeControlsWidgetColor: AppColors.primary,
-                                      cropGridColor: AppColors.primary,
-                                      initAspectRatio: CropAspectRatioPreset.original,
-                                      lockAspectRatio: false),
-                                  IOSUiSettings(
-                                    title: 'Crop Photo',
-                                  ),
-                                  WebUiSettings(
-                                    context: context,
-                                  ),
-                                ],
-                              );
-                              if(croppedFile!=null){
-                                images = List.from(images)..add(croppedFile.path);
-                              }else{
-                                images = List.from(images)..add(pickedFile.path);
-                              }
-                              controller.update();
-                            }
-                          }
-                        },
                       ),
-                    ),
-                  ],
-                ),
-                if(detectedHashtagController.text.isNotEmpty)
-                  Container(
-                    color: getAppColor(AppColors.background),
-                    height: Get.height*0.25,
-                    child: SingleChildScrollView(
-                      child: detectedHashtagController.text.startsWith("#") ?
-                      FutureBuilder<ApiResponse>(
-                        //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
-                          future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")}", true),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                              final posts = SearchHashtagsModel.listFromJson(snapshot.data!.data);
-                              searchedHashtags = jsonEncode(posts);
-                              List<String> title = [];
-                              List<String> subtitle = [];
-                              for (var element in posts) {
-                                if(element.hashtag != null){
-                                  if(element.hashtag.toString().startsWith("#")){
-                                    title.add(element.hashtag!);
-                                  }else{
-                                    title.add("#${element.hashtag!}");
-                                  }
-                                  if(element.postToHashtags != null){
-                                    subtitle.add('${element.postToHashtags!.length} Conversations');
-                                  }else{
-                                    subtitle.add('0 Conversations');
-                                  }
-                                }
-                              }
-                              if(title.isEmpty){
-                                return SizedBox(
-                                  height: Get.height*0.25,
-                                  child: Center(
-                                    child: Text('No Hashtags Found'),
-                                  ),
-                                );
-                              }
-                              return HashTagView(
-                                title: title,
-                                subtitle: subtitle,
-                                onClick: (title, subtitle) {
-                                  //replace last only
-                                  //textController.text = textController.text.replaceAll(detectedHashtagController.text, title);
-                                  var pos = textController.text.lastIndexOf(detectedHashtagController.text);
-                                  textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "$title ");
-                                  textController.selection = TextSelection.collapsed(offset: textController.text.length);
-                                },
-                              );
-                            }else{
-                              if(searchedHashtags.isNotEmpty){
-                                final posts = SearchHashtagsModel.listFromJson(jsonDecode(searchedHashtags));
+                    ],
+                  ),
+                  if(detectedHashtagController.text.isNotEmpty)
+                    Container(
+                      color: getAppColor(AppColors.background),
+                      height: Get.height*0.25,
+                      child: SingleChildScrollView(
+                        child: detectedHashtagController.text.startsWith("#") ?
+                        FutureBuilder<ApiResponse>(
+                          //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
+                            future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")}", true),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                final posts = SearchHashtagsModel.listFromJson(snapshot.data!.data);
+                                searchedHashtags = jsonEncode(posts);
                                 List<String> title = [];
                                 List<String> subtitle = [];
                                 for (var element in posts) {
@@ -918,47 +883,62 @@ class _CreatePostsState extends State<CreatePosts> {
                                     textController.selection = TextSelection.collapsed(offset: textController.text.length);
                                   },
                                 );
+                              }else{
+                                if(searchedHashtags.isNotEmpty){
+                                  final posts = SearchHashtagsModel.listFromJson(jsonDecode(searchedHashtags));
+                                  List<String> title = [];
+                                  List<String> subtitle = [];
+                                  for (var element in posts) {
+                                    if(element.hashtag != null){
+                                      if(element.hashtag.toString().startsWith("#")){
+                                        title.add(element.hashtag!);
+                                      }else{
+                                        title.add("#${element.hashtag!}");
+                                      }
+                                      if(element.postToHashtags != null){
+                                        subtitle.add('${element.postToHashtags!.length} Conversations');
+                                      }else{
+                                        subtitle.add('0 Conversations');
+                                      }
+                                    }
+                                  }
+                                  if(title.isEmpty){
+                                    return SizedBox(
+                                      height: Get.height*0.25,
+                                      child: Center(
+                                        child: Text('No Hashtags Found'),
+                                      ),
+                                    );
+                                  }
+                                  return HashTagView(
+                                    title: title,
+                                    subtitle: subtitle,
+                                    onClick: (title, subtitle) {
+                                      //replace last only
+                                      //textController.text = textController.text.replaceAll(detectedHashtagController.text, title);
+                                      var pos = textController.text.lastIndexOf(detectedHashtagController.text);
+                                      textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "$title ");
+                                      textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                    },
+                                  );
+                                }
+                                if(snapshot.connectionState == ConnectionState.done){
+                                  return SizedBox(
+                                    height: Get.height*0.25,
+                                    child: Center(
+                                      child: Text('No Hashtags Found'),
+                                    ),
+                                  );
+                                }
+                                return GroupView(isLoading: true);
                               }
-                              if(snapshot.connectionState == ConnectionState.done){
-                                return SizedBox(
-                                  height: Get.height*0.25,
-                                  child: Center(
-                                    child: Text('No Hashtags Found'),
-                                  ),
-                                );
-                              }
-                              return GroupView(isLoading: true);
-                            }
-                          }) : FutureBuilder<ApiResponse>(
-                          future: controller.searchPeople(detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                              //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
-                              var posts = SearchPeopleModel.getService(snapshot.data!.data);
-                              searchedPeople = jsonEncode(posts);
-                              if(posts.isEmpty){
-                                return SizedBox(
-                                  height: Get.height * 0.7,
-                                  child: Center(
-                                    child: Text('No People Found'),
-                                  ),
-                                );
-                              }
-                              return PersonView(
-                                name: posts.map((e) => e.displayName.toString()).toList(),
-                                username: posts.map((e) => e.username.toString()).toList(),
-                                profilePic: posts.map((e) => e.avatar.toString()).toList(),
-                                length: posts.length,
-                                userIDs: posts.map((e) => e.userId.toString()).toList(),
-                                onClick: (value){
-                                  var pos = textController.text.lastIndexOf(detectedHashtagController.text);
-                                  textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "@${value.username} ");
-                                  textController.selection = TextSelection.collapsed(offset: textController.text.length);
-                                },
-                              );
-                            }else{
-                              if(searchedPeople.isNotEmpty){
-                                var posts = SearchPeopleModel.getService(jsonDecode(searchedPeople));
+                            }) : FutureBuilder<ApiResponse>(
+                            future: controller.searchPeople(detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                                var posts = SearchPeopleModel.getService(snapshot.data!.data);
+                                searchedPeople = jsonEncode(posts);
                                 if(posts.isEmpty){
                                   return SizedBox(
                                     height: Get.height * 0.7,
@@ -979,21 +959,45 @@ class _CreatePostsState extends State<CreatePosts> {
                                     textController.selection = TextSelection.collapsed(offset: textController.text.length);
                                   },
                                 );
+                              }else{
+                                if(searchedPeople.isNotEmpty){
+                                  var posts = SearchPeopleModel.getService(jsonDecode(searchedPeople));
+                                  if(posts.isEmpty){
+                                    return SizedBox(
+                                      height: Get.height * 0.7,
+                                      child: Center(
+                                        child: Text('No People Found'),
+                                      ),
+                                    );
+                                  }
+                                  return PersonView(
+                                    name: posts.map((e) => e.displayName.toString()).toList(),
+                                    username: posts.map((e) => e.username.toString()).toList(),
+                                    profilePic: posts.map((e) => e.avatar.toString()).toList(),
+                                    length: posts.length,
+                                    userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                    onClick: (value){
+                                      var pos = textController.text.lastIndexOf(detectedHashtagController.text);
+                                      textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "@${value.username} ");
+                                      textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                    },
+                                  );
+                                }
+                                if(snapshot.connectionState == ConnectionState.done){
+                                  return SizedBox(
+                                    height: Get.height * 0.7,
+                                    child: Center(
+                                      child: Text('No People Found'),
+                                    ),
+                                  );
+                                }
+                                return GroupView(isLoading: true,isGroup: true,);
                               }
-                              if(snapshot.connectionState == ConnectionState.done){
-                                return SizedBox(
-                                  height: Get.height * 0.7,
-                                  child: Center(
-                                    child: Text('No People Found'),
-                                  ),
-                                );
-                              }
-                              return GroupView(isLoading: true,isGroup: true,);
-                            }
-                          }),
-                    ),
-                  )
-              ],
+                            }),
+                      ),
+                    )
+                ],
+              ),
             ),
           ),
         );

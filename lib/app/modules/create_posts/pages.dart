@@ -151,246 +151,249 @@ class _CreatePageState extends State<CreatePage> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: Column(
-            children: [
-              Divider(
-                height: 0.5,
-                thickness: 0.5,
-                color: Colors.grey,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: Get.width*0.03, vertical: 0),
-                    child: Form(
-                      key: formKey1,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: Get.height*0.025),
-                          PageInput(
-                            hint: '',
-                            label: 'Page Name',
-                            validator: (val){
-                              if(val!.isEmpty){
-                                return 'Please enter your page name';
-                              }
-                              return null;
-                            },
-                            isCompulsory: true,
-                            controller: nameController,
-                          ),
-                          SizedBox(height: Get.height * 0.025),
-                          PageDropButton(
-                            label: "Page Category",
-                            hint: 'Choose a category',
-                            isCompulsory: true,
-                            onChanged: (value) {
-                              for (var element in categories) {
-                                if(element.id == value){
-                                  pageCategory.text = element.title.toString();
-                                  chosenCategory = element;
-                                  break;
+          body: Container(
+            color: getAppColor(AppColors.background),
+            child: Column(
+              children: [
+                Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  color: Colors.grey,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width*0.03, vertical: 0),
+                      child: Form(
+                        key: formKey1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: Get.height*0.025),
+                            PageInput(
+                              hint: '',
+                              label: 'Page Name',
+                              validator: (val){
+                                if(val!.isEmpty){
+                                  return 'Please enter your page name';
                                 }
-                              }
-                            },
-                            validator: (val){
-                              if(chosenCategory == null){
-                                return 'Please choose a category';
-                              }
-                              return null;
-                            },
-                            items: categories.map<DropdownMenuItem<String>>((PageCategoriesModel value){
-                              return DropdownMenuItem<String>(
-                                value: value.id,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(value.title.toString()),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          SizedBox(height: Get.height*0.025),
-                          PageInput(
-                            hint: '',
-                            label: 'Description',
-                            validator: (val){
-                              if(val!.isEmpty){
-                                return 'Please enter your page description';
-                              }
-                              return null;
-                            },
-                            isCompulsory: true,
-                            controller: descriptionController,
-                          ),
-                          SizedBox(height: Get.height*0.025),
-                          PageInput(
-                            hint: '',
-                            label: 'Website',
-                            validator: (val){
-                              return null;
-                            },
-                            isCompulsory: false,
-                            controller: linkController,
-                          ),
-                          SizedBox(height: Get.height*0.025),
-                          PageDropButton(
-                            label: "Page Visibility",
-                            hint: '',
-                            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            onChanged: (val) {
-                              pageVisibility.text = val;
-                            },
-                            value: "Public",
-                            items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          ),
-                          SizedBox(height: Get.height*0.025),
-                          Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Page Profile Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
-                          FormField<String>(
-                              initialValue: '',
-                              validator: null,
-                              builder: (field) {
-                              return DocumentPicker(
-                                  radius: 10,
-                                  networkImage: null,
-                                  renderHeight: Get.width * 0.35,
-                                  renderWidth: Get.width * 0.35,
-                                  controller: controller,
-                                  fileImage: field.value,
-                                  position: 0,
-                                  onSelected: (imagePath, base64Image) async {
-                                    CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                      sourcePath: imagePath,
-                                      cropStyle: CropStyle.rectangle,
-                                      aspectRatioPresets: [
-                                        CropAspectRatioPreset.square,
-                                        CropAspectRatioPreset.ratio3x2,
-                                        CropAspectRatioPreset.original,
-                                        CropAspectRatioPreset.ratio4x3,
-                                        CropAspectRatioPreset.ratio16x9
-                                      ],
-                                      uiSettings: [
-                                        AndroidUiSettings(
-                                            toolbarTitle: 'Crop Cover Photo',
-                                            toolbarColor: AppColors.primary,
-                                            toolbarWidgetColor: Colors.white,
-                                            activeControlsWidgetColor: AppColors.primary,
-                                            cropGridColor: AppColors.primary,
-                                            initAspectRatio: CropAspectRatioPreset.original,
-                                            lockAspectRatio: false),
-                                        IOSUiSettings(
-                                          title: 'Crop Profile Photo',
-                                        ),
-                                        WebUiSettings(
-                                          context: context,
-                                        ),
-                                      ],
-                                    );
-                                    if(croppedFile == null){
-                                      if(controller.imagePaths.isEmpty){
-                                        controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
-                                      }else{
-                                        controller.imagePaths[0] = imagePath;
-                                      }
-                                      field.didChange(imagePath);
-                                    }else{
-                                      if(controller.imagePaths.isEmpty){
-                                        controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
-                                      }else{
-                                        controller.imagePaths[0] = croppedFile.path;
-                                      }
-                                      field.didChange(croppedFile.path);
-                                    }
-                                  },
-                                  actionWord: "Upload Profile Photo"
-                              );
-                            }
-                          ),
-                          SizedBox(height: Get.height*0.025),
-                          Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Page Cover Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
-                          FormField<String>(
-                              initialValue: '',
-                              validator: null,
-                              builder: (field) {
-                              return DocumentPicker(
-                                  radius: 10,
-                                  networkImage: null,
-                                  renderHeight: Get.width * 0.35,
-                                  renderWidth: Get.width * 0.8,
-                                  controller: controller,
-                                  position: 1,
-                                  onSelected: (imagePath, base64Image) async {
-                                    CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                      sourcePath: imagePath,
-                                      cropStyle: CropStyle.rectangle,
-                                      aspectRatioPresets: [
-                                        CropAspectRatioPreset.square,
-                                        CropAspectRatioPreset.ratio3x2,
-                                        CropAspectRatioPreset.original,
-                                        CropAspectRatioPreset.ratio4x3,
-                                        CropAspectRatioPreset.ratio16x9
-                                      ],
-                                      uiSettings: [
-                                        AndroidUiSettings(
-                                            toolbarTitle: 'Crop Cover Photo',
-                                            toolbarColor: AppColors.primary,
-                                            toolbarWidgetColor: Colors.white,
-                                            activeControlsWidgetColor: AppColors.primary,
-                                            cropGridColor: AppColors.primary,
-                                            initAspectRatio: CropAspectRatioPreset.original,
-                                            lockAspectRatio: false),
-                                        IOSUiSettings(
-                                          title: 'Crop Cover Photo',
-                                        ),
-                                        WebUiSettings(
-                                          context: context,
-                                        ),
-                                      ],
-                                    );
-                                    if(croppedFile == null){
-                                      if(controller.imagePaths.isEmpty){
-                                        controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
-                                      }else{
-                                        if(controller.imagePaths.length > 2) {
-                                          controller.imagePaths[1] = imagePath;
-                                        }else{
+                                return null;
+                              },
+                              isCompulsory: true,
+                              controller: nameController,
+                            ),
+                            SizedBox(height: Get.height * 0.025),
+                            PageDropButton(
+                              label: "Page Category",
+                              hint: 'Choose a category',
+                              isCompulsory: true,
+                              onChanged: (value) {
+                                for (var element in categories) {
+                                  if(element.id == value){
+                                    pageCategory.text = element.title.toString();
+                                    chosenCategory = element;
+                                    break;
+                                  }
+                                }
+                              },
+                              validator: (val){
+                                if(chosenCategory == null){
+                                  return 'Please choose a category';
+                                }
+                                return null;
+                              },
+                              items: categories.map<DropdownMenuItem<String>>((PageCategoriesModel value){
+                                return DropdownMenuItem<String>(
+                                  value: value.id,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(value.title.toString()),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(height: Get.height*0.025),
+                            PageInput(
+                              hint: '',
+                              label: 'Description',
+                              validator: (val){
+                                if(val!.isEmpty){
+                                  return 'Please enter your page description';
+                                }
+                                return null;
+                              },
+                              isCompulsory: true,
+                              controller: descriptionController,
+                            ),
+                            SizedBox(height: Get.height*0.025),
+                            PageInput(
+                              hint: '',
+                              label: 'Website',
+                              validator: (val){
+                                return null;
+                              },
+                              isCompulsory: false,
+                              controller: linkController,
+                            ),
+                            SizedBox(height: Get.height*0.025),
+                            PageDropButton(
+                              label: "Page Visibility",
+                              hint: '',
+                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              onChanged: (val) {
+                                pageVisibility.text = val;
+                              },
+                              value: "Public",
+                              items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(height: Get.height*0.025),
+                            Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Page Profile Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
+                            FormField<String>(
+                                initialValue: '',
+                                validator: null,
+                                builder: (field) {
+                                return DocumentPicker(
+                                    radius: 10,
+                                    networkImage: null,
+                                    renderHeight: Get.width * 0.35,
+                                    renderWidth: Get.width * 0.35,
+                                    controller: controller,
+                                    fileImage: field.value,
+                                    position: 0,
+                                    onSelected: (imagePath, base64Image) async {
+                                      CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                        sourcePath: imagePath,
+                                        cropStyle: CropStyle.rectangle,
+                                        aspectRatioPresets: [
+                                          CropAspectRatioPreset.square,
+                                          CropAspectRatioPreset.ratio3x2,
+                                          CropAspectRatioPreset.original,
+                                          CropAspectRatioPreset.ratio4x3,
+                                          CropAspectRatioPreset.ratio16x9
+                                        ],
+                                        uiSettings: [
+                                          AndroidUiSettings(
+                                              toolbarTitle: 'Crop Cover Photo',
+                                              toolbarColor: AppColors.primary,
+                                              toolbarWidgetColor: Colors.white,
+                                              activeControlsWidgetColor: AppColors.primary,
+                                              cropGridColor: AppColors.primary,
+                                              initAspectRatio: CropAspectRatioPreset.original,
+                                              lockAspectRatio: false),
+                                          IOSUiSettings(
+                                            title: 'Crop Profile Photo',
+                                          ),
+                                          WebUiSettings(
+                                            context: context,
+                                          ),
+                                        ],
+                                      );
+                                      if(croppedFile == null){
+                                        if(controller.imagePaths.isEmpty){
                                           controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
-                                        }
-                                      }
-                                      field.didChange(imagePath);
-                                    }else{
-                                      if(controller.imagePaths.isEmpty){
-                                        controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
-                                      }else{
-                                        if(controller.imagePaths.length > 2) {
-                                          controller.imagePaths[1] = croppedFile.path;
                                         }else{
-                                          controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                          controller.imagePaths[0] = imagePath;
                                         }
+                                        field.didChange(imagePath);
+                                      }else{
+                                        if(controller.imagePaths.isEmpty){
+                                          controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                        }else{
+                                          controller.imagePaths[0] = croppedFile.path;
+                                        }
+                                        field.didChange(croppedFile.path);
                                       }
-                                      field.didChange(croppedFile.path);
-                                    }
-                                  },
-                                  actionWord: "Upload Cover Photo"
-                              );
-                            }
-                          ),
-                          SizedBox(height: Get.height*0.025),
-                        ],
+                                    },
+                                    actionWord: "Upload Profile Photo"
+                                );
+                              }
+                            ),
+                            SizedBox(height: Get.height*0.025),
+                            Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Page Cover Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
+                            FormField<String>(
+                                initialValue: '',
+                                validator: null,
+                                builder: (field) {
+                                return DocumentPicker(
+                                    radius: 10,
+                                    networkImage: null,
+                                    renderHeight: Get.width * 0.35,
+                                    renderWidth: Get.width * 0.8,
+                                    controller: controller,
+                                    position: 1,
+                                    onSelected: (imagePath, base64Image) async {
+                                      CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                        sourcePath: imagePath,
+                                        cropStyle: CropStyle.rectangle,
+                                        aspectRatioPresets: [
+                                          CropAspectRatioPreset.square,
+                                          CropAspectRatioPreset.ratio3x2,
+                                          CropAspectRatioPreset.original,
+                                          CropAspectRatioPreset.ratio4x3,
+                                          CropAspectRatioPreset.ratio16x9
+                                        ],
+                                        uiSettings: [
+                                          AndroidUiSettings(
+                                              toolbarTitle: 'Crop Cover Photo',
+                                              toolbarColor: AppColors.primary,
+                                              toolbarWidgetColor: Colors.white,
+                                              activeControlsWidgetColor: AppColors.primary,
+                                              cropGridColor: AppColors.primary,
+                                              initAspectRatio: CropAspectRatioPreset.original,
+                                              lockAspectRatio: false),
+                                          IOSUiSettings(
+                                            title: 'Crop Cover Photo',
+                                          ),
+                                          WebUiSettings(
+                                            context: context,
+                                          ),
+                                        ],
+                                      );
+                                      if(croppedFile == null){
+                                        if(controller.imagePaths.isEmpty){
+                                          controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
+                                        }else{
+                                          if(controller.imagePaths.length > 2) {
+                                            controller.imagePaths[1] = imagePath;
+                                          }else{
+                                            controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
+                                          }
+                                        }
+                                        field.didChange(imagePath);
+                                      }else{
+                                        if(controller.imagePaths.isEmpty){
+                                          controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
+                                        }else{
+                                          if(controller.imagePaths.length > 2) {
+                                            controller.imagePaths[1] = croppedFile.path;
+                                          }else{
+                                            controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                          }
+                                        }
+                                        field.didChange(croppedFile.path);
+                                      }
+                                    },
+                                    actionWord: "Upload Cover Photo"
+                                );
+                              }
+                            ),
+                            SizedBox(height: Get.height*0.025),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       }),

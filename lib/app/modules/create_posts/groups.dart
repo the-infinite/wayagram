@@ -199,33 +199,168 @@ class _CreateGroupState extends State<CreateGroup> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: Column(
-            children: [
-              Divider(
-                height: 0.5,
-                thickness: 0.5,
-                color: Colors.grey,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: Get.width*0.03, vertical: 0),
-                    child: SizedBox(
-                      height: Get.height*0.8,
-                      child: PageView(
-                        controller: pageController,
-                        physics: NeverScrollableScrollPhysics(),
-                        children: [
-                          Form(
-                            key: formKey1,
-                            child: Column(
+          body: Container(
+            color: getAppColor(AppColors.background),
+            child: Column(
+              children: [
+                Divider(
+                  height: 0.5,
+                  thickness: 0.5,
+                  color: Colors.grey,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: Get.width*0.03, vertical: 0),
+                      child: SizedBox(
+                        height: Get.height*0.8,
+                        child: PageView(
+                          controller: pageController,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: [
+                            Form(
+                              key: formKey1,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: Get.height*0.025),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: Get.width*0.01),
+                                    child: Text('Group Information', style: AppTextStyle.subtitle1.copyWith(
+                                      color: Colors.black,
+                                      fontSize: Get.width*0.05,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                                  ),
+                                  SizedBox(height: Get.height*0.01),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: Get.width*0.01),
+                                    child: Text('Name your group', style: AppTextStyle.subtitle1.copyWith(
+                                      color: Colors.black.withOpacity(0.5),
+                                      fontSize: Get.width*0.04,
+                                      fontWeight: FontWeight.normal,
+                                    )),
+                                  ),
+                                  SizedBox(height: Get.height*0.04),
+                                  PageInput(
+                                    hint: 'What is the name of your group?',
+                                    label: 'Group Name',
+                                    validator: (val){
+                                      if(val!.isEmpty){
+                                        return 'Please enter a group name';
+                                      }else if(val.length <= 1){
+                                        return 'Please enter a valid group name';
+                                      }
+                                      return null;
+                                    },
+                                    keyboardType: TextInputType.name,
+                                    isCompulsory: true,
+                                    controller: groupNameController,
+                                  ),
+                                  SizedBox(height: Get.height*0.025),
+                                  PageInput(
+                                    hint: 'Describe your group',
+                                    label: 'Group Description',
+                                    validator: (val){
+                                      if(val!.isEmpty){
+                                        return 'Please enter a group description';
+                                      }
+                                      return null;
+                                    },
+                                    keyboardType: TextInputType.text,
+                                    isCompulsory: true,
+                                    controller: groupDescriptionController,
+                                  ),
+                                  SizedBox(height: Get.height*0.025),
+                                  PageDropButton(
+                                    label: "Group Category",
+                                    hint: 'Choose a category',
+                                    isCompulsory: true,
+                                    onChanged: (value) {
+                                      for (var element in categories) {
+                                        if(element.id == value){
+                                          pageCategory.text = element.title.toString();
+                                          chosenCategory = element;
+                                          controller.update();
+                                          break;
+                                        }
+                                      }
+                                    },
+                                    validator: (val){
+                                      if(chosenCategory == null){
+                                        return 'Please choose a category';
+                                      }
+                                      return null;
+                                    },
+                                    items: categories.map<DropdownMenuItem<String>>((PageCategoriesModel value){
+                                      return DropdownMenuItem<String>(
+                                        value: value.id,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text(value.title.toString()),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                  SizedBox(height: Get.height*0.025),
+                                  if(pageCategory.text.toLowerCase().trim() == "others")
+                                    PageDropButton(
+                                      label: "Other Category",
+                                      hint: '',
+                                      padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                      onChanged: (val) {
+                                        otherCategory.value = val!;
+                                      },
+                                      value: "Catering and Food",
+                                      items: businessList.map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  if(pageCategory.text.toLowerCase().trim() == "others")
+                                    SizedBox(height: Get.height*0.025),
+                                  PageDropButton(
+                                    label: "Choose Privacy",
+                                    hint: '',
+                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    onChanged: (val) {
+                                      privacyController.text = val;
+                                    },
+                                    value: "Public",
+                                    items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                  SizedBox(height: Get.height*0.025),
+                                  /*PageInput(
+                                    hint: 'e.g. John Doe',
+                                    label: 'Who do you want to invite?',
+                                    validator: (val){
+                                      return null;
+                                    },
+                                    keyboardType: TextInputType.name,
+                                    isCompulsory: false,
+                                    controller: inviteController,
+                                  ),*/
+                                ],
+                              ),
+                            ),
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: Get.height*0.025),
                                 Padding(
                                   padding: EdgeInsets.only(left: Get.width*0.01),
-                                  child: Text('Group Information', style: AppTextStyle.subtitle1.copyWith(
+                                  child: Text('Images', style: AppTextStyle.subtitle1.copyWith(
                                     color: Colors.black,
                                     fontSize: Get.width*0.05,
                                     fontWeight: FontWeight.w600,
@@ -234,287 +369,155 @@ class _CreateGroupState extends State<CreateGroup> {
                                 SizedBox(height: Get.height*0.01),
                                 Padding(
                                   padding: EdgeInsets.only(left: Get.width*0.01),
-                                  child: Text('Name your group', style: AppTextStyle.subtitle1.copyWith(
+                                  child: Text('Pick images for your group [Optional]', style: AppTextStyle.subtitle1.copyWith(
                                     color: Colors.black.withOpacity(0.5),
                                     fontSize: Get.width*0.04,
                                     fontWeight: FontWeight.normal,
                                   )),
                                 ),
                                 SizedBox(height: Get.height*0.04),
-                                PageInput(
-                                  hint: 'What is the name of your group?',
-                                  label: 'Group Name',
-                                  validator: (val){
-                                    if(val!.isEmpty){
-                                      return 'Please enter a group name';
-                                    }else if(val.length <= 1){
-                                      return 'Please enter a valid group name';
-                                    }
-                                    return null;
-                                  },
-                                  keyboardType: TextInputType.name,
-                                  isCompulsory: true,
-                                  controller: groupNameController,
-                                ),
-                                SizedBox(height: Get.height*0.025),
-                                PageInput(
-                                  hint: 'Describe your group',
-                                  label: 'Group Description',
-                                  validator: (val){
-                                    if(val!.isEmpty){
-                                      return 'Please enter a group description';
-                                    }
-                                    return null;
-                                  },
-                                  keyboardType: TextInputType.text,
-                                  isCompulsory: true,
-                                  controller: groupDescriptionController,
-                                ),
-                                SizedBox(height: Get.height*0.025),
-                                PageDropButton(
-                                  label: "Group Category",
-                                  hint: 'Choose a category',
-                                  isCompulsory: true,
-                                  onChanged: (value) {
-                                    for (var element in categories) {
-                                      if(element.id == value){
-                                        pageCategory.text = element.title.toString();
-                                        chosenCategory = element;
-                                        controller.update();
-                                        break;
-                                      }
-                                    }
-                                  },
-                                  validator: (val){
-                                    if(chosenCategory == null){
-                                      return 'Please choose a category';
-                                    }
-                                    return null;
-                                  },
-                                  items: categories.map<DropdownMenuItem<String>>((PageCategoriesModel value){
-                                    return DropdownMenuItem<String>(
-                                      value: value.id,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text(value.title.toString()),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                                SizedBox(height: Get.height*0.025),
-                                if(pageCategory.text.toLowerCase().trim() == "others")
-                                  PageDropButton(
-                                    label: "Other Category",
-                                    hint: '',
-                                    padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
-                                    onChanged: (val) {
-                                      otherCategory.value = val!;
-                                    },
-                                    value: "Catering and Food",
-                                    items: businessList.map<DropdownMenuItem<String>>((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                  ),
-                                if(pageCategory.text.toLowerCase().trim() == "others")
-                                  SizedBox(height: Get.height*0.025),
-                                PageDropButton(
-                                  label: "Choose Privacy",
-                                  hint: '',
-                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                  onChanged: (val) {
-                                    privacyController.text = val;
-                                  },
-                                  value: "Public",
-                                  items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                                SizedBox(height: Get.height*0.025),
-                                /*PageInput(
-                                  hint: 'e.g. John Doe',
-                                  label: 'Who do you want to invite?',
-                                  validator: (val){
-                                    return null;
-                                  },
-                                  keyboardType: TextInputType.name,
-                                  isCompulsory: false,
-                                  controller: inviteController,
-                                ),*/
-                              ],
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: Get.height*0.025),
-                              Padding(
-                                padding: EdgeInsets.only(left: Get.width*0.01),
-                                child: Text('Images', style: AppTextStyle.subtitle1.copyWith(
-                                  color: Colors.black,
-                                  fontSize: Get.width*0.05,
-                                  fontWeight: FontWeight.w600,
-                                )),
-                              ),
-                              SizedBox(height: Get.height*0.01),
-                              Padding(
-                                padding: EdgeInsets.only(left: Get.width*0.01),
-                                child: Text('Pick images for your group [Optional]', style: AppTextStyle.subtitle1.copyWith(
-                                  color: Colors.black.withOpacity(0.5),
-                                  fontSize: Get.width*0.04,
-                                  fontWeight: FontWeight.normal,
-                                )),
-                              ),
-                              SizedBox(height: Get.height*0.04),
-                              Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Group Profile Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
-                              FormField<String>(
-                                  initialValue: '',
-                                  validator: null,
-                                  builder: (field) {
-                                    return DocumentPicker(
-                                        radius: 10,
-                                        networkImage: null,
-                                        renderHeight: Get.width * 0.35,
-                                        renderWidth: Get.width,
-                                        controller: controller,
-                                        fileImage: field.value,
-                                        position: 0,
-                                        onSelected: (imagePath, base64Image) async {
-                                          CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                            sourcePath: imagePath,
-                                            cropStyle: CropStyle.rectangle,
-                                            aspectRatioPresets: [
-                                              CropAspectRatioPreset.square,
-                                              CropAspectRatioPreset.ratio3x2,
-                                              CropAspectRatioPreset.original,
-                                              CropAspectRatioPreset.ratio4x3,
-                                              CropAspectRatioPreset.ratio16x9
-                                            ],
-                                            uiSettings: [
-                                              AndroidUiSettings(
-                                                  toolbarTitle: 'Crop Cover Photo',
-                                                  toolbarColor: AppColors.primary,
-                                                  toolbarWidgetColor: Colors.white,
-                                                  activeControlsWidgetColor: AppColors.primary,
-                                                  cropGridColor: AppColors.primary,
-                                                  initAspectRatio: CropAspectRatioPreset.original,
-                                                  lockAspectRatio: false),
-                                              IOSUiSettings(
-                                                title: 'Crop Profile Photo',
-                                              ),
-                                              WebUiSettings(
-                                                context: context,
-                                              ),
-                                            ],
-                                          );
-                                          if(croppedFile == null){
-                                            if(controller.imagePaths.isEmpty){
-                                              controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
-                                            }else{
-                                              controller.imagePaths[0] = imagePath;
-                                            }
-                                            field.didChange(imagePath);
-                                          }else{
-                                            if(controller.imagePaths.isEmpty){
-                                              controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
-                                            }else{
-                                              controller.imagePaths[0] = croppedFile.path;
-                                            }
-                                            field.didChange(croppedFile.path);
-                                          }
-                                        },
-                                        actionWord: "Upload Profile Photo",
-                                      displayPickerIcon: false,
-                                    );
-                                  }
-                              ),
-                              SizedBox(height: Get.height*0.025),
-                              Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Group Cover Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
-                              FormField<String>(
-                                  initialValue: '',
-                                  validator: null,
-                                  builder: (field) {
-                                    return DocumentPicker(
-                                        radius: 10,
-                                        networkImage: null,
-                                        renderHeight: Get.width * 0.35,
-                                        renderWidth: Get.width,
-                                        controller: controller,
-                                        position: 1,
-                                        onSelected: (imagePath, base64Image) async {
-                                          CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                            sourcePath: imagePath,
-                                            cropStyle: CropStyle.rectangle,
-                                            aspectRatioPresets: [
-                                              CropAspectRatioPreset.square,
-                                              CropAspectRatioPreset.ratio3x2,
-                                              CropAspectRatioPreset.original,
-                                              CropAspectRatioPreset.ratio4x3,
-                                              CropAspectRatioPreset.ratio16x9
-                                            ],
-                                            uiSettings: [
-                                              AndroidUiSettings(
-                                                  toolbarTitle: 'Crop Cover Photo',
-                                                  toolbarColor: AppColors.primary,
-                                                  toolbarWidgetColor: Colors.white,
-                                                  activeControlsWidgetColor: AppColors.primary,
-                                                  cropGridColor: AppColors.primary,
-                                                  initAspectRatio: CropAspectRatioPreset.original,
-                                                  lockAspectRatio: false),
-                                              IOSUiSettings(
-                                                title: 'Crop Cover Photo',
-                                              ),
-                                              WebUiSettings(
-                                                context: context,
-                                              ),
-                                            ],
-                                          );
-                                          if(croppedFile == null){
-                                            if(controller.imagePaths.isEmpty){
-                                              controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
-                                            }else{
-                                              if(controller.imagePaths.length > 2) {
-                                                controller.imagePaths[1] = imagePath;
-                                              }else{
+                                Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Group Profile Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
+                                FormField<String>(
+                                    initialValue: '',
+                                    validator: null,
+                                    builder: (field) {
+                                      return DocumentPicker(
+                                          radius: 10,
+                                          networkImage: null,
+                                          renderHeight: Get.width * 0.35,
+                                          renderWidth: Get.width,
+                                          controller: controller,
+                                          fileImage: field.value,
+                                          position: 0,
+                                          onSelected: (imagePath, base64Image) async {
+                                            CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                              sourcePath: imagePath,
+                                              cropStyle: CropStyle.rectangle,
+                                              aspectRatioPresets: [
+                                                CropAspectRatioPreset.square,
+                                                CropAspectRatioPreset.ratio3x2,
+                                                CropAspectRatioPreset.original,
+                                                CropAspectRatioPreset.ratio4x3,
+                                                CropAspectRatioPreset.ratio16x9
+                                              ],
+                                              uiSettings: [
+                                                AndroidUiSettings(
+                                                    toolbarTitle: 'Crop Cover Photo',
+                                                    toolbarColor: AppColors.primary,
+                                                    toolbarWidgetColor: Colors.white,
+                                                    activeControlsWidgetColor: AppColors.primary,
+                                                    cropGridColor: AppColors.primary,
+                                                    initAspectRatio: CropAspectRatioPreset.original,
+                                                    lockAspectRatio: false),
+                                                IOSUiSettings(
+                                                  title: 'Crop Profile Photo',
+                                                ),
+                                                WebUiSettings(
+                                                  context: context,
+                                                ),
+                                              ],
+                                            );
+                                            if(croppedFile == null){
+                                              if(controller.imagePaths.isEmpty){
                                                 controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
-                                              }
-                                            }
-                                            field.didChange(imagePath);
-                                          }else{
-                                            if(controller.imagePaths.isEmpty){
-                                              controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
-                                            }else{
-                                              if(controller.imagePaths.length > 2) {
-                                                controller.imagePaths[1] = croppedFile.path;
                                               }else{
-                                                controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                                controller.imagePaths[0] = imagePath;
                                               }
+                                              field.didChange(imagePath);
+                                            }else{
+                                              if(controller.imagePaths.isEmpty){
+                                                controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                              }else{
+                                                controller.imagePaths[0] = croppedFile.path;
+                                              }
+                                              field.didChange(croppedFile.path);
                                             }
-                                            field.didChange(croppedFile.path);
-                                          }
-                                        },
-                                        actionWord: "Upload Cover Photo",
-                                      displayPickerIcon: false,
-                                    );
-                                  }
-                              ),
-                            ],
-                          )
-                        ],
+                                          },
+                                          actionWord: "Upload Profile Photo",
+                                        displayPickerIcon: false,
+                                      );
+                                    }
+                                ),
+                                SizedBox(height: Get.height*0.025),
+                                Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Group Cover Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
+                                FormField<String>(
+                                    initialValue: '',
+                                    validator: null,
+                                    builder: (field) {
+                                      return DocumentPicker(
+                                          radius: 10,
+                                          networkImage: null,
+                                          renderHeight: Get.width * 0.35,
+                                          renderWidth: Get.width,
+                                          controller: controller,
+                                          position: 1,
+                                          onSelected: (imagePath, base64Image) async {
+                                            CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                              sourcePath: imagePath,
+                                              cropStyle: CropStyle.rectangle,
+                                              aspectRatioPresets: [
+                                                CropAspectRatioPreset.square,
+                                                CropAspectRatioPreset.ratio3x2,
+                                                CropAspectRatioPreset.original,
+                                                CropAspectRatioPreset.ratio4x3,
+                                                CropAspectRatioPreset.ratio16x9
+                                              ],
+                                              uiSettings: [
+                                                AndroidUiSettings(
+                                                    toolbarTitle: 'Crop Cover Photo',
+                                                    toolbarColor: AppColors.primary,
+                                                    toolbarWidgetColor: Colors.white,
+                                                    activeControlsWidgetColor: AppColors.primary,
+                                                    cropGridColor: AppColors.primary,
+                                                    initAspectRatio: CropAspectRatioPreset.original,
+                                                    lockAspectRatio: false),
+                                                IOSUiSettings(
+                                                  title: 'Crop Cover Photo',
+                                                ),
+                                                WebUiSettings(
+                                                  context: context,
+                                                ),
+                                              ],
+                                            );
+                                            if(croppedFile == null){
+                                              if(controller.imagePaths.isEmpty){
+                                                controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
+                                              }else{
+                                                if(controller.imagePaths.length > 2) {
+                                                  controller.imagePaths[1] = imagePath;
+                                                }else{
+                                                  controller.imagePaths = List.from(controller.imagePaths)..add(imagePath);
+                                                }
+                                              }
+                                              field.didChange(imagePath);
+                                            }else{
+                                              if(controller.imagePaths.isEmpty){
+                                                controller.imagePaths = List.from(controller.imagePaths)..add("")..add(imagePath);
+                                              }else{
+                                                if(controller.imagePaths.length > 2) {
+                                                  controller.imagePaths[1] = croppedFile.path;
+                                                }else{
+                                                  controller.imagePaths = List.from(controller.imagePaths)..add(croppedFile.path);
+                                                }
+                                              }
+                                              field.didChange(croppedFile.path);
+                                            }
+                                          },
+                                          actionWord: "Upload Cover Photo",
+                                        displayPickerIcon: false,
+                                      );
+                                    }
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       }),
