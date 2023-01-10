@@ -889,8 +889,8 @@ class _PromoteProductState extends State<PromoteProduct> {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5),
                             child: PageDropButton(
-                              label: "Select Interval",
-                              hint: 'Select Interval',
+                              label: "Select Reach",
+                              hint: 'Select Reach',
                               padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
                               onChanged: (val) {
                                 reachTextController.text = val.toString();

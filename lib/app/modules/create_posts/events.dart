@@ -607,7 +607,7 @@ class CreateEvent extends StatelessWidget {
                                   SizedBox(height: Get.height*0.01),
                                   _TextButton(
                                     leading: Icon(FeatherIcons.tag, color: getAppColor(Colors.black).withOpacity(0.5)),
-                                    text: freeOrPaidController.text == "Free" ? "Free to attend" : "Paid to attend",
+                                    text: freeOrPaidController.text == "Free" ? "Free to attend" : "Paid to attend: NGN ${priceController.text}",
                                     onPressed: () {
                                     },
                                   ),

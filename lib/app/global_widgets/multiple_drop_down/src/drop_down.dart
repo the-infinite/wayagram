@@ -100,6 +100,7 @@ class _MainBodyState extends State<MainBody> {
 
   @override
   Widget build(BuildContext context) {
+    List<SelectedListItem> selectedList = widget.dropDown.data.where((element) => element.isSelected == true).toList();
     return DraggableScrollableSheet(
       initialChildSize: 0.52,
       minChildSize: 0.1,
@@ -125,8 +126,7 @@ class _MainBodyState extends State<MainBody> {
                         color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
                         child: ElevatedButton(
                           onPressed: () {
-                            List<SelectedListItem> selectedList =
-                                widget.dropDown.data.where((element) => element.isSelected == true).toList();
+                            List<SelectedListItem> selectedList = widget.dropDown.data.where((element) => element.isSelected == true).toList();
                             List<dynamic> selectedNameList = [];
 
                             for (var element in selectedList) {
@@ -157,6 +157,62 @@ class _MainBodyState extends State<MainBody> {
                     ),
               ),
             ),
+            if(widget.dropDown.enableMultipleSelection)
+              InkWell(
+              onTap:() {
+                int index = 0;
+                for (var element in widget.dropDown.data) {
+                  setState(() {
+                    if((selectedList.length == widget.dropDown.data.length)){
+                      mainList[index].isSelected = false;
+                    }else{
+                      mainList[index].isSelected = false;
+                      mainList[index].isSelected = mainList[index].isSelected == true ? false : true;
+                    }
+                  });
+                  index++;
+                }
+              },
+              child: Container(
+                color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: ListTile(
+                    title: Text(
+                          "Select All",
+                          style: AppTextStyle.bodyText1.copyWith(
+                            color: (selectedList.length == widget.dropDown.data.length) ? AppColors.primary : getAppColor(AppColors.onBackground),
+                            fontSize: Get.textScaleFactor * 16,
+                          ),
+                        ),
+                    trailing: widget.dropDown.enableMultipleSelection
+                        ? GestureDetector(
+                      onTap: () {
+                        int index = 0;
+                        for (var element in widget.dropDown.data) {
+                          setState(() {
+                            if((selectedList.length == widget.dropDown.data.length)){
+                              mainList[index].isSelected = false;
+                            }else{
+                              mainList[index].isSelected = false;
+                              mainList[index].isSelected = mainList[index].isSelected == true ? false : true;
+                            }
+                          });
+                          index++;
+                        }
+                      },
+                      child: (selectedList.length == widget.dropDown.data.length)
+                          ? Icon(Icons.check_box, color: AppColors.primary)
+                          : Icon(Icons.check_box_outline_blank, color: AppColors.primary),
+                    )
+                        : SizedBox(
+                      height: 0.0,
+                      width: 0.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
 
             /// Listview (list of data with check box for multiple selection & on tile tap single selection)
             Expanded(
@@ -166,11 +222,15 @@ class _MainBodyState extends State<MainBody> {
                 itemBuilder: (context, index) {
                   bool isSelected = mainList[index].isSelected ?? false;
                   return InkWell(
-                    onTap: widget.dropDown.enableMultipleSelection
-                        ? null
-                        : () {
-                            widget.dropDown.selectedItems?.call([mainList[index]]);
-                            _onUnFocusKeyboardAndPop();
+                    onTap: () {
+                      if(!widget.dropDown.enableMultipleSelection){
+                        widget.dropDown.selectedItems?.call([mainList[index]]);
+                        _onUnFocusKeyboardAndPop();
+                      }else{
+                        setState(() {
+                          mainList[index].isSelected = !isSelected;
+                        });
+                      }
                           },
                     child: Container(
                       color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
