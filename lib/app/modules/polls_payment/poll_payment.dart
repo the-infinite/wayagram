@@ -110,7 +110,7 @@ class _PollPaymentScreenState extends State<PollPaymentScreen> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(1.0),
@@ -126,8 +126,10 @@ class _PollPaymentScreenState extends State<PollPaymentScreen> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: SizedBox(
+          body: Container(
             width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
             child: Padding(
               padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
               child: Form(
@@ -287,7 +289,7 @@ class _PollPaymentScreenState extends State<PollPaymentScreen> {
               ),
             ),
           ),
-          bottomNavigationBar: PinPrompt(),
+          bottomNavigationBar: Container(color: getAppColor(AppColors.background),child: PinPrompt()),
         );
       }),
     );

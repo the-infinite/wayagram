@@ -99,7 +99,7 @@ class _DonateScreenState extends State<DonateScreen> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(1.0),
@@ -115,8 +115,10 @@ class _DonateScreenState extends State<DonateScreen> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: SizedBox(
+          body: Container(
             width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
             child: Padding(
               padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
               child: Form(
@@ -274,7 +276,9 @@ class _DonateScreenState extends State<DonateScreen> {
               ),
             ),
           ),
-          bottomNavigationBar: PinPrompt(),
+          bottomNavigationBar: Container(
+            color: getAppColor(AppColors.background),
+              child: PinPrompt()),
         );
       }),
     );
@@ -301,7 +305,7 @@ class _DonateScreenState extends State<DonateScreen> {
                   Text(
                     title,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: getAppColor(Colors.black),
                       fontSize: Get.textScaleFactor * 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -312,7 +316,7 @@ class _DonateScreenState extends State<DonateScreen> {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: getAppColor(Colors.black),
                       fontSize: Get.textScaleFactor * 15,
                       fontWeight: FontWeight.normal,
                     ),

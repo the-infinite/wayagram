@@ -231,6 +231,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                               expandedHeight: Get.height * 0.40,
                               floating: false,
                               pinned: true,
+                              backgroundColor: getAppColor(AppColors.background),
                               flexibleSpace: LayoutBuilder(
                                   builder: (BuildContext context, BoxConstraints constraints) {
                                     top = constraints.biggest.height;
@@ -731,7 +732,6 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                   ),
                                 ),
                               ),
-                              backgroundColor: getAppColor(AppColors.background),
                               systemOverlayStyle: SystemUiOverlayStyle(
                                   statusBarColor: scrolled ? getAppColor(AppColors.background) : Colors.transparent,
                                   statusBarIconBrightness: getAppBrightness(),

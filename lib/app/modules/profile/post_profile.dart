@@ -216,6 +216,7 @@ class _PostProfileState extends State<PostProfile> with TickerProviderStateMixin
                               expandedHeight: Get.height * 0.39,
                               floating: false,
                               pinned: true,
+                              backgroundColor: getAppColor(AppColors.background),
                               flexibleSpace: LayoutBuilder(
                                   builder: (BuildContext context, BoxConstraints constraints) {
                                     return FlexibleSpaceBar(

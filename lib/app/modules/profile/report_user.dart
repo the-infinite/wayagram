@@ -248,8 +248,10 @@ class _ReportUserState extends State<ReportUser> {
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: SizedBox(
+          body: Container(
             width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
             child: Padding(
               padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
               child: SingleChildScrollView(
