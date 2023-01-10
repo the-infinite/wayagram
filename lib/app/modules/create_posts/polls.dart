@@ -122,7 +122,7 @@ class _CreatePollState extends State<CreatePoll> {
             ),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
               onPressed: () {
                 if(pageController.page?.toInt() == 1){
                   pageController.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.ease);
@@ -532,7 +532,7 @@ class _CreatePollState extends State<CreatePoll> {
                                                         images.removeAt(index);
                                                         controller.update();
                                                       },
-                                                      icon: Center(child: Icon(Icons.cancel_outlined, color: Colors.black, size: Get.width*0.055))
+                                                      icon: Center(child: Icon(Icons.cancel_outlined, color: getAppColor(Colors.black), size: Get.width*0.055))
                                                   ),
                                                 )
                                               ],

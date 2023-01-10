@@ -131,7 +131,7 @@ class _CreatePostsState extends State<CreatePosts> {
               padding: EdgeInsets.zero,
               icon: Icon(
                 FeatherIcons.arrowLeft,
-                color: Colors.black,
+                color: getAppColor(Colors.black),
               ),
               onPressed: () {
                 Get.back();
@@ -391,7 +391,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                                   fontSize: 16,
                                                 ),
                                                 basicStyle: AppTextStyle.subtitle1.copyWith(
-                                                  color: Colors.black,
+                                                  color: getAppColor(Colors.black),
                                                   fontSize: 16,
                                                 ),
                                                 expands: false,
@@ -538,7 +538,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                                                         height: Get.width * 0.06,
                                                                         width: Get.width * 0.06,
                                                                         decoration: BoxDecoration(
-                                                                          color: Colors.black.withOpacity(.8),
+                                                                          color: getAppColor(Colors.black).withOpacity(.8),
                                                                           borderRadius: BorderRadius.circular(100),
                                                                         ),
                                                                         child: Center(
@@ -724,7 +724,7 @@ class _CreatePostsState extends State<CreatePosts> {
                           width: Get.width*0.025,
                         ),
                         IconButton(
-                          icon: Icon(Icons.image_outlined, color: images.length > 29 ? Colors.grey : Colors.black),
+                          icon: Icon(Icons.image_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black)),
                           onPressed: () async {
                             if(images.length <= 29){
                               final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
@@ -768,7 +768,7 @@ class _CreatePostsState extends State<CreatePosts> {
                         ),
                         if(!controller.isProductPost)
                           IconButton(
-                          icon: Icon(Icons.video_camera_back_outlined, color: images.length > 29 ? Colors.grey : Colors.black,size: Get.width*0.065),
+                          icon: Icon(Icons.video_camera_back_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black),size: Get.width*0.065),
                           onPressed: () async {
                             if(images.length <= 29){
                               final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, maxDuration: Duration(minutes: 10));
@@ -784,7 +784,7 @@ class _CreatePostsState extends State<CreatePosts> {
                     Padding(
                       padding: EdgeInsets.only(right: Get.width*0.025),
                       child: IconButton(
-                        icon: Icon(Icons.camera_alt_outlined, color: images.length > 29 ? Colors.grey : Colors.black),
+                        icon: Icon(Icons.camera_alt_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black)),
                         onPressed: () async {
                           if(images.length <= 29){
                             final pickedFile = await _imagePicker.pickImage(

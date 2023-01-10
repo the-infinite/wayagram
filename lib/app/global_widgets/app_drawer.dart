@@ -378,7 +378,7 @@ class _AppDrawerState extends State<AppDrawer> {
                             alignment: Alignment.centerRight,
                             children: [
                               _TextButton(
-                                  leading: SizedBox.shrink(),
+                                  leading: const SizedBox.shrink(),
                                   text: "Dark Mode",
                                   onPressed: () {
                                     var darkMode = MyPref.darkMode.val;

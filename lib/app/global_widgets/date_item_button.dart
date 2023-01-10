@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/theme/app_colors.dart';
+import 'helpers/dark_mode_helper.dart';
 
 class DateItemButton extends StatelessWidget {
   DateItemButton({
     Key? key,
     required this.title,
-    this.color = Colors.black,
-    this.textColor = Colors.black,
+    this.color,
+    this.textColor,
     this.icon
   }) : super(key: key);
 
   final String title;
-  final Color color;
-  final Color textColor;
+  final Color? color;
+  final Color? textColor;
   final IconData? icon;
 
   @override
@@ -40,7 +41,7 @@ class DateItemButton extends StatelessWidget {
           SizedBox(width: Get.width * 0.030),
           Text(
             title,
-            style: theme.textTheme.subtitle1!.copyWith(color: textColor),
+            style: theme.textTheme.subtitle1!.copyWith(color: textColor ?? getAppColor(Colors.black)),
           ),
         ],
       ),

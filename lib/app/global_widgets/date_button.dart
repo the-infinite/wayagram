@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
+import '../data/providers/my_pref.dart';
 import 'date_item_button.dart';
+import 'helpers/dark_mode_helper.dart';
 
 class DateButton<T> extends StatefulWidget {
   DateButton({
@@ -45,7 +47,7 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                 child: Text(
                   widget.label,
                   style: AppTextStyle.bodyText2.copyWith(
-                    color: Colors.black,
+                    color: getAppColor(Colors.black),
                   ),
                 ),
               ),
@@ -58,6 +60,27 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                       initialDate: widget.initialValue! as DateTime,
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
+                      builder: (context, child) {
+                        return Theme(
+                          data: ThemeData.light().copyWith(
+                            colorScheme: MyPref.darkMode.val ? ColorScheme.dark(
+                              primary: AppColors.primary,
+                              onPrimary: Colors.white,
+                              surface: AppColors.primary,
+                              onSurface: Colors.white,
+                              primaryContainer: getAppColor(AppColors.background),
+                            ) : ColorScheme.light(
+                              primary: AppColors.primary,
+                              onPrimary: Colors.white,
+                              surface: AppColors.primary,
+                              onSurface: Colors.black,
+                              primaryContainer: getAppColor(AppColors.background),
+                            ),
+                            dialogBackgroundColor: getAppColor(AppColors.background),
+                          ),
+                          child: child!,
+                        );
+                      },
                     ).then((value) {
                       if (value != null) {
                         if(widget.dateChanged != null) {
@@ -74,6 +97,27 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                     showTimePicker(
                       context: context,
                       initialTime: widget.initialValue! as TimeOfDay,
+                      builder: (context, child) {
+                        return Theme(
+                          data: ThemeData.light().copyWith(
+                            colorScheme: MyPref.darkMode.val ? ColorScheme.dark(
+                              primary: AppColors.primary,
+                              onPrimary: Colors.white,
+                              surface: Colors.black,
+                              onSurface: Colors.white,
+                              primaryContainer: getAppColor(AppColors.background),
+                            ) : ColorScheme.light(
+                              primary: AppColors.primary,
+                              onPrimary: Colors.white,
+                              surface: Colors.white,
+                              onSurface: Colors.black,
+                              primaryContainer: getAppColor(AppColors.background),
+                            ),
+                            dialogBackgroundColor: getAppColor(AppColors.background),
+                          ),
+                          child: child!,
+                        );
+                      },
                     ).then((value) {
                       if (value != null) {
                         if(widget.timeChanged != null) {
