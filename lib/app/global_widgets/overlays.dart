@@ -6,6 +6,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
 import 'app_button.dart';
+import 'helpers/dark_mode_helper.dart';
 
 class AppOverlay {
   static Future<void> loadingOverlay({
@@ -200,6 +201,7 @@ class AppOverlay {
           title,
           style: AppTextStyle.bodyText1.copyWith(
             //color: Colors.grey,
+            color: getAppColor(AppColors.onBackground),
             fontSize: Get.width * 0.04,
             fontWeight: FontWeight.bold,
           ),
@@ -207,7 +209,7 @@ class AppOverlay {
         content: Text(
           content,
           style: AppTextStyle.bodyText1.copyWith(
-            //color: Colors.grey,
+            color: getAppColor(AppColors.onBackground),
             fontSize: Get.width * 0.035,
             fontWeight: FontWeight.normal,
           ),
@@ -217,7 +219,7 @@ class AppOverlay {
             title: Text(
               negativeText,
               style: AppTextStyle.bodyText1.copyWith(
-                color: Colors.blue,
+                color: AppColors.primary,
                 fontSize: Get.width * 0.03,
                 fontWeight: FontWeight.normal,
               ),
@@ -231,7 +233,7 @@ class AppOverlay {
             title: Text(
               positiveText,
               style: AppTextStyle.bodyText1.copyWith(
-                color: Colors.blue,
+                color: AppColors.primary,
                 fontSize: Get.width * 0.03,
                 fontWeight: FontWeight.normal,
               ),
