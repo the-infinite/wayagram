@@ -82,7 +82,7 @@ class _CreateDonationState extends State<CreateDonation> {
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
                 onPressed: () {
                   if(currentPage > 0){
                     pageController.animateToPage(currentPage-1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
@@ -200,7 +200,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             Padding(
                               padding: EdgeInsets.only(left: Get.width*0.005),
                               child: Text('Donation Information', style: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.width*0.05,
                                 fontWeight: FontWeight.w600,
                               )),
@@ -209,7 +209,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             Padding(
                               padding: EdgeInsets.only(left: Get.width*0.005),
                               child: Text('Give your cause a title and description so users can relate', style: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.black.withOpacity(0.5),
+                                color: getAppColor(Colors.black).withOpacity(0.5),
                                 fontSize: Get.width*0.04,
                                 fontWeight: FontWeight.normal,
                               )),
@@ -268,7 +268,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             Padding(
                               padding: EdgeInsets.only(left: Get.width*0.005),
                               child: Text('More Information', style: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.width*0.05,
                                 fontWeight: FontWeight.w600,
                               )),
@@ -277,7 +277,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             Padding(
                               padding: EdgeInsets.only(left: Get.width*0.005),
                               child: Text('Describe your case and state reasons why any user should donate to you', style: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.black.withOpacity(0.5),
+                                color: getAppColor(Colors.black).withOpacity(0.5),
                                 fontSize: Get.width*0.04,
                                 fontWeight: FontWeight.normal,
                               )),
@@ -321,7 +321,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             Padding(
                               padding: EdgeInsets.only(left: Get.width*0.005),
                               child: Text('Other Details', style: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.black,
+                                color: getAppColor(Colors.black),
                                 fontSize: Get.width*0.05,
                                 fontWeight: FontWeight.w600,
                               )),
@@ -330,7 +330,7 @@ class _CreateDonationState extends State<CreateDonation> {
                             Padding(
                               padding: EdgeInsets.only(left: Get.width*0.005),
                               child: Text('Complete your donation post process', style: AppTextStyle.subtitle1.copyWith(
-                                color: Colors.black.withOpacity(0.5),
+                                color: getAppColor(Colors.black).withOpacity(0.5),
                                 fontSize: Get.width*0.04,
                                 fontWeight: FontWeight.normal,
                               )),
@@ -487,7 +487,7 @@ class _CreateDonationState extends State<CreateDonation> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: Get.height*0.025),
-                            //Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Event Image', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
+                            //Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Event Image', style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black).withOpacity(.7)),)),
                             FormField<String>(
                                 initialValue: '',
                                 validator: (val){
@@ -519,7 +519,7 @@ class _CreateDonationState extends State<CreateDonation> {
                                               AndroidUiSettings(
                                                   toolbarTitle: 'Crop Event Photo',
                                                   toolbarColor: getAppColor(AppColors.background),
-                                                  toolbarWidgetColor: Colors.black,
+                                                  toolbarWidgetColor: getAppColor(Colors.black),
                                                   activeControlsWidgetColor: AppColors.primary,
                                                   cropGridColor: AppColors.primary,
                                                   initAspectRatio: CropAspectRatioPreset.original,
@@ -690,7 +690,7 @@ class _TextButton extends StatelessWidget {
             title,
             maxLines: 1,
             overflow: TextOverflow.clip,
-            style: AppTextStyle.subtitle1.copyWith(color: Colors.black,fontWeight: FontWeight.w600,fontSize: Get.width*0.04),
+            style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black),fontWeight: FontWeight.w600,fontSize: Get.width*0.04),
           ),
 
               SizedBox(
@@ -699,7 +699,7 @@ class _TextButton extends StatelessWidget {
                   text,
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyle.subtitle1.copyWith(color: Colors.black,fontSize: Get.width*0.04),
+                  style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black),fontSize: Get.width*0.04),
                   textAlign: TextAlign.end,
                 ),
               )

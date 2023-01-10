@@ -85,7 +85,7 @@ class _CreatePageState extends State<CreatePage> {
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
               onPressed: () => Navigator.pop(context),
             ),
             actions: [
@@ -255,7 +255,7 @@ class _CreatePageState extends State<CreatePage> {
                               }).toList(),
                             ),
                             SizedBox(height: Get.height*0.025),
-                            Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Page Profile Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
+                            Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Page Profile Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black).withOpacity(.7)),)),
                             FormField<String>(
                                 initialValue: '',
                                 validator: null,
@@ -317,7 +317,7 @@ class _CreatePageState extends State<CreatePage> {
                               }
                             ),
                             SizedBox(height: Get.height*0.025),
-                            Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Page Cover Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
+                            Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Page Cover Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black).withOpacity(.7)),)),
                             FormField<String>(
                                 initialValue: '',
                                 validator: null,

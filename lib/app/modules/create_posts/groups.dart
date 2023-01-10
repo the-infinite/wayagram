@@ -124,7 +124,7 @@ class _CreateGroupState extends State<CreateGroup> {
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
               onPressed: (){
                 if(currentPage == 1){
                   pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
@@ -228,7 +228,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.01),
                                     child: Text('Group Information', style: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       fontSize: Get.width*0.05,
                                       fontWeight: FontWeight.w600,
                                     )),
@@ -237,7 +237,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.01),
                                     child: Text('Name your group', style: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black.withOpacity(0.5),
+                                      color: getAppColor(Colors.black).withOpacity(0.5),
                                       fontSize: Get.width*0.04,
                                       fontWeight: FontWeight.normal,
                                     )),
@@ -361,7 +361,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                 Padding(
                                   padding: EdgeInsets.only(left: Get.width*0.01),
                                   child: Text('Images', style: AppTextStyle.subtitle1.copyWith(
-                                    color: Colors.black,
+                                    color: getAppColor(Colors.black),
                                     fontSize: Get.width*0.05,
                                     fontWeight: FontWeight.w600,
                                   )),
@@ -370,13 +370,13 @@ class _CreateGroupState extends State<CreateGroup> {
                                 Padding(
                                   padding: EdgeInsets.only(left: Get.width*0.01),
                                   child: Text('Pick images for your group [Optional]', style: AppTextStyle.subtitle1.copyWith(
-                                    color: Colors.black.withOpacity(0.5),
+                                    color: getAppColor(Colors.black).withOpacity(0.5),
                                     fontSize: Get.width*0.04,
                                     fontWeight: FontWeight.normal,
                                   )),
                                 ),
                                 SizedBox(height: Get.height*0.04),
-                                Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Group Profile Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
+                                Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Group Profile Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black).withOpacity(.7)),)),
                                 FormField<String>(
                                     initialValue: '',
                                     validator: null,
@@ -439,7 +439,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                     }
                                 ),
                                 SizedBox(height: Get.height*0.025),
-                                Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Group Cover Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
+                                Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Group Cover Photo [Optional]', style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black).withOpacity(.7)),)),
                                 FormField<String>(
                                     initialValue: '',
                                     validator: null,

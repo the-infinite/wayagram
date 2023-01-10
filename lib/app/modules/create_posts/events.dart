@@ -75,7 +75,7 @@ class CreateEvent extends StatelessWidget {
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
               onPressed: () {
                 if(currentPage > 0){
                   pageController.animateToPage(currentPage-1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
@@ -179,7 +179,7 @@ class CreateEvent extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.01),
                                     child: Text('Event Information', style: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       fontSize: Get.width*0.05,
                                       fontWeight: FontWeight.w600,
                                     )),
@@ -188,7 +188,7 @@ class CreateEvent extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.01),
                                     child: Text('Name your event, along with why attendees should come, including interesting highlights', style: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black.withOpacity(0.5),
+                                      color: getAppColor(Colors.black).withOpacity(0.5),
                                       fontSize: Get.width*0.04,
                                       fontWeight: FontWeight.normal,
                                     )),
@@ -256,7 +256,7 @@ class CreateEvent extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.01),
                                     child: Text('Location And Price', style: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       fontSize: Get.width*0.05,
                                       fontWeight: FontWeight.w600,
                                     )),
@@ -265,7 +265,7 @@ class CreateEvent extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.01),
                                     child: Text('Where is the location of your event and what is the price of your tickets?', style: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black.withOpacity(0.5),
+                                      color: getAppColor(Colors.black).withOpacity(0.5),
                                       fontSize: Get.width*0.04,
                                       fontWeight: FontWeight.normal,
                                     )),
@@ -365,7 +365,7 @@ class CreateEvent extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.01),
                                     child: Text('Date and time', style: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       fontSize: Get.width*0.05,
                                       fontWeight: FontWeight.w600,
                                     )),
@@ -374,7 +374,7 @@ class CreateEvent extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.01),
                                     child: Text('Tell your attendees when the event will start and end so they plan for it', style: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black.withOpacity(0.5),
+                                      color: getAppColor(Colors.black).withOpacity(0.5),
                                       fontSize: Get.width*0.04,
                                       fontWeight: FontWeight.normal,
                                     )),
@@ -471,7 +471,7 @@ class CreateEvent extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: Get.height*0.025),
-                                  //Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Event Image', style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(.7)),)),
+                                  //Padding(padding: EdgeInsets.only(left: Get.width*0.015,bottom: 5), child: Text('Event Image', style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black).withOpacity(.7)),)),
                                   FormField<String>(
                                       initialValue: '',
                                       validator: (val){
@@ -503,7 +503,7 @@ class CreateEvent extends StatelessWidget {
                                                     AndroidUiSettings(
                                                         toolbarTitle: 'Crop Event Photo',
                                                         toolbarColor: getAppColor(AppColors.background),
-                                                        toolbarWidgetColor: Colors.black,
+                                                        toolbarWidgetColor: getAppColor(Colors.black),
                                                         activeControlsWidgetColor: AppColors.primary,
                                                         cropGridColor: AppColors.primary,
                                                         initAspectRatio: CropAspectRatioPreset.original,
@@ -576,7 +576,7 @@ class CreateEvent extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.01),
                                     child: Text(eventNameController.text, style: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black,
+                                      color: getAppColor(Colors.black),
                                       fontSize: Get.width*0.05,
                                       fontWeight: FontWeight.w600,
                                     )),
@@ -585,35 +585,35 @@ class CreateEvent extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: Get.width*0.01),
                                     child: Text("${DateFormat.yMMMMEEEEd().format(startDate)} at ${startTimeController.text}", style: AppTextStyle.subtitle1.copyWith(
-                                      color: Colors.black.withOpacity(0.5),
+                                      color: getAppColor(Colors.black).withOpacity(0.5),
                                       fontSize: Get.width*0.04,
                                       fontWeight: FontWeight.normal,
                                     )),
                                   ),
                                   SizedBox(height: Get.height*0.01),
                                   _TextButton(
-                                    leading: Icon(Icons.people_alt_rounded, color: Colors.black.withOpacity(0.5)),
+                                    leading: Icon(Icons.people_alt_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
                                     text: eventOrganizerController.text,
                                     onPressed: () {
                                     },
                                   ),
                                   SizedBox(height: Get.height*0.01),
                                   _TextButton(
-                                    leading: Icon(Icons.location_on, color: Colors.black.withOpacity(0.5)),
+                                    leading: Icon(Icons.location_on, color: getAppColor(Colors.black).withOpacity(0.5)),
                                     text: eventsTypeController.text == "Physical" ? locationController.text : linkController.text,
                                     onPressed: () {
                                     },
                                   ),
                                   SizedBox(height: Get.height*0.01),
                                   _TextButton(
-                                    leading: Icon(FeatherIcons.tag, color: Colors.black.withOpacity(0.5)),
+                                    leading: Icon(FeatherIcons.tag, color: getAppColor(Colors.black).withOpacity(0.5)),
                                     text: freeOrPaidController.text == "Free" ? "Free to attend" : "Paid to attend",
                                     onPressed: () {
                                     },
                                   ),
                                   SizedBox(height: Get.height*0.01),
                                   _TextButton(
-                                    leading: Icon(Icons.perm_contact_calendar_rounded, color: Colors.black.withOpacity(0.5)),
+                                    leading: Icon(Icons.perm_contact_calendar_rounded, color: getAppColor(Colors.black).withOpacity(0.5)),
                                     text: "Registered:  0",
                                     onPressed: () {
                                     },
@@ -658,7 +658,7 @@ class _TextButton extends StatelessWidget {
               text,
               maxLines: 1,
               overflow: TextOverflow.clip,
-              style: AppTextStyle.subtitle1.copyWith(color: Colors.black.withOpacity(0.5)),
+              style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black).withOpacity(0.5)),
             ),
           ),
         ]),
