@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -53,6 +54,14 @@ class _AllEventsState extends State<AllEvents> {
         return Scaffold(
           appBar: AppBar(
             elevation: 0,
+            backgroundColor: getAppColor(AppColors.background),
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: getAppColor(AppColors.background),
+                statusBarIconBrightness: getAppBrightness(),
+                statusBarBrightness: getAppBrightness(),
+                systemNavigationBarColor: getAppColor(AppColors.background),
+                systemNavigationBarIconBrightness: getAppBrightness()
+            ),
             title: Text('All Events', style: AppTextStyle.subtitle1.copyWith(
               color: getAppColor(Colors.black),
               fontSize: Get.textScaleFactor * 18,
@@ -76,111 +85,116 @@ class _AllEventsState extends State<AllEvents> {
               ),
             ),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                FutureBuilder<ApiResponse>(
-                    future: controller.getCreatedEvents,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                        final moments = snapshot.data!.data as AllEventsEntity;
-                        if(moments.data == null){
-                          return SizedBox.shrink();
-                        }
-                        print(moments.data!.length);
-                        return EventsView(
-                          moments: moments.data,
-                          title: 'My Created Events',
-                          buttonText: 'Delete',
-                        );
-                      } else {
-                        var savedEvents = MyPref.createdEvents.val;
-                        if(savedEvents.isNotEmpty) {
-                          var events = AllEventsEntity.fromJson(jsonDecode(savedEvents));
-                          print(events.data!.length);
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: getAppColor(AppColors.background),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  FutureBuilder<ApiResponse>(
+                      future: controller.getCreatedEvents,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                          final moments = snapshot.data!.data as AllEventsEntity;
+                          if(moments.data == null){
+                            return SizedBox.shrink();
+                          }
+                          print(moments.data!.length);
                           return EventsView(
-                              moments: events.data,
+                            moments: moments.data,
                             title: 'My Created Events',
                             buttonText: 'Delete',
                           );
-                        }else{
-                          if(snapshot.connectionState == ConnectionState.done){
-                            return SizedBox.shrink();
-                          }
-                          return EventsView(isLoading: true);
-                        }
-                      }
-                    }),
-                FutureBuilder<ApiResponse>(
-                    future: controller.getEventsToAttend,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                        final moments = snapshot.data!.data as AllEventsEntity;
-                        if(moments.data == null){
-                          return SizedBox.shrink();
-                        }else{
-                          for (var element in moments.data!) {
-                            var containsLiked = element.eventLikes?.where((element) => element.profileId == fullProfile.id).toList();
-                            if(containsLiked == null){
-                              return SizedBox.shrink();
-                            }else if(containsLiked.isEmpty){
+                        } else {
+                          var savedEvents = MyPref.createdEvents.val;
+                          if(savedEvents.isNotEmpty) {
+                            var events = AllEventsEntity.fromJson(jsonDecode(savedEvents));
+                            print(events.data!.length);
+                            return EventsView(
+                                moments: events.data,
+                              title: 'My Created Events',
+                              buttonText: 'Delete',
+                            );
+                          }else{
+                            if(snapshot.connectionState == ConnectionState.done){
                               return SizedBox.shrink();
                             }
+                            return EventsView(isLoading: true);
                           }
                         }
-                        return EventsView(
-                          moments: moments.data,
-                          title: 'Liked Events',
-                        );
-                      } else {
-                        var savedEvents = MyPref.eventsToAttend.val;
-                        if(savedEvents.isNotEmpty) {
-                          var events = AllEventsEntity.fromJson(jsonDecode(savedEvents));
-                          for (var element in events.data!) {
-                            var containsLiked = element.eventLikes?.where((element) => element.profileId == fullProfile.id).toList();
-                            if(containsLiked == null){
-                              return SizedBox.shrink();
-                            }else if(containsLiked.isEmpty){
-                              return SizedBox.shrink();
+                      }),
+                  FutureBuilder<ApiResponse>(
+                      future: controller.getEventsToAttend,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                          final moments = snapshot.data!.data as AllEventsEntity;
+                          if(moments.data == null){
+                            return SizedBox.shrink();
+                          }else{
+                            for (var element in moments.data!) {
+                              var containsLiked = element.eventLikes?.where((element) => element.profileId == fullProfile.id).toList();
+                              if(containsLiked == null){
+                                return SizedBox.shrink();
+                              }else if(containsLiked.isEmpty){
+                                return SizedBox.shrink();
+                              }
                             }
                           }
-                          return EventsView(moments: events.data,title: 'Liked Events');
-                        }else{
-                          if(snapshot.connectionState == ConnectionState.done){
-                            return SizedBox.shrink();
-                          }
-                          return EventsView(isLoading: true);
-                        }
-                      }
-                    }),
-                FutureBuilder<ApiResponse>(
-                    future: controller.getEventsToAttend,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                        final moments = snapshot.data!.data as AllEventsEntity;
-                        if(moments.data == null){
-                          return SizedBox.shrink();
-                        }
-                        return EventsView(
+                          return EventsView(
                             moments: moments.data,
-                          title: 'All Events',
-                        );
-                      } else {
-                        var savedEvents = MyPref.eventsToAttend.val;
-                        if(savedEvents.isNotEmpty) {
-                          var events = AllEventsEntity.fromJson(jsonDecode(savedEvents));
-                          return EventsView(moments: events.data,title: 'All Events',);
-                        }else{
-                          if(snapshot.connectionState == ConnectionState.done){
+                            title: 'Liked Events',
+                          );
+                        } else {
+                          var savedEvents = MyPref.eventsToAttend.val;
+                          if(savedEvents.isNotEmpty) {
+                            var events = AllEventsEntity.fromJson(jsonDecode(savedEvents));
+                            for (var element in events.data!) {
+                              var containsLiked = element.eventLikes?.where((element) => element.profileId == fullProfile.id).toList();
+                              if(containsLiked == null){
+                                return SizedBox.shrink();
+                              }else if(containsLiked.isEmpty){
+                                return SizedBox.shrink();
+                              }
+                            }
+                            return EventsView(moments: events.data,title: 'Liked Events');
+                          }else{
+                            if(snapshot.connectionState == ConnectionState.done){
+                              return SizedBox.shrink();
+                            }
+                            return EventsView(isLoading: true);
+                          }
+                        }
+                      }),
+                  FutureBuilder<ApiResponse>(
+                      future: controller.getEventsToAttend,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                          final moments = snapshot.data!.data as AllEventsEntity;
+                          if(moments.data == null){
                             return SizedBox.shrink();
                           }
-                          return EventsView(isLoading: true);
+                          return EventsView(
+                              moments: moments.data,
+                            title: 'All Events',
+                          );
+                        } else {
+                          var savedEvents = MyPref.eventsToAttend.val;
+                          if(savedEvents.isNotEmpty) {
+                            var events = AllEventsEntity.fromJson(jsonDecode(savedEvents));
+                            return EventsView(moments: events.data,title: 'All Events',);
+                          }else{
+                            if(snapshot.connectionState == ConnectionState.done){
+                              return SizedBox.shrink();
+                            }
+                            return EventsView(isLoading: true);
+                          }
                         }
-                      }
-                    }),
-              ],
+                      }),
+                ],
+              ),
             ),
           ),
         );
