@@ -90,6 +90,7 @@ class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
                           var formData = dio.FormData.fromMap(body);
 
                           await controller.updateProfile(formData);
+
                         }
                       },
                       borderRadius: 10,
