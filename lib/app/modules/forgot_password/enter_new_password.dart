@@ -15,7 +15,7 @@ import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
 class EnterNewPassword extends GetView<AuthControllerWayagram> {
-  EnterNewPassword({Key? key}) : super(key: key);
+  const EnterNewPassword({Key? key}) : super(key: key);
 
   static const route = '/enterNewPassword';
 
