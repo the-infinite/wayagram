@@ -231,7 +231,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                         Get.to(() => SignIn(),binding: WayagramBinding());
                                       },
                                       borderRadius: 10,
-                                      bckgrndColor: getAppColor(AppColors.background),
+                                      bckgrndColor: (AppColors.background),
                                       fontColor: AppColors.primary,
                                     ),
                                   ],
@@ -342,7 +342,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                         Get.to(() => SignIn(),binding: WayagramBinding());
                                       },
                                       borderRadius: 10,
-                                      bckgrndColor: getAppColor(AppColors.background),
+                                      bckgrndColor: (AppColors.background),
                                       fontColor: AppColors.primary,
                                     ),
                                   ],
@@ -545,7 +545,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                         Get.to(() => SignIn(),binding: WayagramBinding());
                                       },
                                       borderRadius: 10,
-                                      bckgrndColor: getAppColor(AppColors.background),
+                                      bckgrndColor: (AppColors.background),
                                       fontColor: AppColors.primary,
                                     ),
                                   ],

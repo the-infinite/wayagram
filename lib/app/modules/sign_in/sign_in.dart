@@ -113,7 +113,7 @@ class SignIn extends GetView<AuthControllerWayagram> {
                           Get.to(() => EnterEmail());
                         },
                         borderRadius: 10,
-                        bckgrndColor: getAppColor(AppColors.background),
+                        bckgrndColor: (AppColors.background),
                         fontColor: AppColors.primary,
                       ),
                       SizedBox(height: Get.height * 0.050),
@@ -124,7 +124,7 @@ class SignIn extends GetView<AuthControllerWayagram> {
                           Get.to(() => SignUp(),binding: WayagramBinding());
                         },
                         borderRadius: 10,
-                        bckgrndColor: getAppColor(AppColors.background),
+                        bckgrndColor: (AppColors.background),
                         fontColor: AppColors.primary,
                       ),
                     ],
