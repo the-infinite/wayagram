@@ -276,7 +276,7 @@ class Api {
         onError(data);
       }
     });
-    //socket!.connect();
+    socket!.connect();
   }
 
   void listenToEvent(String event, Function(dynamic) callback){

@@ -161,8 +161,7 @@ class ChatControllerWayagram extends GetxController {
     //userRepo.api.emitEvent('previous_chats', jsonEncode(string));
   }
 
-  void emitMessages(String eventName,Map<String,dynamic> data,{bool encode = true}){
-    print('emitMessages: ${jsonEncode(data)}');
+  Future<void> emitMessages(String eventName,Map<String,dynamic> data,{bool encode = true}) async {
     userRepo.api.emitEvent(eventName, encode ? jsonEncode(data) : data);
   }
 

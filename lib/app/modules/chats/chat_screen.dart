@@ -49,6 +49,7 @@ import '../../global_widgets/person_view.dart';
 import '../../global_widgets/smart_image.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../home/widgets/HashTagView.dart';
+import '../home/widgets/bottom_sheet.dart';
 import '../home/widgets/group_view.dart';
 
 import '../home/widgets/posts_view.dart' as post_view;
@@ -771,10 +772,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                                         margin: EdgeInsets.zero,
                                                         decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
                                                           color: AppColors.button,
-                                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
+                                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
                                                         ) : BoxDecoration(
                                                           color: getAppColor(AppColors.background),
-                                                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
+                                                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
                                                         ),
                                                         child: Icon(
                                                           Icons.arrow_drop_down_rounded,
@@ -787,7 +788,34 @@ class _ChatScreenState extends State<ChatScreen> {
                                                           chatToReply = chat;
                                                           chatController.update();
                                                         }else if(value == 1){
-
+                                                          Get.bottomSheet(
+                                                              PersonBottomSheet(
+                                                                buttonText: "Forward",
+                                                                title: "Forward To",
+                                                                onTap: (person) async {
+                                                                  var message = {
+                                                                    "receiverId":person.id,
+                                                                    "chatId":post.chatId.toString(),
+                                                                    "message":chat.message.toString(),
+                                                                    "forwardMessage":true,
+                                                                    "messageType": chat.messageType.toString(),
+                                                                    "fileUrl":chat.fileUrl.toString(),
+                                                                  };
+                                                                  chatController.listenToCustomEvent('notify_user',(data){
+                                                                    SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
+                                                                    if(sendMessageResponse.status == true){
+                                                                      chatTextController.clear();
+                                                                      chatToReply = null;
+                                                                      chatController.update();
+                                                                    }
+                                                                    chatController.stopListeningToEvent("notify_user");
+                                                                  });
+                                                                  chatController.emitMessages("send_message", message);
+                                                                  AppOverlay.showSuccessSnackBar(content: "Message Forwarded");
+                                                                },
+                                                              ),
+                                                              isScrollControlled: true
+                                                          );
                                                         }else if(value == 2){
                                                           AppOverlay.showDeviceDialog(
                                                             title: "Delete Message",
@@ -1198,7 +1226,34 @@ class _ChatScreenState extends State<ChatScreen> {
                                                           chatToReply = chat;
                                                           chatController.update();
                                                         }else if(value == 1){
-
+                                                          Get.bottomSheet(
+                                                              PersonBottomSheet(
+                                                                buttonText: "Forward",
+                                                                title: "Forward To",
+                                                                onTap: (person) async {
+                                                                  var message = {
+                                                                    "receiverId":person.id,
+                                                                    "chatId":post.chatId.toString(),
+                                                                    "message":chat.message.toString(),
+                                                                    "forwardMessage":true,
+                                                                    "messageType": chat.messageType.toString(),
+                                                                    "fileUrl":chat.fileUrl.toString(),
+                                                                  };
+                                                                  chatController.listenToCustomEvent('notify_user',(data){
+                                                                    SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
+                                                                    if(sendMessageResponse.status == true){
+                                                                      chatTextController.clear();
+                                                                      chatToReply = null;
+                                                                      chatController.update();
+                                                                    }
+                                                                    chatController.stopListeningToEvent("notify_user");
+                                                                  });
+                                                                  chatController.emitMessages("send_message", message);
+                                                                  AppOverlay.showSuccessSnackBar(content: "Message Forwarded");
+                                                                },
+                                                              ),
+                                                              isScrollControlled: true
+                                                          );
                                                         }else if(value == 2){
                                                           AppOverlay.showDeviceDialog(
                                                             title: "Delete Message",
