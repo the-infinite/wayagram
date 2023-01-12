@@ -148,6 +148,32 @@ class _ChatScreenState extends State<ChatScreen> {
 
     var chatNormalInfo = {"otherId": id};
     var chatGroupInfo = {"groupId":id};
+    print(id);
+
+    chatController.listenToCustomEvent('load_previous_group_chats',(chatData){
+      chatController.userRepo.api.emitEvent('chat_overview', {});
+      previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
+      if(previousChatModel!.previousChat != null){
+        if(previousChat.isNotEmpty){
+          previousChat.clear();
+          previousChat.addAll(previousChatModel!.previousChat!);
+          previousChat.sort((a,b) {
+            return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+          });
+          chatController.update(['chats_screen']);
+          _scrollDown();
+        }else{
+          previousChat.addAll(previousChatModel!.previousChat!);
+          previousChat.sort((a,b) {
+            return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+          });
+          chatController.update(['chats_screen']);
+          _scrollDown(animate: false);
+        }
+      }
+      chatController.stopListeningToEvent("load_previous_group_chats");
+    });
+    chatController.emitMessages('previous_group_chats', chatGroupInfo,encode: false);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -160,30 +186,32 @@ class _ChatScreenState extends State<ChatScreen> {
       child: GetBuilder<ChatControllerWayagram>(id:'chats_screen',builder: (chatController) {
         if(mounted){
           if(post.isGroup == true){
-            chatController.listenToCustomEvent('load_previous_group_chats',(chatData){
-              chatController.userRepo.api.emitEvent('chat_overview', {});
-              previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
-              if(previousChatModel!.previousChat != null){
-                if(previousChat.isNotEmpty){
-                  previousChat.clear();
-                  previousChat.addAll(previousChatModel!.previousChat!);
-                  previousChat.sort((a,b) {
-                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
-                  });
-                  chatController.update(['chats_screen']);
-                  _scrollDown();
-                }else{
-                  previousChat.addAll(previousChatModel!.previousChat!);
-                  previousChat.sort((a,b) {
-                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
-                  });
-                  chatController.update(['chats_screen']);
-                  _scrollDown(animate: false);
+            chatController.listenToCustomEvent("new_message", (p0){
+              chatController.listenToCustomEvent('load_previous_group_chats',(chatData){
+                chatController.userRepo.api.emitEvent('chat_overview', {});
+                previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
+                if(previousChatModel!.previousChat != null){
+                  if(previousChat.isNotEmpty){
+                    previousChat.clear();
+                    previousChat.addAll(previousChatModel!.previousChat!);
+                    previousChat.sort((a,b) {
+                      return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                    });
+                    chatController.update(['chats_screen']);
+                    _scrollDown();
+                  }else{
+                    previousChat.addAll(previousChatModel!.previousChat!);
+                    previousChat.sort((a,b) {
+                      return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                    });
+                    chatController.update(['chats_screen']);
+                    _scrollDown(animate: false);
+                  }
                 }
-              }
-              chatController.stopListeningToEvent("load_previous_group_chats");
+                chatController.stopListeningToEvent("load_previous_group_chats");
+              });
+              chatController.emitMessages('previous_group_chats', chatGroupInfo,encode: false);
             });
-            chatController.emitMessages('previous_group_chats', chatGroupInfo,encode: false);
           }else{
             chatController.listenToCustomEvent('load_previous_chats',(chatData){
               chatController.userRepo.api.emitEvent('chat_overview', {});
@@ -1154,10 +1182,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                                         margin: EdgeInsets.zero,
                                                         decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
                                                           color: AppColors.button,
-                                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
+                                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
                                                         ) : BoxDecoration(
                                                           color: getAppColor(AppColors.background),
-                                                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
+                                                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
                                                         ),
                                                         child: Icon(
                                                           Icons.arrow_drop_down_rounded,
@@ -1179,7 +1207,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             onPositivePressed: () {
                                                               chatController.deleteSingleMessage(
                                                                   chatID: chat.id.toString(),
-                                                                  receiverId: chat.receiverId.toString()
+                                                                  receiverId: id
                                                               );
                                                             },
                                                           );
@@ -1352,23 +1380,43 @@ class _ChatScreenState extends State<ChatScreen> {
                                     );
                                     controller.postData(dio.FormData.fromMap(body), "/social-file-resource/aws-upload-file?").then((value){
                                       if(value.isSuccessful){
-                                        var message = {
-                                          "receiverId":post.otherId.toString(),
-                                          "chatId":post.chatId.toString(),
-                                          "message":"file",
-                                          "forwardMessage":false,
-                                          "messageType": "fileMessage",
-                                          "fileUrl": value.url.toString(),
-                                        };
-                                        chatController.listenToCustomEvent('notify_user',(data){
-                                          SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
-                                          if(sendMessageResponse.status == true){
-                                            chatTextController.clear();
-                                            chatController.update(['chats_screen']);
-                                          }
-                                          chatController.stopListeningToEvent("notify_user");
-                                        });
-                                        chatController.emitMessages("send_message", message);
+                                        if(post.isGroup == true){
+                                          var message = {
+                                            "chatId":post.chatId.toString(),
+                                            "message":"file",
+                                            "forwardMessage":false,
+                                            "messageType": "fileMessage",
+                                            "groupId": id,
+                                            "fileUrl": value.url.toString(),
+                                          };
+                                          chatController.listenToCustomEvent('notify_user',(data){
+                                            SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
+                                            if(sendMessageResponse.status == true){
+                                              chatTextController.clear();
+                                              chatController.update(['chats_screen']);
+                                            }
+                                            chatController.stopListeningToEvent("notify_user");
+                                          });
+                                          chatController.emitMessages("send_group_message", message);
+                                        }else{
+                                          var message = {
+                                            "receiverId":post.otherId.toString(),
+                                            "chatId":post.chatId.toString(),
+                                            "message":"file",
+                                            "forwardMessage":false,
+                                            "messageType": "fileMessage",
+                                            "fileUrl": value.url.toString(),
+                                          };
+                                          chatController.listenToCustomEvent('notify_user',(data){
+                                            SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
+                                            if(sendMessageResponse.status == true){
+                                              chatTextController.clear();
+                                              chatController.update(['chats_screen']);
+                                            }
+                                            chatController.stopListeningToEvent("notify_user");
+                                          });
+                                          chatController.emitMessages("send_message", message);
+                                        }
                                       }
                                     });
                                   }
@@ -1398,8 +1446,31 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: IconButton(
                               onPressed: () {
                                 if(post.isGroup == true){
-                                  var chatGroupInfo = {"groupId":id};
-                                }else {
+                                  if(chatTextController.text.isNotEmpty){
+                                    var message = {
+                                      "chatId":post.chatId.toString(),
+                                      "message":chatTextController.text.toString(),
+                                      "forwardMessage":false,
+                                      "messageType": "textMessage",
+                                      "groupId": id,
+                                      "fileUrl":"null",
+                                    };
+                                    if(chatToReply != null){
+                                      message['replyMessageId'] = chatToReply!.id.toString();
+                                    }
+                                    chatController.listenToCustomEvent('notify_user',(data){
+                                      SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
+                                      if(sendMessageResponse.status == true){
+                                        chatTextController.clear();
+                                        chatToReply = null;
+                                        chatController.update();
+                                      }
+                                      chatController.stopListeningToEvent("notify_user");
+                                    });
+                                    chatController.emitMessages("send_group_message", message);
+                                  }
+                                }
+                                else {
                                   if(chatTextController.text.isNotEmpty){
                                     var message = {
                                       "receiverId":post.otherId.toString(),
