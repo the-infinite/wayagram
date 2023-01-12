@@ -532,7 +532,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                     fontWeight: FontWeight.normal,
                                                                   ),
                                                                   basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                                    color: chat.deleted == true ? Colors.blue : chat.senderId != fullProfile.id ? getAppColor(Colors.white) : getAppColor(AppColors.background),
+                                                                    color: chat.deleted == true ? Colors.blue : chat.senderId != fullProfile.id ? Colors.white : AppColors.background,
                                                                     fontSize: 16,
                                                                     fontWeight: FontWeight.normal,
                                                                     fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
@@ -707,7 +707,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                     height: Get.height * 0.02,
                                                     width: Get.width * 0.02,
                                                     child: PopupMenuButton(
-                                                        color: Colors.white,
+                                                        color: getAppColor(Colors.white),
                                                         padding: EdgeInsets.zero,
                                                         icon: Icon(
                                                           Icons.arrow_drop_down_rounded,

@@ -168,4 +168,23 @@ class ChatControllerWayagram extends GetxController {
   void stopListeningToEvent(String eventName){
     userRepo.api.removeCustomListener(eventName);
   }
+
+
+  /////
+  void deleteSingleMessage({
+    required String chatID,
+    required String receiverId,
+    bool deleteForEveryOne = true,
+    bool deletedForReceiver = true ,
+    bool deletedForSender = true,
+  }){
+    var body ={
+      "chatId": chatID,
+      "receiverId": receiverId,
+      "deleteForEveryOne": deleteForEveryOne,
+      "deletedForReceiver": deletedForReceiver,
+      "deletedForSender": deletedForSender,
+    };
+    emitMessages('delete_message', body);
+  }
 }
