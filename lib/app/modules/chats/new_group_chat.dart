@@ -17,6 +17,7 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
+import '../../controllers/chat_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/following_model_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
@@ -30,7 +31,7 @@ import '../home/widgets/notification_view.dart';
 
 
 class NewGroupChat extends StatelessWidget{
-  NewGroupChat({Key? key}) : super(key: key);
+  const NewGroupChat({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class NewGroupChat extends StatelessWidget{
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
             title: Text('New Group Chat', style: AppTextStyle.subtitle1.copyWith(
-              color: getAppColor(Color(0xff4F4F4F)),
+              color: getAppColor(const Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -66,14 +67,32 @@ class NewGroupChat extends StatelessWidget{
                     title: 'Create',
                     onPressed: () async {
                       if(formKey.currentState!.validate()) {
-
+                        var chatController = Get.find<ChatControllerWayagram>();
+                        Map<String, dynamic> body = {
+                          "groupName" : nameController.text.toString(),
+                        };
+                        var list = [];
+                        for (var element in chosenPersonList) {
+                          var person = {
+                            "name" : element.displayName,
+                            "imageUrl" : element.profilePic,
+                            "userId" : element.id,
+                          };
+                          list.add(person);
+                        }
+                        body['members'] = list;
+                        body["groupImageUrl"] = "";
+                        chatController.emitMessages("create_group_chat", body,encode: false);
+                        chatController.update();
+                        Navigator.pop(context);
+                        AppOverlay.showSuccessSnackBar(content:'Group created successfully');
                       }
                     },
                     borderRadius: 10,
                     fontColor: AppColors.button,
                     bckgrndColor: getAppColor(AppColors.background),
                     border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                   ),
                 ),
