@@ -292,7 +292,7 @@ class _PersonViewState extends State<PersonView> {
                           alignment: WrapAlignment.end,
                           children: [
                             PopupMenuButton(
-                              color: Colors.white,
+                              color: getAppColor(Colors.white),
                               icon: Icon(Icons.more_vert,color: getAppColor(Colors.black),),
                               itemBuilder: (context) => [
                                 PopupMenuItem(
