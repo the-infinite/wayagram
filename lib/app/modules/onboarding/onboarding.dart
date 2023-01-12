@@ -29,16 +29,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-            statusBarColor: getAppColor(AppColors.background),
+            statusBarColor: (AppColors.background),
             statusBarIconBrightness: getAppBrightness(),
             statusBarBrightness: getAppBrightness(),
-            systemNavigationBarColor: getAppColor(AppColors.background),
+            systemNavigationBarColor: (AppColors.background),
             systemNavigationBarIconBrightness: getAppBrightness()
         ),
         child: Scaffold(
           body: SafeArea(
             child: Container(
-              color: getAppColor(AppColors.background),
+              color: (AppColors.background),
               child: Padding(
                 padding: EdgeInsets.all(AppThemes.appPaddingVal),
                 child: Column(

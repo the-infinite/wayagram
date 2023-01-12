@@ -57,7 +57,7 @@ class _MultiplexorState extends State<Multiplexor> {
     return Scaffold(
       body: GetBuilder<AuthControllerWayagram>(builder: (controller) {
         return Container(
-          color: getAppColor(AppColors.background),
+          color: (AppColors.background),
           child: Padding(
             padding: EdgeInsets.only(left: AppThemes.appPaddingVal,right: AppThemes.appPaddingVal,top: AppThemes.appPaddingVal),
             child: Column(
