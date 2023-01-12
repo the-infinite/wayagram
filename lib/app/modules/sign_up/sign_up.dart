@@ -85,10 +85,12 @@ class SignUp extends GetView<AuthControllerWayagram> {
             'assets/images/wayagram.png',
             width: Get.width * 0.3,
           ),
+          backgroundColor: AppColors.background,
         ),
-        body: SizedBox(
+        body: Container(
           width: Get.width,
           height: Get.height,
+          color: AppColors.background,
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(left: AppThemes.appPaddingVal,right: AppThemes.appPaddingVal),
@@ -680,87 +682,90 @@ class SignUp extends GetView<AuthControllerWayagram> {
             ),
           ),
         ),
-        bottomNavigationBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: AppThemes.appPaddingVal,right: AppThemes.appPaddingVal),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: Get.height * 0.025),
-                  Row(
-                    crossAxisAlignment:
-                    CrossAxisAlignment.center,
-                    mainAxisAlignment:
-                    MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: Checkbox(
-                          value: controller
-                              .isTermsAndConditionsChecked,
-                          onChanged: (value) {
-                            controller.toggleTermsAndConditions(value!);
-                          },
+        bottomNavigationBar: Container(
+          color: AppColors.background,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: AppThemes.appPaddingVal,right: AppThemes.appPaddingVal),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: Get.height * 0.025),
+                    Row(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.center,
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: Checkbox(
+                            value: controller
+                                .isTermsAndConditionsChecked,
+                            onChanged: (value) {
+                              controller.toggleTermsAndConditions(value!);
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: InkWell(
-                          onTap: (){
-                            controller.launchURL('https://wayagram.ng/privacy-policy');
-                          },
-                          child: RichText(
-                            text: TextSpan(
-                              style: TextStyle(
-                                fontSize: 10.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: InkWell(
+                            onTap: (){
+                              controller.launchURL('https://wayagram.ng/privacy-policy');
+                            },
+                            child: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  fontSize: 10.0,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text:
+                                      'I consent to the collection and processing of my personal data in line with data regulations as described in the'),
+                                  TextSpan(
+                                      text:
+                                      ' Wayagram’s Privacy Policy',
+                                      style: TextStyle(
+                                          fontWeight:
+                                          FontWeight.w400,
+                                          color:
+                                          AppColors.primary)),
+                                ],
                               ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text:
-                                    'I consent to the collection and processing of my personal data in line with data regulations as described in the'),
-                                TextSpan(
-                                    text:
-                                    ' Wayagram’s Privacy Policy',
-                                    style: TextStyle(
-                                        fontWeight:
-                                        FontWeight.w400,
-                                        color:
-                                        AppColors.primary)),
-                              ],
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: Get.height * 0.025),
-                  InkWell(
-                    onTap: (){
-                      controller.launchURL('https://wayagram.ng/terms');
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(text: 'By creating an account, you agree to '),
-                          TextSpan(text: 'Wayagram’s terms of acceptable use.', style: TextStyle(fontWeight: FontWeight.w400, color: AppColors.primary)),
-                        ],
-                      ),
+                      ],
                     ),
-                  )
-                ],
+                    SizedBox(height: Get.height * 0.025),
+                    InkWell(
+                      onTap: (){
+                        controller.launchURL('https://wayagram.ng/terms');
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(text: 'By creating an account, you agree to '),
+                            TextSpan(text: 'Wayagram’s terms of acceptable use.', style: TextStyle(fontWeight: FontWeight.w400, color: AppColors.primary)),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     });

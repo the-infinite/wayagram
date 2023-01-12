@@ -315,15 +315,15 @@ class _ChatScreenState extends State<ChatScreen> {
                       comingSoon();
                     }, icon: Icon(Icons.call_rounded, color: getAppColor(Colors.black),size: 20,)),
                     PopupMenuButton(
-                      color: Colors.white,
-                      icon: Icon(Icons.more_vert,color: getAppColor(Colors.black),),
+                      color: getAppColor(Colors.white),
+                      icon: Icon(Icons.more_vert,color: getAppColor(Colors.black)),
                       itemBuilder: (context) => [
                         PopupMenuItem(
                           value: 0,
                           child: Text(
                             post.isGroup == true ? "Invite To Group" : "Send Money",
                             style: AppTextStyle.bodyText1.copyWith(
-                              color: getAppColor(AppColors.background),
+                              color: getAppColor(Colors.black),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -333,7 +333,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Text(
                             "Clear Chat",
                             style: AppTextStyle.bodyText1.copyWith(
-                              color: getAppColor(AppColors.background),
+                              color: getAppColor(Colors.black),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -538,7 +538,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                     fontWeight: FontWeight.normal,
                                                                   ),
                                                                   basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                                    color: chat.deleted == true ? Colors.blue : chat.senderId != fullProfile.id ? Colors.white : AppColors.background,
+                                                                    color: chat.deleted == true ? Colors.blue : chat.senderId != fullProfile.id ? Colors.white : getAppColor(AppColors.onBackground),
                                                                     fontSize: 16,
                                                                     fontWeight: FontWeight.normal,
                                                                     fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,

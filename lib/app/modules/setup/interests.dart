@@ -565,11 +565,11 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: getAppColor(AppColors.background),
+            backgroundColor: AppColors.background,
             title: Text(
               "Interests",
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -634,8 +634,8 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                       },
                       borderRadius: 10,
                       fontColor: AppColors.button,
-                      bckgrndColor: getAppColor(AppColors.background),
-                      border: Border.all(color: getAppColor(AppColors.background), width: 1),
+                      bckgrndColor: AppColors.background,
+                      border: Border.all(color: AppColors.background, width: 1),
                       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                       width: Get.width * 0.2,
                       fontSize: Get.width * 0.04,
@@ -644,244 +644,249 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                 )
               ],
             systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: getAppColor(AppColors.background),
+                statusBarColor: (AppColors.background),
                 statusBarIconBrightness: getAppBrightness(),
                 statusBarBrightness: getAppBrightness(),
-                systemNavigationBarColor: getAppColor(AppColors.background),
+                systemNavigationBarColor: (AppColors.background),
                 systemNavigationBarIconBrightness: getAppBrightness()
             ),
           ),
-          body: TabBarView(
-            controller: tabController,
-            children: [
-              ListView.builder(
-                itemCount: uniqueInterestList.length,
-                itemBuilder: (context, index) {
-                  var currentInterest = uniqueInterestList[index];
-                  if(chosenInterestList.contains(currentInterest)){
-                    return SizedBox.shrink();
-                  }
-                  return InkWell(
-                    onTap: (){
-
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: Get.height*0.04,
-                            width: Get.height*0.04,
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
-                          ),
-                          SizedBox(width: 10,),
-                          Text(currentInterest, style: TextStyle(
-                            color: Colors.black,
-                            fontSize: Get.textScaleFactor * 17,
-                            fontWeight: FontWeight.w500,
-                          ),),
-                          Spacer(),
-                          InkWell(
-                              onTap: (){
-                                var body = {
-                                  "title": currentInterest,
-                                  "description" : currentInterest
-                                };
-                                var formData = dio.FormData.fromMap(body);
-                                controller.userRepo.postData("/wayagram-service/graph/createInterest",formData).then((value1) {
-                                  if(value1.isSuccessful){
-                                    var res = NewInterestModel.fromJson(value1.data);
-                                    var innerBody = {
-                                      "profileId": fullProfile.id,
-                                      "interestId" : res.id.toString()
-                                    };
-                                    controller.userRepo.postData( "/wayagram-service/graph/user-interest/selectUserInterest",dio.FormData.fromMap(innerBody),).then((value){
-                                      if(value1.isSuccessful){
-                                        controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
-                                          if(valueRes.isSuccessful){
-                                            var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
-                                            savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
-                                          }
-                                          chosenInterestList.add(currentInterest);
-                                          AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
-                                          controller.update(["interests"]);
-                                        });
-                                      }
-                                    });
-                                  }else{
-                                    controller.userRepo.getData("/wayagram-service/graph/search?query=${currentInterest}&filterBy=NAME").then((value) {
-                                      if(value.isSuccessful){
-                                        var res = NewInterestModel.fromJsonList(value.data["data"]);
-                                        var innerBody = {
-                                          "profileId": fullProfile.id,
-                                          "interestId" : res[0].id.toString()
-                                        };
-                                        controller.userRepo.postData( "/wayagram-service/graph/user-interest/selectUserInterest",dio.FormData.fromMap(innerBody),).then((value){
-                                          if(value.isSuccessful){
-                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
-                                              if(valueRes.isSuccessful){
-                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
-                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
-                                              }
-                                              chosenInterestList.add(currentInterest);
-                                              AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
-                                              controller.update(["interests"]);
-                                            });
-                                          }else{
-                                            AppOverlay.showErrorSnackBar(content: "Something went wrong, please try again later");
-                                          }
-                                        });
-                                      }
-                                    });
-                                  }
-                                });
-                              }, child: Icon(Icons.add_circle, color: AppColors.primary,)
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-              FutureBuilder<ApiResponse>(
-                  future: controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}"),
-                  builder: (context, snapshot) {
-                    var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
-                    if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                      final posts = InterestsModel.fromJsonList(snapshot.data!.data);
-                      savedPosts.val = jsonEncode(posts);
-                      return ListView.builder(
-                        itemCount: posts.length,
-                        itemBuilder: (context, index) {
-                          var post = posts[index];
-                          if(!chosenInterestList.contains(post.title)){
-                            chosenInterestList.add(post.title.toString());
-                          }
-                          return InkWell(
-                            onTap: (){
-
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: Get.height*0.04,
-                                    width: Get.height*0.04,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: Get.textScaleFactor * 17,
-                                    fontWeight: FontWeight.w500,
-                                  ),),
-                                  Spacer(),
-                                  InkWell(
-                                      onTap: (){
-                                        var innerBody = {
-                                          "profileId": fullProfile.id,
-                                          "userInterestId" : post.id.toString()
-                                        };
-                                        controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
-                                          if(value.isSuccessful){
-                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
-                                              if(valueRes.isSuccessful){
-                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
-                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
-                                              }
-                                              chosenInterestList.remove(post.title.toString());
-                                              AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
-                                              controller.update(["interests"]);
-                                            });
-                                          }
-                                        });
-                                      },
-                                      child: Icon(Icons.remove_circle, color: AppColors.primary,)
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    } else if(savedPosts.val.isNotEmpty){
-                      var posts = InterestsModel.fromJsonList(jsonDecode(savedPosts.val));
-                      return ListView.builder(
-                        itemCount: posts.length,
-                        itemBuilder: (context, index) {
-                          var post = posts[index];
-                          if(!chosenInterestList.contains(post.title)){
-                            chosenInterestList.add(post.title.toString());
-                          }
-                          return InkWell(
-                            onTap: (){
-
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: Get.height*0.04,
-                                    width: Get.height*0.04,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: Get.textScaleFactor * 17,
-                                    fontWeight: FontWeight.w500,
-                                  ),),
-                                  Spacer(),
-                                  InkWell(
-                                      onTap: (){
-                                        var innerBody = {
-                                          "profileId": fullProfile.id,
-                                          "userInterestId" : post.id.toString()
-                                        };
-                                        controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
-                                          if(value.isSuccessful){
-                                            controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
-                                              if(valueRes.isSuccessful){
-                                                var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
-                                                savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
-                                              }
-                                              chosenInterestList.remove(post.title.toString());
-                                              AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
-                                              controller.update(["interests"]);
-                                            });
-                                          }
-                                        });
-                                      },
-                                      child: Icon(Icons.remove_circle, color: AppColors.primary,)
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }else{
-                      if(snapshot.connectionState == ConnectionState.done){
-                        return SizedBox.shrink();
-                      }
-                      return GroupView(isLoading: true);
+          body: Container(
+            color: AppColors.background,
+            height: Get.height,
+            width: Get.width,
+            child: TabBarView(
+              controller: tabController,
+              children: [
+                ListView.builder(
+                  itemCount: uniqueInterestList.length,
+                  itemBuilder: (context, index) {
+                    var currentInterest = uniqueInterestList[index];
+                    if(chosenInterestList.contains(currentInterest)){
+                      return SizedBox.shrink();
                     }
-                  }),
-            ],
+                    return InkWell(
+                      onTap: (){
+
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: Get.height*0.04,
+                              width: Get.height*0.04,
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
+                            ),
+                            SizedBox(width: 10,),
+                            Text(currentInterest, style: TextStyle(
+                              color: Colors.black,
+                              fontSize: Get.textScaleFactor * 17,
+                              fontWeight: FontWeight.w500,
+                            ),),
+                            Spacer(),
+                            InkWell(
+                                onTap: (){
+                                  var body = {
+                                    "title": currentInterest,
+                                    "description" : currentInterest
+                                  };
+                                  var formData = dio.FormData.fromMap(body);
+                                  controller.userRepo.postData("/wayagram-service/graph/createInterest",formData).then((value1) {
+                                    if(value1.isSuccessful){
+                                      var res = NewInterestModel.fromJson(value1.data);
+                                      var innerBody = {
+                                        "profileId": fullProfile.id,
+                                        "interestId" : res.id.toString()
+                                      };
+                                      controller.userRepo.postData( "/wayagram-service/graph/user-interest/selectUserInterest",dio.FormData.fromMap(innerBody),).then((value){
+                                        if(value1.isSuccessful){
+                                          controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                            if(valueRes.isSuccessful){
+                                              var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                              savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                            }
+                                            chosenInterestList.add(currentInterest);
+                                            AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
+                                            controller.update(["interests"]);
+                                          });
+                                        }
+                                      });
+                                    }else{
+                                      controller.userRepo.getData("/wayagram-service/graph/search?query=${currentInterest}&filterBy=NAME").then((value) {
+                                        if(value.isSuccessful){
+                                          var res = NewInterestModel.fromJsonList(value.data["data"]);
+                                          var innerBody = {
+                                            "profileId": fullProfile.id,
+                                            "interestId" : res[0].id.toString()
+                                          };
+                                          controller.userRepo.postData( "/wayagram-service/graph/user-interest/selectUserInterest",dio.FormData.fromMap(innerBody),).then((value){
+                                            if(value.isSuccessful){
+                                              controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                                if(valueRes.isSuccessful){
+                                                  var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                                  savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                                }
+                                                chosenInterestList.add(currentInterest);
+                                                AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
+                                                controller.update(["interests"]);
+                                              });
+                                            }else{
+                                              AppOverlay.showErrorSnackBar(content: "Something went wrong, please try again later");
+                                            }
+                                          });
+                                        }
+                                      });
+                                    }
+                                  });
+                                }, child: Icon(Icons.add_circle, color: AppColors.primary,)
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                FutureBuilder<ApiResponse>(
+                    future: controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}"),
+                    builder: (context, snapshot) {
+                      var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                      if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                        final posts = InterestsModel.fromJsonList(snapshot.data!.data);
+                        savedPosts.val = jsonEncode(posts);
+                        return ListView.builder(
+                          itemCount: posts.length,
+                          itemBuilder: (context, index) {
+                            var post = posts[index];
+                            if(!chosenInterestList.contains(post.title)){
+                              chosenInterestList.add(post.title.toString());
+                            }
+                            return InkWell(
+                              onTap: (){
+
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: Get.height*0.04,
+                                      width: Get.height*0.04,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.circular(100),
+                                      ),
+                                      child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: Get.textScaleFactor * 17,
+                                      fontWeight: FontWeight.w500,
+                                    ),),
+                                    Spacer(),
+                                    InkWell(
+                                        onTap: (){
+                                          var innerBody = {
+                                            "profileId": fullProfile.id,
+                                            "userInterestId" : post.id.toString()
+                                          };
+                                          controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
+                                            if(value.isSuccessful){
+                                              controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                                if(valueRes.isSuccessful){
+                                                  var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                                  savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                                }
+                                                chosenInterestList.remove(post.title.toString());
+                                                AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
+                                                controller.update(["interests"]);
+                                              });
+                                            }
+                                          });
+                                        },
+                                        child: Icon(Icons.remove_circle, color: AppColors.primary,)
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else if(savedPosts.val.isNotEmpty){
+                        var posts = InterestsModel.fromJsonList(jsonDecode(savedPosts.val));
+                        return ListView.builder(
+                          itemCount: posts.length,
+                          itemBuilder: (context, index) {
+                            var post = posts[index];
+                            if(!chosenInterestList.contains(post.title)){
+                              chosenInterestList.add(post.title.toString());
+                            }
+                            return InkWell(
+                              onTap: (){
+
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: Get.height*0.04,
+                                      width: Get.height*0.04,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.circular(100),
+                                      ),
+                                      child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
+                                    ),
+                                    SizedBox(width: 10,),
+                                    Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: Get.textScaleFactor * 17,
+                                      fontWeight: FontWeight.w500,
+                                    ),),
+                                    Spacer(),
+                                    InkWell(
+                                        onTap: (){
+                                          var innerBody = {
+                                            "profileId": fullProfile.id,
+                                            "userInterestId" : post.id.toString()
+                                          };
+                                          controller.userRepo.deleteData("/wayagram-service/graph/user-interest/deleteUserInterest",dio.FormData.fromMap(innerBody)).then((value) {
+                                            if(value.isSuccessful){
+                                              controller.userRepo.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}").then((valueRes){
+                                                if(valueRes.isSuccessful){
+                                                  var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+                                                  savedPosts.val = jsonEncode(InterestsModel.fromJsonList(valueRes.data));
+                                                }
+                                                chosenInterestList.remove(post.title.toString());
+                                                AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
+                                                controller.update(["interests"]);
+                                              });
+                                            }
+                                          });
+                                        },
+                                        child: Icon(Icons.remove_circle, color: AppColors.primary,)
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }else{
+                        if(snapshot.connectionState == ConnectionState.done){
+                          return SizedBox.shrink();
+                        }
+                        return GroupView(isLoading: true);
+                      }
+                    }),
+              ],
+            ),
           ),
         );
       },

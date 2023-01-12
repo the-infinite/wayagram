@@ -38,10 +38,13 @@ class EnterNewPassword extends GetView<AuthControllerWayagram> {
           title: ImageHelper.normalImage(
             'assets/images/wayagram.png', width: Get.width * 0.3,
           ),
+          backgroundColor: AppColors.background,
         ),
         body: GetBuilder<AuthControllerWayagram>(builder: (controller) {
-          return SizedBox(
+          return Container(
+            color: AppColors.background,
             width: Get.width,
+            height: Get.height,
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(AppThemes.appPaddingVal),

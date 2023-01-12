@@ -29,7 +29,9 @@ class EnterOTP extends GetView<AuthControllerWayagram> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: getAppColor(AppColors.background),
+        color: AppColors.background,
+        width: Get.width,
+        height: Get.height,
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(AppThemes.appPaddingVal),
@@ -42,7 +44,7 @@ class EnterOTP extends GetView<AuthControllerWayagram> {
                 ),
                 ImageHelper.svgImage(
                   'assets/images/wayagram2.svg',
-                  color: getAppColor(AppColors.background),
+                  color: (AppColors.background),
                 ),
                 SizedBox(
                   height: Get.height * 0.07,
@@ -115,7 +117,7 @@ class EnterOTP extends GetView<AuthControllerWayagram> {
                 SizedBox(height: 30),
                 AppButton(
                   title: 'Did not get OTP?',
-                  bckgrndColor: getAppColor(AppColors.background),
+                  bckgrndColor: (AppColors.background),
                   fontColor: AppColors.primary,
                   onPressed: () async {
                     await controller.getResetOtp(showOverlay: true);
