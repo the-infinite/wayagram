@@ -404,7 +404,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 itemCount: previousChat.length,
                                 shrinkWrap: true,
                                 reverse: true,
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   var chat = previousChat[index];
                                   PreviousChat? repliedChat;
@@ -460,14 +460,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                   if(repliedChat != null){
                                     isRepliedFile = repliedChat.messageType == "fileMessage";
                                     if(getUrlType(repliedChat.fileUrl.toString()) == UrlType.AUDIO && isRepliedFile){
-                                      repliedPadding= EdgeInsets.only(
+                                      repliedPadding= const EdgeInsets.only(
                                           left: 0,
                                           right: 0,
                                           bottom: 0,
                                           top: 0);
                                     }
                                     else if((getUrlType(repliedChat.fileUrl.toString()) == UrlType.VIDEO || getUrlType(repliedChat.fileUrl.toString()) == UrlType.IMAGE) && isRepliedFile){
-                                      repliedPadding= EdgeInsets.only(
+                                      repliedPadding= const EdgeInsets.only(
                                           left: 5,
                                           right: 5,
                                           bottom: 5,
@@ -475,7 +475,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       );
                                     }
                                     else if(isRepliedFile){
-                                      repliedPadding= EdgeInsets.only(
+                                      repliedPadding= const EdgeInsets.only(
                                           left: 10,
                                           right: 10,
                                           bottom: 10,
@@ -492,7 +492,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                         SizedBox(height: Get.height*0.005),
                                         Container(
                                           width: isFile ? Get.width*0.65 :Get.width*0.55,
-                                          decoration: chat.senderId == fullProfile.id ? BoxDecoration(
+                                          decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
                                             color: AppColors.button,
                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(0),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
                                           ) : BoxDecoration(
@@ -515,7 +515,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             decoration: chat.senderId == fullProfile.id ? BoxDecoration(
                                                               color: getAppColor(AppColors.background),
                                                               borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
-                                                            ) : BoxDecoration(
+                                                            ) : const BoxDecoration(
                                                               color: AppColors.button,
                                                               borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(20)),
                                                             ),
@@ -532,7 +532,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                     fontWeight: FontWeight.normal,
                                                                   ),
                                                                   basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                                    color: chat.deleted == true ? Colors.blue : chat.senderId != fullProfile.id ? Colors.white :getAppColor(AppColors.background),
+                                                                    color: chat.deleted == true ? Colors.blue : chat.senderId != fullProfile.id ? getAppColor(Colors.white) : getAppColor(AppColors.background),
                                                                     fontSize: 16,
                                                                     fontWeight: FontWeight.normal,
                                                                     fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
@@ -622,7 +622,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             fontWeight: FontWeight.normal,
                                                           ),
                                                           basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                            color: chat.deleted == true ? Colors.blue : chat.senderId == fullProfile.id ? Colors.white :getAppColor(AppColors.background),
+                                                            color: chat.deleted == true ? Colors.blue : chat.senderId == fullProfile.id ?  getAppColor(Colors.black) : getAppColor(AppColors.onBackground),
                                                             fontSize: 16,
                                                             fontWeight: FontWeight.normal,
                                                             fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
