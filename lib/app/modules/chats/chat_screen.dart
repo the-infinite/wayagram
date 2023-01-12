@@ -67,6 +67,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  PreviousChat? chatToReply;
+
   var chatController = Get.find<ChatControllerWayagram>();
   bool canScrollDown = true;
   final ScrollController _scrollController = ScrollController();
@@ -356,6 +358,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             ));
                           }
                         }
+                        else if(value == 1){
+                          chatController.clearChat(id);
+                          AppOverlay.showSuccessSnackBar(content: "Chat Cleared Successfully");
+                        }
                       },
                     ),
                   ],
@@ -622,7 +628,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             fontWeight: FontWeight.normal,
                                                           ),
                                                           basicStyle: AppTextStyle.bodyText1.copyWith(
-                                                            color: chat.deleted == true ? Colors.blue : chat.senderId == fullProfile.id ?  getAppColor(Colors.black) : getAppColor(AppColors.onBackground),
+                                                            color: chat.deleted == true ? Colors.blue : chat.senderId == fullProfile.id ?  Colors.white : getAppColor(AppColors.onBackground),
                                                             fontSize: 16,
                                                             fontWeight: FontWeight.normal,
                                                             fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
@@ -715,7 +721,24 @@ class _ChatScreenState extends State<ChatScreen> {
                                                           size: 22,
                                                         ),
                                                         onSelected: (value) {
+                                                          if(value == 0){
+                                                            chatToReply = chat;
+                                                            chatController.update();
+                                                          }else if(value == 1){
 
+                                                          }else if(value == 2){
+                                                            AppOverlay.showDeviceDialog(
+                                                              title: "Delete Message",
+                                                              content: "Are you sure you want to delete this message?",
+                                                              positiveText: "Delete",
+                                                              onPositivePressed: () {
+                                                                chatController.deleteSingleMessage(
+                                                                    chatID: chat.id.toString(),
+                                                                    receiverId: chat.receiverId.toString()
+                                                                );
+                                                              },
+                                                            );
+                                                          }
                                                         },
                                                         itemBuilder: (context) => [
                                                           PopupMenuItem(
@@ -739,7 +762,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             ),
                                                           ),
                                                           PopupMenuItem(
-                                                            value: 1,
+                                                            value: 2,
                                                             child: Text(
                                                               "Delete",
                                                               style: AppTextStyle.bodyText1.copyWith(
@@ -810,6 +833,49 @@ class _ChatScreenState extends State<ChatScreen> {
                       height: 1.0,
                     ),
                     SizedBox(height: Get.height*0.008),
+                    AnimatedSize(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.fastOutSlowIn,
+                        child: chatToReply == null ? const SizedBox.shrink() : Padding(
+                          padding: EdgeInsets.symmetric(horizontal: Get.width*0.035),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: Get.width*0.8,
+                                child: HashTagText(
+                                  text: chatToReply!.message.toString(),
+                                  basicStyle: AppTextStyle.bodyText1.copyWith(
+                                    color: getAppColor(Colors.black),
+                                    fontSize: Get.textScaleFactor * 16,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                    color: Colors.blue,
+                                    fontSize: Get.textScaleFactor * 16,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.start,
+                                  decorateAtSign: true,
+                                ),
+                              ),
+                              Spacer(),
+                              InkWell(
+                                onTap: (){
+                                  chatToReply = null;
+                                  chatController.update();
+                                },
+                                child: Icon(Icons.cancel_rounded, color: Colors.grey),
+                              )
+                            ],
+                          ),
+                        )
+                    ),
+                    if(chatToReply != null)
+                      SizedBox(height: Get.height*0.008),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -899,11 +965,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                       "forwardMessage":false,
                                       "messageType": "textMessage"
                                     };
+                                    if(chatToReply != null){
+                                      message['replyMessageId'] = chatToReply!.id.toString();
+                                    }
                                     chatController.listenToCustomEvent('notify_user',(data){
                                       SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
                                       if(sendMessageResponse.status == true){
                                         chatTextController.clear();
-                                        chatController.update(['chats_screen']);
+                                        chatToReply = null;
+                                        chatController.update();
                                       }
                                       chatController.stopListeningToEvent("notify_user");
                                     });

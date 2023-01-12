@@ -116,6 +116,7 @@ class _ChatProfileState extends State<ChatProfile> {
     var time = "";
     var lastMessage = "";
     var membersString = "";
+    bool blocked = false;
     if(post.isGroup == true){
       avatar = post.group!.groupImageUrl.toString();
       name = post.group!.groupName.toString();
@@ -137,6 +138,7 @@ class _ChatProfileState extends State<ChatProfile> {
       time = timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(post.time.toString())));
       lastMessage = post.message.toString();
       id = post.otherId.toString();
+      blocked = post.senderIsBlocked == true;
     }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -364,26 +366,46 @@ class _ChatProfileState extends State<ChatProfile> {
                       title: "Clear Chat",
                       icon: Icons.delete_rounded,
                       onTap: (){
-
+                        chatController.clearChat(id);
+                        Navigator.pop(context);
+                        AppOverlay.showSuccessSnackBar(content: "Chat Cleared Successfully");
                       },
                     ),
-                    ChatProfileAction(
+                   /* ChatProfileAction(
                       title: "Archive Chat",
                       icon: Icons.archive_rounded,
                       onTap: (){
 
                       },
-                    ),
-                    if(post.isGroup != true)
+                    ),*/
+                    if(post.isGroup != true && !blocked)
                       ChatProfileAction(
                       title: "Block Contact",
                       icon: Icons.block_rounded,
                       bgColor: AppColors.bostonUniRed,
                       textColor: AppColors.bostonUniRed,
                       onTap: (){
-
+                        chatController.blockUser(post.id.toString());
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        chatController.update();
+                        AppOverlay.showSuccessSnackBar(content: "User Blocked Successfully");
                       },
                     ),
+                    if(post.isGroup != true && blocked)
+                      ChatProfileAction(
+                        title: "Un-Block Contact",
+                        icon: Icons.block_rounded,
+                        bgColor: AppColors.bostonUniRed,
+                        textColor: AppColors.bostonUniRed,
+                        onTap: (){
+                          chatController.unBlockUser(post.id.toString());
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          chatController.update();
+                          AppOverlay.showSuccessSnackBar(content: "User Un-Blocked Successfully");
+                        },
+                      ),
                     if(post.isGroup == true)
                       ChatProfileAction(
                         title: "Exit Group",

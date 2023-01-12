@@ -149,6 +149,12 @@ class ChatControllerWayagram extends GetxController {
       }
     });
 
+    userRepo.api.listenToEvent('block_user', (data) {
+      if (kDebugMode) {
+        print('socket_user_blocked: $data');
+      }
+    });
+
     userRepo.api.emitEvent('chat_overview', {});
     //userRepo.api.emitEvent("is_user_online", {});
     //var string = {"otherId": "492bbb2c-4fc2-4ef4-9c65-ca449575e2b7"};
@@ -182,9 +188,34 @@ class ChatControllerWayagram extends GetxController {
       "chatId": chatID,
       "receiverId": receiverId,
       "deleteForEveryOne": deleteForEveryOne,
-      "deletedForReceiver": deletedForReceiver,
+      "deletedForReciever": deletedForReceiver,
       "deletedForSender": deletedForSender,
     };
     emitMessages('delete_message', body);
+  }
+
+  void blockUser(String id){
+    var body ={
+      "id": id
+    };
+    userRepo.api.emitEvent('block_user', body);
+  }
+
+  void unBlockUser(String id){
+    var body ={
+      "id": id
+    };
+    userRepo.api.emitEvent('unblock_user', body);
+  }
+
+  void archiveChat(){
+    emitMessages('block_chat', {});
+  }
+
+  void clearChat(String otherId){
+    var body ={
+      "otherId": otherId,
+    };
+    emitMessages('clear_chats', body);
   }
 }
