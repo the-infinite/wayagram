@@ -70,6 +70,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
         id: 'search',
         builder: (controller) {
           return Scaffold(
+            backgroundColor: getAppColor(AppColors.background),
             appBar: AppBar(
                 elevation: 0,
                 leading: IconButton(
@@ -92,220 +93,274 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                   ),
                 ),
                 centerTitle: false,
+              backgroundColor: getAppColor(AppColors.background),
             ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: Get.height * 0.015),
-                TabBar(
-                  controller: tabController,
-                  padding: EdgeInsets.zero,
-                  labelColor: getAppColor(Colors.black),
-                  unselectedLabelColor: Color(0xff9A9A9A),
-                  indicatorColor: AppColors.primary,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  labelPadding: EdgeInsets.only(left: Get.width * 0.02),
-                  indicatorPadding: EdgeInsets.zero,
-                  tabs: [
-                    Tab(text: 'Hashtags',iconMargin: EdgeInsets.zero,),
-                    Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                    Tab(text: 'People',iconMargin: EdgeInsets.zero,),
-                    Tab(text: 'Groups',iconMargin: EdgeInsets.zero,),
-                    Tab(text: 'Pages',iconMargin: EdgeInsets.zero,),
-                  ],
-                ),
-                Divider(
-                  height: 0.5,
-                  thickness: 0.5,
-                  color: Colors.grey,
-                ),
-                Expanded(
-                  child: TabBarView(
+            body: Container(
+              color: getAppColor(AppColors.background),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: Get.height * 0.015),
+                  TabBar(
                     controller: tabController,
-                    children: [
-                      SingleChildScrollView(
-                        child: FutureBuilder<ApiResponse>(
-                          //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
-                            future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${searchController.text.replaceAll("#", "").replaceAll("@","")}", true),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                final posts = SearchHashtagsModel.listFromJson(snapshot.data!.data);
-                                searchedHashtags = jsonEncode(posts);
-                                List<String> title = [];
-                                List<String> subtitle = [];
-                                for (var element in posts) {
-                                  if(element.hashtag != null){
-                                    title.add(element.hashtag!);
-                                    if(element.postToHashtags != null){
-                                      subtitle.add('${element.postToHashtags!.length} Conversations');
-                                    }else{
-                                      subtitle.add('0 Conversations');
-                                    }
-                                  }
-                                }
-                                return HashTagView(
-                                  title: title,
-                                  subtitle: subtitle,
-                                  onClick: (title, subtitle) {
-
-                                  },
-                                );
-                              } else if(searchedHashtags.isNotEmpty){
-                                var posts = SearchHashtagsModel.listFromJson(jsonDecode(searchedHashtags));
-                                List<String> title = [];
-                                List<String> subtitle = [];
-                                for (var element in posts) {
-                                  if(element.hashtag != null){
-                                    title.add(element.hashtag!);
-                                    if(element.postToHashtags != null){
-                                      subtitle.add('${element.postToHashtags!.length} Conversations');
-                                    }else{
-                                      subtitle.add('0 Conversations');
-                                    }
-                                  }
-                                }
-                                return HashTagView(
-                                  title: title,
-                                  subtitle: subtitle,
-                                  onClick: (title, subtitle) {
-
-                                  },
-                                );
-                              }else{
-                                if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
-                                  return SizedBox(
-                                    height: Get.height * 0.7,
-                                    child: Center(
-                                      child: Text('Enter a search term to search for hashtags'),
-                                    ),
-                                  );
-                                }
-                                return GroupView(isLoading: true);
-                              }
-                            }),
-                      ),
-                      SingleChildScrollView(
-                        child: FutureBuilder<ApiResponse>(
-                            future: controller.searchPost(searchController.text.replaceAll("#", "").replaceAll("@","")),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                //final posts = snapshot.data!.data as List<AllPostsEntity>;
-                                searchedPosts = jsonEncode(snapshot.data!.data);
-                                var posts = AllPostsEntity.getService(snapshot.data!.data);
-                                return PostsView(posts: posts);
-                              }
-                              else if(searchedPosts.isNotEmpty){
-                                var posts = AllPostsEntity.getService(jsonDecode(searchedPosts));
-                                return PostsView(posts: posts);
-                              }else{
-                                if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
-                                  return SizedBox(
-                                    height: Get.height * 0.7,
-                                    child: Center(
-                                      child: Text('Enter a search term to search for posts'),
-                                    ),
-                                  );
-                                }
-                                return PostsView(isLoading: true);
-                              }
-                            }),
-                      ),
-                      SingleChildScrollView(
-                        child: FutureBuilder<ApiResponse>(
-                            future: controller.searchPeople(searchController.text.replaceAll("#", "").replaceAll("@","")),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
-                                searchedPeople = jsonEncode(snapshot.data!.data);
-                                var posts = SearchPeopleModel.getService(snapshot.data!.data);
-                                return PersonView(
-                                  name: posts.map((e) => e.displayName.toString()).toList(),
-                                  username: posts.map((e) => e.username.toString()).toList(),
-                                  profilePic: posts.map((e) => e.avatar.toString()).toList(),
-                                  length: posts.length,
-                                  userIDs: posts.map((e) => e.userId.toString()).toList(),
-                                  iDs: posts.map((e) => e.id.toString()).toList(),
-                                  privateUser: posts.map((e) => e.notPublic == true ? "true" : "false").toList(),
-                                );
-                              } else if(searchedPeople.isNotEmpty){
-                                var posts = SearchPeopleModel.getService(jsonDecode(searchedPeople));
-                                return PersonView(
-                                  name: posts.map((e) => e.displayName.toString()).toList(),
-                                  username: posts.map((e) => e.username.toString()).toList(),
-                                  profilePic: posts.map((e) => e.avatar.toString()).toList(),
-                                  length: posts.length,
-                                  userIDs: posts.map((e) => e.userId.toString()).toList(),
-                                  iDs: posts.map((e) => e.id.toString()).toList(),
-                                  privateUser: posts.map((e) => e.notPublic == true ? "true" : "false").toList(),
-                                );
-                              }else{
-                                if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
-                                  return SizedBox(
-                                    height: Get.height * 0.7,
-                                    child: Center(
-                                      child: Text('Enter a search term to search for People'),
-                                    ),
-                                  );
-                                }
-                                return GroupView(isLoading: true,isGroup: true,);
-                              }
-                            }),
-                      ),
-                      SingleChildScrollView(
-                        child: FutureBuilder<ApiResponse>(
-                            future: controller.searchGroups(searchController.text.replaceAll("#", "").replaceAll("@","")),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
-                                searchedGroups = jsonEncode(snapshot.data!.data);
-                                var posts = GroupModelEntity.getService(snapshot.data!.data);
-                                return GroupView(posts: posts,isGroup: true,);
-                              } else if(searchedGroups.isNotEmpty){
-                                var posts = GroupModelEntity.getService(jsonDecode(searchedGroups));
-                                return GroupView(posts: posts,isGroup: true);
-                              }else{
-                                if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
-                                  return SizedBox(
-                                    height: Get.height * 0.7,
-                                    child: Center(
-                                      child: Text('Enter a search term to search for groups'),
-                                    ),
-                                  );
-                                }
-                                return GroupView(isLoading: true,isGroup: true,);
-                              }
-                            }),
-                      ),
-                      SingleChildScrollView(
-                        child: FutureBuilder<ApiResponse>(
-                            future: controller.searchPages(searchController.text.replaceAll("#", "").replaceAll("@","")),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
-                                searchedPages = jsonEncode(snapshot.data!.data);
-                                var posts = GroupModelEntity.getService(snapshot.data!.data);
-                                return GroupView(posts: posts,isGroup: false,);
-                              } else if(searchedPages.isNotEmpty){
-                                var posts = GroupModelEntity.getService(jsonDecode(searchedPages));
-                                return GroupView(posts: posts,isGroup: false);
-                              }else{
-                                if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
-                                  return SizedBox(
-                                    height: Get.height * 0.7,
-                                    child: Center(
-                                      child: Text('Enter a search term to search for pages'),
-                                    ),
-                                  );
-                                }
-                                return GroupView(isLoading: true,isGroup: false,);
-                              }
-                            }),
-                      ),
+                    padding: EdgeInsets.zero,
+                    labelColor: getAppColor(Colors.black),
+                    unselectedLabelColor: Color(0xff9A9A9A),
+                    indicatorColor: AppColors.primary,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelPadding: EdgeInsets.only(left: Get.width * 0.02),
+                    indicatorPadding: EdgeInsets.zero,
+                    tabs: [
+                      Tab(text: 'Hashtags',iconMargin: EdgeInsets.zero,),
+                      Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
+                      Tab(text: 'People',iconMargin: EdgeInsets.zero,),
+                      Tab(text: 'Groups',iconMargin: EdgeInsets.zero,),
+                      Tab(text: 'Pages',iconMargin: EdgeInsets.zero,),
                     ],
                   ),
-                ),
-              ],
+                  Divider(
+                    height: 0.5,
+                    thickness: 0.5,
+                    color: Colors.grey,
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: tabController,
+                      children: [
+                        SingleChildScrollView(
+                          child: FutureBuilder<ApiResponse>(
+                            //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
+                              future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${searchController.text.replaceAll("#", "").replaceAll("@","")}", true),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  final posts = SearchHashtagsModel.listFromJson(snapshot.data!.data);
+                                  searchedHashtags = jsonEncode(posts);
+                                  List<String> title = [];
+                                  List<String> subtitle = [];
+                                  for (var element in posts) {
+                                    if(element.hashtag != null){
+                                      title.add(element.hashtag!);
+                                      if(element.postToHashtags != null){
+                                        subtitle.add('${element.postToHashtags!.length} Conversations');
+                                      }else{
+                                        subtitle.add('0 Conversations');
+                                      }
+                                    }
+                                  }
+                                  return HashTagView(
+                                    title: title,
+                                    subtitle: subtitle,
+                                    onClick: (title, subtitle) {
+
+                                    },
+                                  );
+                                } else if(searchedHashtags.isNotEmpty){
+                                  var posts = SearchHashtagsModel.listFromJson(jsonDecode(searchedHashtags));
+                                  List<String> title = [];
+                                  List<String> subtitle = [];
+                                  for (var element in posts) {
+                                    if(element.hashtag != null){
+                                      title.add(element.hashtag!);
+                                      if(element.postToHashtags != null){
+                                        subtitle.add('${element.postToHashtags!.length} Conversations');
+                                      }else{
+                                        subtitle.add('0 Conversations');
+                                      }
+                                    }
+                                  }
+                                  return HashTagView(
+                                    title: title,
+                                    subtitle: subtitle,
+                                    onClick: (title, subtitle) {
+
+                                    },
+                                  );
+                                }else{
+                                  if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                    return SizedBox(
+                                      height: Get.height * 0.7,
+                                      child: Center(
+                                        child: Text('Enter a search term to search for hashtags'),
+                                      ),
+                                    );
+                                  }
+                                  return GroupView(isLoading: true);
+                                }
+                              }),
+                        ),
+                        SingleChildScrollView(
+                          child: FutureBuilder<ApiResponse>(
+                              future: controller.searchPost(searchController.text.replaceAll("#", "").replaceAll("@","")),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  //final posts = snapshot.data!.data as List<AllPostsEntity>;
+                                  searchedPosts = jsonEncode(snapshot.data!.data);
+                                  var posts = AllPostsEntity.getService(snapshot.data!.data);
+                                  return PostsView(posts: posts);
+                                }
+                                else if(searchedPosts.isNotEmpty){
+                                  var posts = AllPostsEntity.getService(jsonDecode(searchedPosts));
+                                  return PostsView(posts: posts);
+                                }else{
+                                  if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                    return SizedBox(
+                                      height: Get.height * 0.7,
+                                      child: Center(
+                                        child: Text('Enter a search term to search for posts'),
+                                      ),
+                                    );
+                                  }
+                                  return PostsView(isLoading: true);
+                                }
+                              }),
+                        ),
+                        SingleChildScrollView(
+                          child: FutureBuilder<ApiResponse>(
+                              future: controller.searchPeople(searchController.text.replaceAll("#", "").replaceAll("@","")),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                                  searchedPeople = jsonEncode(snapshot.data!.data);
+                                  var posts = SearchPeopleModel.getService(snapshot.data!.data);
+                                  return PersonView(
+                                    name: posts.map((e) => e.displayName.toString()).toList(),
+                                    username: posts.map((e) => e.username.toString()).toList(),
+                                    profilePic: posts.map((e) => e.avatar.toString()).toList(),
+                                    length: posts.length,
+                                    userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                    iDs: posts.map((e) => e.id.toString()).toList(),
+                                    privateUser: posts.map((e) => e.notPublic == true ? "true" : "false").toList(),
+                                  );
+                                } else if(searchedPeople.isNotEmpty){
+                                  var posts = SearchPeopleModel.getService(jsonDecode(searchedPeople));
+                                  return PersonView(
+                                    name: posts.map((e) => e.displayName.toString()).toList(),
+                                    username: posts.map((e) => e.username.toString()).toList(),
+                                    profilePic: posts.map((e) => e.avatar.toString()).toList(),
+                                    length: posts.length,
+                                    userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                    iDs: posts.map((e) => e.id.toString()).toList(),
+                                    privateUser: posts.map((e) => e.notPublic == true ? "true" : "false").toList(),
+                                  );
+                                }else{
+                                  if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                    return SizedBox(
+                                      height: Get.height * 0.7,
+                                      child: Center(
+                                        child: Text('Enter a search term to search for People'),
+                                      ),
+                                    );
+                                  }
+                                  return GroupView(isLoading: true,isGroup: true,);
+                                }
+                              }),
+                        ),
+                        SingleChildScrollView(
+                          child: FutureBuilder<ApiResponse>(
+                              future: controller.searchGroups(searchController.text.replaceAll("#", "").replaceAll("@","")),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                                  searchedGroups = jsonEncode(snapshot.data!.data);
+                                  var posts = GroupModelEntity.getService(snapshot.data!.data);
+                                  return GroupView(
+                                    posts: posts,
+                                    isGroup: true,
+                                    onButtonClick: (group) async {
+                                      var body = {
+                                      "groupId": group.id,
+                                      "userId": fullProfile.id,
+                                    };
+                                      var response = await controller.postData(body, "/wayagram-service/main/group/join-group");
+                                      if(response.isSuccessful){
+                                      var newRes = await controller.getData("/wayagram-service/main/group/get-all-user-created-groups?pageNumber=1&userId=${fullProfile.id}", true);
+                                      if(newRes.isSuccessful){
+                                        var savedPosts = ReadWriteValue('wayagram_joined_groups', '', MyPref.box);
+                                        final posts = GroupModelEntity.getService(response.groups);
+                                        savedPosts.val = jsonEncode(posts);
+                                      }
+                                      controller.update();
+                                      Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                                    }else{
+                                        Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                                      }
+                                  }
+                                  );
+                                } else if(searchedGroups.isNotEmpty){
+                                  var posts = GroupModelEntity.getService(jsonDecode(searchedGroups));
+                                  return GroupView(posts: posts,isGroup: true);
+                                }else{
+                                  if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                    return SizedBox(
+                                      height: Get.height * 0.7,
+                                      child: Center(
+                                        child: Text('Enter a search term to search for groups'),
+                                      ),
+                                    );
+                                  }
+                                  return GroupView(isLoading: true,isGroup: true,);
+                                }
+                              }),
+                        ),
+                        SingleChildScrollView(
+                          child: FutureBuilder<ApiResponse>(
+                              future: controller.searchPages(searchController.text.replaceAll("#", "").replaceAll("@","")),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                                  searchedPages = jsonEncode(snapshot.data!.data);
+                                  var posts = GroupModelEntity.getService(snapshot.data!.data);
+                                  return GroupView(posts: posts,isGroup: false,onButtonClick: (group) async {
+                                    var body = {
+                                      "pageId": group.id,
+                                      "userId": fullProfile.id,
+                                    };
+                                    var response = await controller.putData(body, "/wayagram-service/main/page/follow-or-un-follow");
+                                    if(response.isSuccessful){
+                                      await controller.getSuggestedPages;
+                                      await controller.getPagesFollowed;
+                                      controller.update();
+                                      Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                                    }else{
+                                      Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                                    }
+                                  });
+                                } else if(searchedPages.isNotEmpty){
+                                  var posts = GroupModelEntity.getService(jsonDecode(searchedPages));
+                                  return GroupView(posts: posts,isGroup: false,onButtonClick: (group) async {
+                                    var body = {
+                                      "pageId": group.id,
+                                      "userId": fullProfile.id,
+                                    };
+                                    var response = await controller.putData(body, "/wayagram-service/main/page/follow-or-un-follow");
+                                    if(response.isSuccessful){
+                                      await controller.getSuggestedPages;
+                                      await controller.getPagesFollowed;
+                                      controller.update();
+                                      Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: Colors.white);
+                                    }else{
+                                      Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+                                    }
+                                  });
+                                }else{
+                                  if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                    return SizedBox(
+                                      height: Get.height * 0.7,
+                                      child: Center(
+                                        child: Text('Enter a search term to search for pages'),
+                                      ),
+                                    );
+                                  }
+                                  return GroupView(isLoading: true,isGroup: false,);
+                                }
+                              }),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }

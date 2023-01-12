@@ -574,113 +574,116 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                     ),
                   ];
                 },
-                body: TabBarView(
-                  controller: tabController,
-                  children: [
-                    FutureBuilder<ApiResponse>(
-                        future: controller.getData("/wayagram-service/all-posts/group-posts?profile_id=${fullProfile.id}&group_id=${group.id}", true),
-                        builder: (context, snapshot) {
-                          var savedPosts = ReadWriteValue('wayagram_group_${group.id}', '', MyPref.box);
-                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                            final posts = AllPostsEntity.getService(snapshot.data!.data['data']);
-                            savedPosts.val = jsonEncode(posts);
-                            return PostsView(posts: posts,userID: fullProfile.userId);
-                          } else if(savedPosts.val.isNotEmpty){
-                            var posts = AllPostsEntity.getService(jsonDecode(savedPosts.val));
-                            return PostsView(posts: posts,userID: fullProfile.userId);
-                          }else{
-                            if(snapshot.connectionState == ConnectionState.done){
-                              return SizedBox.shrink();
+                body: Container(
+                  color: getAppColor(AppColors.background),
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [
+                      FutureBuilder<ApiResponse>(
+                          future: controller.getData("/wayagram-service/all-posts/group-posts?profile_id=${fullProfile.id}&group_id=${group.id}", true),
+                          builder: (context, snapshot) {
+                            var savedPosts = ReadWriteValue('wayagram_group_${group.id}', '', MyPref.box);
+                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                              final posts = AllPostsEntity.getService(snapshot.data!.data['data']);
+                              savedPosts.val = jsonEncode(posts);
+                              return PostsView(posts: posts,userID: fullProfile.userId);
+                            } else if(savedPosts.val.isNotEmpty){
+                              var posts = AllPostsEntity.getService(jsonDecode(savedPosts.val));
+                              return PostsView(posts: posts,userID: fullProfile.userId);
+                            }else{
+                              if(snapshot.connectionState == ConnectionState.done){
+                                return SizedBox.shrink();
+                              }
+                              return PostsView(isLoading: true);
                             }
-                            return PostsView(isLoading: true);
-                          }
-                        }),
-                    FutureBuilder<ApiResponse>(
-                        future: controller.getData("/wayagram-service/main/group/get-media-files-by-group-id?group_id=${group.id}", true),
-                        builder: (context, snapshot) {
-                          var savedPosts = ReadWriteValue('wayagram_group_images_${group.id}', '', MyPref.box);
-                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                            final posts = GroupMediaModel.listFromJson(snapshot.data!.data);
-                            savedPosts.val = jsonEncode(posts);
-                            return GalleryView(
-                                key: ValueKey("group_gallery"),
-                                imageUrlList: posts.map((e) => e.fileUrl.toString()).toList()
-                            );
-                          } else if(savedPosts.val.isNotEmpty){
-                            var posts = GroupMediaModel.listFromJson(jsonDecode(savedPosts.val));
-                            return GalleryView(
-                                key: ValueKey("group_gallery"),
-                                imageUrlList: posts.map((e) => e.fileUrl.toString()).toList()
-                            );
-                          }else{
-                            if(snapshot.connectionState == ConnectionState.done){
-                              return SizedBox.shrink();
+                          }),
+                      FutureBuilder<ApiResponse>(
+                          future: controller.getData("/wayagram-service/main/group/get-media-files-by-group-id?group_id=${group.id}", true),
+                          builder: (context, snapshot) {
+                            var savedPosts = ReadWriteValue('wayagram_group_images_${group.id}', '', MyPref.box);
+                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                              final posts = GroupMediaModel.listFromJson(snapshot.data!.data);
+                              savedPosts.val = jsonEncode(posts);
+                              return GalleryView(
+                                  key: ValueKey("group_gallery"),
+                                  imageUrlList: posts.map((e) => e.fileUrl.toString()).toList()
+                              );
+                            } else if(savedPosts.val.isNotEmpty){
+                              var posts = GroupMediaModel.listFromJson(jsonDecode(savedPosts.val));
+                              return GalleryView(
+                                  key: ValueKey("group_gallery"),
+                                  imageUrlList: posts.map((e) => e.fileUrl.toString()).toList()
+                              );
+                            }else{
+                              if(snapshot.connectionState == ConnectionState.done){
+                                return SizedBox.shrink();
+                              }
+                              return PostsView(isLoading: true);
                             }
-                            return PostsView(isLoading: true);
-                          }
-                        }),
-                    FutureBuilder<ApiResponse>(
-                        future: controller.getData("/wayagram-service/main/group/see-all-members-in-group?groupId=${group.id}", true),
-                        builder: (context, snapshot) {
-                          var savedPosts = ReadWriteValue('wayagram_group_followers_${group.id}', '', MyPref.box);
-                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                            final posts = GroupMembersModel.listFromJson(snapshot.data!.data);
-                            savedPosts.val = jsonEncode(posts);
-                            //final posts = snapshot.data!.data as FollowersModelEntity;
+                          }),
+                      FutureBuilder<ApiResponse>(
+                          future: controller.getData("/wayagram-service/main/group/see-all-members-in-group?groupId=${group.id}", true),
+                          builder: (context, snapshot) {
+                            var savedPosts = ReadWriteValue('wayagram_group_followers_${group.id}', '', MyPref.box);
+                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                              final posts = GroupMembersModel.listFromJson(snapshot.data!.data);
+                              savedPosts.val = jsonEncode(posts);
+                              //final posts = snapshot.data!.data as FollowersModelEntity;
 
-                            var names = posts.map((e) => e.profile!.displayName.toString()).toList();
-                            var username = posts.map((e) => e.profile!.username.toString()).toList();
-                            var profile = posts.map((e) => e.profile!.avatar.toString()).toList();
-                            var userIds = posts.map((e) => e.profile!.userId.toString()).toList();
-                            var ids = posts.map((e) => e.profile!.id.toString()).toList();
+                              var names = posts.map((e) => e.profile!.displayName.toString()).toList();
+                              var username = posts.map((e) => e.profile!.username.toString()).toList();
+                              var profile = posts.map((e) => e.profile!.avatar.toString()).toList();
+                              var userIds = posts.map((e) => e.profile!.userId.toString()).toList();
+                              var ids = posts.map((e) => e.profile!.id.toString()).toList();
 
-                            return PersonView(
-                              name: names,
-                              username: username,
-                              profilePic: profile,
-                              length: posts.length,
-                              userIDs: userIds,
-                              iDs: ids,
-                              showReport: true,
-                              onReportClick: (value) {
-                                controller.pageToPost = null;
-                                controller.groupToPost = group;
-                                Get.to(() => ReportUser(
-                                  person: value,
-                                  group: group,
-                                ));
-                              },
-                            );
-                          } else if(savedPosts.val.isNotEmpty){
-                            var posts = GroupMembersModel.listFromJson(jsonDecode(savedPosts.val));
-                            var names = posts.map((e) => e.profile!.displayName.toString()).toList();
-                            var username = posts.map((e) => e.profile!.username.toString()).toList();
-                            var profile = posts.map((e) => e.profile!.avatar.toString()).toList();
-                            var userIds = posts.map((e) => e.profile!.userId.toString()).toList();
-                            var ids = posts.map((e) => e.profile!.id.toString()).toList();
+                              return PersonView(
+                                name: names,
+                                username: username,
+                                profilePic: profile,
+                                length: posts.length,
+                                userIDs: userIds,
+                                iDs: ids,
+                                showReport: true,
+                                onReportClick: (value) {
+                                  controller.pageToPost = null;
+                                  controller.groupToPost = group;
+                                  Get.to(() => ReportUser(
+                                    person: value,
+                                    group: group,
+                                  ));
+                                },
+                              );
+                            } else if(savedPosts.val.isNotEmpty){
+                              var posts = GroupMembersModel.listFromJson(jsonDecode(savedPosts.val));
+                              var names = posts.map((e) => e.profile!.displayName.toString()).toList();
+                              var username = posts.map((e) => e.profile!.username.toString()).toList();
+                              var profile = posts.map((e) => e.profile!.avatar.toString()).toList();
+                              var userIds = posts.map((e) => e.profile!.userId.toString()).toList();
+                              var ids = posts.map((e) => e.profile!.id.toString()).toList();
 
-                            return PersonView(
-                              name: names,
-                              username: username,
-                              profilePic: profile,
-                              length: posts.length,
-                              userIDs: userIds,
-                              iDs: ids,
-                              showReport: true,
-                              onReportClick: (value) {
-                                controller.pageToPost = null;
-                                controller.groupToPost = group;
-                                Get.to(() => ReportUser(
-                                  person: value,
-                                  group: group,
-                                ));
-                              },
-                            );
-                          }else{
-                            return NotificationView(isLoading: true);
-                          }
-                        }),
-                  ],
+                              return PersonView(
+                                name: names,
+                                username: username,
+                                profilePic: profile,
+                                length: posts.length,
+                                userIDs: userIds,
+                                iDs: ids,
+                                showReport: true,
+                                onReportClick: (value) {
+                                  controller.pageToPost = null;
+                                  controller.groupToPost = group;
+                                  Get.to(() => ReportUser(
+                                    person: value,
+                                    group: group,
+                                  ));
+                                },
+                              );
+                            }else{
+                              return NotificationView(isLoading: true);
+                            }
+                          }),
+                    ],
+                  ),
                 ),
               ),
               floatingActionButton: ((isUserAMember && allowMemberPost) || isForUser || widget.joined) ? FloatingActionButton(

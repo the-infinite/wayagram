@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_polls/flutter_polls.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
@@ -16,6 +18,7 @@ import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/group_model_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../data/model/posts_model_entity.dart';
+import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/app_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -24,7 +27,7 @@ import '../../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../groups_and_pages/group.dart';
 import '../../groups_and_pages/page.dart';
 
-class GroupView extends StatelessWidget{
+class GroupView extends StatefulWidget{
   GroupView({
     Key? key,
     this.isLoading = false,
@@ -41,19 +44,30 @@ class GroupView extends StatelessWidget{
   final Function(GroupModelEntity info)? onButtonClick;
 
   @override
+  State<GroupView> createState() => _GroupViewState();
+}
+
+class _GroupViewState extends State<GroupView> {
+  @override
   Widget build(BuildContext context) {
-    int count = posts == null ? 0 : posts!.length;
-    if(minimum > -1){
-      if(count > minimum){
-        count = minimum;
+    int count = widget.posts == null ? 0 : widget.posts!.length;
+    if(widget.minimum > -1){
+      if(count > widget.minimum){
+        count = widget.minimum;
       }
     }
+    var savedPosts = ReadWriteValue('wayagram_joined_groups', '', MyPref.box);
+    var savedPostsPages = MyPref.pagesFollowed.val;
+
+    final postsGroups = GroupModelEntity.getService(jsonDecode(savedPosts.val));
+    var postsPages = GroupModelEntity.getService(jsonDecode(savedPostsPages));
+
     return ListView.builder(
-      itemCount: isLoading ? 3 : count,
+      itemCount: widget.isLoading ? 3 : count,
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        if(isLoading){
+        if(widget.isLoading){
           return SizedBox(
             height: Get.height * 0.08,
             width: Get.width * 0.35,
@@ -72,11 +86,16 @@ class GroupView extends StatelessWidget{
             ),
           );
         }
-        var post = posts![index];
+        var post = widget.posts![index];
+        var isJoined1 = postsGroups.any((element) => element.id == post.id);
+        if(!widget.isGroup){
+          isJoined1 = false;
+          isJoined1 = postsPages.any((element) => element.id == post.id);
+        }
         return InkWell(
           onTap: (){
-            if(isGroup) {
-              Get.to(() => Group(group: post,key: ValueKey(post.id),joined: isJoined));
+            if(widget.isGroup) {
+              Get.to(() => Group(group: post,key: ValueKey(post.id),joined: widget.isJoined));
             }else{
               Get.to(() => PageScreen(page: post,key: ValueKey(post.id)));
             }
@@ -93,8 +112,8 @@ class GroupView extends StatelessWidget{
                     icon: AppAvatar(
                       imgUrl: post.imageUrl.toString(),
                       radius: 50,
-                      isGroup: isGroup,
-                      isPage: !isGroup,
+                      isGroup: widget.isGroup,
+                      isPage: !widget.isGroup,
                     ),
                     onPressed: null,
                   ),
@@ -125,20 +144,23 @@ class GroupView extends StatelessWidget{
                     ),
                   ],
                 ),
-                if(!isJoined)
+                if(!widget.isJoined && !isJoined1)
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         AppButton(
-                          title: isGroup ? 'Join' : 'Follow',
+                          title: widget.isGroup ? 'Join' : 'Follow',
                           onPressed: () async {
-                            if(onButtonClick != null){
-                              await onButtonClick!(post);
+                            if(widget.onButtonClick != null){
+                              await widget.onButtonClick!(post);
+                              setState(() {
+
+                              });
                             }
                           },
                           borderRadius: 5,
-                          padding: EdgeInsets.symmetric(vertical: 5),
+                          padding: const EdgeInsets.symmetric(vertical: 5),
                           bckgrndColor: getAppColor(AppColors.background),
                           fontColor: AppColors.primary,
                           border: Border.all(color: AppColors.primary),
@@ -155,5 +177,4 @@ class GroupView extends StatelessWidget{
       },
     );
   }
-
 }

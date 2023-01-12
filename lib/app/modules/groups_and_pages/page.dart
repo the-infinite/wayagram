@@ -513,108 +513,111 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                     ),
                   ];
                 },
-                body: TabBarView(
-                  controller: tabController,
-                  children: [
-                    FutureBuilder<ApiResponse>(
-                        future: controller.getData("/wayagram-service/all-posts/page-posts?profile_id=${fullProfile.id}&page_id=${page.id}", true),
-                        builder: (context, snapshot) {
-                          var savedPosts = ReadWriteValue('wayagram_page_${page.id}', '', MyPref.box);
-                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                            final posts = AllPostsEntity.getService(snapshot.data!.data['data']);
-                            savedPosts.val = jsonEncode(posts);
-                            return PostsView(posts: posts);
-                          } else if(savedPosts.val.isNotEmpty){
-                            var posts = AllPostsEntity.getService(jsonDecode(savedPosts.val));
-                            return PostsView(posts: posts);
-                          }else{
-                            if(snapshot.connectionState == ConnectionState.done){
-                              return SizedBox.shrink();
-                            }
-                            return PostsView(isLoading: true);
-                          }
-                        }),
-                    FutureBuilder<ApiResponse>(
-                        future: controller.getData("/wayagram-service/main/page/get-all-page-followers?pageId=${page.id}", true),
-                        builder: (context, snapshot) {
-                          var savedPosts = ReadWriteValue('wayagram_page_followers_${page.id}', '', MyPref.box);
-                          if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                            final posts = GroupMembersModel.listFromJson(snapshot.data!.data);
-                            savedPosts.val = jsonEncode(posts);
-                            //final posts = snapshot.data!.data as FollowersModelEntity;
-                            var names = List<String>.empty(growable: true);
-                            var username = List<String>.empty(growable: true);
-                            var profile = List<String>.empty(growable: true);
-                            var userIds = List<String>.empty(growable: true);
-                            var ids = List<String>.empty(growable: true);
-
-                            for (var element in posts) {
-                              if(element.profile != null){
-                                names.add(element.profile!.displayName.toString());
-                                username.add(element.profile!.username.toString());
-                                profile.add(element.profile!.avatar.toString());
-                                userIds.add(element.profile!.userId.toString());
-                                ids.add(element.profile!.id.toString());
+                body: Container(
+                  color: getAppColor(AppColors.background),
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [
+                      FutureBuilder<ApiResponse>(
+                          future: controller.getData("/wayagram-service/all-posts/page-posts?profile_id=${fullProfile.id}&page_id=${page.id}", true),
+                          builder: (context, snapshot) {
+                            var savedPosts = ReadWriteValue('wayagram_page_${page.id}', '', MyPref.box);
+                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                              final posts = AllPostsEntity.getService(snapshot.data!.data['data']);
+                              savedPosts.val = jsonEncode(posts);
+                              return PostsView(posts: posts);
+                            } else if(savedPosts.val.isNotEmpty){
+                              var posts = AllPostsEntity.getService(jsonDecode(savedPosts.val));
+                              return PostsView(posts: posts);
+                            }else{
+                              if(snapshot.connectionState == ConnectionState.done){
+                                return SizedBox.shrink();
                               }
+                              return PostsView(isLoading: true);
                             }
+                          }),
+                      FutureBuilder<ApiResponse>(
+                          future: controller.getData("/wayagram-service/main/page/get-all-page-followers?pageId=${page.id}", true),
+                          builder: (context, snapshot) {
+                            var savedPosts = ReadWriteValue('wayagram_page_followers_${page.id}', '', MyPref.box);
+                            if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                              final posts = GroupMembersModel.listFromJson(snapshot.data!.data);
+                              savedPosts.val = jsonEncode(posts);
+                              //final posts = snapshot.data!.data as FollowersModelEntity;
+                              var names = List<String>.empty(growable: true);
+                              var username = List<String>.empty(growable: true);
+                              var profile = List<String>.empty(growable: true);
+                              var userIds = List<String>.empty(growable: true);
+                              var ids = List<String>.empty(growable: true);
 
-                            return PersonView(
-                              name: names,
-                              username: username,
-                              profilePic: profile,
-                              length: names.length,
-                              userIDs: userIds,
-                              iDs: ids,
-                              showReport: true,
-                              onReportClick: (value) {
-                                controller.pageToPost = page;
-                                controller.groupToPost = null;
-                                Get.to(() => ReportUser(
-                                  person: value,
-                                  page: page,
-                                ));
-                              },
-                            );
-                          } else if(savedPosts.val.isNotEmpty){
-                            var posts = GroupMembersModel.listFromJson(jsonDecode(savedPosts.val));
-                            var names = List<String>.empty(growable: true);
-                            var username = List<String>.empty(growable: true);
-                            var profile = List<String>.empty(growable: true);
-                            var userIds = List<String>.empty(growable: true);
-                            var ids = List<String>.empty(growable: true);
-
-                            for (var element in posts) {
-                              if(element.profile != null){
-                                names.add(element.profile!.displayName.toString());
-                                username.add(element.profile!.username.toString());
-                                profile.add(element.profile!.avatar.toString());
-                                userIds.add(element.profile!.userId.toString());
-                                ids.add(element.profile!.id.toString());
+                              for (var element in posts) {
+                                if(element.profile != null){
+                                  names.add(element.profile!.displayName.toString());
+                                  username.add(element.profile!.username.toString());
+                                  profile.add(element.profile!.avatar.toString());
+                                  userIds.add(element.profile!.userId.toString());
+                                  ids.add(element.profile!.id.toString());
+                                }
                               }
-                            }
 
-                            return PersonView(
-                              name: names,
-                              username: username,
-                              profilePic: profile,
-                              length: names.length,
-                              userIDs: userIds,
-                              iDs: ids,
-                              showReport: true,
-                              onReportClick: (value) {
-                                controller.pageToPost = page;
-                                controller.groupToPost = null;
-                                Get.to(() => ReportUser(
-                                  person: value,
-                                  page: page,
-                                ));
-                              },
-                            );
-                          }else{
-                            return NotificationView(isLoading: true);
-                          }
-                        }),
-                  ],
+                              return PersonView(
+                                name: names,
+                                username: username,
+                                profilePic: profile,
+                                length: names.length,
+                                userIDs: userIds,
+                                iDs: ids,
+                                showReport: true,
+                                onReportClick: (value) {
+                                  controller.pageToPost = page;
+                                  controller.groupToPost = null;
+                                  Get.to(() => ReportUser(
+                                    person: value,
+                                    page: page,
+                                  ));
+                                },
+                              );
+                            } else if(savedPosts.val.isNotEmpty){
+                              var posts = GroupMembersModel.listFromJson(jsonDecode(savedPosts.val));
+                              var names = List<String>.empty(growable: true);
+                              var username = List<String>.empty(growable: true);
+                              var profile = List<String>.empty(growable: true);
+                              var userIds = List<String>.empty(growable: true);
+                              var ids = List<String>.empty(growable: true);
+
+                              for (var element in posts) {
+                                if(element.profile != null){
+                                  names.add(element.profile!.displayName.toString());
+                                  username.add(element.profile!.username.toString());
+                                  profile.add(element.profile!.avatar.toString());
+                                  userIds.add(element.profile!.userId.toString());
+                                  ids.add(element.profile!.id.toString());
+                                }
+                              }
+
+                              return PersonView(
+                                name: names,
+                                username: username,
+                                profilePic: profile,
+                                length: names.length,
+                                userIDs: userIds,
+                                iDs: ids,
+                                showReport: true,
+                                onReportClick: (value) {
+                                  controller.pageToPost = page;
+                                  controller.groupToPost = null;
+                                  Get.to(() => ReportUser(
+                                    person: value,
+                                    page: page,
+                                  ));
+                                },
+                              );
+                            }else{
+                              return NotificationView(isLoading: true);
+                            }
+                          }),
+                    ],
+                  ),
                 ),
               ),
               floatingActionButton: ((isUserAMember) || isForUser) ? FloatingActionButton(
