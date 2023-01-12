@@ -149,7 +149,6 @@ class _ChatScreenState extends State<ChatScreen> {
     var chatNormalInfo = {"otherId": id};
     var chatGroupInfo = {"groupId":id};
 
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
@@ -161,7 +160,30 @@ class _ChatScreenState extends State<ChatScreen> {
       child: GetBuilder<ChatControllerWayagram>(id:'chats_screen',builder: (chatController) {
         if(mounted){
           if(post.isGroup == true){
-
+            chatController.listenToCustomEvent('load_previous_group_chats',(chatData){
+              chatController.userRepo.api.emitEvent('chat_overview', {});
+              previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
+              if(previousChatModel!.previousChat != null){
+                if(previousChat.isNotEmpty){
+                  previousChat.clear();
+                  previousChat.addAll(previousChatModel!.previousChat!);
+                  previousChat.sort((a,b) {
+                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                  });
+                  chatController.update(['chats_screen']);
+                  _scrollDown();
+                }else{
+                  previousChat.addAll(previousChatModel!.previousChat!);
+                  previousChat.sort((a,b) {
+                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                  });
+                  chatController.update(['chats_screen']);
+                  _scrollDown(animate: false);
+                }
+              }
+              chatController.stopListeningToEvent("load_previous_group_chats");
+            });
+            chatController.emitMessages('previous_group_chats', chatGroupInfo,encode: false);
           }else{
             chatController.listenToCustomEvent('load_previous_chats',(chatData){
               chatController.userRepo.api.emitEvent('chat_overview', {});
@@ -507,11 +529,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                           ),
                                           child: Padding(
                                               padding: padding,
-                                              child: Row(
+                                              child: Stack(
+                                                alignment: Alignment.topRight,
                                                 children: [
-                                                  Expanded(
+                                                  SizedBox(
+                                                    width: isFile ? Get.width*0.65 :Get.width*0.55,
                                                     child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
+                                                      mainAxisSize: MainAxisSize.max,
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         if(repliedChat!=null)
@@ -709,71 +733,490 @@ class _ChatScreenState extends State<ChatScreen> {
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(
-                                                    height: Get.height * 0.02,
-                                                    width: Get.width * 0.02,
-                                                    child: PopupMenuButton(
-                                                        color: getAppColor(Colors.white),
+                                                  PopupMenuButton(
+                                                      color: getAppColor(Colors.white),
+                                                      padding: EdgeInsets.zero,
+                                                      child: Container(
+                                                        height: Get.height*0.03,
+                                                        width: Get.width*0.05,
                                                         padding: EdgeInsets.zero,
-                                                        icon: Icon(
+                                                        margin: EdgeInsets.zero,
+                                                        decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
+                                                          color: AppColors.button,
+                                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
+                                                        ) : BoxDecoration(
+                                                          color: getAppColor(AppColors.background),
+                                                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
+                                                        ),
+                                                        child: Icon(
                                                           Icons.arrow_drop_down_rounded,
                                                           color: chat.senderId == fullProfile.id ? Colors.white : getAppColor(Colors.black),
                                                           size: 22,
                                                         ),
-                                                        onSelected: (value) {
-                                                          if(value == 0){
-                                                            chatToReply = chat;
-                                                            chatController.update();
-                                                          }else if(value == 1){
+                                                      ),
+                                                      onSelected: (value) {
+                                                        if(value == 0){
+                                                          chatToReply = chat;
+                                                          chatController.update();
+                                                        }else if(value == 1){
 
-                                                          }else if(value == 2){
-                                                            AppOverlay.showDeviceDialog(
-                                                              title: "Delete Message",
-                                                              content: "Are you sure you want to delete this message?",
-                                                              positiveText: "Delete",
-                                                              onPositivePressed: () {
-                                                                chatController.deleteSingleMessage(
-                                                                    chatID: chat.id.toString(),
-                                                                    receiverId: chat.receiverId.toString()
-                                                                );
-                                                              },
-                                                            );
-                                                          }
-                                                        },
-                                                        itemBuilder: (context) => [
-                                                          PopupMenuItem(
-                                                            value: 0,
-                                                            child: Text(
-                                                              "Reply",
-                                                              style: AppTextStyle.bodyText1.copyWith(
-                                                                color: getAppColor(Colors.black),
-                                                                fontWeight: FontWeight.w500,
-                                                              ),
+                                                        }else if(value == 2){
+                                                          AppOverlay.showDeviceDialog(
+                                                            title: "Delete Message",
+                                                            content: "Are you sure you want to delete this message?",
+                                                            positiveText: "Delete",
+                                                            onPositivePressed: () {
+                                                              chatController.deleteSingleMessage(
+                                                                  chatID: chat.id.toString(),
+                                                                  receiverId: chat.receiverId.toString()
+                                                              );
+                                                            },
+                                                          );
+                                                        }
+                                                      },
+                                                      itemBuilder: (context) => [
+                                                        PopupMenuItem(
+                                                          value: 0,
+                                                          child: Text(
+                                                            "Reply",
+                                                            style: AppTextStyle.bodyText1.copyWith(
+                                                              color: getAppColor(Colors.black),
+                                                              fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
-                                                          PopupMenuItem(
-                                                            value: 1,
-                                                            child: Text(
-                                                              "Forward",
-                                                              style: AppTextStyle.bodyText1.copyWith(
-                                                                color: getAppColor(Colors.black),
-                                                                fontWeight: FontWeight.w500,
-                                                              ),
+                                                        ),
+                                                        PopupMenuItem(
+                                                          value: 1,
+                                                          child: Text(
+                                                            "Forward",
+                                                            style: AppTextStyle.bodyText1.copyWith(
+                                                              color: getAppColor(Colors.black),
+                                                              fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
-                                                          PopupMenuItem(
-                                                            value: 2,
-                                                            child: Text(
-                                                              "Delete",
-                                                              style: AppTextStyle.bodyText1.copyWith(
-                                                                color: getAppColor(Colors.black),
-                                                                fontWeight: FontWeight.w500,
-                                                              ),
+                                                        ),
+                                                        PopupMenuItem(
+                                                          value: 2,
+                                                          child: Text(
+                                                            "Delete",
+                                                            style: AppTextStyle.bodyText1.copyWith(
+                                                              color: getAppColor(Colors.black),
+                                                              fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
-                                                        ]),
+                                                        ),
+                                                      ]),
+                                                ],
+                                              )
+                                          ),
+                                        ),
+                                        SizedBox(height: Get.height*0.005),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+
+                            if(previousChatModel != null && post.isGroup == true)
+                              ListView.builder(
+                                itemCount: previousChat.length,
+                                shrinkWrap: true,
+                                reverse: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  var chat = previousChat[index];
+                                  PreviousChat? repliedChat;
+                                  bool isRepliedFile = false;
+                                  if(chat.replyMessageId != null){
+                                    repliedChat = previousChat.firstWhere((element) => element.id == chat.replyMessageId);
+                                  }
+                                  bool isFile = chat.messageType == "fileMessage";
+                                  if(chat.senderId == fullProfile.id){
+                                    if(chat.deleted == true){
+                                      return Container();
+                                    }
+                                    if(chat.deletedForSender == true){
+                                      return Container();
+                                    }
+                                  }
+                                  EdgeInsetsGeometry padding = EdgeInsets.only(
+                                    top: Get.height * 0.01,
+                                    bottom: Get.height * 0.01,
+                                    left: 10,
+                                    right: 10,
+                                  );
+                                  if(getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile){
+                                    padding= EdgeInsets.only(
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        top: 0);
+                                  }
+                                  else if((getUrlType(chat.fileUrl.toString()) == UrlType.VIDEO || getUrlType(chat.fileUrl.toString()) == UrlType.IMAGE) && isFile){
+                                    padding= EdgeInsets.only(
+                                        left: 5,
+                                        right: 5,
+                                        bottom: 5,
+                                        top: 5
+                                    );
+                                  }
+                                  else if(isFile){
+                                    padding= EdgeInsets.only(
+                                        left: 10,
+                                        right: 10,
+                                        bottom: 10,
+                                        top: 10
+                                    );
+                                  }
+
+                                  EdgeInsetsGeometry repliedPadding = EdgeInsets.only(
+                                    top: Get.height * 0.01,
+                                    bottom: Get.height * 0.01,
+                                    left: 10,
+                                    right: 10,
+                                  );
+                                  if(repliedChat != null){
+                                    isRepliedFile = repliedChat.messageType == "fileMessage";
+                                    if(getUrlType(repliedChat.fileUrl.toString()) == UrlType.AUDIO && isRepliedFile){
+                                      repliedPadding= const EdgeInsets.only(
+                                          left: 0,
+                                          right: 0,
+                                          bottom: 0,
+                                          top: 0);
+                                    }
+                                    else if((getUrlType(repliedChat.fileUrl.toString()) == UrlType.VIDEO || getUrlType(repliedChat.fileUrl.toString()) == UrlType.IMAGE) && isRepliedFile){
+                                      repliedPadding= const EdgeInsets.only(
+                                          left: 5,
+                                          right: 5,
+                                          bottom: 5,
+                                          top: 5
+                                      );
+                                    }
+                                    else if(isRepliedFile){
+                                      repliedPadding= const EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          bottom: 10,
+                                          top: 10
+                                      );
+                                    }
+                                  }
+
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                                    child: Column(
+                                      crossAxisAlignment: chat.senderId == fullProfile.id ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: Get.height*0.005),
+                                        Container(
+                                          width: isFile ? Get.width*0.65 :Get.width*0.55,
+                                          decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
+                                            color: AppColors.button,
+                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(0),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                                          ) : BoxDecoration(
+                                            color: getAppColor(AppColors.background),
+                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                                          ),
+                                          child: Padding(
+                                              padding: padding,
+                                              child: Stack(
+                                                alignment: Alignment.topRight,
+                                                children: [
+                                                  SizedBox(
+                                                    width: isFile ? Get.width*0.65 :Get.width*0.55,
+                                                    child: Column(
+                                                      mainAxisSize: MainAxisSize.max,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        if(chat.senderId != fullProfile.id)
+                                                          HashTagText(
+                                                          text:chat.senderUserName.toString(),
+                                                          decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                            color: getAppColor(AppColors.button),
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.bold,
+                                                            fontStyle: FontStyle.normal,
+                                                          ),
+                                                          basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                            color: getAppColor(AppColors.button),
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.bold,
+                                                            fontStyle: FontStyle.normal,
+                                                          ),
+                                                          onTap: (text) {
+                                                            controller.defaultSearchValue = text;
+                                                            Get.to(() => Search());
+                                                          },
+                                                          decorateAtSign: true,
+                                                        ),
+                                                        if(repliedChat!=null)
+                                                          Container(
+                                                            padding: repliedPadding,
+                                                            width: double.infinity,
+                                                            decoration: chat.senderId == fullProfile.id ? BoxDecoration(
+                                                              color: getAppColor(AppColors.background),
+                                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
+                                                            ) : const BoxDecoration(
+                                                              color: AppColors.button,
+                                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(20)),
+                                                            ),
+                                                            child: Column(
+                                                              mainAxisSize: MainAxisSize.min,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                if(!isRepliedFile)
+                                                                  HashTagText(
+                                                                    text: repliedChat.deleted == true ? "This message was deleted" : repliedChat.message.toString(),
+                                                                    decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                                      color: chat.senderId != fullProfile.id ?  Colors.blue : AppColors.primary,
+                                                                      fontSize: 16,
+                                                                      fontWeight: FontWeight.normal,
+                                                                    ),
+                                                                    basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                                      color: chat.deleted == true ? Colors.blue : chat.senderId != fullProfile.id ? Colors.white : getAppColor(AppColors.onBackground),
+                                                                      fontSize: 16,
+                                                                      fontWeight: FontWeight.normal,
+                                                                      fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
+                                                                    ),
+                                                                    onTap: (text) {
+                                                                      controller.defaultSearchValue = text;
+                                                                      Get.to(() => Search());
+                                                                    },
+                                                                    decorateAtSign: true,
+                                                                  ),
+                                                                if((getUrlType(repliedChat.fileUrl.toString()) == UrlType.VIDEO || getUrlType(repliedChat.fileUrl.toString()) == UrlType.IMAGE) && isRepliedFile)
+                                                                  SizedBox(
+                                                                    height: Get.height * 0.18,
+                                                                    child: NewsfeedMultipleImageView(
+                                                                      imageUrls: [repliedChat.fileUrl.toString()],
+                                                                      marginLeft: 0.0,
+                                                                      marginRight: 0.0,
+                                                                      marginBottom: 0,
+                                                                      marginTop: 0,
+                                                                      radius: 10,
+                                                                    ),
+                                                                  ),
+                                                                if(getUrlType(repliedChat.fileUrl.toString()) == UrlType.AUDIO && isRepliedFile)
+                                                                  VoiceMessage(
+                                                                    audioSrc: repliedChat.fileUrl.toString(),
+                                                                    played: false, // To show played badge or not.
+                                                                    me: repliedChat.senderId == fullProfile.id, // Set message side.
+                                                                    onPlay: () {},
+                                                                    meBgColor: AppColors.button,
+                                                                    contactBgColor: getAppColor(AppColors.background),
+                                                                    contactPlayIconColor: getAppColor(AppColors.background),
+                                                                  ),
+                                                                if(getUrlType(repliedChat.fileUrl.toString()) != UrlType.AUDIO && getUrlType(repliedChat.fileUrl.toString()) != UrlType.VIDEO && getUrlType(repliedChat.fileUrl.toString()) != UrlType.IMAGE && isRepliedFile)
+                                                                  Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration: BoxDecoration(
+                                                                          color: repliedChat.senderId == fullProfile.id ? getAppColor(AppColors.background) : AppColors.button,
+                                                                          borderRadius: BorderRadius.circular(12),
+                                                                        ),
+                                                                        height: Get.height*0.04,
+                                                                        width: Get.width*0.08,
+                                                                        child: Icon(Icons.attach_file, color: repliedChat.senderId == fullProfile.id ? getAppColor(AppColors.background) : Colors.white,),
+                                                                      ),
+                                                                      SizedBox(width: Get.width*0.01),
+                                                                      Column(
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            width: Get.width*0.4,
+                                                                            child: Text(
+                                                                              repliedChat.fileUrl.toString().split("/").last,
+                                                                              style: AppTextStyle.bodyText1.copyWith(
+                                                                                color: repliedChat.senderId == fullProfile.id ? Colors.white :getAppColor(AppColors.background),
+                                                                                fontSize: 16,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                              maxLines: 1,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width: Get.width*0.4,
+                                                                            child: Text(
+                                                                              repliedChat.fileUrl.toString().split(".").last.toUpperCase(),
+                                                                              style: AppTextStyle.bodyText1.copyWith(
+                                                                                color: repliedChat.senderId == fullProfile.id ? AppColors.primary :AppColors.button,
+                                                                                fontSize: 14,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                              maxLines: 1,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        if(!isFile)
+                                                          HashTagText(
+                                                            text: chat.deleted == true ? "This message was deleted" : chat.message.toString(),
+                                                            decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                              color: chat.senderId != fullProfile.id ?  Colors.blue : AppColors.primary,
+                                                              fontSize: 16,
+                                                              fontWeight: FontWeight.normal,
+                                                            ),
+                                                            basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                              color: chat.deleted == true ? Colors.blue : chat.senderId == fullProfile.id ?  Colors.white : getAppColor(AppColors.onBackground),
+                                                              fontSize: 16,
+                                                              fontWeight: FontWeight.normal,
+                                                              fontStyle: chat.deleted == true ? FontStyle.italic : FontStyle.normal,
+                                                            ),
+                                                            onTap: (text) {
+                                                              controller.defaultSearchValue = text;
+                                                              Get.to(() => Search());
+                                                            },
+                                                            decorateAtSign: true,
+                                                          ),
+                                                        if((getUrlType(chat.fileUrl.toString()) == UrlType.VIDEO || getUrlType(chat.fileUrl.toString()) == UrlType.IMAGE) && isFile)
+                                                          SizedBox(
+                                                            height: Get.height * 0.18,
+                                                            child: NewsfeedMultipleImageView(
+                                                              imageUrls: [chat.fileUrl.toString()],
+                                                              marginLeft: 0.0,
+                                                              marginRight: 0.0,
+                                                              marginBottom: 0,
+                                                              marginTop: 0,
+                                                              radius: 15,
+                                                            ),
+                                                          ),
+                                                        if(getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile)
+                                                          VoiceMessage(
+                                                            audioSrc: chat.fileUrl.toString(),
+                                                            played: false, // To show played badge or not.
+                                                            me: chat.senderId == fullProfile.id, // Set message side.
+                                                            onPlay: () {},
+                                                            meBgColor: AppColors.button,
+                                                            contactBgColor: getAppColor(AppColors.background),
+                                                            contactPlayIconColor: getAppColor(AppColors.background),
+                                                          ),
+                                                        if(getUrlType(chat.fileUrl.toString()) != UrlType.AUDIO && getUrlType(chat.fileUrl.toString()) != UrlType.VIDEO && getUrlType(chat.fileUrl.toString()) != UrlType.IMAGE && isFile)
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                                decoration: BoxDecoration(
+                                                                  color: chat.senderId == fullProfile.id ? getAppColor(AppColors.background) : AppColors.button,
+                                                                  borderRadius: BorderRadius.circular(12),
+                                                                ),
+                                                                height: Get.height*0.04,
+                                                                width: Get.width*0.08,
+                                                                child: Icon(Icons.attach_file, color: chat.senderId == fullProfile.id ? getAppColor(Colors.black) : Colors.white,),
+                                                              ),
+                                                              SizedBox(width: Get.width*0.01),
+                                                              Column(
+                                                                children: [
+                                                                  SizedBox(
+                                                                    width: Get.width*0.4,
+                                                                    child: Text(
+                                                                      chat.fileUrl.toString().split("/").last,
+                                                                      style: AppTextStyle.bodyText1.copyWith(
+                                                                        color: chat.senderId == fullProfile.id ? Colors.white :getAppColor(Colors.black),
+                                                                        fontSize: 16,
+                                                                        fontWeight: FontWeight.normal,
+                                                                      ),
+                                                                      maxLines: 1,
+                                                                      overflow: TextOverflow.ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: Get.width*0.4,
+                                                                    child: Text(
+                                                                      chat.fileUrl.toString().split(".").last.toUpperCase(),
+                                                                      style: AppTextStyle.bodyText1.copyWith(
+                                                                        color: chat.senderId == fullProfile.id ? AppColors.primary :AppColors.button,
+                                                                        fontSize: 14,
+                                                                        fontWeight: FontWeight.normal,
+                                                                      ),
+                                                                      maxLines: 1,
+                                                                      overflow: TextOverflow.ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                  SizedBox(width: Get.width * 0.02),
+                                                  PopupMenuButton(
+                                                      color: getAppColor(Colors.white),
+                                                      padding: EdgeInsets.zero,
+                                                      child: Container(
+                                                        height: Get.height*0.03,
+                                                        width: Get.width*0.05,
+                                                        padding: EdgeInsets.zero,
+                                                        margin: EdgeInsets.zero,
+                                                        decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
+                                                          color: AppColors.button,
+                                                          borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
+                                                        ) : BoxDecoration(
+                                                          color: getAppColor(AppColors.background),
+                                                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(0)),
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.arrow_drop_down_rounded,
+                                                          color: chat.senderId == fullProfile.id ? Colors.white : getAppColor(Colors.black),
+                                                          size: 22,
+                                                        ),
+                                                      ),
+                                                      onSelected: (value) {
+                                                        if(value == 0){
+                                                          chatToReply = chat;
+                                                          chatController.update();
+                                                        }else if(value == 1){
+
+                                                        }else if(value == 2){
+                                                          AppOverlay.showDeviceDialog(
+                                                            title: "Delete Message",
+                                                            content: "Are you sure you want to delete this message?",
+                                                            positiveText: "Delete",
+                                                            onPositivePressed: () {
+                                                              chatController.deleteSingleMessage(
+                                                                  chatID: chat.id.toString(),
+                                                                  receiverId: chat.receiverId.toString()
+                                                              );
+                                                            },
+                                                          );
+                                                        }
+                                                      },
+                                                      itemBuilder: (context) => [
+                                                        PopupMenuItem(
+                                                          value: 0,
+                                                          child: Text(
+                                                            "Reply",
+                                                            style: AppTextStyle.bodyText1.copyWith(
+                                                              color: getAppColor(Colors.black),
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        PopupMenuItem(
+                                                          value: 1,
+                                                          child: Text(
+                                                            "Forward",
+                                                            style: AppTextStyle.bodyText1.copyWith(
+                                                              color: getAppColor(Colors.black),
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        PopupMenuItem(
+                                                          value: 2,
+                                                          child: Text(
+                                                            "Delete",
+                                                            style: AppTextStyle.bodyText1.copyWith(
+                                                              color: getAppColor(Colors.black),
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ]),
                                                 ],
                                               )
                                           ),
