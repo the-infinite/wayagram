@@ -208,6 +208,14 @@ class ChatControllerWayagram extends GetxController {
     userRepo.api.emitEvent('unblock_user', body);
   }
 
+  void leaveGroup(String id,String userID){
+    var body ={
+      "groupId": id,
+      "userId": userID
+    };
+    userRepo.api.emitEvent('leave_group', jsonEncode(body));
+  }
+
   void archiveChat(){
     emitMessages('block_chat', {});
   }

@@ -413,7 +413,11 @@ class _ChatProfileState extends State<ChatProfile> {
                         bgColor: AppColors.bostonUniRed,
                         textColor: AppColors.bostonUniRed,
                         onTap: (){
-
+                          chatController.leaveGroup(post.groupId.toString(), fullProfile.id.toString());
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          chatController.update();
+                          AppOverlay.showSuccessSnackBar(content: "Group Exited Successfully");
                         },
                       )
                   ],
