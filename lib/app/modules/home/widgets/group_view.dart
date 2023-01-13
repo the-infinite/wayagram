@@ -59,8 +59,14 @@ class _GroupViewState extends State<GroupView> {
     var savedPosts = ReadWriteValue('wayagram_joined_groups', '', MyPref.box);
     var savedPostsPages = MyPref.pagesFollowed.val;
 
-    final postsGroups = GroupModelEntity.getService(jsonDecode(savedPosts.val));
-    var postsPages = GroupModelEntity.getService(jsonDecode(savedPostsPages));
+    List<GroupModelEntity> postsGroups = [];
+    if(savedPosts.val.isNotEmpty){
+      postsGroups = GroupModelEntity.getService(jsonDecode(savedPosts.val));
+    }
+    List<GroupModelEntity> postsPages = [];
+    if(savedPostsPages.isNotEmpty){
+      postsPages = GroupModelEntity.getService(jsonDecode(savedPostsPages));
+    }
 
     return ListView.builder(
       itemCount: widget.isLoading ? 3 : count,

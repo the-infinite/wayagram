@@ -151,31 +151,6 @@ class _ChatScreenState extends State<ChatScreen> {
     var chatGroupInfo = {"groupId":id};
     print(id);
 
-    chatController.listenToCustomEvent('load_previous_group_chats',(chatData){
-      chatController.userRepo.api.emitEvent('chat_overview', {});
-      previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
-      if(previousChatModel!.previousChat != null){
-        if(previousChat.isNotEmpty){
-          previousChat.clear();
-          previousChat.addAll(previousChatModel!.previousChat!);
-          previousChat.sort((a,b) {
-            return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
-          });
-          chatController.update(['chats_screen']);
-          _scrollDown();
-        }else{
-          previousChat.addAll(previousChatModel!.previousChat!);
-          previousChat.sort((a,b) {
-            return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
-          });
-          chatController.update(['chats_screen']);
-          _scrollDown(animate: false);
-        }
-      }
-      chatController.stopListeningToEvent("load_previous_group_chats");
-    });
-    chatController.emitMessages('previous_group_chats', chatGroupInfo,encode: false);
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
@@ -187,7 +162,31 @@ class _ChatScreenState extends State<ChatScreen> {
       child: GetBuilder<ChatControllerWayagram>(id:'chats_screen',builder: (chatController) {
         if(mounted){
           if(post.isGroup == true){
-            chatController.listenToCustomEvent("new_message", (p0){
+            chatController.listenToCustomEvent('load_previous_group_chats',(chatData){
+              chatController.userRepo.api.emitEvent('chat_overview', {});
+              previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
+              if(previousChatModel!.previousChat != null){
+                if(previousChat.isNotEmpty){
+                  previousChat.clear();
+                  previousChat.addAll(previousChatModel!.previousChat!);
+                  previousChat.sort((a,b) {
+                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                  });
+                  chatController.update(['chats_screen']);
+                  _scrollDown();
+                }else{
+                  previousChat.addAll(previousChatModel!.previousChat!);
+                  previousChat.sort((a,b) {
+                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                  });
+                  chatController.update(['chats_screen']);
+                  _scrollDown(animate: false);
+                }
+              }
+              chatController.stopListeningToEvent("load_previous_group_chats");
+            });
+            chatController.emitMessages('previous_group_chats', chatGroupInfo,encode: false);
+            /*chatController.listenToCustomEvent("new_message", (p0){
               chatController.listenToCustomEvent('load_previous_group_chats',(chatData){
                 chatController.userRepo.api.emitEvent('chat_overview', {});
                 previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
@@ -212,7 +211,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 chatController.stopListeningToEvent("load_previous_group_chats");
               });
               chatController.emitMessages('previous_group_chats', chatGroupInfo,encode: false);
-            });
+            });*/
           }else{
             chatController.listenToCustomEvent('load_previous_chats',(chatData){
               chatController.userRepo.api.emitEvent('chat_overview', {});
@@ -547,6 +546,28 @@ class _ChatScreenState extends State<ChatScreen> {
                                       crossAxisAlignment: chat.senderId == fullProfile.id ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(height: Get.height*0.005),
+                                        if(chat.forwardMessage == true)
+                                          Row(
+                                          mainAxisAlignment: chat.senderId == fullProfile.id ? MainAxisAlignment.end : MainAxisAlignment.start,
+                                          children: [
+                                            Icon(FeatherIcons.cornerUpRight, color: getAppColor(Colors.grey), size: 15,),
+                                            HashTagText(
+                                              text: "Forwarded",
+                                              decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                color: getAppColor(Colors.grey),
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                color: getAppColor(Colors.grey),
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.normal,
+                                                fontStyle: FontStyle.italic,
+                                              ),
+                                              decorateAtSign: false,
+                                            ),
+                                          ],
+                                        ),
                                         Container(
                                           width: isFile ? Get.width*0.65 :Get.width*0.55,
                                           decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
@@ -964,6 +985,28 @@ class _ChatScreenState extends State<ChatScreen> {
                                       crossAxisAlignment: chat.senderId == fullProfile.id ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(height: Get.height*0.005),
+                                        if(chat.forwardMessage == true)
+                                          Row(
+                                            mainAxisAlignment: chat.senderId == fullProfile.id ? MainAxisAlignment.end : MainAxisAlignment.start,
+                                            children: [
+                                              Icon(FeatherIcons.cornerUpRight, color: getAppColor(Colors.grey), size: 15,),
+                                              HashTagText(
+                                                text: "Forwarded",
+                                                decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                  color: getAppColor(Colors.grey),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                                basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                  color: getAppColor(Colors.grey),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontStyle: FontStyle.italic,
+                                                ),
+                                                decorateAtSign: false,
+                                              ),
+                                            ],
+                                          ),
                                         Container(
                                           width: isFile ? Get.width*0.65 :Get.width*0.55,
                                           decoration: chat.senderId == fullProfile.id ? const BoxDecoration(
