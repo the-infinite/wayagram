@@ -371,13 +371,31 @@ class _ChatProfileState extends State<ChatProfile> {
                         AppOverlay.showSuccessSnackBar(content: "Chat Cleared Successfully");
                       },
                     ),
-                   /* ChatProfileAction(
+                    if(post.isGroup != true && post.senderArchived == false)
+                      ChatProfileAction(
                       title: "Archive Chat",
                       icon: Icons.archive_rounded,
                       onTap: (){
-
+                        chatController.archiveUser(post.chatId.toString());
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        chatController.update();
+                        AppOverlay.showSuccessSnackBar(content: "Chat Archived Successfully");
                       },
-                    ),*/
+                    ),
+                    if(post.isGroup != true && post.senderArchived == true)
+                      ChatProfileAction(
+                        title: "Unarchive Chat",
+                        icon: Icons.archive_rounded,
+                        onTap: (){
+                          chatController.unarchiveUser(post.chatId.toString());
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          chatController.update();
+                          AppOverlay.showSuccessSnackBar(content: "Chat Unarchived Successfully");
+                        },
+                      ),
+
                     if(post.isGroup != true && !blocked)
                       ChatProfileAction(
                       title: "Block Contact",

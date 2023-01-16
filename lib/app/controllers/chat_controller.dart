@@ -201,6 +201,20 @@ class ChatControllerWayagram extends GetxController {
     userRepo.api.emitEvent('block_user', body);
   }
 
+  void archiveUser(String id){
+    var body ={
+      "chatId": id
+    };
+    userRepo.api.emitEvent('archive_chat_overview', body);
+  }
+
+  void unarchiveUser(String id){
+    var body ={
+      "chatId": id
+    };
+    userRepo.api.emitEvent('unarchive_chat_overview', body);
+  }
+
   void unBlockUser(String id){
     var body ={
       "id": id
