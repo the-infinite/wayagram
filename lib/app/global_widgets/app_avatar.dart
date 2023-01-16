@@ -22,6 +22,7 @@ class AppAvatar extends StatelessWidget {
     this.isNotification = false,
     this.isPage = false,
     this.isGroup = false,
+    this.isArchived = false,
   }) : super(key: key);
 
   final String imgUrl;
@@ -33,6 +34,7 @@ class AppAvatar extends StatelessWidget {
   final bool isNotification;
   final bool isPage;
   final bool isGroup;
+  final bool isArchived;
   final String contactName;
 
   @override
@@ -97,7 +99,7 @@ class AppAvatar extends StatelessWidget {
       );
     }
     return CircleAvatar(
-      backgroundColor: AppColors.primary,
+      backgroundColor: isArchived ? Colors.grey : AppColors.primary,
       radius: radius,
       child: SizedBox(
         width: double.infinity,
@@ -109,6 +111,13 @@ class AppAvatar extends StatelessWidget {
                   imageUrl: imgUrl,
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) {
+                    if(isArchived){
+                      return const Icon(
+                        Icons.archive_rounded,
+                        color: Colors.white,
+                        size: 25,
+                      );
+                    }
                     if(isContact){
                       return Container(
                         decoration: BoxDecoration(

@@ -38,24 +38,88 @@ class ChatsTab extends StatelessWidget {
           height: Get.height*0.82,
           child: TabBarView(
             controller: controller.chatController,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             children: [
               SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    InkWell(
+                      onTap: (){
+                        //Get.to(() => ChatScreen(chatOverview: post));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
+                        child: Column(
+                          children: [
+                            SizedBox(height: Get.height*0.005),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: Get.height*0.04,
+                                  width: Get.height*0.04,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: AppAvatar(
+                                    imgUrl: "",
+                                    isGroup: false,
+                                    isArchived: true,
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                ),
+                                SizedBox(width: 10,),
+                                Stack(
+                                  alignment: Alignment.topRight,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: Get.width*0.8,
+                                          child: HashTagText(text: "Archived", decoratedStyle: TextStyle(
+                                            color: Colors.blue,
+                                            fontSize: Get.textScaleFactor * 17,
+                                            fontWeight: FontWeight.w600,
+                                          ),basicStyle: AppTextStyle.bodyText1.copyWith(
+                                            color: getAppColor(Colors.black),
+                                            fontSize: Get.textScaleFactor * 17,
+                                            fontWeight: FontWeight.w600,),
+                                            softWrap: true,
+                                            onTap: (text) {
+
+                                            },
+                                            decorateAtSign: true,
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: Get.height*0.005),
+                          ],
+                        ),
+                      ),
+                    ),
                     if(chatController.chatListOverView!=null)
                       ListView.builder(
                         itemCount: chatOverview.length,
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           var post = chatOverview[index];
                           var avater = "";
                           var name = "";
                           var time = "";
                           var lastMessage = "";
+                          bool archived = false;
                           if(post.isGroup == true){
                             avater = post.group!.groupImageUrl.toString();
                             name = post.group!.groupName.toString();
@@ -64,10 +128,14 @@ class ChatsTab extends StatelessWidget {
                             time = timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(post.time.toString())));
                             lastMessage = post.message.toString();
                           }else{
+                            archived = post.senderArchived == true;
                             name = post.otherDisplayName.toString();
                             avater = post.otherImageURL.toString();
                             time = timeago.format(DateTime.fromMillisecondsSinceEpoch(int.parse(post.time.toString())));
                             lastMessage = post.message.toString();
+                          }
+                          if(archived){
+                            return const SizedBox.shrink();
                           }
                           return InkWell(
                             onTap: (){
