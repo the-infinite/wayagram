@@ -72,8 +72,10 @@ class NewsfeedMultipleImageView extends StatelessWidget {
 
 class ImageViewer extends StatelessWidget {
   final List<String> imageUrls;
+  final int initialPage;
   ImageViewer({Key? key,
     required this.imageUrls,
+    this.initialPage = 0
   }) : super(key: key);
 
   @override
@@ -174,23 +176,28 @@ class ImageViewer extends StatelessWidget {
               children: [
                 Expanded(
                   child: ImageSlideshow(
-                    initialPage: 0,
-                    indicatorColor: Colors.red,
-                    indicatorBackgroundColor: Colors.grey,
+                    initialPage: initialPage,
+                    indicatorColor: Colors.black,
+                    indicatorBackgroundColor: Colors.black,
                     isLoop: imageUrls.length > 1,
                     onPageChanged: (pos){
                       currentPos = pos;
                     },
-                    children: imageUrls.map((e) => Padding(
-                            padding: EdgeInsets.only(bottom: Get.height * 0.025),
-                            child: SmartImage(
-                              e,
-                              fit: BoxFit.contain,
-                              isPost: true,
-                              useAspectRatio: false,
-                              isSlideShow: true,
-                            ),
-                          ),).toList(),
+                    children:imageUrls.asMap().map((key, value){
+                      return MapEntry(key, Hero(
+                        tag: "photo$key",
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: Get.height * 0.025),
+                          child: SmartImage(
+                            value,
+                            fit: BoxFit.contain,
+                            isPost: true,
+                            useAspectRatio: false,
+                            isSlideShow: true,
+                          ),
+                        ),
+                      ));
+                    }).values.toList(),
                   ),
                 ),
               ],

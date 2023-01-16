@@ -605,7 +605,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                               final posts = GroupMediaModel.listFromJson(snapshot.data!.data);
                               savedPosts.val = jsonEncode(posts);
                               return GalleryView(
-                                  key: ValueKey("group_gallery"),
+                                  key: const ValueKey("group_gallery"),
                                   imageUrlList: posts.map((e) => e.fileUrl.toString()).toList()
                               );
                             } else if(savedPosts.val.isNotEmpty){

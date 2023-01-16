@@ -8,6 +8,8 @@ import 'package:wayagram/app/global_widgets/view_photo.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
+import 'newsfeed_multiple_imageview.dart';
+
 class GalleryView extends StatelessWidget {
   final List<String> imageUrlList;
   final int crossAxisCount;
@@ -40,14 +42,20 @@ class GalleryView extends StatelessWidget {
                           );
                         },
                         fullscreenDialog: true));*/
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ImageViewer(imageUrls: imageUrlList,initialPage: index),
+                  ),
+                );
               },
               child: Hero(
                   tag: "photo$index",
                   child: CachedNetworkImage(
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                     imageUrl: imageUrlList[index],
-                    placeholder: (context, url) => Center(child: CupertinoActivityIndicator()),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    placeholder: (context, url) => const Center(child: CupertinoActivityIndicator()),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
                   )),
             );
           }),
