@@ -8,6 +8,7 @@ class LogInModelEntity{
 	List<String>? roles;
 	bool? pinCreated;
 	String? userLocation;
+	String? merchantId;
 	List<dynamic>? privilege;
 	String? token;
 	int? passwordAge;

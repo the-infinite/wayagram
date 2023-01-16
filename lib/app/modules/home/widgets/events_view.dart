@@ -21,6 +21,7 @@ import '../../../global_widgets/app_avatar.dart';
 import '../../../global_widgets/app_button.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../../global_widgets/payment_widget/wayapay.dart';
 import '../../events/pay_for_event.dart';
 import '../../events/view_event_details.dart';
 
@@ -306,7 +307,9 @@ class _EventsViewState extends State<EventsView> {
                                     widget.onButtonClick!(list[index]);
                                   }else{
                                     if(list[index].profileId.toString() != profile.id){
-                                      Get.to(PayForEvent(post: list[index]));
+                                      var event = list[index];
+                                      Get.to(PayForEvent(post: event));
+                                      //await WayapayUtil().pay(Get.context!, amount: event.amount ?? 0, description: "Payment For Event",isTest: true);
                                     }else{
 
                                     }

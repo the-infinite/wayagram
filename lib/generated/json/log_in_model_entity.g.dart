@@ -19,6 +19,10 @@ LogInModelEntity $LogInModelEntityFromJson(Map<String, dynamic> json) {
 	if (userLocation != null) {
 		logInModelEntity.userLocation = userLocation;
 	}
+	final String? merchantId = jsonConvert.convert<String>(json['merchantId']);
+	if (userLocation != null) {
+		logInModelEntity.merchantId = merchantId;
+	}
 	final List<dynamic>? privilege = jsonConvert.convertListNotNull<dynamic>(json['privilege']);
 	if (privilege != null) {
 		logInModelEntity.privilege = privilege;
