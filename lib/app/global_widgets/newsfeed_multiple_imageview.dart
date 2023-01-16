@@ -4,10 +4,13 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/global_widgets/smart_image.dart';
 
+import '../../core/theme/app_styles.dart';
 import 'helpers/dark_mode_helper.dart';
 import 'multiple_image_view.dart';
 
@@ -75,6 +78,7 @@ class ImageViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var currentPos = 0;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: Colors.black,
@@ -104,7 +108,40 @@ class ImageViewer extends StatelessWidget {
               iconSize: Get.width * 0.06,
             ),
             actions: [
-
+              PopupMenuButton(
+                color: Colors.white,
+                icon: const Icon(Icons.more_vert,color: Colors.white),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 0,
+                    child: Text(
+                      "Download",
+                      style: AppTextStyle.bodyText1.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+                onSelected: (value) {
+                  if(value==0){
+                    bool isVideo() => getUrlType(imageUrls[currentPos]) == UrlType.VIDEO;
+                    if(isVideo()){
+                      GallerySaver.saveVideo(imageUrls[currentPos]).then((val) {
+                        if(val == true){
+                          AppOverlay.showSuccessSnackBar(content: "Video Downloaded To Device");
+                        }
+                      });
+                    }else{
+                      GallerySaver.saveImage(imageUrls[currentPos]).then((val) {
+                        if(val == true){
+                          AppOverlay.showSuccessSnackBar(content: "Image Downloaded To Device");
+                        }
+                      });
+                    }
+                  }
+                },
+              ),
             ],
             bottom: PreferredSize(
                 preferredSize: Size.fromHeight(0.0),
@@ -112,7 +149,7 @@ class ImageViewer extends StatelessWidget {
                   color: Colors.black,
                   height: 1.0,
                 )),
-            systemOverlayStyle: SystemUiOverlayStyle(
+            systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: Colors.black,
                 statusBarIconBrightness: Brightness.light,
                 statusBarBrightness: Brightness.light,
@@ -141,6 +178,9 @@ class ImageViewer extends StatelessWidget {
                     indicatorColor: Colors.red,
                     indicatorBackgroundColor: Colors.grey,
                     isLoop: imageUrls.length > 1,
+                    onPageChanged: (pos){
+                      currentPos = pos;
+                    },
                     children: imageUrls.map((e) => Padding(
                             padding: EdgeInsets.only(bottom: Get.height * 0.025),
                             child: SmartImage(
