@@ -33,7 +33,7 @@ class CreateProduct extends StatelessWidget {
             )),
             centerTitle: false,
             leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
             systemOverlayStyle: SystemUiOverlayStyle(

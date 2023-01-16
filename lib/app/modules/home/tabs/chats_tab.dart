@@ -16,6 +16,7 @@ import '../../../global_widgets/app_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../global_widgets/helpers/dark_mode_helper.dart';
+import '../../chats/archived_chats.dart';
 import '../../chats/chat_screen.dart';
 
 class ChatsTab extends StatelessWidget {
@@ -47,7 +48,7 @@ class ChatsTab extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: (){
-                        //Get.to(() => ChatScreen(chatOverview: post));
+                        Get.to(() => const ArchivedChats());
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
