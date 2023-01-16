@@ -41,7 +41,7 @@ import 'package:http_parser/http_parser.dart' as http_parser;
 
 import 'package:dio/dio.dart' as dio;
 import 'dart:math' as math;
-
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
@@ -54,7 +54,6 @@ import '../home/widgets/group_view.dart';
 
 import '../home/widgets/posts_view.dart' as post_view;
 
-import 'package:timeago/timeago.dart' as timeago;
 
 import '../search/search.dart';
 import '../send_money/send_money.dart';
@@ -886,6 +885,34 @@ class _ChatScreenState extends State<ChatScreen> {
                                               )
                                           ),
                                         ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 10,
+                                            right: 0,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: chat.senderId == fullProfile.id ? MainAxisAlignment.end : MainAxisAlignment.start,
+                                            children: [
+                                              HashTagText(
+                                                text: timeago.format(DateTime.parse(chat.createdAt.toString())),
+                                                decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                  color: getAppColor(Colors.grey),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                                basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                  color: getAppColor(Colors.grey),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontStyle: FontStyle.normal,
+                                                ),
+                                                decorateAtSign: false,
+                                              ),
+                                              if(chat.senderId == fullProfile.id)
+                                                Icon(Icons.check_circle_rounded, color: chat.read == true ? getAppColor(AppColors.button) : getAppColor(Colors.grey), size: 15,),
+                                            ],
+                                          ),
+                                        ),
                                         SizedBox(height: Get.height*0.005),
                                       ],
                                     ),
@@ -1344,6 +1371,32 @@ class _ChatScreenState extends State<ChatScreen> {
                                                       ]),
                                                 ],
                                               )
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 10,
+                                            right: 10,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: chat.senderId == fullProfile.id ? MainAxisAlignment.end : MainAxisAlignment.start,
+                                            children: [
+                                              HashTagText(
+                                                text: timeago.format(DateTime.parse(chat.createdAt.toString())),
+                                                decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                  color: getAppColor(Colors.grey),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                                basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                  color: getAppColor(Colors.grey),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontStyle: FontStyle.normal,
+                                                ),
+                                                decorateAtSign: false,
+                                              ),
+                                            ],
                                           ),
                                         ),
                                         SizedBox(height: Get.height*0.005),
