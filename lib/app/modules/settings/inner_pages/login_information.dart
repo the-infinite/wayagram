@@ -21,6 +21,7 @@ import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/ActivityLogsModel.dart';
 import '../../../data/model/all_posts_entity.dart';
+import '../../../data/model/current_location_model.dart';
 import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/last_login_response.dart';
 import '../../../data/model/login_history.dart';
@@ -36,6 +37,7 @@ import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/group_view.dart';
 import '../../home/widgets/notification_view.dart';
 import '../../search/search.dart';
+import 'package:http/http.dart' as http;
 
 class LoginInformation extends StatefulWidget {
   LoginInformation({Key? key}) : super(key: key);
@@ -47,6 +49,7 @@ class LoginInformation extends StatefulWidget {
 class _LoginInformationState extends State<LoginInformation> {
   var controller = Get.find<HomeControllerWayagram>();
   String location = 'Unknown';
+  String backupLocation = 'Unknown';
   String device = 'Unknown';
   String time = 'Unknown';
 
@@ -56,12 +59,23 @@ class _LoginInformationState extends State<LoginInformation> {
   @override
   Widget build(BuildContext context) {
     var savedLoginTime = ReadWriteValue('wayagram_login_information_last_login', '', MyPref.box);
+    var savedCustomLocationInfo = ReadWriteValue('wayagram_saved_custom_location_info', '', MyPref.box);
     if(savedLoginTime.val.isNotEmpty){
       LastLoginResponse lastLoginResponse = LastLoginResponse.fromJson(jsonDecode(savedLoginTime.val));
       location = "${lastLoginResponse.city}, ${lastLoginResponse.country}";
+      backupLocation = "${lastLoginResponse.city}, ${lastLoginResponse.country}";
       device = lastLoginResponse.device.toString();
       if(lastLoginResponse.loginDate != null){
         time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))}";
+      }
+    }
+
+    if(savedCustomLocationInfo.val.isNotEmpty){
+      CurrentLocationModel currentLocationModel = CurrentLocationModel.fromJson(json.decode(savedCustomLocationInfo.val));
+      if(currentLocationModel.regionName == currentLocationModel.city){
+        location = "${currentLocationModel.regionName}, ${currentLocationModel.country}";
+      }else{
+        location = "${currentLocationModel.city}, ${currentLocationModel.regionName}, ${currentLocationModel.country}";
       }
     }
 
@@ -69,14 +83,42 @@ class _LoginInformationState extends State<LoginInformation> {
       if(value.isSuccessful){
         LastLoginResponse lastLoginResponse = LastLoginResponse.fromJson(value.data);
         savedLoginTime.val = jsonEncode(value.data);
-        location = "${lastLoginResponse.city}, ${lastLoginResponse.country}";
+        backupLocation = "${lastLoginResponse.city}, ${lastLoginResponse.country}";
         device = lastLoginResponse.device.toString();
         if(lastLoginResponse.loginDate != null){
           time = "${DateFormat.yMMMMEEEEd().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))} at ${DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(lastLoginResponse.loginDate!.toInt()))}";
         }
         controller.update();
+      }else{
+
       }
     });
+
+    try {
+      http.get(Uri.parse('http://ip-api.com/json')).then((value) {
+        savedCustomLocationInfo.val = value.body;
+        CurrentLocationModel currentLocationModel = CurrentLocationModel.fromJson(json.decode(value.body));
+        if(currentLocationModel.regionName == currentLocationModel.city){
+          location = "${currentLocationModel.regionName}, ${currentLocationModel.country}";
+        }else{
+          location = "${currentLocationModel.city}, ${currentLocationModel.regionName}, ${currentLocationModel.country}";
+        }
+        controller.update();
+      });
+    } catch (err) {
+      if(savedCustomLocationInfo.val.isNotEmpty){
+        CurrentLocationModel currentLocationModel = CurrentLocationModel.fromJson(json.decode(savedCustomLocationInfo.val));
+        if(currentLocationModel.regionName == currentLocationModel.city){
+          location = "${currentLocationModel.regionName}, ${currentLocationModel.country}";
+        }else{
+          location = "${currentLocationModel.city}, ${currentLocationModel.regionName}, ${currentLocationModel.country}";
+        }
+        controller.update();
+      }else{
+        location = backupLocation;
+        controller.update();
+      }
+    }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(

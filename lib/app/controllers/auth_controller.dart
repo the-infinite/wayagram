@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,7 @@ import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../bindings/wayagram_binding.dart';
 import '../data/model/ValidateUserModel.dart';
+import '../data/model/current_location_model.dart';
 import '../data/model/full_user_profile_entity.dart';
 import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
@@ -208,9 +211,32 @@ class AuthControllerWayagram extends GetxController {
       MyPref.logInDetail.val = jsonEncode(response.data);
       MyPref.referenceCode.val = data.user!.referenceCode.toString();
       MyPref.userId.val = data.user!.id.toString();
+
+      saveHistory(data.user!.id.toString());
       await getUserProfile(data.user!.id.toString());
     }
   }
+
+  void saveHistory(String userID){
+    var savedCustomLocationInfo = ReadWriteValue('wayagram_saved_custom_location_info', '', MyPref.box);
+    http.get(Uri.parse('http://ip-api.com/json')).then((value) {
+      savedCustomLocationInfo.val = value.body;
+      CurrentLocationModel currentLocationModel = CurrentLocationModel.fromJson(json.decode(value.body));
+      var historyBody = {
+        "city" : currentLocationModel.city.toString(),
+        "country" : currentLocationModel.country.toString(),
+        "id": "0",
+        "ip": currentLocationModel.query.toString(),
+        "province": currentLocationModel.region.toString(),
+        "userId": userID,
+        "device": Platform.isAndroid ? "Android" : "iOS"
+      };
+      userRepo.postData("/auth-service/api/v1/history/save?",historyBody).then((value){
+
+      });
+    });
+  }
+
   //First Sign IN
   Future<void> signInFirst() async {
     var message = "";
@@ -224,6 +250,8 @@ class AuthControllerWayagram extends GetxController {
       MyPref.authToken.val = data.token.toString();
       MyPref.logInDetail.val = jsonEncode(response.data);
       MyPref.userId.val = data.user!.id.toString();
+
+      saveHistory(data.user!.id.toString());
       await getUserProfileFirst(data.user!.id.toString());
     }
   }

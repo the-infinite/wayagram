@@ -105,35 +105,51 @@ class CreateEvent extends StatelessWidget {
                           currentPage++;
                           controller.update(['create_event']);
                         }else{
-                          Map<String, dynamic> body = {
-                            'location':locationController.text.toString(),
-                            'amount':int.parse(priceController.text),
-                            'eventOrganizer': eventOrganizerController.text.toString(),
-                            'eventUrl': linkController.text.isEmpty ? "wayagram.com":linkController.text,
-                            'eventName': eventNameController.text.toString(),
-                            'details': eventNameController.text.toString(),
-                            'eventStart': startDate.millisecondsSinceEpoch.toString(),
-                            'eventEnd': endDate.millisecondsSinceEpoch.toString(),
-                            'eventTicketEnd': endDate.millisecondsSinceEpoch.toString(),
-                            'isPaid': freeOrPaidController.text != "Free",
-                            'isPrivate': privacyController.text != "Public",
-                            'virtual': eventsTypeController.text != "Physical",
-                            'no_of_ticket': int.parse(ticketsController.text),
-                            "profile_id":fullProfile.id
-                          };
+                          bool create = true;
+                          if(freeOrPaidController.text != "Free"){
+                            await AppOverlay.showDeviceDialog(
+                              title: "Payment Information",
+                              content: "Waya will take a commission from the payment and the rest of the money will be paid into your account at the end of this event duration or its expiry date.",
+                              onPositivePressed: () {
+                                create = true;
+                              },
+                              onNegativePressed: () {
+                                create = false;
+                              },
+                            );
+                          }
 
-                          body['eventPoster'] = await dio.MultipartFile.fromFile(
-                            controller.imagePaths[1],
-                            filename: controller.imagePaths[1].split('/').last,
-                          );
+                          if(create){
+                            Map<String, dynamic> body = {
+                              'location':locationController.text.toString(),
+                              'amount':int.parse(priceController.text),
+                              'eventOrganizer': eventOrganizerController.text.toString(),
+                              'eventUrl': linkController.text.isEmpty ? "wayagram.com":linkController.text,
+                              'eventName': eventNameController.text.toString(),
+                              'details': eventNameController.text.toString(),
+                              'eventStart': startDate.millisecondsSinceEpoch.toString(),
+                              'eventEnd': endDate.millisecondsSinceEpoch.toString(),
+                              'eventTicketEnd': endDate.millisecondsSinceEpoch.toString(),
+                              'isPaid': freeOrPaidController.text != "Free",
+                              'isPrivate': privacyController.text != "Public",
+                              'virtual': eventsTypeController.text != "Physical",
+                              'no_of_ticket': int.parse(ticketsController.text),
+                              "profile_id":fullProfile.id
+                            };
 
-                          var formData = dio.FormData.fromMap(body);
-                          var response = await controller.postData(formData, "/wayagram-service/all-posts/create-event",updatePages: false);
-                          if(response.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram event created successfully".toLowerCase()){
-                            Get.back();
-                            AppOverlay.showSuccessSnackBar(content: "Event Created Successfully");
-                          }else{
-                            AppOverlay.showErrorSnackBar(content: "An Error Occurred, Please try again later");
+                            body['eventPoster'] = await dio.MultipartFile.fromFile(
+                              controller.imagePaths[1],
+                              filename: controller.imagePaths[1].split('/').last,
+                            );
+
+                            var formData = dio.FormData.fromMap(body);
+                            var response = await controller.postData(formData, "/wayagram-service/all-posts/create-event",updatePages: false);
+                            if(response.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram event created successfully".toLowerCase()){
+                              Get.back();
+                              AppOverlay.showSuccessSnackBar(content: "Event Created Successfully");
+                            }else{
+                              AppOverlay.showErrorSnackBar(content: "An Error Occurred, Please try again later");
+                            }
                           }
                         }
                       }
@@ -142,7 +158,7 @@ class CreateEvent extends StatelessWidget {
                     fontColor: AppColors.button,
                     bckgrndColor: getAppColor(AppColors.background),
                     border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                   ),
                 ),
@@ -153,7 +169,7 @@ class CreateEvent extends StatelessWidget {
             color: getAppColor(AppColors.background),
             child: Column(
               children: [
-                Divider(
+                const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,

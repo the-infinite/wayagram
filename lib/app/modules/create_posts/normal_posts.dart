@@ -146,43 +146,34 @@ class _CreatePostsState extends State<CreatePosts> {
                     onPressed: () async {
                       if(formKey.currentState!.validate()){
                         if(controller.isProductPost){
-                          Map<String, dynamic> body = {
-                            'description': textController.text,
-                            'name':nameController.text,
-                            'amount':priceController.text,
-                            'profile_id': fullProfile.id,
-                          };
-                          if(images.isNotEmpty){
-                            body['image'] = await dio.MultipartFile.fromFile(
-                              images[0],
-                              filename: images[0].split('/').last,
-                            );
-                          }
-                          var formData = dio.FormData.fromMap(body);
-                          ApiResponse? response;
-                          if(postID.isNotEmpty){
-                            formData.fields.add(MapEntry('product_id', postID));
-                            for (var element in images) {
-                              body['product_id'] = postID;
+                          bool create = true;
+                          await AppOverlay.showDeviceDialog(
+                            title: "Payment Information",
+                            content: "Waya will take a commission from every sales and the rest of the money will be paid into your account",
+                            onPositivePressed: () {
+                              create = true;
+                            },
+                            onNegativePressed: () {
+                              create = false;
+                            },
+                          );
+                          if(create){
+                            Map<String, dynamic> body = {
+                              'description': textController.text,
+                              'name':nameController.text,
+                              'amount':priceController.text,
+                              'profile_id': fullProfile.id,
+                            };
+                            if(images.isNotEmpty){
                               body['image'] = await dio.MultipartFile.fromFile(
-                                element,
-                                filename: element.split('/').last,
+                                images[0],
+                                filename: images[0].split('/').last,
                               );
-                              formData = dio.FormData.fromMap(body);
-                              response = await controller.putData(formData, "/wayagram-service/all-posts/update-product");
                             }
-                            if(response!.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram product created successfully".toLowerCase() || response.message.toString().trim().toLowerCase() == "WAYAGram Product updated successfully".toLowerCase()){
-                              postID = "";
-                              Get.back();
-                              AppOverlay.showSuccessSnackBar(content: "Product created successfully");
-                            }
-                          }else{
-                            response = await controller.postData(formData, "/wayagram-service/all-posts/create-product");
-                            if(response.isSuccessful || response.message == "WAYAGram product created successfully" || response.message == "WAYAGram Product updated successfully"){
-                              if(images.isNotEmpty){
-                                images.removeAt(0);
-                              }
-                              postID = response.data['id'] as String;
+                            var formData = dio.FormData.fromMap(body);
+                            ApiResponse? response;
+                            if(postID.isNotEmpty){
+                              formData.fields.add(MapEntry('product_id', postID));
                               for (var element in images) {
                                 body['product_id'] = postID;
                                 body['image'] = await dio.MultipartFile.fromFile(
@@ -198,11 +189,33 @@ class _CreatePostsState extends State<CreatePosts> {
                                 AppOverlay.showSuccessSnackBar(content: "Product created successfully");
                               }
                             }else{
-                              AppOverlay.showErrorSnackBar(title: 'Error', content: "Something went wrong, please try again later");
+                              response = await controller.postData(formData, "/wayagram-service/all-posts/create-product");
+                              if(response.isSuccessful || response.message == "WAYAGram product created successfully" || response.message == "WAYAGram Product updated successfully"){
+                                if(images.isNotEmpty){
+                                  images.removeAt(0);
+                                }
+                                postID = response.data['id'] as String;
+                                for (var element in images) {
+                                  body['product_id'] = postID;
+                                  body['image'] = await dio.MultipartFile.fromFile(
+                                    element,
+                                    filename: element.split('/').last,
+                                  );
+                                  formData = dio.FormData.fromMap(body);
+                                  response = await controller.putData(formData, "/wayagram-service/all-posts/update-product");
+                                }
+                                if(response!.isSuccessful || response.message.toString().trim().toLowerCase() == "WAYAGram product created successfully".toLowerCase() || response.message.toString().trim().toLowerCase() == "WAYAGram Product updated successfully".toLowerCase()){
+                                  postID = "";
+                                  Get.back();
+                                  AppOverlay.showSuccessSnackBar(content: "Product created successfully");
+                                }
+                              }else{
+                                AppOverlay.showErrorSnackBar(title: 'Error', content: "Something went wrong, please try again later");
+                              }
                             }
                           }
-
-                        }else{
+                        }
+                        else{
                           if(controller.postToQuote != null){
                             var body = {
                               "original_post_id": controller.postToQuote!.id,

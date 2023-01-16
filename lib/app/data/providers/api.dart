@@ -25,10 +25,10 @@ import 'my_pref.dart';
 //Account Service https://services.wayagram.ng/account-service/swagger-ui/index.html#/
 
 class Api {
-  static String baseUrl = 'https://services.wayagram.ng/';
-  static String baseSocketUrl = 'wss://chats.wayagram.ng/';
-  //static String baseUrl = 'https://services.staging.wayagram.ng/';
-  //static String baseSocketUrl = 'wss://chats.staging.wayagram.ng/';
+  //static String baseUrl = 'https://services.wayagram.ng/';
+  //static String baseSocketUrl = 'wss://chats.wayagram.ng/';
+  static String baseUrl = 'https://services.staging.wayagram.ng/';
+  static String baseSocketUrl = 'wss://chats.staging.wayagram.ng/';
   CancelToken token = CancelToken();
 
   final Dio _client = Dio(
@@ -46,7 +46,7 @@ class Api {
     try {
       var head = {
         'Authorization': MyPref.authToken.val,
-        //'Authorization':"serial eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbeyJjcmVhdGVkQXQiOiIxNS0wMi0yMDIyIDA2OjI3OjEzIiwidXBkYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsImNyZWF0ZWRCeSI6Ik1HUiIsIm1vZGlmaWVkQnkiOiJNR1IiLCJpZCI6MTMsIm5hbWUiOiJST0xFX1VTRVIiLCJkZXNjcmlwdGlvbiI6IlVTRVIgUk9MRSIsImRlZmF1bHQiOnRydWV9XSwiaWQiOjEyMjEsInN1YiI6ImdyZWVuMTBAeW9wbWFpbC5jb20iLCJpYXQiOjE2Njg3NjQ2MTIsImV4cCI6MTcwMDMyMjIxMn0.ITr_SLT4Zqm6G9w0c-H9vphGIhxv8hnZFdYTk0uW91eFVqutAkAZjkfwiSOMA70qZVF2NKfjyMgST7OauUd2gQ"
+        //'Authorization': "serial eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbeyJjcmVhdGVkQXQiOiIxNS0wMi0yMDIyIDA2OjI3OjEzIiwidXBkYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsImNyZWF0ZWRCeSI6Ik1HUiIsIm1vZGlmaWVkQnkiOiJNR1IiLCJpZCI6MTMsIm5hbWUiOiJST0xFX1VTRVJfT1dORVIiLCJkZXNjcmlwdGlvbiI6IlVTRVIgUk9MRSIsImRlZmF1bHQiOnRydWV9LHsiY3JlYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsInVwZGF0ZWRBdCI6IjE1LTAyLTIwMjIgMDY6Mjc6MTMiLCJjcmVhdGVkQnkiOiJNR1IiLCJtb2RpZmllZEJ5IjoiTUdSIiwiaWQiOjE0LCJuYW1lIjoiUk9MRV9VU0VSX01FUkNIQU5UIiwiZGVzY3JpcHRpb24iOiJDT1JQT1JBVEUgVVNFUiBST0xFIiwiZGVmYXVsdCI6dHJ1ZX1dLCJpZCI6NjM5LCJzdWIiOiJjZXBoYXNhcm93b2xvQGdtYWlsLmNvbSIsImlhdCI6MTY3Mzg2MTE2OSwiZXhwIjoxNzA1NDE4NzY5fQ.N6_l6-D2x9AgQun0dK8VA80jh9Sa09QkepRgL66wOuTMeRjtQO1S7x5VO0ixKIaUdsv7GVNec5FhZ_gGBowztg"
       };
       var link = url;
       if(sso){

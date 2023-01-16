@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:wayagram/app/controllers/home_controller.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/app/modules/home/home.dart';
@@ -25,6 +26,9 @@ import '../profile/profile.dart';
 import '../profile/update_profile.dart';
 import 'inner_pages/login_information.dart';
 
+import 'package:http/http.dart' as http;
+
+
 class Settings extends GetView<HomeControllerWayagram>{
   Settings({Key? key}) : super(key: key);
 
@@ -35,7 +39,14 @@ class Settings extends GetView<HomeControllerWayagram>{
     return  GetBuilder<HomeControllerWayagram>(
       id: 'settings',
       builder: (controller){
+        var savedCustomLocationInfo = ReadWriteValue('wayagram_saved_custom_location_info', '', MyPref.box);
         var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+
+        try {
+          http.get(Uri.parse('http://ip-api.com/json')).then((value) {
+            savedCustomLocationInfo.val = value.body;
+          });
+        } catch (_) {}
 
         return Scaffold(
           appBar: AppBar(
