@@ -1,5 +1,6 @@
 library newsfeed_multiple_imageview;
 
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/app/global_widgets/smart_image.dart';
 
+import 'helpers/dark_mode_helper.dart';
 import 'multiple_image_view.dart';
 
 
@@ -74,16 +76,53 @@ class ImageViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
+      value: const SystemUiOverlayStyle(
           statusBarColor: Colors.black,
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.light,
           systemNavigationBarColor: Colors.black,
           systemNavigationBarIconBrightness: Brightness.light
       ),
-      child: Scaffold(body: SafeArea(
-        bottom: false,
-        child: Container(
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+
+              ],
+            ),
+            leading: IconButton(
+              padding: EdgeInsets.zero,
+              icon: Icon(
+                FeatherIcons.arrowLeft,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Get.back();
+              },
+              iconSize: Get.width * 0.06,
+            ),
+            actions: [
+
+            ],
+            bottom: PreferredSize(
+                preferredSize: Size.fromHeight(0.0),
+                child: Container(
+                  color: Colors.black,
+                  height: 1.0,
+                )),
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: Colors.black,
+                statusBarIconBrightness: Brightness.light,
+                statusBarBrightness: Brightness.light,
+                systemNavigationBarColor: Colors.black,
+                systemNavigationBarIconBrightness: Brightness.light
+            ),
+          ),
+          body: SafeArea(
+            bottom: false,
+            child: Container(
           // width: MediaQuery.of(context).size.width,
           // height: MediaQuery.of(context).size.height,
           color: Colors.black,
@@ -102,9 +141,7 @@ class ImageViewer extends StatelessWidget {
                     indicatorColor: Colors.red,
                     indicatorBackgroundColor: Colors.grey,
                     isLoop: imageUrls.length > 1,
-                    children: imageUrls
-                        .map(
-                          (e) => Padding(
+                    children: imageUrls.map((e) => Padding(
                             padding: EdgeInsets.only(bottom: Get.height * 0.025),
                             child: SmartImage(
                               e,
@@ -113,8 +150,7 @@ class ImageViewer extends StatelessWidget {
                               useAspectRatio: false,
                               isSlideShow: true,
                             ),
-                          ),
-                    ).toList(),
+                          ),).toList(),
                   ),
                 ),
               ],

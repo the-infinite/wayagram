@@ -270,6 +270,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                   element,
                                   filename: element.split('/').last,
                                 );
+                                body.removeWhere((key, value) => key == "hashtags");
                                 formData = dio.FormData.fromMap(body);
                                 response = await controller.putData(formData, "/wayagram-service/all-posts/update");
                               }
@@ -298,6 +299,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                     element,
                                     filename: element.split('/').last,
                                   );
+                                  body.removeWhere((key, value) => key == "hashtags");
                                   formData = dio.FormData.fromMap(body);
                                   response = await controller.putData(formData, "/wayagram-service/all-posts/update");
                                 }
