@@ -181,7 +181,7 @@ class ImageViewer extends StatelessWidget {
                     indicatorBackgroundColor: Colors.black,
                     isLoop: imageUrls.length > 1,
                     onPageChanged: (pos){
-                      currentPos = pos;
+                       currentPos = pos;
                     },
                     children:imageUrls.asMap().map((key, value){
                       return MapEntry(key, Hero(

@@ -149,7 +149,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
     var chatNormalInfo = {"otherId": id};
     var chatGroupInfo = {"groupId":id};
-    print(id);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
