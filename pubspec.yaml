@@ -80,6 +80,7 @@ dependencies:
     git:
       url: https://github.com/CephasPeter/WAYA-PAY-CHAT-2.0-FLUTTER-SDK.git
       ref: main # branch name
+  visibility_detector: ^0.3.3
 
 dev_dependencies:
   flutter_test:
