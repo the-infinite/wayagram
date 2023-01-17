@@ -282,6 +282,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                             savedFollowing.val = savedFollowingList.join(",");
                                             controller.getFollowing;
                                             controller.update(['other_profile_page']);
+                                            setState(() {
+
+                                            });
                                           }else{
                                             AppOverlay.showErrorSnackBar();
                                           }

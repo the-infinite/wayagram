@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:share_plus/share_plus.dart';
@@ -24,11 +25,13 @@ import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/app_refresher.dart';
 import '../../global_widgets/document_picker.dart';
+import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
+import '../profile/other_profile.dart';
 
 class Contact extends StatefulWidget {
   Contact({Key? key}) : super(key: key);
@@ -209,10 +212,10 @@ class _ContactState extends State<Contact> {
                                 if(user!.email == fullProfile.email || user!.phoneNumber == fullProfile.phone){
                                   return Container();
                                 }
-                                buttonText = "Follow";
-                                isFollowing = following.following!.any((element) => (element.email == user!.email) || (element.phone == user.phoneNumber) || (element.id == user.id));
+                                buttonText = "View Profile";
+                                //isFollowing = following.following!.any((element) => (element.email == user!.email) || (element.phone == user.phoneNumber) || (element.id == user.id));
                                 if(isFollowing){
-                                  buttonText = "Following";
+                                  //buttonText = "Following";
                                 }
                                 backgroundColor = AppColors.primary;
                                 fontColor = getAppColor(AppColors.background);
@@ -226,10 +229,10 @@ class _ContactState extends State<Contact> {
                                 if(user!.email == fullProfile.email || user!.phoneNumber == fullProfile.phone){
                                   return Container();
                                 }
-                                buttonText = "Follow";
-                                isFollowing = following.following!.any((element) => (element.email == user!.email) || (element.phone == user.phoneNumber) || (element.id == user.id));
+                                buttonText = "View Profile";
+                              //  isFollowing = following.following!.any((element) => (element.email == user!.email) || (element.phone == user.phoneNumber) || (element.id == user.id));
                                 if(isFollowing){
-                                  buttonText = "Following";
+                                 // buttonText = "Following";
 
                                 }
                                 backgroundColor = AppColors.primary;
@@ -332,26 +335,30 @@ class _ContactState extends State<Contact> {
                                                 "user_id": user!.id.toString(),
                                                 "username": person.displayName
                                               };
+                                              final userDetails = ReadWriteValue('wayagram_user_details${user.userId.toString()}${user.id.toString()}', "", MyPref.box);
 
-                                              if(!isFollowing){
-                                                var response = await controller.postData(body, "wayagram-service/graph/friend/follow");
-                                                if(response.isSuccessful){
-                                                  await controller.getFollowing;
-                                                  await controller.getPosts;
-                                                  setState(() {
-
-                                                  });
+                                              controller.getData("/wayagram-service/main/profile/get-by-user-id?user_id=${user.userId.toString()}", true).then((value){
+                                                if(value.isSuccessful){
+                                                  userDetails.val = jsonEncode(value.data);
+                                                  var model = FullUserProfileEntity.fromJson(value.data);
+                                                  Get.to(() => OtherProfile(info: [
+                                                    model.displayName.toString(),
+                                                    model.username.toString(),
+                                                    model.avatar.toString(),
+                                                    model.userId.toString(),
+                                                    model.bio.toString(),
+                                                    model.posts.toString(),
+                                                    model.followers.toString(),
+                                                    model.followings.toString(),
+                                                    model.coverImage.toString(),
+                                                    model.id.toString(),
+                                                    model.notPublic == true ? "true" : "false"
+                                                  ]));
+                                                }else{
+                                                   AppOverlay.showErrorSnackBar(content: value.message.toString());
                                                 }
-                                              }else{
-                                                var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
-                                                if(response.isSuccessful){
-                                                  await controller.getFollowing;
-                                                  await controller.getPosts;
-                                                  setState(() {
+                                              });
 
-                                                  });
-                                                }
-                                              }
                                             }else{
                                               await Share.share('Hi Friend, Join me on wayagram https://app.staging.wayagram.ng?from=shared', subject: 'Invite');
                                             }
