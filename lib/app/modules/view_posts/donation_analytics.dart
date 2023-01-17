@@ -322,7 +322,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                             onTap: (){
                               if(post.donatorProfile != null){
                                 var person = post.donatorProfile!;
-                                Get.to(() => OtherProfile(),arguments: [
+                                Get.to(() => OtherProfile(info: [
                                   person.displayName.toString(),
                                   person.username.toString(),
                                   person.avatar.toString(),
@@ -334,7 +334,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                                   person.coverImage.toString(),
                                   person.id.toString(),
                                   person.notPublic == true ? "true" : "false"
-                                ]);
+                                ]));
                               }
                             },
                             child: Container(

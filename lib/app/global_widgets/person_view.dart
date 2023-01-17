@@ -238,7 +238,7 @@ class _PersonViewState extends State<PersonView> {
               id: id
               ));
             }else{
-              Get.to(() => OtherProfile(),arguments: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,id,privateUser]);
+              Get.to(() => OtherProfile(info: [displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,id,privateUser]));
             }
           },
           child: Container(

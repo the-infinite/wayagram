@@ -4,7 +4,6 @@ import 'dart:convert';
 
 @JsonSerializable()
 class FullUserProfileEntity {
-
 	String? id;
 	@JSONField(name: "UserId")
 	String? userId;

@@ -96,18 +96,6 @@ class AppPages {
     ),
 
     GetPage(
-      name: OtherProfile.route,
-      page: () => OtherProfile(),
-      binding: WayagramBinding(),
-    ),
-
-    GetPage(
-      name: PostProfile.route,
-      page: () => PostProfile(),
-      binding: WayagramBinding(),
-    ),
-
-    GetPage(
       name: Search.route,
       page: () => Search(),
       binding: WayagramBinding(),

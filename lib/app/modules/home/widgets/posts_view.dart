@@ -340,10 +340,10 @@ class _PostState extends State<Post> {
                       if(widget.post.profile!.userId == widget.fullProfile.userId) {
                         Get.to(() => Profile());
                       }else{
-                        Get.to(() => PostProfile(), arguments: widget.post);
+                        Get.to(() => PostProfile(profileUserID: widget.post.profile!.userId.toString()), arguments: widget.post);
                       }
                     }else{
-                      Get.to(() => PostProfile(), arguments: widget.post);
+                      Get.to(() => PostProfile(profileUserID: widget.post.profile!.userId.toString()), arguments: widget.post);
                     }
                   },
                   child: SizedBox(

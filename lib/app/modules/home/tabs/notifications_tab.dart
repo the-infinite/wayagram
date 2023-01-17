@@ -133,7 +133,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(info: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -145,7 +145,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.coverImage.toString(),
                                                 post.profile!.id.toString(),
                                                 post.profile!.notPublic == true ? "true" : "false"
-                                              ]);
+                                              ]));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
@@ -262,7 +262,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(info: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -274,7 +274,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.coverImage.toString(),
                                                 post.profile!.id.toString(),
                                                 post.profile!.notPublic == true ? "true" : "false"
-                                              ]);
+                                              ]));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
@@ -413,7 +413,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(info: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -425,7 +425,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.coverImage.toString(),
                                                 post.profile!.id.toString(),
                                                 post.profile!.notPublic == true ? "true" : "false"
-                                              ]);
+                                              ]));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
@@ -542,7 +542,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(info: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -554,7 +554,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.coverImage.toString(),
                                                 post.profile!.id.toString(),
                                                 post.profile!.notPublic == true ? "true" : "false"
-                                              ]);
+                                              ]));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
@@ -693,7 +693,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(info: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -705,7 +705,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.coverImage.toString(),
                                                 post.profile!.id.toString(),
                                                 post.profile!.notPublic == true ? "true" : "false"
-                                              ]);
+                                              ]));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
@@ -828,7 +828,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(info: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -840,7 +840,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.coverImage.toString(),
                                                 post.profile!.id.toString(),
                                                 post.profile!.notPublic == true ? "true" : "false"
-                                              ]);
+                                              ]));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
@@ -985,7 +985,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(info: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -997,7 +997,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.coverImage.toString(),
                                                 post.profile!.id.toString(),
                                                 post.profile!.notPublic == true ? "true" : "false"
-                                              ]);
+                                              ]));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),
@@ -1120,7 +1120,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                           var post = posts[index];
                                           return InkWell(
                                             onTap: (){
-                                              Get.to(() => OtherProfile(),arguments: [
+                                              Get.to(() => OtherProfile(info: [
                                                 post.profile!.displayName.toString(),
                                                 post.profile!.username.toString(),
                                                 post.profile!.avatar.toString(),
@@ -1132,7 +1132,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                 post.profile!.coverImage.toString(),
                                                 post.profile!.id.toString(),
                                                 post.profile!.notPublic == true ? "true" : "false"
-                                              ]);
+                                              ]));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(horizontal: Get.width*0.025, vertical: Get.height*0.01),

@@ -334,7 +334,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                             onTap: (){
                               if(post.voterProfile != null){
                                 var person = post.voterProfile!;
-                                Get.to(() => OtherProfile(),arguments: [
+                                Get.to(() => OtherProfile(info: [
                                   person.displayName.toString(),
                                   person.username.toString(),
                                   person.avatar.toString(),
@@ -346,7 +346,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                                   person.coverImage.toString(),
                                   person.id.toString(),
                                   person.notPublic == true ? "true" : "false"
-                                ]);
+                                ]));
                               }
                             },
                             child: Container(
