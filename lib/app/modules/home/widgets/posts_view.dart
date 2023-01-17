@@ -340,10 +340,36 @@ class _PostState extends State<Post> {
                       if(widget.post.profile!.userId == widget.fullProfile.userId) {
                         Get.to(() => Profile());
                       }else{
-                        Get.to(() => PostProfile(profileUserID: widget.post.profile!.userId.toString()), arguments: widget.post);
+                       // Get.to(() => PostProfile(profileUserID: widget.post.profile!.userId.toString()), arguments: widget.post);
+                        Get.to(() => OtherProfile(info: [
+                          widget.post.profile!.displayName.toString(),
+                          widget.post.profile!.username.toString(),
+                          widget.post.profile!.avatar.toString(),
+                          widget.post.profile!.userId.toString(),
+                          widget.post.profile!.bio.toString(),
+                          widget.post.profile!.posts.toString(),
+                          widget.post.profile!.followers.toString(),
+                          widget.post.profile!.followings.toString(),
+                          widget. post.profile!.coverImage.toString(),
+                          widget.post.profile!.id.toString(),
+                          widget.post.profile!.notPublic == true ? "true" : "false"
+                        ],post: widget.post));
                       }
                     }else{
-                      Get.to(() => PostProfile(profileUserID: widget.post.profile!.userId.toString()), arguments: widget.post);
+                     // Get.to(() => PostProfile(profileUserID: widget.post.profile!.userId.toString()), arguments: widget.post);
+                      Get.to(() => OtherProfile(info: [
+                        widget.post.profile!.displayName.toString(),
+                        widget.post.profile!.username.toString(),
+                        widget.post.profile!.avatar.toString(),
+                        widget.post.profile!.userId.toString(),
+                        widget.post.profile!.bio.toString(),
+                        widget.post.profile!.posts.toString(),
+                        widget.post.profile!.followers.toString(),
+                        widget.post.profile!.followings.toString(),
+                        widget. post.profile!.coverImage.toString(),
+                        widget.post.profile!.id.toString(),
+                        widget.post.profile!.notPublic == true ? "true" : "false"
+                      ],post: widget.post));
                     }
                   },
                   child: SizedBox(
