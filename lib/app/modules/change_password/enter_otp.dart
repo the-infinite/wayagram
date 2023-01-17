@@ -29,6 +29,7 @@ class EnterChangeOTP extends GetView<AuthControllerWayagram> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: getAppColor(AppColors.background),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -99,7 +100,10 @@ class EnterChangeOTP extends GetView<AuthControllerWayagram> {
                   },
                   otpFieldStyle: OtpFieldStyle(
                     backgroundColor: getAppColor(Colors.white),
-                    borderColor: getAppColor(AppColors.grey),
+                    borderColor: getAppColor(Colors.black),
+                    enabledBorderColor: getAppColor(Colors.black),
+                    disabledBorderColor: getAppColor(Colors.black),
+                    focusBorderColor: AppColors.primary
                   ),
                 ),
 

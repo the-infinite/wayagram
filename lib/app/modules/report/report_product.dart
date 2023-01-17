@@ -87,7 +87,7 @@ class _ReportProductState extends State<ReportProduct> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             actions: [
               Center(
@@ -160,7 +160,7 @@ class _ReportProductState extends State<ReportProduct> {
                         child: Text(
                           subtitle,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: getAppColor(Colors.black),
                             fontSize: Get.textScaleFactor * 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -177,6 +177,11 @@ class _ReportProductState extends State<ReportProduct> {
                           item,
                         ),
                         activeColor: AppColors.primary,
+                        textStyle: TextStyle(
+                          color: getAppColor(const Color(0xff4F4F4F)),
+                          fontSize: Get.textScaleFactor * 16,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
                       SizedBox(height: 10,),
                       if(_reason == "Other")

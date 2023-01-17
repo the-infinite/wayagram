@@ -152,7 +152,9 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                     title: title,
                                     subtitle: subtitle,
                                     onClick: (title, subtitle) {
-
+                                      controller.defaultSearchValue = title;
+                                      searchController.text = title;
+                                      tabController.animateTo(1);
                                     },
                                   );
                                 } else if(searchedHashtags.isNotEmpty){
@@ -173,14 +175,16 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                     title: title,
                                     subtitle: subtitle,
                                     onClick: (title, subtitle) {
-
+                                      tabController.animateTo(1);
+                                      controller.defaultSearchValue = title;
+                                      searchController.text = title;
                                     },
                                   );
                                 }else{
                                   if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                     return SizedBox(
                                       height: Get.height * 0.7,
-                                      child: Center(
+                                      child: const Center(
                                         child: Text('Enter a search term to search for hashtags'),
                                       ),
                                     );

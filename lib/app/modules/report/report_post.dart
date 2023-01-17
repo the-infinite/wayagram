@@ -85,7 +85,7 @@ class _ReportPostState extends State<ReportPost> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             actions: [
               Center(
@@ -164,7 +164,7 @@ class _ReportPostState extends State<ReportPost> {
                         child: Text(
                           subtitle,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: getAppColor(Colors.black),
                             fontSize: Get.textScaleFactor * 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -179,6 +179,11 @@ class _ReportPostState extends State<ReportPost> {
                         items: ["Inappropriate Contents", "Promoting HateFul Conducts", "Abusive", "Fraud", "Other"],
                         itemBuilder: (item) => RadioButtonBuilder(
                           item,
+                        ),
+                        textStyle: TextStyle(
+                          color: getAppColor(const Color(0xff4F4F4F)),
+                          fontSize: Get.textScaleFactor * 16,
+                          fontWeight: FontWeight.normal,
                         ),
                         activeColor: AppColors.primary,
                       ),

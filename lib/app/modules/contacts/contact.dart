@@ -329,7 +329,7 @@ class _ContactState extends State<Contact> {
                                           onPressed: () async {
                                             if(isOnWayagram){
                                               var body = {
-                                                "user_id": user!.userId.toString(),
+                                                "user_id": user!.id.toString(),
                                                 "username": person.displayName
                                               };
 
@@ -357,7 +357,7 @@ class _ContactState extends State<Contact> {
                                             }
                                           },
                                           borderRadius: 5,
-                                          padding: EdgeInsets.symmetric(vertical: 5),
+                                          padding: const EdgeInsets.symmetric(vertical: 5),
                                           bckgrndColor: backgroundColor,
                                           fontColor: fontColor,
                                           border: Border.all(color: (isFollowing && isOnWayagram) ? getAppColor(AppColors.background) : AppColors.primary, width: 1),

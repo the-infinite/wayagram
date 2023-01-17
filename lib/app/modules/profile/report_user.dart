@@ -82,7 +82,7 @@ class _ReportUserState extends State<ReportUser> {
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             actions: [
               Center(
@@ -278,7 +278,7 @@ class _ReportUserState extends State<ReportUser> {
                             Text(
                               widget.person.displayName,
                               style: TextStyle(
-                                color: Colors.black ,
+                                color: getAppColor(Colors.black) ,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -306,7 +306,7 @@ class _ReportUserState extends State<ReportUser> {
                       child: Text(
                         subtitle,
                         style: TextStyle(
-                          color: Colors.black,
+                          color: getAppColor(Colors.black),
                           fontSize: Get.textScaleFactor * 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -323,6 +323,11 @@ class _ReportUserState extends State<ReportUser> {
                         item,
                       ),
                       activeColor: AppColors.primary,
+                      textStyle: TextStyle(
+                        color: getAppColor(const Color(0xff4F4F4F)),
+                        fontSize: Get.textScaleFactor * 16,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                     SizedBox(height: 10,),
                     if(_reason == "Other")

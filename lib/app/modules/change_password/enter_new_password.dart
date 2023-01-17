@@ -25,6 +25,7 @@ class EnterNewChangedPassword extends GetView<AuthControllerWayagram> {
     GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     return Scaffold(
+        backgroundColor: getAppColor(AppColors.background),
         appBar: AppBar(
           elevation: 0,
           backgroundColor: getAppColor(AppColors.background),
