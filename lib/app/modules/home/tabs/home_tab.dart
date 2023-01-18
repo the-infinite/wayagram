@@ -120,7 +120,7 @@ class HomeTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 0.025 * Get.width),
+              padding: EdgeInsets.only(left: 0.025 * Get.width,top: 0.015 * Get.width),
               child: Text("What more can your app do!",
                   style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(
                     fontWeight: FontWeight.bold,

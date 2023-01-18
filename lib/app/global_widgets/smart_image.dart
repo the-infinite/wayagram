@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 import 'helpers/size.dart';
 
-class SmartImage extends StatefulWidget {
+class SmartImage extends StatelessWidget {
   final String src;
   final BoxFit? fit;
   final bool isPost;
@@ -23,80 +23,41 @@ class SmartImage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<SmartImage> createState() => _SmartImageState();
-}
+  Widget build(BuildContext context) {
+    bool networkImage() => src.startsWith('https');
+    bool isVideo() => getUrlType(src) == UrlType.VIDEO;
+    bool base64() => src.contains('[]');
 
-class _SmartImageState extends State<SmartImage> {
-  double aspectRatio = 16 / 9;
-  late BetterPlayerController _betterPlayerController;
-  bool networkImage() => widget.src.startsWith('https');
-  bool isVideo() => getUrlType(widget.src) == UrlType.VIDEO;
-  bool base64() => widget.src.contains('[]');
-
-  @override
-  void initState() {
-    super.initState();
     if(isVideo()){
       if(networkImage()){
         BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
           BetterPlayerDataSourceType.network,
-          widget.src,
+          src,
           cacheConfiguration: BetterPlayerCacheConfiguration(
             useCache: true,
             preCacheSize: 10 * 1024 * 1024,
             maxCacheSize: 10 * 1024 * 1024,
             maxCacheFileSize: 10 * 1024 * 1024,
-            key: widget.src,
+            key: src,
           ),
         );
-        _betterPlayerController = BetterPlayerController(BetterPlayerConfiguration(), betterPlayerDataSource: betterPlayerDataSource);
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if(isVideo()){
-      if(widget.isSlideShow){
-        if(networkImage()){
-          return AspectRatio(
-            aspectRatio: 16 / 9,
-            child: BetterPlayer(
-              controller: _betterPlayerController,
-            ),
-          );
-        }else {
-          return BetterPlayer.file(
-            widget.src,
-            betterPlayerConfiguration: BetterPlayerConfiguration(
-              aspectRatio: 16 / 9,
-            ),
-          );
-        }
-      }
-
-      return MeasureSize(
-        onChange: (size) {
-          aspectRatio = size.width / size.height;
-          setState(() {
-          });
-        },
-        child: networkImage() ? AspectRatio(
-          aspectRatio: aspectRatio,
-          child: BetterPlayer(
-            controller: _betterPlayerController,
+        return BetterPlayer(
+          controller: BetterPlayerController(const BetterPlayerConfiguration(
+            fit: BoxFit.contain,
+          ), betterPlayerDataSource: betterPlayerDataSource),
+        );
+      }else {
+        return BetterPlayer.file(
+          src,
+          betterPlayerConfiguration: const BetterPlayerConfiguration(
+            fit: BoxFit.contain,
           ),
-        ) : BetterPlayer.file(
-          widget.src,
-          betterPlayerConfiguration: BetterPlayerConfiguration(
-            aspectRatio: aspectRatio,
-          ),
-        ),
-      );
+        );
+      }
     }
 
     return networkImage() ? CachedNetworkImage(
-      imageUrl: widget.src, placeholder: (context, url) => Container(
+      imageUrl: src, placeholder: (context, url) => Container(
       color: Colors.transparent,
       child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.05),
     ),
@@ -104,24 +65,19 @@ class _SmartImageState extends State<SmartImage> {
           color: Colors.transparent,
           child: Icon(Icons.broken_image_rounded,color: Colors.grey,size: Get.height*0.05)
       ),
-      fit: widget.fit,
-    ) : widget.isPost
+      fit: fit,
+    ) : isPost
         ? Image.file(
-                File(widget.src),
-                fit: widget.fit,
+                File(src),
+                fit: fit,
               )
         : CircleAvatar(
-                radius: widget.radius,
+                radius: radius,
                 backgroundImage: MemoryImage(
-                  imageDecoder(widget.src),
+                  imageDecoder(src),
                   //fit: fit,
                 ),
               );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   Uint8List imageDecoder(String image) {
@@ -129,7 +85,6 @@ class _SmartImageState extends State<SmartImage> {
     return Uint8List.fromList(list);
   }
 }
-
 
 enum UrlType { IMAGE, VIDEO, AUDIO,UNKNOWN }
 UrlType getUrlType(String url) {

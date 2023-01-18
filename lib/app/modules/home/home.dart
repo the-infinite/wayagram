@@ -35,7 +35,7 @@ import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
 class Home extends StatefulWidget {
-  Home({Key? key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   static const route = '/home';
 

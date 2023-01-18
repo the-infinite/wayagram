@@ -657,6 +657,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                             ),
                           ),
                           actions: [
+                            if(userName != "wayaOfficialHandle")
                             PopupMenuButton(
                                 color: getAppColor(Colors.white),
                                 child: Padding(

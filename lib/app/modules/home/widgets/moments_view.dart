@@ -42,21 +42,30 @@ class _MomentsViewState extends State<MomentsView> {
   List<MomentsModelEntity> list = [];
 
   @override
-  Widget build(BuildContext context) {
-    final storyController = StoryController();
+  void initState() {
+    super.initState();
+    list.clear();
     widget.moments?.forEach((element) {
       if (element.profileId != userID) {
-        list.add(element);
-        userID = element.profileId.toString();
+        if(!list.contains(element)){
+          list.add(element);
+          userID = element.profileId.toString();
+        }
       }
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final storyController = StoryController();
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 10,
           ),
           child: Text(
@@ -73,7 +82,7 @@ class _MomentsViewState extends State<MomentsView> {
           height: Get.height * 0.18,
           width: Get.width,
           child: ListView.builder(
-            itemCount: widget.isLoading ? 5 : (list.length+1),
+            itemCount: widget.isLoading ? 10 : (list.length+1),
             shrinkWrap: false,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, i) {
@@ -102,7 +111,7 @@ class _MomentsViewState extends State<MomentsView> {
                     Get.to(() => CreateMoment());
                   },
                   child: Container(
-                    margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                    margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                     height: Get.height * 0.15,
                     width: Get.width * 0.28,
                     decoration: BoxDecoration(
@@ -113,7 +122,7 @@ class _MomentsViewState extends State<MomentsView> {
                       alignment: Alignment.bottomLeft,
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10),
                             bottomLeft: Radius.circular(10),
@@ -188,33 +197,42 @@ class _MomentsViewState extends State<MomentsView> {
               return InkWell(
                 onTap: (){
                   List<StoryItem> storyItems = [];
+                  List<MomentsModelEntity> momentItems = [];
                   widget.moments?.forEach((element) {
                     if (element.profileId == list[index].profileId) {
+                      momentItems.add(element);
                       if(element.image != null){
+                        var image = element.image.toString();
+                        var caption = element.text;
+
                         storyItems.add(
                           StoryItem.pageImage(
-                            url: element.image.toString(),
+                            url: image,
                             controller: storyController,
                             imageFit: BoxFit.contain,
-                            duration: Duration(seconds: 5),
-                            caption: element.text,
+                            duration: const Duration(seconds: 5),
+                            caption: caption,
+                            key: ValueKey(element),
                           ),
                         );
                       }else{
                         storyItems.add(
                             StoryItem.text(
-                                title: element.text.toString(), backgroundColor: AppColors.primary, textStyle: AppTextStyle.headline4
+                              title: element.text.toString(),
+                              backgroundColor: Colors.black,
+                              textStyle: AppTextStyle.headline4.copyWith(color: Colors.white),
+                              key: ValueKey(element),
                             )
                         );
                       }
                     }
                   });
                   Get.to(
-                    () => Story(storyItems: storyItems, storyController: storyController),
+                    () => Story(storyItems: storyItems, storyController: storyController,momentItems: momentItems),
                   );
                 },
                 child: Container(
-                  margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                  margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                   height: Get.height * 0.18,
                   width: Get.width * 0.28,
                   decoration: BoxDecoration(
@@ -276,21 +294,18 @@ class _MomentsViewState extends State<MomentsView> {
                                   onPressed: null,
                                 ),
                               ),
-                              SizedBox(
-                                width: Get.width * 0.15,
-                                child: BorderedText(
-                                  strokeWidth: 2.0,
-                                  child: Text(
-                                    (list[index].profile!.displayName.toString().split(" ")[0]),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: Get.width * 0.035,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
+                              Expanded(
+                                //width: Get.width * 0.15,
+                                child: Text(
+                                  (list[index].profile!.displayName.toString().split(" ")[0]),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: Get.width * 0.035,
+                                    fontWeight: FontWeight.normal,
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.start,
                                 ),
                               ),
                             ],

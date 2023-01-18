@@ -310,7 +310,7 @@ class _PostState extends State<Post> {
     }
     return GetBuilder<HomeControllerWayagram>(id: widget.post.id.toString(),builder: (controller) {
       return Container(
-        margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+        margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
         decoration: widget.hasBorder ? decoration : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -319,7 +319,7 @@ class _PostState extends State<Post> {
               Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Icon(Icons.compare_arrows_rounded, color: getAppColor(Colors.black).withOpacity(.7), size: 20,),
                 Text(
                   "Promoted",

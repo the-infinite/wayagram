@@ -52,6 +52,8 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
+
     List<String> chosenInterestList = [];
     List<String> interestList = [
       'School',
@@ -523,6 +525,13 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
     List<String> uniqueInterestList = interestList.toSet().toList();
     uniqueInterestList.sort();
     uniqueInterestList.add('Others');
+
+    if(savedPosts.val.isNotEmpty){
+      var posts = InterestsModel.fromJsonList(jsonDecode(savedPosts.val));
+      for (var element in posts) {
+        uniqueInterestList.removeWhere((e) => element.title.toString().toLowerCase() == e.toLowerCase());
+      }
+    }
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
@@ -557,7 +566,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                 preferredSize: Size(Get.width, Get.height * 0.06),
                 child: Column(
                   children: [
-                    Divider(
+                    const Divider(
                       height: 0.5,
                       thickness: 0.5,
                       color: Colors.grey,
@@ -577,7 +586,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                         fontSize: Get.width*0.035,
                         fontWeight: FontWeight.w500,
                       ),
-                      tabs: [
+                      tabs: const [
                         Tab(text: 'All Interests',iconMargin: EdgeInsets.zero,),
                         Tab(text: 'Your Interests',iconMargin: EdgeInsets.zero,),
                       ],
@@ -586,7 +595,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                         //controller.update(['profile_page']);
                       },
                     ),
-                    Divider(
+                    const Divider(
                       height: 0.5,
                       thickness: 0.5,
                       color: Colors.grey,
@@ -612,8 +621,9 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                   itemCount: uniqueInterestList.length,
                   itemBuilder: (context, index) {
                     var currentInterest = uniqueInterestList[index];
-                    if(chosenInterestList.contains(currentInterest)){
-                      return SizedBox.shrink();
+                    var contains = chosenInterestList.firstWhereOrNull((element) => element.toLowerCase() == currentInterest.toLowerCase());
+                    if(chosenInterestList.contains(currentInterest) || contains != null){
+                      return const SizedBox.shrink();
                     }
                     return InkWell(
                       onTap: (){
@@ -662,7 +672,10 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                             }
                                             interestList.remove(currentInterest);
                                             AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
-                                            controller.update(["add_interests_page"]);
+                                            //controller.update(["add_interests_page"]);
+                                            setState(() {
+
+                                            });
                                           });
                                         }
                                       });
@@ -683,7 +696,9 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                                 }
                                                 interestList.remove(currentInterest);
                                                 AppOverlay.showSuccessSnackBar(content: "Interest added successfully");
-                                                controller.update(["add_interests_page"]);
+                                                setState(() {
+
+                                                });
                                               });
                                             }else{
                                               AppOverlay.showErrorSnackBar(content: "Something went wrong, please try again later");
@@ -693,7 +708,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                       });
                                     }
                                   });
-                                }, child: Icon(Icons.add_circle, color: AppColors.primary,)
+                                }, child: const Icon(Icons.add_circle, color: AppColors.primary,)
                             )
                           ],
                         ),
@@ -704,7 +719,6 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                 FutureBuilder<ApiResponse>(
                     future: controller.getData("/wayagram-service/graph/user-interest/userInterest?profileId=${fullProfile.id}", true),
                     builder: (context, snapshot) {
-                      var savedPosts = ReadWriteValue('wayagram_interests', '', MyPref.box);
                       if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                         final posts = InterestsModel.fromJsonList(snapshot.data!.data);
                         savedPosts.val = jsonEncode(posts);
@@ -754,7 +768,9 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                               }
                                               chosenInterestList.remove(post.title.toString());
                                               AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
-                                              controller.update(["add_interests_page"]);
+                                              setState(() {
+
+                                              });
                                             });
                                           }
                                         });
@@ -815,7 +831,9 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                                 }
                                                 chosenInterestList.remove(post.title.toString());
                                                 AppOverlay.showSuccessSnackBar(content: "Interest removed successfully");
-                                                controller.update(["add_interests_page"]);
+                                                setState(() {
+
+                                                });
                                               });
                                             }
                                           });

@@ -44,7 +44,7 @@ class _DateButtonState<T> extends State<DateButton<T>> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 5),
+                padding: const EdgeInsets.only(left: 5),
                 child: Text(
                   widget.label,
                   style: AppTextStyle.bodyText2.copyWith(
@@ -52,7 +52,7 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               InkWell(
                 onTap: () {
                   if (widget.date != null) {
@@ -145,7 +145,7 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                     : Row(
                         children: [
                           DateItemButton(
-                            title: "${time.hourOfPeriod} : ${time.minute}  ${time.period == DayPeriod.am
+                            title: "${time.hourOfPeriod.toString().length < 2 ? "0${time.hourOfPeriod}" : time.hourOfPeriod} : ${time.minute.toString().length < 2 ? "0${time.minute}" : time.minute}  ${time.period == DayPeriod.am
                                 ? 'AM'
                                 : 'PM'}",
                             icon: Icons.access_time,
@@ -153,7 +153,7 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                         ],
                       ),
               ),
-              SizedBox(height: 5.0),
+              const SizedBox(height: 5.0),
               field.hasError
                   ? Text(
                       field.errorText!,
