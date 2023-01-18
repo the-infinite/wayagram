@@ -33,6 +33,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../global_widgets/helpers/size.dart';
 import '../../../global_widgets/newsfeed_multiple_imageview.dart';
+import '../../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../../donate/donate.dart';
 import '../../polls_payment/poll_payment.dart';
 import '../../profile/other_profile.dart';
@@ -44,8 +45,8 @@ import '../../view_posts/post_analytics.dart';
 import '../../view_posts/view_post.dart';
 import 'bottom_sheet.dart';
 
-class PostsView extends StatelessWidget{
-  PostsView({
+class PostsView extends StatefulWidget{
+  const PostsView({
     Key? key,
     this.isLoading = false,
     this.posts,
@@ -61,18 +62,26 @@ class PostsView extends StatelessWidget{
   final bool? isPoll;
   final bool? isDonation;
   final bool? isNormal;
+
+  @override
+  State<PostsView> createState() => _PostsViewState();
+}
+
+class _PostsViewState extends State<PostsView> {
+  ReusableVideoListController videoListController = ReusableVideoListController();
+
   @override
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     var homeController = Get.find<HomeControllerWayagram>();
 
     return ListView.builder(
-      itemCount: isLoading ? 5 : posts!.length,
+      itemCount: widget.isLoading ? 5 : widget.posts!.length,
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.all(0),
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(0),
       itemBuilder: (context, index) {
-        if(isLoading){
+        if(widget.isLoading){
           return SizedBox(
             height: Get.height * 0.18,
             width: Get.width * 0.35,
@@ -91,7 +100,7 @@ class PostsView extends StatelessWidget{
             ),
           );
         }
-        var post = posts![index];
+        var post = widget.posts![index];
         return InkWell(
           onTap: (){
             Get.to(() => ViewPost(post: post));
@@ -100,16 +109,22 @@ class PostsView extends StatelessWidget{
             post: post,
             fullProfile: fullProfile,
             homeController: homeController,
-            userID: userID,
-            isPoll: isPoll,
-            isDonation: isDonation,
-            isNormal: isNormal,
+            userID: widget.userID,
+            isPoll: widget.isPoll,
+            isDonation: widget.isDonation,
+            isNormal: widget.isNormal,
+            videoListController: videoListController,
           ),
         );
       },
     );
   }
 
+  @override
+  void dispose() {
+    videoListController.dispose();
+    super.dispose();
+  }
 }
 
 class CommentPostsView extends StatelessWidget{
@@ -175,7 +190,7 @@ class CommentPostsView extends StatelessWidget{
 }
 
 class Post extends StatefulWidget{
-  Post({
+  const Post({
     Key? key,
     required this.fullProfile,
     required this.homeController,
@@ -186,7 +201,7 @@ class Post extends StatefulWidget{
     this.decoration,
     this.isPoll,
     this.isDonation,
-    this.isNormal,
+    this.isNormal, required this.videoListController,
   }) : super(key: key);
 
   final FullUserProfileEntity fullProfile;
@@ -199,6 +214,7 @@ class Post extends StatefulWidget{
   final bool? isPoll;
   final bool? isDonation;
   final bool? isNormal;
+  final ReusableVideoListController videoListController;
 
   @override
   State<Post> createState() => _PostState();
@@ -594,6 +610,7 @@ class _PostState extends State<Post> {
                   marginRight: 10.0,
                   marginBottom: 0,
                   marginTop: 0,
+                  videoListController: widget.videoListController,
                 ),
               ),
             if(pollImageUrls.isNotEmpty)
@@ -957,7 +974,7 @@ class _PostState extends State<Post> {
               ),
             ),*/
             if(widget.post.isRepost == true)
-              InnerPost(outerPost: widget.post,homeController: widget.homeController),
+              InnerPost(outerPost: widget.post,homeController: widget.homeController,videoListController: widget.videoListController),
             if(donation != null)
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10,top: 10),
@@ -1224,14 +1241,15 @@ class _PostState extends State<Post> {
 }
 
 class InnerPost extends StatelessWidget{
-  InnerPost({
+  const InnerPost({
     Key? key,
     required this.outerPost,
-    required this.homeController,
+    required this.homeController, required this.videoListController,
   }) : super(key: key);
 
   final AllPostsEntity outerPost;
   final HomeControllerWayagram homeController;
+  final ReusableVideoListController videoListController;
   @override
   Widget build(BuildContext context) {
     List<String> votedPolls = [];
@@ -1347,6 +1365,7 @@ class InnerPost extends StatelessWidget{
                 marginRight: 10.0,
                 marginBottom: 0,
                 marginTop: 0,
+                videoListController: videoListController,
               ),
             ),
           /*if(pollImageUrls.isNotEmpty)

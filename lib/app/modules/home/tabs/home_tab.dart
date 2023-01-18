@@ -18,6 +18,7 @@ import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/helpers/dark_mode_helper.dart';
 import '../../../global_widgets/horizontal_item_tile.dart';
+import '../../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
@@ -27,8 +28,14 @@ String wayabankIconSvg="assets/images/waya_bank_ic.svg";
 String wayaposIconSvg="assets/images/waya_pos_ic.svg";
 String failed = "assets/images/failed.svg";
 
-class HomeTab extends StatelessWidget {
-  HomeTab({Key? key}) : super(key: key);
+class HomeTab extends StatefulWidget {
+  const HomeTab({Key? key}) : super(key: key);
+
+  @override
+  State<HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +74,7 @@ class HomeTab extends StatelessWidget {
                 }
               }),
           Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               left: 10,
               top: 15,
             ),
@@ -93,7 +100,7 @@ class HomeTab extends StatelessWidget {
                   return PostsView(posts: posts);
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                   return PostsView(isLoading: true);
                 }

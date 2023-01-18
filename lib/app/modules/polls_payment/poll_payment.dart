@@ -32,6 +32,7 @@ import '../../global_widgets/app_input.dart';
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../../global_widgets/wayagram_to_wayabank_widgets/wayagram_to_wayabank_widgets.dart';
 import '../home/widgets/bottom_sheet.dart';
 import '../home/widgets/posts_view.dart';
@@ -47,6 +48,7 @@ class PollPaymentScreen extends StatefulWidget {
 }
 
 class _PollPaymentScreenState extends State<PollPaymentScreen> {
+  ReusableVideoListController videoListController = ReusableVideoListController();
   List<String> votedPolls = [];
 
   FocusNode inputNode = FocusNode();
@@ -142,6 +144,7 @@ class _PollPaymentScreenState extends State<PollPaymentScreen> {
                         post: widget.post,
                         fullProfile: fullProfile,
                         homeController: controller,
+                        videoListController: videoListController,
                         showActions: false,
                         decoration: BoxDecoration(
                           color: getAppColor(AppColors.background),

@@ -28,6 +28,7 @@ import 'package:dio/dio.dart' as dio;
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/person_view.dart';
+import '../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../home/widgets/HashTagView.dart';
 import '../home/widgets/group_view.dart';
 
@@ -41,6 +42,7 @@ class CreatePosts extends StatefulWidget {
 }
 
 class _CreatePostsState extends State<CreatePosts> {
+  ReusableVideoListController videoListController = ReusableVideoListController();
   final ImagePicker _imagePicker = ImagePicker();
   var textController = TextEditingController();
   var nameController = TextEditingController();
@@ -475,6 +477,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                         isFile: true,
                                         useAspectRatio: true,
                                         isSlideShow: false,
+                                        videoListController: videoListController,
                                   ),
                                     ),
                                   if(controller.postToQuote != null)
@@ -483,6 +486,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                       fullProfile: fullProfile,
                                       homeController: controller,
                                       showActions: false,
+                                      videoListController: videoListController,
                                       decoration: BoxDecoration(
                                         color: getAppColor(AppColors.background),
                                         borderRadius: BorderRadius.circular(10),

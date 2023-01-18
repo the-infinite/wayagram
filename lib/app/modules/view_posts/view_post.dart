@@ -29,10 +29,11 @@ import '../../global_widgets/app_input.dart';
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../home/widgets/posts_view.dart';
 
 class ViewPost extends StatefulWidget {
-  ViewPost({Key? key,required this.post}) : super(key: key);
+  const ViewPost({Key? key,required this.post}) : super(key: key);
 
   final AllPostsEntity post;
 
@@ -41,6 +42,8 @@ class ViewPost extends StatefulWidget {
 }
 
 class _ViewPostState extends State<ViewPost> {
+  ReusableVideoListController videoListController = ReusableVideoListController();
+
   FocusNode inputNode = FocusNode();
   var commentController = TextEditingController();
   var parentID = "";
@@ -116,6 +119,7 @@ class _ViewPostState extends State<ViewPost> {
                       post: widget.post,
                       fullProfile: fullProfile,
                       homeController: controller,
+                      videoListController: videoListController,
                       //hasBorder: false,
                     ),
                     FutureBuilder<ApiResponse>(

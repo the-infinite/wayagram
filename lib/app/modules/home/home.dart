@@ -303,7 +303,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                         ),
                       ),
                       if(controller.currentBottomNavPage.value != 1)
-                        SizedBox(height: kBottomNavigationBarHeight),
+                        const SizedBox(height: kBottomNavigationBarHeight),
                     ],
                   ),
                 ),

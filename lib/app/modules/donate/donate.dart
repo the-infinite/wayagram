@@ -32,6 +32,7 @@ import '../../global_widgets/app_input.dart';
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../../global_widgets/wayagram_to_wayabank_widgets/wayagram_to_wayabank_widgets.dart';
 import '../home/widgets/bottom_sheet.dart';
 import '../home/widgets/posts_view.dart';
@@ -47,6 +48,8 @@ class DonateScreen extends StatefulWidget {
 }
 
 class _DonateScreenState extends State<DonateScreen> {
+  ReusableVideoListController videoListController = ReusableVideoListController();
+
   FocusNode inputNode = FocusNode();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   var impressionsController = TextEditingController(text: '0');
@@ -131,6 +134,7 @@ class _DonateScreenState extends State<DonateScreen> {
                         post: widget.post,
                         fullProfile: fullProfile,
                         homeController: controller,
+                        videoListController: videoListController,
                         showActions: false,
                         decoration: BoxDecoration(
                           color: getAppColor(AppColors.background),

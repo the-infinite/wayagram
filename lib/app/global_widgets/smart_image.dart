@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -7,57 +8,183 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+import 'package:wayagram/app/global_widgets/video_player/reusable_video_list_controller.dart';
 
 import 'helpers/size.dart';
 
-class SmartImage extends StatelessWidget {
+class SmartImage extends StatefulWidget {
   final String src;
   final BoxFit? fit;
   final bool isPost;
   final double? radius;
   final bool useAspectRatio;
   final bool isSlideShow;
+  final ReusableVideoListController videoListController;
 
-  SmartImage(this.src,
-      {Key? key, this.fit, this.isPost = false, this.radius, this.useAspectRatio = false, this.isSlideShow = false})
+  const SmartImage(this.src,
+      {Key? key, this.fit, this.isPost = false, this.radius, this.useAspectRatio = false, this.isSlideShow = false, required this.videoListController})
       : super(key: key);
 
   @override
+  State<SmartImage> createState() => _SmartImageState();
+}
+
+class _SmartImageState extends State<SmartImage> {
+  late BetterPlayerConfiguration betterPlayerConfiguration;
+  late BetterPlayerDataSource betterPlayerDataSource;
+  BetterPlayerController? controller;
+
+  StreamController<BetterPlayerController?>
+  betterPlayerControllerStreamController = StreamController.broadcast();
+
+  bool _initialized = false;
+  Timer? _timer;
+
+  @override
+  initState() {
+    super.initState();
+    bool networkImage() => widget.src.startsWith('https');
+    //bool isVideo() => getUrlType(widget.src) == UrlType.VIDEO;
+    //bool base64() => widget.src.contains('[]');
+
+    if(networkImage()){
+      betterPlayerDataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.network,
+        widget.src,
+        cacheConfiguration: BetterPlayerCacheConfiguration(
+          useCache: true,
+          preCacheSize: 10 * 1024 * 1024,
+          maxCacheSize: 10 * 1024 * 1024,
+          maxCacheFileSize: 10 * 1024 * 1024,
+          key: widget.src,
+        ),
+      );
+    }
+    betterPlayerConfiguration = const BetterPlayerConfiguration(
+      fit: BoxFit.contain,
+      handleLifecycle: false,
+      autoDispose: false,
+    );
+  }
+
+  void _setupController() {
+    bool networkImage() => widget.src.startsWith('https');
+    if (controller == null) {
+      controller = widget.videoListController.getBetterPlayerController();
+      if (controller != null) {
+        if(networkImage()){
+          betterPlayerDataSource = BetterPlayerDataSource(
+            BetterPlayerDataSourceType.network,
+            widget.src,
+            cacheConfiguration: BetterPlayerCacheConfiguration(
+              useCache: true,
+              preCacheSize: 10 * 1024 * 1024,
+              maxCacheSize: 10 * 1024 * 1024,
+              maxCacheFileSize: 10 * 1024 * 1024,
+              key: widget.src,
+            ),
+          );
+        }else {
+          betterPlayerDataSource = BetterPlayerDataSource(
+            BetterPlayerDataSourceType.file,
+            widget.src,
+            cacheConfiguration: BetterPlayerCacheConfiguration(
+              useCache: true,
+              preCacheSize: 10 * 1024 * 1024,
+              maxCacheSize: 10 * 1024 * 1024,
+              maxCacheFileSize: 10 * 1024 * 1024,
+              key: widget.src,
+            ),
+          );
+        }
+        controller!.setupDataSource(betterPlayerDataSource);
+        if (!betterPlayerControllerStreamController.isClosed) {
+          betterPlayerControllerStreamController.add(controller);
+        }
+      }
+    }
+  }
+
+  void _freeController() {
+    if (!_initialized) {
+      _initialized = true;
+      return;
+    }
+    if (controller != null && _initialized) {
+      widget.videoListController.freeBetterPlayerController(controller);
+      controller!.pause();
+      controller = null;
+      if (!betterPlayerControllerStreamController.isClosed) {
+        betterPlayerControllerStreamController.add(null);
+      }
+      _initialized = false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool networkImage() => src.startsWith('https');
-    bool isVideo() => getUrlType(src) == UrlType.VIDEO;
-    bool base64() => src.contains('[]');
+    bool networkImage() => widget.src.startsWith('https');
+    bool isVideo() => getUrlType(widget.src) == UrlType.VIDEO;
+    //bool base64() => widget.src.contains('[]');
 
     if(isVideo()){
+      return VisibilityDetector(
+        key: Key(hashCode.toString() + DateTime.now().toString()),
+        onVisibilityChanged: (info) {
+          /*if (!widget.canBuildVideo!()) {
+            _timer?.cancel();
+            _timer = null;
+            _timer = Timer(Duration(milliseconds: 500), () {
+              if (info.visibleFraction >= 0.6) {
+                _setupController();
+              } else {
+                _freeController();
+              }
+            });
+            return;
+          }*/
+          if (info.visibleFraction >= 0.6) {
+            _setupController();
+          } else {
+            _freeController();
+          }
+        },
+        child: StreamBuilder<BetterPlayerController?>(
+          stream: betterPlayerControllerStreamController.stream,
+          builder: (context, snapshot) {
+            return AspectRatio(
+              aspectRatio: 16 / 9,
+              child: controller != null ? BetterPlayer(
+                controller: controller!,
+              ) : Container(
+                color: Colors.black,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    valueColor:
+                    AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+
       if(networkImage()){
-        BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-          BetterPlayerDataSourceType.network,
-          src,
-          cacheConfiguration: BetterPlayerCacheConfiguration(
-            useCache: true,
-            preCacheSize: 10 * 1024 * 1024,
-            maxCacheSize: 10 * 1024 * 1024,
-            maxCacheFileSize: 10 * 1024 * 1024,
-            key: src,
-          ),
-        );
         return BetterPlayer(
-          controller: BetterPlayerController(const BetterPlayerConfiguration(
-            fit: BoxFit.contain,
-          ), betterPlayerDataSource: betterPlayerDataSource),
+          controller: BetterPlayerController(betterPlayerConfiguration, betterPlayerDataSource: betterPlayerDataSource),
         );
       }else {
         return BetterPlayer.file(
-          src,
-          betterPlayerConfiguration: const BetterPlayerConfiguration(
-            fit: BoxFit.contain,
-          ),
+          widget.src,
+          betterPlayerConfiguration: betterPlayerConfiguration,
         );
       }
     }
 
     return networkImage() ? CachedNetworkImage(
-      imageUrl: src, placeholder: (context, url) => Container(
+      imageUrl: widget.src, placeholder: (context, url) => Container(
       color: Colors.transparent,
       child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.05),
     ),
@@ -65,19 +192,25 @@ class SmartImage extends StatelessWidget {
           color: Colors.transparent,
           child: Icon(Icons.broken_image_rounded,color: Colors.grey,size: Get.height*0.05)
       ),
-      fit: fit,
-    ) : isPost
+      fit: widget.fit,
+    ) : widget.isPost
         ? Image.file(
-                File(src),
-                fit: fit,
+                File(widget.src),
+                fit: widget.fit,
               )
         : CircleAvatar(
-                radius: radius,
+                radius: widget.radius,
                 backgroundImage: MemoryImage(
-                  imageDecoder(src),
+                  imageDecoder(widget.src),
                   //fit: fit,
                 ),
               );
+  }
+
+  @override
+  void dispose() {
+    betterPlayerControllerStreamController.close();
+    super.dispose();
   }
 
   Uint8List imageDecoder(String image) {

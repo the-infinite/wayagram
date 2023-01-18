@@ -47,6 +47,7 @@ import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/person_view.dart';
 import '../../global_widgets/smart_image.dart';
+import '../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../home/widgets/HashTagView.dart';
 import '../home/widgets/bottom_sheet.dart';
@@ -67,6 +68,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  ReusableVideoListController videoListController = ReusableVideoListController();
   PreviousChat? chatToReply;
 
   var chatController = Get.find<ChatControllerWayagram>();
@@ -631,6 +633,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                       marginBottom: 0,
                                                                       marginTop: 0,
                                                                       radius: 10,
+                                                                      videoListController: videoListController,
                                                                     ),
                                                                   ),
                                                                 if(getUrlType(repliedChat.fileUrl.toString()) == UrlType.AUDIO && isRepliedFile)
@@ -721,6 +724,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                               marginBottom: 0,
                                                               marginTop: 0,
                                                               radius: 15,
+                                                              videoListController: videoListController,
                                                             ),
                                                           ),
                                                         if(getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile)
@@ -1119,6 +1123,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                       marginBottom: 0,
                                                                       marginTop: 0,
                                                                       radius: 10,
+                                                                      videoListController: videoListController,
                                                                     ),
                                                                   ),
                                                                 if(getUrlType(repliedChat.fileUrl.toString()) == UrlType.AUDIO && isRepliedFile)
@@ -1209,6 +1214,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                               marginBottom: 0,
                                                               marginTop: 0,
                                                               radius: 15,
+                                                              videoListController: videoListController,
                                                             ),
                                                           ),
                                                         if(getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile)

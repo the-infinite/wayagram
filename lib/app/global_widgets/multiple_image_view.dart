@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/app/global_widgets/smart_image.dart';
+import 'package:wayagram/app/global_widgets/video_player/reusable_video_list_controller.dart';
 
 import '../../core/theme/app_styles.dart';
 
@@ -9,14 +10,16 @@ class MultipleImageView extends StatelessWidget {
   final bool isFile;
   final bool useAspectRatio;
   final bool isSlideShow;
+  final ReusableVideoListController videoListController;
 
-  MultipleImageView({
+  const MultipleImageView({
     Key? key,
     required this.imageUrls,
     this.radius = 10,
     this.isFile = false,
     this.useAspectRatio = false,
     this.isSlideShow = false,
+    required this.videoListController,
   }) : super(key: key);
 
   @override
@@ -59,7 +62,7 @@ class MultipleImageView extends StatelessWidget {
             fit: BoxFit.cover,
             isPost: true,
             useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,
+            isSlideShow: isSlideShow,videoListController:  videoListController
           ),
         ),
       ),
@@ -80,7 +83,7 @@ class MultipleImageView extends StatelessWidget {
             fit: BoxFit.cover,
             isPost: true,
             useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,
+            isSlideShow: isSlideShow,videoListController:  videoListController
           ),
         ),
       ),
@@ -97,7 +100,7 @@ class MultipleImageView extends StatelessWidget {
             fit: BoxFit.cover,
             isPost: true,
             useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,
+            isSlideShow: isSlideShow,videoListController:  videoListController
           ),
         ),
       )
@@ -118,7 +121,7 @@ class MultipleImageView extends StatelessWidget {
             fit: BoxFit.cover,
             isPost: true,
             useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,
+            isSlideShow: isSlideShow,videoListController:  videoListController
           ),
         ),
       ),
@@ -141,7 +144,7 @@ class MultipleImageView extends StatelessWidget {
                   fit: BoxFit.cover,
                   isPost: true,
                   useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,
+                  isSlideShow: isSlideShow,videoListController:  videoListController
                 ),
               ),
             ),
@@ -157,7 +160,7 @@ class MultipleImageView extends StatelessWidget {
                   fit: BoxFit.cover,
                   isPost: true,
                   useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,
+                  isSlideShow: isSlideShow,videoListController:  videoListController
                 ),
               ),
             ),
@@ -181,7 +184,7 @@ class MultipleImageView extends StatelessWidget {
             fit: BoxFit.cover,
             isPost: true,
             useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,
+            isSlideShow: isSlideShow,videoListController:  videoListController
           ),
         ),
       ),
@@ -204,7 +207,7 @@ class MultipleImageView extends StatelessWidget {
                   fit: BoxFit.cover,
                   isPost: true,
                   useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,
+                  isSlideShow: isSlideShow,videoListController:  videoListController
                 ),
               ),
             ),
@@ -217,7 +220,7 @@ class MultipleImageView extends StatelessWidget {
                   fit: BoxFit.cover,
                   isPost: true,
                   useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,
+                  isSlideShow: isSlideShow,videoListController:  videoListController
                 ),
               ),
             ),
@@ -233,7 +236,7 @@ class MultipleImageView extends StatelessWidget {
                   fit: BoxFit.cover,
                   isPost: true,
                   useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,
+                  isSlideShow: isSlideShow,videoListController:  videoListController
                 ),
               ),
             ),
@@ -257,7 +260,7 @@ class MultipleImageView extends StatelessWidget {
             fit: BoxFit.cover,
             isPost: true,
             useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,
+            isSlideShow: isSlideShow,videoListController:  videoListController
           ),
         ),
       ),
@@ -280,7 +283,7 @@ class MultipleImageView extends StatelessWidget {
                   fit: BoxFit.cover,
                   isPost: true,
                   useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,
+                  isSlideShow: isSlideShow,videoListController:  videoListController
                 ),
               ),
             ),
@@ -293,7 +296,7 @@ class MultipleImageView extends StatelessWidget {
                   fit: BoxFit.cover,
                   isPost: true,
                   useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,
+                  isSlideShow: isSlideShow,videoListController:  videoListController
                 ),
               ),
             ),
@@ -313,7 +316,7 @@ class MultipleImageView extends StatelessWidget {
                       fit: BoxFit.cover,
                       isPost: true,
                       useAspectRatio: useAspectRatio,
-                      isSlideShow: isSlideShow,
+                      isSlideShow: isSlideShow,videoListController:  videoListController
                     ),
                   ),
                   Positioned.fill(

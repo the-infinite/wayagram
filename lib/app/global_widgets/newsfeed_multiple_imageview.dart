@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/global_widgets/smart_image.dart';
+import 'package:wayagram/app/global_widgets/video_player/reusable_video_list_controller.dart';
 
 import '../../core/theme/app_styles.dart';
 import 'helpers/dark_mode_helper.dart';
@@ -16,7 +17,6 @@ import 'multiple_image_view.dart';
 
 
 class NewsfeedMultipleImageView extends StatelessWidget {
-
   final List<String> imageUrls;
   final double marginLeft;
   final double marginTop;
@@ -26,8 +26,9 @@ class NewsfeedMultipleImageView extends StatelessWidget {
   final bool isFile;
   final bool useAspectRatio;
   final bool isSlideShow;
+  final ReusableVideoListController videoListController;
 
-  NewsfeedMultipleImageView({
+  const NewsfeedMultipleImageView({
     Key? key,
     this.marginLeft = 0,
     this.marginTop = 0,
@@ -37,7 +38,7 @@ class NewsfeedMultipleImageView extends StatelessWidget {
     this.radius = 10,
     this.isFile = false,
     this.useAspectRatio = false,
-    this.isSlideShow = false,
+    this.isSlideShow = false, required this.videoListController,
   }) : super(key: key);
 
   @override
@@ -57,7 +58,7 @@ class NewsfeedMultipleImageView extends StatelessWidget {
           marginBottom,
         ),
         child: GestureDetector(
-          child: MultipleImageView(imageUrls: imageUrls,radius: radius,isSlideShow: isSlideShow,useAspectRatio: useAspectRatio),
+          child: MultipleImageView(imageUrls: imageUrls,radius: radius,isSlideShow: isSlideShow,useAspectRatio: useAspectRatio,videoListController: videoListController,),
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
@@ -70,17 +71,23 @@ class NewsfeedMultipleImageView extends StatelessWidget {
   }
 }
 
-class ImageViewer extends StatelessWidget {
+class ImageViewer extends StatefulWidget {
   final List<String> imageUrls;
   final int initialPage;
-  ImageViewer({Key? key,
+  const ImageViewer({Key? key,
     required this.imageUrls,
-    this.initialPage = 0
+    this.initialPage = 0,
   }) : super(key: key);
 
   @override
+  State<ImageViewer> createState() => _ImageViewerState();
+}
+
+class _ImageViewerState extends State<ImageViewer> {
+  @override
   Widget build(BuildContext context) {
     var currentPos = 0;
+    ReusableVideoListController videoListController = ReusableVideoListController();
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
           statusBarColor: Colors.black,
@@ -127,15 +134,15 @@ class ImageViewer extends StatelessWidget {
                 ],
                 onSelected: (value) {
                   if(value==0){
-                    bool isVideo() => getUrlType(imageUrls[currentPos]) == UrlType.VIDEO;
+                    bool isVideo() => getUrlType(widget.imageUrls[currentPos]) == UrlType.VIDEO;
                     if(isVideo()){
-                      GallerySaver.saveVideo(imageUrls[currentPos]).then((val) {
+                      GallerySaver.saveVideo(widget.imageUrls[currentPos]).then((val) {
                         if(val == true){
                           AppOverlay.showSuccessSnackBar(content: "Video Downloaded To Device");
                         }
                       });
                     }else{
-                      GallerySaver.saveImage(imageUrls[currentPos]).then((val) {
+                      GallerySaver.saveImage(widget.imageUrls[currentPos]).then((val) {
                         if(val == true){
                           AppOverlay.showSuccessSnackBar(content: "Image Downloaded To Device");
                         }
@@ -176,14 +183,14 @@ class ImageViewer extends StatelessWidget {
               children: [
                 Expanded(
                   child: ImageSlideshow(
-                    initialPage: initialPage,
+                    initialPage: widget.initialPage,
                     indicatorColor: Colors.black,
                     indicatorBackgroundColor: Colors.black,
-                    isLoop: imageUrls.length > 1,
+                    isLoop: widget.imageUrls.length > 1,
                     onPageChanged: (pos){
                        currentPos = pos;
                     },
-                    children:imageUrls.asMap().map((key, value){
+                    children:widget.imageUrls.asMap().map((key, value){
                       return MapEntry(key, Hero(
                         tag: "photo$key",
                         child: Padding(
@@ -194,6 +201,7 @@ class ImageViewer extends StatelessWidget {
                             isPost: true,
                             useAspectRatio: false,
                             isSlideShow: true,
+                            videoListController: videoListController,
                           ),
                         ),
                       ));

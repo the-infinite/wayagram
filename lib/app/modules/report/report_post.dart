@@ -32,6 +32,7 @@ import '../../global_widgets/app_input.dart';
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../home/widgets/posts_view.dart';
 
 class ReportPost extends StatefulWidget {
@@ -50,6 +51,7 @@ class ReportPost extends StatefulWidget {
 }
 
 class _ReportPostState extends State<ReportPost> {
+  ReusableVideoListController videoListController = ReusableVideoListController();
   String _reason = "Inappropriate Contents";
   var formKey = GlobalKey<FormState>();
   final TextEditingController _controller = TextEditingController();
@@ -151,6 +153,7 @@ class _ReportPostState extends State<ReportPost> {
                           post: widget.post!,
                           fullProfile: fullProfile,
                           homeController: controller,
+                          videoListController: videoListController,
                           showActions: false,
                           decoration: BoxDecoration(
                             color: getAppColor(AppColors.background),

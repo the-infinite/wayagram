@@ -25,6 +25,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../../global_widgets/overlays.dart';
+import '../../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../../products/buy_product.dart';
 import '../../report/report_product.dart';
 import '../../view_posts/product_analytics.dart';
@@ -42,6 +43,7 @@ class ProductView extends StatelessWidget{
   final bool showBuyButton;
   final bool showActions;
   final List<ProductsModelData>? posts;
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeControllerWayagram>(id: 'product_post',builder: (controller) {
@@ -82,8 +84,8 @@ class ProductView extends StatelessWidget{
   }
 }
 
-class ProductRealView extends StatelessWidget{
-  ProductRealView({
+class ProductRealView extends StatefulWidget{
+  const ProductRealView({
     Key? key,
     this.isLoading = false,
     required this.post,
@@ -97,14 +99,21 @@ class ProductRealView extends StatelessWidget{
   final ProductsModelData post;
 
   @override
+  State<ProductRealView> createState() => _ProductRealViewState();
+}
+
+class _ProductRealViewState extends State<ProductRealView> {
+  ReusableVideoListController videoListController = ReusableVideoListController();
+  @override
   Widget build(BuildContext context) {
+
     return GetBuilder<HomeControllerWayagram>(id: 'product_real_post',builder: (controller) {
-      var time = DateTime.parse(post.createdAt!);
+      var time = DateTime.parse(widget.post.createdAt!);
       List<String> imageUrls = [];
-      for (var element in post.productImages!) {
+      for (var element in widget.post.productImages!) {
         imageUrls.add(element.imageUrl.toString());
       }
-      var isCurrentUserPost = controller.profile.id == post.profile!.id;
+      var isCurrentUserPost = controller.profile.id == widget.post.profile!.id;
 
       return Container(
         margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
@@ -123,7 +132,7 @@ class ProductRealView extends StatelessWidget{
                   height: 50,
                   child: IconButton(
                     icon: AppAvatar(
-                      imgUrl: post.profile == null ? "" : post.profile!.avatar.toString(),
+                      imgUrl: widget.post.profile == null ? "" : widget.post.profile!.avatar.toString(),
                       radius: 45,
                     ),
                     onPressed: null,
@@ -133,7 +142,7 @@ class ProductRealView extends StatelessWidget{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      post.profile!.displayName.toString(),
+                      widget.post.profile!.displayName.toString(),
                       style: TextStyle(
                         color: getAppColor(Colors.black) ,
                         fontSize: 16,
@@ -141,7 +150,7 @@ class ProductRealView extends StatelessWidget{
                       ),
                     ),
                     Text(
-                      "@${post.profile!.username}",
+                      "@${widget.post.profile!.username}",
                       style: TextStyle(
                         color: getAppColor(Colors.grey),
                         fontSize: 16,
@@ -166,7 +175,7 @@ class ProductRealView extends StatelessWidget{
                       SizedBox(
                         width: 10,
                       ),
-                      if(showActions)
+                      if(widget.showActions)
                         PopupMenuButton(
                             color: getAppColor(Colors.white),
                             icon: Icon(
@@ -209,12 +218,12 @@ class ProductRealView extends StatelessWidget{
                                   Get.to(() => ReportPost(post: widget.post,isPost: true));
                                 }*/
                               if (value == 1) {
-                                Share.share('https://app.staging.wayagram.ng/post/${post.id}', subject: 'Wayagram Product');
+                                Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Product');
                               }
                               else if(value == 3){
                                 var body = {
                                   "profile_id": controller.profile.id,
-                                  "product_id": post.id
+                                  "product_id": widget.post.id
                                 };
                                 controller.deleteData(body, "/wayagram-service/all-posts/delete-product").then((value){
                                   if(value.isSuccessful){
@@ -226,7 +235,7 @@ class ProductRealView extends StatelessWidget{
                                 });
                               }
                               else if(value == 4){
-                                Get.to(() => ReportProduct(post: post,isPost: true));
+                                Get.to(() => ReportProduct(post: widget.post,isPost: true));
                               }
                             },
                             itemBuilder: (context) => [
@@ -304,6 +313,7 @@ class ProductRealView extends StatelessWidget{
                   marginRight: 10.0,
                   marginBottom: 0,
                   marginTop: 0,
+                  videoListController: videoListController,
                 ),
               ),
             SizedBox(
@@ -321,7 +331,7 @@ class ProductRealView extends StatelessWidget{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           HashTagText(
-                            text: post.name.toString(),
+                            text: widget.post.name.toString(),
                             decoratedStyle: TextStyle(
                               color: Colors.blue,
                               fontSize: 18,
@@ -338,7 +348,7 @@ class ProductRealView extends StatelessWidget{
                             decorateAtSign: true,
                           ),
                           HashTagText(
-                            text: post.description.toString(),
+                            text: widget.post.description.toString(),
                             decoratedStyle: TextStyle(
                               color: Colors.blue,
                               fontSize: 16,
@@ -366,7 +376,7 @@ class ProductRealView extends StatelessWidget{
                                 width: 5,
                               ),
                               Text(
-                                "NGN ${post.amount}",
+                                "NGN ${widget.post.amount}",
                                 style: TextStyle(
                                   color: getAppColor(Colors.black),
                                   fontSize: 16,
@@ -378,18 +388,18 @@ class ProductRealView extends StatelessWidget{
                         ],
                       ),
                     ),
-                    if(showBuyButton)
+                    if(widget.showBuyButton)
                       AppButton(
                         title: "Buy",
                         onPressed: (){
-                          Get.to(() => BuyProduct(post: post));
+                          Get.to(() => BuyProduct(post: widget.post));
                         },
                         bckgrndColor: AppColors.primary,
                         fontColor: getAppColor(AppColors.background),
                         width: Get.width * 0.2,
                         padding: EdgeInsets.symmetric(vertical: 10),
                       ),
-                    if(!showBuyButton && showActions)
+                    if(!widget.showBuyButton && widget.showActions)
                       Row(
                         children: [
                           SizedBox(
@@ -397,7 +407,7 @@ class ProductRealView extends StatelessWidget{
                           ),
                           InkWell(
                             onTap: isCurrentUserPost ? (){
-                              Get.to(() => ProductAnalytics(post: post));
+                              Get.to(() => ProductAnalytics(post: widget.post));
                             } : null,
                             child: Icon(
                               Icons.bar_chart,
