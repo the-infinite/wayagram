@@ -44,22 +44,29 @@ class CreateMoment extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
-            title: Text('Moment', style: AppTextStyle.subtitle1.copyWith(
-              color: getAppColor(AppColors.background),
+            title: Text('Create Moment', style: AppTextStyle.subtitle1.copyWith(
+              color: getAppColor(const Color(0xff4F4F4F)),
+              fontSize: Get.textScaleFactor * 18,
+              fontWeight: FontWeight.bold,
             )),
-            centerTitle: false,
-            leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(AppColors.background)),
-              onPressed: () => Navigator.pop(context),
-            ),
+            centerTitle: true, leading: IconButton(
+                padding: EdgeInsets.zero,
+                icon: Icon(
+                  FeatherIcons.arrowLeft,
+                  color: getAppColor(Colors.black),
+                ),
+                onPressed: () {
+                  Get.back();
+                },
+                iconSize: Get.width * 0.06,
+              ),
             systemOverlayStyle:  SystemUiOverlayStyle(
                 statusBarColor: getAppColor(AppColors.background),
                 statusBarIconBrightness: getAppBrightness(),
                 statusBarBrightness: getAppBrightness(),
                 systemNavigationBarColor: getAppColor(AppColors.background),
                 systemNavigationBarIconBrightness: getAppBrightness()
-            ),
-              actions: [
+            ), actions: [
                 Center(
                   child: SizedBox(
                     child: AppButton(
@@ -131,11 +138,12 @@ class CreateMoment extends StatelessWidget {
                         }
                       },
                       borderRadius: 10,
-                      fontColor: AppColors.primary,
+                      fontColor: AppColors.button,
                       bckgrndColor: getAppColor(AppColors.background),
                       border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-                      width: Get.width * 0.3,
+                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                      width: Get.width * 0.2,
+                      fontSize: Get.textScaleFactor * 18,
                     ),
                   ),
                 )

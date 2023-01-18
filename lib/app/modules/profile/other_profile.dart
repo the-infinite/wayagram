@@ -170,6 +170,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
 
             //https://services.staging.wayagram.ng/wayagram-service/main/profile/get-by-user-id?user_id=8&sso_id=313
             return Scaffold(
+              backgroundColor: getAppColor(AppColors.background),
               body:Stack(
                 alignment: Alignment.topCenter,
                 children: [

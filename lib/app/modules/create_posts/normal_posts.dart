@@ -75,7 +75,7 @@ class _CreatePostsState extends State<CreatePosts> {
                 Text(
                   controller.isProductPost ? "Create Product" : controller.postToQuote == null ? "Create Post" : "Quote Post",
                   style: TextStyle(
-                    color: getAppColor(Color(0xff4F4F4F)),
+                    color: getAppColor(const Color(0xff4F4F4F)),
                     fontSize: Get.textScaleFactor * 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -324,7 +324,7 @@ class _CreatePostsState extends State<CreatePosts> {
                     fontColor: AppColors.button,
                     bckgrndColor: getAppColor(AppColors.background),
                     border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                     fontSize: Get.textScaleFactor * 18,
                   ),
