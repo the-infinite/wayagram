@@ -52,7 +52,7 @@ class Person{
 }
 
 class PersonView extends StatefulWidget {
-  PersonView({
+  const PersonView({
     Key? key,
     this.isLoading = false,
     required this.name,

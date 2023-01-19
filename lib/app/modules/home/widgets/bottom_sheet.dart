@@ -46,7 +46,7 @@ class WayaBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
 
@@ -221,7 +221,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(()=> NewGroupChat());
+                        Get.to(()=> const NewGroupChat());
                       }
                   ),
                 ],
@@ -315,12 +315,13 @@ class GroupAndPageBottomSheet extends StatelessWidget {
 }
 
 class RepostBottomSheet extends StatelessWidget {
-  RepostBottomSheet({Key? key, required this.post}) : super(key: key);
+  RepostBottomSheet({Key? key, required this.post,this.undo = false}) : super(key: key);
   final AllPostsEntity post;
+  final bool undo;
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
 
@@ -337,7 +338,7 @@ class RepostBottomSheet extends StatelessWidget {
           //height: Get.height * 0.65,
           decoration: BoxDecoration(
             color: getAppColor(AppColors.background),
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
@@ -348,7 +349,8 @@ class RepostBottomSheet extends StatelessWidget {
               SizedBox(
                 height: Get.height * 0.01,
               ),
-              BottomSheetButton(
+              if(!undo)
+                BottomSheetButton(
                   icon: FeatherIcons.repeat,
                   title: "REPOST",
                   subtitle: "Share this post on your timeline",
@@ -371,6 +373,31 @@ class RepostBottomSheet extends StatelessWidget {
                     });
                   }
               ),
+              if(undo)
+                BottomSheetButton(
+                    icon: FeatherIcons.repeat,
+                    title: "UNDO REPOST",
+                    subtitle: "Remove this re-post from your timeline",
+                    onTap: () {
+                      controller.imagePaths.clear();
+                      Get.back();
+                      var body = {
+                        "post_id": post.id,
+                      };
+                      controller.deleteData(body, "/wayagram-service/all-posts/delete?profile_id=${controller.profile.id}",updatePages: true).then((value) async {
+                        if(value.isSuccessful){
+                          await controller.getPosts;
+                          controller.update(['profile_page','home_tab','home']);
+                          if(Get.currentRoute == "/ViewPost"){
+                            Get.back();
+                          }
+                          AppOverlay.showSuccessSnackBar(title: "Undo Repost",content: "Undo Repost successfully");
+                        }else{
+                          AppOverlay.showErrorSnackBar(title: "Undo Repost",content: value.message != null ? value.message.toString() : "Something went wrong");
+                        }
+                      });
+                    }
+                ),
               BottomSheetButton(
                   icon: FeatherIcons.edit,
                   title: "QUOTE POST",
@@ -740,6 +767,140 @@ class PersonBottomSheet extends StatelessWidget {
                             }),
                       ],
                     ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class MomentViewBottomSheet extends StatelessWidget {
+  const MomentViewBottomSheet({Key? key,this.title = "Friends",this.buttonText = "Message",this.onTap, required this.momentId}) : super(key: key);
+
+  final Function(Person person)? onTap;
+  final String title;
+  final String buttonText;
+  final String momentId;
+  @override
+  Widget build(BuildContext context) {
+    RefreshController refreshController = RefreshController(initialRefresh: false);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
+          systemNavigationBarColor: getAppColor(AppColors.background),
+          systemNavigationBarIconBrightness: getAppBrightness()
+      ),
+      child: GetBuilder<HomeControllerWayagram>(id:"friends_screen",builder: (controller) {
+        var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+        var savedPosts = ReadWriteValue('wayagram_moments_views_$momentId', "", MyPref.box);
+
+        return Container(
+          decoration: BoxDecoration(
+            color: getAppColor(AppColors.background),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: Get.height * 0.020, bottom: Get.height * 0.015),
+                child: Text(
+                  title,
+                  style: AppTextStyle.subtitle1.copyWith(
+                    color: getAppColor(Colors.black),
+                    fontWeight: FontWeight.w600,
+                    fontSize: Get.width * 0.045,
+                  ),
+                ),
+              ),
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: Get.height * 0.50,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FutureBuilder<ApiResponse>(
+                          future: controller.getData('wayagram-service/all-posts/get-moment-viewers?profile_id=${profile.id}&moment_id=$momentId',true),
+                          builder: (context, snapshot) {
+                            if(savedPosts.val.isNotEmpty){
+                              var listToUse = jsonDecode(savedPosts.val) as List;
+                              List<String> names = [];
+                              List<String> username = [];
+                              List<String> profile = [];
+                              List<String> userIds = [];
+                              for (var element in listToUse) {
+                                var posts = FullUserProfileEntity.fromJson(element['Profile']);
+                                names.add(posts.displayName.toString());
+                                username.add(posts.username.toString());
+                                profile.add(posts.avatar.toString());
+                                userIds.add(posts.userId.toString());
+                              }
+                              return PersonView(
+                                name: names,
+                                username: username,
+                                profilePic: profile,
+                                length: listToUse.length,
+                                userIDs: userIds,
+                                showButton: false,
+                                buttonName: buttonText,
+                                onButtonClick: (person) async{
+                                  if(onTap != null){
+                                    onTap!(person);
+                                  }
+                                },
+                              );
+                            }else{
+                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                var listToUse = snapshot.data!.data['MomentViews'] as List;
+                                List<String> names = [];
+                                List<String> username = [];
+                                List<String> profile = [];
+                                List<String> userIds = [];
+                                for (var element in listToUse) {
+                                  var posts = FullUserProfileEntity.fromJson(element['Profile']);
+                                  names.add(posts.displayName.toString());
+                                  username.add(posts.username.toString());
+                                  profile.add(posts.avatar.toString());
+                                  userIds.add(posts.userId.toString());
+                                }
+                                savedPosts.val = jsonEncode(listToUse);
+
+                                return PersonView(
+                                  name: names,
+                                  username: username,
+                                  profilePic: profile,
+                                  length: listToUse.length,
+                                  userIDs: userIds,
+                                  showButton: false,
+                                  buttonName: buttonText,
+                                  onButtonClick: (person) async{
+                                    if(onTap != null){
+                                      onTap!(person);
+                                    }
+                                  },
+                                );
+                              }
+                              return NotificationView(isLoading: true);
+                            }
+                          }),
+                    ],
                   ),
                 ),
               ),

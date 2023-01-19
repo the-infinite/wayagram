@@ -29,6 +29,7 @@ import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../profile/other_profile.dart';
 import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
+import 'bottom_sheet.dart';
 
 class Story extends StatefulWidget {
   const Story({Key? key, required this.storyItems, required this.storyController, required this.momentItems}) : super(key: key);
@@ -275,26 +276,49 @@ class _StoryState extends State<Story> {
             ],
           ),
           bottomNavigationBar: firstItem.profile!.id == fullProfile.id ? GetBuilder<HomeControllerWayagram>(builder: (controller) {
-            return Container(
-              height: Get.height * 0.06,
-              width: Get.width,
-              color: Colors.black,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(FeatherIcons.eye),
-                    onPressed: () {
-                      //Navigator.pop(context);
-                    },
-                    color: Colors.white.withOpacity(.7),
-                  ),
-                  Text('${shortenCount(firstItem.viewCount.toString())} Views', style: AppTextStyle.subtitle1.copyWith(
-                    color: Colors.white.withOpacity(.7),
-                    fontSize: Get.textScaleFactor * 16,
-                    fontWeight: FontWeight.normal,
-                  ))
-                ],
+            return InkWell(
+              onTap: () async {
+                widget.storyController.pause();
+                await Get.bottomSheet(
+                    MomentViewBottomSheet(
+                      buttonText: "Forward",
+                      title: 'Views (${shortenCount(firstItem.viewCount.toString()*10)})',
+                      onTap: (person) async {
+
+                      }, momentId: '${firstItem.id}',
+                    ),
+                    isScrollControlled: true, ignoreSafeArea: true,
+                );
+                widget.storyController.play();
+              },
+              child: Container(
+                height: Get.height * 0.06,
+                width: Get.width,
+                color: Colors.black,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(FeatherIcons.eye),
+                      onPressed: () {
+                        //Navigator.pop(context);
+                      },
+                      color: Colors.white.withOpacity(.7),
+                    ),
+                    if(firstItem.viewCount != null)
+                      Text('${shortenCount(firstItem.viewCount.toString())} Views', style: AppTextStyle.subtitle1.copyWith(
+                      color: Colors.white.withOpacity(.7),
+                      fontSize: Get.textScaleFactor * 16,
+                      fontWeight: FontWeight.normal,
+                    )),
+                    if(firstItem.viewCount == null)
+                      Text('${shortenCount("0")} Views', style: AppTextStyle.subtitle1.copyWith(
+                        color: Colors.white.withOpacity(.7),
+                        fontSize: Get.textScaleFactor * 16,
+                        fontWeight: FontWeight.normal,
+                      )),
+                  ],
+                ),
               ),
             );
           },id: 'bottomBar') : null,
@@ -308,8 +332,11 @@ String shortenCount(String amount){
   if(amount == "null" || amount.isEmpty){
     return "0";
   }
+  if(num.parse(amount) >= 1000000000){
+    return "${(num.parse(amount) / 1000000000).toStringAsFixed(1)}B";
+  }
   if(amount.length > 6){
-    return "${amount.substring(0, amount.length-6)}M";
+    return "${(int.parse(amount) / 1000000).toStringAsFixed(1)}M";
   }
   if(amount.length > 3) {
     var first = amount.substring(0, amount.length - 3);

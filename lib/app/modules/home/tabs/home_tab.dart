@@ -102,7 +102,7 @@ class _HomeTabState extends State<HomeTab> {
                   if(snapshot.connectionState == ConnectionState.done){
                     return const SizedBox.shrink();
                   }
-                  return PostsView(isLoading: true);
+                  return const PostsView(isLoading: true);
                 }
               }),
         ],

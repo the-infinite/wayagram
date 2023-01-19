@@ -45,6 +45,11 @@ class FullUserProfileEntity {
 
   Map<String, dynamic> toJson() => $FullUserProfileEntityToJson(this);
 
+	static List<FullUserProfileEntity> fromJsonList(List list) {
+		if(list.isEmpty) return [];
+		return list.map((item) => FullUserProfileEntity.fromJson(item)).toList();
+	}
+
   @override
   String toString() {
     return jsonEncode(this);
