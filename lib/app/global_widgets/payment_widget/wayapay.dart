@@ -26,7 +26,7 @@ class WayapayUtil {
             email: profile.email.toString(),
             phoneNumber: profile.phone.toString()
         ),
-        merchantId: logInModelEntity.merchantId.toString(),
+        merchantId: "MER_qZaVZ1645265780823HOaZW",
         wayaPublicKey:"WAYAPUBK_TEST_0x3442f06c8fa6454e90c5b1a518758c70"
     );
 

@@ -308,8 +308,8 @@ class _EventsViewState extends State<EventsView> {
                                   }else{
                                     if(list[index].profileId.toString() != profile.id){
                                       var event = list[index];
-                                      Get.to(PayForEvent(post: event));
-                                      //await WayapayUtil().pay(Get.context!, amount: event.amount ?? 0, description: "Payment For Event",isTest: true);
+                                     // Get.to(PayForEvent(post: event));
+                                      await WayapayUtil().pay(context, amount: event.amount ?? 0, description: "Payment For Event",isTest: true);
                                     }else{
 
                                     }
