@@ -913,7 +913,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                 decorateAtSign: false,
                                               ),
                                               if(chat.senderId == fullProfile.id)
-                                                Icon(Icons.check_circle_rounded, color: chat.read == true ? getAppColor(AppColors.button) : getAppColor(Colors.grey), size: 15,),
+                                                Icon(Icons.check_circle_rounded, color: chat.read == true ? AppColors.primary : getAppColor(Colors.grey), size: 15,),
                                             ],
                                           ),
                                         ),
