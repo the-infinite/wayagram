@@ -37,7 +37,7 @@ import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
 
 class ReportProduct extends StatefulWidget {
-  ReportProduct({Key? key, this.post, this.group, this.page,this.isGroup = false, this.isPage = false,this.isPost = false,this.isProfile = false}) : super(key: key);
+  const ReportProduct({Key? key, this.post, this.group, this.page,this.isGroup = false, this.isPage = false,this.isPost = false,this.isProfile = false}) : super(key: key);
 
   final ProductsModelData? post;
   final GroupModelEntity? group;

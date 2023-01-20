@@ -21,6 +21,7 @@ import '../../data/model/group_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_avatar.dart';
+import '../../global_widgets/overlays.dart';
 import '../../global_widgets/person_view.dart';
 import '../home/widgets/events_view.dart';
 import '../home/widgets/group_view.dart';
@@ -106,7 +107,18 @@ class _AllEventsState extends State<AllEvents> {
                           return EventsView(
                             moments: moments.data,
                             title: 'My Created Events',
-                            buttonText: 'Delete',
+                            buttonText: 'View',
+                            onLikeClick: (event){
+                              var body = {"event_id": event.id.toString(), "going": "yes"};
+                              controller.postData(body, "wayagram-service/all-posts/show-interest-in-event?profile_id=${fullProfile.id}").then((value) {
+                                if(value.isSuccessful){
+                                  AppOverlay.showSuccessSnackBar(content: "Event Liked Successfully");
+                                  controller.update();
+                                }else{
+                                  AppOverlay.showErrorSnackBar(content: "An Error Occurred");
+                                }
+                              });
+                            },
                           );
                         } else {
                           var savedEvents = MyPref.createdEvents.val;
@@ -116,7 +128,21 @@ class _AllEventsState extends State<AllEvents> {
                             return EventsView(
                                 moments: events.data,
                               title: 'My Created Events',
-                              buttonText: 'Delete',
+                              buttonText: 'View',
+                              onButtonClick: (event){
+
+                              },
+                              onLikeClick: (event){
+                                var body = {"event_id": event.id.toString(), "going": "yes"};
+                                controller.postData(body, "wayagram-service/all-posts/show-interest-in-event?profile_id=${fullProfile.id}").then((value) {
+                                  if(value.isSuccessful){
+                                    AppOverlay.showSuccessSnackBar(content: "Event Liked Successfully");
+                                    controller.update();
+                                  }else{
+                                    AppOverlay.showErrorSnackBar(content: "An Error Occurred");
+                                  }
+                                });
+                              },
                             );
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
@@ -146,6 +172,17 @@ class _AllEventsState extends State<AllEvents> {
                           return EventsView(
                             moments: moments.data,
                             title: 'Liked Events',
+                            onLikeClick: (event){
+                              var body = {"event_id": event.id.toString(), "going": "yes"};
+                              controller.postData(body, "wayagram-service/all-posts/show-interest-in-event?profile_id=${fullProfile.id}").then((value) {
+                                if(value.isSuccessful){
+                                  AppOverlay.showSuccessSnackBar(content: "Event Liked Successfully");
+                                  controller.update();
+                                }else{
+                                  AppOverlay.showErrorSnackBar(content: "An Error Occurred");
+                                }
+                              });
+                            },
                           );
                         } else {
                           var savedEvents = MyPref.eventsToAttend.val;
@@ -159,7 +196,17 @@ class _AllEventsState extends State<AllEvents> {
                                 return SizedBox.shrink();
                               }
                             }
-                            return EventsView(moments: events.data,title: 'Liked Events');
+                            return EventsView(moments: events.data,title: 'Liked Events',onLikeClick: (event){
+                              var body = {"event_id": event.id.toString(), "going": "yes"};
+                              controller.postData(body, "wayagram-service/all-posts/show-interest-in-event?profile_id=${fullProfile.id}").then((value) {
+                                if(value.isSuccessful){
+                                  AppOverlay.showSuccessSnackBar(content: "Event Liked Successfully");
+                                  controller.update();
+                                }else{
+                                  AppOverlay.showErrorSnackBar(content: "An Error Occurred");
+                                }
+                              });
+                            });
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
                               return SizedBox.shrink();
@@ -179,12 +226,33 @@ class _AllEventsState extends State<AllEvents> {
                           return EventsView(
                               moments: moments.data,
                             title: 'All Events',
+                            onLikeClick: (event){
+                              var body = {"event_id": event.id.toString(), "going": "yes"};
+                              controller.postData(body, "wayagram-service/all-posts/show-interest-in-event?profile_id=${fullProfile.id}").then((value) {
+                                if(value.isSuccessful){
+                                  AppOverlay.showSuccessSnackBar(content: "Event Liked Successfully");
+                                  controller.update();
+                                }else{
+                                  AppOverlay.showErrorSnackBar(content: "An Error Occurred");
+                                }
+                              });
+                            },
                           );
                         } else {
                           var savedEvents = MyPref.eventsToAttend.val;
                           if(savedEvents.isNotEmpty) {
                             var events = AllEventsEntity.fromJson(jsonDecode(savedEvents));
-                            return EventsView(moments: events.data,title: 'All Events',);
+                            return EventsView(moments: events.data,title: 'All Events',onLikeClick: (event){
+                              var body = {"event_id": event.id.toString(), "going": "yes"};
+                              controller.postData(body, "wayagram-service/all-posts/show-interest-in-event?profile_id=${fullProfile.id}").then((value) {
+                                if(value.isSuccessful){
+                                  AppOverlay.showSuccessSnackBar(content: "Event Liked Successfully");
+                                  controller.update();
+                                }else{
+                                  AppOverlay.showErrorSnackBar(content: "An Error Occurred");
+                                }
+                              });
+                            });
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
                               return SizedBox.shrink();

@@ -35,7 +35,8 @@ class EventsView extends StatefulWidget {
     this.actionIcon = Icons.share,
     this.onEventClick,
     this.onActionClick,
-    this.onButtonClick
+    this.onButtonClick,
+    this.onLikeClick
   }) : super(key: key);
 
   final bool isLoading;
@@ -46,6 +47,7 @@ class EventsView extends StatefulWidget {
   final Function(AllEventsData data)? onEventClick;
   final Function(AllEventsData data)? onButtonClick;
   final Function(AllEventsData data)? onActionClick;
+  final Function(AllEventsData data)? onLikeClick;
 
   @override
   State<EventsView> createState() => _EventsViewState();
@@ -233,7 +235,11 @@ class _EventsViewState extends State<EventsView> {
                                             color: isLiked ? AppColors.primary : getAppColor(Colors.black),
                                             size: 15,
                                           ),
-                                          onPressed: (){},
+                                          onPressed: (){
+                                            if(widget.onLikeClick != null){
+                                              widget.onLikeClick!(list[index]);
+                                            }
+                                          },
                                         ),
                                       ),
                                     ),
@@ -308,10 +314,10 @@ class _EventsViewState extends State<EventsView> {
                                   }else{
                                     if(list[index].profileId.toString() != profile.id){
                                       var event = list[index];
-                                     // Get.to(PayForEvent(post: event));
-                                      await WayapayUtil().pay(context, amount: event.amount ?? 0, description: "Payment For Event",isTest: true);
+                                      Get.to(PayForEvent(post: event));
+                                      //await WayapayUtil().pay(context, amount: event.amount ?? 0, description: "Payment For Event",isTest: true);
                                     }else{
-
+                                      Get.to(() => ViewEventDetails(event: list[index]));
                                     }
                                   }
                                 },

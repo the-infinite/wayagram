@@ -33,10 +33,11 @@ import '../home/widgets/group_view.dart';
 import '../home/widgets/notification_view.dart';
 import '../profile/profile.dart';
 import '../profile/update_profile.dart';
+import '../report/report_event.dart';
 import '../view_posts/event_analytics.dart';
 
 class ViewEventDetails extends StatefulWidget{
-  ViewEventDetails({Key? key, required this.event}) : super(key: key);
+  const ViewEventDetails({Key? key, required this.event}) : super(key: key);
 
   final AllEventsData event;
 
@@ -102,7 +103,32 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                 ),
               ),
               if(widget.event.profile!.id == fullProfile.id)
-                SizedBox(width: 15)
+                const SizedBox(width: 15),
+              if(widget.event.profile!.id != fullProfile.id)
+                PopupMenuButton(
+                  color: getAppColor(Colors.white),
+                  icon: Icon(
+                    FeatherIcons.moreVertical,
+                    color: getAppColor(Colors.black),
+                    size: 20,
+                  ),
+                  onSelected: (value) {
+                    if (value == 0) {
+                      Get.to(() => ReportEvent(post: widget.event,isPost: true));
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 0,
+                      child: Text(
+                        "Report",
+                        style: AppTextStyle.bodyText1.copyWith(
+                          color: getAppColor(Colors.black),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ]),
             ],
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(0.5),
