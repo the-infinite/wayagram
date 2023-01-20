@@ -26,7 +26,7 @@ import 'my_pref.dart';
 
 class Api {
   //static String baseUrl = 'https://services.wayagram.ng/';
-  //static String baseSocketUrl = 'wss://chats.wayagram.ng/';
+ // static String baseSocketUrl = 'wss://chats.wayagram.ng/';
   static String baseUrl = 'https://services.staging.wayagram.ng/';
   static String baseSocketUrl = 'wss://chats.staging.wayagram.ng/';
   CancelToken token = CancelToken();

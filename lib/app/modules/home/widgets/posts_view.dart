@@ -688,7 +688,7 @@ class _PostState extends State<Post> {
               ),
             if(imageUrls.isNotEmpty && hasVideoAndOnlyOne)
               SizedBox(
-                height: Get.height * 0.4,
+                height: Get.height * 0.418,
                 child: NewsfeedMultipleImageView(
                   imageUrls: imageUrls,
                   marginLeft: 10.0,
@@ -1514,7 +1514,7 @@ class _InnerPostState extends State<InnerPost> {
               ),
             if(imageUrls.isNotEmpty && hasVideoAndOnlyOne)
               SizedBox(
-                height: Get.height * 0.4,
+                height: Get.height * 0.418,
                 child: NewsfeedMultipleImageView(
                   imageUrls: imageUrls,
                   marginLeft: 10.0,
@@ -2006,7 +2006,7 @@ class _InnerPostWithoutBorder extends State<InnerPostWithoutBorder> {
             ),
           if(imageUrls.isNotEmpty && hasVideoAndOnlyOne)
             SizedBox(
-              height: Get.height * 0.4,
+              height: Get.height * 0.418,
               child: NewsfeedMultipleImageView(
                 imageUrls: imageUrls,
                 marginLeft: 10.0,

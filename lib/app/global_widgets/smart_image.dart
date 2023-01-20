@@ -156,10 +156,8 @@ class _SmartImageState extends State<SmartImage> {
             if(controller!=null){
               return Container(
                   color: Colors.black,
-                  child: Expanded(
-                    child: BetterPlayer(
-                      controller: controller!,
-                    ),
+                  child: BetterPlayer(
+                    controller: controller!,
                   ) );
             }
             return Container(
