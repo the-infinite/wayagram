@@ -153,8 +153,24 @@ class _SmartImageState extends State<SmartImage> {
         child: StreamBuilder<BetterPlayerController?>(
           stream: betterPlayerControllerStreamController.stream,
           builder: (context, snapshot) {
+            if(controller!=null){
+              return Container(
+                  color: Colors.black,
+                  child: Expanded(
+                    child: BetterPlayer(
+                      controller: controller!,
+                    ),
+                  ) );
+            }
+            return Container(
+                color: Colors.black,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ));
             return AspectRatio(
-              aspectRatio: 16 / 9,
+              aspectRatio: 1,
               child: controller != null ? BetterPlayer(
                 controller: controller!,
               ) : Container(

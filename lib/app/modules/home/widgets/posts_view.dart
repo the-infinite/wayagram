@@ -33,6 +33,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../global_widgets/helpers/size.dart';
 import '../../../global_widgets/newsfeed_multiple_imageview.dart';
+import '../../../global_widgets/smart_image.dart';
 import '../../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../../donate/donate.dart';
 import '../../polls_payment/poll_payment.dart';
@@ -275,6 +276,12 @@ class _PostState extends State<Post> {
     if(widget.post.postImages != null){
       for (var element in widget.post.postImages!) {
         imageUrls.add(element.imageURL.toString());
+      }
+    }
+    bool hasVideoAndOnlyOne = false;
+    if(imageUrls.length == 1){
+      if(getUrlType(imageUrls[0]) == UrlType.VIDEO){
+        hasVideoAndOnlyOne = true;
       }
     }
 
@@ -667,9 +674,21 @@ class _PostState extends State<Post> {
                   decorateAtSign: true,
                 )
             ),
-            if(imageUrls.isNotEmpty)
+            if(imageUrls.isNotEmpty && !hasVideoAndOnlyOne)
               SizedBox(
                 height: Get.height * 0.18,
+                child: NewsfeedMultipleImageView(
+                  imageUrls: imageUrls,
+                  marginLeft: 10.0,
+                  marginRight: 10.0,
+                  marginBottom: 0,
+                  marginTop: 0,
+                  videoListController: widget.videoListController,
+                ),
+              ),
+            if(imageUrls.isNotEmpty && hasVideoAndOnlyOne)
+              SizedBox(
+                height: Get.height * 0.4,
                 child: NewsfeedMultipleImageView(
                   imageUrls: imageUrls,
                   marginLeft: 10.0,
@@ -1344,6 +1363,12 @@ class _InnerPostState extends State<InnerPost> {
     for (var element in innerPostData.postImages!) {
       imageUrls.add(element.imageURL.toString());
     }
+    bool hasVideoAndOnlyOne = false;
+    if(imageUrls.length == 1){
+      if(getUrlType(imageUrls[0]) == UrlType.VIDEO){
+        hasVideoAndOnlyOne = true;
+      }
+    }
 
     List<String> pollImageUrls = [];
     if(innerPostData.isPoll == true && innerPostData.poll!.pollOptions!.length >= 2){
@@ -1372,7 +1397,7 @@ class _InnerPostState extends State<InnerPost> {
       }
     }
     if(innerPostData.profile == null) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     DonationsModel? donation;
@@ -1475,9 +1500,21 @@ class _InnerPostState extends State<InnerPost> {
                   decorateAtSign: true,
                 )
             ),
-            if(imageUrls.isNotEmpty)
+            if(imageUrls.isNotEmpty && !hasVideoAndOnlyOne)
               SizedBox(
                 height: Get.height * 0.18,
+                child: NewsfeedMultipleImageView(
+                  imageUrls: imageUrls,
+                  marginLeft: 10.0,
+                  marginRight: 10.0,
+                  marginBottom: 0,
+                  marginTop: 0,
+                  videoListController: widget.videoListController,
+                ),
+              ),
+            if(imageUrls.isNotEmpty && hasVideoAndOnlyOne)
+              SizedBox(
+                height: Get.height * 0.4,
                 child: NewsfeedMultipleImageView(
                   imageUrls: imageUrls,
                   marginLeft: 10.0,
@@ -1865,6 +1902,12 @@ class _InnerPostWithoutBorder extends State<InnerPostWithoutBorder> {
     for (var element in innerPostData.postImages!) {
       imageUrls.add(element.imageURL.toString());
     }
+    bool hasVideoAndOnlyOne = false;
+    if(imageUrls.length == 1){
+      if(getUrlType(imageUrls[0]) == UrlType.VIDEO){
+        hasVideoAndOnlyOne = true;
+      }
+    }
 
     List<String> pollImageUrls = [];
     if(innerPostData.isPoll == true && innerPostData.poll!.pollOptions!.length >= 2){
@@ -1949,9 +1992,21 @@ class _InnerPostWithoutBorder extends State<InnerPostWithoutBorder> {
                 decorateAtSign: true,
               )
           ),
-          if(imageUrls.isNotEmpty)
+          if(imageUrls.isNotEmpty && !hasVideoAndOnlyOne)
             SizedBox(
               height: Get.height * 0.18,
+              child: NewsfeedMultipleImageView(
+                imageUrls: imageUrls,
+                marginLeft: 10.0,
+                marginRight: 10.0,
+                marginBottom: 0,
+                marginTop: 0,
+                videoListController: widget.videoListController,
+              ),
+            ),
+          if(imageUrls.isNotEmpty && hasVideoAndOnlyOne)
+            SizedBox(
+              height: Get.height * 0.4,
               child: NewsfeedMultipleImageView(
                 imageUrls: imageUrls,
                 marginLeft: 10.0,
