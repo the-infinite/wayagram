@@ -710,51 +710,64 @@ class _PostState extends State<Post> {
                         shrinkWrap: false,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, i) {
-                          return Container(
-                            margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
-                            padding: EdgeInsets.all(0),
-                            constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: getAppColor(Colors.grey).withOpacity(.5),
-                            ),
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                ClipRRect(
+                          return InkWell(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ImageViewer(imageUrls: pollImageUrls,initialPage: i),
+                                ),
+                              );
+                            },
+                            child:  Hero(
+                              tag: "photo$i",
+                              child: Container(
+                                margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
+                                padding: const EdgeInsets.all(0),
+                                constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl: pollImageUrls[i],
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) {
-                                      return Icon(
-                                        IconlyLight.profile,
-                                        color: getAppColor(Colors.black),
-                                        size: 25,
-                                      );
-                                    },
-                                    width: Get.width * 0.3,
-                                    height: Get.height * 0.20,
-                                  ),
+                                  color: getAppColor(Colors.grey).withOpacity(.5),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 10),
-                                  child: BorderedText(
-                                    strokeWidth: 2.0,
-                                    child: Text(
-                                      (i+1).toString(),
-                                      style: TextStyle(
-                                        color: getAppColor(Colors.white),
-                                        fontSize: Get.width * 0.04,
-                                        fontWeight: FontWeight.normal,
+                                child: Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl: pollImageUrls[i],
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) {
+                                          return Icon(
+                                            IconlyLight.profile,
+                                            color: getAppColor(Colors.black),
+                                            size: 25,
+                                          );
+                                        },
+                                        width: Get.width * 0.3,
+                                        height: Get.height * 0.20,
                                       ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: BorderedText(
+                                        strokeWidth: 2.0,
+                                        child: Text(
+                                          (i+1).toString(),
+                                          style: TextStyle(
+                                            color: getAppColor(Colors.white),
+                                            fontSize: Get.width * 0.04,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },
@@ -1536,51 +1549,64 @@ class _InnerPostState extends State<InnerPost> {
                         shrinkWrap: false,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, i) {
-                          return Container(
-                            margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
-                            padding: EdgeInsets.all(0),
-                            constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: getAppColor(Colors.grey).withOpacity(.5),
-                            ),
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                ClipRRect(
+                          return InkWell(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ImageViewer(imageUrls: pollImageUrls,initialPage: i),
+                                ),
+                              );
+                            },
+                            child:  Hero(
+                              tag: "photo$i",
+                              child: Container(
+                                margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
+                                padding: const EdgeInsets.all(0),
+                                constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl: pollImageUrls[i],
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) {
-                                      return Icon(
-                                        IconlyLight.profile,
-                                        color: getAppColor(Colors.black),
-                                        size: 25,
-                                      );
-                                    },
-                                    width: Get.width * 0.3,
-                                    height: Get.height * 0.20,
-                                  ),
+                                  color: getAppColor(Colors.grey).withOpacity(.5),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 10),
-                                  child: BorderedText(
-                                    strokeWidth: 2.0,
-                                    child: Text(
-                                      (i+1).toString(),
-                                      style: TextStyle(
-                                        color: getAppColor(Colors.white),
-                                        fontSize: Get.width * 0.04,
-                                        fontWeight: FontWeight.normal,
+                                child: Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl: pollImageUrls[i],
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) {
+                                          return Icon(
+                                            IconlyLight.profile,
+                                            color: getAppColor(Colors.black),
+                                            size: 25,
+                                          );
+                                        },
+                                        width: Get.width * 0.3,
+                                        height: Get.height * 0.20,
                                       ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: BorderedText(
+                                        strokeWidth: 2.0,
+                                        child: Text(
+                                          (i+1).toString(),
+                                          style: TextStyle(
+                                            color: getAppColor(Colors.white),
+                                            fontSize: Get.width * 0.04,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },
@@ -2028,51 +2054,64 @@ class _InnerPostWithoutBorder extends State<InnerPostWithoutBorder> {
                       shrinkWrap: false,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, i) {
-                        return Container(
-                          margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
-                          padding: EdgeInsets.all(0),
-                          constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: getAppColor(Colors.grey).withOpacity(.5),
-                          ),
-                          child: Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              ClipRRect(
+                        return InkWell(
+                          onTap: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ImageViewer(imageUrls: pollImageUrls,initialPage: i),
+                              ),
+                            );
+                          },
+                          child:  Hero(
+                            tag: "photo$i",
+                            child: Container(
+                              margin: EdgeInsets.only(top: 0, bottom: 0, left: i==0 ? 0:10,right: 0),
+                              padding: const EdgeInsets.all(0),
+                              constraints: BoxConstraints(maxHeight: Get.height * 0.20,maxWidth: Get.width * 0.3),
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                child: CachedNetworkImage(
-                                  imageUrl: pollImageUrls[i],
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) {
-                                    return Icon(
-                                      IconlyLight.profile,
-                                      color: getAppColor(Colors.black),
-                                      size: 25,
-                                    );
-                                  },
-                                  width: Get.width * 0.3,
-                                  height: Get.height * 0.20,
-                                ),
+                                color: getAppColor(Colors.grey).withOpacity(.5),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 10),
-                                child: BorderedText(
-                                  strokeWidth: 2.0,
-                                  child: Text(
-                                    (i+1).toString(),
-                                    style: TextStyle(
-                                      color: getAppColor(Colors.white),
-                                      fontSize: Get.width * 0.04,
-                                      fontWeight: FontWeight.normal,
+                              child: Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl: pollImageUrls[i],
+                                      fit: BoxFit.cover,
+                                      errorWidget: (context, url, error) {
+                                        return Icon(
+                                          IconlyLight.profile,
+                                          color: getAppColor(Colors.black),
+                                          size: 25,
+                                        );
+                                      },
+                                      width: Get.width * 0.3,
+                                      height: Get.height * 0.20,
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
                                   ),
-                                ),
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: 10),
+                                    child: BorderedText(
+                                      strokeWidth: 2.0,
+                                      child: Text(
+                                        (i+1).toString(),
+                                        style: TextStyle(
+                                          color: getAppColor(Colors.white),
+                                          fontSize: Get.width * 0.04,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         );
                       },

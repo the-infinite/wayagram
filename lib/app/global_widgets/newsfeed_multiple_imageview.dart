@@ -101,13 +101,13 @@ class _ImageViewerState extends State<ImageViewer> {
             backgroundColor: Colors.black,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: const [
 
               ],
             ),
             leading: IconButton(
               padding: EdgeInsets.zero,
-              icon: Icon(
+              icon: const Icon(
                 FeatherIcons.arrowLeft,
                 color: Colors.white,
               ),
@@ -184,9 +184,9 @@ class _ImageViewerState extends State<ImageViewer> {
                 Expanded(
                   child: ImageSlideshow(
                     initialPage: widget.initialPage,
-                    indicatorColor: Colors.black,
-                    indicatorBackgroundColor: Colors.black,
-                    isLoop: widget.imageUrls.length > 1,
+                    indicatorColor: Colors.transparent,
+                    indicatorBackgroundColor: Colors.transparent,
+                    isLoop: false,
                     onPageChanged: (pos){
                        currentPos = pos;
                     },

@@ -144,7 +144,7 @@ class _SmartImageState extends State<SmartImage> {
             });
             return;
           }*/
-          if (info.visibleFraction >= 0.6) {
+          if (info.visibleFraction >= 0.2) {
             _setupController();
           } else {
             _freeController();
@@ -158,7 +158,8 @@ class _SmartImageState extends State<SmartImage> {
                   color: Colors.black,
                   child: BetterPlayer(
                     controller: controller!,
-                  ) );
+                  )
+              );
             }
             return Container(
                 color: Colors.black,
@@ -167,7 +168,7 @@ class _SmartImageState extends State<SmartImage> {
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 ));
-            return AspectRatio(
+            /*return AspectRatio(
               aspectRatio: 1,
               child: controller != null ? BetterPlayer(
                 controller: controller!,
@@ -180,7 +181,7 @@ class _SmartImageState extends State<SmartImage> {
                   ),
                 ),
               ),
-            );
+            );*/
           },
         ),
       );

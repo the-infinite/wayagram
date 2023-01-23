@@ -35,7 +35,7 @@ import '../home/widgets/group_view.dart';
 import '../home/widgets/posts_view.dart';
 
 class AddInterestPage extends StatefulWidget {
-  AddInterestPage({Key? key}) : super(key: key);
+  const AddInterestPage({Key? key}) : super(key: key);
 
   @override
   State<AddInterestPage> createState() => _AddInterestPageState();

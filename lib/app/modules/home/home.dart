@@ -61,7 +61,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
     homeController.notificationController = notificationController;
     homeController.chatController = chatController;
     if(Platform.isAndroid){
-      homeController.checkPermissionStatus();
+      //homeController.checkPermissionStatus();
     }
     homeController.getAllUserData().then((value) => homeController.update());
 
@@ -217,7 +217,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                             fontSize: Get.width*0.035,
                             fontWeight: FontWeight.w500,
                           ),
-                          tabs: [
+                          tabs: const [
                             Tab(text: 'All Products',iconMargin: EdgeInsets.zero,),
                             Tab(text: 'My Products',iconMargin: EdgeInsets.zero,),
                           ],
@@ -375,7 +375,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   );
                 },
                 backgroundColor: AppColors.primary,
-                child: Icon(Icons.add,color: Colors.white),
+                child: const Icon(Icons.add,color: Colors.white),
               ),
             ),
           );

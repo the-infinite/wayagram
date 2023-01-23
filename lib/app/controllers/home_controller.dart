@@ -328,13 +328,13 @@ class HomeControllerWayagram extends GetxController {
     try {
       await launch(
         url,
-        customTabsOption: CustomTabsOption(
+        customTabsOption: const CustomTabsOption(
           toolbarColor: AppColors.primary,
           enableDefaultShare: true,
           enableUrlBarHiding: true,
           showPageTitle: true,
         ),
-        safariVCOption: SafariViewControllerOption(
+        safariVCOption: const SafariViewControllerOption(
           preferredBarTintColor: AppColors.primary,
           preferredControlTintColor: Colors.white,
           barCollapsingEnabled: true,

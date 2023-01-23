@@ -21,9 +21,9 @@ class AppThemes {
       inactiveTrackColor: AppColors.primary.withOpacity(0.5),
       trackHeight: 4.0,
       thumbColor: AppColors.primary,
-      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12.0),
       overlayColor: AppColors.primary.withOpacity(0.2),
-      overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+      overlayShape: const RoundSliderOverlayShape(overlayRadius: 28.0),
       valueIndicatorColor: AppColors.primary,
     ),
     appBarTheme: AppBarTheme(

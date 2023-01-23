@@ -511,22 +511,24 @@ class _CreateDonationState extends State<CreateDonation> {
                                             sourcePath: imagePath,
                                             cropStyle: CropStyle.rectangle,
                                             aspectRatioPresets: [
+                                              CropAspectRatioPreset.square,
                                               CropAspectRatioPreset.ratio3x2,
                                               CropAspectRatioPreset.original,
+                                              CropAspectRatioPreset.ratio4x3,
                                               CropAspectRatioPreset.ratio16x9
                                             ],
                                             uiSettings: [
                                               AndroidUiSettings(
-                                                  toolbarTitle: 'Crop Event Photo',
+                                                  toolbarTitle: 'Crop Donation Photo',
                                                   toolbarColor: getAppColor(AppColors.background),
                                                   toolbarWidgetColor: getAppColor(Colors.black),
                                                   activeControlsWidgetColor: AppColors.primary,
                                                   cropGridColor: AppColors.primary,
                                                   initAspectRatio: CropAspectRatioPreset.original,
-                                                  lockAspectRatio: true),
+                                                  lockAspectRatio: false),
                                               IOSUiSettings(
                                                 title: 'Crop Cover Photo',
-                                                aspectRatioLockEnabled: true,
+                                                aspectRatioLockEnabled: false,
                                               ),
                                               WebUiSettings(
                                                 context: context,

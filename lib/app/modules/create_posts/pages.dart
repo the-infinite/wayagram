@@ -24,7 +24,7 @@ import 'package:dio/dio.dart' as dio;
 import 'normal_posts.dart';
 
 class CreatePage extends StatefulWidget {
-  CreatePage({Key? key}) : super(key: key);
+  const CreatePage({Key? key}) : super(key: key);
 
   @override
   State<CreatePage> createState() => _CreatePageState();
@@ -79,7 +79,7 @@ class _CreatePageState extends State<CreatePage> {
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
             title: Text('Create Page', style: AppTextStyle.subtitle1.copyWith(
-              color: getAppColor(Color(0xff4F4F4F)),
+              color: getAppColor(const Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -155,7 +155,7 @@ class _CreatePageState extends State<CreatePage> {
             color: getAppColor(AppColors.background),
             child: Column(
               children: [
-                Divider(
+                const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,

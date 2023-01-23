@@ -24,7 +24,7 @@ import 'package:dio/dio.dart' as dio;
 
 
 class CreateEvent extends StatelessWidget {
-  CreateEvent({Key? key}) : super(key: key);
+  const CreateEvent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class CreateEvent extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
             title: Text('Create Event', style: AppTextStyle.subtitle1.copyWith(
-              color: getAppColor(Color(0xff4F4F4F)),
+              color: getAppColor(const Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -78,9 +78,9 @@ class CreateEvent extends StatelessWidget {
               icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
               onPressed: () {
                 if(currentPage > 0){
-                  pageController.animateToPage(currentPage-1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                  pageController.animateToPage(currentPage-1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                   currentPage--;
-                  controller.update();
+                  controller.update(['create_event']);
                 }else{
                   Navigator.pop(context);
                 }
@@ -184,10 +184,10 @@ class CreateEvent extends StatelessWidget {
                           height: Get.height*0.8,
                           child: PageView(
                             controller: pageController,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             children: [
                               Column(
-                                key: Key('page1'),
+                                key: const Key('page1'),
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -264,7 +264,7 @@ class CreateEvent extends StatelessWidget {
                                 ],
                               ),
                               Column(
-                                key: Key('page2'),
+                                key: const Key('page2'),
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -373,7 +373,7 @@ class CreateEvent extends StatelessWidget {
                                 ],
                               ),
                               Column(
-                                key: Key('page3'),
+                                key: const Key('page3'),
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -482,7 +482,7 @@ class CreateEvent extends StatelessWidget {
                                 ],
                               ),
                               Column(
-                                key: Key('page4'),
+                                key: const Key('page4'),
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -511,8 +511,10 @@ class CreateEvent extends StatelessWidget {
                                                   sourcePath: imagePath,
                                                   cropStyle: CropStyle.rectangle,
                                                   aspectRatioPresets: [
+                                                    CropAspectRatioPreset.square,
                                                     CropAspectRatioPreset.ratio3x2,
                                                     CropAspectRatioPreset.original,
+                                                    CropAspectRatioPreset.ratio4x3,
                                                     CropAspectRatioPreset.ratio16x9
                                                   ],
                                                   uiSettings: [
@@ -523,10 +525,10 @@ class CreateEvent extends StatelessWidget {
                                                         activeControlsWidgetColor: AppColors.primary,
                                                         cropGridColor: AppColors.primary,
                                                         initAspectRatio: CropAspectRatioPreset.original,
-                                                        lockAspectRatio: true),
+                                                        lockAspectRatio: false),
                                                     IOSUiSettings(
                                                       title: 'Crop Cover Photo',
-                                                      aspectRatioLockEnabled: true,
+                                                      aspectRatioLockEnabled: false,
                                                     ),
                                                     WebUiSettings(
                                                       context: context,

@@ -10,7 +10,15 @@ class ReusableVideoListController {
     for (int index = 0; index < 3; index++) {
       _betterPlayerControllerRegistry.add(
         BetterPlayerController(
-          const BetterPlayerConfiguration(handleLifecycle: false, autoDispose: false,fit: BoxFit.contain,expandToFill: false),
+          const BetterPlayerConfiguration(
+              handleLifecycle: false,
+              autoDispose: false,
+              fit: BoxFit.contain,
+              expandToFill: false,
+              controlsConfiguration: BetterPlayerControlsConfiguration(
+                enableOverflowMenu: false,
+              )
+          ),
         ),
       );
     }

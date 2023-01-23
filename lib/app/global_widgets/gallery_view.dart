@@ -13,7 +13,7 @@ import 'newsfeed_multiple_imageview.dart';
 class GalleryView extends StatelessWidget {
   final List<String> imageUrlList;
   final int crossAxisCount;
-  GalleryView({super.key, required this.imageUrlList, this.crossAxisCount = 3});
+  const GalleryView({super.key, required this.imageUrlList, this.crossAxisCount = 3});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class GalleryView extends StatelessWidget {
       backgroundColor: getAppColor(AppColors.background),
       body: GridView.builder(
           itemCount: imageUrlList.length,
-          padding: EdgeInsets.only(left: 6, right: 6),
+          padding: const EdgeInsets.only(left: 6, right: 6),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
               crossAxisSpacing: 6.0,
@@ -31,17 +31,6 @@ class GalleryView extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return InkWell(
               onTap: () {
-               /* Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) {
-                          return ViewPhotos(
-                            imageIndex: index,
-                            imageList: imageUrlList,
-                            heroTitle: "image$index",
-                          );
-                        },
-                        fullscreenDialog: true));*/
                 Navigator.push(
                   context,
                   MaterialPageRoute(
