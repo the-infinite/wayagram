@@ -24,7 +24,7 @@ import '../../../global_widgets/page_dropdown.dart';
 import '../../../global_widgets/page_input.dart';
 
 class EditGroup extends StatelessWidget {
-  EditGroup({Key? key, required this.editInfo}) : super(key: key);
+  const EditGroup({Key? key, required this.editInfo}) : super(key: key);
 
   final GroupModelEntity editInfo;
 
@@ -82,17 +82,21 @@ class EditGroup extends StatelessWidget {
     var publicController = TextEditingController(text: editInfo.isPublic == true ? 'Public' : 'Private');
     var muteController = TextEditingController(text: editInfo.mute == true ? 'UnMute' : 'Mute');
 
+    PageCategoriesModel? formerCategory;
+
     return  GetBuilder<HomeControllerWayagram>(
         builder: (controller) {
           List<PageCategoriesModel> categories = [];
           if(MyPref.groupCategories.val.isNotEmpty){
             categories = PageCategoriesModel.listFromJson(jsonDecode(MyPref.groupCategories.val));
+            formerCategory = categories.firstWhereOrNull((element) => element.title == editInfo.category);
+            print(categories.firstWhereOrNull((element) => element.title == editInfo.category)!.id);
           }
           return Scaffold(
             appBar: AppBar(
                 elevation: 0,
                 leading: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.arrow_back,
                     color: Colors.black,
                   ),
@@ -327,8 +331,9 @@ class EditGroup extends StatelessWidget {
                               hint: 'Choose a category',
                               isCompulsory: true,
                               onChanged: (value) {
+                                var val = value as PageCategoriesModel;
                                 for (var element in categories) {
-                                  if(element.id == value){
+                                  if(element == val){
                                     categoryController.text = element.title.toString();
                                     categoryIDController.text = element.id.toString();
                                     controller.update();
@@ -342,10 +347,10 @@ class EditGroup extends StatelessWidget {
                                 }
                                 return null;
                               },
-                              //value: categories.firstWhere((element) => element.id == editInfo.categoryId),
-                              items: categories.map<DropdownMenuItem<String>>((PageCategoriesModel value){
-                                return DropdownMenuItem<String>(
-                                  value: value.id,
+                              value: formerCategory,
+                              items: categories.map<DropdownMenuItem<PageCategoriesModel>>((PageCategoriesModel value){
+                                return DropdownMenuItem<PageCategoriesModel>(
+                                  value: value,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [

@@ -29,7 +29,7 @@ import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
 
 class DiscoverTab extends StatefulWidget {
-  DiscoverTab({Key? key}) : super(key: key);
+  const DiscoverTab({Key? key}) : super(key: key);
 
   @override
   State<DiscoverTab> createState() => _DiscoverTabState();
@@ -48,7 +48,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
           Container(
             color: getAppColor(Colors.blue.shade50),
             width: Get.width,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Text(
               'Trending',
               style: AppTextStyle.headline4.copyWith(

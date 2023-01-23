@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_chat_list/chat_list.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hashtager/widgets/hashtag_text_field.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +19,8 @@ import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/SearchHashtagsModel.dart';
 import '../../data/model/SearhPeopleModel.dart';
+import '../../data/model/TrendingHashtagsModel.dart';
+import '../../data/model/following_model_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
@@ -25,6 +29,7 @@ import '../../global_widgets/app_button.dart';
 
 import 'package:dio/dio.dart' as dio;
 
+import '../../global_widgets/app_refresher.dart';
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/person_view.dart';
@@ -32,6 +37,7 @@ import '../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../home/widgets/HashTagView.dart';
 import '../home/widgets/group_view.dart';
 
+import '../home/widgets/notification_view.dart';
 import '../home/widgets/posts_view.dart' as post_view;
 
 class CreatePosts extends StatefulWidget {
@@ -42,6 +48,7 @@ class CreatePosts extends StatefulWidget {
 }
 
 class _CreatePostsState extends State<CreatePosts> {
+  RefreshController refreshController = RefreshController(initialRefresh: false);
   ReusableVideoListController videoListController = ReusableVideoListController();
   final ImagePicker _imagePicker = ImagePicker();
   var textController = TextEditingController();
@@ -57,7 +64,7 @@ class _CreatePostsState extends State<CreatePosts> {
 
   @override
   Widget build(BuildContext context) {
-
+    var currentPage = ReadWriteValue('wayagram_following_current_page', 1, MyPref.box);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
@@ -435,6 +442,9 @@ class _CreatePostsState extends State<CreatePosts> {
                                                   searchedHashtags = "";
                                                   controller.update();
                                                 },
+                                                onChanged: (String value){
+                                                  controller.update();
+                                                },
                                               ),
                                               if(field.hasError)
                                                 Padding(
@@ -736,7 +746,7 @@ class _CreatePostsState extends State<CreatePosts> {
                     color: Color(0xffEDEAEA),
                     height: 1.0,
                   ),
-                  if(detectedHashtagController.text.isEmpty && controller.postToQuote == null)
+                  if(detectedHashtagController.text.isEmpty && controller.postToQuote == null && !(textController.text.endsWith("#") || textController.text.endsWith("@")))
                     Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -1011,6 +1021,130 @@ class _CreatePostsState extends State<CreatePosts> {
                                   );
                                 }
                                 return GroupView(isLoading: true,isGroup: true,);
+                              }
+                            }),
+                      ),
+                    ),
+                  if(textController.text.endsWith("#") || textController.text.endsWith("@"))
+                    Container(
+                      color: getAppColor(AppColors.background),
+                      height: Get.height*0.25,
+                      child: textController.text.endsWith("#") ? SingleChildScrollView(
+                        child: FutureBuilder<ApiResponse>(
+                            future: controller.getData("/wayagram-service/all-posts/get-trending-hashtags?profile_id=${fullProfile.id}", true),
+                            builder: (context, snapshot) {
+                              var savedPosts = ReadWriteValue('wayagram_trending_hashtags', '', MyPref.box);
+                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                final posts = TrendingHashtagsModel.listFromJson(snapshot.data!.data['data']);
+                                savedPosts.val = jsonEncode(posts);
+                                List<String> title = [];
+                                List<String> subtitle = [];
+                                for (var element in posts) {
+                                  if(element.hashtag != null){
+                                    title.add("#${element.hashtag!}");
+                                    if(element.postToHashtags != null){
+                                      subtitle.add('${element.postToHashtags!.length} Conversations');
+                                    }else{
+                                      subtitle.add('0 Conversations');
+                                    }
+                                  }
+                                }
+                                return HashTagView(
+                                  title: title,
+                                  subtitle: subtitle,
+                                  onClick: (title, subtitle) {
+                                    var pos = textController.text.lastIndexOf("#");
+                                    textController.text = textController.text.replaceRange(pos, pos+1, "$title ");
+                                    textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                  },
+                                );
+                              } else if(savedPosts.val.isNotEmpty){
+                                var posts = TrendingHashtagsModel.listFromJson(jsonDecode(savedPosts.val));
+                                List<String> title = [];
+                                List<String> subtitle = [];
+                                for (var element in posts) {
+                                  if(element.hashtag != null){
+                                    title.add("#${element.hashtag!}");
+                                    if(element.postToHashtags != null){
+                                      subtitle.add('${element.postToHashtags!.length} Conversations');
+                                    }else{
+                                      subtitle.add('0 Conversations');
+                                    }
+                                  }
+                                }
+                                return HashTagView(
+                                  title: title,
+                                  subtitle: subtitle,
+                                  onClick: (title, subtitle) {
+                                    var pos = textController.text.lastIndexOf("#");
+                                    textController.text = textController.text.replaceRange(pos, pos+1, "$title ");
+                                    textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                  },
+                                );
+                              }else{
+                                if(snapshot.connectionState == ConnectionState.done){
+                                  return SizedBox(
+                                    height: Get.height*0.25,
+                                    child: const Center(
+                                      child: Text('No Trending Hashtags Found'),
+                                    ),
+                                  );
+                                }
+                                return GroupView(isLoading: true);
+                              }
+                            }),
+                      ) : SingleChildScrollView(
+                        child: FutureBuilder<ApiResponse>(
+                            future: controller.getData('/wayagram-service/graph/friend/following?user_id=${fullProfile.userId}&page=1',true),
+                            builder: (context, snapshot) {
+                              var savedPosts = MyPref.following.val;
+                              if(savedPosts.isNotEmpty){
+                                var posts = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
+                                var names = posts.following!.map((e) => e.displayName.toString()).toList();
+                                var username = posts.following!.map((e) => e.username.toString()).toList();
+                                var profile = posts.following!.map((e) => e.avatar.toString()).toList();
+                                var userIds = posts.following!.map((e) => e.userId.toString()).toList();
+                                return PersonView(
+                                  name: names,
+                                  username: username,
+                                  profilePic: profile,
+                                  length: posts.following == null ? 0 : posts.following!.length,
+                                  userIDs: userIds,
+                                  following: posts.following,
+                                  showButton: false,
+                                  onClick: (person) {
+                                    var pos = textController.text.lastIndexOf("@");
+                                    textController.text = textController.text.replaceRange(pos, pos+1, "@${person.username} ");
+                                    textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                    controller.update();
+                                  },
+                                );
+                              }else{
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  var posts = FollowingModelEntity.fromJson(snapshot.data!.data);
+                                  var names = posts.following!.map((e) => e.displayName.toString()).toList();
+                                  var username = posts.following!.map((e) => e.username.toString()).toList();
+                                  var profile = posts.following!.map((e) => e.avatar.toString()).toList();
+                                  var userIds = posts.following!.map((e) => e.userId.toString()).toList();
+                                  MyPref.following.val = jsonEncode(posts);
+                                  currentPage.val = 2;
+                                  return PersonView(
+                                    name: names,
+                                    username: username,
+                                    profilePic: profile,
+                                    length: posts.following == null ? 0 : posts.following!.length,
+                                    userIDs: userIds,
+                                    following: posts.following,
+                                    showButton: true,
+                                    onClick: (person) {
+                                      var pos = textController.text.lastIndexOf("@");
+                                      textController.text = textController.text.replaceRange(pos, pos+1, "@${person.username} ");
+                                      textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                      controller.update();
+                                    },
+                                  );
+                                }
+                                return NotificationView(isLoading: true);
                               }
                             }),
                       ),

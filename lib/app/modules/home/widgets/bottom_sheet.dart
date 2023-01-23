@@ -40,7 +40,7 @@ import '../widgets/posts_view.dart';
 import 'notification_view.dart';
 
 class WayaBottomSheet extends StatelessWidget {
-  WayaBottomSheet({Key? key, this.isChat = false}) : super(key: key);
+  const WayaBottomSheet({Key? key, this.isChat = false}) : super(key: key);
 
   final bool isChat;
   @override
@@ -235,13 +235,13 @@ class WayaBottomSheet extends StatelessWidget {
 }
 
 class GroupAndPageBottomSheet extends StatelessWidget {
-  GroupAndPageBottomSheet({Key? key, this.isChat = false}) : super(key: key);
+  const GroupAndPageBottomSheet({Key? key, this.isChat = false}) : super(key: key);
 
   final bool isChat;
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
 
@@ -315,7 +315,7 @@ class GroupAndPageBottomSheet extends StatelessWidget {
 }
 
 class RepostBottomSheet extends StatelessWidget {
-  RepostBottomSheet({Key? key, required this.post,this.undo = false}) : super(key: key);
+  const RepostBottomSheet({Key? key, required this.post,this.undo = false}) : super(key: key);
   final AllPostsEntity post;
   final bool undo;
   @override
@@ -421,7 +421,7 @@ class RepostBottomSheet extends StatelessWidget {
 }
 
 class WalletBottomSheet extends StatelessWidget {
-  WalletBottomSheet({Key? key,this.title = "Wallet List",this.onTap}) : super(key: key);
+  const WalletBottomSheet({Key? key,this.title = "Wallet List",this.onTap}) : super(key: key);
 
   final Function(WalletModel wallet)? onTap;
   final String title;
@@ -542,7 +542,7 @@ class WalletBottomSheet extends StatelessWidget {
 }
 
 class BottomSheetButton extends StatelessWidget {
-  BottomSheetButton({
+  const BottomSheetButton({
     Key? key,
     required this.icon,
     required this.title,
@@ -641,7 +641,7 @@ class PersonBottomSheet extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             color: getAppColor(AppColors.background),
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
