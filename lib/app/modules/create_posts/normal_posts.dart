@@ -1030,7 +1030,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                 }),
                           ),
                         ),
-                      /*if(textController.text.endsWith("#") || textController.text.endsWith("@"))
+                      if(textController.text.endsWith("#") || textController.text.endsWith("@"))
                         Container(
                           color: getAppColor(AppColors.background),
                           height: Get.height*0.25,
@@ -1153,7 +1153,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                   }
                                 }),
                           ),
-                        )*/
+                        )
                     ],
                   ),
                 ),
