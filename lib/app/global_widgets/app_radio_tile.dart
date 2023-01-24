@@ -5,7 +5,7 @@ import '../../core/theme/app_styles.dart';
 import '../../core/theme/app_themes.dart';
 
 class AppRadioTile extends StatelessWidget {
-  AppRadioTile({
+  const AppRadioTile({
     Key? key,
     required this.title,
     this.isSelected = false,
@@ -28,7 +28,7 @@ class AppRadioTile extends StatelessWidget {
       child: Row(
         children: [
           Transform.translate(
-            offset: Offset(-10, 0),
+            offset: const Offset(-10, 0),
             child: Radio(
               visualDensity: VisualDensity.compact,
               value: isSelected,
@@ -39,14 +39,14 @@ class AppRadioTile extends StatelessWidget {
             ),
           ),
           Transform.translate(
-            offset: Offset(-10, 0),
+            offset: const Offset(-10, 0),
             child: Text(
               title,
               style:
                   AppTextStyle.bodyText2.copyWith(color: AppColors.spanishGray),
             ),
           ),
-          subtitle != null ? Spacer() : SizedBox.shrink(),
+          subtitle != null ? const Spacer() : const SizedBox.shrink(),
           subtitle != null
               ? Text(
                   subtitle!,
@@ -55,7 +55,7 @@ class AppRadioTile extends StatelessWidget {
                         subtitleisRed ? AppColors.bostonUniRed : Colors.white,
                   ),
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ],
       ),
     );

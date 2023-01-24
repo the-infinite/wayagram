@@ -29,7 +29,7 @@ class MeasureSizeRenderObject extends RenderProxyBox {
 class MeasureSize extends SingleChildRenderObjectWidget {
   final OnWidgetSizeChange onChange;
 
-  MeasureSize({
+  const MeasureSize({
     Key? key,
     required this.onChange,
     required Widget child,
@@ -62,7 +62,7 @@ class RoundedBorderOnSomeSidesWidget extends StatelessWidget {
   final bool bottomLeft;
   final bool bottomRight;
 
-  RoundedBorderOnSomeSidesWidget({super.key,
+  const RoundedBorderOnSomeSidesWidget({super.key,
     required this.borderColor,
     required this.contentBackgroundColor,
     this.child,

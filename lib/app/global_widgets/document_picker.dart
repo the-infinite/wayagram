@@ -84,7 +84,7 @@ class DocumentPicker extends StatefulWidget {
     String base64Image,
   ) onSelected;
 
-  DocumentPicker({
+  const DocumentPicker({
     this.networkImage,
     required this.renderHeight,
     required this.renderWidth,
@@ -182,7 +182,7 @@ class _DocumentPickerState extends State<DocumentPicker> {
                   color: Colors.white.withOpacity(0.0)
               ),
               child: Padding(
-                padding: EdgeInsets.all(2.0),
+                padding: const EdgeInsets.all(2.0),
                 child: Icon(Icons.add_a_photo_rounded, color: Colors.white.withOpacity(1), size: 30),
               ),
             )
@@ -210,7 +210,7 @@ class _DocumentPickerState extends State<DocumentPicker> {
       final List<int> rawBytes = File(pickedFile.path).readAsBytesSync();
       final String base64Image = base64Encode(rawBytes);
       widget.onSelected(
-          pickedFile.path, "data:image/png;base64," + base64Image);
+          pickedFile.path, "data:image/png;base64,$base64Image");
       _pickedFile = pickedFile;
       _path = pickedFile.path;
     }

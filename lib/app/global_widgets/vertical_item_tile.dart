@@ -8,7 +8,7 @@ import '../../core/theme/app_styles.dart';
 import 'app_ratings.dart';
 
 class VerticalListTile extends StatelessWidget {
-  VerticalListTile({
+  const VerticalListTile({
     this.onTap,
     Key? key,
     this.img = '',
@@ -67,10 +67,10 @@ class VerticalListTile extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                       ],
                     )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
                 hasRating
                     ? Column(
                       children: [
@@ -78,10 +78,10 @@ class VerticalListTile extends StatelessWidget {
                             onRatingUpdate: (val) {},
                             rating: rating,
                           ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                       ],
                     )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
                 scnd != null
                     ? Column(
                       children: [
@@ -94,10 +94,10 @@ class VerticalListTile extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                       ],
                     )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
                 third != null
                     ?  Column(
                       children: [
@@ -110,10 +110,10 @@ class VerticalListTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                             ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                       ],
                     )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
                 fourth != null
                     ?  Column(
                       children: [
@@ -126,10 +126,10 @@ class VerticalListTile extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                       ],
                     )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
               ],
             ),
 
@@ -141,7 +141,7 @@ class VerticalListTile extends StatelessWidget {
 }
 
 class VerticalTileShimmer extends StatelessWidget {
-  VerticalTileShimmer({
+  const VerticalTileShimmer({
     Key? key,
     this.size = const Size(155, 155),
   }) : super(key: key);
@@ -155,7 +155,7 @@ class VerticalTileShimmer extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         height: size.height,
-        margin: EdgeInsets.only(bottom: 25),
+        margin: const EdgeInsets.only(bottom: 25),
         child: Row(
           children: [
             Shimmer.fromColors(
@@ -170,7 +170,7 @@ class VerticalTileShimmer extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 15),
+            const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceAround,

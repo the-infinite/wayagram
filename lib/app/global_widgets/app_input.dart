@@ -7,7 +7,7 @@ import 'helpers/dark_mode_helper.dart';
 
 
 class AppInput extends StatefulWidget {
-  AppInput({
+  const AppInput({
     Key? key,
     this.label,
     required this.hintText,
@@ -84,7 +84,7 @@ class _AppInputState extends State<AppInput> {
       borderRadius: BorderRadius.circular(widget.borderRadius),
       borderSide: widget.borderSide ?? BorderSide(
         width: 1,
-        color: getAppColor(Color(0xFF828282)),
+        color: getAppColor(const Color(0xFF828282)),
       ),
     );
 
@@ -96,10 +96,10 @@ class _AppInputState extends State<AppInput> {
                 widget.label!,
                 style: AppTextStyle.bodyText2.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: getAppColor(getAppColor(Color(0xFF828282))),
+                  color: getAppColor(getAppColor(const Color(0xFF828282))),
                 ),
               )
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
         SizedBox(
           height: widget.label != null ? 3 : 0,
         ),

@@ -106,7 +106,7 @@ class _AppButtonState extends State<AppButton> {
 }
 
 class AppOutlineButton extends StatelessWidget {
-  AppOutlineButton({
+  const AppOutlineButton({
     Key? key,
     required this.title,
     this.onPressed,
@@ -132,7 +132,7 @@ class AppOutlineButton extends StatelessWidget {
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         padding: padding,
-        side: BorderSide(
+        side: const BorderSide(
           width: 1.5,
           color: AppColors.bostonUniRed,
         ),

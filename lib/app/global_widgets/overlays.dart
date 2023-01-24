@@ -18,9 +18,9 @@ class AppOverlay {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 26, 26, 25),
+                  color: const Color.fromARGB(255, 26, 26, 25),
                   borderRadius: BorderRadius.circular(10)),
               child: LoadingAnimationWidget.staggeredDotsWave(
                 color: AppColors.bostonUniRed,
@@ -49,7 +49,7 @@ class AppOverlay {
             children: [
               Container(
                 width: Get.width * 0.8,
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   vertical: 15,
                   horizontal: 20,
                 ),
@@ -68,7 +68,7 @@ class AppOverlay {
                           fontSize: 17 * Get.textScaleFactor * 0.90,
                           color: Colors.black),
                     ),
-                    SizedBox(height: 11),
+                    const SizedBox(height: 11),
                     Center(
                       child: contentReplacement ??
                           Text(
@@ -80,7 +80,7 @@ class AppOverlay {
                             ),
                           ),
                     ),
-                    SizedBox(height: 22),
+                    const SizedBox(height: 22),
                     SizedBox(
                       width: double.infinity,
                       child: AppButton(

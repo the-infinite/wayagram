@@ -24,7 +24,7 @@ class PageInfo extends StatelessWidget {
           title,
           style: AppTextStyle.bodyText2.copyWith(color: AppColors.spanishGray),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Text(
           subtitle,
           textAlign: TextAlign.justify,
@@ -54,7 +54,7 @@ class HorizontalPageInfo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Text(subtitle),
       ],
     );

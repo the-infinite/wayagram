@@ -4,7 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../core/theme/app_colors.dart';
 
 class AppRating extends StatelessWidget {
-  AppRating({
+  const AppRating({
     Key? key,
     this.size = 18,
     required this.onRatingUpdate,
@@ -23,7 +23,7 @@ class AppRating extends StatelessWidget {
       updateOnDrag: false,
       initialRating: rating ?? 5,
       ignoreGestures: true,
-      itemBuilder: (context, index) => Icon(
+      itemBuilder: (context, index) => const Icon(
         Icons.star_rate_rounded,
         color: AppColors.deepSaffron,
       ),

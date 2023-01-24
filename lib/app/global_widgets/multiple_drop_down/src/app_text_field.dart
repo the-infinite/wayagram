@@ -9,7 +9,7 @@ class AppTextField extends StatefulWidget {
   final DropDown dropDown;
   final Function(String) onTextChanged;
 
-  AppTextField({required this.dropDown, required this.onTextChanged, Key? key})
+  const AppTextField({required this.dropDown, required this.onTextChanged, Key? key})
       : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(12.0),
       child: TextFormField(
         controller: _editingController,
         cursorColor: getAppColor(AppColors.onBackground).withOpacity(0.3),
@@ -34,10 +34,10 @@ class _AppTextFieldState extends State<AppTextField> {
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.black12,
-          contentPadding: EdgeInsets.only(left: 0, bottom: 0, top: 0, right: 15),
+          contentPadding: const EdgeInsets.only(left: 0, bottom: 0, top: 0, right: 15),
           hintText: 'Search',
           hintStyle: TextStyle(color: getAppColor(AppColors.onBackground).withOpacity(0.3)),
-          border: OutlineInputBorder(
+          border: const OutlineInputBorder(
             borderSide: BorderSide(
               width: 0,
               style: BorderStyle.none,
@@ -46,13 +46,13 @@ class _AppTextFieldState extends State<AppTextField> {
               Radius.circular(8.0),
             ),
           ),
-          prefixIcon: IconButton(
+          prefixIcon: const IconButton(
             icon: Icon(Icons.search,color: AppColors.primary,),
             onPressed: null,
           ),
           suffixIcon: GestureDetector(
             onTap: onClearTap,
-            child: Icon(
+            child: const Icon(
               Icons.cancel,
               color: Colors.grey,
             ),

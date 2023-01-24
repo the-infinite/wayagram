@@ -11,7 +11,7 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 class AppAvatar extends StatelessWidget {
-  AppAvatar({
+  const AppAvatar({
     Key? key,
     this.imgUrl = '',
     this.selectedImg,
@@ -69,7 +69,7 @@ class AppAvatar extends StatelessWidget {
                 );
               }
               if(isNotification){
-                return Icon(
+                return const Icon(
                   IconlyBroken.notification,
                   color: Colors.white,
                   size: 25,
@@ -89,7 +89,7 @@ class AppAvatar extends StatelessWidget {
                   size: 25,
                 );
               }
-              return Icon(
+              return const Icon(
                 IconlyBroken.profile,
                 color: Colors.white,
                 size: 25,
@@ -129,7 +129,7 @@ class AppAvatar extends StatelessWidget {
                             style: TextStyle(
                               color: fgColor,
                               fontSize: Get.textScaleFactor * 20,
-                              shadows: [
+                              shadows: const [
                                 Shadow(
                                   color: Colors.black,
                                   offset: Offset(0, 0),
@@ -205,7 +205,7 @@ class AppAvatar extends StatelessWidget {
                             style: TextStyle(
                               color: fgColor,
                               fontSize: Get.textScaleFactor * 20,
-                              shadows: [
+                              shadows: const [
                                 Shadow(
                                   color: Colors.black,
                                   offset: Offset(0, 0),

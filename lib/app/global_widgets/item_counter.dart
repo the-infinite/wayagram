@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 
 class ItemCounter extends StatefulWidget {
-  ItemCounter({
+  const ItemCounter({
     Key? key, this.onCountChanged, this.initialCount,this.maxCount
   }) : super(key: key);
 
@@ -53,9 +53,9 @@ class _ItemCounterState extends State<ItemCounter> {
           iconColor: count == 1 ? Colors.grey.withOpacity(.5) : Colors.white,
           containerColor: count == 1 ? Colors.grey.withOpacity(.2) : AppColors.onyx,
         ),
-        SizedBox(width: 7),
+        const SizedBox(width: 7),
         Text('$count'),
-        SizedBox(width: 7),
+        const SizedBox(width: 7),
         _PageIconButton(
           icon: FeatherIcons.plus,
           onPressed: () {
@@ -84,7 +84,7 @@ class _ItemCounterState extends State<ItemCounter> {
 }
 
 class _PageIconButton extends StatelessWidget {
-  _PageIconButton({
+  const _PageIconButton({
     Key? key,
     this.onPressed,
     required this.icon,
@@ -102,7 +102,7 @@ class _PageIconButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        padding: EdgeInsets.all(2.5),
+        padding: const EdgeInsets.all(2.5),
         decoration: BoxDecoration(
           color: containerColor,
           borderRadius: BorderRadius.circular(5),

@@ -49,7 +49,7 @@ class DropDown {
     this.submitButtonChild,
     this.searchWidget,
     this.isSearchVisible = true,
-    this.dropDownBackgroundColor = null,
+    this.dropDownBackgroundColor,
   });
 }
 
@@ -62,7 +62,7 @@ class DropDownState {
   void showModal(context) {
     showModalBottomSheet(
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
       ),
       context: context,
@@ -81,7 +81,7 @@ class DropDownState {
 class MainBody extends StatefulWidget {
   final DropDown dropDown;
 
-  MainBody({required this.dropDown, Key? key}) : super(key: key);
+  const MainBody({required this.dropDown, Key? key}) : super(key: key);
 
   @override
   State<MainBody> createState() => _MainBodyState();
@@ -112,7 +112,7 @@ class _MainBodyState extends State<MainBody> {
           child: Column(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
+                padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -138,7 +138,7 @@ class _MainBodyState extends State<MainBody> {
                               widget.dropDown.selectedItems?.call(selectedNameList);
                               _onUnFocusKeyboardAndPop();
                             },
-                            child: widget.dropDown.submitButtonChild ?? Text('Done'),
+                            child: widget.dropDown.submitButtonChild ?? const Text('Done'),
                           ),
                         ),
                       ),
@@ -178,7 +178,7 @@ class _MainBodyState extends State<MainBody> {
                 child: Container(
                   color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                     child: ListTile(
                       title: Text(
                             "Select All",
@@ -204,10 +204,10 @@ class _MainBodyState extends State<MainBody> {
                           }
                         },
                         child: (selectedList.length == widget.dropDown.data.length)
-                            ? Icon(Icons.check_box, color: AppColors.primary)
-                            : Icon(Icons.check_box_outline_blank, color: AppColors.primary),
+                            ? const Icon(Icons.check_box, color: AppColors.primary)
+                            : const Icon(Icons.check_box_outline_blank, color: AppColors.primary),
                       )
-                          : SizedBox(
+                          : const SizedBox(
                         height: 0.0,
                         width: 0.0,
                       ),
@@ -237,7 +237,7 @@ class _MainBodyState extends State<MainBody> {
                       child: Container(
                         color: widget.dropDown.dropDownBackgroundColor ?? getAppColor(AppColors.background),
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                           child: ListTile(
                             title: widget.dropDown.listBuilder?.call(index) ??
                                 Text(
@@ -255,10 +255,10 @@ class _MainBodyState extends State<MainBody> {
                                       });
                                     },
                                     child: isSelected
-                                        ? Icon(Icons.check_box, color: AppColors.primary)
-                                        : Icon(Icons.check_box_outline_blank, color: AppColors.primary),
+                                        ? const Icon(Icons.check_box, color: AppColors.primary)
+                                        : const Icon(Icons.check_box_outline_blank, color: AppColors.primary),
                                   )
-                                : SizedBox(
+                                : const SizedBox(
                                     height: 0.0,
                                     width: 0.0,
                                   ),
@@ -296,9 +296,9 @@ class _MainBodyState extends State<MainBody> {
   }
 
   void _setSearchWidgetListener() {
-    TextFormField? _searchField = (widget.dropDown.searchWidget as TextFormField?);
-    _searchField?.controller?.addListener(() {
-      _buildSearchList(_searchField.controller?.text ?? '');
+    TextFormField? searchField = widget.dropDown.searchWidget;
+    searchField?.controller?.addListener(() {
+      _buildSearchList(searchField.controller?.text ?? '');
     });
   }
 }

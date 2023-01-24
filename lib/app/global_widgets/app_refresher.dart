@@ -6,7 +6,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_themes.dart';
 
 class AppRefresher extends StatelessWidget {
-  AppRefresher({
+  const AppRefresher({
     Key? key,
     required this.controller,
     required this.child,
@@ -40,7 +40,7 @@ class AppRefresher extends StatelessWidget {
         builder: (context, mode) {
           Widget body;
           if (mode == RefreshStatus.refreshing) {
-            body = SizedBox(
+            body = const SizedBox(
               height: 25,
               width: 25,
               child: CupertinoActivityIndicator(
@@ -48,9 +48,9 @@ class AppRefresher extends StatelessWidget {
               ),
             );
           } else if (mode == RefreshStatus.canRefresh) {
-            body = Text("Release to refresh");
+            body = const Text("Release to refresh");
           } else {
-            body = Text("");
+            body = const Text("");
           }
           return SizedBox(
             height: 55.0,
@@ -62,15 +62,15 @@ class AppRefresher extends StatelessWidget {
         builder: (BuildContext context, LoadStatus? mode) {
           Widget body;
           if (mode == LoadStatus.loading) {
-            body = CupertinoActivityIndicator(
+            body = const CupertinoActivityIndicator(
               color: AppColors.primary,
             );
           } else if (mode == LoadStatus.failed) {
-            body = Text("An Error Occurred");
+            body = const Text("An Error Occurred");
           } else if (mode == LoadStatus.canLoading) {
-            body = Text("Release to load more");
+            body = const Text("Release to load more");
           } else {
-            body = Text("");
+            body = const Text("");
           }
           return SizedBox(
             height: 55.0,

@@ -9,7 +9,7 @@ import 'date_item_button.dart';
 import 'helpers/dark_mode_helper.dart';
 
 class DateButton<T> extends StatefulWidget {
-  DateButton({
+  const DateButton({
     Key? key,
     this.validator,
     this.initialValue,
@@ -160,7 +160,7 @@ class _DateButtonState<T> extends State<DateButton<T>> {
                       style: TextStyle(
                           color: Colors.redAccent.shade700, fontSize: 12.0),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
             ],
           );
         });

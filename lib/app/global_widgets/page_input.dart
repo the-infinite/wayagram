@@ -9,7 +9,7 @@ import 'app_input.dart';
 import 'helpers/dark_mode_helper.dart';
 
 class PageInput extends StatelessWidget {
-  PageInput({
+  const PageInput({
     Key? key,
     required this.hint,
     required this.label,
@@ -58,7 +58,7 @@ class PageInput extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 5),
+          padding: const EdgeInsets.only(left: 5),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -67,11 +67,11 @@ class PageInput extends StatelessWidget {
                 label,
                 style: AppTextStyle.bodyText2.copyWith(
                   fontWeight: FontWeight.w400,
-                  color: getAppColor(Color(0xFF828282)),
+                  color: getAppColor(const Color(0xFF828282)),
                 ),
               ),
               if(isCompulsory)
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
               if(isCompulsory)
                 Text(
                 "*",
@@ -83,7 +83,7 @@ class PageInput extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         if(isPhoneNumber)
           Row(
           crossAxisAlignment: CrossAxisAlignment.start,

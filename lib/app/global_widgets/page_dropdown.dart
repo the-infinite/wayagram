@@ -5,7 +5,7 @@ import '../../core/theme/app_styles.dart';
 import 'helpers/dark_mode_helper.dart';
 
 class PageDropButton extends StatelessWidget {
-  PageDropButton({
+  const PageDropButton({
     Key? key,
     required this.label,
     required this.hint,
@@ -38,7 +38,7 @@ class PageDropButton extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 5),
+          padding: const EdgeInsets.only(left: 5),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -47,11 +47,11 @@ class PageDropButton extends StatelessWidget {
                   label,
                   style: AppTextStyle.bodyText2.copyWith(
                     fontWeight: FontWeight.w400,
-                    color:getAppColor( Color(0xFF828282)),
+                    color:getAppColor( const Color(0xFF828282)),
                   ),
                 ),
               if(isCompulsory)
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
               if(isCompulsory)
                 Text(
                   "*",
@@ -63,14 +63,14 @@ class PageDropButton extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         AppDropdownButton(
           value: value,
           borderRadius: 10,
           hint: hint,
           borderSide: BorderSide(
             width: 1,
-            color:getAppColor( Color(0xFF828282)),
+            color:getAppColor( const Color(0xFF828282)),
           ),
           validator: validator,
           padding: padding,
@@ -83,7 +83,7 @@ class PageDropButton extends StatelessWidget {
 }
 
 class AppDropdownButton<T> extends StatelessWidget {
-  AppDropdownButton({
+  const AppDropdownButton({
     Key? key,
     this.borderRadius = 8,
     this.borderSide = BorderSide.none,

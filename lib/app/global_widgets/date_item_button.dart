@@ -5,7 +5,7 @@ import '../../core/theme/app_colors.dart';
 import 'helpers/dark_mode_helper.dart';
 
 class DateItemButton extends StatelessWidget {
-  DateItemButton({
+  const DateItemButton({
     Key? key,
     required this.title,
     this.color,
@@ -22,10 +22,10 @@ class DateItemButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Get.theme;
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(
-          color: Color(0xFF828282),
+          color: const Color(0xFF828282),
           width: 1,
         ),
         borderRadius: BorderRadius.circular(10),

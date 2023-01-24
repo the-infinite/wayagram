@@ -34,7 +34,7 @@ import 'app_button.dart';
 import 'helpers/dark_mode_helper.dart';
 
 class AppDrawer extends StatefulWidget {
-  AppDrawer({Key? key}) : super(key: key);
+  const AppDrawer({Key? key}) : super(key: key);
 
   static const String route = "/drawer";
 
@@ -111,7 +111,7 @@ class _AppDrawerState extends State<AppDrawer> {
                             onTap: (){
                               controller.imagePaths.clear();
                               Get.back();
-                              Get.to(() => Profile());
+                              Get.to(() => const Profile());
                             },
                             child: Padding(
                               padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
@@ -130,7 +130,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                       onPressed: () {
                                         controller.imagePaths.clear();
                                         Get.back();
-                                        Get.to(() => Profile());
+                                        Get.to(() => const Profile());
                                       },
                                     ),
                                   ),
@@ -196,7 +196,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               onTap: (){
                                 controller.imagePaths.clear();
                                 Get.back();
-                                Get.to(() => Profile());
+                                Get.to(() => const Profile());
                               },
                               child: Padding(
                                 padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
@@ -231,7 +231,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               ),
                             ),
                           //Divider
-                          Divider(
+                          const Divider(
                             color: Colors.grey,
                             thickness: 0.5,
                           ),
@@ -246,7 +246,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => Profile());
+                                    Get.to(() => const Profile());
                                   },
                                 ),
 
@@ -264,7 +264,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => GroupsAndPages());
+                                    Get.to(() => const GroupsAndPages());
                                   },
                                 ),
 
@@ -274,7 +274,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => BookmarksPage());
+                                    Get.to(() => const BookmarksPage());
                                   },
                                 ),
 
@@ -284,7 +284,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => TopClips());
+                                    Get.to(() => const TopClips());
                                   },
                                 ),
 
@@ -294,7 +294,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => AddInterestPage());
+                                    Get.to(() => const AddInterestPage());
                                   },
                                 ),
 
@@ -304,7 +304,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => AllEvents());
+                                    Get.to(() => const AllEvents());
                                   },
                                 ),
 
@@ -314,7 +314,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => PromotionAnalytics());
+                                    Get.to(() => const PromotionAnalytics());
                                   },
                                 ),
 
@@ -324,7 +324,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => ActivityLog());
+                                    Get.to(() => const ActivityLog());
                                   },
                                 ),
 
@@ -334,7 +334,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => Settings());
+                                    Get.to(() => const Settings());
                                   },
                                 ),
 
@@ -344,32 +344,32 @@ class _AppDrawerState extends State<AppDrawer> {
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();
-                                    Get.to(() => Support());
+                                    Get.to(() => const Support());
                                   },
                                 ),
                               ],
                             ),
                           ),
 
-                          Divider(
+                          const Divider(
                             color: Colors.grey,
                             thickness: 0.5,
                           ),
 
                           _TextButton(
-                              leading: SizedBox.shrink(),
+                              leading: const SizedBox.shrink(),
                               text: "FAQ",
                               onPressed: ()  {
                                 controller.launchURL("https://wayagram.ng/faq");
                               }),
                           _TextButton(
-                              leading: SizedBox.shrink(),
+                              leading: const SizedBox.shrink(),
                               text: "Privacy Policy",
                               onPressed: ()  {
                                 controller.launchURL("https://wayagram.ng/privacy-policy");
                               }),
                           _TextButton(
-                              leading: SizedBox.shrink(),
+                              leading: const SizedBox.shrink(),
                               text: "Terms of Use",
                               onPressed: () {
                                 controller.launchURL("https://wayagram.ng/terms");
@@ -419,7 +419,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                       controller.userRepo.api.disconnect();
                                       Get.back();
                                       await MyPref.clearBoxes();
-                                      Get.offAll(() => Multiplexor(),binding: WayagramBinding());
+                                      Get.offAll(() => const Multiplexor(),binding: WayagramBinding());
                                     },
                                     borderRadius: 10,
                                     fontColor: AppColors.primary,
@@ -451,7 +451,7 @@ class _TextButton extends StatelessWidget {
   final Widget leading;
   final String text;
   final Function() onPressed;
-  _TextButton({required this.text, required this.onPressed, required this.leading});
+  const _TextButton({required this.text, required this.onPressed, required this.leading});
 
   @override
   Widget build(BuildContext context) {
@@ -461,7 +461,7 @@ class _TextButton extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: Get.height*0.018),
         child: Row(children: [
           leading,
-          SizedBox(
+          const SizedBox(
             width: 15,
           ),
           Expanded(

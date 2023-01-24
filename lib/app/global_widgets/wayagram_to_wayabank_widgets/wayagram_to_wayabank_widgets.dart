@@ -16,7 +16,7 @@ class FundWalletButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.find<HomeControllerWayagram>();
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: AppButton(
         title: 'Fund Wallet',
         onPressed: () async {
@@ -29,7 +29,7 @@ class FundWalletButton extends StatelessWidget {
         width: double.infinity,
         fontSize: Get.textScaleFactor * 18,
         border: Border.all(color: getAppColor(AppColors.background), width: 1),
-        padding: EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12),
       ),
     );
   }
@@ -52,12 +52,12 @@ class PinPrompt extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Divider(
+          const Divider(
             height: 0.5,
             thickness: 0.5,
             color: Colors.grey,
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
           Text(
             "Click To Create Or Change Your PIN",
             style: TextStyle(
@@ -69,7 +69,7 @@ class PinPrompt extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 10,),
+          const SizedBox(height: 10,),
         ],
       ),
     );

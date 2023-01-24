@@ -87,7 +87,7 @@ class MultipleImageView extends StatelessWidget {
           ),
         ),
       ),
-      SizedBox(width: 5),
+      const SizedBox(width: 5),
       Expanded(
         flex: 1,
         child: ClipRRect(
@@ -125,7 +125,7 @@ class MultipleImageView extends StatelessWidget {
           ),
         ),
       ),
-      SizedBox(width: 5),
+      const SizedBox(width: 5),
       Expanded(
         flex: 1,
         child: Column(
@@ -148,7 +148,7 @@ class MultipleImageView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Expanded(
               flex: 1,
               child: ClipRRect(
@@ -188,7 +188,7 @@ class MultipleImageView extends StatelessWidget {
           ),
         ),
       ),
-      SizedBox(width: 5),
+      const SizedBox(width: 5),
       Expanded(
         flex: 1,
         child: Column(
@@ -211,7 +211,7 @@ class MultipleImageView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Expanded(
               flex: 1,
               child: ClipRRect(
@@ -224,7 +224,7 @@ class MultipleImageView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Expanded(
               flex: 1,
               child: ClipRRect(
@@ -264,7 +264,7 @@ class MultipleImageView extends StatelessWidget {
           ),
         ),
       ),
-      SizedBox(width: 5),
+      const SizedBox(width: 5),
       Expanded(
         flex: 1,
         child: Column(
@@ -287,7 +287,7 @@ class MultipleImageView extends StatelessWidget {
                 ),
               ),
             ),
-           SizedBox(height: 5),
+           const SizedBox(height: 5),
             Expanded(
               flex: 1,
               child: ClipRRect(
@@ -300,7 +300,7 @@ class MultipleImageView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Expanded(
               flex: 1,
               child: Stack(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_styles.dart';
 
 class AppCheckBoxTile extends StatelessWidget {
-  AppCheckBoxTile({
+  const AppCheckBoxTile({
     Key? key,
     required this.title,
     required this.trailing,
