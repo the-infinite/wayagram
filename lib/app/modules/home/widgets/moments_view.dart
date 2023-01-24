@@ -3,20 +3,15 @@ import 'dart:convert';
 import 'package:bordered_text/bordered_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/app/modules/home/widgets/story_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
-import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
-import '../../../controllers/home_controller.dart';
 import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../data/providers/my_pref.dart';
@@ -24,7 +19,7 @@ import '../../../global_widgets/app_avatar.dart';
 import '../tabs/create_moment.dart';
 
 class MomentsView extends StatefulWidget {
-  MomentsView({
+  const MomentsView({
     Key? key,
     this.isLoading = false,
     this.moments,
@@ -94,7 +89,7 @@ class _MomentsViewState extends State<MomentsView> {
                     baseColor: Colors.grey.withOpacity(0.8),
                     highlightColor: Colors.grey.withOpacity(0.2),
                     child: Container(
-                      margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                      margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                       height: Get.height * 0.18,
                       width: Get.width * 0.35,
                       decoration: BoxDecoration(
@@ -108,7 +103,7 @@ class _MomentsViewState extends State<MomentsView> {
               if(i == 0){
                 return InkWell(
                   onTap: (){
-                    Get.to(() => CreateMoment());
+                    Get.to(() => const CreateMoment());
                   },
                   child: Container(
                     margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
@@ -135,7 +130,7 @@ class _MomentsViewState extends State<MomentsView> {
                               imageUrl: (fullProfile.avatar as String?).toString(),
                               fit: BoxFit.cover,
                               errorWidget: (context, url, error) {
-                                return Icon(
+                                return const Icon(
                                   IconlyLight.profile,
                                   color: Colors.black,
                                   size: 25,
@@ -163,9 +158,9 @@ class _MomentsViewState extends State<MomentsView> {
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
                                       onPressed: (){
-                                        Get.to(() => CreateMoment());
+                                        Get.to(() => const CreateMoment());
                                       },
-                                      icon: Icon(Icons.add_circle_rounded),color: Colors.grey.withOpacity(.8),
+                                      icon: const Icon(Icons.add_circle_rounded),color: Colors.grey.withOpacity(.8),
                                     iconSize: Get.width * 0.06,
                                   ),
                                 ),

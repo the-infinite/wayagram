@@ -28,7 +28,7 @@ import '../../groups_and_pages/group.dart';
 import '../../groups_and_pages/page.dart';
 
 class GroupView extends StatefulWidget{
-  GroupView({
+  const GroupView({
     Key? key,
     this.isLoading = false,
     this.posts,
@@ -81,7 +81,7 @@ class _GroupViewState extends State<GroupView> {
               baseColor: getAppColor(Colors.grey).withOpacity(0.8),
               highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
               child: Container(
-                margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                 height: Get.height * 0.18,
                 width: Get.width * 0.35,
                 decoration: BoxDecoration(
@@ -107,7 +107,7 @@ class _GroupViewState extends State<GroupView> {
             }
           },
           child: Container(
-            margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+            margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

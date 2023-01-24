@@ -5,13 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_list/chat_list.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:story_view/controller/story_controller.dart';
-import 'package:story_view/utils.dart';
-import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
@@ -30,7 +25,7 @@ import 'chat_screen.dart';
 
 
 class NewChat extends StatelessWidget{
-  NewChat({Key? key}) : super(key: key);
+  const NewChat({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +57,7 @@ class NewChat extends StatelessWidget{
               appBar: AppBar(
                 backgroundColor: getAppColor(AppColors.background),
                 title: Text('New Chat', style: AppTextStyle.subtitle1.copyWith(
-                  color: getAppColor(Color(0xff4F4F4F)),
+                  color: getAppColor(const Color(0xff4F4F4F)),
                   fontSize: Get.textScaleFactor * 18,
                   fontWeight: FontWeight.bold,
                 )),
@@ -74,7 +69,7 @@ class NewChat extends StatelessWidget{
                 bottom: PreferredSize(
                     preferredSize: Size(Get.width, 0.5),
                     child: Column(
-                      children: [
+                      children: const [
                         Divider(
                           height: 0.5,
                           thickness: 0.5,

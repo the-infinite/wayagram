@@ -40,7 +40,7 @@ import '../promotion/promote_product.dart';
 import 'donation_analytics.dart';
 
 class ProductAnalytics extends StatefulWidget {
-  ProductAnalytics({Key? key,required this.post}) : super(key: key);
+  const ProductAnalytics({Key? key,required this.post}) : super(key: key);
 
   final ProductsModelData post;
 
@@ -95,7 +95,7 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
             title: Text(
               "Product Activity",
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -110,9 +110,9 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
                 child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
-                preferredSize: Size.fromHeight(1.0),
+                preferredSize: const Size.fromHeight(1.0),
                 child: Container(
-                  color: Color(0xffEDEAEA),
+                  color: const Color(0xffEDEAEA),
                   height: 1.0,
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
@@ -138,21 +138,21 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
                       showActions: false,
                       showBuyButton: false,
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     widgetAnalyticsWidget(
                         "Impressions",
                         "Times people saw this product on wayagram",
                         impressions.toString()
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     widgetAnalyticsWidget(
                         "Total engagements",
                         "Times people interacted with this product",
                         (likes + reposts + comments).toString()
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: AppButton(
                         title: 'Promote this Product',
                         onPressed: () async {
@@ -189,12 +189,12 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
                         width: double.infinity,
                         fontSize: Get.textScaleFactor * 18,
                         border: Border.all(color: AppColors.primary, width: 1),
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
-                    SizedBox(height: 5,),
+                    const SizedBox(height: 5,),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Text(
                         "Promote your product to reach more people and boost engagements",
                         style: TextStyle(
@@ -207,7 +207,7 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),
@@ -220,12 +220,12 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
 
   Padding widgetAnalyticsWidget(String title, String subtitle, String amount) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Container(
         decoration: BoxDecoration(
           color: getAppColor(AppColors.background),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Color(0xffEDEAEA), width: 1),
+          border: Border.all(color: const Color(0xffEDEAEA), width: 1),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: Get.width*0.025,vertical: Get.height*0.01),
@@ -263,7 +263,7 @@ class _ProductAnalyticsState extends State<ProductAnalytics> {
               Text(
                 amount,
                 style: TextStyle(
-                  color: getAppColor(Color(0xff4F4F4F)),
+                  color: getAppColor(const Color(0xff4F4F4F)),
                   fontSize: Get.textScaleFactor * 15,
                   fontWeight: FontWeight.normal,
                 ),

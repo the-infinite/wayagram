@@ -25,7 +25,7 @@ import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/notification_view.dart';
 
 class Followers extends StatelessWidget {
-  Followers({Key? key}) : super(key: key);
+  const Followers({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,19 +43,19 @@ class Followers extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
             title: Text('Followers', style: AppTextStyle.subtitle1.copyWith(
-              color: getAppColor(Color(0xff4F4F4F)),
+              color: getAppColor(const Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
                 child: Column(
-                  children: [
+                  children: const [
                     Divider(
                       height: 0.5,
                       thickness: 0.5,

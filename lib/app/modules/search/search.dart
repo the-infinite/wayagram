@@ -32,7 +32,7 @@ import '../home/widgets/group_view.dart';
 import '../home/widgets/posts_view.dart';
 
 class Search extends StatefulWidget {
-  Search({Key? key}) : super(key: key);
+  const Search({Key? key}) : super(key: key);
 
   static const route = '/search';
 
@@ -106,12 +106,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                     controller: tabController,
                     padding: EdgeInsets.zero,
                     labelColor: getAppColor(Colors.black),
-                    unselectedLabelColor: Color(0xff9A9A9A),
+                    unselectedLabelColor: const Color(0xff9A9A9A),
                     indicatorColor: AppColors.primary,
                     indicatorSize: TabBarIndicatorSize.tab,
                     labelPadding: EdgeInsets.only(left: Get.width * 0.02),
                     indicatorPadding: EdgeInsets.zero,
-                    tabs: [
+                    tabs: const [
                       Tab(text: 'Hashtags',iconMargin: EdgeInsets.zero,),
                       Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                       Tab(text: 'People',iconMargin: EdgeInsets.zero,),
@@ -119,7 +119,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                       Tab(text: 'Pages',iconMargin: EdgeInsets.zero,),
                     ],
                   ),
-                  Divider(
+                  const Divider(
                     height: 0.5,
                     thickness: 0.5,
                     color: Colors.grey,
@@ -189,7 +189,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                       ),
                                     );
                                   }
-                                  return GroupView(isLoading: true);
+                                  return const GroupView(isLoading: true);
                                 }
                               }),
                         ),
@@ -210,12 +210,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                     return SizedBox(
                                       height: Get.height * 0.7,
-                                      child: Center(
+                                      child: const Center(
                                         child: Text('Enter a search term to search for posts'),
                                       ),
                                     );
                                   }
-                                  return PostsView(isLoading: true);
+                                  return const PostsView(isLoading: true);
                                 }
                               }),
                         ),
@@ -251,12 +251,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                     return SizedBox(
                                       height: Get.height * 0.7,
-                                      child: Center(
+                                      child: const Center(
                                         child: Text('Enter a search term to search for People'),
                                       ),
                                     );
                                   }
-                                  return GroupView(isLoading: true,isGroup: true,);
+                                  return const GroupView(isLoading: true,isGroup: true,);
                                 }
                               }),
                         ),
@@ -298,12 +298,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                     return SizedBox(
                                       height: Get.height * 0.7,
-                                      child: Center(
+                                      child: const Center(
                                         child: Text('Enter a search term to search for groups'),
                                       ),
                                     );
                                   }
-                                  return GroupView(isLoading: true,isGroup: true,);
+                                  return const GroupView(isLoading: true,isGroup: true,);
                                 }
                               }),
                         ),
@@ -351,12 +351,12 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                     return SizedBox(
                                       height: Get.height * 0.7,
-                                      child: Center(
+                                      child: const Center(
                                         child: Text('Enter a search term to search for pages'),
                                       ),
                                     );
                                   }
-                                  return GroupView(isLoading: true,isGroup: false,);
+                                  return const GroupView(isLoading: true,isGroup: false,);
                                 }
                               }),
                         ),

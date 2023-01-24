@@ -4,16 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_list/chat_list.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
-import 'package:wayagram/app/modules/create_posts/go_live.dart';
 import 'package:wayagram/app/modules/create_posts/groups.dart';
 import 'package:wayagram/app/modules/create_posts/normal_posts.dart';
 import 'package:wayagram/app/modules/create_posts/pages.dart';
-import 'package:wayagram/app/modules/create_posts/products.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -21,22 +17,17 @@ import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/following_model_entity.dart';
 import '../../../data/model/full_user_profile_entity.dart';
-import '../../../data/model/moments_model_entity.dart';
-import '../../../data/model/posts_model_entity.dart';
 import '../../../data/model/wallet_model.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/app_refresher.dart';
 import '../../../global_widgets/helpers/dark_mode_helper.dart';
-import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../../global_widgets/person_view.dart';
 import '../../chats/new_chat.dart';
 import '../../chats/new_group_chat.dart';
 import '../../create_posts/donations.dart';
 import '../../create_posts/events.dart';
 import '../../create_posts/polls.dart';
-import '../widgets/moments_view.dart';
-import '../widgets/posts_view.dart';
 import 'notification_view.dart';
 
 class WayaBottomSheet extends StatelessWidget {
@@ -63,7 +54,7 @@ class WayaBottomSheet extends StatelessWidget {
           //height: Get.height * 0.65,
           decoration: BoxDecoration(
             color: getAppColor(AppColors.background),
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
@@ -101,7 +92,7 @@ class WayaBottomSheet extends StatelessWidget {
                         controller.postToQuote = null;
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => CreatePosts());
+                        Get.to(() => const CreatePosts());
                       }
                   ),
                   BottomSheetButton(
@@ -113,7 +104,7 @@ class WayaBottomSheet extends StatelessWidget {
                         controller.pageToPost = null;
                         controller.groupToPost = null;
                         Get.back();
-                        Get.to(() => CreatePoll());
+                        Get.to(() => const CreatePoll());
                       }
                   ),
                   BottomSheetButton(
@@ -123,7 +114,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => CreatePage());
+                        Get.to(() => const CreatePage());
                       }
                   ),
 
@@ -138,7 +129,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => CreateGroup());
+                        Get.to(() => const CreateGroup());
                       }
                   ),
                   BottomSheetButton(
@@ -148,7 +139,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => CreateEvent());
+                        Get.to(() => const CreateEvent());
                       }
                   ),
                   BottomSheetButton(
@@ -158,7 +149,7 @@ class WayaBottomSheet extends StatelessWidget {
                       onTap: () {
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => CreateDonation());
+                        Get.to(() => const CreateDonation());
                       }
                   ),
 
@@ -176,7 +167,7 @@ class WayaBottomSheet extends StatelessWidget {
                         controller.postToQuote = null;
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(() => CreatePosts());
+                        Get.to(() => const CreatePosts());
                       }
                   ),
                 ],
@@ -211,7 +202,7 @@ class WayaBottomSheet extends StatelessWidget {
                         controller.postToQuote = null;
                         controller.imagePaths.clear();
                         Get.back();
-                        Get.to(()=> NewChat());
+                        Get.to(()=> const NewChat());
                       }
                   ),
                   BottomSheetButton(
@@ -258,7 +249,7 @@ class GroupAndPageBottomSheet extends StatelessWidget {
           //height: Get.height * 0.65,
           decoration: BoxDecoration(
             color: getAppColor(AppColors.background),
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
@@ -291,7 +282,7 @@ class GroupAndPageBottomSheet extends StatelessWidget {
                           controller.postToQuote = null;
                           controller.imagePaths.clear();
                           Get.back();
-                          Get.to(() => CreatePosts());
+                          Get.to(() => const CreatePosts());
                         }
                     ),
                     BottomSheetButton(
@@ -301,7 +292,7 @@ class GroupAndPageBottomSheet extends StatelessWidget {
                         onTap: () {
                           controller.imagePaths.clear();
                           Get.back();
-                          Get.to(() => CreatePoll());
+                          Get.to(() => const CreatePoll());
                         }
                     ),
                   ],
@@ -409,7 +400,7 @@ class RepostBottomSheet extends StatelessWidget {
                     controller.postToQuote = post;
                     controller.imagePaths.clear();
                     Get.back();
-                    Get.to(() => CreatePosts());
+                    Get.to(() => const CreatePosts());
                   }
               ),
             ],
@@ -427,7 +418,7 @@ class WalletBottomSheet extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
 
@@ -443,7 +434,7 @@ class WalletBottomSheet extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             color: getAppColor(AppColors.background),
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
@@ -477,7 +468,7 @@ class WalletBottomSheet extends StatelessWidget {
                         if(posts.isEmpty){
                           return SizedBox(
                               height: Get.height*0.3,
-                              child: Center(child: Text('No Wallets Available'),));
+                              child: const Center(child: Text('No Wallets Available'),));
                         }
                         return ListView.builder(
                           itemCount: posts.length,
@@ -503,7 +494,7 @@ class WalletBottomSheet extends StatelessWidget {
                         if(posts.isEmpty){
                           return SizedBox(
                               height: Get.height*0.3,
-                              child: Center(child: Text('No Wallets Available'),));
+                              child: const Center(child: Text('No Wallets Available'),));
                         }
                         return ListView.builder(
                           itemCount: posts.length,
@@ -527,7 +518,7 @@ class WalletBottomSheet extends StatelessWidget {
                         if(snapshot.connectionState == ConnectionState.done){
                           return SizedBox(
                               height: Get.height*0.3,
-                              child: Center(child: Text('No Wallets Available'),));
+                              child: const Center(child: Text('No Wallets Available'),));
                         }
                         return NotificationView(isLoading: true);
                       }

@@ -1,22 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wayagram/app/modules/home/widgets/product_view.dart';
 
 import '../../../controllers/home_controller.dart';
-import '../../../data/model/all_events_entity.dart';
-import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/products_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
-import '../widgets/posts_view.dart';
 
 class ShopsTab extends StatelessWidget {
-  ShopsTab({Key? key}) : super(key: key);
+  const ShopsTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +38,9 @@ class ShopsTab extends StatelessWidget {
                           return ProductView(posts: posts.data!);
                         }else{
                           if(snapshot.connectionState == ConnectionState.done){
-                            return SizedBox.shrink();
+                            return const SizedBox.shrink();
                           }
-                          return ProductView(isLoading: true);
+                          return const ProductView(isLoading: true);
                         }
                       }),
                 ],
@@ -69,9 +63,9 @@ class ShopsTab extends StatelessWidget {
                           return ProductView(posts: posts.data!,showBuyButton: false);
                         }else{
                           if(snapshot.connectionState == ConnectionState.done){
-                            return SizedBox.shrink();
+                            return const SizedBox.shrink();
                           }
-                          return ProductView(isLoading: true,showBuyButton: false);
+                          return const ProductView(isLoading: true,showBuyButton: false);
                         }
                       }),
                 ],

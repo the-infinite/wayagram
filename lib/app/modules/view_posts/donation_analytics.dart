@@ -47,7 +47,7 @@ import '../search/search.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class DonationAnalytics extends StatefulWidget {
-  DonationAnalytics({Key? key}) : super(key: key);
+  const DonationAnalytics({Key? key}) : super(key: key);
 
   @override
   State<DonationAnalytics> createState() => _DonationAnalyticsState();
@@ -106,7 +106,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
             title: Text(
               "Donation Analytics",
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -118,11 +118,11 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
-                child: Divider(
+                child: const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
@@ -141,7 +141,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
             color: getAppColor(AppColors.background),
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Row(
@@ -158,7 +158,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 1,
                             blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3), // changes position of shadow
                           ),
                         ],
                       ),
@@ -168,7 +168,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                           Text(
                             "Donors",
                             style: TextStyle(
-                              color: getAppColor(Color(0xff4F4F4F)),
+                              color: getAppColor(const Color(0xff4F4F4F)),
                               fontSize: Get.textScaleFactor * 12,
                               fontWeight: FontWeight.bold,
                             ),
@@ -201,7 +201,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 1,
                             blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3), // changes position of shadow
                           ),
                         ],
                       ),
@@ -211,7 +211,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                           Text(
                             "Expiry Date",
                             style: TextStyle(
-                              color: getAppColor(Color(0xff4F4F4F)),
+                              color: getAppColor(const Color(0xff4F4F4F)),
                               fontSize: Get.textScaleFactor * 12,
                               fontWeight: FontWeight.bold,
                             ),
@@ -244,7 +244,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 1,
                             blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3), // changes position of shadow
                           ),
                         ],
                       ),
@@ -254,7 +254,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                           Text(
                             "Raised(NGN)",
                             style: TextStyle(
-                              color: getAppColor(Color(0xff4F4F4F)),
+                              color: getAppColor(const Color(0xff4F4F4F)),
                               fontSize: Get.textScaleFactor * 12,
                               fontWeight: FontWeight.bold,
                             ),
@@ -278,7 +278,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Expanded(
@@ -302,7 +302,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                             children: [
                               SizedBox(height: Get.height*0.2,),
                               Icon(Icons.money_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                              SizedBox(height: 20,),
+                              const SizedBox(height: 20,),
                               Text("No Donations Yet", style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: Get.textScaleFactor * 17,
@@ -315,7 +315,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                       ListView.builder(
                         itemCount: peopleWhoDonated.length,
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           var post = peopleWhoDonated[index];
                           return InkWell(
@@ -354,7 +354,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                                       radius: 100,
                                     ),
                                   ),
-                                  SizedBox(width: 10,),
+                                  const SizedBox(width: 10,),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -371,7 +371,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                                           softWrap: true,
                                           onTap: (text) {
                                             controller.defaultSearchValue = text;
-                                            Get.to(() => Search());
+                                            Get.to(() => const Search());
                                           },
                                           decorateAtSign: true,
                                         ),
@@ -388,7 +388,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                                       ),),
                                     ],
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                 ],
                               ),
                             ),
@@ -407,12 +407,12 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Divider(
+                const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
                 if(!closed)
                   AppButton(
                   title: "Close Donation",
@@ -467,7 +467,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                   Text(
                     "Money Requested Already",
                     style: TextStyle(
-                      color: getAppColor(Color(0xff4F4F4F)),
+                      color: getAppColor(const Color(0xff4F4F4F)),
                       fontSize: Get.textScaleFactor * 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -475,7 +475,7 @@ class _DonationAnalyticsState extends State<DonationAnalytics> with TickerProvid
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
               ],
             ),
           ),

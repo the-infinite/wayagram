@@ -38,7 +38,7 @@ import '../promotion/promote_post.dart';
 import 'donation_analytics.dart';
 
 class PostAnalytics extends StatefulWidget {
-  PostAnalytics({Key? key,required this.post}) : super(key: key);
+  const PostAnalytics({Key? key,required this.post}) : super(key: key);
 
   final AllPostsEntity post;
 
@@ -100,7 +100,7 @@ class _PostAnalyticsState extends State<PostAnalytics> {
             title: Text(
               "Post Activity",
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -115,9 +115,9 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                 child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
-                preferredSize: Size.fromHeight(1.0),
+                preferredSize: const Size.fromHeight(1.0),
                 child: Container(
-                  color: Color(0xffEDEAEA),
+                  color: const Color(0xffEDEAEA),
                   height: 1.0,
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
@@ -147,24 +147,24 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                       decoration: BoxDecoration(
                         color: getAppColor(AppColors.background),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Color(0xffEDEAEA), width: 1),
+                        border: Border.all(color: const Color(0xffEDEAEA), width: 1),
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     widgetAnalyticsWidget(
                         "Impressions",
                         "Times people saw this post on wayagram",
                         impressions.toString()
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     widgetAnalyticsWidget(
                         "Total engagements",
                         "Times people interacted with this post",
                         (likes + reposts + comments).toString()
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: AppButton(
                         title: 'Promote this Post',
                         onPressed: () async {
@@ -201,12 +201,12 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                         width: double.infinity,
                         fontSize: Get.textScaleFactor * 18,
                         border: Border.all(color: AppColors.primary, width: 1),
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
-                    SizedBox(height: 5,),
+                    const SizedBox(height: 5,),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Text(
                         "Promote your post to reach more people and boost engagements",
                         style: TextStyle(
@@ -219,10 +219,10 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     if(widget.post.kind == 'donation')
                       Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: AppButton(
                         title: 'View Donation Analytics',
                         onPressed: () async {
@@ -234,10 +234,10 @@ class _PostAnalyticsState extends State<PostAnalytics> {
 
                             if(res.isSuccessful){
                               savedPosts.val = jsonEncode(res.data);
-                              Get.to(() => DonationAnalytics(),arguments: donation);
+                              Get.to(() => const DonationAnalytics(),arguments: donation);
                             }else{
                               if(savedPosts.val.isNotEmpty){
-                                Get.to(() => DonationAnalytics(),arguments: donation);
+                                Get.to(() => const DonationAnalytics(),arguments: donation);
                               }else{
                                 AppOverlay.showErrorSnackBar(content: "Error getting donation statistics");
                               }
@@ -250,12 +250,12 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                         width: double.infinity,
                         fontSize: Get.textScaleFactor * 18,
                         border: Border.all(color: AppColors.primary, width: 1),
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
                     if(widget.post.isPoll == true)
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: AppButton(
                           title: 'View Poll Analytics',
                           onPressed: () async {
@@ -269,17 +269,17 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                                 if(response.isSuccessful){
                                   savedPosts.val = jsonEncode(res.data);
                                   savedVotes.val = jsonEncode(response.data['data']);
-                                  Get.to(() => PollAnalytics(),arguments: widget.post.poll!);
+                                  Get.to(() => const PollAnalytics(),arguments: widget.post.poll!);
                                 }else{
                                   if(savedVotes.val.isNotEmpty){
-                                    Get.to(() => PollAnalytics(),arguments: widget.post.poll!);
+                                    Get.to(() => const PollAnalytics(),arguments: widget.post.poll!);
                                   }else{
                                     AppOverlay.showErrorSnackBar(content: "Error getting poll statistics");
                                   }
                                 }
                               }else{
                                 if(savedPosts.val.isNotEmpty){
-                                  Get.to(() => PollAnalytics(),arguments: widget.post.poll!);
+                                  Get.to(() => const PollAnalytics(),arguments: widget.post.poll!);
                                 }else{
                                   AppOverlay.showErrorSnackBar(content: "Error getting poll statistics");
                                 }
@@ -292,10 +292,10 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                           width: double.infinity,
                           fontSize: Get.textScaleFactor * 18,
                           border: Border.all(color: AppColors.primary, width: 1),
-                          padding: EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),
@@ -308,12 +308,12 @@ class _PostAnalyticsState extends State<PostAnalytics> {
 
   Padding widgetAnalyticsWidget(String title, String subtitle, String amount) {
     return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: Container(
                       decoration: BoxDecoration(
                         color: getAppColor(AppColors.background),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Color(0xffEDEAEA), width: 1),
+                        border: Border.all(color: const Color(0xffEDEAEA), width: 1),
                       ),
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: Get.width*0.025,vertical: Get.height*0.01),
@@ -351,7 +351,7 @@ class _PostAnalyticsState extends State<PostAnalytics> {
                             Text(
                               amount,
                               style: TextStyle(
-                                color: getAppColor(Color(0xff4F4F4F)),
+                                color: getAppColor(const Color(0xff4F4F4F)),
                                 fontSize: Get.textScaleFactor * 15,
                                 fontWeight: FontWeight.normal,
                               ),

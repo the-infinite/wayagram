@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
@@ -12,11 +11,9 @@ import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/page_input.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
-import '../setup/interests.dart';
-import '../sign_up/sign_up.dart';
 
 class EnterNewChangedPassword extends GetView<AuthControllerWayagram> {
-  EnterNewChangedPassword({Key? key}) : super(key: key);
+  const EnterNewChangedPassword({Key? key}) : super(key: key);
 
   static const route = '/enterNewPassword';
 

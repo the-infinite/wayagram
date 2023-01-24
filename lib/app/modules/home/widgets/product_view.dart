@@ -1,12 +1,8 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_polls/flutter_polls.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
@@ -15,10 +11,6 @@ import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
-import '../../../data/model/all_events_entity.dart';
-import '../../../data/model/all_posts_entity.dart';
-import '../../../data/model/moments_model_entity.dart';
-import '../../../data/model/posts_model_entity.dart';
 import '../../../data/model/products_model_entity.dart';
 import '../../../global_widgets/app_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -31,7 +23,7 @@ import '../../report/report_product.dart';
 import '../../view_posts/product_analytics.dart';
 
 class ProductView extends StatelessWidget{
-  ProductView({
+  const ProductView({
     Key? key,
     this.isLoading = false,
     this.posts,
@@ -51,7 +43,7 @@ class ProductView extends StatelessWidget{
         itemCount: isLoading ? 5 : posts!.length,
         shrinkWrap: true,
         padding: EdgeInsets.zero,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           if(isLoading){
             return SizedBox(
@@ -61,7 +53,7 @@ class ProductView extends StatelessWidget{
                 baseColor: getAppColor(Colors.grey).withOpacity(0.8),
                 highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
                 child: Container(
-                  margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                  margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                   height: Get.height * 0.18,
                   width: Get.width * 0.35,
                   decoration: BoxDecoration(
@@ -116,7 +108,7 @@ class _ProductRealViewState extends State<ProductRealView> {
       var isCurrentUserPost = controller.profile.id == widget.post.profile!.id;
 
       return Container(
-        margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+        margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
         decoration: BoxDecoration(
           color: getAppColor(Colors.white).withOpacity(.8),
           borderRadius: BorderRadius.circular(10),
@@ -172,7 +164,7 @@ class _ProductRealViewState extends State<ProductRealView> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       if(widget.showActions)
@@ -293,7 +285,7 @@ class _ProductRealViewState extends State<ProductRealView> {
                                   ),
                                 ),
                             ]),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                     ],
@@ -301,7 +293,7 @@ class _ProductRealViewState extends State<ProductRealView> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             if(imageUrls.isNotEmpty)
@@ -316,11 +308,11 @@ class _ProductRealViewState extends State<ProductRealView> {
                   videoListController: videoListController,
                 ),
               ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
-                padding: EdgeInsets.only(left: 10, right: 10,bottom: 10),
+                padding: const EdgeInsets.only(left: 10, right: 10,bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -332,7 +324,7 @@ class _ProductRealViewState extends State<ProductRealView> {
                         children: [
                           HashTagText(
                             text: widget.post.name.toString(),
-                            decoratedStyle: TextStyle(
+                            decoratedStyle: const TextStyle(
                               color: Colors.blue,
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -349,7 +341,7 @@ class _ProductRealViewState extends State<ProductRealView> {
                           ),
                           HashTagText(
                             text: widget.post.description.toString(),
-                            decoratedStyle: TextStyle(
+                            decoratedStyle: const TextStyle(
                               color: Colors.blue,
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
@@ -367,12 +359,12 @@ class _ProductRealViewState extends State<ProductRealView> {
                           Row(
                             children: [
                               //tag icon
-                              Icon(
+                              const Icon(
                                 FeatherIcons.tag,
                                 color: AppColors.primary,
                                 size: 20,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
                               Text(
@@ -397,12 +389,12 @@ class _ProductRealViewState extends State<ProductRealView> {
                         bckgrndColor: AppColors.primary,
                         fontColor: getAppColor(AppColors.background),
                         width: Get.width * 0.2,
-                        padding: EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
                       ),
                     if(!widget.showBuyButton && widget.showActions)
                       Row(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           InkWell(
@@ -415,7 +407,7 @@ class _ProductRealViewState extends State<ProductRealView> {
                               size: 24,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                         ],

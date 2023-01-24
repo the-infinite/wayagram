@@ -3,55 +3,33 @@ import 'dart:convert';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
-import 'package:wayagram/app/modules/profile/inner_pages/blocked.dart';
-import 'package:wayagram/app/modules/profile/inner_pages/muted.dart';
-import 'package:wayagram/app/modules/profile/update_profile.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
-import '../../../core/theme/app_themes.dart';
-import '../../../core/utils/validator.dart';
-import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/GroupMediaModel.dart';
 import '../../data/model/GroupMembersModel.dart';
 import '../../data/model/all_posts_entity.dart';
-import '../../data/model/followers_model_entity.dart';
-import '../../data/model/following_model_entity.dart';
-import '../../data/model/friends_model_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/group_model_entity.dart';
-import '../../data/model/log_in_model_entity.dart';
-import '../../data/model/products_model_entity.dart';
-import '../../data/model/profile_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
-import '../../global_widgets/app_drawer.dart';
 import '../../global_widgets/gallery_view.dart';
-import '../../global_widgets/page_input.dart';
 import '../../global_widgets/person_view.dart';
-import '../create_posts/normal_posts.dart';
 import '../home/widgets/notification_view.dart';
 import '../home/widgets/posts_view.dart';
-import '../home/widgets/product_view.dart';
-import '../profile/inner_pages/followers.dart';
-import '../profile/inner_pages/following.dart';
 import '../profile/report_user.dart';
-import '../setup/interests.dart';
-import '../sign_up/sign_up.dart';
 import 'edit/edit_group.dart';
 import 'invite/invite_to_group_or_pages.dart';
 
 class Group extends StatefulWidget {
-  Group({Key? key, required this.group,this.joined = false}) : super(key: key);
+  const Group({Key? key, required this.group,this.joined = false}) : super(key: key);
 
   final GroupModelEntity group;
   final bool joined;
@@ -174,7 +152,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                           flexibleSpace: LayoutBuilder(
                               builder: (BuildContext context, BoxConstraints constraints) {
                                 return FlexibleSpaceBar(
-                                  stretchModes: [
+                                  stretchModes: const [
                                     StretchMode.zoomBackground,
                                     StretchMode.blurBackground,
                                   ],
@@ -284,7 +262,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       ),
                                       SizedBox(height: Get.height * 0.01),
                                       Padding(
-                                        padding: EdgeInsets.only(left: 15),
+                                        padding: const EdgeInsets.only(left: 15),
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -317,7 +295,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                           leading: Column(
                             children: [
                               Padding(
-                                padding: EdgeInsets.all(4),
+                                padding: const EdgeInsets.all(4),
                                 child: Container(
                                   width: Get.width * 0.1,
                                   height: Get.width * 0.1,
@@ -344,7 +322,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                             PopupMenuButton(
                                 color: getAppColor(Colors.white),
                                 child: Padding(
-                                  padding: EdgeInsets.only(top: 2.5,right: 5),
+                                  padding: const EdgeInsets.only(top: 2.5,right: 5),
                                   child: Column(
                                     children: [
                                       Container(
@@ -502,12 +480,12 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                 ])
                           ],
                           title: AnimatedOpacity(
-                            duration: Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             opacity: scrolled ? 1.0 : 0.0,
                             child: Text(
                               group.name.toString(),
                               style: AppTextStyle.subtitle1.copyWith(
-                                color: getAppColor(Color(0xff4F4F4F)),
+                                color: getAppColor(const Color(0xff4F4F4F)),
                                 fontWeight: FontWeight.bold,
                                 fontSize: Get.textScaleFactor * 18,
                               ),
@@ -526,9 +504,9 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                               child: Column(
                                 children: [
                                   AnimatedOpacity(
-                                    duration: Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
                                     opacity: scrolled ? 1.0 : 0.0,
-                                    child: Divider(
+                                    child: const Divider(
                                       height: 0.5,
                                       thickness: 0.5,
                                       color: Colors.grey,
@@ -540,7 +518,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       controller: tabController,
                                       padding: EdgeInsets.zero,
                                       labelColor: getAppColor(Colors.black),
-                                      unselectedLabelColor: Color(0xff9A9A9A),
+                                      unselectedLabelColor: const Color(0xff9A9A9A),
                                       indicatorColor: AppColors.primary,
                                       indicatorSize: TabBarIndicatorSize.tab,
                                       labelStyle: TextStyle(
@@ -551,7 +529,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                         fontSize: Get.width*0.035,
                                         fontWeight: FontWeight.w500,
                                       ),
-                                      tabs: [
+                                      tabs: const [
                                         Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                                         Tab(text: 'Media',iconMargin: EdgeInsets.zero,),
                                         Tab(text: "Members",iconMargin: EdgeInsets.zero,),
@@ -562,7 +540,7 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                                       },
                                     ),
                                   ),
-                                  Divider(
+                                  const Divider(
                                     height: 0.5,
                                     thickness: 0.5,
                                     color: Colors.grey,
@@ -592,9 +570,9 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                               return PostsView(posts: posts,userID: fullProfile.userId);
                             }else{
                               if(snapshot.connectionState == ConnectionState.done){
-                                return SizedBox.shrink();
+                                return const SizedBox.shrink();
                               }
-                              return PostsView(isLoading: true);
+                              return const PostsView(isLoading: true);
                             }
                           }),
                       FutureBuilder<ApiResponse>(
@@ -611,14 +589,14 @@ class _GroupState extends State<Group> with TickerProviderStateMixin{
                             } else if(savedPosts.val.isNotEmpty){
                               var posts = GroupMediaModel.listFromJson(jsonDecode(savedPosts.val));
                               return GalleryView(
-                                  key: ValueKey("group_gallery"),
+                                  key: const ValueKey("group_gallery"),
                                   imageUrlList: posts.map((e) => e.fileUrl.toString()).toList()
                               );
                             }else{
                               if(snapshot.connectionState == ConnectionState.done){
-                                return SizedBox.shrink();
+                                return const SizedBox.shrink();
                               }
-                              return PostsView(isLoading: true);
+                              return const PostsView(isLoading: true);
                             }
                           }),
                       FutureBuilder<ApiResponse>(

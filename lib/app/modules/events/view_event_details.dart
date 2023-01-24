@@ -4,36 +4,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/controllers/home_controller.dart';
-import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
-import 'package:wayagram/app/modules/home/home.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
-import '../../controllers/auth_controller.dart';
 import '../../data/model/all_events_entity.dart';
-import '../../data/model/blocked_accounts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
-import '../../data/model/group_model_entity.dart';
-import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
-import '../../global_widgets/app_avatar.dart';
-import '../../global_widgets/document_picker.dart';
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
-import '../../global_widgets/person_view.dart';
-import '../home/widgets/events_view.dart';
-import '../home/widgets/group_view.dart';
-import '../home/widgets/notification_view.dart';
-import '../profile/profile.dart';
-import '../profile/update_profile.dart';
 import '../report/report_event.dart';
 import '../view_posts/event_analytics.dart';
 
@@ -132,7 +114,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                   ]),
             ],
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(0.5),
+              preferredSize: const Size.fromHeight(0.5),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
@@ -191,7 +173,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                       readOnly: true,
                       controller: textController,
                       suffix: IconButton(
-                        icon: Icon(Icons.copy_rounded, color: Colors.grey),
+                        icon: const Icon(Icons.copy_rounded, color: Colors.grey),
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: textController.text));
                           AppOverlay.showSuccessSnackBar(content: 'Copied to clipboard');
@@ -273,7 +255,7 @@ class _TextButton extends StatelessWidget {
   final Widget leading;
   final String text;
   final Function() onPressed;
-  _TextButton({required this.text, required this.onPressed, required this.leading});
+  const _TextButton({required this.text, required this.onPressed, required this.leading});
 
   @override
   Widget build(BuildContext context) {
@@ -284,7 +266,7 @@ class _TextButton extends StatelessWidget {
         child: Row(children: [
           SizedBox(width: Get.width*0.01),
           leading,
-          SizedBox(
+          const SizedBox(
             width: 15,
           ),
           Expanded(

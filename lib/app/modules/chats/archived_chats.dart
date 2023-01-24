@@ -44,7 +44,7 @@ class ArchivedChats extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: getAppColor(AppColors.background),
               title: Text('Archive', style: AppTextStyle.subtitle1.copyWith(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               )),
@@ -127,7 +127,7 @@ class ArchivedChats extends StatelessWidget {
                                               isGroup: post.isGroup == true,
                                             ),
                                           ),
-                                          SizedBox(width: 10,),
+                                          const SizedBox(width: 10,),
                                           Stack(
                                             alignment: Alignment.topRight,
                                             children: [

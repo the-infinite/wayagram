@@ -19,16 +19,16 @@ Future<void> main() async {
   );
   await GetStorage.init('MyPref');
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     //var initial = OnboardingPage(key: Key('wayagram_onboarding'));
-    var initial = MyPref.authToken.val.isNotEmpty ? Home(key: Key('wayagram_home')) : OnboardingPage(key: Key('wayagram_onboarding'));
+    var initial = MyPref.authToken.val.isNotEmpty ? const Home(key: Key('wayagram_home')) : const OnboardingPage(key: Key('wayagram_onboarding'));
     MyPref.currentApp.val = 'wayagram';
     return AppBuilder(builder: (context) {
       return GetMaterialApp(

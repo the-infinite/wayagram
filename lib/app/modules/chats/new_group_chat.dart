@@ -4,14 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_list/chat_list.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:story_view/controller/story_controller.dart';
-import 'package:story_view/utils.dart';
-import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
@@ -105,7 +100,7 @@ class NewGroupChat extends StatelessWidget{
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
                 child: Column(
-                  children: [
+                  children: const [
                     Divider(
                       height: 0.5,
                       thickness: 0.5,

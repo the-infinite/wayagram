@@ -28,82 +28,82 @@ class AppPages {
   static final routes = [
     GetPage(
       name: OnboardingPage.route,
-      page: () => OnboardingPage()
+      page: () => const OnboardingPage()
     ),
     GetPage(
         name: Multiplexor.route,
-        page: () => Multiplexor()
+        page: () => const Multiplexor()
     ),
     GetPage(
       name: SignIn.route,
-      page: () => SignIn(),
+      page: () => const SignIn(),
       binding: WayagramBinding(),
     ),
     GetPage(
       name: SignUp.route,
-      page: () => SignUp(),
+      page: () => const SignUp(),
       binding: WayagramBinding(),
     ),
     GetPage(
       name: VerifyOTP.route,
-      page: () => VerifyOTP(),
+      page: () => const VerifyOTP(),
       binding: WayagramBinding(),
     ),
     GetPage(
         name: CreatePIN.route,
-        page: () => CreatePIN()
+        page: () => const CreatePIN()
     ),
     GetPage(
         name: UpdateProfile.route,
-        page: () => UpdateProfile()
+        page: () => const UpdateProfile()
     ),
 
     GetPage(
         name: CreatePIN.route,
-        page: () => CreatePIN()
+        page: () => const CreatePIN()
     ),
     GetPage(
         name: ConfirmPIN.route,
-        page: () => ConfirmPIN()
+        page: () => const ConfirmPIN()
     ),
     GetPage(
         name: Interests.route,
-        page: () => Interests()
+        page: () => const Interests()
     ),
 
     GetPage(
       name: Home.route,
-      page: () => Home(),
+      page: () => const Home(),
       binding: WayagramBinding(),
     ),
 
     GetPage(
       name: Profile.route,
-      page: () => Profile(),
+      page: () => const Profile(),
       binding: WayagramBinding(),
     ),
 
     GetPage(
       name: GroupsAndPages.route,
-      page: () => GroupsAndPages(),
+      page: () => const GroupsAndPages(),
       binding: WayagramBinding(),
     ),
 
     GetPage(
       name: Settings.route,
-      page: () => Settings(),
+      page: () => const Settings(),
       binding: WayagramBinding(),
     ),
 
     GetPage(
       name: Search.route,
-      page: () => Search(),
+      page: () => const Search(),
       binding: WayagramBinding(),
     ),
 
     GetPage(
       name: Contact.route,
-      page: () => Contact(),
+      page: () => const Contact(),
       binding: WayagramBinding(),
     ),
   ];

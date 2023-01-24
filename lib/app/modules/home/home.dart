@@ -4,35 +4,22 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 
-import '../../../core/theme/app_styles.dart';
-import '../../../core/theme/app_themes.dart';
-import '../../../core/utils/validator.dart';
 import '../../bindings/wayagram_binding.dart';
-import '../../controllers/auth_controller.dart';
 import '../../controllers/chat_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/full_user_profile_entity.dart';
-import '../../data/model/log_in_model_entity.dart';
-import '../../data/model/profile_model_entity.dart';
 import '../../data/providers/my_pref.dart';
-import '../../global_widgets/app_button.dart';
 import '../../global_widgets/app_drawer.dart';
 
-import '../../global_widgets/page_input.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../contacts/contact.dart';
 import '../search/search.dart';
-import '../setup/interests.dart';
-import '../sign_up/sign_up.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -134,7 +121,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                     Builder(
                         builder: (context1) {
                           return Padding(
-                            padding: EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.only(left: 10.0),
                             child: SizedBox(
                               width: 45,
                               height: 45,
@@ -154,7 +141,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   ],
                 ),
                 title: ImageHelper.normalImage(
-                  'assets/images/wayagram_new.png', width: Get.width * 0.25, color:getAppColor(Color(0xff4F4F4F),),
+                  'assets/images/wayagram_new.png', width: Get.width * 0.25, color:getAppColor(const Color(0xff4F4F4F),),
                 ),
                 actions: [
                   Padding(
@@ -171,7 +158,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                         ),
                         onPressed: () {
                           if (!showSearchIcon && Platform.isAndroid) {
-                            Get.to(() => Contact(),binding: WayagramBinding());
+                            Get.to(() => const Contact(),binding: WayagramBinding());
                           } else {
                             Get.to(() => Search(),binding: WayagramBinding());
                           }
@@ -206,7 +193,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                           controller: shopController,
                           padding: EdgeInsets.zero,
                           labelColor: getAppColor(AppColors.onBackground),
-                          unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
+                          unselectedLabelColor: getAppColor(const Color(0xff9A9A9A)),
                           indicatorColor: AppColors.primary,
                           indicatorSize: TabBarIndicatorSize.tab,
                           labelStyle: TextStyle(
@@ -236,7 +223,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                           controller: notificationController,
                           padding: EdgeInsets.zero,
                           labelColor: getAppColor(AppColors.onBackground),
-                          unselectedLabelColor: getAppColor(Color(0xff9A9A9A)),
+                          unselectedLabelColor: getAppColor(const Color(0xff9A9A9A)),
                           indicatorColor: AppColors.primary,
                           indicatorSize: TabBarIndicatorSize.tab,
                           labelStyle: TextStyle(
@@ -247,7 +234,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                             fontSize: Get.width*0.035,
                             fontWeight: FontWeight.w500,
                           ),
-                          tabs: [
+                          tabs: const [
                             Tab(text: 'All',iconMargin: EdgeInsets.zero,),
                             Tab(text: 'Requests',iconMargin: EdgeInsets.zero,),
                           ],
@@ -292,7 +279,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                       ),
                       Expanded(
                         child: SingleChildScrollView(
-                          physics: (controller.currentBottomNavPage.value == 2 || controller.currentBottomNavPage.value == 3 || controller.currentBottomNavPage.value == 4) ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
+                          physics: (controller.currentBottomNavPage.value == 2 || controller.currentBottomNavPage.value == 3 || controller.currentBottomNavPage.value == 4) ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.stretch,

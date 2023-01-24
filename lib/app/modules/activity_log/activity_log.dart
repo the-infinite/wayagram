@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,9 +6,6 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
-import 'package:hashtager/widgets/hashtag_text_field.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
@@ -18,29 +14,18 @@ import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/ActivityLogsModel.dart';
-import '../../data/model/CommentModel.dart';
-import '../../data/model/InterestsModel.dart';
-import '../../data/model/NewInterestModel.dart';
-import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
-import '../../global_widgets/app_avatar.dart';
-import '../../global_widgets/app_button.dart';
 
-import 'package:dio/dio.dart' as dio;
 
-import '../../global_widgets/app_input.dart';
 import '../../global_widgets/app_refresher.dart';
-import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
-import '../../global_widgets/page_input.dart';
 import '../home/widgets/group_view.dart';
-import '../home/widgets/posts_view.dart';
 import '../search/search.dart';
 
 class ActivityLog extends StatefulWidget {
-  ActivityLog({Key? key}) : super(key: key);
+  const ActivityLog({Key? key}) : super(key: key);
 
   @override
   State<ActivityLog> createState() => _ActivityLogState();
@@ -77,7 +62,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
             title: Text(
               "Activity Log",
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -93,7 +78,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
-                child: Divider(
+                child: const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
@@ -150,7 +135,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                         return ListView.builder(
                           itemCount: allPosts.length,
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             var post = allPosts[index];
                             return InkWell(
@@ -171,7 +156,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                       ),
                                       child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                     ),
-                                    SizedBox(width: 10,),
+                                    const SizedBox(width: 10,),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -200,7 +185,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                         ),),
                                       ],
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     InkWell(
                                         onTap: () {
                                           var body = {
@@ -216,7 +201,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                             }
                                           });
                                         },
-                                        child: Icon(Icons.delete, color: AppColors.primary,)
+                                        child: const Icon(Icons.delete, color: AppColors.primary,)
                                     )
                                   ],
                                 ),
@@ -234,7 +219,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                         return ListView.builder(
                           itemCount: allPosts.length,
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             var post = allPosts[index];
                             return InkWell(
@@ -255,7 +240,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                       ),
                                       child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                     ),
-                                    SizedBox(width: 10,),
+                                    const SizedBox(width: 10,),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -284,7 +269,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                         ),),
                                       ],
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     InkWell(
                                         onTap: () {
                                           var body = {
@@ -300,7 +285,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                             }
                                           });
                                         },
-                                        child: Icon(Icons.delete, color: AppColors.primary,)
+                                        child: const Icon(Icons.delete, color: AppColors.primary,)
                                     )
                                   ],
                                 ),
@@ -313,7 +298,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                         return ListView.builder(
                           itemCount: posts.length,
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             var post = posts[index];
                             return InkWell(
@@ -334,7 +319,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                       ),
                                       child: Icon(Icons.access_time_filled_outlined, color: Colors.white, size: Get.height*0.02,),
                                     ),
-                                    SizedBox(width: 10,),
+                                    const SizedBox(width: 10,),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -363,7 +348,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                         ),),
                                       ],
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     InkWell(
                                         onTap: () {
                                           var body = {
@@ -379,7 +364,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                             }
                                           });
                                         },
-                                        child: Icon(Icons.delete, color: AppColors.primary,)
+                                        child: const Icon(Icons.delete, color: AppColors.primary,)
                                     )
                                   ],
                                 ),
@@ -389,7 +374,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                         );
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
                         return GroupView(isLoading: true);
                       }

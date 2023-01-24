@@ -30,7 +30,7 @@ import 'package:http/http.dart' as http;
 
 
 class Settings extends GetView<HomeControllerWayagram>{
-  Settings({Key? key}) : super(key: key);
+  const Settings({Key? key}) : super(key: key);
 
   static const route = '/settings';
 
@@ -60,7 +60,7 @@ class Settings extends GetView<HomeControllerWayagram>{
             ),
             backgroundColor: getAppColor(AppColors.background),
             title: Text('Settings', style: AppTextStyle.subtitle1.copyWith(
-              color: getAppColor(Color(0xff4F4F4F)),
+              color: getAppColor(const Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -105,12 +105,12 @@ class Settings extends GetView<HomeControllerWayagram>{
                         imgUrl: (fullProfile.avatar as String?).toString(),
                       ),
                       onPressed: () {
-                        Get.to(() => Profile(),binding: WayagramBinding());
+                        Get.to(() => const Profile(),binding: WayagramBinding());
                       },
                     ),
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
                   '${fullProfile.displayName}',
                   style: TextStyle(
@@ -127,7 +127,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   "Your Referral Code:",
                   style: TextStyle(
@@ -142,7 +142,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                     title: MyPref.referenceCode.val,
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: MyPref.referenceCode.val)).then((_){
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
                       });
                     },
                     borderRadius: 10,
@@ -150,24 +150,24 @@ class Settings extends GetView<HomeControllerWayagram>{
                     fontSize: Get.width*0.04,
                     bckgrndColor: getAppColor(AppColors.background),
                     border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     leading: Icon(Icons.copy, color: Colors.blue, size: Get.width*0.04),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: Get.width*0.4,
                   child: AppButton(
                     title: 'Wallet Balance',
                     onPressed: () {
-                      Get.bottomSheet(WalletBottomSheet(),isScrollControlled: true);
+                      Get.bottomSheet(const WalletBottomSheet(),isScrollControlled: true);
                     },
                     borderRadius: 10,
                     fontColor: getAppColor(Colors.white),
                     bckgrndColor: AppColors.primary,
                     fontSize: Get.width*0.04,
                     border: Border.all(color: AppColors.primary, width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   ),
                 ),
                 SizedBox(height: Get.height*0.05),
@@ -180,7 +180,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                             subtitle: "Update your profile",
                             onPressed: (){
                               controller.imagePaths.clear();
-                              Get.to(() => UpdateProfile(),binding: WayagramBinding());
+                              Get.to(() => const UpdateProfile(),binding: WayagramBinding());
                             }
                         ),
                         SizedBox(height: Get.height*0.02),
@@ -188,7 +188,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                             text: "Notifications",
                             subtitle: "Manage your notifications",
                             onPressed: (){
-                              Get.to(() => NotificationsSettings());
+                              Get.to(() => const NotificationsSettings());
                             }
                         ),
                         SizedBox(height: Get.height*0.02),
@@ -196,7 +196,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                             text: "Security",
                             subtitle: "Manage your security settings",
                             onPressed: (){
-                              Get.to(() => SecuritySettings());
+                              Get.to(() => const SecuritySettings());
                             }
                         ),
                         //SizedBox(height: Get.height*0.02),
@@ -212,7 +212,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                             text: "Privacy Settings",
                             subtitle: "Manage your privacy settings",
                             onPressed: (){
-                              Get.to(() => PrivacySettings());
+                              Get.to(() => const PrivacySettings());
                             }
                         ),
                         SizedBox(height: Get.height*0.02),
@@ -220,7 +220,7 @@ class Settings extends GetView<HomeControllerWayagram>{
                             text: "Login Information",
                             subtitle: "Location, device, time Of login",
                             onPressed: (){
-                              Get.to(() => LoginInformation());
+                              Get.to(() => const LoginInformation());
                             }
                         ),
                         SizedBox(height: Get.height * 0.02),
@@ -241,7 +241,7 @@ class _TextButton extends StatelessWidget {
   final String text;
   final String subtitle;
   final Function() onPressed;
-  _TextButton({required this.text, required this.onPressed, required this.subtitle});
+  const _TextButton({required this.text, required this.onPressed, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +257,7 @@ class _TextButton extends StatelessWidget {
                 color: getAppColor(Colors.grey).withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 5,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
             border: Border.all(color: getAppColor(Colors.white), width: 1),

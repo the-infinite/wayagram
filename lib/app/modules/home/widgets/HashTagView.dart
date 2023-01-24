@@ -1,28 +1,10 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_polls/flutter_polls.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:hashtager/widgets/hashtag_text.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
-import '../../../controllers/home_controller.dart';
-import '../../../data/model/all_posts_entity.dart';
-import '../../../data/model/group_model_entity.dart';
-import '../../../data/model/moments_model_entity.dart';
-import '../../../data/model/posts_model_entity.dart';
-import '../../../global_widgets/app_avatar.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
-import '../../../global_widgets/app_button.dart';
-import '../../../global_widgets/newsfeed_multiple_imageview.dart';
-import '../../groups_and_pages/group.dart';
-import '../../groups_and_pages/page.dart';
 
 class HashTagView extends StatelessWidget{
   const HashTagView({
@@ -88,7 +70,7 @@ class HashTagView extends StatelessWidget{
                       width: Get.width*0.5,
                       child: Text(
                         subtitle[index],
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 16,
                           fontWeight: FontWeight.normal,

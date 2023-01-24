@@ -4,45 +4,27 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
-import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
-import 'package:wayagram/app/modules/profile/inner_pages/blocked.dart';
-import 'package:wayagram/app/modules/profile/inner_pages/muted.dart';
 import 'package:wayagram/app/modules/profile/report_user.dart';
-import 'package:wayagram/app/modules/profile/update_profile.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
-import '../../../core/theme/app_themes.dart';
-import '../../../core/utils/validator.dart';
-import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/blocked_accounts_entity.dart';
 import '../../data/model/followers_model_entity.dart';
 import '../../data/model/following_model_entity.dart';
-import '../../data/model/friends_model_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
-import '../../data/model/log_in_model_entity.dart';
 import '../../data/model/products_model_entity.dart';
-import '../../data/model/profile_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
-import '../../global_widgets/app_drawer.dart';
-import '../../global_widgets/page_input.dart';
 import '../../global_widgets/person_view.dart';
 import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
-import '../setup/interests.dart';
-import '../sign_up/sign_up.dart';
-import 'inner_pages/followers.dart';
-import 'inner_pages/following.dart';
 
 class OtherProfile extends StatefulWidget {
   const OtherProfile({Key? key,required this.info,this.post}) : super(key: key);
@@ -295,7 +277,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                       fontColor: isFollowing ? AppColors.primary : getAppColor(AppColors.background),
                                       bckgrndColor: isFollowing ? getAppColor(AppColors.background) : AppColors.primary,
                                       border: Border.all(color: isFollowing ? AppColors.primary : getAppColor(AppColors.background), width: 1),
-                                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                       fontSize: Get.width * 0.04,
                                       width: Get.width * 0.32,
                                     ),
@@ -447,7 +429,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                               controller: tabController,
                               padding: EdgeInsets.zero,
                               labelColor: getAppColor(Colors.black),
-                              unselectedLabelColor: Color(0xff9A9A9A),
+                              unselectedLabelColor: const Color(0xff9A9A9A),
                               indicatorColor: AppColors.primary,
                               indicatorSize: TabBarIndicatorSize.tab,
                               labelStyle: TextStyle(
@@ -519,9 +501,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         return PostsView(posts: posts);
                                       }else{
                                         if(snapshot.connectionState == ConnectionState.done){
-                                          return SizedBox.shrink();
+                                          return const SizedBox.shrink();
                                         }
-                                        return PostsView(isLoading: true);
+                                        return const PostsView(isLoading: true);
                                       }
                                     }),
                               ),
@@ -546,9 +528,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         return ProductView(posts: posts.data!);
                                       }else{
                                         if(snapshot.connectionState == ConnectionState.done){
-                                          return SizedBox.shrink();
+                                          return const SizedBox.shrink();
                                         }
-                                        return ProductView(isLoading: true);
+                                        return const ProductView(isLoading: true);
                                       }
                                     }),
                               ),
@@ -573,9 +555,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         return PostsView(posts: posts,userID: fullProfile.userId,isPoll: true);
                                       }else{
                                         if(snapshot.connectionState == ConnectionState.done){
-                                          return SizedBox.shrink();
+                                          return const SizedBox.shrink();
                                         }
-                                        return PostsView(isLoading: true);
+                                        return const PostsView(isLoading: true);
                                       }
                                     }),
                               ),
@@ -600,9 +582,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         return PostsView(posts: posts,userID: fullProfile.userId,isDonation: true);
                                       }else{
                                         if(snapshot.connectionState == ConnectionState.done){
-                                          return SizedBox.shrink();
+                                          return const SizedBox.shrink();
                                         }
-                                        return PostsView(isLoading: true);
+                                        return const PostsView(isLoading: true);
                                       }
                                     }),
                               ),
@@ -625,7 +607,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                               child: Text(
                                 displayName,
                                 style: AppTextStyle.subtitle1.copyWith(
-                                  color: getAppColor(getAppColor(Color(0xff4F4F4F))),
+                                  color: getAppColor(getAppColor(const Color(0xff4F4F4F))),
                                   fontSize: Get.textScaleFactor * 18,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -634,7 +616,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                           ),
                           leading: Center(
                             child: Padding(
-                              padding: EdgeInsets.all(4),
+                              padding: const EdgeInsets.all(4),
                               child: Container(
                                 width: Get.width * 0.1,
                                 height: Get.width * 0.1,
@@ -661,7 +643,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                             PopupMenuButton(
                                 color: getAppColor(Colors.white),
                                 child: Padding(
-                                  padding: EdgeInsets.only(top: 2.5,right: 5),
+                                  padding: const EdgeInsets.only(top: 2.5,right: 5),
                                   child: Center(
                                     child: Container(
                                       width: Get.width * 0.1,
@@ -883,12 +865,12 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                 ])
                           ],
                           bottom: PreferredSize(
-                              preferredSize: Size.fromHeight(1.0),
+                              preferredSize: const Size.fromHeight(1.0),
                               child: AnimatedOpacity(
                                 duration: const Duration(milliseconds: 300),
                                 opacity: showName ? 1.0 : 0.0,
                                 child: Container(
-                                  color: Color(0xffEDEAEA),
+                                  color: const Color(0xffEDEAEA),
                                   height: 1.0,
                                 ),
                               )),
@@ -911,7 +893,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                               controller: tabController,
                               padding: EdgeInsets.zero,
                               labelColor: getAppColor(Colors.black),
-                              unselectedLabelColor: Color(0xff9A9A9A),
+                              unselectedLabelColor: const Color(0xff9A9A9A),
                               indicatorColor: AppColors.primary,
                               indicatorSize: TabBarIndicatorSize.tab,
                               labelStyle: TextStyle(

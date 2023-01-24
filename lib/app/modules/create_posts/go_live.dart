@@ -11,7 +11,7 @@ import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
 
 class CreateLiveVideo extends StatelessWidget {
-  CreateLiveVideo({Key? key}) : super(key: key);
+  const CreateLiveVideo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
-import 'package:intl/intl.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -20,7 +16,7 @@ import '../../chats/archived_chats.dart';
 import '../../chats/chat_screen.dart';
 
 class ChatsTab extends StatelessWidget {
-  ChatsTab({Key? key}) : super(key: key);
+  const ChatsTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +74,7 @@ class ChatsTab extends StatelessWidget {
                                             backgroundColor: Colors.grey,
                                           ),
                                         ),
-                                        SizedBox(width: 10,),
+                                        const SizedBox(width: 10,),
                                         Stack(
                                           alignment: Alignment.topRight,
                                           children: [
@@ -168,7 +164,7 @@ class ChatsTab extends StatelessWidget {
                                               isGroup: post.isGroup == true,
                                             ),
                                           ),
-                                          SizedBox(width: 10,),
+                                          const SizedBox(width: 10,),
                                           Stack(
                                             alignment: Alignment.topRight,
                                             children: [

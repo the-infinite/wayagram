@@ -20,7 +20,7 @@ import '../sign_in/sign_in.dart';
 import '../verify_otp/verify_otp.dart';
 
 class SignUp extends GetView<AuthControllerWayagram> {
-  SignUp({Key? key}) : super(key: key);
+  const SignUp({Key? key}) : super(key: key);
 
   static const route = '/signUp';
 
@@ -73,7 +73,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back,
               color: Colors.black,
             ),
@@ -114,29 +114,29 @@ class SignUp extends GetView<AuthControllerWayagram> {
                       minWidth: Get.width * 0.4,
                       initialLabelIndex: controller.isBusiness ? 1 : 0,
                       totalSwitches: 2,
-                      inactiveBgColor: Color(0xffbdbdbd).withOpacity(.3),
-                      activeBgColor: [Colors.white, Colors.white],
+                      inactiveBgColor: const Color(0xffbdbdbd).withOpacity(.3),
+                      activeBgColor: const [Colors.white, Colors.white],
                       activeBorders: [
                         Border.all(
-                          color: Color(0xffbdbdbd).withOpacity(.3),
+                          color: const Color(0xffbdbdbd).withOpacity(.3),
                           width: 3.0,
                         ),
                         Border.all(
-                          color: Color(0xffbdbdbd).withOpacity(.3),
+                          color: const Color(0xffbdbdbd).withOpacity(.3),
                           width: 3.0,
                         ),
                       ],
                       radiusStyle: true,
                       cornerRadius: 10.0,
-                      labels: ['Business account', 'Personal account'],
+                      labels: const ['Business account', 'Personal account'],
                       customTextStyles: [
                         AppTextStyle.bodyText1.copyWith(
-                          color: Color(0xff064A72),
+                          color: const Color(0xff064A72),
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                         ),
                         AppTextStyle.bodyText1.copyWith(
-                          color: Color(0xff064A72),
+                          color: const Color(0xff064A72),
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                         ),
@@ -158,14 +158,14 @@ class SignUp extends GetView<AuthControllerWayagram> {
                     height: (controller.currentBusinessPage == 0 || controller.currentBusinessPage == 2) ? Get.height*0.8 : (Get.height+ Get.height*0.2),
                     child: PageView(
                       controller: controller.pageController,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       children: [
                         //Business
                         SizedBox(
                           height: Get.height,
                           child: PageView(
                             controller: controller.businessPageController,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             children: [
                               Form(
                                 key: formKeyBusiness1,
@@ -201,7 +201,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                     PageDropButton(
                                       label: "Business Type",
                                       hint: '',
-                                      padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                      padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                       onChanged: (val) {
                                         //controller.businessType.value = val!;
                                       },
@@ -220,7 +220,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                         if(formKeyBusiness1.currentState!.validate()){
                                           controller.currentBusinessPage = 1;
                                           controller.update();
-                                          controller.businessPageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                                          controller.businessPageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                                         }
                                       },
                                       borderRadius: 10,
@@ -228,7 +228,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                     AppButton(
                                       title: 'Already have an account?  Login Now',
                                       onPressed: () {
-                                        Get.to(() => SignIn(),binding: WayagramBinding());
+                                        Get.to(() => const SignIn(),binding: WayagramBinding());
                                       },
                                       borderRadius: 10,
                                       bckgrndColor: (AppColors.background),
@@ -292,7 +292,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                     PageDropButton(
                                       label: "State",
                                       hint: '',
-                                      padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                      padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                       onChanged: (val) {
                                         controller.updateCity(val.toString());
                                       },
@@ -308,7 +308,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                     PageDropButton(
                                       label: "City",
                                       hint: '',
-                                      padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                      padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                       onChanged: (val) {
                                         //controller.state.value = ;
                                       },
@@ -329,7 +329,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                         }*/
                                         if(formKeyBusiness2.currentState!.validate()){
                                           controller.currentBusinessPage = 2;
-                                          controller.businessPageController.animateToPage(2, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                                          controller.businessPageController.animateToPage(2, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                                           controller.update();
                                         }
                                       },
@@ -339,7 +339,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                       title:
                                       'Already have an account?  Login Now',
                                       onPressed: () {
-                                        Get.to(() => SignIn(),binding: WayagramBinding());
+                                        Get.to(() => const SignIn(),binding: WayagramBinding());
                                       },
                                       borderRadius: 10,
                                       bckgrndColor: (AppColors.background),
@@ -483,7 +483,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                           height: Get.height * 0.6,
                           child: PageView(
                             controller: controller.personalPageController,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             children: [
                               Form(
                                 key:formKeyPersonal1,
@@ -533,7 +533,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                         if(formKeyPersonal1.currentState!.validate()){
                                           controller.currentPersonalPage = 1;
                                           controller.update();
-                                          controller.personalPageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                                          controller.personalPageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                                         }
                                       },
                                       borderRadius: 10,
@@ -542,7 +542,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                                     AppButton(
                                       title: 'Have an Account? Login',
                                       onPressed: () {
-                                        Get.to(() => SignIn(),binding: WayagramBinding());
+                                        Get.to(() => const SignIn(),binding: WayagramBinding());
                                       },
                                       borderRadius: 10,
                                       bckgrndColor: (AppColors.background),
@@ -710,14 +710,14 @@ class SignUp extends GetView<AuthControllerWayagram> {
                             },
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: InkWell(
                             onTap: (){
                               controller.launchURL('https://wayagram.ng/privacy-policy');
                             },
                             child: RichText(
-                              text: TextSpan(
+                              text: const TextSpan(
                                 style: TextStyle(
                                   fontSize: 10.0,
                                   color: Colors.black,
@@ -748,7 +748,7 @@ class SignUp extends GetView<AuthControllerWayagram> {
                         controller.launchURL('https://wayagram.ng/terms');
                       },
                       child: RichText(
-                        text: TextSpan(
+                        text: const TextSpan(
                           style: TextStyle(
                             fontSize: 12.0,
                             color: Colors.black,

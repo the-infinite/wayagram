@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:wayagram/app/global_widgets/overlays.dart';
-import 'package:wayagram/app/modules/sign_in/sign_in.dart';
-import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
@@ -15,11 +11,9 @@ import '../../../core/theme/app_themes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
-import '../profile/create_pin.dart';
-import '../profile/update_profile.dart';
 
 class CreatePIN extends GetView<AuthControllerWayagram> {
-  CreatePIN({Key? key}) : super(key: key);
+  const CreatePIN({Key? key}) : super(key: key);
 
   static const route = '/createPIN';
 
@@ -79,7 +73,7 @@ class CreatePIN extends GetView<AuthControllerWayagram> {
                   length: 6,
                   width: MediaQuery.of(context).size.width,
                   fieldWidth: Get.width * 0.1,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 17
                   ),
                   textFieldAlignment: MainAxisAlignment.spaceAround,
@@ -106,7 +100,7 @@ class CreatePIN extends GetView<AuthControllerWayagram> {
                   },
                   borderRadius: 10,
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 AppButton(
                   title: 'Did not get OTP?',
                   bckgrndColor: getAppColor(AppColors.background),

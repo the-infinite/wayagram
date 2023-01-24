@@ -1,35 +1,21 @@
-import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:story_view/controller/story_controller.dart';
-import 'package:story_view/utils.dart';
-import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
-import '../../../data/model/all_posts_entity.dart';
-import '../../../data/model/moments_model_entity.dart';
-import '../../../data/model/posts_model_entity.dart';
 import '../../../data/model/sms_notification_response.dart';
-import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
-import '../../../global_widgets/app_button.dart';
-import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../../global_widgets/overlays.dart';
-import '../../../global_widgets/person_view.dart';
-import '../../home/widgets/notification_view.dart';
 
 class NotificationsSettings extends StatefulWidget {
-  NotificationsSettings({Key? key}) : super(key: key);
+  const NotificationsSettings({Key? key}) : super(key: key);
 
   @override
   State<NotificationsSettings> createState() => _NotificationsSettingsState();
@@ -77,7 +63,7 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
             title: Text('Notification Settings', style: AppTextStyle.subtitle1.copyWith(
-              color: getAppColor(Color(0xff4F4F4F)),
+              color: getAppColor(const Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -199,7 +185,7 @@ class _SwitchButton extends StatefulWidget {
   final String text;
   final bool value;
   final Function(bool)? onChanged;
-  _SwitchButton({required this.text, this.value = false, Key? key, this.onChanged}) : super(key: key);
+  const _SwitchButton({required this.text, this.value = false, Key? key, this.onChanged}) : super(key: key);
 
   @override
   State<_SwitchButton> createState() => _SwitchButtonState();
@@ -233,7 +219,7 @@ class _SwitchButtonState extends State<_SwitchButton> {
                 color: getAppColor(Colors.grey).withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 5,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
             border: Border.all(color: getAppColor(Colors.white), width: 1),

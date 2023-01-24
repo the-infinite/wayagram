@@ -11,7 +11,7 @@ import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
 
 class CreateProduct extends StatelessWidget {
-  CreateProduct({Key? key}) : super(key: key);
+  const CreateProduct({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class CreateProduct extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
 
               ],
             ),

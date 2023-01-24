@@ -2,14 +2,10 @@ import 'dart:convert';
 
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/home/widgets/bottom_sheet.dart';
 import 'package:wayagram/app/modules/profile/inner_pages/blocked.dart';
@@ -19,33 +15,23 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
-import '../../../core/theme/app_themes.dart';
-import '../../../core/utils/validator.dart';
 import '../../bindings/wayagram_binding.dart';
-import '../../controllers/auth_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/followers_model_entity.dart';
 import '../../data/model/following_model_entity.dart';
-import '../../data/model/friends_model_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
-import '../../data/model/log_in_model_entity.dart';
 import '../../data/model/products_model_entity.dart';
-import '../../data/model/profile_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
-import '../../global_widgets/app_drawer.dart';
-import '../../global_widgets/page_input.dart';
 import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
-import '../setup/interests.dart';
-import '../sign_up/sign_up.dart';
 import 'inner_pages/followers.dart';
 import 'inner_pages/following.dart';
 
 class Profile extends StatefulWidget {
-  Profile({Key? key}) : super(key: key);
+  const Profile({Key? key}) : super(key: key);
 
   static const route = '/profile';
 
@@ -105,7 +91,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
             var postListID = fullProfile.id;
             var tabs = [
               SingleChildScrollView(
-                key: ValueKey('posts'),
+                key: const ValueKey('posts'),
                 child: FutureBuilder<ApiResponse>(
                     future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID&page=1&limit=40", true),
                     builder: (context, snapshot) {
@@ -119,14 +105,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                         return PostsView(posts: posts);
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
-                        return PostsView(isLoading: true);
+                        return const PostsView(isLoading: true);
                       }
                     }),
               ),
               SingleChildScrollView(
-                key: ValueKey('products'),
+                key: const ValueKey('products'),
                 child: FutureBuilder<ApiResponse>(
                     future: controller.getData("/wayagram-service/all-posts/get-user-products?page=1&limit=40&profile_id=$postListID", true),
                     builder: (context, snapshot) {
@@ -140,14 +126,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                         return ProductView(posts: posts.data!);
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
-                        return ProductView(isLoading: true);
+                        return const ProductView(isLoading: true);
                       }
                     }),
               ),
               SingleChildScrollView(
-                key: ValueKey('polls'),
+                key: const ValueKey('polls'),
                 child: FutureBuilder<ApiResponse>(
                     future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID&page=1&limit=40", true),
                     builder: (context, snapshot) {
@@ -161,14 +147,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                         return PostsView(posts: posts,userID: fullProfile.userId,isPoll: true);
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
-                        return PostsView(isLoading: true);
+                        return const PostsView(isLoading: true);
                       }
                     }),
               ),
               SingleChildScrollView(
-                key: ValueKey('donations'),
+                key: const ValueKey('donations'),
                 child: FutureBuilder<ApiResponse>(
                     future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID&page=1&limit=40", true),
                     builder: (context, snapshot) {
@@ -182,9 +168,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                         return PostsView(posts: posts,userID: fullProfile.userId,isDonation: true);
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
-                        return PostsView(isLoading: true);
+                        return const PostsView(isLoading: true);
                       }
                     }),
               ),
@@ -278,7 +264,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                         fontColor: AppColors.primary,
                                                         bckgrndColor: getAppColor(AppColors.background),
                                                         border: Border.all(color: AppColors.primary, width: 1),
-                                                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                                         fontSize: Get.width * 0.04,
                                                         width: Get.width * 0.2,
                                                       ),
@@ -289,7 +275,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                             ),
                                             SizedBox(height: Get.height * 0.01),
                                             Padding(
-                                              padding: EdgeInsets.only(left: 15),
+                                              padding: const EdgeInsets.only(left: 15),
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
@@ -325,14 +311,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                             ),
                                             SizedBox(height: Get.height * 0.01),
                                             Padding(
-                                              padding: EdgeInsets.only(left: 15),
+                                              padding: const EdgeInsets.only(left: 15),
                                               child: Row(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
                                                   InkWell(
                                                     onTap: () {
-                                                      Get.to(() => Followers());
+                                                      Get.to(() => const Followers());
                                                     },
                                                     child: Row(
                                                       children: [
@@ -355,11 +341,11 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10),
+                                                  const SizedBox(width: 10),
 
                                                   InkWell(
                                                     onTap: () {
-                                                      Get.to(() => Following());
+                                                      Get.to(() => const Following());
                                                     },
                                                     child: Row(
                                                       children: [
@@ -382,7 +368,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                       ],
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10),
+                                                  const SizedBox(width: 10),
 
                                                   Text(
                                                     fullProfile.posts.toString(),
@@ -406,7 +392,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                             SizedBox(height: Get.height * 0.01),
                                           ],
                                         ),
-                                        stretchModes: [
+                                        stretchModes: const [
                                           StretchMode.zoomBackground,
                                           StretchMode.blurBackground,
                                         ],
@@ -416,7 +402,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                               ),
                               leading: Center(
                                 child: Padding(
-                                  padding: EdgeInsets.all(4),
+                                  padding: const EdgeInsets.all(4),
                                   child: Container(
                                     width: Get.width * 0.1,
                                     height: Get.width * 0.1,
@@ -444,9 +430,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                     iconSize: Get.width * 0.2,
                                     onSelected: (value) {
                                       if (value == 0) {
-                                        Get.to(() => Muted());
+                                        Get.to(() => const Muted());
                                       } else if (value == 1) {
-                                        Get.to(() => Blocked());
+                                        Get.to(() => const Blocked());
                                       } else if (value == 2) {
                                         //Get.to(() => Followers());
                                       }
@@ -484,7 +470,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                       ),
                                     ],
                                     child: Padding(
-                                      padding: EdgeInsets.only(top: 2.5,right: 5),
+                                      padding: const EdgeInsets.only(top: 2.5,right: 5),
                                       child: Center(
                                         child: Container(
                                           width: Get.width * 0.1,
@@ -508,12 +494,12 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                               ],
                               title: Center(
                                 child: AnimatedOpacity(
-                                  duration: Duration(milliseconds: 300),
+                                  duration: const Duration(milliseconds: 300),
                                   opacity: scrolled ? 1.0 : 0.0,
                                   child: Text(
                                     '${controller.profile.displayName} ',
                                     style: AppTextStyle.subtitle1.copyWith(
-                                      color: getAppColor(getAppColor(Color(0xff4F4F4F))),
+                                      color: getAppColor(getAppColor(const Color(0xff4F4F4F))),
                                       fontSize: Get.textScaleFactor * 18,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -534,9 +520,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                   child: Column(
                                     children: [
                                       AnimatedOpacity(
-                                        duration: Duration(milliseconds: 300),
+                                        duration: const Duration(milliseconds: 300),
                                         opacity: scrolled ? 1.0 : 0.0,
-                                        child: Divider(
+                                        child: const Divider(
                                           height: 0.5,
                                           thickness: 0.5,
                                           color: Colors.grey,
@@ -546,7 +532,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                         controller: tabController,
                                         padding: EdgeInsets.zero,
                                         labelColor: getAppColor(Colors.black),
-                                        unselectedLabelColor: Color(0xff9A9A9A),
+                                        unselectedLabelColor: const Color(0xff9A9A9A),
                                         indicatorColor: AppColors.primary,
                                         indicatorSize: TabBarIndicatorSize.tab,
                                         labelStyle: TextStyle(
@@ -557,7 +543,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                           fontSize: Get.width*0.035,
                                           fontWeight: FontWeight.w500,
                                         ),
-                                        tabs: [
+                                        tabs: const [
                                           Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
                                           Tab(text: 'Products',iconMargin: EdgeInsets.zero,),
                                           Tab(text: 'Polls',iconMargin: EdgeInsets.zero,),
@@ -568,7 +554,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                           //controller.update(['profile_page']);
                                         },
                                       ),
-                                      Divider(
+                                      const Divider(
                                         height: 0.5,
                                         thickness: 0.5,
                                         color: Colors.grey,
@@ -590,7 +576,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                         child: Builder(
                           builder: (BuildContext context) {
                             return CustomScrollView(
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               key: PageStorageKey<String>(widget.key.toString()),
                               slivers: <Widget>[
                                 SliverOverlapInjector(
@@ -610,10 +596,10 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  Get.bottomSheet(WayaBottomSheet(),isScrollControlled: true);
+                  Get.bottomSheet(const WayaBottomSheet(),isScrollControlled: true);
                 },
                 backgroundColor: AppColors.primary,
-                child: Icon(Icons.add,color: Colors.white),
+                child: const Icon(Icons.add,color: Colors.white),
               ),
             );
           }),

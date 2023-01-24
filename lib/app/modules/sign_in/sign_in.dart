@@ -17,7 +17,7 @@ import '../setup/interests.dart';
 import '../sign_up/sign_up.dart';
 
 class SignIn extends GetView<AuthControllerWayagram> {
-  SignIn({Key? key}) : super(key: key);
+  const SignIn({Key? key}) : super(key: key);
 
   static const route = '/signIn';
 
@@ -29,7 +29,7 @@ class SignIn extends GetView<AuthControllerWayagram> {
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back,
               color: Colors.black,
             ),
@@ -110,7 +110,7 @@ class SignIn extends GetView<AuthControllerWayagram> {
                         title:
                         'Forgot Password?',
                         onPressed: () {
-                          Get.to(() => EnterEmail());
+                          Get.to(() => const EnterEmail());
                         },
                         borderRadius: 10,
                         bckgrndColor: (AppColors.background),

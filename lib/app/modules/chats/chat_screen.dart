@@ -3,17 +3,11 @@ import 'dart:io';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_chat_list/chat_list.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
-import 'package:hashtager/widgets/hashtag_text_field.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:voice_message_package/voice_message_package.dart';
@@ -21,22 +15,17 @@ import 'package:wayagram/app/global_widgets/app_input.dart';
 import 'package:wayagram/app/modules/chats/chat_profile.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
-import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/chat_controller.dart';
 import '../../controllers/home_controller.dart';
-import '../../data/model/SearchHashtagsModel.dart';
-import '../../data/model/SearhPeopleModel.dart';
 import '../../data/model/full_user_profile_entity.dart';
-import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../data/socket_models/chat_list_over_view.dart';
 import '../../data/socket_models/previous_chat_model.dart' as normal_chat;
 import '../../data/socket_models/previous_chat_model.dart';
 import '../../data/socket_models/send_message_response.dart';
 import '../../global_widgets/app_avatar.dart';
-import '../../global_widgets/app_button.dart';
 import 'package:http_parser/http_parser.dart' as http_parser;
 
 import 'package:dio/dio.dart' as dio;
@@ -45,22 +34,18 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
-import '../../global_widgets/person_view.dart';
 import '../../global_widgets/smart_image.dart';
 import '../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
-import '../home/widgets/HashTagView.dart';
 import '../home/widgets/bottom_sheet.dart';
-import '../home/widgets/group_view.dart';
 
-import '../home/widgets/posts_view.dart' as post_view;
 
 
 import '../search/search.dart';
 import '../send_money/send_money.dart';
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({Key? key, required this.chatOverview}) : super(key: key);
+  const ChatScreen({Key? key, required this.chatOverview}) : super(key: key);
 
   final ChatOverview chatOverview;
   @override
@@ -103,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
       if(animate){
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.fastOutSlowIn,
         );
       }else{
@@ -267,7 +252,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             isGroup: post.isGroup == true,
                           ),
                         ),
-                        SizedBox(width: 10,),
+                        const SizedBox(width: 10,),
                         Stack(
                           alignment: Alignment.topRight,
                           children: [
@@ -420,9 +405,9 @@ class _ChatScreenState extends State<ChatScreen> {
               centerTitle: false,
               titleSpacing: 0,
               bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(1.0),
+                  preferredSize: const Size.fromHeight(1.0),
                   child: Container(
-                    color: Color(0xffEDEAEA),
+                    color: const Color(0xffEDEAEA),
                     height: 1.0,
                   )),
               systemOverlayStyle: SystemUiOverlayStyle(
@@ -484,14 +469,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                     right: 10,
                                   );
                                   if(getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile){
-                                    padding= EdgeInsets.only(
+                                    padding= const EdgeInsets.only(
                                         left: 0,
                                         right: 0,
                                         bottom: 0,
                                         top: 0);
                                   }
                                   else if((getUrlType(chat.fileUrl.toString()) == UrlType.VIDEO || getUrlType(chat.fileUrl.toString()) == UrlType.IMAGE) && isFile){
-                                    padding= EdgeInsets.only(
+                                    padding= const EdgeInsets.only(
                                         left: 5,
                                         right: 5,
                                         bottom: 5,
@@ -499,7 +484,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     );
                                   }
                                   else if(isFile){
-                                    padding= EdgeInsets.only(
+                                    padding= const EdgeInsets.only(
                                         left: 10,
                                         right: 10,
                                         bottom: 10,
@@ -575,7 +560,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(0),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
                                           ) : BoxDecoration(
                                             color: getAppColor(AppColors.background),
-                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
                                           ),
                                           child: Padding(
                                               padding: padding,
@@ -594,7 +579,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             width: double.infinity,
                                                             decoration: chat.senderId == fullProfile.id ? BoxDecoration(
                                                               color: getAppColor(AppColors.background),
-                                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
+                                                              borderRadius: const BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
                                                             ) : const BoxDecoration(
                                                               color: AppColors.button,
                                                               borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(20)),
@@ -953,14 +938,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                     right: 10,
                                   );
                                   if(getUrlType(chat.fileUrl.toString()) == UrlType.AUDIO && isFile){
-                                    padding= EdgeInsets.only(
+                                    padding= const EdgeInsets.only(
                                         left: 0,
                                         right: 0,
                                         bottom: 0,
                                         top: 0);
                                   }
                                   else if((getUrlType(chat.fileUrl.toString()) == UrlType.VIDEO || getUrlType(chat.fileUrl.toString()) == UrlType.IMAGE) && isFile){
-                                    padding= EdgeInsets.only(
+                                    padding= const EdgeInsets.only(
                                         left: 5,
                                         right: 5,
                                         bottom: 5,
@@ -968,7 +953,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     );
                                   }
                                   else if(isFile){
-                                    padding= EdgeInsets.only(
+                                    padding= const EdgeInsets.only(
                                         left: 10,
                                         right: 10,
                                         bottom: 10,
@@ -1044,7 +1029,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                             borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(0),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
                                           ) : BoxDecoration(
                                             color: getAppColor(AppColors.background),
-                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
                                           ),
                                           child: Padding(
                                               padding: padding,
@@ -1084,7 +1069,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             width: double.infinity,
                                                             decoration: chat.senderId == fullProfile.id ? BoxDecoration(
                                                               color: getAppColor(AppColors.background),
-                                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
+                                                              borderRadius: const BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(0),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10)),
                                                             ) : const BoxDecoration(
                                                               color: AppColors.button,
                                                               borderRadius: BorderRadius.only(topLeft: Radius.circular(0),topRight: Radius.circular(10),bottomLeft: Radius.circular(10),bottomRight: Radius.circular(20)),
@@ -1432,7 +1417,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 onPressed: () async {
                                   await _scrollController.animateTo(
                                     _scrollController.position.maxScrollExtent,
-                                    duration: Duration(milliseconds: 200),
+                                    duration: const Duration(milliseconds: 200),
                                     curve: Curves.easeOut,
                                   );
                                   chatController.update(['chats_screen']);
@@ -1456,7 +1441,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      color: Color(0xffEDEAEA),
+                      color: const Color(0xffEDEAEA),
                       height: 1.0,
                     ),
                     SizedBox(height: Get.height*0.008),
@@ -1489,13 +1474,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                   decorateAtSign: true,
                                 ),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               InkWell(
                                 onTap: (){
                                   chatToReply = null;
                                   chatController.update();
                                 },
-                                child: Icon(Icons.cancel_rounded, color: Colors.grey),
+                                child: const Icon(Icons.cancel_rounded, color: Colors.grey),
                               )
                             ],
                           ),
@@ -1651,7 +1636,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   }
                                 }
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 //chatTextController.text.isEmpty
                                   //  ? Icons.mic_rounded:
                               Icons.send_rounded,
@@ -1678,7 +1663,7 @@ class _ChatScreenState extends State<ChatScreen> {
     showDialog(
         context: Get.context!,
         builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Builder(
             builder: (context) {
@@ -1695,10 +1680,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       ImageHelper.svgImage(
                         failed,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text('Coming soon')
+                      const Text('Coming soon')
                     ],
                   ));
             },

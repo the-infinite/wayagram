@@ -23,7 +23,7 @@ import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
 class CreateGroup extends StatefulWidget {
-  CreateGroup({Key? key}) : super(key: key);
+  const CreateGroup({Key? key}) : super(key: key);
 
   @override
   State<CreateGroup> createState() => _CreateGroupState();
@@ -118,7 +118,7 @@ class _CreateGroupState extends State<CreateGroup> {
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
             title: Text('Create Group', style: AppTextStyle.subtitle1.copyWith(
-              color: getAppColor(Color(0xff4F4F4F)),
+              color: getAppColor(const Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -127,7 +127,7 @@ class _CreateGroupState extends State<CreateGroup> {
               icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
               onPressed: (){
                 if(currentPage == 1){
-                  pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                  pageController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                   currentPage = 0;
                   controller.update();
                 }else{
@@ -142,7 +142,7 @@ class _CreateGroupState extends State<CreateGroup> {
                   onPressed: () async {
                     if(currentPage == 0){
                       if(formKey1.currentState!.validate()) {
-                        pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                        pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                         currentPage = 1;
                         controller.update();
                       }
@@ -186,7 +186,7 @@ class _CreateGroupState extends State<CreateGroup> {
                   fontColor: AppColors.button,
                   bckgrndColor: getAppColor(AppColors.background),
                   border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                   width: Get.width * 0.2,
                 ),
               )
@@ -203,7 +203,7 @@ class _CreateGroupState extends State<CreateGroup> {
             color: getAppColor(AppColors.background),
             child: Column(
               children: [
-                Divider(
+                const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
@@ -216,7 +216,7 @@ class _CreateGroupState extends State<CreateGroup> {
                         height: Get.height*0.8,
                         child: PageView(
                           controller: pageController,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           children: [
                             Form(
                               key: formKey1,
@@ -310,7 +310,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                     PageDropButton(
                                       label: "Other Category",
                                       hint: '',
-                                      padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                      padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                                       onChanged: (val) {
                                         otherCategory.value = val!;
                                       },
@@ -327,7 +327,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                   PageDropButton(
                                     label: "Choose Privacy",
                                     hint: '',
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     onChanged: (val) {
                                       privacyController.text = val;
                                     },

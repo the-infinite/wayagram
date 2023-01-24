@@ -75,7 +75,7 @@ class _ReportProductState extends State<ReportProduct> {
             title: Text(
               title,
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -97,14 +97,14 @@ class _ReportProductState extends State<ReportProduct> {
                     onPressed: () async {
                       if(_reason == "Other"){
                         if(formKey.currentState!.validate()){
-                          await Future.delayed(Duration(seconds: 5));
+                          await Future.delayed(const Duration(seconds: 5));
                           AppOverlay.showSuccessSnackBar(content: "Product Reported Successfully");
                           if(Get.currentRoute == "/ReportProduct"){
                             Navigator.pop(context);
                           }
                         }
                       } else{
-                        await Future.delayed(Duration(seconds: 5));
+                        await Future.delayed(const Duration(seconds: 5));
                         AppOverlay.showSuccessSnackBar(content: "Product Reported Successfully");
                         if(Get.currentRoute == "/ReportProduct"){
                           Navigator.pop(context);
@@ -115,7 +115,7 @@ class _ReportProductState extends State<ReportProduct> {
                     fontColor: AppColors.button,
                     bckgrndColor: getAppColor(AppColors.background),
                     border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                     fontSize: Get.textScaleFactor * 18,
                   ),
@@ -123,9 +123,9 @@ class _ReportProductState extends State<ReportProduct> {
               )
             ],
             bottom: PreferredSize(
-                preferredSize: Size.fromHeight(1.0),
+                preferredSize: const Size.fromHeight(1.0),
                 child: Container(
-                  color: Color(0xffEDEAEA),
+                  color: const Color(0xffEDEAEA),
                   height: 1.0,
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
@@ -154,7 +154,7 @@ class _ReportProductState extends State<ReportProduct> {
                           showBuyButton: false,
                           showActions: false,
                         ),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       Padding(
                         padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02),
                         child: Text(
@@ -166,13 +166,13 @@ class _ReportProductState extends State<ReportProduct> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       RadioGroup<String>.builder(
                         groupValue: _reason,
                         onChanged: (value) => setState(() {
                           _reason = value.toString();
                         }),
-                        items: ["Inappropriate Contents", "Promoting HateFul Conducts", "Abusive", "Fraud", "Other"],
+                        items: const ["Inappropriate Contents", "Promoting HateFul Conducts", "Abusive", "Fraud", "Other"],
                         itemBuilder: (item) => RadioButtonBuilder(
                           item,
                         ),
@@ -183,7 +183,7 @@ class _ReportProductState extends State<ReportProduct> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       if(_reason == "Other")
                         Padding(
                           padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02),

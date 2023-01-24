@@ -1,36 +1,23 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/controllers/home_controller.dart';
-import 'package:wayagram/app/global_widgets/app_button.dart';
-import 'package:wayagram/app/modules/home/home.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
-import '../../controllers/auth_controller.dart';
 import '../../data/model/all_events_entity.dart';
-import '../../data/model/blocked_accounts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
-import '../../data/model/group_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
-import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/overlays.dart';
-import '../../global_widgets/person_view.dart';
 import '../home/widgets/events_view.dart';
-import '../home/widgets/group_view.dart';
-import '../home/widgets/notification_view.dart';
-import '../profile/profile.dart';
-import '../profile/update_profile.dart';
 
 class AllEvents extends StatefulWidget{
-  AllEvents({Key? key}) : super(key: key);
+  const AllEvents({Key? key}) : super(key: key);
 
   static const route = '/allEvents';
 
@@ -79,7 +66,7 @@ class _AllEventsState extends State<AllEvents> {
               },
             ),
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(0.5),
+              preferredSize: const Size.fromHeight(0.5),
               child: Container(
                 height: 0.5,
                 color: Colors.grey,
@@ -101,9 +88,11 @@ class _AllEventsState extends State<AllEvents> {
                         if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                           final moments = snapshot.data!.data as AllEventsEntity;
                           if(moments.data == null){
-                            return SizedBox.shrink();
+                            return const SizedBox.shrink();
                           }
-                          print(moments.data!.length);
+                          if (kDebugMode) {
+                            print(moments.data!.length);
+                          }
                           return EventsView(
                             moments: moments.data,
                             title: 'My Created Events',
@@ -124,7 +113,9 @@ class _AllEventsState extends State<AllEvents> {
                           var savedEvents = MyPref.createdEvents.val;
                           if(savedEvents.isNotEmpty) {
                             var events = AllEventsEntity.fromJson(jsonDecode(savedEvents));
-                            print(events.data!.length);
+                            if (kDebugMode) {
+                              print(events.data!.length);
+                            }
                             return EventsView(
                                 moments: events.data,
                               title: 'My Created Events',
@@ -146,9 +137,9 @@ class _AllEventsState extends State<AllEvents> {
                             );
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
-                              return SizedBox.shrink();
+                              return const SizedBox.shrink();
                             }
-                            return EventsView(isLoading: true);
+                            return const EventsView(isLoading: true);
                           }
                         }
                       }),
@@ -158,14 +149,14 @@ class _AllEventsState extends State<AllEvents> {
                         if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                           final moments = snapshot.data!.data as AllEventsEntity;
                           if(moments.data == null){
-                            return SizedBox.shrink();
+                            return const SizedBox.shrink();
                           }else{
                             for (var element in moments.data!) {
                               var containsLiked = element.eventLikes?.where((element) => element.profileId == fullProfile.id).toList();
                               if(containsLiked == null){
-                                return SizedBox.shrink();
+                                return const SizedBox.shrink();
                               }else if(containsLiked.isEmpty){
-                                return SizedBox.shrink();
+                                return const SizedBox.shrink();
                               }
                             }
                           }
@@ -191,9 +182,9 @@ class _AllEventsState extends State<AllEvents> {
                             for (var element in events.data!) {
                               var containsLiked = element.eventLikes?.where((element) => element.profileId == fullProfile.id).toList();
                               if(containsLiked == null){
-                                return SizedBox.shrink();
+                                return const SizedBox.shrink();
                               }else if(containsLiked.isEmpty){
-                                return SizedBox.shrink();
+                                return const SizedBox.shrink();
                               }
                             }
                             return EventsView(moments: events.data,title: 'Liked Events',onLikeClick: (event){
@@ -209,9 +200,9 @@ class _AllEventsState extends State<AllEvents> {
                             });
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
-                              return SizedBox.shrink();
+                              return const SizedBox.shrink();
                             }
-                            return EventsView(isLoading: true);
+                            return const EventsView(isLoading: true);
                           }
                         }
                       }),
@@ -221,7 +212,7 @@ class _AllEventsState extends State<AllEvents> {
                         if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                           final moments = snapshot.data!.data as AllEventsEntity;
                           if(moments.data == null){
-                            return SizedBox.shrink();
+                            return const SizedBox.shrink();
                           }
                           return EventsView(
                               moments: moments.data,
@@ -255,9 +246,9 @@ class _AllEventsState extends State<AllEvents> {
                             });
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
-                              return SizedBox.shrink();
+                              return const SizedBox.shrink();
                             }
-                            return EventsView(isLoading: true);
+                            return const EventsView(isLoading: true);
                           }
                         }
                       }),

@@ -22,7 +22,7 @@ import 'package:dio/dio.dart' as dio;
 
 
 class CreatePoll extends StatefulWidget {
-  CreatePoll({Key? key}) : super(key: key);
+  const CreatePoll({Key? key}) : super(key: key);
 
   @override
   State<CreatePoll> createState() => _CreatePollState();
@@ -72,7 +72,7 @@ class _CreatePollState extends State<CreatePoll> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text('Create Poll', style: AppTextStyle.subtitle1.copyWith(
-                  color: getAppColor(Color(0xff4F4F4F)),
+                  color: getAppColor(const Color(0xff4F4F4F)),
                   fontSize: Get.textScaleFactor * 18,
                   fontWeight: FontWeight.bold,
                 )),
@@ -83,7 +83,7 @@ class _CreatePollState extends State<CreatePoll> {
                       Text(
                         'To Group: ',
                         style: TextStyle(
-                          color: getAppColor(Color(0xff4F4F4F)),
+                          color: getAppColor(const Color(0xff4F4F4F)),
                           fontSize: Get.textScaleFactor * 14,
                           fontWeight: FontWeight.normal,
                         ),
@@ -104,7 +104,7 @@ class _CreatePollState extends State<CreatePoll> {
                       Text(
                         'To Page: ',
                         style: TextStyle(
-                          color: getAppColor(Color(0xff4F4F4F)),
+                          color: getAppColor(const Color(0xff4F4F4F)),
                           fontSize: Get.textScaleFactor * 14,
                           fontWeight: FontWeight.normal,
                         ),
@@ -125,7 +125,7 @@ class _CreatePollState extends State<CreatePoll> {
               icon: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black)),
               onPressed: () {
                 if(pageController.page?.toInt() == 1){
-                  pageController.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.ease);
+                  pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.ease);
                   pos = 0;
                   controller.update();
                 }else{
@@ -140,7 +140,7 @@ class _CreatePollState extends State<CreatePoll> {
                     title: pos == 0 ? 'Next' : 'Post',
                     onPressed: () async {
                       if(pageController.page?.toInt() == 0 && formKey1.currentState!.validate()) {
-                        pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.ease);
+                        pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.ease);
                         pos = 1;
                         controller.update();
                       } else {
@@ -240,7 +240,7 @@ class _CreatePollState extends State<CreatePoll> {
                     bckgrndColor: getAppColor(AppColors.background),
                     width: Get.width * 0.2,
                     border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
                   ),
                 ),
               )
@@ -270,7 +270,7 @@ class _CreatePollState extends State<CreatePoll> {
                         height: Get.height * 0.9,
                         child: PageView(
                           controller: pageController,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           children: [
                             Form(
                               key: formKey1,
@@ -282,7 +282,7 @@ class _CreatePollState extends State<CreatePoll> {
                                   PageDropButton(
                                     label: "Poll Category",
                                     hint: '',
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     onChanged: (val) {
                                       //controller.state.value = ;
                                       if(val.toString().contains('Text')) {
@@ -367,7 +367,7 @@ class _CreatePollState extends State<CreatePoll> {
                                     children: [
                                       DateButton<DateTime>(
                                         label: 'End Date',
-                                        date: DateTime.now().add(Duration(days: 1)),
+                                        date: DateTime.now().add(const Duration(days: 1)),
                                         initialValue: DateTime.now(),
                                         validator: (date){
                                           if(date == null){
@@ -379,8 +379,8 @@ class _CreatePollState extends State<CreatePoll> {
                                       ),
                                       DateButton<TimeOfDay>(
                                         label: 'End Time',
-                                        time: TimeOfDay(hour: 23, minute: 59),
-                                        initialValue: TimeOfDay(hour: 23, minute: 59),
+                                        time: const TimeOfDay(hour: 23, minute: 59),
+                                        initialValue: const TimeOfDay(hour: 23, minute: 59),
                                         validator: (date){
                                           if(date == null){
                                             return 'Required';
@@ -395,7 +395,7 @@ class _CreatePollState extends State<CreatePoll> {
                                   PageDropButton(
                                     label: "Poll Visibility",
                                     hint: '',
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     onChanged: (val) {
                                       //controller.state.value = ;
                                     },
@@ -438,7 +438,7 @@ class _CreatePollState extends State<CreatePoll> {
                                     Padding(
                                       padding: EdgeInsets.only(left: Get.width*0.02,bottom: Get.height*0.008),
                                       child: Text('Add Option', style: AppTextStyle.subtitle1.copyWith(
-                                        color: getAppColor(Color(0xff4F4F4F)),
+                                        color: getAppColor(const Color(0xff4F4F4F)),
                                         fontSize: Get.textScaleFactor * 14,
                                         fontWeight: FontWeight.bold,
                                       )),
@@ -464,7 +464,7 @@ class _CreatePollState extends State<CreatePoll> {
                                   child: Expanded(
                                     child: ListView.builder(
                                       itemCount: allTextOptions.length,
-                                      padding: EdgeInsets.all(0),
+                                      padding: const EdgeInsets.all(0),
                                       itemBuilder: (context, index){
                                         return Padding(
                                           padding: EdgeInsets.only(bottom: Get.height*0.02),
@@ -501,19 +501,19 @@ class _CreatePollState extends State<CreatePoll> {
                                                           width: Get.width*0.3,
                                                           decoration: BoxDecoration(
                                                             color: getAppColor(AppColors.background),
-                                                            border: Border.all(color: Color(0xFF828282)),
-                                                            borderRadius: BorderRadius.only(
+                                                            border: Border.all(color: const Color(0xFF828282)),
+                                                            borderRadius: const BorderRadius.only(
                                                               bottomRight: Radius.circular(10),
                                                               topRight: Radius.circular(10),
                                                             ),
                                                           ),
                                                           child: Center(
                                                             child: Padding(
-                                                              padding: EdgeInsets.all(2.0),
+                                                              padding: const EdgeInsets.all(2.0),
                                                               child: Text(
                                                                 images[index].isEmpty ? 'Pick Image' : images[index].split('/').last,
                                                                 style: AppTextStyle.subtitle1.copyWith(
-                                                                color: getAppColor(Color(0xff4F4F4F)),
+                                                                color: getAppColor(const Color(0xff4F4F4F)),
                                                                 fontSize: Get.textScaleFactor * 12,
                                                                 fontWeight: FontWeight.bold,
                                                               ),
@@ -571,12 +571,12 @@ class _CreatePollState extends State<CreatePoll> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Divider(
+                  const Divider(
                     height: 0.5,
                     thickness: 0.5,
                     color: Colors.grey,
                   ),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   Text(
                     "By creating, you agree with our terms and conditions \nof poll creation",
                     style: TextStyle(
@@ -587,7 +587,7 @@ class _CreatePollState extends State<CreatePoll> {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                 ],
               ),
             ),

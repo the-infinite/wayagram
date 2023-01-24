@@ -39,7 +39,7 @@ import '../home/widgets/bottom_sheet.dart';
 import '../home/widgets/posts_view.dart';
 
 class PromotePost extends StatefulWidget {
-  PromotePost({Key? key,required this.post}) : super(key: key);
+  const PromotePost({Key? key,required this.post}) : super(key: key);
 
   final AllPostsEntity post;
 
@@ -69,7 +69,7 @@ class _PromotePostState extends State<PromotePost> {
   var accountTextController = TextEditingController();
   var pinTextController = TextEditingController();
 
-  RangeValues currentRangeValues = RangeValues(0, 100);
+  RangeValues currentRangeValues = const RangeValues(0, 100);
 
 
   List<String> selectedStates = [];
@@ -594,7 +594,7 @@ class _PromotePostState extends State<PromotePost> {
             title: Text(
               "Promote Post",
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -609,9 +609,9 @@ class _PromotePostState extends State<PromotePost> {
                 child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
-                preferredSize: Size.fromHeight(1.0),
+                preferredSize: const Size.fromHeight(1.0),
                 child: Container(
-                  color: Color(0xffEDEAEA),
+                  color: const Color(0xffEDEAEA),
                   height: 1.0,
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
@@ -628,7 +628,7 @@ class _PromotePostState extends State<PromotePost> {
             color: getAppColor(AppColors.background),
             child: PageView(
               controller: pageController,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: Get.width*0.008,right: Get.width*0.008),
@@ -649,9 +649,9 @@ class _PromotePostState extends State<PromotePost> {
                               border: Border.all(color: Color(0xffEDEAEA), width: 1),
                             ),
                           ),*/
-                          SizedBox(height: 10,),
+                          const SizedBox(height: 10,),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Text(
                               "Customize Your Audience",
                               style: TextStyle(
@@ -665,7 +665,7 @@ class _PromotePostState extends State<PromotePost> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Text(
                               "Promote your post to reach more people and boost engagements",
                               style: TextStyle(
@@ -680,7 +680,7 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height*0.04),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: PageInput(
                               hint: 'Click to select one or more states',
                               label: 'Select Location To Target',
@@ -704,7 +704,7 @@ class _PromotePostState extends State<PromotePost> {
                                         color: getAppColor(AppColors.onBackground)
                                       ),
                                     ),
-                                    submitButtonChild: Text(
+                                    submitButtonChild: const Text(
                                       'Done',
                                       style: TextStyle(
                                         fontSize: 16,
@@ -735,11 +735,11 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height * 0.025),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: PageDropButton(
                               label: "Select Gender To Target",
                               hint: 'Select Gender',
-                              padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                               onChanged: (val) {
                                 genderTextController.text = val;
                               },
@@ -754,7 +754,7 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height * 0.025),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: PageInput(
                               hint: 'Click to select promotion goals',
                               label: 'Goals',
@@ -778,7 +778,7 @@ class _PromotePostState extends State<PromotePost> {
                                           color: getAppColor(AppColors.onBackground)
                                       ),
                                     ),
-                                    submitButtonChild: Text(
+                                    submitButtonChild: const Text(
                                       'Done',
                                       style: TextStyle(
                                         fontSize: 16,
@@ -809,7 +809,7 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height * 0.025),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: PageInput(
                               hint: 'Click to select promotion interests',
                               label: 'Select Interests',
@@ -833,7 +833,7 @@ class _PromotePostState extends State<PromotePost> {
                                             color: getAppColor(AppColors.onBackground)
                                         ),
                                       ),
-                                      submitButtonChild: Text(
+                                      submitButtonChild: const Text(
                                         'Done',
                                         style: TextStyle(
                                           fontSize: 16,
@@ -865,11 +865,11 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height * 0.025),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: PageDropButton(
                               label: "Select Interval",
                               hint: 'Select Interval',
-                              padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                               onChanged: (val) {
                                 intervalTextController.text = val.toString();
                                 reachTextController.text = priceMap[intervalTextController.text]!.first.toString();
@@ -886,11 +886,11 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height * 0.025),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: PageDropButton(
                               label: "Select Reach",
                               hint: 'Select Reach',
-                              padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                               onChanged: (val) {
                                 reachTextController.text = val.toString();
                               },
@@ -905,7 +905,7 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height * 0.025),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: PageInput(
                               hint: '',
                               label: 'Quantity',
@@ -931,12 +931,12 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height * 0.025),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 13),
+                            padding: const EdgeInsets.symmetric(horizontal: 13),
                             child: Text(
                               "Select Age Range",
                               style: AppTextStyle.bodyText2.copyWith(
                                 fontWeight: FontWeight.w400,
-                                color: Color(0xFF828282),
+                                color: const Color(0xFF828282),
                               ),
                             ),
                           ),
@@ -954,14 +954,14 @@ class _PromotePostState extends State<PromotePost> {
                             },
                           ),
 
-                          SizedBox(height: 40),
+                          const SizedBox(height: 40),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: AppButton(
                               title: 'Next',
                               onPressed: () {
                                 if(formKey.currentState!.validate()){
-                                  pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
+                                  pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
                                 }
                               },
                               borderRadius: 10,
@@ -970,7 +970,7 @@ class _PromotePostState extends State<PromotePost> {
                               width: double.infinity,
                               fontSize: Get.textScaleFactor * 18,
                               border: Border.all(color: AppColors.primary, width: 1),
-                              padding: EdgeInsets.symmetric(vertical: 12),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
                           ),
                           SizedBox(height: Get.height * 0.050),
@@ -985,9 +985,9 @@ class _PromotePostState extends State<PromotePost> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        SizedBox(height: 10,),
+                        const SizedBox(height: 10,),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
                             "Promotion Post Review",
                             style: TextStyle(
@@ -1001,7 +1001,7 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
                             "Review your promotion post",
                             style: TextStyle(
@@ -1017,7 +1017,7 @@ class _PromotePostState extends State<PromotePost> {
                         SizedBox(height: Get.height*0.04),
 
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
                             "Overview",
                             style: TextStyle(
@@ -1035,7 +1035,7 @@ class _PromotePostState extends State<PromotePost> {
                             subtitle: "NGN ${int.parse(reachTextController.text)*int.parse(quantityTextController.text)} over ${quantityTextController.text} day"
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
                             "Estimated reach of ${promotionPricingModelList.firstWhere((element) => element.interval == intervalTextController.text).totalReach} persons per day",
                             style: TextStyle(
@@ -1055,7 +1055,7 @@ class _PromotePostState extends State<PromotePost> {
                         SizedBox(height: Get.height*0.02),
 
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
                             "Audience",
                             style: TextStyle(
@@ -1087,7 +1087,7 @@ class _PromotePostState extends State<PromotePost> {
                         SizedBox(height: Get.height*0.02),
 
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
                             "Promotion Goals",
                             style: TextStyle(
@@ -1108,11 +1108,11 @@ class _PromotePostState extends State<PromotePost> {
                         SizedBox(height: Get.height*0.04),
 
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: AppButton(
                             title: 'Continue to Payment',
                             onPressed: () {
-                              pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
+                              pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
                             },
                             borderRadius: 10,
                             fontColor: getAppColor(AppColors.background),
@@ -1120,7 +1120,7 @@ class _PromotePostState extends State<PromotePost> {
                             width: double.infinity,
                             fontSize: Get.textScaleFactor * 18,
                             border: Border.all(color: AppColors.primary, width: 1),
-                            padding: EdgeInsets.symmetric(vertical: 12),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
                         ),
 
@@ -1137,9 +1137,9 @@ class _PromotePostState extends State<PromotePost> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          SizedBox(height: 10,),
+                          const SizedBox(height: 10,),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Text(
                               "Payment Overview",
                               style: TextStyle(
@@ -1155,7 +1155,7 @@ class _PromotePostState extends State<PromotePost> {
 
                           SizedBox(height: Get.height*0.04),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Text(
                               "Overview",
                               style: TextStyle(
@@ -1191,7 +1191,7 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height*0.02),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Text(
                               "Account Details",
                               style: TextStyle(
@@ -1206,7 +1206,7 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height*0.02),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
                             child: PageInput(
                               hint: 'Click to select account',
                               label: 'Account To Debit',
@@ -1236,7 +1236,7 @@ class _PromotePostState extends State<PromotePost> {
                           ),
                           SizedBox(height: Get.height*0.02),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
                             child: PageInput(
                               hint: 'Enter account pin',
                               label: 'PIN',
@@ -1261,9 +1261,9 @@ class _PromotePostState extends State<PromotePost> {
                             ),
                           ),
 
-                          SizedBox(height: 40),
+                          const SizedBox(height: 40),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: AppButton(
                               title: 'Confirm Payment',
                               onPressed: () async {
@@ -1313,7 +1313,7 @@ class _PromotePostState extends State<PromotePost> {
                               width: double.infinity,
                               fontSize: Get.textScaleFactor * 18,
                               border: Border.all(color: AppColors.primary, width: 1),
-                              padding: EdgeInsets.symmetric(vertical: 12),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
                           ),
                           SizedBox(height: Get.height * 0.050),
@@ -1332,12 +1332,12 @@ class _PromotePostState extends State<PromotePost> {
 
   Padding widgetAnalyticsWidget(String title, String subtitle, String amount) {
     return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: Container(
                       decoration: BoxDecoration(
                         color: getAppColor(AppColors.background),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Color(0xffEDEAEA), width: 1),
+                        border: Border.all(color: const Color(0xffEDEAEA), width: 1),
                       ),
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: Get.width*0.025,vertical: Get.height*0.01),
@@ -1375,7 +1375,7 @@ class _PromotePostState extends State<PromotePost> {
                             Text(
                               amount,
                               style: TextStyle(
-                                color: getAppColor(Color(0xff4F4F4F)),
+                                color: getAppColor(const Color(0xff4F4F4F)),
                                 fontSize: Get.textScaleFactor * 15,
                                 fontWeight: FontWeight.normal,
                               ),
@@ -1392,7 +1392,7 @@ class _PromotePostState extends State<PromotePost> {
 }
 
 class OverViewWidget extends StatelessWidget {
-  OverViewWidget({
+  const OverViewWidget({
     Key? key,
     required this.subtitle,
     required this.title,
@@ -1406,7 +1406,7 @@ class OverViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 5),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

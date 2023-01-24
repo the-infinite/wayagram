@@ -1,16 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:intl/intl.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:wayagram/app/global_widgets/app_avatar.dart';
-import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -22,17 +16,15 @@ import '../../../data/model/GroupInvites.dart';
 import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/notification_model_entity.dart';
 import '../../../data/model/page_invites.dart';
-import '../../../data/model/products_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/helpers/dark_mode_helper.dart';
 import '../../profile/other_profile.dart';
 import '../../search/search.dart';
 import '../widgets/notification_view.dart';
-import '../widgets/product_view.dart';
 
 class NotificationsTab extends StatefulWidget {
-  NotificationsTab({Key? key}) : super(key: key);
+  const NotificationsTab({Key? key}) : super(key: key);
 
   @override
   State<NotificationsTab> createState() => _NotificationsTabState();
@@ -87,19 +79,19 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                   controller: tabController,
                   padding: EdgeInsets.zero,
                   labelColor: Colors.black,
-                  unselectedLabelColor: Color(0xff9A9A9A),
+                  unselectedLabelColor: const Color(0xff9A9A9A),
                   indicatorColor: AppColors.primary,
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelPadding: EdgeInsets.only(left: Get.width * 0.02),
                   indicatorPadding: EdgeInsets.zero,
-                  tabs: [
+                  tabs: const [
                     Tab(text: 'Friend',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Events',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Groups',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Pages',iconMargin: EdgeInsets.zero,),
                   ],
                 ),
-                Divider(
+                const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
@@ -123,12 +115,12 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                           height: Get.height*0.7,
-                                            child: Center(child: Text('No Friend Requests'),));
+                                            child: const Center(child: Text('No Friend Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
+                                        physics: const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
@@ -163,7 +155,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10,),
+                                                  const SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -252,12 +244,12 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Friend Requests'),));
+                                            child: const Center(child: Text('No Friend Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
+                                        physics: const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
@@ -292,7 +284,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10,),
+                                                  const SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -380,7 +372,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(snapshot.connectionState == ConnectionState.done){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Friend Requests'),));
+                                            child: const Center(child: Text('No Friend Requests'),));
                                       }
                                       return NotificationView(isLoading: true);
                                     }
@@ -403,12 +395,12 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Events Requests'),));
+                                            child: const Center(child: Text('No Events Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
+                                        physics: const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
@@ -443,7 +435,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10,),
+                                                  const SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -532,12 +524,12 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Events Requests'),));
+                                            child: const Center(child: Text('No Events Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
+                                        physics: const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
@@ -572,7 +564,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10,),
+                                                  const SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -660,7 +652,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(snapshot.connectionState == ConnectionState.done){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Events Requests'),));
+                                            child: const Center(child: Text('No Events Requests'),));
                                       }
                                       return NotificationView(isLoading: true);
                                     }
@@ -683,12 +675,12 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Group Requests'),));
+                                            child: const Center(child: Text('No Group Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
+                                        physics: const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
@@ -723,7 +715,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10,),
+                                                  const SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -818,12 +810,12 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Group Requests'),));
+                                            child: const Center(child: Text('No Group Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
+                                        physics: const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
@@ -858,7 +850,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10,),
+                                                  const SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -952,7 +944,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(snapshot.connectionState == ConnectionState.done){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Group Requests'),));
+                                            child: const Center(child: Text('No Group Requests'),));
                                       }
                                       return NotificationView(isLoading: true);
                                     }
@@ -975,12 +967,12 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Page Requests'),));
+                                            child: const Center(child: Text('No Page Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
+                                        physics: const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
@@ -1015,7 +1007,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10,),
+                                                  const SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -1110,12 +1102,12 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(posts.isEmpty){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Page Requests'),));
+                                            child: const Center(child: Text('No Page Requests'),));
                                       }
                                       return ListView.builder(
                                         itemCount: posts.length,
                                         shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
+                                        physics: const NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           var post = posts[index];
                                           return InkWell(
@@ -1150,7 +1142,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                       imgUrl: post.profile!.avatar.toString(),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10,),
+                                                  const SizedBox(width: 10,),
                                                   Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
@@ -1244,7 +1236,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                       if(snapshot.connectionState == ConnectionState.done){
                                         return SizedBox(
                                             height: Get.height*0.7,
-                                            child: Center(child: Text('No Page Requests'),));
+                                            child: const Center(child: Text('No Page Requests'),));
                                       }
                                       return NotificationView(isLoading: true);
                                     }

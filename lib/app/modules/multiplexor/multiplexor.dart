@@ -1,14 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:wayagram/app/data/providers/my_pref.dart';
 import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
-import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
@@ -20,7 +18,7 @@ import '../../global_widgets/app_button.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 
 class Multiplexor extends StatefulWidget {
-  Multiplexor({Key? key,this.anotherApp = false,this.token = "",this.currentApp = "wayagram"}) : super(key: key);
+  const Multiplexor({Key? key,this.anotherApp = false,this.token = "",this.currentApp = "wayagram"}) : super(key: key);
 
   static const route = '/multiplexor';
   final bool anotherApp;
@@ -191,7 +189,7 @@ class _MultiplexorState extends State<Multiplexor> {
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children:[
+                              children: const [
                                 CircularProgressIndicator(
                                   color: AppColors.primary,
                                 ),

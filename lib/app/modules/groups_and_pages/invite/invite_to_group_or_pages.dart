@@ -3,33 +3,23 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:story_view/controller/story_controller.dart';
-import 'package:story_view/utils.dart';
-import 'package:story_view/widgets/story_view.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
-import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/followers_model_entity.dart';
-import '../../../data/model/following_model_entity.dart';
 import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/group_model_entity.dart';
-import '../../../data/model/moments_model_entity.dart';
-import '../../../data/model/posts_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
-import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/notification_view.dart';
 
 class InviteToGroupOrPage extends StatelessWidget {
-  InviteToGroupOrPage({Key? key,this.isGroup = false, this.isPage = false,this.group,this.page}) : super(key: key);
+  const InviteToGroupOrPage({Key? key,this.isGroup = false, this.isPage = false,this.group,this.page}) : super(key: key);
 
   final bool isGroup;
   final bool isPage;
@@ -53,13 +43,13 @@ class InviteToGroupOrPage extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
             title: Text(isPage ? "Invite To Page" : "Invite To Group", style: AppTextStyle.subtitle1.copyWith(
-              color: getAppColor(Color(0xff4F4F4F)),
+              color: getAppColor(const Color(0xff4F4F4F)),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+              icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
               onPressed: () => Navigator.pop(context),
             ),
             systemOverlayStyle: SystemUiOverlayStyle(

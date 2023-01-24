@@ -1,46 +1,29 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:hashtager/widgets/hashtag_text_field.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
-import '../../../../core/theme/app_styles.dart';
 import '../../controllers/chat_controller.dart';
 import '../../controllers/home_controller.dart';
-import '../../data/model/CommentModel.dart';
-import '../../data/model/DonationsModel.dart';
-import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
-import '../../data/model/promotion_pricing_model.dart';
 import '../../data/model/wallet_model.dart';
-import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../data/socket_models/chat_list_over_view.dart';
 import '../../data/socket_models/send_message_response.dart';
-import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/app_button.dart';
 
-import 'package:dio/dio.dart' as dio;
 
-import '../../global_widgets/app_input.dart';
-import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_input.dart';
 import '../home/widgets/bottom_sheet.dart';
-import '../home/widgets/posts_view.dart';
-import '../promotion/promote_post.dart';
 
 class SendMoney extends StatefulWidget {
-  SendMoney({Key? key,required this.userIDToSendTo, required this.userDisplayName, this.post}) : super(key: key);
+  const SendMoney({Key? key,required this.userIDToSendTo, required this.userDisplayName, this.post}) : super(key: key);
 
   final String userIDToSendTo;
   final String userDisplayName;
@@ -94,7 +77,7 @@ class _SendMoneyState extends State<SendMoney> {
                 Text(
                   "Send Money",
                   style: TextStyle(
-                    color: getAppColor(Color(0xff4F4F4F)),
+                    color: getAppColor(const Color(0xff4F4F4F)),
                     fontSize: Get.textScaleFactor * 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -105,7 +88,7 @@ class _SendMoneyState extends State<SendMoney> {
                 Text(
                   "Send money to ${widget.userDisplayName}",
                   style: TextStyle(
-                    color: getAppColor(Color(0xff4F4F4F)),
+                    color: getAppColor(const Color(0xff4F4F4F)),
                     fontSize: Get.textScaleFactor * 14,
                     fontWeight: FontWeight.normal,
                   ),
@@ -122,9 +105,9 @@ class _SendMoneyState extends State<SendMoney> {
                 child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
-                preferredSize: Size.fromHeight(1.0),
+                preferredSize: const Size.fromHeight(1.0),
                 child: Container(
-                  color: Color(0xffEDEAEA),
+                  color: const Color(0xffEDEAEA),
                   height: 1.0,
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
@@ -147,7 +130,7 @@ class _SendMoneyState extends State<SendMoney> {
                     children: [
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Enter amount to send',
                           label: 'Amount',
@@ -165,7 +148,7 @@ class _SendMoneyState extends State<SendMoney> {
                       ),
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Add description(optional)',
                           label: 'Description',
@@ -176,7 +159,7 @@ class _SendMoneyState extends State<SendMoney> {
                       ),
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Click to select account',
                           label: 'Account To Debit',
@@ -206,7 +189,7 @@ class _SendMoneyState extends State<SendMoney> {
                       ),
                       SizedBox(height: Get.height*0.02),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: PageInput(
                           hint: 'Enter account pin',
                           label: 'PIN',
@@ -231,9 +214,9 @@ class _SendMoneyState extends State<SendMoney> {
                         ),
                       ),
 
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: AppButton(
                           title: 'Send Money',
                           onPressed: () async {
@@ -288,10 +271,10 @@ class _SendMoneyState extends State<SendMoney> {
                           width: double.infinity,
                           fontSize: Get.textScaleFactor * 18,
                           border: Border.all(color: AppColors.primary, width: 1),
-                          padding: EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      const SizedBox(height: 5,),
                     ],
                   ),
                 ),
@@ -305,12 +288,12 @@ class _SendMoneyState extends State<SendMoney> {
 
   Padding widgetAnalyticsWidget(String title, String subtitle, String amount) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Container(
         decoration: BoxDecoration(
           color: getAppColor(AppColors.background),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Color(0xffEDEAEA), width: 1),
+          border: Border.all(color: const Color(0xffEDEAEA), width: 1),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: Get.width*0.025,vertical: Get.height*0.01),
@@ -348,7 +331,7 @@ class _SendMoneyState extends State<SendMoney> {
               Text(
                 amount,
                 style: TextStyle(
-                  color: getAppColor(Color(0xff4F4F4F)),
+                  color: getAppColor(const Color(0xff4F4F4F)),
                   fontSize: Get.textScaleFactor * 15,
                   fontWeight: FontWeight.normal,
                 ),

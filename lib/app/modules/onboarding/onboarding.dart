@@ -16,7 +16,7 @@ import 'onboarding_item.dart';
 CarouselController buttonCarouselController = CarouselController();
 
 class OnboardingPage extends StatefulWidget {
-  OnboardingPage({Key? key}) : super(key: key);
+  const OnboardingPage({Key? key}) : super(key: key);
   static const route = '/onboarding';
 
   @override
@@ -47,7 +47,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () {
-                          Get.to(() => Multiplexor(),binding: WayagramBinding());
+                          Get.to(() => const Multiplexor(),binding: WayagramBinding());
                         },
                         child: Text(
                           'Skip',
@@ -55,7 +55,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Expanded(
@@ -113,7 +113,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ),
                           ],
                         ),
-                        separatorBuilder: (context, index) => SizedBox(
+                        separatorBuilder: (context, index) => const SizedBox(
                           width: 5,
                         ),
                         itemCount: 7,
@@ -127,7 +127,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       onPressed: (){
                         buttonCarouselController.nextPage();
                         if (currentIndex == 6) {
-                          Get.to(() => Multiplexor(),binding: WayagramBinding());
+                          Get.to(() => const Multiplexor(),binding: WayagramBinding());
                         }
                       },
                       borderRadius: 360,

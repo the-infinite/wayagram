@@ -2,32 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/app/controllers/home_controller.dart';
-import 'package:wayagram/app/global_widgets/app_button.dart';
-import 'package:wayagram/app/modules/home/home.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
-import '../../controllers/auth_controller.dart';
-import '../../data/model/blocked_accounts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/group_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
-import '../../global_widgets/app_avatar.dart';
-import '../../global_widgets/person_view.dart';
 import '../home/widgets/group_view.dart';
-import '../home/widgets/notification_view.dart';
-import '../profile/profile.dart';
-import '../profile/update_profile.dart';
 
 class GroupsAndPages extends StatefulWidget{
-  GroupsAndPages({Key? key}) : super(key: key);
+  const GroupsAndPages({Key? key}) : super(key: key);
 
   static const route = '/groupsAndPages';
 
@@ -94,7 +83,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Divider(
+                const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
@@ -103,7 +92,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                   controller: tabController,
                   padding: EdgeInsets.zero,
                   labelColor: getAppColor(Colors.black),
-                  unselectedLabelColor: Color(0xff9A9A9A),
+                  unselectedLabelColor: const Color(0xff9A9A9A),
                   indicatorColor: AppColors.primary,
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelStyle: TextStyle(
@@ -114,7 +103,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                     fontSize: Get.width*0.035,
                     fontWeight: FontWeight.w500,
                   ),
-                  tabs: [
+                  tabs: const [
                     Tab(text: 'Groups',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Pages',iconMargin: EdgeInsets.zero,),
                   ],
@@ -122,7 +111,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
 
                   },
                 ),
-                Divider(
+                const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
@@ -136,14 +125,14 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   bottom: 10,
                                   top: 10
                               ),
                               child: Container(
                                 color: getAppColor(Colors.blue.shade50),
                                 width: Get.width,
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Text(
                                   'My Created Groups',
                                   style: AppTextStyle.headline4.copyWith(
@@ -176,14 +165,14 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                   }
                                 }),
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   bottom: 10,
                                   top: 10
                               ),
                               child: Container(
                                 color: getAppColor(Colors.blue.shade50),
                                 width: Get.width,
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Text(
                                   'Joined Groups',
                                   style: AppTextStyle.headline4.copyWith(
@@ -216,14 +205,14 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                   }
                                 }),
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   bottom: 10,
                                   top: 10
                               ),
                               child: Container(
                                 color: getAppColor(Colors.blue.shade50),
                                 width: Get.width,
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Text(
                                   'Groups To Join',
                                   style: AppTextStyle.headline4.copyWith(
@@ -287,14 +276,14 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                   }
                                 }),
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   bottom: 10,
                                   top: 10
                               ),
                               child: Container(
                                 color: getAppColor(Colors.blue.shade50),
                                 width: Get.width,
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Text(
                                   'All Groups',
                                   style: AppTextStyle.headline4.copyWith(
@@ -379,14 +368,14 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   bottom: 10,
                                   top: 10
                               ),
                               child: Container(
                                 color: getAppColor(Colors.blue.shade50),
                                 width: Get.width,
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Text(
                                   'My Pages',
                                   style: AppTextStyle.headline4.copyWith(
@@ -410,20 +399,20 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     return GroupView(posts: posts,isGroup: false,isJoined: true);
                                   }else{
                                     if(snapshot.connectionState == ConnectionState.done){
-                                      return SizedBox.shrink();
+                                      return const SizedBox.shrink();
                                     }
                                     return GroupView(isLoading: true);
                                   }
                                 }),
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   bottom: 10,
                                   top: 10
                               ),
                               child: Container(
                                 color: getAppColor(Colors.blue.shade50),
                                 width: Get.width,
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Text(
                                   'Pages To Follow',
                                   style: AppTextStyle.headline4.copyWith(
@@ -476,20 +465,20 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     },minimum: 5);
                                   }else{
                                     if(snapshot.connectionState == ConnectionState.done){
-                                      return SizedBox.shrink();
+                                      return const SizedBox.shrink();
                                     }
                                     return GroupView(isLoading: true,isGroup: false,);
                                   }
                                 }),
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   bottom: 10,
                                   top: 10
                               ),
                               child: Container(
                                 color: getAppColor(Colors.blue.shade50),
                                 width: Get.width,
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Text(
                                   'All Pages',
                                   style: AppTextStyle.headline4.copyWith(
@@ -551,7 +540,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     });
                                   }else{
                                     if(snapshot.connectionState == ConnectionState.done){
-                                      return SizedBox.shrink();
+                                      return const SizedBox.shrink();
                                     }
                                     return GroupView(isLoading: true,isGroup: false,);
                                   }

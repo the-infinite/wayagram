@@ -3,18 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
-import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../core/theme/app_styles.dart';
-import '../../../core/theme/app_themes.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/SearchPeopleResponse.dart';
 import '../../data/model/followers_model_entity.dart';
@@ -24,17 +20,13 @@ import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/app_refresher.dart';
-import '../../global_widgets/document_picker.dart';
 import '../../global_widgets/overlays.dart';
-import '../../global_widgets/page_dropdown.dart';
-import '../../global_widgets/page_input.dart';
-import 'package:dio/dio.dart' as dio;
 
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../profile/other_profile.dart';
 
 class Contact extends StatefulWidget {
-  Contact({Key? key}) : super(key: key);
+  const Contact({Key? key}) : super(key: key);
 
   static const route = '/contact';
 
@@ -67,7 +59,7 @@ class _ContactState extends State<Contact> {
                   systemNavigationBarIconBrightness: getAppBrightness()
               ),
               leading: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back,
                   color: Colors.black,
                 ),
@@ -116,7 +108,7 @@ class _ContactState extends State<Contact> {
                                 color: Colors.grey.withOpacity(.2),
                                 spreadRadius: 1,
                                 blurRadius: 1,
-                                offset: Offset(0, 1), // changes position of shadow
+                                offset: const Offset(0, 1), // changes position of shadow
                               ),
                             ],
                           ),
@@ -159,7 +151,7 @@ class _ContactState extends State<Contact> {
                                     fontColor: getAppColor(AppColors.background),
                                     bckgrndColor: AppColors.primary,
                                     border: Border.all(color: AppColors.primary, width: 1),
-                                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                                     fontSize: Get.width * 0.04,
                                     width: Get.width * 0.25,
                                   ),
@@ -244,7 +236,7 @@ class _ContactState extends State<Contact> {
                               return Container();
                             }
                             return Container(
-                              margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                              margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -269,7 +261,7 @@ class _ContactState extends State<Contact> {
                                         width: Get.width*0.5,
                                         child: Text(
                                           person.displayName,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Colors.black ,
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,

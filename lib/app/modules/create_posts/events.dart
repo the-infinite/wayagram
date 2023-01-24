@@ -52,8 +52,8 @@ class CreateEvent extends StatelessWidget {
 
     DateTime startDate = DateTime.now();
     TimeOfDay startTime = TimeOfDay.now();
-    DateTime endDate = DateTime.now().add(Duration(days: 1));
-    TimeOfDay endTime = TimeOfDay(hour: 23, minute: 59);
+    DateTime endDate = DateTime.now().add(const Duration(days: 1));
+    TimeOfDay endTime = const TimeOfDay(hour: 23, minute: 59);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -101,7 +101,7 @@ class CreateEvent extends StatelessWidget {
                     onPressed: () async {
                       if(formKey1.currentState!.validate()) {
                         if(currentPage < 3){
-                          pageController.animateToPage(currentPage+1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+                          pageController.animateToPage(currentPage+1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                           currentPage++;
                           controller.update(['create_event']);
                         }else{
@@ -238,7 +238,7 @@ class CreateEvent extends StatelessWidget {
                                   PageDropButton(
                                     label: "Is the event private or public?",
                                     hint: '',
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     onChanged: (val) {
                                       privacyController.text = val;
                                     },
@@ -290,7 +290,7 @@ class CreateEvent extends StatelessWidget {
                                   PageDropButton(
                                     label: "Event Type",
                                     hint: '',
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     onChanged: (val) {
                                       eventsTypeController.text = val;
                                       controller.update(['create_event']);
@@ -327,7 +327,7 @@ class CreateEvent extends StatelessWidget {
                                   PageDropButton(
                                     label: "Free to attend or paid event?",
                                     hint: '',
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     onChanged: (val) {
                                       freeOrPaidController.text = val;
                                       controller.update(['create_event']);
@@ -443,7 +443,7 @@ class CreateEvent extends StatelessWidget {
                                     children: [
                                       DateButton<DateTime>(
                                         label: 'End Date',
-                                        date: DateTime.now().add(Duration(days: 1)),
+                                        date: DateTime.now().add(const Duration(days: 1)),
                                         initialValue: DateTime.now(),
                                         validator: (date){
                                           if(date == null){
@@ -459,8 +459,8 @@ class CreateEvent extends StatelessWidget {
                                       ),
                                       DateButton<TimeOfDay>(
                                         label: 'End Time',
-                                        time: TimeOfDay(hour: 23, minute: 59),
-                                        initialValue: TimeOfDay(hour: 23, minute: 59),
+                                        time: const TimeOfDay(hour: 23, minute: 59),
+                                        initialValue: const TimeOfDay(hour: 23, minute: 59),
                                         validator: (date){
                                           if(date == null){
                                             return 'Required';
@@ -568,7 +568,7 @@ class CreateEvent extends StatelessWidget {
                                                 padding: EdgeInsets.only(top: Get.height*0.01),
                                                 child: Row(
                                                   children: [
-                                                    Icon(
+                                                    const Icon(
                                                       Icons.error,
                                                       color: Colors.red,
                                                       size: 16,
@@ -658,7 +658,7 @@ class _TextButton extends StatelessWidget {
   final Widget leading;
   final String text;
   final Function() onPressed;
-  _TextButton({required this.text, required this.onPressed, required this.leading});
+  const _TextButton({required this.text, required this.onPressed, required this.leading});
 
   @override
   Widget build(BuildContext context) {
@@ -668,7 +668,7 @@ class _TextButton extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: Get.height*0.018),
         child: Row(children: [
           leading,
-          SizedBox(
+          const SizedBox(
             width: 15,
           ),
           Expanded(

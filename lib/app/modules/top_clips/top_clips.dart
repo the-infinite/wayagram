@@ -32,7 +32,7 @@ import '../../global_widgets/page_input.dart';
 import '../home/widgets/posts_view.dart';
 
 class TopClips extends StatefulWidget {
-  TopClips({Key? key}) : super(key: key);
+  const TopClips({Key? key}) : super(key: key);
 
   @override
   State<TopClips> createState() => _TopClipsState();
@@ -59,7 +59,7 @@ class _TopClipsState extends State<TopClips> {
             title: Text(
               "Top Clips",
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -74,9 +74,9 @@ class _TopClipsState extends State<TopClips> {
                 child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
             bottom: PreferredSize(
-                preferredSize: Size.fromHeight(1.0),
+                preferredSize: const Size.fromHeight(1.0),
                 child: Container(
-                  color: getAppColor(Color(0xffEDEAEA)),
+                  color: getAppColor(const Color(0xffEDEAEA)),
                   height: 1.0,
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
@@ -109,9 +109,9 @@ class _TopClipsState extends State<TopClips> {
                             return PostsView(posts: posts);
                           }else{
                             if(snapshot.connectionState == ConnectionState.done){
-                              return SizedBox.shrink();
+                              return const SizedBox.shrink();
                             }
-                            return PostsView(isLoading: true);
+                            return const PostsView(isLoading: true);
                           }
                         }),
                   ],

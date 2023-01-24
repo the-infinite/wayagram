@@ -1,41 +1,23 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:group_radio_button/group_radio_button.dart';
-import 'package:hashtager/widgets/hashtag_text.dart';
-import 'package:hashtager/widgets/hashtag_text_field.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:wayagram/app/global_widgets/person_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
-import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
-import '../../data/model/CommentModel.dart';
 import '../../data/model/all_events_entity.dart';
-import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/group_model_entity.dart';
-import '../../data/model/products_model_entity.dart';
-import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
-import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/app_button.dart';
 
-import 'package:dio/dio.dart' as dio;
 
 import '../../global_widgets/app_input.dart';
-import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
-import '../../global_widgets/page_input.dart';
-import '../home/widgets/posts_view.dart';
-import '../home/widgets/product_view.dart';
 
 class ReportEvent extends StatefulWidget {
   const ReportEvent({Key? key, this.post, this.group, this.page,this.isGroup = false, this.isPage = false,this.isPost = false,this.isProfile = false}) : super(key: key);
@@ -76,7 +58,7 @@ class _ReportEventState extends State<ReportEvent> {
             title: Text(
               title,
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -116,7 +98,7 @@ class _ReportEventState extends State<ReportEvent> {
                     fontColor: AppColors.button,
                     bckgrndColor: getAppColor(AppColors.background),
                     border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                     fontSize: Get.textScaleFactor * 18,
                   ),
@@ -124,9 +106,9 @@ class _ReportEventState extends State<ReportEvent> {
               )
             ],
             bottom: PreferredSize(
-                preferredSize: Size.fromHeight(1.0),
+                preferredSize: const Size.fromHeight(1.0),
                 child: Container(
-                  color: Color(0xffEDEAEA),
+                  color: const Color(0xffEDEAEA),
                   height: 1.0,
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
@@ -184,7 +166,7 @@ class _ReportEventState extends State<ReportEvent> {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       if(_reason == "Other")
                         Padding(
                           padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02),

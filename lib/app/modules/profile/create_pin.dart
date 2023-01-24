@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:wayagram/app/modules/sign_in/sign_in.dart';
-import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
@@ -15,11 +12,9 @@ import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
-import '../profile/update_profile.dart';
-import 'confirm_pin.dart';
 
 class CreatePIN extends GetView<AuthControllerWayagram> {
-  CreatePIN({Key? key}) : super(key: key);
+  const CreatePIN({Key? key}) : super(key: key);
 
   static const route = '/createPIN';
 
@@ -83,7 +78,7 @@ class CreatePIN extends GetView<AuthControllerWayagram> {
                   length: 4,
                   width: MediaQuery.of(context).size.width,
                   fieldWidth: Get.width * 0.1,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 17,
                     color: Colors.black,
                   ),
@@ -118,7 +113,7 @@ class CreatePIN extends GetView<AuthControllerWayagram> {
                   length: 4,
                   width: MediaQuery.of(context).size.width,
                   fieldWidth: Get.width * 0.1,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 17,
                     color: Colors.black,
                   ),

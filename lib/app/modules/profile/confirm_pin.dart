@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
-import 'package:wayagram/app/modules/sign_in/sign_in.dart';
-import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../bindings/wayagram_binding.dart';
-import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
-import '../profile/update_profile.dart';
 import '../setup/interests.dart';
 
 class ConfirmPIN extends StatelessWidget {
-  ConfirmPIN({Key? key}) : super(key: key);
+  const ConfirmPIN({Key? key}) : super(key: key);
 
   static const route = '/confirmPIN';
 

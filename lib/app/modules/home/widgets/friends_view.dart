@@ -45,11 +45,11 @@ class _FriendsViewState extends State<FriendsView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.only(bottom: 10),
           child: Container(
             color: getAppColor(Colors.blue.shade50),
             width: Get.width,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Text(
               'People To Follow',
               style: AppTextStyle.headline4.copyWith(
@@ -78,7 +78,7 @@ class _FriendsViewState extends State<FriendsView> {
                     baseColor: getAppColor(Colors.grey).withOpacity(0.8),
                     highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
                     child: Container(
-                      margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                      margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                       height: Get.height * 0.18,
                       width: Get.width * 0.35,
                       decoration: BoxDecoration(
@@ -114,7 +114,7 @@ class _FriendsViewState extends State<FriendsView> {
                         Get.to(() => OtherProfile(info :[displayName, username, profilePic, userID, bio,postCount,followersCount,followingCount,coverImage,person.id.toString(),person.notPublic == true ? "true" : "false"]));
                       },
                       child: Container(
-                        margin: EdgeInsets.only(top: 5, bottom: 3.7, left: 5,right: 5),
+                        margin: const EdgeInsets.only(top: 5, bottom: 3.7, left: 5,right: 5),
                         width: Get.width * 0.4,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -124,7 +124,7 @@ class _FriendsViewState extends State<FriendsView> {
                               color: getAppColor(Colors.grey).withOpacity(0.4),
                               spreadRadius: 1,
                               blurRadius: 1,
-                              offset: Offset(0, 1), // changes position of shadow
+                              offset: const Offset(0, 1), // changes position of shadow
                             ),
                           ],
                         ),

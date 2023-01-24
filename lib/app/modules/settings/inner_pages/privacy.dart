@@ -27,7 +27,7 @@ import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/notification_view.dart';
 
 class PrivacySettings extends StatefulWidget {
-  PrivacySettings({Key? key}) : super(key: key);
+  const PrivacySettings({Key? key}) : super(key: key);
 
   @override
   State<PrivacySettings> createState() => _PrivacySettingsState();
@@ -63,7 +63,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
           appBar: AppBar(
               backgroundColor: getAppColor(AppColors.background),
               title: Text('Privacy Settings', style: AppTextStyle.subtitle1.copyWith(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               )),
@@ -92,7 +92,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
                   controller: tabController,
                   padding: EdgeInsets.zero,
                   labelColor: getAppColor(Colors.black),
-                  unselectedLabelColor: Color(0xff9A9A9A),
+                  unselectedLabelColor: const Color(0xff9A9A9A),
                   indicatorColor: AppColors.primary,
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelStyle: TextStyle(
@@ -103,7 +103,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
                     fontSize: Get.width*0.035,
                     fontWeight: FontWeight.w500,
                   ),
-                  tabs: [
+                  tabs: const [
                     Tab(text: 'Muted Users',iconMargin: EdgeInsets.zero,),
                     Tab(text: 'Blocked Users',iconMargin: EdgeInsets.zero,),
                   ],
@@ -111,7 +111,7 @@ class _PrivacySettingsState extends State<PrivacySettings> with TickerProviderSt
 
                   },
                 ),
-                Divider(
+                const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,

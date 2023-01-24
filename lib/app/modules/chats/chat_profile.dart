@@ -1,63 +1,35 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:dio/dio.dart' as dio;
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_chat_list/chat_list.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
-import 'package:hashtager/widgets/hashtag_text_field.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mime/mime.dart';
-import 'package:voice_message_package/voice_message_package.dart';
-import 'package:wayagram/app/global_widgets/app_input.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
-import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../controllers/chat_controller.dart';
 import '../../controllers/home_controller.dart';
-import '../../data/model/SearchHashtagsModel.dart';
-import '../../data/model/SearhPeopleModel.dart';
 import '../../data/model/full_user_profile_entity.dart';
-import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../data/socket_models/chat_list_over_view.dart';
 import '../../data/socket_models/previous_chat_model.dart' as normal_chat;
-import '../../data/socket_models/send_message_response.dart';
 import '../../global_widgets/app_avatar.dart';
-import '../../global_widgets/app_button.dart';
-import 'package:http_parser/http_parser.dart' as http_parser;
-
-import 'package:dio/dio.dart' as dio;
-import 'dart:math' as math;
 
 
-import '../../global_widgets/newsfeed_multiple_imageview.dart';
+
 import '../../global_widgets/overlays.dart';
-import '../../global_widgets/person_view.dart';
-import '../../global_widgets/smart_image.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
-import '../home/widgets/HashTagView.dart';
-import '../home/widgets/group_view.dart';
 
-import '../home/widgets/posts_view.dart' as post_view;
 
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../search/search.dart';
 import '../send_money/send_money.dart';
 
 class ChatProfile extends StatefulWidget {
-  ChatProfile({Key? key, required this.chatOverview}) : super(key: key);
+  const ChatProfile({Key? key, required this.chatOverview}) : super(key: key);
 
   final ChatOverview chatOverview;
   @override
@@ -96,7 +68,7 @@ class _ChatProfileState extends State<ChatProfile> {
       if(animate){
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.fastOutSlowIn,
         );
       }else{
@@ -274,7 +246,7 @@ class _ChatProfileState extends State<ChatProfile> {
                           children: [
                             IconButton(onPressed: (){
                               comingSoon();
-                            }, icon: Icon(Icons.videocam_rounded, color: AppColors.primary,size: 24)),
+                            }, icon: const Icon(Icons.videocam_rounded, color: AppColors.primary,size: 24)),
                             Text("Video", style: TextStyle(
                               color: AppColors.primary,
                               fontSize: Get.textScaleFactor * 15,
@@ -288,7 +260,7 @@ class _ChatProfileState extends State<ChatProfile> {
                           children: [
                             IconButton(onPressed: (){
                               comingSoon();
-                            }, icon: Icon(Icons.call_rounded, color: AppColors.primary,size: 20,)),
+                            }, icon: const Icon(Icons.call_rounded, color: AppColors.primary,size: 20,)),
                             Text("Call", style: TextStyle(
                               color: AppColors.primary,
                               fontSize: Get.textScaleFactor * 15,
@@ -300,7 +272,7 @@ class _ChatProfileState extends State<ChatProfile> {
                     ),
                     SizedBox(height: Get.height*0.01),
                     Container(
-                      color: Color(0xffEDEAEA),
+                      color: const Color(0xffEDEAEA),
                       height: 1.0,
                     ),
                     if(post.isGroup == true)
@@ -332,7 +304,7 @@ class _ChatProfileState extends State<ChatProfile> {
                       SizedBox(height: Get.height*0.01),
                     if(post.isGroup == true)
                       Container(
-                      color: Color(0xffEDEAEA),
+                      color: const Color(0xffEDEAEA),
                       height: 1.0,
                     ),
                     SizedBox(height: Get.height*0.01),
@@ -453,7 +425,7 @@ class _ChatProfileState extends State<ChatProfile> {
     showDialog(
         context: Get.context!,
         builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Builder(
             builder: (context) {
@@ -470,10 +442,10 @@ class _ChatProfileState extends State<ChatProfile> {
                       ImageHelper.svgImage(
                         failed,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text('Coming soon')
+                      const Text('Coming soon')
                     ],
                   ));
             },
@@ -488,7 +460,7 @@ class _ChatProfileState extends State<ChatProfile> {
 }
 
 class ChatProfileAction extends StatelessWidget {
-  ChatProfileAction({
+  const ChatProfileAction({
     Key? key, required this.title, required this.onTap, required this.icon,this.textColor,this.bgColor = AppColors.primary,this.iconColor = Colors.white
   }) : super(key: key);
 
@@ -517,13 +489,13 @@ class ChatProfileAction extends StatelessWidget {
               ),
               child: Icon(icon, color: Colors.white, size: Get.height*0.02,),
             ),
-            SizedBox(width: 10,),
+            const SizedBox(width: 10,),
             Text(title, style: TextStyle(
               color: textColor??getAppColor(Colors.black),
               fontSize: Get.textScaleFactor * 17,
               fontWeight: FontWeight.w500,
             ),),
-            Spacer(),
+            const Spacer(),
           ],
         ),
       ),
@@ -532,7 +504,7 @@ class ChatProfileAction extends StatelessWidget {
 }
 
 class PersonProfileAction extends StatelessWidget {
-  PersonProfileAction({
+  const PersonProfileAction({
     Key? key, required this.title, required this.onTap, required this.url,this.textColor,this.bgColor = AppColors.primary,this.iconColor = Colors.white, required this.subtitle
   }) : super(key: key);
 
@@ -565,7 +537,7 @@ class PersonProfileAction extends StatelessWidget {
                 isGroup: false,
               ),
             ),
-            SizedBox(width: 10,),
+            const SizedBox(width: 10,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -581,7 +553,7 @@ class PersonProfileAction extends StatelessWidget {
                 ),),
               ],
             ),
-            Spacer(),
+            const Spacer(),
           ],
         ),
       ),

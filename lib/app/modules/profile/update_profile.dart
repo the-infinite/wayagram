@@ -21,7 +21,7 @@ import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
 class UpdateProfile extends GetView<HomeControllerWayagram> {
-  UpdateProfile({Key? key}) : super(key: key);
+  const UpdateProfile({Key? key}) : super(key: key);
 
   static const route = '/updateProfile';
 
@@ -60,7 +60,7 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
                     },
                   ),
                   title: Text('Update Profile', style: AppTextStyle.subtitle1.copyWith(
-                    color: getAppColor(Color(0xff4F4F4F)),
+                    color: getAppColor(const Color(0xff4F4F4F)),
                     fontSize: Get.textScaleFactor * 18,
                     fontWeight: FontWeight.bold,
                   )),
@@ -106,7 +106,7 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
                       fontColor: getAppColor(AppColors.button),
                       bckgrndColor: getAppColor(AppColors.background),
                       border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                       width: Get.width * 0.2,
                     ),
                   ),
@@ -298,7 +298,7 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
                                   isCompulsory: true,
                                   controller: usernameController,
                                   prefix: Icon(Icons.alternate_email, color: getAppColor(Colors.black),size: Get.width*0.05),
-                                  contentPadding: EdgeInsets.only(left: 0),
+                                  contentPadding: const EdgeInsets.only(left: 0),
                                 ),
                                 SizedBox(
                                   height: Get.height * 0.025,
@@ -331,7 +331,7 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
                                 PageDropButton(
                                   label: "Choose Privacy",
                                   hint: '',
-                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   onChanged: (val) {
                                     if(val == "Public") {
                                       isPrivate = false;

@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
-import '../../../../core/theme/app_styles.dart';
-import '../../../controllers/home_controller.dart';
-import '../../../data/model/all_events_entity.dart';
-import '../../../data/model/moments_model_entity.dart';
 import '../../../data/model/notification_model_entity.dart';
 import '../../../global_widgets/app_avatar.dart';
-import '../../../global_widgets/app_button.dart';
 
 class NotificationView extends StatefulWidget {
   NotificationView({
@@ -40,7 +31,7 @@ class _NotificationViewState extends State<NotificationView> {
     return ListView.builder(
       itemCount: isLoading ? 3 : posts!.length,
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         if(isLoading){
           return SizedBox(
@@ -50,7 +41,7 @@ class _NotificationViewState extends State<NotificationView> {
               baseColor: Colors.grey.withOpacity(0.8),
               highlightColor: Colors.grey.withOpacity(0.2),
               child: Container(
-                margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                 height: Get.height * 0.18,
                 width: Get.width * 0.35,
                 decoration: BoxDecoration(
@@ -63,7 +54,7 @@ class _NotificationViewState extends State<NotificationView> {
         }
         var post = posts![index];
         return Container(
-          margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+          margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -97,7 +88,7 @@ class _NotificationViewState extends State<NotificationView> {
                     width: Get.width*0.8,
                     child: Text(
                       (post.content.toString()),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 15,
                         fontWeight: FontWeight.normal,

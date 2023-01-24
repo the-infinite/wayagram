@@ -23,7 +23,7 @@ import '../../../global_widgets/helpers/dark_mode_helper.dart';
 import '../../../global_widgets/overlays.dart';
 
 class CreateMoment extends StatelessWidget {
-  CreateMoment({Key? key}) : super(key: key);
+  const CreateMoment({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -277,25 +277,25 @@ class CreateMoment extends StatelessWidget {
                   ],
                   radiusStyle: true,
                   cornerRadius: 10.0,
-                  labels: ['Image', 'Text'],
+                  labels: const ['Image', 'Text'],
                   customTextStyles: [
                     AppTextStyle.bodyText1.copyWith(
-                      color: currentStep == 0 ? AppColors.primary : Color(0xff064A72),
+                      color: currentStep == 0 ? AppColors.primary : const Color(0xff064A72),
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
                     AppTextStyle.bodyText1.copyWith(
-                      color: currentStep == 1 ? AppColors.primary : Color(0xff064A72),
+                      color: currentStep == 1 ? AppColors.primary : const Color(0xff064A72),
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
                   ],
                   onToggle: (index) {
                     if (index == 0) {
-                      pageController.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                      pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                       currentStep = 0;
                     } else {
-                      pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                      pageController.animateToPage(1, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                       currentStep = 1;
                     }
                     controller.update();

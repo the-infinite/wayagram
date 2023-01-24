@@ -35,7 +35,7 @@ import '../../global_widgets/page_input.dart';
 import '../home/widgets/posts_view.dart';
 
 class ReportUser extends StatefulWidget {
-  ReportUser({Key? key, required this.person, this.group, this.page,this.isGroup = false, this.isPage = false}) : super(key: key);
+  const ReportUser({Key? key, required this.person, this.group, this.page,this.isGroup = false, this.isPage = false}) : super(key: key);
 
   final Person person;
   final GroupModelEntity? group;
@@ -70,7 +70,7 @@ class _ReportUserState extends State<ReportUser> {
             title: Text(
               title,
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -227,7 +227,7 @@ class _ReportUserState extends State<ReportUser> {
                     fontColor: AppColors.button,
                     bckgrndColor: getAppColor(AppColors.background),
                     border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                     fontSize: Get.textScaleFactor * 18,
                   ),
@@ -235,9 +235,9 @@ class _ReportUserState extends State<ReportUser> {
               )
             ],
             bottom: PreferredSize(
-                preferredSize: Size.fromHeight(1.0),
+                preferredSize: const Size.fromHeight(1.0),
                 child: Container(
-                  color: Color(0xffEDEAEA),
+                  color: const Color(0xffEDEAEA),
                   height: 1.0,
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
@@ -287,7 +287,7 @@ class _ReportUserState extends State<ReportUser> {
                               width: Get.width*0.8,
                               child: Text(
                                 "@${widget.person.username}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.grey,
                                   fontSize: 16,
                                   fontWeight: FontWeight.normal,
@@ -300,7 +300,7 @@ class _ReportUserState extends State<ReportUser> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     Padding(
                       padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02),
                       child: Text(
@@ -312,13 +312,13 @@ class _ReportUserState extends State<ReportUser> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     RadioGroup<String>.builder(
                       groupValue: _reason,
                       onChanged: (value) => setState(() {
                         _reason = value.toString();
                       }),
-                      items: ["Inappropriate Contents", "Promoting HateFul Conducts", "Abusive", "Fraud", "Other"],
+                      items: const ["Inappropriate Contents", "Promoting HateFul Conducts", "Abusive", "Fraud", "Other"],
                       itemBuilder: (item) => RadioButtonBuilder(
                         item,
                       ),
@@ -329,7 +329,7 @@ class _ReportUserState extends State<ReportUser> {
                         fontWeight: FontWeight.normal,
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     if(_reason == "Other")
                       Padding(
                         padding: EdgeInsets.only(left: Get.width*0.02,right: Get.width*0.02),

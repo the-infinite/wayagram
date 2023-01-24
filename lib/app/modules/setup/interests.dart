@@ -28,7 +28,7 @@ import '../profile/update_profile_on_sign_up.dart';
 
 
 class Interests extends StatefulWidget{
-  Interests({Key? key}) : super(key: key);
+  const Interests({Key? key}) : super(key: key);
 
   static const route = '/interests';
 
@@ -569,7 +569,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
             title: Text(
               "Interests",
               style: TextStyle(
-                color: Color(0xff4F4F4F),
+                color: const Color(0xff4F4F4F),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -581,13 +581,13 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                 onTap: (){
                   Navigator.pop(context);
                 },
-                child: Icon(FeatherIcons.arrowLeft, color: Colors.black)
+                child: const Icon(FeatherIcons.arrowLeft, color: Colors.black)
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, Get.height * 0.06),
                 child: Column(
                   children: [
-                    Divider(
+                    const Divider(
                       height: 0.5,
                       thickness: 0.5,
                       color: Colors.grey,
@@ -596,7 +596,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                       controller: tabController,
                       padding: EdgeInsets.zero,
                       labelColor: Colors.black,
-                      unselectedLabelColor: Color(0xff9A9A9A),
+                      unselectedLabelColor: const Color(0xff9A9A9A),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: TextStyle(
@@ -607,7 +607,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                         fontSize: Get.width*0.035,
                         fontWeight: FontWeight.w500,
                       ),
-                      tabs: [
+                      tabs: const [
                         Tab(text: 'All Interests',iconMargin: EdgeInsets.zero,),
                         Tab(text: 'Your Interests',iconMargin: EdgeInsets.zero,),
                       ],
@@ -616,7 +616,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                         //controller.userRepoupdate(['profile_page']);
                       },
                     ),
-                    Divider(
+                    const Divider(
                       height: 0.5,
                       thickness: 0.5,
                       color: Colors.grey,
@@ -630,13 +630,13 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                       title: 'Continue',
                       onPressed: () {
                         //,binding: WayagramBinding()
-                        Get.to(() => UpdateProfileSignUp());
+                        Get.to(() => const UpdateProfileSignUp());
                       },
                       borderRadius: 10,
                       fontColor: AppColors.button,
                       bckgrndColor: AppColors.background,
                       border: Border.all(color: AppColors.background, width: 1),
-                      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                       width: Get.width * 0.2,
                       fontSize: Get.width * 0.04,
                     ),
@@ -663,7 +663,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                   itemBuilder: (context, index) {
                     var currentInterest = uniqueInterestList[index];
                     if(chosenInterestList.contains(currentInterest)){
-                      return SizedBox.shrink();
+                      return const SizedBox.shrink();
                     }
                     return InkWell(
                       onTap: (){
@@ -682,13 +682,13 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                               ),
                               child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                             ),
-                            SizedBox(width: 10,),
+                            const SizedBox(width: 10,),
                             Text(currentInterest, style: TextStyle(
                               color: Colors.black,
                               fontSize: Get.textScaleFactor * 17,
                               fontWeight: FontWeight.w500,
                             ),),
-                            Spacer(),
+                            const Spacer(),
                             InkWell(
                                 onTap: (){
                                   var body = {
@@ -743,7 +743,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                       });
                                     }
                                   });
-                                }, child: Icon(Icons.add_circle, color: AppColors.primary,)
+                                }, child: const Icon(Icons.add_circle, color: AppColors.primary,)
                             )
                           ],
                         ),
@@ -782,13 +782,13 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                       ),
                                       child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                                     ),
-                                    SizedBox(width: 10,),
+                                    const SizedBox(width: 10,),
                                     Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
                                       color: Colors.black,
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w500,
                                     ),),
-                                    Spacer(),
+                                    const Spacer(),
                                     InkWell(
                                         onTap: (){
                                           var innerBody = {
@@ -809,7 +809,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                             }
                                           });
                                         },
-                                        child: Icon(Icons.remove_circle, color: AppColors.primary,)
+                                        child: const Icon(Icons.remove_circle, color: AppColors.primary,)
                                     )
                                   ],
                                 ),
@@ -843,13 +843,13 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                       ),
                                       child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                                     ),
-                                    SizedBox(width: 10,),
+                                    const SizedBox(width: 10,),
                                     Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
                                       color: Colors.black,
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w500,
                                     ),),
-                                    Spacer(),
+                                    const Spacer(),
                                     InkWell(
                                         onTap: (){
                                           var innerBody = {
@@ -870,7 +870,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                                             }
                                           });
                                         },
-                                        child: Icon(Icons.remove_circle, color: AppColors.primary,)
+                                        child: const Icon(Icons.remove_circle, color: AppColors.primary,)
                                     )
                                   ],
                                 ),
@@ -880,9 +880,9 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
                         );
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
-                        return GroupView(isLoading: true);
+                        return const GroupView(isLoading: true);
                       }
                     }),
               ],

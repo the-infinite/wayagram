@@ -2,10 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -13,12 +10,9 @@ import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
-import '../../../data/model/posts_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/helpers/dark_mode_helper.dart';
-import '../../../global_widgets/horizontal_item_tile.dart';
-import '../../../global_widgets/video_player/reusable_video_list_controller.dart';
 import '../../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../widgets/moments_view.dart';
 import '../widgets/posts_view.dart';
@@ -122,7 +116,7 @@ class _HomeTabState extends State<HomeTab> {
         //height: 0.21 * Get.height,
         decoration: BoxDecoration(
             color: getAppColor(AppColors.lightGrayColor),
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -139,7 +133,7 @@ class _HomeTabState extends State<HomeTab> {
               child: Container(
                 width: 0.070 * Get.width,
                 height: 0.005 * Get.height,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: AppColors.primary,
                     borderRadius: BorderRadius.all(Radius.circular(10))),
               ),
@@ -179,20 +173,20 @@ class _HomeTabState extends State<HomeTab> {
         onTap: onOptionsTap,
         child: FittedBox(
           child: Container(
-            margin: EdgeInsetsDirectional.only(end: 2, start: 5),
+            margin: const EdgeInsetsDirectional.only(end: 2, start: 5),
             padding:
-            EdgeInsets.only(top: 1.0, bottom: 2, left: 5, right: 5),
+            const EdgeInsets.only(top: 1.0, bottom: 2, left: 5, right: 5),
             height: 0.150 * Get.height,
             width: 0.30 * Get.width,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
                 color: getAppColor(AppColors.white),
                 boxShadow: [
                   BoxShadow(
                     color: getAppColor(AppColors.grayColor).withOpacity(0.2),
                     spreadRadius: 1,
                     blurRadius: 4,
-                    offset: Offset(0, 2), // changes position of shadow
+                    offset: const Offset(0, 2), // changes position of shadow
                   ),
                 ]),
             child: Column(
@@ -201,7 +195,7 @@ class _HomeTabState extends State<HomeTab> {
                 Container(
                   height: 0.07 * Get.height,
                   width: 0.07 * Get.width,
-                  padding: EdgeInsets.all(6.0),
+                  padding: const EdgeInsets.all(6.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: getAppColor(AppColors.grayColor).withOpacity(.3),
@@ -234,7 +228,7 @@ class _HomeTabState extends State<HomeTab> {
     showDialog(
         context: Get.context!,
         builder: (_) => AlertDialog(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Builder(
             builder: (context) {
@@ -251,10 +245,10 @@ class _HomeTabState extends State<HomeTab> {
                       ImageHelper.svgImage(
                         failed,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text('Coming soon')
+                      const Text('Coming soon')
                     ],
                   ));
             },

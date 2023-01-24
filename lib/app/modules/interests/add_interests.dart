@@ -1,38 +1,24 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hashtager/widgets/hashtag_text.dart';
-import 'package:hashtager/widgets/hashtag_text_field.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
-import '../../../../core/theme/app_styles.dart';
 import '../../controllers/home_controller.dart';
-import '../../data/model/CommentModel.dart';
 import '../../data/model/InterestsModel.dart';
 import '../../data/model/NewInterestModel.dart';
-import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
-import '../../global_widgets/app_avatar.dart';
-import '../../global_widgets/app_button.dart';
 
 import 'package:dio/dio.dart' as dio;
 
-import '../../global_widgets/app_input.dart';
-import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
-import '../../global_widgets/page_input.dart';
 import '../home/widgets/group_view.dart';
-import '../home/widgets/posts_view.dart';
 
 class AddInterestPage extends StatefulWidget {
   const AddInterestPage({Key? key}) : super(key: key);
@@ -548,7 +534,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
             title: Text(
               "Interests",
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -575,7 +561,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                       controller: tabController,
                       padding: EdgeInsets.zero,
                       labelColor: getAppColor(Colors.black),
-                      unselectedLabelColor: Color(0xff9A9A9A),
+                      unselectedLabelColor: const Color(0xff9A9A9A),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: TextStyle(
@@ -642,13 +628,13 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                               ),
                               child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                             ),
-                            SizedBox(width: 10,),
+                            const SizedBox(width: 10,),
                             Text(currentInterest, style: TextStyle(
                               color: getAppColor(Colors.black),
                               fontSize: Get.textScaleFactor * 17,
                               fontWeight: FontWeight.w500,
                             ),),
-                            Spacer(),
+                            const Spacer(),
                             InkWell(
                                 onTap: (){
                                   var body = {
@@ -680,7 +666,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                         }
                                       });
                                     }else{
-                                      controller.getData("/wayagram-service/graph/search?query=${currentInterest}&filterBy=NAME",true).then((value) {
+                                      controller.getData("/wayagram-service/graph/search?query=$currentInterest&filterBy=NAME",true).then((value) {
                                         if(value.isSuccessful){
                                           var res = NewInterestModel.fromJsonList(value.data["data"]);
                                           var innerBody = {
@@ -746,13 +732,13 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                       ),
                                       child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                                     ),
-                                    SizedBox(width: 10,),
+                                    const SizedBox(width: 10,),
                                     Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
                                       color: getAppColor(Colors.black),
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w500,
                                     ),),
-                                    Spacer(),
+                                    const Spacer(),
                                     InkWell(
                                       onTap: (){
                                         var innerBody = {
@@ -775,7 +761,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                           }
                                         });
                                       },
-                                        child: Icon(Icons.remove_circle, color: AppColors.primary,)
+                                        child: const Icon(Icons.remove_circle, color: AppColors.primary,)
                                     )
                                   ],
                                 ),
@@ -809,13 +795,13 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                       ),
                                       child: Icon(Icons.interests, color: Colors.white, size: Get.height*0.02,),
                                     ),
-                                    SizedBox(width: 10,),
+                                    const SizedBox(width: 10,),
                                     Text(post.title.toString().capitalizeFirst.toString(), style: TextStyle(
                                       color: getAppColor(Colors.black),
                                       fontSize: Get.textScaleFactor * 17,
                                       fontWeight: FontWeight.w500,
                                     ),),
-                                    Spacer(),
+                                    const Spacer(),
                                     InkWell(
                                         onTap: (){
                                           var innerBody = {
@@ -838,7 +824,7 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                                             }
                                           });
                                         },
-                                        child: Icon(Icons.remove_circle, color: AppColors.primary,)
+                                        child: const Icon(Icons.remove_circle, color: AppColors.primary,)
                                     )
                                   ],
                                 ),
@@ -848,9 +834,9 @@ class _AddInterestPageState extends State<AddInterestPage> with TickerProviderSt
                         );
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         }
-                        return GroupView(isLoading: true);
+                        return const GroupView(isLoading: true);
                       }
                     }),
               ],

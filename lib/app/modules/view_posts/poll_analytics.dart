@@ -49,7 +49,7 @@ import '../search/search.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class PollAnalytics extends StatefulWidget {
-  PollAnalytics({Key? key}) : super(key: key);
+  const PollAnalytics({Key? key}) : super(key: key);
 
   @override
   State<PollAnalytics> createState() => _PollAnalyticsState();
@@ -118,7 +118,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
             title: Text(
               "Poll Analytics",
               style: TextStyle(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -134,7 +134,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
             ),
             bottom: PreferredSize(
                 preferredSize: Size(Get.width, 0.5),
-                child: Divider(
+                child: const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
@@ -153,7 +153,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
             color: getAppColor(AppColors.background),
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Row(
@@ -170,7 +170,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 1,
                             blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3), // changes position of shadow
                           ),
                         ],
                       ),
@@ -180,7 +180,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                           Text(
                             "Votes",
                             style: TextStyle(
-                              color: getAppColor(Color(0xff4F4F4F)),
+                              color: getAppColor(const Color(0xff4F4F4F)),
                               fontSize: Get.textScaleFactor * 12,
                               fontWeight: FontWeight.bold,
                             ),
@@ -213,7 +213,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 1,
                             blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3), // changes position of shadow
                           ),
                         ],
                       ),
@@ -223,7 +223,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                           Text(
                             "End Date",
                             style: TextStyle(
-                              color: getAppColor(Color(0xff4F4F4F)),
+                              color: getAppColor(const Color(0xff4F4F4F)),
                               fontSize: Get.textScaleFactor * 12,
                               fontWeight: FontWeight.bold,
                             ),
@@ -256,7 +256,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 1,
                             blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3), // changes position of shadow
                           ),
                         ],
                       ),
@@ -266,7 +266,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                           Text(
                             "Amount(NGN)",
                             style: TextStyle(
-                              color: getAppColor(Color(0xff4F4F4F)),
+                              color: getAppColor(const Color(0xff4F4F4F)),
                               fontSize: Get.textScaleFactor * 12,
                               fontWeight: FontWeight.bold,
                             ),
@@ -290,7 +290,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Expanded(
@@ -314,7 +314,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                             children: [
                               SizedBox(height: Get.height*0.2,),
                               Icon(Icons.poll_rounded, color: AppColors.primary, size: Get.height*0.1,),
-                              SizedBox(height: 20,),
+                              const SizedBox(height: 20,),
                               Text("No Votes Yet", style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: Get.textScaleFactor * 17,
@@ -327,7 +327,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                       ListView.builder(
                         itemCount: pollVotes.length,
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           var post = pollVotes[index];
                           var widget =  InkWell(
@@ -366,7 +366,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                                       radius: 100,
                                     ),
                                   ),
-                                  SizedBox(width: 10,),
+                                  const SizedBox(width: 10,),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -383,7 +383,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                                           softWrap: true,
                                           onTap: (text) {
                                             controller.defaultSearchValue = text;
-                                            Get.to(() => Search());
+                                            Get.to(() => const Search());
                                           },
                                           decorateAtSign: true,
                                         ),
@@ -405,7 +405,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                                       ),),
                                     ],
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                 ],
                               ),
                             ),
@@ -425,12 +425,12 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Divider(
+                const Divider(
                   height: 0.5,
                   thickness: 0.5,
                   color: Colors.grey,
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
                 if(!closed)
                   AppButton(
                   title: "Close Poll",
@@ -486,7 +486,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                   Text(
                     "Money Requested Already",
                     style: TextStyle(
-                      color: getAppColor(Color(0xff4F4F4F)),
+                      color: getAppColor(const Color(0xff4F4F4F)),
                       fontSize: Get.textScaleFactor * 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -494,7 +494,7 @@ class _PollAnalyticsState extends State<PollAnalytics> with TickerProviderStateM
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
               ],
             ),
           ),

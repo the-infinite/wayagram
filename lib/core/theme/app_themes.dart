@@ -66,7 +66,7 @@ class AppThemes {
       primary: AppColors.primary,
       primaryVariant: AppColors.bostonUniRed,
       secondary: AppColors.bostonUniRed,
-      secondaryVariant: Color(0xFFD9222A),
+      secondaryVariant: const Color(0xFFD9222A),
       surface: getAppColor(AppColors.background),
       background: getAppColor(AppColors.background),
       error: Colors.red,

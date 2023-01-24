@@ -27,7 +27,7 @@ import '../../../global_widgets/person_view.dart';
 import '../../home/widgets/notification_view.dart';
 
 class PaymentSettings extends StatelessWidget {
-  PaymentSettings({Key? key}) : super(key: key);
+  const PaymentSettings({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +46,13 @@ class PaymentSettings extends StatelessWidget {
           appBar: AppBar(
               backgroundColor: getAppColor(AppColors.background),
               title: Text('Payment Settings', style: AppTextStyle.subtitle1.copyWith(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               )),
               centerTitle: true,
               leading: IconButton(
-                icon: Icon(FeatherIcons.arrowLeft, color: Colors.black),
+                icon: const Icon(FeatherIcons.arrowLeft, color: Colors.black),
                 onPressed: () => Navigator.pop(context),
               ),
               systemOverlayStyle: SystemUiOverlayStyle(
@@ -68,7 +68,7 @@ class PaymentSettings extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Center(
                   child: Container(
                     width: Get.width*0.2,
@@ -88,7 +88,7 @@ class PaymentSettings extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   "Your Referral Code:",
                   style: TextStyle(
@@ -103,7 +103,7 @@ class PaymentSettings extends StatelessWidget {
                     title: MyPref.referenceCode.val,
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: MyPref.referenceCode.val)).then((_){
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Referral copied to clipboard",),backgroundColor: AppColors.primary));
                       });
                     },
                     borderRadius: 10,
@@ -111,11 +111,11 @@ class PaymentSettings extends StatelessWidget {
                     fontSize: Get.width*0.04,
                     bckgrndColor: getAppColor(AppColors.background),
                     border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     leading: Icon(Icons.copy, color: Colors.blue, size: Get.width*0.04),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _TextButton(
                     text: "Dispute Resolution",
                     subtitle: "View and file disputes",
@@ -160,7 +160,7 @@ class _TextButton extends StatelessWidget {
   final String text;
   final String subtitle;
   final Function() onPressed;
-  _TextButton({required this.text, required this.onPressed, required this.subtitle});
+  const _TextButton({required this.text, required this.onPressed, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +176,7 @@ class _TextButton extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 5,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
             border: Border.all(color: Colors.white, width: 1),

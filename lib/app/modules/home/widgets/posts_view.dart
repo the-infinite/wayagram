@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:bordered_text/bordered_text.dart';
@@ -8,12 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:flutter_polls/flutter_polls.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hashtager/widgets/hashtag_text.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
@@ -26,8 +22,6 @@ import '../../../data/model/CommentModel.dart' as comment;
 import '../../../data/model/DonationsModel.dart';
 import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/full_user_profile_entity.dart';
-import '../../../data/model/moments_model_entity.dart';
-import '../../../data/model/posts_model_entity.dart';
 import '../../../data/providers/my_pref.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -38,7 +32,6 @@ import '../../../global_widgets/video_player/reusable_video_list_controller.dart
 import '../../donate/donate.dart';
 import '../../polls_payment/poll_payment.dart';
 import '../../profile/other_profile.dart';
-import '../../profile/post_profile.dart';
 import '../../profile/profile.dart';
 import '../../report/report_post.dart';
 import '../../search/search.dart';

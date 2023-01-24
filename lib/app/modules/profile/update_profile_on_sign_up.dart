@@ -1,17 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
-import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import 'package:wayagram/core/utils/validator.dart';
 
 import '../../../core/theme/app_styles.dart';
-import '../../../core/theme/app_themes.dart';
 import '../../controllers/auth_controller.dart';
-import '../../controllers/home_controller.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
@@ -21,7 +17,7 @@ import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
 class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
-  UpdateProfileSignUp({Key? key}) : super(key: key);
+  const UpdateProfileSignUp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +36,7 @@ class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
           appBar: AppBar(
             elevation: 0,
             leading: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back,
                 color: Colors.black,
               ),
@@ -49,7 +45,7 @@ class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
               },
             ),
             title: Text('Set Up Profile', style: AppTextStyle.subtitle1.copyWith(
-              color: ((Color(0xff4F4F4F))),
+              color: ((const Color(0xff4F4F4F))),
               fontSize: Get.textScaleFactor * 18,
               fontWeight: FontWeight.bold,
             )),
@@ -97,7 +93,7 @@ class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
                       fontColor: AppColors.button,
                       bckgrndColor: (AppColors.background),
                       border: Border.all(color: (AppColors.background), width: 1),
-                      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                       width: Get.width * 0.2,
                     ),
                   ),
@@ -281,7 +277,7 @@ class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
                               isCompulsory: true,
                               controller: usernameController,
                               prefix: Icon(Icons.alternate_email, color: (Colors.black),size: Get.width*0.05),
-                              contentPadding: EdgeInsets.only(left: 0),
+                              contentPadding: const EdgeInsets.only(left: 0),
                             ),
                             SizedBox(
                               height: Get.height * 0.025,
@@ -314,7 +310,7 @@ class UpdateProfileSignUp extends GetView<AuthControllerWayagram> {
                             PageDropButton(
                               label: "Choose Privacy",
                               hint: '',
-                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                               onChanged: (val) {
                                 if(val == "Public") {
                                   isPrivate = false;

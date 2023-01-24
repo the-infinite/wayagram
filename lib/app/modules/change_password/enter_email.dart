@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
-import '../../../core/utils/validator.dart';
 import '../../controllers/auth_controller.dart';
 import '../../data/providers/api.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/page_dropdown.dart';
-import '../../global_widgets/page_input.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../../repository/user_repo.dart';
-import '../setup/interests.dart';
-import '../sign_up/sign_up.dart';
 
 class EnterEmail extends GetView<AuthControllerWayagram> {
-  EnterEmail(this.email, this.phone, {Key? key}) : super(key: key);
+  const EnterEmail(this.email, this.phone, {Key? key}) : super(key: key);
 
   final String? email;
   final String? phone;
@@ -103,7 +98,7 @@ class EnterEmail extends GetView<AuthControllerWayagram> {
                       PageDropButton(
                         label: "OTP will be sent to",
                         hint: '',
-                        padding: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                        padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
                         onChanged: (val) {
                           controller.emailOrPhone.text = val;
                         },

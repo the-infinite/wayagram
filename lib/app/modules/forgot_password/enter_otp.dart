@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:wayagram/app/global_widgets/overlays.dart';
 import 'package:wayagram/app/modules/forgot_password/enter_new_password.dart';
-import 'package:wayagram/app/modules/sign_in/sign_in.dart';
-import 'package:wayagram/app/modules/sign_up/sign_up.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
-import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../global_widgets/app_button.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
-import '../profile/create_pin.dart';
-import '../profile/update_profile.dart';
 
 class EnterOTP extends GetView<AuthControllerWayagram> {
-  EnterOTP({Key? key}) : super(key: key);
+  const EnterOTP({Key? key}) : super(key: key);
 
   static const route = '/verifyOTP';
 
@@ -82,7 +74,7 @@ class EnterOTP extends GetView<AuthControllerWayagram> {
                   length: 6,
                   width: MediaQuery.of(context).size.width,
                   fieldWidth: Get.width * 0.1,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 17,
                     color: Colors.black,
                   ),
@@ -107,14 +99,14 @@ class EnterOTP extends GetView<AuthControllerWayagram> {
                   title: 'Verify',
                   onPressed: () async {
                     if(controller.otp.text.length == 6) {
-                      Get.to(() => EnterNewPassword());
+                      Get.to(() => const EnterNewPassword());
                     }else{
                       Get.snackbar("Error", "Please Enter a valid otp",backgroundColor: Colors.red, colorText: Colors.white);
                     }
                   },
                   borderRadius: 10,
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 AppButton(
                   title: 'Did not get OTP?',
                   bckgrndColor: (AppColors.background),

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:share_plus/share_plus.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../global_widgets/overlays.dart';
@@ -9,26 +8,18 @@ import '../../profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
-import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/moments_model_entity.dart';
-import '../../../data/model/posts_model_entity.dart';
-import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/app_avatar.dart';
-import '../../../global_widgets/horizontal_item_tile.dart';
 import '../../profile/other_profile.dart';
-import '../widgets/moments_view.dart';
-import '../widgets/posts_view.dart';
 import 'bottom_sheet.dart';
 
 class Story extends StatefulWidget {

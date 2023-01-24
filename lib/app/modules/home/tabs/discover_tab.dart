@@ -1,22 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wayagram/app/data/model/TrendingHashtagsModel.dart';
 
 import '../../../../core/theme/app_styles.dart';
 import '../../../bindings/wayagram_binding.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_events_entity.dart';
-import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/friends_suggestions_entity.dart';
 import '../../../data/model/full_user_profile_entity.dart';
 import '../../../data/model/group_model_entity.dart';
-import '../../../data/model/moments_model_entity.dart';
 import '../../../data/providers/api_response.dart';
 import '../../../data/providers/my_pref.dart';
 import '../../../global_widgets/helpers/dark_mode_helper.dart';
@@ -25,8 +20,6 @@ import '../widgets/HashTagView.dart';
 import '../widgets/events_view.dart';
 import '../widgets/friends_view.dart';
 import '../widgets/group_view.dart';
-import '../widgets/moments_view.dart';
-import '../widgets/posts_view.dart';
 
 class DiscoverTab extends StatefulWidget {
   const DiscoverTab({Key? key}) : super(key: key);
@@ -119,7 +112,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
           Container(
             color: getAppColor(Colors.blue.shade50),
             width: Get.width,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Text(
               'Groups To Join',
               style: AppTextStyle.headline4.copyWith(
@@ -180,7 +173,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                   },minimum: 5,);
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                   return GroupView(isLoading: true);
                 }
@@ -191,7 +184,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                   final friendsToFollow = snapshot.data!.data as List<FriendsSuggestionsEntity>;
                   if(friendsToFollow.isEmpty){
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                   return FriendsView(data: friendsToFollow);
                 } else {
@@ -201,21 +194,21 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     return FriendsView(data: friendsToFollow);
                   }else{
                     if(snapshot.connectionState == ConnectionState.done){
-                      return SizedBox.shrink();
+                      return const SizedBox.shrink();
                     }
-                    return FriendsView(isLoading: true);
+                    return const FriendsView(isLoading: true);
                   }
                 }
               }),
           Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
                 bottom: 0,
                 top: 10
             ),
             child: Container(
               color: getAppColor(Colors.blue.shade50),
               width: Get.width,
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Text(
                 'Pages To Follow',
                 style: AppTextStyle.headline4.copyWith(
@@ -275,7 +268,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                       },minimum: 5,);
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                   return GroupView(isLoading: true,isGroup: false,);
                 }
@@ -286,7 +279,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                   final moments = snapshot.data!.data as AllEventsEntity;
                   if(moments.data == null){
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                   return EventsView(moments: moments.data);
                 } else {
@@ -296,9 +289,9 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     return EventsView(moments: events.data);
                   }else{
                     if(snapshot.connectionState == ConnectionState.done){
-                      return SizedBox.shrink();
+                      return const SizedBox.shrink();
                     }
-                    return EventsView(isLoading: true);
+                    return const EventsView(isLoading: true);
                   }
                 }
               }),

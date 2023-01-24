@@ -20,7 +20,7 @@ import '../profile/create_pin.dart';
 import '../profile/update_profile.dart';
 
 class VerifyOTP extends GetView<AuthControllerWayagram> {
-  VerifyOTP({Key? key}) : super(key: key);
+  const VerifyOTP({Key? key}) : super(key: key);
 
   static const route = '/verifyOTP';
 
@@ -82,7 +82,7 @@ class VerifyOTP extends GetView<AuthControllerWayagram> {
                   length: 6,
                   width: MediaQuery.of(context).size.width,
                   fieldWidth: Get.width * 0.1,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 17,
                     color: Colors.black,
                   ),
@@ -114,7 +114,7 @@ class VerifyOTP extends GetView<AuthControllerWayagram> {
                   },
                   borderRadius: 10,
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 AppButton(
                   title: 'Did not get OTP?',
                   bckgrndColor: (AppColors.background),

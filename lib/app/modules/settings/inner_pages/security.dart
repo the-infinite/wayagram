@@ -32,7 +32,7 @@ import '../../home/widgets/notification_view.dart';
 import '../../multiplexor/multiplexor.dart';
 
 class SecuritySettings extends StatelessWidget {
-  SecuritySettings({Key? key}) : super(key: key);
+  const SecuritySettings({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class SecuritySettings extends StatelessWidget {
           appBar: AppBar(
               backgroundColor: getAppColor(AppColors.background),
               title: Text('Security Settings', style: AppTextStyle.subtitle1.copyWith(
-                color: getAppColor(Color(0xff4F4F4F)),
+                color: getAppColor(const Color(0xff4F4F4F)),
                 fontSize: Get.textScaleFactor * 18,
                 fontWeight: FontWeight.bold,
               )),
@@ -112,7 +112,7 @@ class SecuritySettings extends StatelessWidget {
                               controller.userRepo.api.disconnect();
                               Get.back();
                               MyPref.clearBoxes();
-                              Get.offAll(() => Multiplexor(),binding: WayagramBinding());
+                              Get.offAll(() => const Multiplexor(),binding: WayagramBinding());
                             }else{
                               AppOverlay.showErrorSnackBar(content: response.message?? "Error deleting account");
                             }
@@ -134,7 +134,7 @@ class _TextButton extends StatelessWidget {
   final String text;
   final String subtitle;
   final Function() onPressed;
-  _TextButton({required this.text, required this.onPressed, required this.subtitle});
+  const _TextButton({required this.text, required this.onPressed, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +150,7 @@ class _TextButton extends StatelessWidget {
                 color: getAppColor(Colors.grey).withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 5,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
             border: Border.all(color: getAppColor(Colors.white), width: 1),

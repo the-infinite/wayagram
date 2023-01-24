@@ -1,16 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
-import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import 'onboarding.dart';
 
 class OnboardingItem extends StatelessWidget {
-  OnboardingItem({
+  const OnboardingItem({
     Key? key,
     required this.onboardingModel,
     required this.pos,

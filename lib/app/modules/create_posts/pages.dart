@@ -137,7 +137,7 @@ class _CreatePageState extends State<CreatePage> {
                     fontColor: AppColors.button,
                     bckgrndColor: getAppColor(AppColors.background),
                     border: Border.all(color: getAppColor(AppColors.background), width: 1),
-                    padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     width: Get.width * 0.2,
                   ),
                 ),
@@ -242,7 +242,7 @@ class _CreatePageState extends State<CreatePage> {
                             PageDropButton(
                               label: "Page Visibility",
                               hint: '',
-                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                               onChanged: (val) {
                                 pageVisibility.text = val;
                               },
