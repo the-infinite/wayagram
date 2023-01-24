@@ -86,7 +86,8 @@ class _DiscoverTabState extends State<DiscoverTab> {
                       Get.to(() => Search(),binding: WayagramBinding());
                     },
                   );
-                } else if(savedPosts.val.isNotEmpty){
+                }
+                else if(savedPosts.val.isNotEmpty){
                   var posts = TrendingHashtagsModel.listFromJson(jsonDecode(savedPosts.val));
                   List<String> title = [];
                   List<String> subtitle = [];
@@ -110,7 +111,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                   );
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                   return GroupView(isLoading: true);
                 }

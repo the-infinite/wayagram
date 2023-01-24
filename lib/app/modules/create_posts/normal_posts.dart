@@ -29,7 +29,6 @@ import '../../global_widgets/app_button.dart';
 
 import 'package:dio/dio.dart' as dio;
 
-import '../../global_widgets/app_refresher.dart';
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/person_view.dart';
@@ -41,7 +40,7 @@ import '../home/widgets/notification_view.dart';
 import '../home/widgets/posts_view.dart' as post_view;
 
 class CreatePosts extends StatefulWidget {
-  CreatePosts({Key? key}) : super(key: key);
+  const CreatePosts({Key? key}) : super(key: key);
 
   @override
   State<CreatePosts> createState() => _CreatePostsState();
@@ -65,6 +64,8 @@ class _CreatePostsState extends State<CreatePosts> {
   @override
   Widget build(BuildContext context) {
     var currentPage = ReadWriteValue('wayagram_following_current_page', 1, MyPref.box);
+    var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
@@ -74,7 +75,7 @@ class _CreatePostsState extends State<CreatePosts> {
           systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
-        var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
+
         return Scaffold(
           appBar: AppBar(
             backgroundColor: getAppColor(AppColors.background),
@@ -99,7 +100,7 @@ class _CreatePostsState extends State<CreatePosts> {
                       Text(
                         'To Group: ',
                         style: TextStyle(
-                          color: getAppColor(Color(0xff4F4F4F)),
+                          color: getAppColor(const Color(0xff4F4F4F)),
                           fontSize: Get.textScaleFactor * 14,
                           fontWeight: FontWeight.normal,
                         ),
@@ -120,7 +121,7 @@ class _CreatePostsState extends State<CreatePosts> {
                       Text(
                         'To Page: ',
                         style: TextStyle(
-                          color: getAppColor(Color(0xff4F4F4F)),
+                          color: getAppColor(const Color(0xff4F4F4F)),
                           fontSize: Get.textScaleFactor * 14,
                           fontWeight: FontWeight.normal,
                         ),
@@ -341,9 +342,9 @@ class _CreatePostsState extends State<CreatePosts> {
               )
             ],
             bottom: PreferredSize(
-                preferredSize: Size.fromHeight(1.0),
+                preferredSize: const Size.fromHeight(1.0),
                 child: Container(
-                  color: Color(0xffEDEAEA),
+                  color: const Color(0xffEDEAEA),
                   height: 1.0,
                 )),
             systemOverlayStyle: SystemUiOverlayStyle(
@@ -451,7 +452,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                                   padding: EdgeInsets.only(top: Get.height*0.01),
                                                   child: Row(
                                                     children: [
-                                                      Icon(
+                                                      const Icon(
                                                         Icons.error,
                                                         color: Colors.red,
                                                         size: 16,
@@ -500,7 +501,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                       decoration: BoxDecoration(
                                         color: getAppColor(AppColors.background),
                                         borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(color: Color(0xffEDEAEA), width: 1),
+                                        border: Border.all(color: const Color(0xffEDEAEA), width: 1),
                                       ),
                                     ),
                                   if(controller.isProductPost)
@@ -510,7 +511,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                       decoration: BoxDecoration(
                                         color: getAppColor(AppColors.background),
                                         borderRadius: BorderRadius.circular(15),
-                                        border: Border.all(color: Color(0xffEDEAEA), width: 1),
+                                        border: Border.all(color: const Color(0xffEDEAEA), width: 1),
                                       ),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -525,7 +526,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                               },
                                               builder: (field) {
                                                 return Padding(
-                                                  padding: EdgeInsets.only(top: 10, bottom: 0, left: 5,right: 5),
+                                                  padding: const EdgeInsets.only(top: 10, bottom: 0, left: 5,right: 5),
                                                   child: Column(
                                                     children: [
                                                       ClipRRect(
@@ -538,8 +539,8 @@ class _CreatePostsState extends State<CreatePosts> {
                                                             scrollDirection: Axis.horizontal,
                                                             itemBuilder: (context, index) {
                                                               return Container(
-                                                                margin: EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
-                                                                padding: EdgeInsets.all(0),
+                                                                margin: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
+                                                                padding: const EdgeInsets.all(0),
                                                                 height: Get.height * 0.15,
                                                                 width: Get.width * 0.3,
                                                                 decoration: BoxDecoration(
@@ -557,7 +558,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                                                         height: Get.height * 0.20,
                                                                         width: Get.width * 0.3,
                                                                         errorBuilder: (context, error, stackTrace) {
-                                                                          return Icon(Icons.error);
+                                                                          return const Icon(Icons.error);
                                                                         },
                                                                       ),
                                                                     ),
@@ -630,9 +631,9 @@ class _CreatePostsState extends State<CreatePosts> {
                                                               decoration: BoxDecoration(
                                                                 color: Colors.grey.withOpacity(.5),
                                                                 borderRadius: BorderRadius.circular(10),
-                                                                border: Border.all(color: Color(0xffEDEAEA), width: 1),
+                                                                border: Border.all(color: const Color(0xffEDEAEA), width: 1),
                                                               ),
-                                                              child: Center(
+                                                              child: const Center(
                                                                 child: Icon(Icons.image_rounded, color: Colors.grey),
                                                               ),
                                                             ),
@@ -644,7 +645,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                                           padding: EdgeInsets.only(top: Get.height*0.01),
                                                           child: Row(
                                                             children: [
-                                                              Icon(
+                                                              const Icon(
                                                                 Icons.error,
                                                                 color: Colors.red,
                                                                 size: 16,
@@ -669,7 +670,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                           ),
                                           SizedBox(height: Get.height * 0.01),
                                           Container(
-                                            color: Color(0xffEDEAEA),
+                                            color: const Color(0xffEDEAEA),
                                             height: 1.0,
                                           ),
                                           AppInput(
@@ -682,7 +683,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                           ),
                                           SizedBox(height: Get.height * 0.01),
                                           Container(
-                                            color: Color(0xffEDEAEA),
+                                            color: const Color(0xffEDEAEA),
                                             height: 1.0,
                                           ),
                                           AppInput(
@@ -706,7 +707,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          SizedBox(height: 10,),
+                                          const SizedBox(height: 10,),
                                           Text(
                                             "By creating, you agree with our terms and conditions \nof donation product creation",
                                             style: TextStyle(
@@ -717,7 +718,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.center,
                                           ),
-                                          SizedBox(height: 10,),
+                                          const SizedBox(height: 10,),
                                         ],
                                       ),
                                     )
@@ -733,425 +734,428 @@ class _CreatePostsState extends State<CreatePosts> {
               ),
             ),
           ),
-          bottomNavigationBar: Padding(
-            padding: MediaQuery.of(context).viewInsets,
-            child: Container(
-              color: getAppColor(AppColors.background),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if(controller.postToQuote == null)
-                    Container(
-                    color: Color(0xffEDEAEA),
-                    height: 1.0,
-                  ),
-                  if(detectedHashtagController.text.isEmpty && controller.postToQuote == null && !(textController.text.endsWith("#") || textController.text.endsWith("@")))
-                    Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          bottomNavigationBar: GetBuilder<HomeControllerWayagram>(id: "post_bottom_bar",builder: (controller) {
+              return Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Container(
+                  color: getAppColor(AppColors.background),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Row(
+                      if(controller.postToQuote == null)
+                        Container(
+                        color: const Color(0xffEDEAEA),
+                        height: 1.0,
+                      ),
+                      if(detectedHashtagController.text.isEmpty && controller.postToQuote == null && !(textController.text.endsWith("#") || textController.text.endsWith("@")))
+                        Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(
-                            width: Get.width*0.025,
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.image_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black)),
-                            onPressed: () async {
-                              if(images.length <= 29){
-                                final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
-                                if (pickedFile != null) {
-                                  CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                    sourcePath: pickedFile.path,
-                                    cropStyle: CropStyle.rectangle,
-                                    aspectRatioPresets: [
-                                      CropAspectRatioPreset.square,
-                                      CropAspectRatioPreset.ratio3x2,
-                                      CropAspectRatioPreset.original,
-                                      CropAspectRatioPreset.ratio4x3,
-                                      CropAspectRatioPreset.ratio16x9
-                                    ],
-                                    uiSettings: [
-                                      AndroidUiSettings(
-                                          toolbarTitle: 'Crop Photo',
-                                          toolbarColor: AppColors.primary,
-                                          toolbarWidgetColor: Colors.white,
-                                          activeControlsWidgetColor: AppColors.primary,
-                                          cropGridColor: AppColors.primary,
-                                          initAspectRatio: CropAspectRatioPreset.original,
-                                          lockAspectRatio: false),
-                                      IOSUiSettings(
-                                        title: 'Crop Photo',
-                                      ),
-                                      WebUiSettings(
-                                        context: context,
-                                      ),
-                                    ],
-                                  );
-                                  if(croppedFile!=null){
-                                    images = List.from(images)..add(croppedFile.path);
-                                  }else{
-                                    images = List.from(images)..add(pickedFile.path);
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: Get.width*0.025,
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.image_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black)),
+                                onPressed: () async {
+                                  if(images.length <= 29){
+                                    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 30);
+                                    if (pickedFile != null) {
+                                      CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                        sourcePath: pickedFile.path,
+                                        cropStyle: CropStyle.rectangle,
+                                        aspectRatioPresets: [
+                                          CropAspectRatioPreset.square,
+                                          CropAspectRatioPreset.ratio3x2,
+                                          CropAspectRatioPreset.original,
+                                          CropAspectRatioPreset.ratio4x3,
+                                          CropAspectRatioPreset.ratio16x9
+                                        ],
+                                        uiSettings: [
+                                          AndroidUiSettings(
+                                              toolbarTitle: 'Crop Photo',
+                                              toolbarColor: AppColors.primary,
+                                              toolbarWidgetColor: Colors.white,
+                                              activeControlsWidgetColor: AppColors.primary,
+                                              cropGridColor: AppColors.primary,
+                                              initAspectRatio: CropAspectRatioPreset.original,
+                                              lockAspectRatio: false),
+                                          IOSUiSettings(
+                                            title: 'Crop Photo',
+                                          ),
+                                          WebUiSettings(
+                                            context: context,
+                                          ),
+                                        ],
+                                      );
+                                      if(croppedFile!=null){
+                                        images = List.from(images)..add(croppedFile.path);
+                                      }else{
+                                        images = List.from(images)..add(pickedFile.path);
+                                      }
+                                      controller.update();
+                                    }
                                   }
-                                  controller.update();
-                                }
-                              }
-                            },
+                                },
+                              ),
+                              if(!controller.isProductPost)
+                                IconButton(
+                                icon: Icon(Icons.video_camera_back_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black),size: Get.width*0.065),
+                                onPressed: () async {
+                                  if(images.length <= 29){
+                                    final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, maxDuration: const Duration(minutes: 10));
+                                    if (pickedFile != null) {
+                                      images = List.from(images)..add(pickedFile.path);
+                                      controller.update();
+                                    }
+                                  }
+                                },
+                              ),
+                            ],
                           ),
-                          if(!controller.isProductPost)
-                            IconButton(
-                            icon: Icon(Icons.video_camera_back_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black),size: Get.width*0.065),
-                            onPressed: () async {
-                              if(images.length <= 29){
-                                final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, maxDuration: Duration(minutes: 10));
-                                if (pickedFile != null) {
-                                  images = List.from(images)..add(pickedFile.path);
-                                  controller.update();
+                          Padding(
+                            padding: EdgeInsets.only(right: Get.width*0.025),
+                            child: IconButton(
+                              icon: Icon(Icons.camera_alt_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black)),
+                              onPressed: () async {
+                                if(images.length <= 29){
+                                  final pickedFile = await _imagePicker.pickImage(
+                                    source: ImageSource.camera,
+                                    imageQuality: 30,
+                                  );
+                                  if (pickedFile != null && pickedFile.path.isNotEmpty) {
+                                    CroppedFile? croppedFile = await ImageCropper().cropImage(
+                                      sourcePath: pickedFile.path,
+                                      cropStyle: CropStyle.rectangle,
+                                      aspectRatioPresets: [
+                                        CropAspectRatioPreset.square,
+                                        CropAspectRatioPreset.ratio3x2,
+                                        CropAspectRatioPreset.original,
+                                        CropAspectRatioPreset.ratio4x3,
+                                        CropAspectRatioPreset.ratio16x9
+                                      ],
+                                      uiSettings: [
+                                        AndroidUiSettings(
+                                            toolbarTitle: 'Crop Photo',
+                                            toolbarColor: AppColors.primary,
+                                            toolbarWidgetColor: Colors.white,
+                                            activeControlsWidgetColor: AppColors.primary,
+                                            cropGridColor: AppColors.primary,
+                                            initAspectRatio: CropAspectRatioPreset.original,
+                                            lockAspectRatio: false),
+                                        IOSUiSettings(
+                                          title: 'Crop Photo',
+                                        ),
+                                        WebUiSettings(
+                                          context: context,
+                                        ),
+                                      ],
+                                    );
+                                    if(croppedFile!=null){
+                                      images = List.from(images)..add(croppedFile.path);
+                                    }else{
+                                      images = List.from(images)..add(pickedFile.path);
+                                    }
+                                    controller.update();
+                                  }
                                 }
-                              }
-                            },
+                              },
+                            ),
                           ),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(right: Get.width*0.025),
-                        child: IconButton(
-                          icon: Icon(Icons.camera_alt_outlined, color: images.length > 29 ? Colors.grey : getAppColor(Colors.black)),
-                          onPressed: () async {
-                            if(images.length <= 29){
-                              final pickedFile = await _imagePicker.pickImage(
-                                source: ImageSource.camera,
-                                imageQuality: 30,
-                              );
-                              if (pickedFile != null && pickedFile.path.isNotEmpty) {
-                                CroppedFile? croppedFile = await ImageCropper().cropImage(
-                                  sourcePath: pickedFile.path,
-                                  cropStyle: CropStyle.rectangle,
-                                  aspectRatioPresets: [
-                                    CropAspectRatioPreset.square,
-                                    CropAspectRatioPreset.ratio3x2,
-                                    CropAspectRatioPreset.original,
-                                    CropAspectRatioPreset.ratio4x3,
-                                    CropAspectRatioPreset.ratio16x9
-                                  ],
-                                  uiSettings: [
-                                    AndroidUiSettings(
-                                        toolbarTitle: 'Crop Photo',
-                                        toolbarColor: AppColors.primary,
-                                        toolbarWidgetColor: Colors.white,
-                                        activeControlsWidgetColor: AppColors.primary,
-                                        cropGridColor: AppColors.primary,
-                                        initAspectRatio: CropAspectRatioPreset.original,
-                                        lockAspectRatio: false),
-                                    IOSUiSettings(
-                                      title: 'Crop Photo',
-                                    ),
-                                    WebUiSettings(
-                                      context: context,
-                                    ),
-                                  ],
-                                );
-                                if(croppedFile!=null){
-                                  images = List.from(images)..add(croppedFile.path);
-                                }else{
-                                  images = List.from(images)..add(pickedFile.path);
-                                }
-                                controller.update();
-                              }
-                            }
-                          },
+                      if(detectedHashtagController.text.isNotEmpty)
+                        Container(
+                          color: getAppColor(AppColors.background),
+                          height: Get.height*0.25,
+                          child: SingleChildScrollView(
+                            child: detectedHashtagController.text.startsWith("#") ?
+                            FutureBuilder<ApiResponse>(
+                              //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
+                                future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")}", true),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                    final posts = SearchHashtagsModel.listFromJson(snapshot.data!.data);
+                                    searchedHashtags = jsonEncode(posts);
+                                    List<String> title = [];
+                                    List<String> subtitle = [];
+                                    for (var element in posts) {
+                                      if(element.hashtag != null){
+                                        if(element.hashtag.toString().startsWith("#")){
+                                          title.add(element.hashtag!);
+                                        }else{
+                                          title.add("#${element.hashtag!}");
+                                        }
+                                        if(element.postToHashtags != null){
+                                          subtitle.add('${element.postToHashtags!.length} Conversations');
+                                        }else{
+                                          subtitle.add('0 Conversations');
+                                        }
+                                      }
+                                    }
+                                    if(title.isEmpty){
+                                      return SizedBox(
+                                        height: Get.height*0.25,
+                                        child: const Center(
+                                          child: Text('No Hashtags Found'),
+                                        ),
+                                      );
+                                    }
+                                    return HashTagView(
+                                      title: title,
+                                      subtitle: subtitle,
+                                      onClick: (title, subtitle) {
+                                        //replace last only
+                                        //textController.text = textController.text.replaceAll(detectedHashtagController.text, title);
+                                        var pos = textController.text.lastIndexOf(detectedHashtagController.text);
+                                        textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "$title ");
+                                        textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                      },
+                                    );
+                                  }else{
+                                    if(searchedHashtags.isNotEmpty){
+                                      final posts = SearchHashtagsModel.listFromJson(jsonDecode(searchedHashtags));
+                                      List<String> title = [];
+                                      List<String> subtitle = [];
+                                      for (var element in posts) {
+                                        if(element.hashtag != null){
+                                          if(element.hashtag.toString().startsWith("#")){
+                                            title.add(element.hashtag!);
+                                          }else{
+                                            title.add("#${element.hashtag!}");
+                                          }
+                                          if(element.postToHashtags != null){
+                                            subtitle.add('${element.postToHashtags!.length} Conversations');
+                                          }else{
+                                            subtitle.add('0 Conversations');
+                                          }
+                                        }
+                                      }
+                                      if(title.isEmpty){
+                                        return SizedBox(
+                                          height: Get.height*0.25,
+                                          child: const Center(
+                                            child: Text('No Hashtags Found'),
+                                          ),
+                                        );
+                                      }
+                                      return HashTagView(
+                                        title: title,
+                                        subtitle: subtitle,
+                                        onClick: (title, subtitle) {
+                                          //replace last only
+                                          //textController.text = textController.text.replaceAll(detectedHashtagController.text, title);
+                                          var pos = textController.text.lastIndexOf(detectedHashtagController.text);
+                                          textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "$title ");
+                                          textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                        },
+                                      );
+                                    }
+                                    if(snapshot.connectionState == ConnectionState.done){
+                                      return SizedBox(
+                                        height: Get.height*0.25,
+                                        child: const Center(
+                                          child: Text('No Hashtags Found'),
+                                        ),
+                                      );
+                                    }
+                                    return GroupView(isLoading: true);
+                                  }
+                                }) : FutureBuilder<ApiResponse>(
+                                future: controller.searchPeople(detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                    //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
+                                    var posts = SearchPeopleModel.getService(snapshot.data!.data);
+                                    searchedPeople = jsonEncode(posts);
+                                    if(posts.isEmpty){
+                                      return SizedBox(
+                                        height: Get.height * 0.7,
+                                        child: const Center(
+                                          child: Text('No People Found'),
+                                        ),
+                                      );
+                                    }
+                                    return PersonView(
+                                      name: posts.map((e) => e.displayName.toString()).toList(),
+                                      username: posts.map((e) => e.username.toString()).toList(),
+                                      profilePic: posts.map((e) => e.avatar.toString()).toList(),
+                                      length: posts.length,
+                                      userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                      onClick: (value){
+                                        var pos = textController.text.lastIndexOf(detectedHashtagController.text);
+                                        textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "@${value.username} ");
+                                        textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                      },
+                                    );
+                                  }else{
+                                    if(searchedPeople.isNotEmpty){
+                                      var posts = SearchPeopleModel.getService(jsonDecode(searchedPeople));
+                                      if(posts.isEmpty){
+                                        return SizedBox(
+                                          height: Get.height * 0.7,
+                                          child: const Center(
+                                            child: Text('No People Found'),
+                                          ),
+                                        );
+                                      }
+                                      return PersonView(
+                                        name: posts.map((e) => e.displayName.toString()).toList(),
+                                        username: posts.map((e) => e.username.toString()).toList(),
+                                        profilePic: posts.map((e) => e.avatar.toString()).toList(),
+                                        length: posts.length,
+                                        userIDs: posts.map((e) => e.userId.toString()).toList(),
+                                        onClick: (value){
+                                          var pos = textController.text.lastIndexOf(detectedHashtagController.text);
+                                          textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "@${value.username} ");
+                                          textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                        },
+                                      );
+                                    }
+                                    if(snapshot.connectionState == ConnectionState.done){
+                                      return SizedBox(
+                                        height: Get.height * 0.7,
+                                        child: const Center(
+                                          child: Text('No People Found'),
+                                        ),
+                                      );
+                                    }
+                                    return GroupView(isLoading: true,isGroup: true,);
+                                  }
+                                }),
+                          ),
                         ),
-                      ),
+                      if(textController.text.endsWith("#") || textController.text.endsWith("@"))
+                        Container(
+                          color: getAppColor(AppColors.background),
+                          height: Get.height*0.25,
+                          child: textController.text.endsWith("#") ? SingleChildScrollView(
+                            child: FutureBuilder<ApiResponse>(
+                                future: controller.getData("/wayagram-service/all-posts/get-trending-hashtags?profile_id=${fullProfile.id}", true),
+                                builder: (context, snapshot) {
+                                  var savedPosts = ReadWriteValue('wayagram_trending_hashtags', '', MyPref.box);
+                                  if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                    final posts = TrendingHashtagsModel.listFromJson(snapshot.data!.data['data']);
+                                    savedPosts.val = jsonEncode(posts);
+                                    List<String> title = [];
+                                    List<String> subtitle = [];
+                                    for (var element in posts) {
+                                      if(element.hashtag != null){
+                                        title.add("#${element.hashtag!}");
+                                        if(element.postToHashtags != null){
+                                          subtitle.add('${element.postToHashtags!.length} Conversations');
+                                        }else{
+                                          subtitle.add('0 Conversations');
+                                        }
+                                      }
+                                    }
+                                    return HashTagView(
+                                      title: title,
+                                      subtitle: subtitle,
+                                      onClick: (title, subtitle) {
+                                        var pos = textController.text.lastIndexOf("#");
+                                        textController.text = textController.text.replaceRange(pos, pos+1, "$title ");
+                                        textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                      },
+                                    );
+                                  } else if(savedPosts.val.isNotEmpty){
+                                    var posts = TrendingHashtagsModel.listFromJson(jsonDecode(savedPosts.val));
+                                    List<String> title = [];
+                                    List<String> subtitle = [];
+                                    for (var element in posts) {
+                                      if(element.hashtag != null){
+                                        title.add("#${element.hashtag!}");
+                                        if(element.postToHashtags != null){
+                                          subtitle.add('${element.postToHashtags!.length} Conversations');
+                                        }else{
+                                          subtitle.add('0 Conversations');
+                                        }
+                                      }
+                                    }
+                                    return HashTagView(
+                                      title: title,
+                                      subtitle: subtitle,
+                                      onClick: (title, subtitle) {
+                                        var pos = textController.text.lastIndexOf("#");
+                                        textController.text = textController.text.replaceRange(pos, pos+1, "$title ");
+                                        textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                      },
+                                    );
+                                  }else{
+                                    if(snapshot.connectionState == ConnectionState.done){
+                                      return SizedBox(
+                                        height: Get.height*0.25,
+                                        child: const Center(
+                                          child: Text('No Trending Hashtags Found'),
+                                        ),
+                                      );
+                                    }
+                                    return GroupView(isLoading: true);
+                                  }
+                                }),
+                          ) : SingleChildScrollView(
+                            child: FutureBuilder<ApiResponse>(
+                                future: controller.getData('/wayagram-service/graph/friend/following?user_id=${fullProfile.userId}&page=1',true),
+                                builder: (context, snapshot) {
+                                  var savedPosts = MyPref.following.val;
+                                  if(savedPosts.isNotEmpty){
+                                    var posts = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
+                                    var names = posts.following!.map((e) => e.displayName.toString()).toList();
+                                    var username = posts.following!.map((e) => e.username.toString()).toList();
+                                    var profile = posts.following!.map((e) => e.avatar.toString()).toList();
+                                    var userIds = posts.following!.map((e) => e.userId.toString()).toList();
+                                    return PersonView(
+                                      name: names,
+                                      username: username,
+                                      profilePic: profile,
+                                      length: posts.following == null ? 0 : posts.following!.length,
+                                      userIDs: userIds,
+                                      following: posts.following,
+                                      showButton: false,
+                                      onClick: (person) {
+                                        var pos = textController.text.lastIndexOf("@");
+                                        textController.text = textController.text.replaceRange(pos, pos+1, "@${person.username} ");
+                                        textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                        controller.update(["post_bottom_bar"]);
+                                      },
+                                    );
+                                  }else{
+                                    if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                      var posts = FollowingModelEntity.fromJson(snapshot.data!.data);
+                                      var names = posts.following!.map((e) => e.displayName.toString()).toList();
+                                      var username = posts.following!.map((e) => e.username.toString()).toList();
+                                      var profile = posts.following!.map((e) => e.avatar.toString()).toList();
+                                      var userIds = posts.following!.map((e) => e.userId.toString()).toList();
+                                      MyPref.following.val = jsonEncode(posts);
+                                      currentPage.val = 2;
+                                      return PersonView(
+                                        name: names,
+                                        username: username,
+                                        profilePic: profile,
+                                        length: posts.following == null ? 0 : posts.following!.length,
+                                        userIDs: userIds,
+                                        following: posts.following,
+                                        showButton: true,
+                                        onClick: (person) {
+                                          var pos = textController.text.lastIndexOf("@");
+                                          textController.text = textController.text.replaceRange(pos, pos+1, "@${person.username} ");
+                                          textController.selection = TextSelection.collapsed(offset: textController.text.length);
+                                          controller.update(["post_bottom_bar"]);
+                                        },
+                                      );
+                                    }
+                                    return NotificationView(isLoading: true);
+                                  }
+                                }),
+                          ),
+                        )
                     ],
                   ),
-                  if(detectedHashtagController.text.isNotEmpty)
-                    Container(
-                      color: getAppColor(AppColors.background),
-                      height: Get.height*0.25,
-                      child: SingleChildScrollView(
-                        child: detectedHashtagController.text.startsWith("#") ?
-                        FutureBuilder<ApiResponse>(
-                          //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
-                            future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")}", true),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                final posts = SearchHashtagsModel.listFromJson(snapshot.data!.data);
-                                searchedHashtags = jsonEncode(posts);
-                                List<String> title = [];
-                                List<String> subtitle = [];
-                                for (var element in posts) {
-                                  if(element.hashtag != null){
-                                    if(element.hashtag.toString().startsWith("#")){
-                                      title.add(element.hashtag!);
-                                    }else{
-                                      title.add("#${element.hashtag!}");
-                                    }
-                                    if(element.postToHashtags != null){
-                                      subtitle.add('${element.postToHashtags!.length} Conversations');
-                                    }else{
-                                      subtitle.add('0 Conversations');
-                                    }
-                                  }
-                                }
-                                if(title.isEmpty){
-                                  return SizedBox(
-                                    height: Get.height*0.25,
-                                    child: Center(
-                                      child: Text('No Hashtags Found'),
-                                    ),
-                                  );
-                                }
-                                return HashTagView(
-                                  title: title,
-                                  subtitle: subtitle,
-                                  onClick: (title, subtitle) {
-                                    //replace last only
-                                    //textController.text = textController.text.replaceAll(detectedHashtagController.text, title);
-                                    var pos = textController.text.lastIndexOf(detectedHashtagController.text);
-                                    textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "$title ");
-                                    textController.selection = TextSelection.collapsed(offset: textController.text.length);
-                                  },
-                                );
-                              }else{
-                                if(searchedHashtags.isNotEmpty){
-                                  final posts = SearchHashtagsModel.listFromJson(jsonDecode(searchedHashtags));
-                                  List<String> title = [];
-                                  List<String> subtitle = [];
-                                  for (var element in posts) {
-                                    if(element.hashtag != null){
-                                      if(element.hashtag.toString().startsWith("#")){
-                                        title.add(element.hashtag!);
-                                      }else{
-                                        title.add("#${element.hashtag!}");
-                                      }
-                                      if(element.postToHashtags != null){
-                                        subtitle.add('${element.postToHashtags!.length} Conversations');
-                                      }else{
-                                        subtitle.add('0 Conversations');
-                                      }
-                                    }
-                                  }
-                                  if(title.isEmpty){
-                                    return SizedBox(
-                                      height: Get.height*0.25,
-                                      child: Center(
-                                        child: Text('No Hashtags Found'),
-                                      ),
-                                    );
-                                  }
-                                  return HashTagView(
-                                    title: title,
-                                    subtitle: subtitle,
-                                    onClick: (title, subtitle) {
-                                      //replace last only
-                                      //textController.text = textController.text.replaceAll(detectedHashtagController.text, title);
-                                      var pos = textController.text.lastIndexOf(detectedHashtagController.text);
-                                      textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "$title ");
-                                      textController.selection = TextSelection.collapsed(offset: textController.text.length);
-                                    },
-                                  );
-                                }
-                                if(snapshot.connectionState == ConnectionState.done){
-                                  return SizedBox(
-                                    height: Get.height*0.25,
-                                    child: Center(
-                                      child: Text('No Hashtags Found'),
-                                    ),
-                                  );
-                                }
-                                return GroupView(isLoading: true);
-                              }
-                            }) : FutureBuilder<ApiResponse>(
-                            future: controller.searchPeople(detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
-                                var posts = SearchPeopleModel.getService(snapshot.data!.data);
-                                searchedPeople = jsonEncode(posts);
-                                if(posts.isEmpty){
-                                  return SizedBox(
-                                    height: Get.height * 0.7,
-                                    child: Center(
-                                      child: Text('No People Found'),
-                                    ),
-                                  );
-                                }
-                                return PersonView(
-                                  name: posts.map((e) => e.displayName.toString()).toList(),
-                                  username: posts.map((e) => e.username.toString()).toList(),
-                                  profilePic: posts.map((e) => e.avatar.toString()).toList(),
-                                  length: posts.length,
-                                  userIDs: posts.map((e) => e.userId.toString()).toList(),
-                                  onClick: (value){
-                                    var pos = textController.text.lastIndexOf(detectedHashtagController.text);
-                                    textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "@${value.username} ");
-                                    textController.selection = TextSelection.collapsed(offset: textController.text.length);
-                                  },
-                                );
-                              }else{
-                                if(searchedPeople.isNotEmpty){
-                                  var posts = SearchPeopleModel.getService(jsonDecode(searchedPeople));
-                                  if(posts.isEmpty){
-                                    return SizedBox(
-                                      height: Get.height * 0.7,
-                                      child: Center(
-                                        child: Text('No People Found'),
-                                      ),
-                                    );
-                                  }
-                                  return PersonView(
-                                    name: posts.map((e) => e.displayName.toString()).toList(),
-                                    username: posts.map((e) => e.username.toString()).toList(),
-                                    profilePic: posts.map((e) => e.avatar.toString()).toList(),
-                                    length: posts.length,
-                                    userIDs: posts.map((e) => e.userId.toString()).toList(),
-                                    onClick: (value){
-                                      var pos = textController.text.lastIndexOf(detectedHashtagController.text);
-                                      textController.text = textController.text.replaceRange(pos, pos+detectedHashtagController.text.length, "@${value.username} ");
-                                      textController.selection = TextSelection.collapsed(offset: textController.text.length);
-                                    },
-                                  );
-                                }
-                                if(snapshot.connectionState == ConnectionState.done){
-                                  return SizedBox(
-                                    height: Get.height * 0.7,
-                                    child: Center(
-                                      child: Text('No People Found'),
-                                    ),
-                                  );
-                                }
-                                return GroupView(isLoading: true,isGroup: true,);
-                              }
-                            }),
-                      ),
-                    ),
-                  if(textController.text.endsWith("#") || textController.text.endsWith("@"))
-                    Container(
-                      color: getAppColor(AppColors.background),
-                      height: Get.height*0.25,
-                      child: textController.text.endsWith("#") ? SingleChildScrollView(
-                        child: FutureBuilder<ApiResponse>(
-                            future: controller.getData("/wayagram-service/all-posts/get-trending-hashtags?profile_id=${fullProfile.id}", true),
-                            builder: (context, snapshot) {
-                              var savedPosts = ReadWriteValue('wayagram_trending_hashtags', '', MyPref.box);
-                              if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                final posts = TrendingHashtagsModel.listFromJson(snapshot.data!.data['data']);
-                                savedPosts.val = jsonEncode(posts);
-                                List<String> title = [];
-                                List<String> subtitle = [];
-                                for (var element in posts) {
-                                  if(element.hashtag != null){
-                                    title.add("#${element.hashtag!}");
-                                    if(element.postToHashtags != null){
-                                      subtitle.add('${element.postToHashtags!.length} Conversations');
-                                    }else{
-                                      subtitle.add('0 Conversations');
-                                    }
-                                  }
-                                }
-                                return HashTagView(
-                                  title: title,
-                                  subtitle: subtitle,
-                                  onClick: (title, subtitle) {
-                                    var pos = textController.text.lastIndexOf("#");
-                                    textController.text = textController.text.replaceRange(pos, pos+1, "$title ");
-                                    textController.selection = TextSelection.collapsed(offset: textController.text.length);
-                                  },
-                                );
-                              } else if(savedPosts.val.isNotEmpty){
-                                var posts = TrendingHashtagsModel.listFromJson(jsonDecode(savedPosts.val));
-                                List<String> title = [];
-                                List<String> subtitle = [];
-                                for (var element in posts) {
-                                  if(element.hashtag != null){
-                                    title.add("#${element.hashtag!}");
-                                    if(element.postToHashtags != null){
-                                      subtitle.add('${element.postToHashtags!.length} Conversations');
-                                    }else{
-                                      subtitle.add('0 Conversations');
-                                    }
-                                  }
-                                }
-                                return HashTagView(
-                                  title: title,
-                                  subtitle: subtitle,
-                                  onClick: (title, subtitle) {
-                                    var pos = textController.text.lastIndexOf("#");
-                                    textController.text = textController.text.replaceRange(pos, pos+1, "$title ");
-                                    textController.selection = TextSelection.collapsed(offset: textController.text.length);
-                                  },
-                                );
-                              }else{
-                                if(snapshot.connectionState == ConnectionState.done){
-                                  return SizedBox(
-                                    height: Get.height*0.25,
-                                    child: const Center(
-                                      child: Text('No Trending Hashtags Found'),
-                                    ),
-                                  );
-                                }
-                                return GroupView(isLoading: true);
-                              }
-                            }),
-                      ) : SingleChildScrollView(
-                        child: FutureBuilder<ApiResponse>(
-                            future: controller.getData('/wayagram-service/graph/friend/following?user_id=${fullProfile.userId}&page=1',true),
-                            builder: (context, snapshot) {
-                              var savedPosts = MyPref.following.val;
-                              if(savedPosts.isNotEmpty){
-                                var posts = FollowingModelEntity.fromJson(jsonDecode(savedPosts));
-                                var names = posts.following!.map((e) => e.displayName.toString()).toList();
-                                var username = posts.following!.map((e) => e.username.toString()).toList();
-                                var profile = posts.following!.map((e) => e.avatar.toString()).toList();
-                                var userIds = posts.following!.map((e) => e.userId.toString()).toList();
-                                return PersonView(
-                                  name: names,
-                                  username: username,
-                                  profilePic: profile,
-                                  length: posts.following == null ? 0 : posts.following!.length,
-                                  userIDs: userIds,
-                                  following: posts.following,
-                                  showButton: false,
-                                  onClick: (person) {
-                                    var pos = textController.text.lastIndexOf("@");
-                                    textController.text = textController.text.replaceRange(pos, pos+1, "@${person.username} ");
-                                    textController.selection = TextSelection.collapsed(offset: textController.text.length);
-                                    controller.update();
-                                  },
-                                );
-                              }else{
-                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                  var posts = FollowingModelEntity.fromJson(snapshot.data!.data);
-                                  var names = posts.following!.map((e) => e.displayName.toString()).toList();
-                                  var username = posts.following!.map((e) => e.username.toString()).toList();
-                                  var profile = posts.following!.map((e) => e.avatar.toString()).toList();
-                                  var userIds = posts.following!.map((e) => e.userId.toString()).toList();
-                                  MyPref.following.val = jsonEncode(posts);
-                                  currentPage.val = 2;
-                                  return PersonView(
-                                    name: names,
-                                    username: username,
-                                    profilePic: profile,
-                                    length: posts.following == null ? 0 : posts.following!.length,
-                                    userIDs: userIds,
-                                    following: posts.following,
-                                    showButton: true,
-                                    onClick: (person) {
-                                      var pos = textController.text.lastIndexOf("@");
-                                      textController.text = textController.text.replaceRange(pos, pos+1, "@${person.username} ");
-                                      textController.selection = TextSelection.collapsed(offset: textController.text.length);
-                                      controller.update();
-                                    },
-                                  );
-                                }
-                                return NotificationView(isLoading: true);
-                              }
-                            }),
-                      ),
-                    )
-                ],
-              ),
-            ),
+                ),
+              );
+            }
           ),
         );
       }),

@@ -81,17 +81,13 @@ class EditPage extends StatelessWidget {
     var publicController = TextEditingController(text: editInfo.isPublic == true ? 'Public' : 'Private');
     var muteController = TextEditingController(text: editInfo.mute == true ? 'UnMute' : 'Mute');
 
-    print(editInfo.categoryId);
+    PageCategoriesModel? formerCategory;
     return  GetBuilder<HomeControllerWayagram>(
         builder: (controller) {
           List<PageCategoriesModel> categories = [];
           if(MyPref.groupCategories.val.isNotEmpty){
             categories = PageCategoriesModel.listFromJson(jsonDecode(MyPref.groupCategories.val));
-            categories.forEach((element) {
-              if(element.id == editInfo.categoryId){
-                print(editInfo.categoryId);
-              }
-            });
+            formerCategory = categories.firstWhereOrNull((element) => element.title == editInfo.category);
           }
           return Scaffold(
             appBar: AppBar(
@@ -325,8 +321,9 @@ class EditPage extends StatelessWidget {
                               hint: 'Choose a category',
                               isCompulsory: true,
                               onChanged: (value) {
+                                var val = value as PageCategoriesModel;
                                 for (var element in categories) {
-                                  if(element.id == value){
+                                  if(element == val){
                                     categoryController.text = element.title.toString();
                                     categoryIDController.text = element.id.toString();
                                     controller.update();
@@ -340,10 +337,11 @@ class EditPage extends StatelessWidget {
                                 }
                                 return null;
                               },
+                              value: formerCategory,
                               //value: categories.firstWhere((element) => element.id == editInfo.categoryId),
-                              items: categories.map<DropdownMenuItem<String>>((PageCategoriesModel value){
-                                return DropdownMenuItem<String>(
-                                  value: value.id,
+                              items: categories.map<DropdownMenuItem<PageCategoriesModel>>((PageCategoriesModel value){
+                                return DropdownMenuItem<PageCategoriesModel>(
+                                  value: value,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [

@@ -188,7 +188,7 @@ class _CreateDonationState extends State<CreateDonation> {
                     height: Get.height * 0.8,
                     child: PageView(
                       controller: pageController,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       children: [
                         Column(
                           key: Key('page1'),

@@ -27,6 +27,7 @@ import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_avatar.dart';
 import '../../global_widgets/document_picker.dart';
+import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/person_view.dart';
 import '../home/widgets/events_view.dart';
 import '../home/widgets/group_view.dart';
@@ -149,20 +150,33 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: Get.width * 0.025, right: Get.width * 0.025, top: Get.height * 0.02),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.event.eventPoster.toString(),
-                        height: Get.height * 0.23,
-                        width: Get.width,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          color: Colors.grey[200],
-                          child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.04),
-                        ),
-                        errorWidget: (context, url, error) => Container(
-                            color: Colors.grey[200],
-                            child: Icon(Icons.event_rounded,color: Colors.grey,size: Get.height*0.04)
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageViewer(imageUrls: [widget.event.eventPoster.toString()],initialPage: 0),
+                          ),
+                        );
+                      },
+                      child: Hero(
+                        tag: widget.event.eventPoster.toString()+"0",
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                            imageUrl: widget.event.eventPoster.toString(),
+                            height: Get.height * 0.23,
+                            width: Get.width,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Container(
+                              color: Colors.grey[200],
+                              child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.04),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                                color: Colors.grey[200],
+                                child: Icon(Icons.event_rounded,color: Colors.grey,size: Get.height*0.04)
+                            ),
+                          ),
                         ),
                       ),
                     ),

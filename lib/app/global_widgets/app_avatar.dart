@@ -6,6 +6,7 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'dart:math' as math;
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
@@ -75,14 +76,14 @@ class AppAvatar extends StatelessWidget {
                 );
               }
               if(isPage){
-                return Icon(
+                return const Icon(
                   IconlyBroken.document,
                   color: Colors.white,
                   size: 25,
                 );
               }
               if(isGroup){
-                return Icon(
+                return const Icon(
                   Icons.groups_rounded,
                   color: Colors.white,
                   size: 25,
@@ -98,6 +99,80 @@ class AppAvatar extends StatelessWidget {
         ),
       );
     }
+    if(selectedImg == null && imgUrl == "null"){
+      return CircleAvatar(
+        backgroundColor: isArchived ? Colors.grey : AppColors.primary,
+        radius: radius,
+        child: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(radius * 2),
+            child: Builder(
+                  builder: (context) {
+                    if(isArchived){
+                      return const Icon(
+                        Icons.archive_rounded,
+                        color: Colors.white,
+                        size: 25,
+                      );
+                    }
+                    if(isContact){
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: bgColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            contactName.substring(0, 1),
+                            style: TextStyle(
+                              color: fgColor,
+                              fontSize: Get.textScaleFactor * 20,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black,
+                                  offset: Offset(0, 0),
+                                  blurRadius: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    if(isPage){
+                      return const Icon(
+                        IconlyBroken.document,
+                        color: Colors.white,
+                        size: 25,
+                      );
+                    }
+                    if(isGroup){
+                      return const Icon(
+                        Icons.groups_rounded,
+                        color: Colors.white,
+                        size: 25,
+                      );
+                    }
+                    if(isNotification){
+                      return const Icon(
+                        IconlyBroken.notification,
+                        color: Colors.white,
+                        size: 25,
+                      );
+                    }
+                    return const Icon(
+                      IconlyBroken.profile,
+                      color: Colors.white,
+                      size: 25,
+                    );
+                  }
+                ),
+          ),
+        ),
+      );
+    }
     return CircleAvatar(
       backgroundColor: isArchived ? Colors.grey : AppColors.primary,
       radius: radius,
@@ -107,7 +182,7 @@ class AppAvatar extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(radius * 2),
           child: selectedImg == null
-              ? CachedNetworkImage(
+              ? OptimizedCacheImage(
                   imageUrl: imgUrl,
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) {
@@ -143,27 +218,27 @@ class AppAvatar extends StatelessWidget {
                       );
                     }
                     if(isPage){
-                      return Icon(
+                      return const Icon(
                         IconlyBroken.document,
                         color: Colors.white,
                         size: 25,
                       );
                     }
                     if(isGroup){
-                      return Icon(
+                      return const Icon(
                         Icons.groups_rounded,
                         color: Colors.white,
                         size: 25,
                       );
                     }
                     if(isNotification){
-                      return Icon(
+                      return const Icon(
                         IconlyBroken.notification,
                         color: Colors.white,
                         size: 25,
                       );
                     }
-                    return Icon(
+                    return const Icon(
                       IconlyBroken.profile,
                       color: Colors.white,
                       size: 25,

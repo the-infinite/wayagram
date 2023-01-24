@@ -21,12 +21,13 @@ import '../../../global_widgets/app_avatar.dart';
 import '../../../global_widgets/app_button.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../../global_widgets/payment_widget/wayapay.dart';
 import '../../events/pay_for_event.dart';
 import '../../events/view_event_details.dart';
 
 class EventsView extends StatefulWidget {
-  EventsView({
+  const EventsView({
     Key? key,
     this.isLoading = false,
     this.moments,
@@ -188,26 +189,36 @@ class _EventsViewState extends State<EventsView> {
                               left: 0,
                               right: 0,
                               bottom: 0,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: getAppColor(Colors.white),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl: list[index].eventPoster.toString(), placeholder: (context, url) => Container(
-                                    color: Colors.transparent,
-                                    child: Icon(Icons.image_rounded,color: getAppColor(Colors.grey),size: Get.height*0.04),
-                                  ),
-                                    errorWidget: (context, url, error) => Container(
-                                        color: Colors.transparent,
-                                        child: Icon(Icons.event_rounded,color: getAppColor(Colors.grey),size: Get.height*0.04)
+                              child: InkWell(
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ImageViewer(imageUrls: [list[index].eventPoster.toString()],initialPage: 0),
                                     ),
-                                    fit: BoxFit.cover,
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: getAppColor(Colors.white),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl: list[index].eventPoster.toString(), placeholder: (context, url) => Container(
+                                      color: Colors.transparent,
+                                      child: Icon(Icons.image_rounded,color: getAppColor(Colors.grey),size: Get.height*0.04),
+                                    ),
+                                      errorWidget: (context, url, error) => Container(
+                                          color: Colors.transparent,
+                                          child: Icon(Icons.event_rounded,color: getAppColor(Colors.grey),size: Get.height*0.04)
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),

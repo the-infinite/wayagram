@@ -304,22 +304,22 @@ class HomeControllerWayagram extends GetxController {
   }
 
   Future<void> getAllUserData() async {
-    await userRepo.getFriends();
+    //await userRepo.getFriends();
     await userRepo.getRestrictedAccount();
     await userRepo.getMutedAccount();
     await userRepo.getFollowers();
     await userRepo.getFollowing();
-    await userRepo.getFriendSuggestions();
-    await userRepo.getMoments();
-    await userRepo.getPosts();
+    //await userRepo.getFriendSuggestions();
+    //await userRepo.getMoments();
+    //await userRepo.getPosts();
     //await userRepo.getGroups();
-    await userRepo.getSuggestedGroups();
-    await userRepo.getSuggestedPages();
-    await userRepo.getEventsToAttend();
-    await userRepo.getAllProducts();
-    await userRepo.getMyProducts();
+    //await userRepo.getSuggestedGroups();
+    //await userRepo.getSuggestedPages();
+    //await userRepo.getEventsToAttend();
+    //await userRepo.getAllProducts();
+    //await userRepo.getMyProducts();
     await userRepo.getAllNotifications();
-    await userRepo.getAccountNumber();
+    //await userRepo.getAccountNumber();
     await userRepo.getPageCategories();
     await userRepo.getGroupCategories();
   }

@@ -140,6 +140,8 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                   muted = element.mute == true;
                   userMuted = element.isUserOnMute == true;
                   allowMemberPost = element.allowMemberPost == true;
+
+
                   break;
                 }
               }
@@ -245,9 +247,21 @@ class _PageScreenState extends State<PageScreen> with TickerProviderStateMixin{
                                                           await controller.getSuggestedPages;
                                                           if(buttonText == "Follow Page") {
                                                             //pageFollowed = true;
+                                                            var allGroups = GroupModelEntity.getService(jsonDecode(savedPosts.val));
+                                                            allGroups.add(page);
+                                                            savedPosts.val = jsonEncode(allGroups);
+                                                          }else{
+                                                            var allGroups = GroupModelEntity.getService(jsonDecode(savedPosts.val));
+                                                            for(var i = 0; i < allGroups.length; i++){
+                                                              var element = allGroups[i];
+                                                              if(element.id == page.id){
+                                                                allGroups.removeAt(i);
+                                                                savedPosts.val = jsonEncode(allGroups);
+                                                                break;
+                                                              }
+                                                            }
                                                           }
                                                           controller.update(['page_screen']);
-                                                          controller.update();
                                                           Get.snackbar("Success", response.message == null ? "Success" : response.message.toString(),backgroundColor: Colors.green, colorText: getAppColor(Colors.white));
                                                         }else{
                                                           Get.snackbar("Error", response.message == null ? "Something went wrong" : response.message.toString(),backgroundColor: Colors.red, colorText: getAppColor(Colors.white));

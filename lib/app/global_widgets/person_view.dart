@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
@@ -114,7 +111,7 @@ class _PersonViewState extends State<PersonView> {
     return ListView.builder(
       itemCount: isLoading ? 3 : widget.length,
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         if(isLoading){
@@ -125,7 +122,7 @@ class _PersonViewState extends State<PersonView> {
               baseColor: Colors.grey.withOpacity(0.8),
               highlightColor: Colors.grey.withOpacity(0.2),
               child: Container(
-                margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+                margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
                 height: Get.height * 0.18,
                 width: Get.width * 0.35,
                 decoration: BoxDecoration(
@@ -242,7 +239,7 @@ class _PersonViewState extends State<PersonView> {
             }
           },
           child: Container(
-            margin: EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
+            margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
             child: Stack(
               alignment: Alignment.centerRight,
               children: [
@@ -275,7 +272,7 @@ class _PersonViewState extends State<PersonView> {
                           width: Get.width*0.7,
                           child: Text(
                             "@${widget.username[index]}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
                               fontWeight: FontWeight.normal,
@@ -420,7 +417,7 @@ class _PersonViewState extends State<PersonView> {
                               ));
                             }
                           },
-                          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                           fontColor: AppColors.primary,
                           bckgrndColor: getAppColor(AppColors.background),
                           border: Border.all(color: AppColors.primary),

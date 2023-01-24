@@ -90,7 +90,6 @@ class EditGroup extends StatelessWidget {
           if(MyPref.groupCategories.val.isNotEmpty){
             categories = PageCategoriesModel.listFromJson(jsonDecode(MyPref.groupCategories.val));
             formerCategory = categories.firstWhereOrNull((element) => element.title == editInfo.category);
-            print(categories.firstWhereOrNull((element) => element.title == editInfo.category)!.id);
           }
           return Scaffold(
             appBar: AppBar(
