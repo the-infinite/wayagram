@@ -76,7 +76,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     subtitle: subtitle,
                     onClick: (title, subtitle) {
                       controller.defaultSearchValue = title;
-                      Get.to(() => Search(),binding: WayagramBinding());
+                      Get.to(() => const Search(),binding: WayagramBinding());
                     },
                   );
                 }
@@ -99,14 +99,14 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     subtitle: subtitle,
                     onClick: (title, subtitle) {
                       controller.defaultSearchValue = title;
-                      Get.to(() => Search(),binding: WayagramBinding());
+                      Get.to(() => const Search(),binding: WayagramBinding());
                     },
                   );
                 }else{
                   if(snapshot.connectionState == ConnectionState.done){
                     return const SizedBox.shrink();
                   }
-                  return GroupView(isLoading: true);
+                  return const GroupView(isLoading: true);
                 }
               }),
           Container(
@@ -175,7 +175,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                   if(snapshot.connectionState == ConnectionState.done){
                     return const SizedBox.shrink();
                   }
-                  return GroupView(isLoading: true);
+                  return const GroupView(isLoading: true);
                 }
               }),
           FutureBuilder<ApiResponse>(
@@ -270,7 +270,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                   if(snapshot.connectionState == ConnectionState.done){
                     return const SizedBox.shrink();
                   }
-                  return GroupView(isLoading: true,isGroup: false,);
+                  return const GroupView(isLoading: true,isGroup: false,);
                 }
               }),
           FutureBuilder<ApiResponse>(

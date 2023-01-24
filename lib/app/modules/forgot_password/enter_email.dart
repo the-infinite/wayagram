@@ -105,7 +105,7 @@ class EnterEmail extends GetView<AuthControllerWayagram> {
                         title:
                         'Don\'t have an account? Sign Up',
                         onPressed: () {
-                          Get.to(() => SignUp(),binding: WayagramBinding());
+                          Get.to(() => const SignUp(),binding: WayagramBinding());
                         },
                         borderRadius: 10,
                         bckgrndColor: getAppColor(AppColors.background),

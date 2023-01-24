@@ -89,7 +89,7 @@ class _StoryState extends State<Story> {
                         onTap: (){
                           if(firstItem.profile!.userId!=null){
                             if(firstItem.profile!.userId == fullProfile.userId) {
-                              Get.to(() => Profile());
+                              Get.to(() => const Profile());
                             }else{
                               Get.to(() => OtherProfile(info: [
                                 firstItem.profile!.displayName.toString(),
@@ -137,7 +137,7 @@ class _StoryState extends State<Story> {
                         onTap: (){
                           if(firstItem.profile!.userId!=null){
                             if(firstItem.profile!.userId == fullProfile.userId) {
-                              Get.to(() => Profile());
+                              Get.to(() => const Profile());
                             }else{
                               Get.to(() => OtherProfile(info: [
                                 firstItem.profile!.displayName.toString(),

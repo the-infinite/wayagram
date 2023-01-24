@@ -160,7 +160,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                           if (!showSearchIcon && Platform.isAndroid) {
                             Get.to(() => const Contact(),binding: WayagramBinding());
                           } else {
-                            Get.to(() => Search(),binding: WayagramBinding());
+                            Get.to(() => const Search(),binding: WayagramBinding());
                           }
                         },
                         color: getAppColor(AppColors.background),
@@ -295,7 +295,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                   ),
                 ),
               ),
-              drawer: AppDrawer(),
+              drawer: const AppDrawer(),
               extendBody: controller.currentBottomNavPage.value == 1 ? false : true,
               bottomNavigationBar: BottomNavigationBar(
                   backgroundColor: getAppColor(AppColors.background),

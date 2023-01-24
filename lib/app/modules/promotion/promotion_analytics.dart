@@ -421,7 +421,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                   softWrap: true,
                                                   onTap: (text) {
                                                     controller.defaultSearchValue = text;
-                                                    Get.to(() => Search());
+                                                    Get.to(() => const Search());
                                                   },
                                                   decorateAtSign: true,
                                                 ),
@@ -513,7 +513,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                   softWrap: true,
                                                   onTap: (text) {
                                                     controller.defaultSearchValue = text;
-                                                    Get.to(() => Search());
+                                                    Get.to(() => const Search());
                                                   },
                                                   decorateAtSign: true,
                                                 ),
@@ -600,7 +600,7 @@ class _PromotionAnalyticsState extends State<PromotionAnalytics> with TickerProv
                                                   softWrap: true,
                                                   onTap: (text) {
                                                     controller.defaultSearchValue = text;
-                                                    Get.to(() => Search());
+                                                    Get.to(() => const Search());
                                                   },
                                                   decorateAtSign: true,
                                                 ),

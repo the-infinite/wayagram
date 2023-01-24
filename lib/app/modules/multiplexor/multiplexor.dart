@@ -105,7 +105,7 @@ class _MultiplexorState extends State<Multiplexor> {
                               AppButton(
                                 title: 'Get Started',
                                 onPressed: () {
-                                  Get.to(() => SignUp(),binding: WayagramBinding());
+                                  Get.to(() => const SignUp(),binding: WayagramBinding());
                                 },
                                 borderRadius: 300,
                                 padding: EdgeInsets.symmetric(
@@ -118,7 +118,7 @@ class _MultiplexorState extends State<Multiplexor> {
                                 bckgrndColor: Colors.white,
                                 fontColor: AppColors.primary,
                                 onPressed: () {
-                                  Get.to(() => SignIn(),binding: WayagramBinding());
+                                  Get.to(() => const SignIn(),binding: WayagramBinding());
                                 },
                                 borderRadius: 300,
                                 border: Border.all(color: AppColors.primary),
@@ -159,7 +159,7 @@ class _MultiplexorState extends State<Multiplexor> {
                                 AppButton(
                                   title: 'Get Started',
                                   onPressed: () {
-                                    Get.to(() => SignUp(),binding: WayagramBinding());
+                                    Get.to(() => const SignUp(),binding: WayagramBinding());
                                   },
                                   borderRadius: 300,
                                   padding: EdgeInsets.symmetric(
@@ -172,7 +172,7 @@ class _MultiplexorState extends State<Multiplexor> {
                                   bckgrndColor: Colors.white,
                                   fontColor: AppColors.primary,
                                   onPressed: () {
-                                    Get.to(() => SignIn(),binding: WayagramBinding());
+                                    Get.to(() => const SignIn(),binding: WayagramBinding());
                                   },
                                   borderRadius: 300,
                                   border: Border.all(color: AppColors.primary),
@@ -228,7 +228,7 @@ class _MultiplexorState extends State<Multiplexor> {
                         AppButton(
                           title: 'Get Started',
                           onPressed: () {
-                            Get.to(() => SignUp(),binding: WayagramBinding());
+                            Get.to(() => const SignUp(),binding: WayagramBinding());
                           },
                           borderRadius: 300,
                           padding: EdgeInsets.symmetric(
@@ -241,7 +241,7 @@ class _MultiplexorState extends State<Multiplexor> {
                           bckgrndColor: Colors.white,
                           fontColor: AppColors.primary,
                           onPressed: () {
-                            Get.to(() => SignIn(),binding: WayagramBinding());
+                            Get.to(() => const SignIn(),binding: WayagramBinding());
                           },
                           borderRadius: 300,
                           border: Border.all(color: AppColors.primary),

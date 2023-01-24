@@ -1,11 +1,8 @@
-import 'package:dart_countries/dart_countries.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:nigerian_states_and_lga/nigerian_states_and_lga.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
-import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../core/theme/app_styles.dart';
 import '../../../core/theme/app_themes.dart';
@@ -17,7 +14,6 @@ import '../../global_widgets/page_dropdown.dart';
 import '../../global_widgets/page_input.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../sign_in/sign_in.dart';
-import '../verify_otp/verify_otp.dart';
 
 class SignUp extends GetView<AuthControllerWayagram> {
   const SignUp({Key? key}) : super(key: key);

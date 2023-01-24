@@ -161,7 +161,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     var posts = GroupModelEntity.getService(jsonDecode(savedPosts.val));
                                     return GroupView(posts: posts,isJoined: true);
                                   }else{
-                                    return GroupView(isLoading: true,isJoined: true);
+                                    return const GroupView(isLoading: true,isJoined: true);
                                   }
                                 }),
                             Padding(
@@ -201,7 +201,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     var posts = GroupModelEntity.getService(jsonDecode(savedPosts.val));
                                     return GroupView(posts: posts,isJoined: true);
                                   }else{
-                                    return GroupView(isLoading: true,isJoined: true);
+                                    return const GroupView(isLoading: true,isJoined: true);
                                   }
                                 }),
                             Padding(
@@ -272,7 +272,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                       }
                                     },minimum: 5,);
                                   }else{
-                                    return GroupView(isLoading: true);
+                                    return const GroupView(isLoading: true);
                                   }
                                 }),
                             Padding(
@@ -357,7 +357,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                       }
                                     });
                                   }else{
-                                    return GroupView(isLoading: true);
+                                    return const GroupView(isLoading: true);
                                   }
                                 }),
                           ],
@@ -401,7 +401,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     if(snapshot.connectionState == ConnectionState.done){
                                       return const SizedBox.shrink();
                                     }
-                                    return GroupView(isLoading: true);
+                                    return const GroupView(isLoading: true);
                                   }
                                 }),
                             Padding(
@@ -467,7 +467,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     if(snapshot.connectionState == ConnectionState.done){
                                       return const SizedBox.shrink();
                                     }
-                                    return GroupView(isLoading: true,isGroup: false,);
+                                    return const GroupView(isLoading: true,isGroup: false,);
                                   }
                                 }),
                             Padding(
@@ -542,7 +542,7 @@ class _GroupsAndPagesState extends State<GroupsAndPages> with TickerProviderStat
                                     if(snapshot.connectionState == ConnectionState.done){
                                       return const SizedBox.shrink();
                                     }
-                                    return GroupView(isLoading: true,isGroup: false,);
+                                    return const GroupView(isLoading: true,isGroup: false,);
                                   }
                                 }),
                           ],

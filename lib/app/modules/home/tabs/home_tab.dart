@@ -64,7 +64,7 @@ class _HomeTabState extends State<HomeTab> {
                   var posts = MomentsModelEntity.getService(jsonDecode(saved));
                   return MomentsView(moments: posts);
                 }else{
-                  return MomentsView(isLoading: true);
+                  return const MomentsView(isLoading: true);
                 }
               }),
           Padding(

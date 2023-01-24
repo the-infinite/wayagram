@@ -67,7 +67,7 @@ class ConfirmPIN extends StatelessWidget {
                 AppButton(
                   title: 'Next',
                   onPressed: () {
-                    Get.to(() => Interests(),binding: WayagramBinding());
+                    Get.to(() => const Interests(),binding: WayagramBinding());
 
                   },
                   borderRadius: 10,

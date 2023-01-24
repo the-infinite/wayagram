@@ -173,7 +173,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                             softWrap: true,
                                             onTap: (text) {
                                             controller.defaultSearchValue = text;
-                                            Get.to(() => Search());
+                                            Get.to(() => const Search());
                                             },
                                             decorateAtSign: true,
                                           ),
@@ -257,7 +257,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                             softWrap: true,
                                             onTap: (text) {
                                               controller.defaultSearchValue = text;
-                                              Get.to(() => Search());
+                                              Get.to(() => const Search());
                                             },
                                             decorateAtSign: true,
                                           ),
@@ -336,7 +336,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                                             softWrap: true,
                                             onTap: (text) {
                                               controller.defaultSearchValue = text;
-                                              Get.to(() => Search());
+                                              Get.to(() => const Search());
                                             },
                                             decorateAtSign: true,
                                           ),
@@ -376,7 +376,7 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                         if(snapshot.connectionState == ConnectionState.done){
                           return const SizedBox.shrink();
                         }
-                        return GroupView(isLoading: true);
+                        return const GroupView(isLoading: true);
                       }
                     }),
               ),

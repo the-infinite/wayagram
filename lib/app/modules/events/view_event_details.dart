@@ -77,7 +77,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
               if(widget.event.profile!.id == fullProfile.id)
                 InkWell(
                 onTap: (){
-                  Get.to(() => EventAnalytics(),arguments: widget.event);
+                  Get.to(() => const EventAnalytics(),arguments: widget.event);
                 },
                 child: Icon(
                   Icons.bar_chart,

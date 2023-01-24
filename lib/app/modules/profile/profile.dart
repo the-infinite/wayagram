@@ -258,7 +258,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                                         title: 'Edit',
                                                         onPressed: () {
                                                           controller.imagePaths.clear();
-                                                          Get.to(() => UpdateProfile(),binding: WayagramBinding());
+                                                          Get.to(() => const UpdateProfile(),binding: WayagramBinding());
                                                         },
                                                         borderRadius: 10,
                                                         fontColor: AppColors.primary,

@@ -419,7 +419,7 @@ class _PostState extends State<Post> {
                   onTap: (){
                     if(widget.fullProfile.userId!=null){
                       if(widget.post.profile!.userId == widget.fullProfile.userId) {
-                        Get.to(() => Profile());
+                        Get.to(() => const Profile());
                       }else{
                        // Get.to(() => PostProfile(profileUserID: widget.post.profile!.userId.toString()), arguments: widget.post);
                         Get.to(() => OtherProfile(info: [
@@ -638,7 +638,7 @@ class _PostState extends State<Post> {
                         ),
                         onTap: (text) {
                           widget.homeController.defaultSearchValue = text;
-                          Get.to(() => Search());
+                          Get.to(() => const Search());
                         },
                         decorateAtSign: true,
                       )
@@ -662,7 +662,7 @@ class _PostState extends State<Post> {
                   ),
                   onTap: (text) {
                     widget.homeController.defaultSearchValue = text;
-                    Get.to(() => Search());
+                    Get.to(() => const Search());
                   },
                   decorateAtSign: true,
                 )
@@ -1512,7 +1512,7 @@ class _InnerPostState extends State<InnerPost> {
                   ),
                   onTap: (text) {
                     widget.homeController.defaultSearchValue = text;
-                    Get.to(() => Search());
+                    Get.to(() => const Search());
                   },
                   decorateAtSign: true,
                 )
@@ -2024,7 +2024,7 @@ class _InnerPostWithoutBorder extends State<InnerPostWithoutBorder> {
                 ),
                 onTap: (text) {
                   widget.homeController.defaultSearchValue = text;
-                  Get.to(() => Search());
+                  Get.to(() => const Search());
                 },
                 decorateAtSign: true,
               )
@@ -2643,7 +2643,7 @@ class _CommentPostState extends State<CommentPost> {
                           ),
                           onTap: (text) {
                             widget.homeController.defaultSearchValue = text;
-                            Get.to(() => Search());
+                            Get.to(() => const Search());
                           },
                           decorateAtSign: true,
                         )
@@ -2954,7 +2954,7 @@ class _CommentPostReplyState extends State<CommentPostReply> {
                       ),
                       onTap: (text) {
                         widget.homeController.defaultSearchValue = text;
-                        Get.to(() => Search());
+                        Get.to(() => const Search());
                       },
                       decorateAtSign: true,
                     )

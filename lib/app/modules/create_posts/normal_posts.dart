@@ -961,7 +961,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                         ),
                                       );
                                     }
-                                    return GroupView(isLoading: true);
+                                    return const GroupView(isLoading: true);
                                   }
                                 }) : FutureBuilder<ApiResponse>(
                                 future: controller.searchPeople(detectedHashtagController.text.replaceAll("#", "").replaceAll("@","")),
@@ -1022,7 +1022,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                         ),
                                       );
                                     }
-                                    return GroupView(isLoading: true,isGroup: true,);
+                                    return const GroupView(isLoading: true,isGroup: true,);
                                   }
                                 }),
                           ),
@@ -1092,7 +1092,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                         ),
                                       );
                                     }
-                                    return GroupView(isLoading: true);
+                                    return const GroupView(isLoading: true);
                                   }
                                 }),
                           ) : SingleChildScrollView(
