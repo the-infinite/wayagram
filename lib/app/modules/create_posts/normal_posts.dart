@@ -235,7 +235,7 @@ class _CreatePostsState extends State<CreatePosts> {
                             var response = await controller.postData(body, "/wayagram-service/all-posts/repost-post");
                             if(response.isSuccessful){
                               controller.getPosts.then((value){
-                                controller.update();
+                                controller.update(['profile_page','home_tab','home']);
                               });
                               Get.back();
                               AppOverlay.showSuccessSnackBar(content: "Post quoted successfully");
@@ -288,7 +288,7 @@ class _CreatePostsState extends State<CreatePosts> {
                               if(response!.isSuccessful){
                                 postID = "";
                                 controller.getPosts.then((value){
-                                  controller.update();
+                                  controller.update(['profile_page','home_tab','home']);
                                 });
                                 //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                                 Get.back();
@@ -319,7 +319,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                   postID = "";
                                   //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                                   controller.getPosts.then((value){
-                                    controller.update();
+                                    controller.update(['profile_page','home_tab','home']);
                                   });
                                   //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                                   Get.back();
@@ -1030,7 +1030,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                 }),
                           ),
                         ),
-                      if(textController.text.endsWith("#") || textController.text.endsWith("@"))
+                      /*if(textController.text.endsWith("#") || textController.text.endsWith("@"))
                         Container(
                           color: getAppColor(AppColors.background),
                           height: Get.height*0.25,
@@ -1153,7 +1153,7 @@ class _CreatePostsState extends State<CreatePosts> {
                                   }
                                 }),
                           ),
-                        )
+                        )*/
                     ],
                   ),
                 ),

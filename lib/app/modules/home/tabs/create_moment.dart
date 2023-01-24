@@ -88,8 +88,9 @@ class CreateMoment extends StatelessWidget {
                             var response = await controller.postData(formData, "/wayagram-service/all-posts/create-moment");
                             if(response.isSuccessful){
                               controller.imagePaths.clear();
-                              await controller.getPosts;
-                              controller.update(['home_tab']);
+                              await controller.getPosts.then((value){
+                                controller.update(['profile_page','home_tab','home']);
+                              });
                               if(Get.currentRoute == "/CreateMoment"){
                                 Get.back();
                                 AppOverlay.showSuccessSnackBar(content: "Moment Created Successfully");
@@ -113,8 +114,9 @@ class CreateMoment extends StatelessWidget {
                             var formData = dio.FormData.fromMap(body);
                             var response = await controller.postData(body, "/wayagram-service/all-posts/create-moment");
                             if(response.isSuccessful){
-                              await controller.getPosts;
-                              controller.update(['home_tab']);
+                              await controller.getPosts.then((value){
+                                controller.update(['profile_page','home_tab','home']);
+                              });
                               controller.imagePaths.clear();
                               if(Get.currentRoute == "/CreateMoment"){
                                 Get.back();
@@ -166,7 +168,7 @@ class CreateMoment extends StatelessWidget {
                 children: [
                   SizedBox(
                     child: FormField<String>(
-                        initialValue: '',
+                        initialValue: controller.imagePaths.isEmpty ? "" : controller.imagePaths[0],
                         validator: null,
                         builder: (field) {
                           return DocumentPicker(

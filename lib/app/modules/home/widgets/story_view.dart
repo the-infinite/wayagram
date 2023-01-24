@@ -273,7 +273,7 @@ class _StoryState extends State<Story> {
                 await Get.bottomSheet(
                     MomentViewBottomSheet(
                       buttonText: "Forward",
-                      title: 'Views (${shortenCount(firstItem.viewCount.toString()*10)})',
+                      title: 'Views (${shortenCount(firstItem.viewCount.toString())})',
                       onTap: (person) async {
 
                       }, momentId: '${firstItem.id}',
