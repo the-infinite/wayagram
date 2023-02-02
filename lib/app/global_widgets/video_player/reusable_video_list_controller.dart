@@ -20,6 +20,7 @@ class ReusableVideoListController {
                   enableOverflowMenu: false,
                   enablePlayPause: false,
                   enableSkips: false,
+                  controlBarColor: Colors.black26,
                   playIcon: Icons.play_arrow_rounded,
                   pauseIcon: Icons.pause_rounded,
                   fullscreenEnableIcon: Icons.fullscreen_rounded,
@@ -29,7 +30,6 @@ class ReusableVideoListController {
                   muteIcon: Icons.volume_up_rounded,
                   unMuteIcon: Icons.volume_off_rounded,
                   enableFullscreen: false,
-                controlBarColor: Colors.black26
               )
           ),
         ),

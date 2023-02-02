@@ -1,3 +1,4 @@
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:get/get.dart';
@@ -185,12 +186,32 @@ class AppOverlay {
     );
   }
 
-  static void showErrorSnackBar({String title = "Error",String content = "Something Went Wrong, Please Try Again Later"}) {
-    Get.snackbar(title, content, backgroundColor: Colors.red, colorText: Colors.white);
+  static void showErrorSnackBar({
+    String title = "Error",
+    String content = "Something Went Wrong, Please Try Again Later",
+    Widget? icon = const Icon(Icons.error_rounded)
+  }) {
+    Get.snackbar(
+        title, 
+        content, 
+        backgroundColor: AppColors.bostonUniRed,
+        colorText: Colors.white,
+        icon: icon
+    );
   }
 
-  static void showSuccessSnackBar({String title = "Success",String content = "Your request was successful"}) {
-    Get.snackbar(title, content, backgroundColor: Colors.green, colorText: Colors.white);
+  static void showSuccessSnackBar({
+    String title = "Success",
+    String content = "Your request was successful",
+    Widget? icon = const Icon(Icons.flag_circle_rounded)
+  }) {
+    Get.snackbar(
+        title,
+        content,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        icon: icon
+    );
   }
 
   static Future<void> showDeviceDialog({String title = "",String content = "",String positiveText = "Confirm",String  negativeText = "Cancel",Function()? onPositivePressed,Function()? onNegativePressed}) async {

@@ -10,19 +10,15 @@ import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:http/http.dart';
 import 'package:nigerian_states_and_lga/nigerian_states_and_lga.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:wayagram/app/data/model/log_in_model_entity.dart';
-import 'package:wayagram/app/modules/sign_in/sign_in.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
-import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../bindings/wayagram_binding.dart';
 import '../data/model/ValidateUserModel.dart';
 import '../data/model/current_location_model.dart';
 import '../data/model/full_user_profile_entity.dart';
-import '../data/model/profile_model_entity.dart';
 import '../data/providers/api_response.dart';
 import '../data/providers/my_pref.dart';
 import '../global_widgets/overlays.dart';
@@ -30,7 +26,6 @@ import '../modules/change_password/enter_otp.dart';
 import '../modules/forgot_password/enter_otp.dart';
 import '../modules/home/home.dart';
 import '../modules/profile/confirm_pin.dart';
-import '../modules/profile/create_pin.dart';
 import '../modules/setup/interests.dart';
 import '../modules/verify_otp/verify_otp.dart';
 import '../repository/user_repo.dart';
@@ -80,10 +75,10 @@ class AuthControllerWayagram extends GetxController {
   toggleBusiness(int index) {
     if(index == 0) {
       isBusiness = false;
-      pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+      pageController.animateToPage(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
     } else {
       isBusiness = true;
-      pageController.animateToPage(1, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+      pageController.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
     }
     update();
   }
@@ -147,10 +142,10 @@ class AuthControllerWayagram extends GetxController {
         isLogin = false;
         buttonMessage = "Okay";
       }
-      Get.snackbar("Account Creation Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar(content: message);
     }else{
       await userRepo.resendAuthOTP(personalEmail.text);
-      Get.to(() => VerifyOTP(),binding: WayagramBinding());
+      Get.to(() => const VerifyOTP(),binding: WayagramBinding());
     }
   }
 
@@ -173,10 +168,10 @@ class AuthControllerWayagram extends GetxController {
         isLogin = false;
         buttonMessage = "Okay";
       }
-      Get.snackbar("Account Creation Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar(content: message);
     }else{
       await userRepo.resendAuthOTP(personalEmail.text);
-      Get.to(() => VerifyOTP(),binding: WayagramBinding());
+      Get.to(() => const VerifyOTP(),binding: WayagramBinding());
     }
   }
 
@@ -200,11 +195,15 @@ class AuthControllerWayagram extends GetxController {
         message = "Bad credentials. Check your details and try again";
         buttonMessage = "Okay";
       }
+      else if(response.message == "Http status error [401]"){
+        message = "Account Does Not Exist";
+        buttonMessage = "Okay";
+      }
       else{
         message = "An Error Occurred";
         buttonMessage = "Okay";
       }
-      Get.snackbar("Sign In Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar(title: "Sign In Failed", content: message);
     }else{
       var data = response.data as LogInModelEntity;
       MyPref.authToken.val = data.token.toString();
@@ -244,7 +243,7 @@ class AuthControllerWayagram extends GetxController {
     var isLogin = true;
     ApiResponse response = await userRepo.signIn(_signInFirst);
     if(!response.isSuccessful){
-      Get.snackbar("An Error Occurred", "Please try again",backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar();
     }else{
       var data = response.data as LogInModelEntity;
       MyPref.authToken.val = data.token.toString();
@@ -261,14 +260,14 @@ class AuthControllerWayagram extends GetxController {
     if(!response.isSuccessful){
       MyPref.authToken.val = "";
       if(showError){
-        Get.snackbar("Sign In Failed", "An Error Occurred",backgroundColor: Colors.red, colorText: Colors.white);
+        AppOverlay.showErrorSnackBar(title: "Sign In Failed");
       }
     }else{
       var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
       MyPref.profileId.val = data.id.toString();
       await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
-      await Get.offAll(() => Home(),binding: WayagramBinding());
+      await Get.offAll(() => const Home(),binding: WayagramBinding());
     }
   }
 
@@ -288,14 +287,14 @@ class AuthControllerWayagram extends GetxController {
     ApiResponse response = await userRepo.getFullUserProfile(userID);
     if(!response.isSuccessful){
       MyPref.authToken.val = "";
-      Get.snackbar("An Error Occurred", "Please try again",backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar();
     }else{
       var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
       MyPref.profileId.val = data.id.toString();
       await userRepo.getFollowedByWayaOfficial();
       await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
-      Get.to(() => Interests(),binding: WayagramBinding());
+      Get.to(() => const Interests(),binding: WayagramBinding());
     }
   }
 
@@ -311,7 +310,7 @@ class AuthControllerWayagram extends GetxController {
     var buttonMessage = "";
     if(!response.isSuccessful){
       message = response.message.toString().toLowerCase() == "record with provided input not found" ? "Incorrect OTP Entered" : "An Error Occurred";
-      Get.snackbar("OTP Verification Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar(title: "OTP Verification Error", content: message);
     }else{
       await signInFirst();
     }
@@ -322,9 +321,9 @@ class AuthControllerWayagram extends GetxController {
     var message = "";
     var buttonMessage = "";
     if(!response.isSuccessful){
-      Get.snackbar("Request Failed", response.message!=null ? response.message.toString() : "An Error Occurred",backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar(content: response.message!=null ? response.message.toString() : "An Error Occurred");
     }else{
-      Get.snackbar("OTP Resent", "OTP has been resent to your email address",backgroundColor: Colors.green, colorText: Colors.white);
+      AppOverlay.showSuccessSnackBar(title: "Success", content: "OTP has been resent to your email address");
     }
   }
 
@@ -355,16 +354,9 @@ class AuthControllerWayagram extends GetxController {
     }
     ApiResponse response = await userRepo.createPIN(d);
     if(!response.isSuccessful){
-      AppOverlay.showInfoDialog(
-        title: 'PIN Creation Failed',
-        content:  "An Error Occurred",
-        buttonText: "Okay",
-        onPressed: () {
-          Get.back();
-        },
-      );
+      AppOverlay.showErrorSnackBar();
     }else{
-      Get.to(() => ConfirmPIN(),binding: WayagramBinding());
+      Get.to(() => const ConfirmPIN(),binding: WayagramBinding());
     }
   }
 
@@ -389,12 +381,12 @@ class AuthControllerWayagram extends GetxController {
         message = "An Error Occurred";
         buttonMessage = "Okay";
       }
-      Get.snackbar("Error", message,backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar(content: message);
     }else{
       if(showOverlay){
-        Get.snackbar("Success", "OTP Resent Successfully",backgroundColor: Colors.green, colorText: Colors.white);
+        AppOverlay.showSuccessSnackBar(content: "OTP Resent Successfully");
       }else{
-        Get.to(() => EnterOTP());
+        Get.to(() => const EnterOTP());
       }
     }
   }
@@ -429,9 +421,9 @@ class AuthControllerWayagram extends GetxController {
         message = "An Error Occurred";
         buttonMessage = "Okay";
       }
-      Get.snackbar("Password Reset Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar(content: message);
     }else{
-      Get.snackbar("Success", "Password Reset Successfully",backgroundColor: Colors.green, colorText: Colors.white);
+      AppOverlay.showSuccessSnackBar(content: "Password Reset Successfully");
       password.clear();
       otp.clear();
       emailOrPhone.clear();
@@ -459,12 +451,12 @@ class AuthControllerWayagram extends GetxController {
         message = "An Error Occurred";
         buttonMessage = "Okay";
       }
-      Get.snackbar("Error", message,backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar(content: message);
     }else{
       if(showOverlay){
-        Get.snackbar("Success", "OTP Resent Successfully",backgroundColor: Colors.green, colorText: Colors.white);
+        AppOverlay.showSuccessSnackBar(content: "OTP Resent Successfully");
       }else{
-        Get.to(() => EnterChangeOTP());
+        Get.to(() => const EnterChangeOTP());
       }
     }
   }
@@ -486,7 +478,6 @@ class AuthControllerWayagram extends GetxController {
 
     var message = "";
     var buttonMessage = "";
-    print(response.message);
     if(!response.isSuccessful){
       if(response.message.toString().contains("is not valid")){
         message = "Incorrect OTP Entered";
@@ -504,9 +495,9 @@ class AuthControllerWayagram extends GetxController {
         message = "An Error Occurred";
         buttonMessage = "Okay";
       }
-      Get.snackbar("Password Change Failed", message,backgroundColor: Colors.red, colorText: Colors.white);
+      AppOverlay.showErrorSnackBar(content: message);
     }else{
-      Get.snackbar("Success", "Password Changed Successfully",backgroundColor: Colors.green, colorText: Colors.white);
+      AppOverlay.showSuccessSnackBar(content: "Password Changed Successfully");
       password.clear();
       otp.clear();
       emailOrPhone.clear();
@@ -539,13 +530,13 @@ class AuthControllerWayagram extends GetxController {
     try {
       await launch(
         url,
-        customTabsOption: CustomTabsOption(
+        customTabsOption: const CustomTabsOption(
           toolbarColor: AppColors.primary,
           enableDefaultShare: true,
           enableUrlBarHiding: true,
           showPageTitle: true,
         ),
-        safariVCOption: SafariViewControllerOption(
+        safariVCOption: const SafariViewControllerOption(
           preferredBarTintColor: AppColors.primary,
           preferredControlTintColor: Colors.white,
           barCollapsingEnabled: true,
@@ -565,7 +556,7 @@ class AuthControllerWayagram extends GetxController {
     final response = await userRepo.updateProfile(body);
     var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     await userRepo.getFullUserProfile(profile.userId.toString());
-    Get.offAll(() => Home(),binding: WayagramBinding());
+    Get.offAll(() => const Home(),binding: WayagramBinding());
 
     return response;
   }
