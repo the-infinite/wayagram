@@ -14,6 +14,7 @@ import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
 import '../../../../core/theme/app_styles.dart';
+import '../../bindings/wayagram_binding.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/model/CommentModel.dart';
 import '../../data/model/all_posts_entity.dart';
@@ -29,7 +30,9 @@ import '../../global_widgets/app_input.dart';
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/overlays.dart';
 import '../../global_widgets/page_input.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../home/widgets/posts_view.dart';
+import '../search/search.dart';
 
 class TopClips extends StatefulWidget {
   const TopClips({Key? key}) : super(key: key);
@@ -73,6 +76,29 @@ class _TopClipsState extends State<TopClips> {
                 },
                 child: Icon(FeatherIcons.arrowLeft, color: getAppColor(Colors.black))
             ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: SizedBox(
+                  width: 45,
+                  height: 45,
+                  child: IconButton(
+                    icon: ImageHelper.normalImage(
+                      'assets/images/search.png',
+                      color: getAppColor(AppColors.onBackground),
+                      width: Get.width*0.05,
+                      height: Get.width*0.05,
+                    ),
+                    onPressed: () {
+                      controller.defaultSearchPos = 1;
+                      controller.defaultSearchValue = "";
+                      Get.to(() => const Search(),binding: WayagramBinding());
+                    },
+                    color: getAppColor(AppColors.background),
+                  ),
+                ),
+              )
+            ],
             bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(1.0),
                 child: Container(

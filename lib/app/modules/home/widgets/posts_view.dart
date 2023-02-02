@@ -1273,8 +1273,8 @@ class _PostState extends State<Post> {
                     ],
                   ),
                   //Repost
-                  if(donation == null)
-                    InkWell(
+                  //if(donation == null)
+                  InkWell(
                       onTap: (){
                         Get.bottomSheet(RepostBottomSheet(post: widget.post,undo: reposted));
                       },
