@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,6 +19,7 @@ import '../../data/model/TrendingHashtagsModel.dart';
 import '../../data/model/all_posts_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/group_model_entity.dart';
+import '../../data/model/products_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_button.dart';
@@ -30,6 +32,7 @@ import '../../global_widgets/person_view.dart';
 import '../home/widgets/HashTagView.dart';
 import '../home/widgets/group_view.dart';
 import '../home/widgets/posts_view.dart';
+import '../home/widgets/product_view.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -49,12 +52,13 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
   var searchedGroups = "";
   var searchedPages = "";
   var searchedHashtags = "";
+  var searchedProducts = "";
   late TabController tabController;
 
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 5, vsync: this);
+    tabController = TabController(length: 6, vsync: this);
     searchController.text = homeController.defaultSearchValue;
     homeController.defaultSearchValue = "";
     searchController.addListener(() {
@@ -72,8 +76,8 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
           return Scaffold(
             backgroundColor: getAppColor(AppColors.background),
             appBar: AppBar(
-                elevation: 0,
-                leading: IconButton(
+              elevation: 0,
+              leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back,
                     color: getAppColor(Colors.black),
@@ -82,7 +86,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                     Get.back();
                   },
                 ),
-                title: Padding(
+              title: Padding(
                   padding: EdgeInsets.only(top: Get.height * 0.02,bottom: Get.height * 0.02),
                   child: PageInput(
                     hint: 'Search',
@@ -92,8 +96,57 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                     borderRadius: 180,
                   ),
                 ),
-                centerTitle: false,
+              centerTitle: false,
               backgroundColor: getAppColor(AppColors.background),
+              bottom: PreferredSize(
+                preferredSize: Size(Get.width, Get.height * 0.06),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TabBar(
+                      controller: tabController,
+                      padding: EdgeInsets.zero,
+                      labelColor: getAppColor(Colors.black),
+                      unselectedLabelColor: const Color(0xff9A9A9A),
+                      indicatorColor: AppColors.primary,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelPadding: EdgeInsets.only(left: Get.width * 0.025, right:  Get.width * 0.025),
+                      indicatorPadding: EdgeInsets.zero,
+                      isScrollable: true,
+                      tabs: [
+                        SizedBox(
+                            width:  Get.width * 0.2,
+                            child: const Tab(text: 'Hashtags',iconMargin: EdgeInsets.zero,)
+                        ),
+                        SizedBox(
+                            width:  Get.width * 0.2,
+                            child: const Tab(text: 'Posts',iconMargin: EdgeInsets.zero,)
+                        ),
+                        SizedBox(
+                            width:  Get.width * 0.2,child: const Tab(text: 'People',iconMargin: EdgeInsets.zero,)),
+                        SizedBox(
+                            width:  Get.width * 0.2,child: const Tab(text: 'Groups',iconMargin: EdgeInsets.zero,)),
+                        SizedBox(
+                            width:  Get.width * 0.2,child: const Tab(text: 'Pages',iconMargin: EdgeInsets.zero,)),
+                        SizedBox(
+                            width:  Get.width * 0.2,child: const Tab(text: 'Product',iconMargin: EdgeInsets.zero,)),
+                      ],
+                    ),
+                    const Divider(
+                      height: 0.5,
+                      thickness: 0.5,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ),
+              systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: getAppColor(AppColors.background),
+                  statusBarIconBrightness: getAppBrightness(),
+                  statusBarBrightness: getAppBrightness(),
+                  systemNavigationBarColor: getAppColor(AppColors.background),
+                  systemNavigationBarIconBrightness: getAppBrightness()
+              ),
             ),
             body: Container(
               color: getAppColor(AppColors.background),
@@ -101,33 +154,11 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: Get.height * 0.015),
-                  TabBar(
-                    controller: tabController,
-                    padding: EdgeInsets.zero,
-                    labelColor: getAppColor(Colors.black),
-                    unselectedLabelColor: const Color(0xff9A9A9A),
-                    indicatorColor: AppColors.primary,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    labelPadding: EdgeInsets.only(left: Get.width * 0.02),
-                    indicatorPadding: EdgeInsets.zero,
-                    tabs: const [
-                      Tab(text: 'Hashtags',iconMargin: EdgeInsets.zero,),
-                      Tab(text: 'Posts',iconMargin: EdgeInsets.zero,),
-                      Tab(text: 'People',iconMargin: EdgeInsets.zero,),
-                      Tab(text: 'Groups',iconMargin: EdgeInsets.zero,),
-                      Tab(text: 'Pages',iconMargin: EdgeInsets.zero,),
-                    ],
-                  ),
-                  const Divider(
-                    height: 0.5,
-                    thickness: 0.5,
-                    color: Colors.grey,
-                  ),
                   Expanded(
                     child: TabBarView(
                       controller: tabController,
                       children: [
+                        //Hashtags
                         SingleChildScrollView(
                           child: FutureBuilder<ApiResponse>(
                             //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
@@ -193,6 +224,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 }
                               }),
                         ),
+                        //Posts
                         SingleChildScrollView(
                           child: FutureBuilder<ApiResponse>(
                               future: controller.searchPost(searchController.text.replaceAll("#", "").replaceAll("@","")),
@@ -219,6 +251,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 }
                               }),
                         ),
+                        //People
                         SingleChildScrollView(
                           child: FutureBuilder<ApiResponse>(
                               future: controller.searchPeople(searchController.text.replaceAll("#", "").replaceAll("@","")),
@@ -260,6 +293,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 }
                               }),
                         ),
+                        //Groups
                         SingleChildScrollView(
                           child: FutureBuilder<ApiResponse>(
                               future: controller.searchGroups(searchController.text.replaceAll("#", "").replaceAll("@","")),
@@ -307,6 +341,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 }
                               }),
                         ),
+                        //Pages
                         SingleChildScrollView(
                           child: FutureBuilder<ApiResponse>(
                               future: controller.searchPages(searchController.text.replaceAll("#", "").replaceAll("@","")),
@@ -357,6 +392,49 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                     );
                                   }
                                   return const GroupView(isLoading: true,isGroup: false,);
+                                }
+                              }),
+                        ),
+                        //Products
+                        SingleChildScrollView(
+                          child: FutureBuilder<ApiResponse>(
+                              future: controller.searchProduct(searchController.text.replaceAll("#", "").replaceAll("@","")),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
+                                  //final posts = snapshot.data!.data as List<AllPostsEntity>;
+                                  searchedProducts = jsonEncode(snapshot.data!.data);
+                                  var posts = ProductsModelEntity.fromJson(snapshot.data!.data);
+                                  if(searchController.text.isEmpty && posts.data == null){
+                                    return SizedBox(
+                                      height: Get.height * 0.7,
+                                      child: const Center(
+                                        child: Text('No Products Available'),
+                                      ),
+                                    );
+                                  }
+                                  return ProductView(posts: posts.data!);
+                                }
+                                else if(searchedProducts.isNotEmpty){
+                                  var posts = ProductsModelEntity.fromJson(jsonDecode(searchedProducts));
+                                  if(searchController.text.isEmpty && posts.data == null){
+                                    return SizedBox(
+                                      height: Get.height * 0.7,
+                                      child: const Center(
+                                        child: Text('No Products Available'),
+                                      ),
+                                    );
+                                  }
+                                  return ProductView(posts: posts.data!);
+                                }else{
+                                  if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
+                                    return SizedBox(
+                                      height: Get.height * 0.7,
+                                      child: const Center(
+                                        child: Text('Enter a search term to search for products'),
+                                      ),
+                                    );
+                                  }
+                                  return const PostsView(isLoading: true);
                                 }
                               }),
                         ),

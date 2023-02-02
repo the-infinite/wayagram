@@ -38,6 +38,8 @@ class _CreatePageState extends State<CreatePage> {
   var linkController = TextEditingController();
   var pageVisibility = TextEditingController();
   var pageCategory = TextEditingController();
+  var otherCategory = TextEditingController(text: 'Catering and Food');
+
   PageCategoriesModel? chosenCategory;
 
   var formKey1 = GlobalKey<FormState>();
@@ -45,9 +47,21 @@ class _CreatePageState extends State<CreatePage> {
   @override
   void initState() {
     super.initState();
-    homeController.userRepo.getFullUserProfile(homeController.profile.userId.toString()).then((value) {
+    /*homeController.userRepo.getFullUserProfile(homeController.profile.userId.toString()).then((value) {
       if(value.isSuccessful){
         homeController.userRepo.getPageCategories().then((value) {
+          if(mounted){
+            setState(() {
+
+            });
+          }
+        });
+      }
+    });
+     */
+    homeController.userRepo.getFullUserProfile(homeController.profile.userId.toString()).then((value) {
+      if(value.isSuccessful){
+        homeController.userRepo.getGroupCategories().then((value) {
           if(mounted){
             setState(() {
 
@@ -60,7 +74,41 @@ class _CreatePageState extends State<CreatePage> {
 
   @override
   Widget build(BuildContext context) {
-
+    var businessList = [
+      'Catering and Food',
+      'Cakes and Pastries',
+      'Event Planning',
+      'Music and DJ',
+      'Photography and Videography',
+      'Makeup and Hair',
+      'Decorations',
+      'Health and Skin Care',
+      'Fashion and Accessories',
+      'Clothing, Accessories and Shoes',
+      'Computers and Accessories',
+      'Electronics and Accessories',
+      'Transportation',
+      'Church',
+      'Mosque',
+      'School',
+      'Hospital',
+      'Hotel',
+      'Bar and Lounge',
+      'Beauty Salon',
+      'Barber Shop',
+      'Gym',
+      'Fitness Center',
+      'Sports Club',
+      'E-commerce',
+      'Consulting',
+      'Manufacturer',
+      'Wholesaler',
+      'Retailer',
+      'Distributor',
+      'Importer',
+      'Exporter',
+      'Others'
+    ];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -71,9 +119,13 @@ class _CreatePageState extends State<CreatePage> {
           systemNavigationBarIconBrightness: getAppBrightness()
       ),
       child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
-        List<PageCategoriesModel> categories = [];
+        /*List<PageCategoriesModel> categories = [];
         if(MyPref.pageCategories.val.isNotEmpty){
           categories = PageCategoriesModel.listFromJson(jsonDecode(MyPref.pageCategories.val));
+        }*/
+        List<PageCategoriesModel> categories = [];
+        if(MyPref.groupCategories.val.isNotEmpty){
+          categories = PageCategoriesModel.listFromJson(jsonDecode(MyPref.groupCategories.val));
         }
         return Scaffold(
           appBar: AppBar(
@@ -99,6 +151,7 @@ class _CreatePageState extends State<CreatePage> {
                           "userId": fullProfile.id,
                           "categoryId": chosenCategory!.id,
                           "category": chosenCategory!.title,
+                          "customCategory": chosenCategory!.title!.toLowerCase().trim() == 'others' ? otherCategory.text : "undefined",
                           "username": nameController.text,
                           "title": nameController.text,
                           "description": descriptionController.text,
@@ -193,6 +246,7 @@ class _CreatePageState extends State<CreatePage> {
                                   if(element.id == value){
                                     pageCategory.text = element.title.toString();
                                     chosenCategory = element;
+                                    controller.update();
                                     break;
                                   }
                                 }
@@ -216,6 +270,24 @@ class _CreatePageState extends State<CreatePage> {
                               }).toList(),
                             ),
                             SizedBox(height: Get.height*0.025),
+                            if(pageCategory.text.toLowerCase().trim() == "others")
+                              PageDropButton(
+                                label: "Other Category",
+                                hint: '',
+                                padding: const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                onChanged: (val) {
+                                  otherCategory.value = val!;
+                                },
+                                value: "Catering and Food",
+                                items: businessList.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            if(pageCategory.text.toLowerCase().trim() == "others")
+                              SizedBox(height: Get.height*0.025),
                             PageInput(
                               hint: '',
                               label: 'Description',

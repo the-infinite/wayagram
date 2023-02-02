@@ -13,6 +13,8 @@ class WayapayUtil {
     required String description,
     bool isTest = false,
   }) async {
+    //MER_4ZVuX1672742984272ECB4y
+    //WAYAPUBK_TEST_0x36ff287e3b39402a8b085072b393f98a
     final wayapayPlugin = Wayapay();
     LogInModelEntity logInModelEntity = LogInModelEntity.fromJson(jsonDecode(MyPref.logInDetail.val));
     var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
@@ -31,6 +33,7 @@ class WayapayUtil {
     );
 
     TransactionStatus? transactionStatus = await wayapayPlugin.checkout(context,charge);
+    var id = transactionStatus?.transactionId;
     return transactionStatus;
   }
 }

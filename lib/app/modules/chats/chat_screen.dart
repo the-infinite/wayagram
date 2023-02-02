@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -136,42 +137,33 @@ class _ChatScreenState extends State<ChatScreen> {
     var chatNormalInfo = {"otherId": id};
     var chatGroupInfo = {"groupId":id};
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-          statusBarColor: getAppColor(AppColors.background),
-          statusBarIconBrightness: getAppBrightness(),
-          statusBarBrightness: getAppBrightness(),
-          systemNavigationBarColor: getAppColor(AppColors.background),
-          systemNavigationBarIconBrightness: getAppBrightness()
-      ),
-      child: GetBuilder<ChatControllerWayagram>(id:'chats_screen',builder: (chatController) {
-        if(mounted){
-          if(post.isGroup == true){
-            chatController.listenToCustomEvent('load_previous_group_chats',(chatData){
-              chatController.userRepo.api.emitEvent('chat_overview', {});
-              previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
-              if(previousChatModel!.previousChat != null){
-                if(previousChat.isNotEmpty){
-                  previousChat.clear();
-                  previousChat.addAll(previousChatModel!.previousChat!);
-                  previousChat.sort((a,b) {
-                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
-                  });
-                  chatController.update(['chats_screen']);
-                  _scrollDown();
-                }else{
-                  previousChat.addAll(previousChatModel!.previousChat!);
-                  previousChat.sort((a,b) {
-                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
-                  });
-                  chatController.update(['chats_screen']);
-                  _scrollDown(animate: false);
-                }
-              }
-              chatController.stopListeningToEvent("load_previous_group_chats");
-            });
-            chatController.emitMessages('previous_group_chats', chatGroupInfo,encode: false);
-            /*chatController.listenToCustomEvent("new_message", (p0){
+    if(mounted){
+      if(post.isGroup == true){
+        chatController.listenToCustomEvent('load_previous_group_chats',(chatData){
+          chatController.userRepo.api.emitEvent('chat_overview', {});
+          previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
+          if(previousChatModel!.previousChat != null){
+            if(previousChat.isNotEmpty){
+              previousChat.clear();
+              previousChat.addAll(previousChatModel!.previousChat!);
+              previousChat.sort((a,b) {
+                return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+              });
+              chatController.update(['chats_screen']);
+              _scrollDown();
+            }else{
+              previousChat.addAll(previousChatModel!.previousChat!);
+              previousChat.sort((a,b) {
+                return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+              });
+              chatController.update(['chats_screen']);
+              _scrollDown(animate: false);
+            }
+          }
+          chatController.stopListeningToEvent("load_previous_group_chats");
+        });
+        chatController.emitMessages('previous_group_chats', chatGroupInfo,encode: false);
+        /*chatController.listenToCustomEvent("new_message", (p0){
               chatController.listenToCustomEvent('load_previous_group_chats',(chatData){
                 chatController.userRepo.api.emitEvent('chat_overview', {});
                 previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
@@ -197,33 +189,43 @@ class _ChatScreenState extends State<ChatScreen> {
               });
               chatController.emitMessages('previous_group_chats', chatGroupInfo,encode: false);
             });*/
-          }else{
-            chatController.listenToCustomEvent('load_previous_chats',(chatData){
-              chatController.userRepo.api.emitEvent('chat_overview', {});
-              previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
-              if(previousChatModel!.previousChat != null){
-                if(previousChat.isNotEmpty){
-                  previousChat.clear();
-                  previousChat.addAll(previousChatModel!.previousChat!);
-                  previousChat.sort((a,b) {
-                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
-                  });
-                  chatController.update(['chats_screen']);
-                  _scrollDown();
-                }else{
-                  previousChat.addAll(previousChatModel!.previousChat!);
-                  previousChat.sort((a,b) {
-                    return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
-                  });
-                  chatController.update(['chats_screen']);
-                  _scrollDown(animate: false);
-                }
-              }
-              chatController.stopListeningToEvent("load_previous_chats");
-            });
-            chatController.emitMessages('previous_chats', chatNormalInfo);
+      }else{
+        chatController.listenToCustomEvent('load_previous_chats',(chatData){
+          chatController.userRepo.api.emitEvent('chat_overview', {});
+          previousChatModel = normal_chat.PreviousChatModel.fromJson(chatData);
+          if(previousChatModel!.previousChat != null){
+            if(previousChat.isNotEmpty){
+              previousChat.clear();
+              previousChat.addAll(previousChatModel!.previousChat!);
+              previousChat.sort((a,b) {
+                return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+              });
+              chatController.update(['chats_screen']);
+              _scrollDown();
+            }else{
+              previousChat.addAll(previousChatModel!.previousChat!);
+              previousChat.sort((a,b) {
+                return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+              });
+              chatController.update(['chats_screen']);
+              _scrollDown(animate: false);
+            }
           }
-        }
+          chatController.stopListeningToEvent("load_previous_chats");
+        });
+        chatController.emitMessages('previous_chats', chatNormalInfo);
+      }
+    }
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+          statusBarColor: getAppColor(AppColors.background),
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
+          systemNavigationBarColor: getAppColor(AppColors.background),
+          systemNavigationBarIconBrightness: getAppBrightness()
+      ),
+      child: GetBuilder<ChatControllerWayagram>(id:'chats_screen',builder: (chatController) {
         //callMessage
         //fileMessage
         return  GetBuilder<HomeControllerWayagram>(builder: (controller) {
@@ -770,7 +772,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                                       ],
                                                     ),
                                                   ),
-                                                  PopupMenuButton(
+                                                  if(chat.sending == false)
+                                                    PopupMenuButton(
                                                       color: getAppColor(Colors.white),
                                                       padding: EdgeInsets.zero,
                                                       child: Container(
@@ -870,6 +873,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                                           ),
                                                         ),
                                                       ]),
+                                                  if(chat.sending == true)
+                                                    SizedBox(
+                                                      height: Get.height*0.03,
+                                                    )
                                                 ],
                                               )
                                           ),
@@ -882,7 +889,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                           child: Row(
                                             mainAxisAlignment: chat.senderId == fullProfile.id ? MainAxisAlignment.end : MainAxisAlignment.start,
                                             children: [
-                                              HashTagText(
+                                              if(chat.sending == false)
+                                                HashTagText(
                                                 text: timeago.format(DateTime.parse(chat.createdAt.toString())),
                                                 decoratedStyle: AppTextStyle.bodyText1.copyWith(
                                                   color: getAppColor(Colors.grey),
@@ -897,8 +905,27 @@ class _ChatScreenState extends State<ChatScreen> {
                                                 ),
                                                 decorateAtSign: false,
                                               ),
-                                              if(chat.senderId == fullProfile.id)
+                                              if(chat.senderId == fullProfile.id && chat.sending == false)
                                                 Icon(Icons.check_circle_rounded, color: chat.read == true ? AppColors.primary : getAppColor(Colors.grey), size: 15,),
+
+                                              if(chat.sending == true)
+                                                HashTagText(
+                                                  text: "Sending",
+                                                  decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                    color: getAppColor(Colors.grey),
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.normal,
+                                                  ),
+                                                  basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                    color: getAppColor(Colors.grey),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.normal,
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
+                                                  decorateAtSign: false,
+                                                ),
+                                              if(chat.senderId == fullProfile.id && chat.sending == true)
+                                                Icon(Icons.circle_outlined, color: chat.read == true ? AppColors.primary : getAppColor(Colors.grey), size: 15,),
                                             ],
                                           ),
                                         ),
@@ -1372,7 +1399,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                           child: Row(
                                             mainAxisAlignment: chat.senderId == fullProfile.id ? MainAxisAlignment.end : MainAxisAlignment.start,
                                             children: [
-                                              HashTagText(
+                                              if(chat.sending == false)
+                                                HashTagText(
                                                 text: timeago.format(DateTime.parse(chat.createdAt.toString())),
                                                 decoratedStyle: AppTextStyle.bodyText1.copyWith(
                                                   color: getAppColor(Colors.grey),
@@ -1387,6 +1415,22 @@ class _ChatScreenState extends State<ChatScreen> {
                                                 ),
                                                 decorateAtSign: false,
                                               ),
+                                              if(chat.sending == true)
+                                                HashTagText(
+                                                  text: "Sending",
+                                                  decoratedStyle: AppTextStyle.bodyText1.copyWith(
+                                                    color: getAppColor(Colors.grey),
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.normal,
+                                                  ),
+                                                  basicStyle: AppTextStyle.bodyText1.copyWith(
+                                                    color: getAppColor(Colors.grey),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.normal,
+                                                    fontStyle: FontStyle.italic,
+                                                  ),
+                                                  decorateAtSign: false,
+                                                ),
                                             ],
                                           ),
                                         ),
@@ -1599,15 +1643,49 @@ class _ChatScreenState extends State<ChatScreen> {
                                     if(chatToReply != null){
                                       message['replyMessageId'] = chatToReply!.id.toString();
                                     }
+
+                                    normal_chat.PreviousChat msg = normal_chat.PreviousChat(
+                                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                        receiverId: post.otherId.toString(),
+                                        message: chatTextController.text.toString(),
+                                        forwardMessage: false,
+                                        messageType: "textMessage",
+                                        time: DateTime.now().millisecondsSinceEpoch.toString(),
+                                        createdAt: DateFormat("yyyy-MM-ddTHH:mm:ss").format(DateTime.now()),
+                                        senderId: fullProfile.id,
+                                        sending: true,
+                                        replyMessageId: chatToReply != null ? chatToReply!.id.toString() : null,
+                                        groupId: id
+                                    );
+
                                     chatController.listenToCustomEvent('notify_user',(data){
                                       SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
-                                      if(sendMessageResponse.status == true){
+                                      if(sendMessageResponse.status == true && sendMessageResponse.frontEndId == post.chatId){
                                         chatTextController.clear();
                                         chatToReply = null;
-                                        chatController.update();
+
+                                        var newMsg = msg.copyWith(
+                                            id: sendMessageResponse.id,
+                                            sending: false
+                                        );
+                                        previousChat.remove(msg);
+                                        previousChat.add(newMsg);
+                                        previousChat.sort((a,b) {
+                                          return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                                        });
+                                        chatController.update(['chats_screen']);
+                                        _scrollDown(animate: false);
                                       }
                                       chatController.stopListeningToEvent("notify_user");
                                     });
+
+                                    previousChat.add(msg);
+                                    previousChat.sort((a,b) {
+                                      return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                                    });
+                                    chatController.update(['chats_screen']);
+                                    _scrollDown(animate: false);
+
                                     chatController.emitMessages("send_group_message", message);
                                   }
                                 }
@@ -1623,15 +1701,48 @@ class _ChatScreenState extends State<ChatScreen> {
                                     if(chatToReply != null){
                                       message['replyMessageId'] = chatToReply!.id.toString();
                                     }
+
+                                    normal_chat.PreviousChat msg = normal_chat.PreviousChat(
+                                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                        receiverId: post.otherId.toString(),
+                                        message: chatTextController.text.toString(),
+                                        forwardMessage: false,
+                                        messageType: "textMessage",
+                                        time: DateTime.now().millisecondsSinceEpoch.toString(),
+                                        createdAt: DateFormat("yyyy-MM-ddTHH:mm:ss").format(DateTime.now()),
+                                        senderId: fullProfile.id,
+                                        sending: true,
+                                        replyMessageId: chatToReply != null ? chatToReply!.id.toString() : null
+                                    );
+
                                     chatController.listenToCustomEvent('notify_user',(data){
                                       SendMessageResponse sendMessageResponse = SendMessageResponse.fromJson(data);
-                                      if(sendMessageResponse.status == true){
+                                      if(sendMessageResponse.status == true && sendMessageResponse.frontEndId == post.chatId){
                                         chatTextController.clear();
                                         chatToReply = null;
-                                        chatController.update();
+
+                                        var newMsg = msg.copyWith(
+                                            id: sendMessageResponse.id,
+                                            sending: false
+                                        );
+                                        previousChat.remove(msg);
+                                        previousChat.add(newMsg);
+                                        previousChat.sort((a,b) {
+                                          return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                                        });
+                                        chatController.update(['chats_screen']);
+                                        _scrollDown(animate: false);
                                       }
                                       chatController.stopListeningToEvent("notify_user");
                                     });
+
+                                    previousChat.add(msg);
+                                    previousChat.sort((a,b) {
+                                      return int.parse(b.time.toString()).compareTo(int.parse(a.time.toString()));
+                                    });
+                                    chatController.update(['chats_screen']);
+                                    _scrollDown(animate: false);
+
                                     chatController.emitMessages("send_message", message);
                                   }
                                 }

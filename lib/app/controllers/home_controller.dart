@@ -182,10 +182,12 @@ class HomeControllerWayagram extends GetxController {
   Future<ApiResponse> get getTopClips => userRepo.getTopClips();
 
   //Search
-  Future<ApiResponse> searchPost(String query) => userRepo.getData("wayagram-service/all-posts/search?query=$query");
+  Future<ApiResponse> searchPost(String query) => userRepo.getData("wayagram-service/all-posts/search?query=$query&filterBy=DESCRIPTION");
   Future<ApiResponse> searchPages(String query) => userRepo.getData("wayagram-service/main/page/search-pages?query=$query&pageNumber=1&userId=${profile.id}");
   Future<ApiResponse> searchGroups(String query) => userRepo.getData("wayagram-service/main/group/search-groups?query=$query&pageNumber=1&userId=${profile.id}");
   Future<ApiResponse> searchPeople(String query) => userRepo.getData("wayagram-service/main/profile/search?query=$query&profile_id=${profile.id}");
+  //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-products?query=h&sso_id=639
+  Future<ApiResponse> searchProduct(String query) => userRepo.getData("wayagram-service/all-posts/search-products?query=$query&filterBy=DESCRIPTION");
 
   //discover
   Future<ApiResponse> get getGroups => userRepo.getGroups();

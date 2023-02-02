@@ -73,7 +73,7 @@ PreviousChat previousChatFromJson(String str) => PreviousChat.fromJson(json.deco
 String previousChatToJson(PreviousChat data) => json.encode(data.toJson());
 class PreviousChat {
   PreviousChat({
-      String? id, 
+      String? id,
       String? replyMessageId, 
       String? frontEndId, 
       String? senderId, 
@@ -98,7 +98,9 @@ class PreviousChat {
       bool? isGroup, 
       String? groupId, 
       String? createdAt, 
-      String? updatedAt,}){
+      String? updatedAt,
+      this.sending = false,
+  }){
     _id = id;
     _replyMessageId = replyMessageId;
     _frontEndId = frontEndId;
@@ -154,7 +156,10 @@ class PreviousChat {
     _groupId = json['groupId'];
     _createdAt = json['createdAt'];
     _updatedAt = json['updatedAt'];
+    sending = false;
   }
+
+  bool? sending;
   String? _id;
   String? _replyMessageId;
   String? _frontEndId;
@@ -207,6 +212,7 @@ PreviousChat copyWith({  String? id,
   String? groupId,
   String? createdAt,
   String? updatedAt,
+  bool? sending
 }) => PreviousChat(  id: id ?? _id,
   replyMessageId: replyMessageId ?? _replyMessageId,
   frontEndId: frontEndId ?? _frontEndId,
@@ -233,6 +239,7 @@ PreviousChat copyWith({  String? id,
   groupId: groupId ?? _groupId,
   createdAt: createdAt ?? _createdAt,
   updatedAt: updatedAt ?? _updatedAt,
+  sending: sending
 );
   String? get id => _id;
   String? get replyMessageId => _replyMessageId;
@@ -289,7 +296,17 @@ PreviousChat copyWith({  String? id,
     map['groupId'] = _groupId;
     map['createdAt'] = _createdAt;
     map['updatedAt'] = _updatedAt;
+    map['sending'] = sending;
     return map;
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PreviousChat &&
+          runtimeType == other.runtimeType &&
+          _id == other._id;
+
+  @override
+  int get hashCode => _id.hashCode;
 }

@@ -10,7 +10,6 @@ import '../model/profile_model_entity.dart';
 import 'api_response.dart';
 import 'my_pref.dart';
 
-
 //swagger docs
 //Auth swagger https://services.staging.wayagram.ng/auth-service/swagger-ui/index.html#
 //Main (profile-group-page) https://services.staging.wayagram.ng/main-service/api-docs/
@@ -25,10 +24,10 @@ import 'my_pref.dart';
 //Account Service https://services.wayagram.ng/account-service/swagger-ui/index.html#/
 
 class Api {
-  static String baseUrl = 'https://services.wayagram.ng/';
-  static String baseSocketUrl = 'wss://chats.wayagram.ng/';
-  //static String baseUrl = 'https://services.staging.wayagram.ng/';
-  // gbv  static String baseSocketUrl = 'wss://chats.staging.wayagram.ng/';
+  //static String baseUrl = 'https://services.wayagram.ng/';
+  //static String baseSocketUrl = 'wss://chats.wayagram.ng/';
+  static String baseUrl = 'https://services.staging.wayagram.ng/';
+  static String baseSocketUrl = 'wss://chats.staging.wayagram.ng/';
   CancelToken token = CancelToken();
 
   final Dio _client = Dio(
