@@ -36,6 +36,7 @@ class HomeControllerWayagram extends GetxController {
 
   var defaultSearchValue = "";
   var defaultSearchPos = 0;
+  var searchFilter = "Most Recent";
   TextEditingController otp = TextEditingController();
   RxInt currentBottomNavPage = 0.obs;
 

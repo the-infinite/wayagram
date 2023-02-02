@@ -6,6 +6,7 @@ import 'package:flutter_chat_list/chat_list.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/modules/create_posts/groups.dart';
 import 'package:wayagram/app/modules/create_posts/normal_posts.dart';
@@ -894,6 +895,81 @@ class MomentViewBottomSheet extends StatelessWidget {
                     ],
                   ),
                 ),
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class FilterBottomSheet extends StatefulWidget {
+  const FilterBottomSheet({Key? key}) : super(key: key);
+
+  @override
+  State<FilterBottomSheet> createState() => _FilterBottomSheetState();
+}
+
+class _FilterBottomSheetState extends State<FilterBottomSheet> {
+  @override
+  Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
+          systemNavigationBarColor: getAppColor(AppColors.background),
+          systemNavigationBarIconBrightness: getAppBrightness()
+      ),
+      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
+        return Container(
+          //height: Get.height * 0.65,
+          decoration: BoxDecoration(
+            color: getAppColor(AppColors.background),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: Get.height * 0.020, left: Get.width*0.05, right: 20,bottom: Get.height * 0.015),
+                child: Text(
+                  'Search Filter',
+                  style: AppTextStyle.subtitle1.copyWith(
+                    color: getAppColor(Colors.black),
+                    fontWeight: FontWeight.w600,
+                    fontSize: Get.width * 0.045,
+                  ),
+                ),
+              ),
+              RadioGroup<String>.builder(
+                groupValue: controller.searchFilter,
+                onChanged: (value) => setState(() {
+                  controller.searchFilter = value.toString();
+                  controller.update(['search']);
+                  Get.back();
+                }),
+                items: const ["Most Recent", "Least Recent", "Most Engaged", "Least Engaged"],
+                itemBuilder: (item) => RadioButtonBuilder(
+                  item,
+                ),
+                textStyle: TextStyle(
+                  color: getAppColor(const Color(0xff4F4F4F)),
+                  fontSize: Get.textScaleFactor * 16,
+                  fontWeight: FontWeight.normal,
+                ),
+                activeColor: AppColors.primary,
+                fillColor: AppColors.primary,
               ),
             ],
           ),

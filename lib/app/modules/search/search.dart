@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -29,7 +31,9 @@ import '../../global_widgets/page_input.dart';
 import 'package:dio/dio.dart' as dio;
 
 import '../../global_widgets/person_view.dart';
+import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../home/widgets/HashTagView.dart';
+import '../home/widgets/bottom_sheet.dart';
 import '../home/widgets/group_view.dart';
 import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
@@ -96,6 +100,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                     borderRadius: 180,
                   ),
                 ),
+              titleSpacing: 5,
               centerTitle: false,
               backgroundColor: getAppColor(AppColors.background),
               bottom: PreferredSize(
@@ -140,8 +145,24 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                   ],
                 ),
               ),
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    IconlyLight.filter,
+                    color: getAppColor(Colors.black),
+                  ),
+                  onPressed: () {
+                    Get.bottomSheet(
+                        const FilterBottomSheet(
+
+                        ),
+                        isScrollControlled: true
+                    );
+                  },
+                )
+              ],
               systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarColor: getAppColor(AppColors.background),
+                  statusBarColor: Colors.transparent,
                   statusBarIconBrightness: getAppBrightness(),
                   statusBarBrightness: getAppBrightness(),
                   systemNavigationBarColor: getAppColor(AppColors.background),
@@ -161,11 +182,32 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                         //Hashtags
                         SingleChildScrollView(
                           child: FutureBuilder<ApiResponse>(
-                            //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-hashtags?query=trend&sso_id=41
                               future: controller.getData("/wayagram-service/all-posts/search-hashtags?query=${searchController.text.replaceAll("#", "").replaceAll("@","")}", true),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                   final posts = SearchHashtagsModel.listFromJson(snapshot.data!.data);
+
+                                  if(controller.searchFilter == "Most Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Most Engaged"){
+                                    posts.sort((a,b) {
+                                      return b.postToHashtags!.length.compareTo(a.postToHashtags!.length);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Engaged"){
+                                    posts.sort((a,b) {
+                                      return a.postToHashtags!.length.compareTo(b.postToHashtags!.length);
+                                    });
+                                  }
+
                                   searchedHashtags = jsonEncode(posts);
                                   List<String> title = [];
                                   List<String> subtitle = [];
@@ -190,6 +232,28 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   );
                                 } else if(searchedHashtags.isNotEmpty){
                                   var posts = SearchHashtagsModel.listFromJson(jsonDecode(searchedHashtags));
+
+                                  if(controller.searchFilter == "Most Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Most Engaged"){
+                                    posts.sort((a,b) {
+                                      return b.postToHashtags!.length.compareTo(a.postToHashtags!.length);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Engaged"){
+                                    posts.sort((a,b) {
+                                      return a.postToHashtags!.length.compareTo(b.postToHashtags!.length);
+                                    });
+                                  }
+
                                   List<String> title = [];
                                   List<String> subtitle = [];
                                   for (var element in posts) {
@@ -230,13 +294,88 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                               future: controller.searchPost(searchController.text.replaceAll("#", "").replaceAll("@","")),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
-                                  //final posts = snapshot.data!.data as List<AllPostsEntity>;
                                   searchedPosts = jsonEncode(snapshot.data!.data);
                                   var posts = AllPostsEntity.getService(snapshot.data!.data);
+
+                                  if(controller.searchFilter == "Most Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Most Engaged"){
+                                    posts.sort((a,b) {
+                                      if(a.engagement != null && b.engagement != null){
+                                        var totalA = (a.engagement!.likeCount ?? 0) + (a.engagement!.repostCount ?? 0) + (a.engagement!.commentCount ?? 0);
+                                        var totalB = (b.engagement!.likeCount ?? 0) + (b.engagement!.repostCount ?? 0) + (b.engagement!.commentCount ?? 0);
+                                        return totalB.compareTo(totalA);
+                                      }else{
+                                        var totalA = (a.likeCount ?? 0) + (double.tryParse(a.repostCount.toString()) ?? 0) + (double.tryParse(a.commentCount.toString()) ?? 0);
+                                        var totalB = (b.likeCount ?? 0) + (double.tryParse(b.repostCount.toString()) ?? 0) + (double.tryParse(b.commentCount.toString()) ?? 0);
+                                        return totalB.compareTo(totalA);
+                                      }
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Engaged"){
+                                    posts.sort((a,b) {
+                                      if(a.engagement != null && b.engagement != null){
+                                        var totalA = (a.engagement!.likeCount ?? 0) + (a.engagement!.repostCount ?? 0) + (a.engagement!.commentCount ?? 0);
+                                        var totalB = (b.engagement!.likeCount ?? 0) + (b.engagement!.repostCount ?? 0) + (b.engagement!.commentCount ?? 0);
+                                        return totalA.compareTo(totalB);
+                                      }else{
+                                        var totalA = (a.likeCount ?? 0) + (double.tryParse(a.repostCount.toString()) ?? 0) + (double.tryParse(a.commentCount.toString()) ?? 0);
+                                        var totalB = (b.likeCount ?? 0) + (double.tryParse(b.repostCount.toString()) ?? 0) + (double.tryParse(b.commentCount.toString()) ?? 0);
+                                        return totalA.compareTo(totalB);
+                                      }
+                                    });
+                                  }
+
                                   return PostsView(posts: posts);
                                 }
                                 else if(searchedPosts.isNotEmpty){
                                   var posts = AllPostsEntity.getService(jsonDecode(searchedPosts));
+
+                                  if(controller.searchFilter == "Most Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Most Engaged"){
+                                    posts.sort((a,b) {
+                                      if(a.engagement != null && b.engagement != null){
+                                        var totalA = (a.engagement!.likeCount ?? 0) + (a.engagement!.repostCount ?? 0) + (a.engagement!.commentCount ?? 0);
+                                        var totalB = (b.engagement!.likeCount ?? 0) + (b.engagement!.repostCount ?? 0) + (b.engagement!.commentCount ?? 0);
+                                        return totalB.compareTo(totalA);
+                                      }else{
+                                        var totalA = (a.likeCount ?? 0) + (double.tryParse(a.repostCount.toString()) ?? 0) + (double.tryParse(a.commentCount.toString()) ?? 0);
+                                        var totalB = (b.likeCount ?? 0) + (double.tryParse(b.repostCount.toString()) ?? 0) + (double.tryParse(b.commentCount.toString()) ?? 0);
+                                        return totalB.compareTo(totalA);
+                                      }
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Engaged"){
+                                    posts.sort((a,b) {
+                                      if(a.engagement != null && b.engagement != null){
+                                        var totalA = (a.engagement!.likeCount ?? 0) + (a.engagement!.repostCount ?? 0) + (a.engagement!.commentCount ?? 0);
+                                        var totalB = (b.engagement!.likeCount ?? 0) + (b.engagement!.repostCount ?? 0) + (b.engagement!.commentCount ?? 0);
+                                        return totalA.compareTo(totalB);
+                                      }else{
+                                        var totalA = (a.likeCount ?? 0) + (double.tryParse(a.repostCount.toString()) ?? 0) + (double.tryParse(a.commentCount.toString()) ?? 0);
+                                        var totalB = (b.likeCount ?? 0) + (double.tryParse(b.repostCount.toString()) ?? 0) + (double.tryParse(b.commentCount.toString()) ?? 0);
+                                        return totalA.compareTo(totalB);
+                                      }
+                                    });
+                                  }
+
                                   return PostsView(posts: posts);
                                 }else{
                                   if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
@@ -260,6 +399,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
                                   searchedPeople = jsonEncode(snapshot.data!.data);
                                   var posts = SearchPeopleModel.getService(snapshot.data!.data);
+
                                   return PersonView(
                                     name: posts.map((e) => e.displayName.toString()).toList(),
                                     username: posts.map((e) => e.username.toString()).toList(),
@@ -302,6 +442,28 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
                                   searchedGroups = jsonEncode(snapshot.data!.data);
                                   var posts = GroupModelEntity.getService(snapshot.data!.data);
+
+                                  if(controller.searchFilter == "Most Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Most Engaged"){
+                                    posts.sort((a,b) {
+                                      return (b.numberOfMembers ?? 0).compareTo((a.numberOfMembers ?? 0));
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Engaged"){
+                                    posts.sort((a,b) {
+                                      return (a.numberOfMembers ?? 0).compareTo((b.numberOfMembers ?? 0));
+                                    });
+                                  }
+
                                   return GroupView(
                                     posts: posts,
                                     isGroup: true,
@@ -327,6 +489,28 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   );
                                 } else if(searchedGroups.isNotEmpty){
                                   var posts = GroupModelEntity.getService(jsonDecode(searchedGroups));
+
+                                  if(controller.searchFilter == "Most Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Most Engaged"){
+                                    posts.sort((a,b) {
+                                      return (b.numberOfMembers ?? 0).compareTo((a.numberOfMembers ?? 0));
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Engaged"){
+                                    posts.sort((a,b) {
+                                      return (a.numberOfMembers ?? 0).compareTo((b.numberOfMembers ?? 0));
+                                    });
+                                  }
+
                                   return GroupView(posts: posts,isGroup: true);
                                 }else{
                                   if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
@@ -350,6 +534,28 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   //final posts = snapshot.data!.suggestion as List<GroupModelEntity>;
                                   searchedPages = jsonEncode(snapshot.data!.data);
                                   var posts = GroupModelEntity.getService(snapshot.data!.data);
+
+                                  if(controller.searchFilter == "Most Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Most Engaged"){
+                                    posts.sort((a,b) {
+                                      return (b.numberOfMembers ?? 0).compareTo((a.numberOfMembers ?? 0));
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Engaged"){
+                                    posts.sort((a,b) {
+                                      return (a.numberOfMembers ?? 0).compareTo((b.numberOfMembers ?? 0));
+                                    });
+                                  }
+
                                   return GroupView(posts: posts,isGroup: false,onButtonClick: (group) async {
                                     var body = {
                                       "pageId": group.id,
@@ -367,6 +573,28 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                   });
                                 } else if(searchedPages.isNotEmpty){
                                   var posts = GroupModelEntity.getService(jsonDecode(searchedPages));
+
+                                  if(controller.searchFilter == "Most Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Most Engaged"){
+                                    posts.sort((a,b) {
+                                      return (b.numberOfMembers ?? 0).compareTo((a.numberOfMembers ?? 0));
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Engaged"){
+                                    posts.sort((a,b) {
+                                      return (a.numberOfMembers ?? 0).compareTo((b.numberOfMembers ?? 0));
+                                    });
+                                  }
+
                                   return GroupView(posts: posts,isGroup: false,onButtonClick: (group) async {
                                     var body = {
                                       "pageId": group.id,
@@ -403,8 +631,9 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                 if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                                   //final posts = snapshot.data!.data as List<AllPostsEntity>;
                                   searchedProducts = jsonEncode(snapshot.data!.data);
-                                  var posts = ProductsModelEntity.fromJson(snapshot.data!.data);
-                                  if(searchController.text.isEmpty && posts.data == null){
+                                  var post = ProductsModelEntity.fromJson(snapshot.data!.data);
+
+                                  if(searchController.text.isEmpty && post.data == null){
                                     return SizedBox(
                                       height: Get.height * 0.7,
                                       child: const Center(
@@ -412,11 +641,35 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                       ),
                                     );
                                   }
-                                  return ProductView(posts: posts.data!);
+
+                                  var posts = post.data!;
+
+                                  if(controller.searchFilter == "Most Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Most Engaged"){
+                                    posts.sort((a,b) {
+                                      return (b.noOfPurchase ?? 0).compareTo((a.noOfPurchase ?? 0));
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Engaged"){
+                                    posts.sort((a,b) {
+                                      return (a.noOfPurchase ?? 0).compareTo((b.noOfPurchase ?? 0));
+                                    });
+                                  }
+
+                                  return ProductView(posts: posts);
                                 }
                                 else if(searchedProducts.isNotEmpty){
-                                  var posts = ProductsModelEntity.fromJson(jsonDecode(searchedProducts));
-                                  if(searchController.text.isEmpty && posts.data == null){
+                                  var post = ProductsModelEntity.fromJson(jsonDecode(searchedProducts));
+                                  if(searchController.text.isEmpty && post.data == null){
                                     return SizedBox(
                                       height: Get.height * 0.7,
                                       child: const Center(
@@ -424,7 +677,31 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                                       ),
                                     );
                                   }
-                                  return ProductView(posts: posts.data!);
+
+                                  var posts = post.data!;
+
+                                  if(controller.searchFilter == "Most Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Recent"){
+                                    posts.sort((a,b) {
+                                      return DateTime.parse(a.createdAt.toString()).millisecondsSinceEpoch.compareTo(DateTime.parse(b.createdAt.toString()).millisecondsSinceEpoch);
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Most Engaged"){
+                                    posts.sort((a,b) {
+                                      return (b.noOfPurchase ?? 0).compareTo((a.noOfPurchase ?? 0));
+                                    });
+                                  }
+                                  else if(controller.searchFilter == "Least Engaged"){
+                                    posts.sort((a,b) {
+                                      return (a.noOfPurchase ?? 0).compareTo((b.noOfPurchase ?? 0));
+                                    });
+                                  }
+
+                                  return ProductView(posts: posts);
                                 }else{
                                   if(searchController.text.isEmpty && snapshot.connectionState == ConnectionState.done){
                                     return SizedBox(
