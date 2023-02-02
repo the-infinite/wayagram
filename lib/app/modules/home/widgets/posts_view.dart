@@ -638,6 +638,7 @@ class _PostState extends State<Post> {
                         ),
                         onTap: (text) {
                           widget.homeController.defaultSearchValue = text;
+                          controller.defaultSearchPos = 1;
                           Get.to(() => const Search());
                         },
                         decorateAtSign: true,
@@ -662,6 +663,7 @@ class _PostState extends State<Post> {
                   ),
                   onTap: (text) {
                     widget.homeController.defaultSearchValue = text;
+                    controller.defaultSearchPos = 1;
                     Get.to(() => const Search());
                   },
                   decorateAtSign: true,
@@ -1512,6 +1514,7 @@ class _InnerPostState extends State<InnerPost> {
                   ),
                   onTap: (text) {
                     widget.homeController.defaultSearchValue = text;
+                    controller.defaultSearchPos = 1;
                     Get.to(() => const Search());
                   },
                   decorateAtSign: true,
@@ -2024,6 +2027,7 @@ class _InnerPostWithoutBorder extends State<InnerPostWithoutBorder> {
                 ),
                 onTap: (text) {
                   widget.homeController.defaultSearchValue = text;
+                  controller.defaultSearchPos = 1;
                   Get.to(() => const Search());
                 },
                 decorateAtSign: true,
@@ -2643,6 +2647,7 @@ class _CommentPostState extends State<CommentPost> {
                           ),
                           onTap: (text) {
                             widget.homeController.defaultSearchValue = text;
+                            widget.homeController.defaultSearchPos = 1;
                             Get.to(() => const Search());
                           },
                           decorateAtSign: true,
@@ -2954,6 +2959,7 @@ class _CommentPostReplyState extends State<CommentPostReply> {
                       ),
                       onTap: (text) {
                         widget.homeController.defaultSearchValue = text;
+                        widget.homeController.defaultSearchPos = 1;
                         Get.to(() => const Search());
                       },
                       decorateAtSign: true,

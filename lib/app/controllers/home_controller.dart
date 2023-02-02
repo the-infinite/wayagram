@@ -35,6 +35,7 @@ class HomeControllerWayagram extends GetxController {
   final UserRepository userRepo;
 
   var defaultSearchValue = "";
+  var defaultSearchPos = 0;
   TextEditingController otp = TextEditingController();
   RxInt currentBottomNavPage = 0.obs;
 

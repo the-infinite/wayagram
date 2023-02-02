@@ -58,7 +58,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 6, vsync: this);
+    tabController = TabController(length: 6, vsync: this,initialIndex: homeController.defaultSearchPos);
     searchController.text = homeController.defaultSearchValue;
     homeController.defaultSearchValue = "";
     searchController.addListener(() {

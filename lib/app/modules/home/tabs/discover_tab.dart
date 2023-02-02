@@ -76,6 +76,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     subtitle: subtitle,
                     onClick: (title, subtitle) {
                       controller.defaultSearchValue = title;
+                      controller.defaultSearchPos = 0;
                       Get.to(() => const Search(),binding: WayagramBinding());
                     },
                   );
@@ -99,6 +100,7 @@ class _DiscoverTabState extends State<DiscoverTab> {
                     subtitle: subtitle,
                     onClick: (title, subtitle) {
                       controller.defaultSearchValue = title;
+                      controller.defaultSearchPos = 0;
                       Get.to(() => const Search(),binding: WayagramBinding());
                     },
                   );

@@ -160,6 +160,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                           if (!showSearchIcon && Platform.isAndroid) {
                             Get.to(() => const Contact(),binding: WayagramBinding());
                           } else {
+                            var pos = 0;
+                            if(controller.currentBottomNavPage.value == 0){
+                              pos = 1;
+                            }else if(controller.currentBottomNavPage.value == 1){
+                              pos = 0;
+                            }else if(controller.currentBottomNavPage.value == 2){
+                              pos = 5;
+                            }else if(controller.currentBottomNavPage.value == 3){
+                              pos = 0;
+                            }else if(controller.currentBottomNavPage.value == 4){
+                              pos = 0;
+                            }
+                            controller.defaultSearchPos = pos;
                             Get.to(() => const Search(),binding: WayagramBinding());
                           }
                         },

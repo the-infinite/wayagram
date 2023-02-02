@@ -172,6 +172,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
+                                                            controller.defaultSearchPos = 1;
                                                             Get.to(() => const Search());
                                                           },
                                                           decorateAtSign: true,
@@ -301,6 +302,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
+                                                            controller.defaultSearchPos = 1;
                                                             Get.to(() => const Search());
                                                           },
                                                           decorateAtSign: true,
@@ -452,6 +454,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
+                                                            controller.defaultSearchPos = 1;
                                                             Get.to(() => const Search());
                                                           },
                                                           decorateAtSign: true,
@@ -581,6 +584,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
+                                                            controller.defaultSearchPos = 1;
                                                             Get.to(() => const Search());
                                                           },
                                                           decorateAtSign: true,
@@ -732,6 +736,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
+                                                            controller.defaultSearchPos = 1;
                                                             Get.to(() => const Search());
                                                           },
                                                           decorateAtSign: true,
@@ -867,6 +872,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
+                                                            controller.defaultSearchPos = 1;
                                                             Get.to(() => const Search());
                                                           },
                                                           decorateAtSign: true,
@@ -1024,6 +1030,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
+                                                            controller.defaultSearchPos = 1;
                                                             Get.to(() => const Search());
                                                           },
                                                           decorateAtSign: true,
@@ -1159,6 +1166,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                                           softWrap: true,
                                                           onTap: (text) {
                                                             controller.defaultSearchValue = text;
+                                                            controller.defaultSearchPos = 1;
                                                             Get.to(() => const Search());
                                                           },
                                                           decorateAtSign: true,

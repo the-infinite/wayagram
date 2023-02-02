@@ -606,6 +606,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                   ),
                                                                   onTap: (text) {
                                                                     controller.defaultSearchValue = text;
+                                                                    controller.defaultSearchPos = 1;
                                                                     Get.to(() => const Search());
                                                                   },
                                                                   decorateAtSign: true,
@@ -1212,6 +1213,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                             ),
                                                             onTap: (text) {
                                                               controller.defaultSearchValue = text;
+                                                              controller.defaultSearchPos = 1;
                                                               Get.to(() => const Search());
                                                             },
                                                             decorateAtSign: true,
