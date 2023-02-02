@@ -138,13 +138,19 @@ class _ImageViewerState extends State<ImageViewer> {
                     if(isVideo()){
                       GallerySaver.saveVideo(widget.imageUrls[currentPos]).then((val) {
                         if(val == true){
-                          AppOverlay.showSuccessSnackBar(content: "Video Downloaded To Device");
+                          AppOverlay.showSuccessSnackBar(
+                              content: "Video Downloaded To Device",
+                              icon: const Icon(Icons.download_rounded)
+                          );
                         }
                       });
                     }else{
                       GallerySaver.saveImage(widget.imageUrls[currentPos]).then((val) {
                         if(val == true){
-                          AppOverlay.showSuccessSnackBar(content: "Image Downloaded To Device");
+                          AppOverlay.showSuccessSnackBar(
+                              content: "Image Downloaded To Device",
+                              icon: const Icon(Icons.download_rounded)
+                          );
                         }
                       });
                     }
@@ -153,7 +159,7 @@ class _ImageViewerState extends State<ImageViewer> {
               ),
             ],
             bottom: PreferredSize(
-                preferredSize: Size.fromHeight(0.0),
+                preferredSize: const Size.fromHeight(0.0),
                 child: Container(
                   color: Colors.black,
                   height: 1.0,

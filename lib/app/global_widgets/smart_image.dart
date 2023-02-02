@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wayagram/app/global_widgets/video_player/reusable_video_list_controller.dart';
 
-import 'helpers/size.dart';
 
 class SmartImage extends StatefulWidget {
   final String src;
