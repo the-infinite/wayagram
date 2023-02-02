@@ -101,6 +101,7 @@ class _ProductRealViewState extends State<ProductRealView> {
     if(widget.post.profile == null){
       return const SizedBox.shrink();
     }
+
     return GetBuilder<HomeControllerWayagram>(id: 'product_real_post',builder: (controller) {
       var time = DateTime.parse(widget.post.createdAt!);
       List<String> imageUrls = [];
