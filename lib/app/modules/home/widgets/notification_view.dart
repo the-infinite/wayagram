@@ -7,7 +7,7 @@ import '../../../data/model/notification_model_entity.dart';
 import '../../../global_widgets/app_avatar.dart';
 
 class NotificationView extends StatefulWidget {
-  NotificationView({
+  const NotificationView({
     Key? key,
     this.isLoading = false,
     this.moments,

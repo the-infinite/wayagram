@@ -5,6 +5,7 @@ class MyPref  {
   static final currentApp = ReadWriteValue('wayagram_current_app', "wayagram", box);
   static final anotherApp = ReadWriteValue('wayagram_another_app', false, box);
 
+  static final notificationCount = ReadWriteValue('wayagram_notification_count', 0, box);
   static final darkMode = ReadWriteValue('wayagram_dark_mode', false, box);
 
   static final uniqueID = ReadWriteValue('wayagram_unique_device_id', '', box);

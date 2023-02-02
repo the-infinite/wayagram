@@ -43,6 +43,13 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
   Widget build(BuildContext context) {
     var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
     return GetBuilder<HomeControllerWayagram>(id:"notification_tab",builder: (controller) {
+      var body = {"profileId": fullProfile.id};
+      controller.putData(body, "wayagram-service/main/profile/reset-notification-count").then((value){
+        MyPref.notificationCount.val = 0;
+        controller.getUserProfile().then((value){
+          controller.update(['home_bottom_bar']);
+        });
+      });
       return SizedBox(
         width: Get.width,
         height: Get.height*0.78,

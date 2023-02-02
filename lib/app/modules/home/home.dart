@@ -52,11 +52,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
     }
     homeController.getAllUserData().then((value) => homeController.update());
 
-    subscribeToFirebaseNotification(homeController.profile.userId.toString(), homeController.profile.id.toString());
     setUpMessaging();
   }
 
   Future<void> setUpMessaging() async {
+    subscribeToFirebaseNotification(homeController.profile.userId.toString(), homeController.profile.id.toString());
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
@@ -68,7 +68,24 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
       sound: true,
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      AppOverlay.showSuccessSnackBar(title: message.notification!.title.toString(),content: message.notification!.body!.toString());
+      if(MyPref.authToken.val.isNotEmpty){
+        homeController.getUserProfile().then((value){
+          homeController.update(['home_bottom_bar']);
+        });
+        AppOverlay.showSuccessSnackBar(
+            title: message.notification!.title.toString(),
+            content: message.notification!.body!.toString(),
+            icon: const Icon(Icons.notifications_active_rounded),
+            onTap: (v){
+              if(Get.currentRoute != "/Home" || Get.currentRoute != "/"){
+                Navigator.popUntil(Get.context!, (route) => Get.currentRoute == "/Home" || Get.currentRoute == "/");
+              }
+              homeController.currentBottomNavPage.value = 3;
+              homeController.update(['home']);
+              homeController.toggleShop(0,animate: false);
+            }
+        );
+      }
     });
     chatXController.connectToSocket();
   }
@@ -102,7 +119,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
         builder: (controller) {
           var fullProfile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
           var showSearchIcon = controller.currentBottomNavPage.value == 1 || controller.currentBottomNavPage.value == 2;
-
+          controller.getUserProfile().then((value){
+            controller.update(['home_bottom_bar']);
+          });
           return AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
                 statusBarColor: getAppColor(AppColors.background),
@@ -310,60 +329,79 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
               ),
               drawer: const AppDrawer(),
               extendBody: controller.currentBottomNavPage.value == 1 ? false : true,
-              bottomNavigationBar: BottomNavigationBar(
-                  backgroundColor: getAppColor(AppColors.background),
-                  showSelectedLabels: true,
-                  showUnselectedLabels: true,
-                  type: BottomNavigationBarType.fixed,
-                  items: <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      icon: ImageHelper.normalImage(
-                        'assets/images/u_home-alt.png',
-                        width: 25,
-                        color: controller.currentBottomNavPage.value == 0 ? AppColors.primary : AppColors.grey,
-                      ),
-                      label: 'Home',
+              bottomNavigationBar: GetBuilder<HomeControllerWayagram>(
+                  id: 'home_bottom_bar',
+                  builder: (controller) {
+                  return BottomNavigationBar(
                       backgroundColor: getAppColor(AppColors.background),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: ImageHelper.normalImage(
-                        'assets/images/u_compass.png',
-                        width: 25,
-                        color: controller.currentBottomNavPage.value == 1 ? AppColors.primary : AppColors.grey,
-                      ),
-                      label: 'Discover',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.shopping_cart, color: controller.currentBottomNavPage.value == 2 ? AppColors.primary : AppColors.grey,
-                      ),
-                      label: 'Shops',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: ImageHelper.normalImage(
-                        'assets/images/mdi_notifications_none.png',
-                        width: 25,
-                        color: controller.currentBottomNavPage.value == 3 ? AppColors.primary : AppColors.grey,
-                      ),
-                      label: 'Notifications',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: ImageHelper.normalImage(
-                        'assets/images/message-outline.png',
-                        width: 25,
-                        color: controller.currentBottomNavPage.value == 4 ? AppColors.primary : AppColors.grey,
-                      ),
-                      label: 'Chat',
-                    ),
-                  ],
-                  currentIndex: controller.currentBottomNavPage.value,
-                  selectedItemColor: AppColors.primary,
-                  unselectedItemColor: Colors.grey,
-                  onTap: (index) {
-                    controller.currentBottomNavPage.value = index;
-                    controller.update(['home']);
-                    controller.toggleShop(0,animate: false);
-                  }
+                      showSelectedLabels: true,
+                      showUnselectedLabels: true,
+                      type: BottomNavigationBarType.fixed,
+                      items: <BottomNavigationBarItem>[
+                        BottomNavigationBarItem(
+                          icon: ImageHelper.normalImage(
+                            'assets/images/u_home-alt.png',
+                            width: 25,
+                            color: controller.currentBottomNavPage.value == 0 ? AppColors.primary : AppColors.grey,
+                          ),
+                          label: 'Home',
+                          backgroundColor: getAppColor(AppColors.background),
+                        ),
+                        BottomNavigationBarItem(
+                          icon: ImageHelper.normalImage(
+                            'assets/images/u_compass.png',
+                            width: 25,
+                            color: controller.currentBottomNavPage.value == 1 ? AppColors.primary : AppColors.grey,
+                          ),
+                          label: 'Discover',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(
+                            Icons.shopping_cart, color: controller.currentBottomNavPage.value == 2 ? AppColors.primary : AppColors.grey,
+                          ),
+                          label: 'Shops',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Badge(
+                            label: Text(
+                              MyPref.notificationCount.val.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            isLabelVisible: MyPref.notificationCount.val > 0,
+                            child: ImageHelper.normalImage(
+                              'assets/images/mdi_notifications_none.png',
+                              width: 25,
+                              color: controller.currentBottomNavPage.value == 3 ? AppColors.primary : AppColors.grey,
+                            ),
+                          ),
+                          label: 'Notifications',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: ImageHelper.normalImage(
+                            'assets/images/message-outline.png',
+                            width: 25,
+                            color: controller.currentBottomNavPage.value == 4 ? AppColors.primary : AppColors.grey,
+                          ),
+                          label: 'Chat',
+                        ),
+                      ],
+                      currentIndex: controller.currentBottomNavPage.value,
+                      selectedItemColor: AppColors.primary,
+                      unselectedItemColor: Colors.grey,
+                      onTap: (index) {
+                        controller.currentBottomNavPage.value = index;
+                        controller.update(['home']);
+                        controller.toggleShop(0,animate: false);
+                        homeController.getUserProfile().then((value){
+                          homeController.update(['home_bottom_bar']);
+                        });
+                      }
+                  );
+                }
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {

@@ -266,6 +266,7 @@ class AuthControllerWayagram extends GetxController {
       var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
       MyPref.profileId.val = data.id.toString();
+      MyPref.notificationCount.val = data.notificationCount ?? 0;
       await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
       await Get.offAll(() => const Home(),binding: WayagramBinding());
     }
@@ -292,6 +293,7 @@ class AuthControllerWayagram extends GetxController {
       var data = response.data as FullUserProfileEntity;
       MyPref.fullProfile.val = jsonEncode(response.data);
       MyPref.profileId.val = data.id.toString();
+      MyPref.notificationCount.val = data.notificationCount ?? 0;
       await userRepo.getFollowedByWayaOfficial();
       await subscribeToFirebaseNotification(data.userId.toString(),data.id.toString());
       Get.to(() => const Interests(),binding: WayagramBinding());

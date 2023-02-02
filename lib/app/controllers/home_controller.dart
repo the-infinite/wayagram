@@ -62,11 +62,11 @@ class HomeControllerWayagram extends GetxController {
   bool isProductPost = false;
 
   List<Widget> pages = [
-    HomeTab(),
-    DiscoverTab(),
-    ShopsTab(),
-    NotificationsTab(),
-    ChatsTab()
+    const HomeTab(),
+    const DiscoverTab(),
+    const ShopsTab(),
+    const NotificationsTab(),
+    const ChatsTab()
   ];
   String image1 = "";
   String image2 = "";
@@ -78,6 +78,15 @@ class HomeControllerWayagram extends GetxController {
 
   var profile = FullUserProfileEntity.fromJson(jsonDecode(MyPref.fullProfile.val));
   //var logInDetails = LogInModelEntity.fromJson(jsonDecode(MyPref.logInDetail.val));
+  Future<void> getUserProfile() async {
+    ApiResponse response = await userRepo.getFullUserProfile(profile.userId.toString());
+    if(response.isSuccessful){
+      var data = response.data as FullUserProfileEntity;
+      MyPref.fullProfile.val = jsonEncode(response.data);
+      MyPref.profileId.val = data.id.toString();
+      MyPref.notificationCount.val = data.notificationCount ?? 0;
+    }
+  }
 
   Future<void> checkPermissionStatus() async{
     var status = await Permission.contacts.status;
@@ -187,7 +196,6 @@ class HomeControllerWayagram extends GetxController {
   Future<ApiResponse> searchPages(String query) => userRepo.getData("wayagram-service/main/page/search-pages?query=$query&pageNumber=1&userId=${profile.id}");
   Future<ApiResponse> searchGroups(String query) => userRepo.getData("wayagram-service/main/group/search-groups?query=$query&pageNumber=1&userId=${profile.id}");
   Future<ApiResponse> searchPeople(String query) => userRepo.getData("wayagram-service/main/profile/search?query=$query&profile_id=${profile.id}");
-  //https://services.staging.wayagram.ng/wayagram-service/all-posts/search-products?query=h&sso_id=639
   Future<ApiResponse> searchProduct(String query) => userRepo.getData("wayagram-service/all-posts/search-products?query=$query&filterBy=DESCRIPTION");
 
   //discover

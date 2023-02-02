@@ -189,28 +189,32 @@ class AppOverlay {
   static void showErrorSnackBar({
     String title = "Error",
     String content = "Something Went Wrong, Please Try Again Later",
-    Widget? icon = const Icon(Icons.error_rounded)
+    Widget? icon = const Icon(Icons.error_rounded),
+    Function(GetSnackBar)? onTap
   }) {
     Get.snackbar(
         title, 
         content, 
         backgroundColor: AppColors.bostonUniRed,
         colorText: Colors.white,
-        icon: icon
+        icon: icon,
+        onTap: onTap
     );
   }
 
   static void showSuccessSnackBar({
     String title = "Success",
     String content = "Your request was successful",
-    Widget? icon = const Icon(Icons.flag_circle_rounded)
+    Widget? icon = const Icon(Icons.flag_circle_rounded),
+    Function(GetSnackBar)? onTap
   }) {
     Get.snackbar(
         title,
         content,
         backgroundColor: Colors.green,
         colorText: Colors.white,
-        icon: icon
+        icon: icon,
+        onTap: onTap
     );
   }
 

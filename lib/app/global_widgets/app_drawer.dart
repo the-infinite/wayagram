@@ -87,7 +87,6 @@ class _AppDrawerState extends State<AppDrawer> {
       following = follow.following!.length;
     }
 
-    var controller = Get.find<HomeControllerWayagram>();
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
             statusBarColor: getAppColor(AppColors.background),

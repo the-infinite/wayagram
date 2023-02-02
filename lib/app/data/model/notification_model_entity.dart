@@ -22,7 +22,6 @@ class NotificationModelEntity {
 
 @JsonSerializable()
 class NotificationModelData {
-
 	String? id;
 	@JSONField(name: "PatronId")
 	String? patronId;
@@ -59,7 +58,6 @@ class NotificationModelData {
 
 @JsonSerializable()
 class NotificationModelDataProfile {
-
 	String? id;
 	@JSONField(name: "UserId")
 	String? userId;
@@ -109,9 +107,6 @@ class NotificationModelDataProfile {
 
 @JsonSerializable()
 class NotificationModelDataProfileConnection {
-
-
-  
   NotificationModelDataProfileConnection();
 
   factory NotificationModelDataProfileConnection.fromJson(Map<String, dynamic> json) => $NotificationModelDataProfileConnectionFromJson(json);
