@@ -126,7 +126,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
           });
           return AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
-                statusBarColor: getAppColor(AppColors.background),
+                statusBarColor: Colors.transparent,
                 statusBarIconBrightness: getAppBrightness(),
                 statusBarBrightness: getAppBrightness(),
                 systemNavigationBarColor: getAppColor(AppColors.background),
@@ -204,7 +204,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                 ],
                 backgroundColor: getAppColor(AppColors.background),
                 systemOverlayStyle: SystemUiOverlayStyle(
-                    statusBarColor: getAppColor(AppColors.background),
+                    statusBarColor: Colors.transparent,
                     statusBarIconBrightness: getAppBrightness(),
                     statusBarBrightness: getAppBrightness(),
                     systemNavigationBarColor: getAppColor(AppColors.background),
