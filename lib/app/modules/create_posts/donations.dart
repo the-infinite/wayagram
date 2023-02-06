@@ -43,6 +43,8 @@ class _CreateDonationState extends State<CreateDonation> {
   var descriptionOfSolutionController = TextEditingController();
   var tellUsMoreAboutYouController = TextEditingController();
 
+  var privacyController = TextEditingController(text: 'Public');
+
   var targetController = TextEditingController();
   var minimumAmountController = TextEditingController(text: '500');
 
@@ -249,13 +251,29 @@ class _CreateDonationState extends State<CreateDonation> {
                               controller: descriptionController,
                             ),
                             SizedBox(height: Get.height*0.025),
+                            PageDropButton(
+                              label: "Is the donation private or public?",
+                              hint: '',
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              onChanged: (val) {
+                                privacyController.text = val;
+                              },
+                              value: "Public",
+                              items: ["Public","Private"].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
+                            /*SizedBox(height: Get.height*0.025),
                             PageInput(
                               hint: 'e.g. #schoolfees, #medical, #food, #clothing',
                               label: 'Tags',
                               keyboardType: TextInputType.name,
                               isCompulsory: false,
                               controller: tagsController,
-                            ),
+                            ),*/
                           ],
                         ),
                         Column(

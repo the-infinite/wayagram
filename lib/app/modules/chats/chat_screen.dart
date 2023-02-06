@@ -219,7 +219,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-          statusBarColor: getAppColor(AppColors.background),
+          statusBarColor: Colors.transparent,
           statusBarIconBrightness: getAppBrightness(),
           statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
@@ -413,7 +413,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     height: 1.0,
                   )),
               systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarColor: getAppColor(AppColors.background),
+                  statusBarColor: Colors.transparent,
                   statusBarIconBrightness: getAppBrightness(),
                   statusBarBrightness: getAppBrightness(),
                   systemNavigationBarColor: getAppColor(AppColors.background),

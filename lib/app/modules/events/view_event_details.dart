@@ -16,6 +16,7 @@ import '../../data/model/all_events_entity.dart';
 import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/newsfeed_multiple_imageview.dart';
+import '../home/widgets/bottom_sheet.dart';
 import '../report/report_event.dart';
 import '../view_posts/event_analytics.dart';
 
@@ -52,7 +53,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
             elevation: 0,
             backgroundColor: getAppColor(AppColors.background),
             systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: getAppColor(AppColors.background),
+                statusBarColor: Colors.transparent,
                 statusBarIconBrightness: getAppBrightness(),
                 statusBarBrightness: getAppBrightness(),
                 systemNavigationBarColor: getAppColor(AppColors.background),
@@ -74,7 +75,7 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
               },
             ),
             actions: [
-              if(widget.event.profile!.id == fullProfile.id)
+              /*if(widget.event.profile!.id == fullProfile.id)
                 InkWell(
                 onTap: (){
                   Get.to(() => const EventAnalytics(),arguments: widget.event);
@@ -86,9 +87,8 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                 ),
               ),
               if(widget.event.profile!.id == fullProfile.id)
-                const SizedBox(width: 15),
-              if(widget.event.profile!.id != fullProfile.id)
-                PopupMenuButton(
+                const SizedBox(width: 15),*/
+              PopupMenuButton(
                   color: getAppColor(Colors.white),
                   icon: Icon(
                     FeatherIcons.moreVertical,
@@ -99,18 +99,69 @@ class _ViewEventDetailsState extends State<ViewEventDetails> {
                     if (value == 0) {
                       Get.to(() => ReportEvent(post: widget.event,isPost: true));
                     }
+
+                    if (value == 2) {
+                      Get.to(() => const EventAnalytics(),arguments: widget.event);
+                    }
+
+                    if (value == 1) {
+                      Get.bottomSheet(
+                          PersonBottomSheet(
+                            buttonText: "Invite",
+                            title: "Invite People",
+                            onTap: (person) async {
+                              var body = {
+                                "event_id": widget.event.id,
+                                "requestFrom": fullProfile.id.toString(),
+                                "requestTo": person.id.toString(),
+                              };
+
+                              var response = await controller.postData(body, "/wayagram-service/all-posts/invite-others-to-event");
+                              if(response.isSuccessful){
+                                AppOverlay.showSuccessSnackBar(content: "Invitation sent successfully");
+                              }else{
+                                AppOverlay.showErrorSnackBar(content: "Something went wrong, please try again later");
+                              }
+                            },
+                          ),
+                          isScrollControlled: true
+                      );
+                    }
                   },
                   itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 0,
-                      child: Text(
-                        "Report",
-                        style: AppTextStyle.bodyText1.copyWith(
-                          color: getAppColor(Colors.black),
-                          fontWeight: FontWeight.w500,
+                    if(widget.event.profile!.id == fullProfile.id)
+                      PopupMenuItem(
+                        value: 2,
+                        child: Text(
+                          "View Analytics",
+                          style: AppTextStyle.bodyText1.copyWith(
+                            color: getAppColor(Colors.black),
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
+                    if(widget.event.profile!.id == fullProfile.id)
+                      PopupMenuItem(
+                        value: 1,
+                        child: Text(
+                          "Invite People",
+                          style: AppTextStyle.bodyText1.copyWith(
+                            color: getAppColor(Colors.black),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    if(widget.event.profile!.id != fullProfile.id)
+                      PopupMenuItem(
+                        value: 0,
+                        child: Text(
+                          "Report",
+                          style: AppTextStyle.bodyText1.copyWith(
+                            color: getAppColor(Colors.black),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                   ]),
             ],
             bottom: PreferredSize(

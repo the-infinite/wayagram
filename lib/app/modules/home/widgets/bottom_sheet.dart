@@ -723,9 +723,9 @@ class PersonBottomSheet extends StatelessWidget {
                                   following: posts.following,
                                   showButton: true,
                                   buttonName: buttonText,
-                                  onButtonClick: (person) async{
+                                  onButtonClick: (person) async {
                                     if(onTap != null){
-                                      onTap!(person);
+                                      await onTap!(person);
                                     }
                                   },
                                 );
@@ -749,12 +749,12 @@ class PersonBottomSheet extends StatelessWidget {
                                     buttonName: buttonText,
                                     onButtonClick: (person) async{
                                       if(onTap != null){
-                                        onTap!(person);
+                                        await onTap!(person);
                                       }
                                     },
                                   );
                                 }
-                                return NotificationView(isLoading: true);
+                                return const NotificationView(isLoading: true);
                               }
                             }),
                       ],
