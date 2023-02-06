@@ -72,19 +72,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
         homeController.getUserProfile().then((value){
           homeController.update(['home_bottom_bar']);
         });
-        AppOverlay.showSuccessSnackBar(
-            title: message.notification!.title.toString(),
-            content: message.notification!.body!.toString(),
-            icon: const Icon(Icons.notifications_active_rounded),
-            onTap: (v){
-              if(Get.currentRoute != "/Home" || Get.currentRoute != "/"){
-                Navigator.popUntil(Get.context!, (route) => Get.currentRoute == "/Home" || Get.currentRoute == "/");
+        if(!message.notification!.body!.toString().toLowerCase().contains("you unfollowed")){
+          AppOverlay.showSuccessSnackBar(
+              title: message.notification!.title.toString(),
+              content: message.notification!.body!.toString(),
+              icon: const Icon(Icons.notifications_active_rounded),
+              onTap: (v){
+                if(Get.currentRoute != "/Home" || Get.currentRoute != "/"){
+                  Navigator.popUntil(Get.context!, (route) => Get.currentRoute == "/Home" || Get.currentRoute == "/");
+                }
+                homeController.currentBottomNavPage.value = 3;
+                homeController.update(['home']);
+                homeController.toggleShop(0,animate: false);
               }
-              homeController.currentBottomNavPage.value = 3;
-              homeController.update(['home']);
-              homeController.toggleShop(0,animate: false);
-            }
-        );
+          );
+        }
       }
     });
     chatXController.connectToSocket();

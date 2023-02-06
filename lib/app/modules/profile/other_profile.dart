@@ -59,9 +59,11 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     final savedFollowing = ReadWriteValue('wayagram_saved_following', "", MyPref.box);
+
     if(savedFollowing.val.isNotEmpty){
       savedFollowingList = savedFollowing.val.split(",");
     }
+
     var top = 0.0;
     var arguments = widget.info;
     var userId = arguments[3];
@@ -92,17 +94,23 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
       postsCount = widget.post!.profile!.posts!.toInt();
     }
 
+    final followRequestSent = ReadWriteValue('wayagram_follow_request_sent$userId$id', false, MyPref.box);
     final userDetails = ReadWriteValue('wayagram_user_details$userId$id', "", MyPref.box);
+
     if(userDetails.val.isNotEmpty){
       var model = FullUserProfileEntity.fromJson(jsonDecode(userDetails.val));
       followingCount = model.followings ?? 0;
       followersCount = model.followers ?? 0;
       postsCount = model.posts ?? 0;
     }
+    var connected = false;
     controller.getData("/wayagram-service/main/profile/get-by-user-id?user_id=$userId", true).then((value){
       if(value.isSuccessful){
         userDetails.val = jsonEncode(value.data);
         var model = FullUserProfileEntity.fromJson(value.data);
+        if(model.connection != null){
+          connected = model.connection!.connected ?? false;
+        }
 
         followingCount = model.followings ?? 0;
         followersCount = model.followers ?? 0;
@@ -112,6 +120,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
        /* AppOverlay.showErrorSnackBar(content: "Unable To Get Profile, Pls Try Again");*/
       }
     });
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
           statusBarColor: getAppColor(AppColors.background),
@@ -132,6 +141,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
 
             var isAFollower = followers.followers!.any((element) => element.username == userName);
             var isFollowing = following.following!.any((element) => element.username == userName) || savedFollowingList.contains(id);
+            //followRequestSent.val = !isFollowing;
             var isBlocked = blocked.any((element) => element.username == userName);
             var isMuted = muted.any((element) => element.username == userName);
 
@@ -143,14 +153,19 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
             }else{
               if(savedFollowingList.contains(id)){
                 isFollowing = true;
+                followRequestSent.val = false;
               }else{
                 isFollowing = false;
               }
             }
 
+            if(connected){
+              isFollowing = true;
+              followRequestSent.val = false;
+            }
+
             var postListID = id;
 
-            //https://services.staging.wayagram.ng/wayagram-service/main/profile/get-by-user-id?user_id=8&sso_id=313
             return Scaffold(
               backgroundColor: getAppColor(AppColors.background),
               body:Stack(
@@ -222,24 +237,28 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                     ),
                                   ),
                                 ),
-                                //Edit Profile
+                                //Follow Button
                                 Positioned(
                                   bottom: 0,
                                   right: 20,
                                   child: SizedBox(
                                     child: AppButton(
-                                      title: isFollowing ? 'Following' : privateUser ? 'Send Request' : 'Follow',
+                                      title: followRequestSent.val == false ? (isFollowing ? 'Following' : privateUser ? 'Send Request' : 'Follow') : 'Cancel Request',
                                       onPressed: () async {
                                         var body = {
                                           "user_id": userId,
                                           "username": userName
                                         };
-                                        if(!isFollowing){
+                                        if(!isFollowing && followRequestSent.val == false){
                                           var response = await controller.postData(body, "wayagram-service/graph/friend/follow");
+
                                           if(response.isSuccessful){
                                             if(response.message.toString().toLowerCase().contains("request")){
-                                              AppOverlay.showSuccessSnackBar(content :"Follow request sent successfully");
+                                              followRequestSent.val = true;
+                                              controller.update(['other_profile_page']);
+                                              AppOverlay.showSuccessSnackBar(content :"Request sent successfully");
                                             }else{
+                                              followRequestSent.val = false;
                                               AppOverlay.showSuccessSnackBar(content :"User Followed successfully");
                                               savedFollowingList.add(id);
                                               savedFollowing.val = savedFollowingList.join(",");
@@ -251,7 +270,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                             }
                                           }else{
                                             if(response.message.toString().toLowerCase().contains("request")){
-                                              AppOverlay.showSuccessSnackBar(content :"Friend request sent successfully");
+                                              followRequestSent.val = true;
+                                              controller.update(['other_profile_page']);
+                                              AppOverlay.showSuccessSnackBar(content :"Request sent successfully");
                                             }else{
                                               AppOverlay.showErrorSnackBar();
                                             }
@@ -259,6 +280,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         }else{
                                           var response = await controller.postData(body, "wayagram-service/graph/friend/unfollow");
                                           if(response.isSuccessful){
+                                            AppOverlay.showSuccessSnackBar(content : followRequestSent.val ? "Request cancelled successfully" : "User Unfollowed successfully");
+                                            followRequestSent.val = false;
+
                                             following.following!.removeWhere((element) => element.userId == userId);
                                             MyPref.following.val = jsonEncode(following);
                                             savedFollowingList.remove(id);
@@ -274,10 +298,10 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                         }
                                       },
                                       borderRadius: 10,
-                                      fontColor: isFollowing ? AppColors.primary : getAppColor(AppColors.background),
-                                      bckgrndColor: isFollowing ? getAppColor(AppColors.background) : AppColors.primary,
-                                      border: Border.all(color: isFollowing ? AppColors.primary : getAppColor(AppColors.background), width: 1),
-                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                      fontColor: (isFollowing || followRequestSent.val) ? AppColors.primary : getAppColor(AppColors.background),
+                                      bckgrndColor: (isFollowing || followRequestSent.val) ? getAppColor(AppColors.background) : AppColors.primary,
+                                      border: Border.all(color: (isFollowing || followRequestSent.val) ? AppColors.primary : getAppColor(AppColors.background), width: 1),
+                                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
                                       fontSize: Get.width * 0.04,
                                       width: Get.width * 0.32,
                                     ),
@@ -357,7 +381,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                   child: Row(
                                     children: [
                                       Text(
-                                        followersCount.toString(),
+                                        shortenCount(followersCount.toString()),
                                         style: TextStyle(
                                           color: getAppColor(Colors.black),
                                           fontSize: Get.width*0.035,
@@ -384,7 +408,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                   child: Row(
                                     children: [
                                       Text(
-                                        followingCount.toString(),
+                                        shortenCount(followingCount.toString()),
                                         style: TextStyle(
                                           color: getAppColor(Colors.black),
                                           fontSize: Get.width*0.035,
@@ -405,7 +429,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                 const SizedBox(width: 10),
 
                                 Text(
-                                  postsCount.toString(),
+                                  shortenCount(postsCount.toString()),
                                   style: TextStyle(
                                     color: getAppColor(Colors.black),
                                     fontSize: Get.width*0.035,
@@ -943,5 +967,21 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
     super.dispose();
     tabController.dispose();
     pageController.dispose();
+  }
+
+  String shortenCount(String amount){
+    if(amount == "null" || amount.isEmpty){
+      return "0";
+    }
+    if(num.parse(amount) >= 1000000000){
+      return "${(num.parse(amount) / 1000000000).toStringAsFixed(1)}B";
+    }
+    if(amount.length > 6 && amount.length <= 9){
+      return "${(int.parse(amount) / 1000000).toStringAsFixed(1)}M";
+    }
+    if(amount.length > 4 && amount.length <= 6){
+      return "${(int.parse(amount) / 1000).toStringAsFixed(1)}K";
+    }
+    return amount;
   }
 }

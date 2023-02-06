@@ -58,7 +58,6 @@ class FullUserProfileEntity {
 
 @JsonSerializable()
 class FullUserProfileConnection {
-
 	bool? connected;
 	bool? isAccepted;
 	bool? isPending;
