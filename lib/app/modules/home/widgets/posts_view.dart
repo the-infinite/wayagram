@@ -328,8 +328,12 @@ class _PostState extends State<Post> {
     var originalPostProfile = widget.post.profileId.toString();
     bool reposted = widget.post.isRepost == true || widget.post.originalOwner != null;
     bool showRepost = true;
+    bool repostIsForCurrentUser = false;
     if(reposted){
       var innerpost = widget.post.originalOwner!;
+      if(originalPostProfile == widget.fullProfile.id){
+        repostIsForCurrentUser = true;
+      }
       if(widget.post.description.toString() == innerpost.description.toString()){
         showRepost = false;
         widget.post.profile!.displayName = innerpost.profile!.displayName;
@@ -833,6 +837,7 @@ class _PostState extends State<Post> {
                                           "profile_id": widget.fullProfile.id.toString(),
                                           "poll_option_id": widget.post.poll!.pollOptions![i].id.toString(),
                                           "millisecCreatedAt": 0,
+                                          //"pollOption": widget.post.poll!.pollOptions![i].id.toString(),
                                           //"tranId": "0",
                                         };
                                         homeController.postData(body, "/wayagram-service/all-posts/vote").then((value){
@@ -878,7 +883,7 @@ class _PostState extends State<Post> {
                                     height: Get.height * 0.045,
                                     margin: const EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(11),
+                                      borderRadius: BorderRadius.circular(180),
                                       border: Border.all(color: currentPollVoted ? AppColors.primary :getAppColor(AppColors.onBackground),width: 1),
                                     ),
                                     child: Stack(
@@ -922,7 +927,7 @@ class _PostState extends State<Post> {
                                           SizedBox(
                                           height: Get.height * 0.045,
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(180),
                                             child: LinearProgressIndicator(
                                               value: votePercentage,
                                               valueColor: AlwaysStoppedAnimation<Color>(progressColor),
@@ -934,13 +939,14 @@ class _PostState extends State<Post> {
                                     ),
                                   ),
                                   const SizedBox(height: 5,),
-                                  Padding(
+                                  if(widget.post.poll!.pollOptions![i].shortDesc.toString().isNotEmpty)
+                                    Padding(
                                     padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
                                     child: Text(
                                       widget.post.poll!.pollOptions![i].shortDesc.toString(),
                                       style: TextStyle(
-                                        color: getAppColor(AppColors.onBackground),
-                                        fontSize: Get.width * 0.035,
+                                        color: getAppColor(AppColors.onBackground.withOpacity(0.7)),
+                                        fontSize: Get.width * 0.03,
                                         fontWeight: FontWeight.normal,
                                       ),
                                       softWrap: true,
@@ -1276,7 +1282,7 @@ class _PostState extends State<Post> {
                   //if(donation == null)
                   InkWell(
                       onTap: (){
-                        Get.bottomSheet(RepostBottomSheet(post: widget.post,undo: reposted));
+                        Get.bottomSheet(RepostBottomSheet(post: widget.post,undo: repostIsForCurrentUser));
                       },
                       child: Row(
                         children: [
@@ -1725,7 +1731,7 @@ class _InnerPostState extends State<InnerPost> {
                                     height: Get.height * 0.045,
                                     margin: const EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(11),
+                                      borderRadius: BorderRadius.circular(180),
                                       border: Border.all(color: currentPollVoted ? AppColors.primary :getAppColor(AppColors.onBackground),width: 1),
                                     ),
                                     child: Stack(
@@ -1769,7 +1775,7 @@ class _InnerPostState extends State<InnerPost> {
                                           SizedBox(
                                             height: Get.height * 0.045,
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius: BorderRadius.circular(180),
                                               child: LinearProgressIndicator(
                                                 value: votePercentage,
                                                 valueColor: AlwaysStoppedAnimation<Color>(progressColor),
@@ -1781,13 +1787,14 @@ class _InnerPostState extends State<InnerPost> {
                                     ),
                                   ),
                                   const SizedBox(height: 5,),
-                                  Padding(
+                                  if(innerPostData.poll!.pollOptions![i].shortDesc.toString().isNotEmpty)
+                                    Padding(
                                     padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
                                     child: Text(
                                       innerPostData.poll!.pollOptions![i].shortDesc.toString(),
                                       style: TextStyle(
-                                        color: getAppColor(AppColors.onBackground),
-                                        fontSize: Get.width * 0.035,
+                                        color: getAppColor(AppColors.onBackground.withOpacity(0.7)),
+                                        fontSize: Get.width * 0.03,
                                         fontWeight: FontWeight.normal,
                                       ),
                                       softWrap: true,
@@ -2238,7 +2245,7 @@ class _InnerPostWithoutBorder extends State<InnerPostWithoutBorder> {
                                   height: Get.height * 0.045,
                                   margin: const EdgeInsets.only(top: 0, bottom: 0, left: 0,right: 0),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(11),
+                                    borderRadius: BorderRadius.circular(180),
                                     border: Border.all(color: currentPollVoted ? AppColors.primary :getAppColor(AppColors.onBackground),width: 1),
                                   ),
                                   child: Stack(
@@ -2282,7 +2289,7 @@ class _InnerPostWithoutBorder extends State<InnerPostWithoutBorder> {
                                         SizedBox(
                                           height: Get.height * 0.045,
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(180),
                                             child: LinearProgressIndicator(
                                               value: votePercentage,
                                               valueColor: AlwaysStoppedAnimation<Color>(progressColor),
@@ -2294,13 +2301,14 @@ class _InnerPostWithoutBorder extends State<InnerPostWithoutBorder> {
                                   ),
                                 ),
                                 const SizedBox(height: 5,),
-                                Padding(
+                                if(innerPostData.poll!.pollOptions![i].shortDesc.toString().isNotEmpty)
+                                  Padding(
                                   padding: const EdgeInsets.only(top: 0, bottom: 0, left: 5,right: 5),
                                   child: Text(
                                     innerPostData.poll!.pollOptions![i].shortDesc.toString(),
                                     style: TextStyle(
-                                      color: getAppColor(AppColors.onBackground),
-                                      fontSize: Get.width * 0.035,
+                                      color: getAppColor(AppColors.onBackground.withOpacity(0.7)),
+                                      fontSize: Get.width * 0.03,
                                       fontWeight: FontWeight.normal,
                                     ),
                                     softWrap: true,
