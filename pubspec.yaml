@@ -86,6 +86,7 @@ dependencies:
       ref: main # branch name
   visibility_detector: ^0.3.3
   badges: ^3.0.2
+  freshchat_sdk: ^0.10.2
 
 dev_dependencies:
   flutter_test:
