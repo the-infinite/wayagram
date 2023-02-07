@@ -200,30 +200,40 @@ class _AppDrawerState extends State<AppDrawer> {
                               child: Padding(
                                 padding: EdgeInsets.only(left: Get.width*0.025, right: Get.width*0.025),
                                 child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Acct: ",
+                                      "Account No: ",
                                       style: AppTextStyle.headline4.copyWith(
                                         color: getAppColor(Colors.black),
                                         fontWeight: FontWeight.normal,
                                         fontSize: Get.width*0.04,
                                       ),
                                     ),
-                                    Text(
-                                      "$accountNumber | ",
-                                      style: AppTextStyle.headline4.copyWith(
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: Get.width*0.04,
-                                      ),
-                                    ),
-                                    Text(
-                                      bankName,
-                                      style: AppTextStyle.headline4.copyWith(
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: Get.width*0.04,
-                                      ),
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Text(
+                                          accountNumber,
+                                          style: AppTextStyle.headline4.copyWith(
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: Get.width*0.031,
+                                          ),
+                                        ),
+                                        Text(
+                                          "WAYA MICROFINANCE BANK",
+                                          style: AppTextStyle.headline4.copyWith(
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: Get.width*0.031,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
