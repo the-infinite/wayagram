@@ -20,18 +20,36 @@ class Validator {
     String spcPattern = '(?=.*?[!@#\$&*_~])';
 
     if (!(val!.length >= 8)) {
-      return 'Must be at least 8 characters in length';
+      return 'Password must be at least 8 characters in length';
     } else if (!GetUtils.hasMatch(val, uppercasePattern)) {
-      return 'should contain at least one upper case';
+      return 'Password should contain at least one uppercase';
     } else if (!GetUtils.hasMatch(val, lowercasePattern)) {
-      return 'should contain at least one lower case';
+      return 'Password should contain at least one lowercase';
     } else if (!GetUtils.hasMatch(val, digitPattern)) {
-      return 'should contain at least one number';
+      return 'Password should contain at least one number';
     } else if (!GetUtils.hasMatch(val, spcPattern)) {
-      return 'should contain at least one special character';
-    } else {
-      return null;
+      return 'Password should contain at least one special character';
+    } else if(val.trim().contains(' ')){
+      return 'Password should not contain spaces';
     }
+    return null;
+  }
+
+  static String? singleNameValidation(String? val) {
+    String digitPattern = '(?=.*?[0-9])';
+    String spcPattern = '(?=.*?[!@#\$&*_~^+-?><%])';
+    if (val == null || val.isEmpty) {
+      return 'Please enter your name';
+    }else if (GetUtils.hasMatch(val, digitPattern)) {
+      return 'Name should not contain numbers';
+    } else if (GetUtils.hasMatch(val, spcPattern)) {
+      return 'Name should not contain special characters';
+    }else if(val.length <= 2){
+      return 'Name should be more than 2 characters';
+    }else if(val.trim().contains(' ')){
+      return 'Name should not contain spaces';
+    }
+    return null;
   }
 
   static String? fullnameValidation(String? val) {
@@ -43,7 +61,7 @@ class Validator {
       return 'Name should not contain numbers';
     } else if (GetUtils.hasMatch(val, spcPattern)) {
       return 'Name should not contain special characters';
-    }else if(val.length <= 2){
+    }else if(val.trim().removeAllWhitespace.length <= 2){
       return 'Name should be more than 2 characters';
     }
     return null;
@@ -99,7 +117,7 @@ class Validator {
 
   static String? imageValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter an image';
+      return 'Please select an image';
     }
     return null;
   }

@@ -24,10 +24,10 @@ import 'my_pref.dart';
 //Account Service https://services.wayagram.ng/account-service/swagger-ui/index.html#/
 
 class Api {
-  //static String baseUrl = 'https://services.wayagram.ng/';
-  //static String baseSocketUrl = 'wss://chats.wayagram.ng/';
-  static String baseUrl = 'https://services.staging.wayagram.ng/';
-  static String baseSocketUrl = 'wss://chats.staging.wayagram.ng/';
+  static String baseUrl = 'https://services.wayagram.ng/';
+  static String baseSocketUrl = 'wss://chats.wayagram.ng/';
+  //static String baseUrl = 'https://services.staging.wayagram.ng/';
+  //static String baseSocketUrl = 'wss://chats.staging.wayagram.ng/';
   CancelToken token = CancelToken();
 
   final Dio _client = Dio(
