@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:wayagram/app/data/model/account_model_entity.dart';
@@ -428,6 +429,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                       controller.userRepo.api.disconnect();
                                       Get.back();
                                       await MyPref.clearBoxes();
+                                      Freshchat.resetUser();
                                       Get.offAll(() => const Multiplexor(),binding: WayagramBinding());
                                     },
                                     borderRadius: 10,

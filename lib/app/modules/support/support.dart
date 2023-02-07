@@ -4,6 +4,7 @@ import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wayagram/app/controllers/home_controller.dart';
@@ -88,10 +89,16 @@ class Support extends GetView<HomeControllerWayagram>{
                             text: "Send us a message",
                             subtitle: "Talk to a customer service representative",
                             onPressed: () async {
-                              const url = "https://wa.me/2348066252349?text=Hi, I'm a Wayagram user and i have a complaint";
-                              var encoded = Uri.encodeFull(url);
-                              Uri uri = Uri.parse(url);
-                              controller.launchURL(encoded);
+                              //const url = "https://wa.me/2348066252349?text=Hi, I'm a Wayagram user and i have a complaint";
+                              //var encoded = Uri.encodeFull(url);
+                              //Uri uri = Uri.parse(url);
+                              //controller.launchURL(encoded);
+
+                              //,"reggram","introgram"
+                              Freshchat.identifyUser(externalId:fullProfile.email.toString());
+                              Freshchat.showConversations(tags: ["all","introgram","chatgram"]);
+                              //Freshchat.showFAQ();
+                              //Freshchat.showConversations();
                             }
                         ),
                         SizedBox(height: Get.height*0.02),
