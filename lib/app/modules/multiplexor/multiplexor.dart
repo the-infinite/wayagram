@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:wayagram/app/data/providers/my_pref.dart';
@@ -41,6 +42,7 @@ class _MultiplexorState extends State<Multiplexor> {
 
   Future<void> initFirebase() async {
     await GetStorage.init('MyPref');
+    Freshchat.init("360f8adf-353c-4639-97c5-e07409a4312b", "22786a6e-2a51-4246-8b8d-cf218789930c","msdk.freshchat.com");
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
