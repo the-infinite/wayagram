@@ -240,8 +240,8 @@ class HomeControllerWayagram extends GetxController {
     return response;
   }
 
-  Future<ApiResponse> postData(dynamic body,String url,{bool updatePages = true}) async {
-    final response = await userRepo.postData(url, body);
+  Future<ApiResponse> postData(dynamic body,String url,{bool updatePages = true,String? pin}) async {
+    final response = await userRepo.postData(url, body, pin: pin);
     if (kDebugMode) {
       print(body);
       print(response.message);
@@ -259,8 +259,8 @@ class HomeControllerWayagram extends GetxController {
     return response;
   }
 
-  Future<ApiResponse> putData(dynamic body,String url,{bool updatePages = true}) async {
-    final response = await userRepo.putData(url, body);
+  Future<ApiResponse> putData(dynamic body,String url,{bool updatePages = true,String? pin}) async {
+    final response = await userRepo.putData(url, body, pin: pin);
     if (kDebugMode) {
       print(response.message);
     }
@@ -277,8 +277,8 @@ class HomeControllerWayagram extends GetxController {
     return response;
   }
 
-  Future<ApiResponse> patchData(dynamic body,String url,{bool updatePages = true}) async {
-    final response = await userRepo.patchData(url, body);
+  Future<ApiResponse> patchData(dynamic body,String url,{bool updatePages = true,String? pin}) async {
+    final response = await userRepo.patchData(url, body, pin: pin);
     if (kDebugMode) {
       print(response.message);
     }
@@ -295,8 +295,8 @@ class HomeControllerWayagram extends GetxController {
     return response;
   }
 
-  Future<ApiResponse> deleteData(dynamic body,String url,{bool updatePages = true}) async {
-    final response = await userRepo.deleteData(url, body);
+  Future<ApiResponse> deleteData(dynamic body,String url,{bool updatePages = true,String? pin}) async {
+    final response = await userRepo.deleteData(url, body, pin: pin);
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
       if(updatePages){
         update(['profile_page','home','settings','home_tab']);
@@ -310,28 +310,41 @@ class HomeControllerWayagram extends GetxController {
     return response;
   }
 
-  Future<ApiResponse> getData(String url,bool hasSSO) async {
-    final response = await userRepo.getData(url, sso: hasSSO);
+  Future<ApiResponse> getData(String url,bool hasSSO,{bool updatePages = true,String? pin}) async {
+    final response = await userRepo.getData(url, sso: hasSSO, pin: pin);
+    userRepo.getFullUserProfile(profile.userId.toString()).then((value){
+      if(updatePages){
+        update(['profile_page','home','settings']);
+      }
+      getAllUserData().then((value){
+        if(updatePages){
+          update(['profile_page','home','settings']);
+        }
+      });
+    });
     return response;
   }
 
   Future<void> getAllUserData() async {
     //await userRepo.getFriends();
+    await userRepo.getMoments();
+    await userRepo.getPosts();
+
     await userRepo.getRestrictedAccount();
     await userRepo.getMutedAccount();
     await userRepo.getFollowers();
     await userRepo.getFollowing();
     //await userRepo.getFriendSuggestions();
-    //await userRepo.getMoments();
-    //await userRepo.getPosts();
+
     //await userRepo.getGroups();
     //await userRepo.getSuggestedGroups();
     //await userRepo.getSuggestedPages();
     //await userRepo.getEventsToAttend();
     //await userRepo.getAllProducts();
     //await userRepo.getMyProducts();
-    await userRepo.getAllNotifications();
+    //await userRepo.getAllNotifications();
     //await userRepo.getAccountNumber();
+
     await userRepo.getPageCategories();
     await userRepo.getGroupCategories();
   }

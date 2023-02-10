@@ -456,6 +456,7 @@ class _AppDrawerState extends State<AppDrawer> {
     }
     (context as Element).visitChildren(rebuild);
   }
+
 }
 
 class _TextButton extends StatelessWidget {

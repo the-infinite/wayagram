@@ -181,24 +181,24 @@ class UserRepository {
     final response = await api.putData('/wayagram-service/main/profile/update',hasHeader: true,body: body);
     return response;
   }
-  Future<ApiResponse> postData(String url,dynamic body,{hasHeader = true,sso = true}) async {
-    final response = await api.postData(url,hasHeader: hasHeader,sso: sso,body: body);
+  Future<ApiResponse> postData(String url,dynamic body,{hasHeader = true,sso = true,String? pin}) async {
+    final response = await api.postData(url,hasHeader: hasHeader,sso: sso,body: body,pin: pin);
     return response;
   }
-  Future<ApiResponse> getData(String url,{hasHeader = true,sso = true}) async {
-    final response = await api.getData(url,hasHeader: hasHeader,sso: sso);
+  Future<ApiResponse> getData(String url,{hasHeader = true,sso = true,String? pin}) async {
+    final response = await api.getData(url,hasHeader: hasHeader,sso: sso,pin: pin);
     return response;
   }
-  Future<ApiResponse> putData(String url,dynamic body,{hasHeader = true,sso = true}) async {
-    final response = await api.putData(url,hasHeader: hasHeader,sso: sso,body: body);
+  Future<ApiResponse> putData(String url,dynamic body,{hasHeader = true,sso = true,String? pin}) async {
+    final response = await api.putData(url,hasHeader: hasHeader,sso: sso,body: body,pin: pin);
     return response;
   }
-  Future<ApiResponse> patchData(String url,dynamic body,{hasHeader = true,sso = true}) async {
-    final response = await api.patchData(url,hasHeader: hasHeader,sso: sso,body: body);
+  Future<ApiResponse> patchData(String url,dynamic body,{hasHeader = true,sso = true,String? pin}) async {
+    final response = await api.patchData(url,hasHeader: hasHeader,sso: sso,body: body,pin: pin);
     return response;
   }
-  Future<ApiResponse> deleteData(String url,dynamic body,{hasHeader = true,sso = true}) async {
-    final response = await api.deleteData(url,hasHeader: hasHeader,sso: sso,body: body);
+  Future<ApiResponse> deleteData(String url,dynamic body,{hasHeader = true,sso = true,String? pin}) async {
+    final response = await api.deleteData(url,hasHeader: hasHeader,sso: sso,body: body,pin: pin);
     return response;
   }
   //Not Done Yet
