@@ -241,7 +241,7 @@ class _PollPaymentScreenState extends State<PollPaymentScreen> {
                               
                               var validatePin = await controller.getData("/auth-service/api/v1/pin/validate-pin/${pinTextController.text}", false);
                               if(validatePin.isSuccessful){
-                                var res = await  controller.postData(body,"/wayagram-service/all-posts/vote");
+                                var res = await  controller.postData(body,"/wayagram-service/all-posts/vote",pin:pinTextController.text);
                                 if(Get.currentRoute == "/PollPaymentScreen"){
                                   if(res.isSuccessful){
                                     var pollVoteID = widget.post.id.toString()+id;

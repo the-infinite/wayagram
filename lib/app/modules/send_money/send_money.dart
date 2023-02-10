@@ -233,7 +233,7 @@ class _SendMoneyState extends State<SendMoney> {
 
                               var validatePin = await controller.getData("/auth-service/api/v1/pin/validate-pin/${pinTextController.text}", false);
                               if(validatePin.isSuccessful){
-                                var res = await  controller.postData(body,"/contact-service/contact/account/service/send/money/to/userId/${widget.userIDToSendTo}");
+                                var res = await  controller.postData(body,"/contact-service/contact/account/service/send/money/to/userId/${widget.userIDToSendTo}",pin:pinTextController.text);
                                 if(Get.currentRoute == "/SendMoney"){
                                   if(res.isSuccessful){
                                     if(post != null){

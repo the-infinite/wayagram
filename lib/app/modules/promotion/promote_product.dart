@@ -1295,7 +1295,7 @@ class _PromoteProductState extends State<PromoteProduct> {
                                   };
                                   var validatePin = await controller.getData("/auth-service/api/v1/pin/validate-pin/${pinTextController.text}", false);
                                   if(validatePin.isSuccessful){
-                                    var res = await controller.postData(body, "wayagram-service/all-posts/promotion-create");
+                                    var res = await controller.postData(body, "wayagram-service/all-posts/promotion-create",pin:pinTextController.text);
                                     if(Get.currentRoute == "/PromoteProduct"){
                                       if(res.isSuccessful){
                                         Navigator.popUntil(Get.context!, (route) => Get.currentRoute == "/ProductAnalytics");

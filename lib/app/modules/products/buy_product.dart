@@ -187,7 +187,7 @@ class _BuyProductState extends State<BuyProduct> {
 
                               var validatePin = await controller.getData("/auth-service/api/v1/pin/validate-pin/${pinTextController.text}", false);
                               if(validatePin.isSuccessful){
-                                var res = await  controller.postData(body,"/wayagram-service/all-posts/pay-a-product");
+                                var res = await  controller.postData(body,"/wayagram-service/all-posts/pay-a-product",pin:pinTextController.text);
                                 if(Get.currentRoute == "/BuyProduct"){
                                   if(res.isSuccessful){
                                     Navigator.pop(Get.context!);

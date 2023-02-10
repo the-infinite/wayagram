@@ -236,7 +236,7 @@ class _PayForEventState extends State<PayForEvent> {
 
                               var validatePin = await controller.getData("/auth-service/api/v1/pin/validate-pin/${pinTextController.text}", false);
                               if(validatePin.isSuccessful){
-                                var res = await  controller.postData(body,"/wayagram-service/all-posts/pay-an-event");
+                                var res = await  controller.postData(body,"/wayagram-service/all-posts/pay-an-event",pin:pinTextController.text);
                                 if(Get.currentRoute == "/PayForEvent"){
                                   if(res.isSuccessful){
                                     Navigator.pop(Get.context!);
