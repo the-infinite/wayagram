@@ -118,7 +118,7 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
                     },
                   ),
                   SizedBox(height: Get.height*0.02),
-                  _SwitchButton(
+                  /*_SwitchButton(
                     text: "Email Notifications",
                     value: emailNotification.val,
                     onChanged: (val){
@@ -127,13 +127,13 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
                     },
                   ),
 
-                  /*SizedBox(height: Get.height*0.02),
+                  *//*SizedBox(height: Get.height*0.02),
                   _SwitchButton(
                     text: "New Notifications",
                     onChanged: (val){
 
                     },
-                  ),*/
+                  ),*//*
 
                   SizedBox(height: Get.height*0.02),
                   _SwitchButton(
@@ -170,7 +170,7 @@ class _NotificationsSettingsState extends State<NotificationsSettings> {
                       interestRecommendationNotification.val = val;
                       if(mounted) setState(() {});
                     },
-                  ),
+                  ),*/
                 ],
               ),
             ),

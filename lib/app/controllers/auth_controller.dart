@@ -354,6 +354,7 @@ class AuthControllerWayagram extends GetxController {
   }
 
   //Confirm OTP
+
   Map<String, dynamic> get _getOTP => {
     'phoneOrEmail': personalEmail.text,
     "otp" : otp.text,
