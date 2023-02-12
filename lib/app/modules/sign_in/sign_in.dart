@@ -101,6 +101,7 @@ class SignIn extends GetView<AuthControllerWayagram> {
                         title: 'Login',
                         onPressed: () async {
                           if(formKey.currentState!.validate()){
+                            controller.twoFactorOTP.text = '';
                             await controller.signIn();
                           }
                         },

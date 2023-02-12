@@ -109,7 +109,7 @@ class VerifyOTP extends GetView<AuthControllerWayagram> {
                     if(controller.otp.text.length == 6) {
                       await controller.confirmOTP();
                     }else{
-                      Get.snackbar("Error", "Please Enter a valid otp",backgroundColor: Colors.red, colorText: Colors.white);
+                      AppOverlay.showErrorSnackBar(content: "Please enter a valid otp");
                     }
                   },
                   borderRadius: 10,

@@ -27,6 +27,8 @@ import '../modules/forgot_password/enter_otp.dart';
 import '../modules/home/home.dart';
 import '../modules/profile/confirm_pin.dart';
 import '../modules/setup/interests.dart';
+import '../modules/sign_in/sign_in.dart';
+import '../modules/verify_otp/verify_2fa_otp.dart';
 import '../modules/verify_otp/verify_otp.dart';
 import '../repository/user_repo.dart';
 
@@ -35,6 +37,7 @@ class AuthControllerWayagram extends GetxController {
 
   TextEditingController emailOrPhone = TextEditingController();
   OtpFieldController otpController = OtpFieldController();
+  OtpFieldController otpController2 = OtpFieldController();
 
   TextEditingController gender = TextEditingController(text: "MALE");
   TextEditingController businessName = TextEditingController();
@@ -57,6 +60,8 @@ class AuthControllerWayagram extends GetxController {
 
   TextEditingController pin = TextEditingController();
   TextEditingController confirmPin = TextEditingController();
+
+  TextEditingController twoFactorOTP = TextEditingController(text: "");
 
   var currentBusinessPage = 0;
   var currentPersonalPage = 0;
@@ -123,6 +128,7 @@ class AuthControllerWayagram extends GetxController {
     "wayaBankPayPosGram": "WAYAGRAM",
   };
 
+  bool creatingAccount = false;
   Future<void> signUpCorporate() async {
     var message = "";
     var buttonMessage = "";
@@ -145,6 +151,8 @@ class AuthControllerWayagram extends GetxController {
       AppOverlay.showErrorSnackBar(content: message);
     }else{
       await userRepo.resendAuthOTP(personalEmail.text);
+      AppOverlay.showSuccessSnackBar(content: "Account Created Successfully");
+      creatingAccount = true;
       Get.to(() => const VerifyOTP(),binding: WayagramBinding());
     }
   }
@@ -171,6 +179,8 @@ class AuthControllerWayagram extends GetxController {
       AppOverlay.showErrorSnackBar(content: message);
     }else{
       await userRepo.resendAuthOTP(personalEmail.text);
+      AppOverlay.showSuccessSnackBar(content: "Account Created Successfully");
+      creatingAccount = true;
       Get.to(() => const VerifyOTP(),binding: WayagramBinding());
     }
   }
@@ -179,7 +189,7 @@ class AuthControllerWayagram extends GetxController {
   Map<String, dynamic> get _signIn => {
     'emailOrPhoneNumber': GetUtils.isEmail(emailOrPhone.text) ?  emailOrPhone.text : emailOrPhone.text.startsWith("+234") ? emailOrPhone.text.substring(1,emailOrPhone.text.length) : emailOrPhone.text.startsWith("234") ? emailOrPhone.text : emailOrPhone.text.length == 10 ? "234${emailOrPhone.text}" : "234${emailOrPhone.text.substring(1,emailOrPhone.text.length)}",
     'password': password.text,
-    //'otp':"481606"
+    'otp': twoFactorOTP.text,
   };
 
   Map<String, dynamic> get _signInFirst => {
@@ -187,35 +197,75 @@ class AuthControllerWayagram extends GetxController {
     'password': password.text,
   };
 
-  Future<void> signIn() async {
+  Future<void> signIn({bool firstTime = false}) async {
     var message = "";
-    var buttonMessage = "";
-    ApiResponse response = await userRepo.signIn(_signIn);
-    if(!response.isSuccessful){
-      if(response.message.toString().contains("Bad credentials")) {
-        message = "Bad credentials. Check your details and try again";
-        buttonMessage = "Okay";
-      }
-      else if(response.message == "Http status error [401]"){
-        message = "Account Does Not Exist";
-        buttonMessage = "Okay";
+    if(twoFactorOTP.text.isEmpty){
+      ApiResponse response = await userRepo.signIn(_signIn);
+      if(!response.isSuccessful){
+        if(response.message.toString().contains("Bad credentials")) {
+          message = "Bad credentials. Check your details and try again";
+          AppOverlay.showErrorSnackBar(title: "Sign In Failed", content: message);
+        }
+        else if(response.message == "Http status error [401]"){
+          var res = await userRepo.postData("/auth-service/api/v1/auth/generate-login-otp/${emailOrPhone.text}", null);
+          if(res.isSuccessful){
+            AppOverlay.showSuccessSnackBar(content: "2 Factor Authentication Code Sent To Your Email");
+            Get.to(() => const Verify2FAOTP());
+          }else{
+            message = "An Error Occurred";
+            AppOverlay.showErrorSnackBar(title: "Sign In Failed", content: message);
+          }
+        }
+        else{
+          message = "An Error Occurred";
+          AppOverlay.showErrorSnackBar(title: "Sign In Failed", content: message);
+        }
       }
       else{
-        message = "An Error Occurred";
-        buttonMessage = "Okay";
-      }
-      print(response.message.toString());
-      print(response.data.toString());
-      AppOverlay.showErrorSnackBar(title: "Sign In Failed", content: message);
-    }else{
-      var data = response.data as LogInModelEntity;
-      MyPref.authToken.val = data.token.toString();
-      MyPref.logInDetail.val = jsonEncode(response.data);
-      MyPref.referenceCode.val = data.user!.referenceCode.toString();
-      MyPref.userId.val = data.user!.id.toString();
+        var data = response.data as LogInModelEntity;
+        MyPref.authToken.val = data.token.toString();
+        MyPref.logInDetail.val = jsonEncode(response.data);
+        MyPref.referenceCode.val = data.user!.referenceCode.toString();
+        MyPref.userId.val = data.user!.id.toString();
 
-      saveHistory(data.user!.id.toString());
-      await getUserProfile(data.user!.id.toString());
+        saveHistory(data.user!.id.toString());
+        if(firstTime || creatingAccount){
+          await getUserProfileFirst(data.user!.id.toString());
+        }else{
+          await getUserProfile(data.user!.id.toString());
+        }
+      }
+    }
+    else{
+      ApiResponse response = await userRepo.signIn(_signIn);
+      if(!response.isSuccessful){
+        if(response.message.toString().contains("Bad credentials")) {
+          message = "Bad credentials. Check your details and try again";
+        }
+        else if(response.message == "Http status error [401]"){
+          message = "Account Does Not Exist";
+        }
+        else{
+          message = "An Error Occurred";
+        }
+        print(response.message.toString());
+        print(response.data.toString());
+        AppOverlay.showErrorSnackBar(title: "Sign In Failed", content: message);
+      }
+      else{
+        var data = response.data as LogInModelEntity;
+        MyPref.authToken.val = data.token.toString();
+        MyPref.logInDetail.val = jsonEncode(response.data);
+        MyPref.referenceCode.val = data.user!.referenceCode.toString();
+        MyPref.userId.val = data.user!.id.toString();
+
+        saveHistory(data.user!.id.toString());
+        if(firstTime || creatingAccount){
+          await getUserProfileFirst(data.user!.id.toString());
+        }else{
+          await getUserProfile(data.user!.id.toString());
+        }
+      }
     }
   }
 
@@ -317,7 +367,10 @@ class AuthControllerWayagram extends GetxController {
       message = response.message.toString().toLowerCase() == "record with provided input not found" ? "Incorrect OTP Entered" : "An Error Occurred";
       AppOverlay.showErrorSnackBar(title: "OTP Verification Error", content: message);
     }else{
-      await signInFirst();
+      password.text = "";
+      emailOrPhone.text = "";
+      Get.to(() => const SignIn(),binding: WayagramBinding());
+      //await signInFirst();
     }
   }
   Future<void> resendOTP() async {
