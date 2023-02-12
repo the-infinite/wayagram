@@ -127,6 +127,7 @@ class SignIn extends GetView<AuthControllerWayagram> {
                         bckgrndColor: (AppColors.background),
                         fontColor: AppColors.primary,
                       ),
+                      SizedBox(height: Get.height * 0.025),
                     ],
                   ),
                 ),

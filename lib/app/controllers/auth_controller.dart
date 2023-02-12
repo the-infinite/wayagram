@@ -179,6 +179,7 @@ class AuthControllerWayagram extends GetxController {
   Map<String, dynamic> get _signIn => {
     'emailOrPhoneNumber': GetUtils.isEmail(emailOrPhone.text) ?  emailOrPhone.text : emailOrPhone.text.startsWith("+234") ? emailOrPhone.text.substring(1,emailOrPhone.text.length) : emailOrPhone.text.startsWith("234") ? emailOrPhone.text : emailOrPhone.text.length == 10 ? "234${emailOrPhone.text}" : "234${emailOrPhone.text.substring(1,emailOrPhone.text.length)}",
     'password': password.text,
+    //'otp':"481606"
   };
 
   Map<String, dynamic> get _signInFirst => {
@@ -203,6 +204,8 @@ class AuthControllerWayagram extends GetxController {
         message = "An Error Occurred";
         buttonMessage = "Okay";
       }
+      print(response.message.toString());
+      print(response.data.toString());
       AppOverlay.showErrorSnackBar(title: "Sign In Failed", content: message);
     }else{
       var data = response.data as LogInModelEntity;

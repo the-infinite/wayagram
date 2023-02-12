@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
@@ -18,6 +19,7 @@ import '../../../bindings/wayagram_binding.dart';
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/all_posts_entity.dart';
+import '../../../data/model/authentication_information.dart';
 import '../../../data/model/moments_model_entity.dart';
 import '../../../data/model/posts_model_entity.dart';
 import '../../../data/providers/api.dart';
@@ -31,9 +33,28 @@ import '../../change_password/enter_email.dart';
 import '../../home/widgets/notification_view.dart';
 import '../../multiplexor/multiplexor.dart';
 
-class SecuritySettings extends StatelessWidget {
+class SecuritySettings extends StatefulWidget {
   const SecuritySettings({Key? key}) : super(key: key);
 
+  @override
+  State<SecuritySettings> createState() => _SecuritySettingsState();
+}
+
+class _SecuritySettingsState extends State<SecuritySettings> {
+  var controller = Get.find<HomeControllerWayagram>();
+  final twoFactorAuth = ReadWriteValue('wayagram_two_factor_auth', false, MyPref.box);
+
+  @override
+  void initState() {
+    super.initState();
+    controller.getData("/auth-service/api/v1/auth/status-check-2fa/${controller.profile.userId.toString()}", false).then((value){
+      if(value.isSuccessful){
+        AuthenticationInformation authenticationInformation = AuthenticationInformation.fromJson(value.data);
+        twoFactorAuth.val = authenticationInformation.fa == true;
+        if(mounted) setState(() {});
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -75,6 +96,35 @@ class SecuritySettings extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: Get.height*0.02),
+                  _SwitchButton(
+                    text: "2FA Authentication",
+                    value: twoFactorAuth.val,
+                    subtitle: "Enable/Disable 2FA authentication",
+                    onChanged: (val,onChanged) async {
+                      var response = await controller.postData(null,"/auth-service/api/v1/auth/toggle-2fa?userId=${controller.profile.userId.toString()}");
+                      if(response.isSuccessful){
+                        var res = await controller.getData("/auth-service/api/v1/auth/status-check-2fa/${controller.profile.userId.toString()}", false);
+                        if(res.isSuccessful){
+                          AuthenticationInformation authenticationInformation = AuthenticationInformation.fromJson(res.data);
+                          twoFactorAuth.val = authenticationInformation.fa == true;
+                          if(onChanged != null){
+                            onChanged(twoFactorAuth.val);
+                          }
+                        }else{
+                          twoFactorAuth.val = !twoFactorAuth.val;
+                          if(onChanged != null){
+                            onChanged(twoFactorAuth.val);
+                          }
+                        }
+                      }else{
+                        AppOverlay.showErrorSnackBar(content: "Something went wrong, please try again later");
+                        if(onChanged != null){
+                          onChanged(false);
+                        }
+                      }
+                    },
+                  ),
                   SizedBox(height: Get.height*0.02),
                   _TextButton(
                       text: "Change Password",
@@ -198,6 +248,160 @@ class _TextButton extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   icon: Icon(Icons.arrow_forward_ios_rounded, color: getAppColor(Colors.black), size: Get.width*0.04,)
               )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SwitchButton extends StatefulWidget {
+  final String text;
+  final bool value;
+  final String subtitle;
+  final Function(bool,Function(bool)?)? onChanged;
+  const _SwitchButton({required this.text, this.value = false, Key? key, this.onChanged, required this.subtitle}) : super(key: key);
+
+  @override
+  State<_SwitchButton> createState() => _SwitchButtonState();
+}
+
+class _SwitchButtonState extends State<_SwitchButton> {
+  bool value = false;
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    value = widget.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: Get.width*0.025,right: Get.width*0.025),
+      child: InkWell(
+        onTap: () async {
+          callback(bool val) async {
+            await Future.delayed(const Duration(milliseconds: 500));
+            setState(() {
+              value = val;
+            });
+          }
+
+          setState(() {
+            loading = true;
+          });
+
+          if(widget.onChanged != null){
+            await widget.onChanged!(!value,callback);
+          }
+
+          setState(() {
+            loading = false;
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: getAppColor(Colors.grey).withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+            border: Border.all(color: getAppColor(Colors.white), width: 1),
+            color: getAppColor(Colors.white),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: Get.width*0.7,
+                child: Padding(
+                  padding: EdgeInsets.only(left: Get.width*0.025),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                        Text(
+                          widget.text,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: AppTextStyle.subtitle1.copyWith(color: getAppColor(Colors.black),fontSize: Get.width*0.04,fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                        Text(
+                          widget.subtitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          style: AppTextStyle.subtitle1.copyWith(color: value ? getAppColor(Colors.black) : getAppColor(Colors.black).withOpacity(.5)),
+                        ),
+                        SizedBox(
+                          height: Get.height*0.01,
+                        ),
+                      ]
+                  ),
+                ),
+              ),
+
+              Stack(
+                children: [
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    transitionBuilder: (Widget child, Animation<double> animation) {
+                      return ScaleTransition(scale: animation, child: child);
+                    },
+                    child: loading ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: SizedBox(
+                          width: Get.width*0.05,
+                          height: Get.width*0.05,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                          ),
+                        ),
+                      ),
+                    ) :  Switch(
+                      value: value,
+                      onChanged: (v) async {
+                        callback(bool val) async {
+                          await Future.delayed(const Duration(milliseconds: 500));
+                          setState(() {
+                            value = val;
+                          });
+                        }
+
+                        setState(() {
+                          loading = true;
+                        });
+
+                        if(widget.onChanged != null){
+                          await widget.onChanged!(v,callback);
+                        }
+
+                        setState(() {
+                          loading = false;
+                        });
+                      },
+                      activeTrackColor: AppColors.primary.withOpacity(0.5),
+                      activeColor: AppColors.primary,
+                      inactiveTrackColor: getAppColor(Colors.grey).withOpacity(0.5),
+                      inactiveThumbColor: getAppColor(Colors.grey),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
