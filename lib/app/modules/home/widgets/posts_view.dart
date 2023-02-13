@@ -22,6 +22,7 @@ import '../../../data/model/CommentModel.dart' as comment;
 import '../../../data/model/DonationsModel.dart';
 import '../../../data/model/all_posts_entity.dart';
 import '../../../data/model/full_user_profile_entity.dart';
+import '../../../data/providers/api.dart';
 import '../../../data/providers/my_pref.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -533,7 +534,7 @@ class _PostState extends State<Post> {
                                 });
                               }
                               else if (value == 1) {
-                                Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
+                                Share.share('${Api.baseWebUrl}${widget.post.id}', subject: 'Wayagram Post');
                               }
                               else if (value == 2) {
                                 //Get.to(() => Followers());
@@ -1121,7 +1122,7 @@ class _PostState extends State<Post> {
                         title: "Donate",
                         onPressed: (){
                           if(Platform.isIOS) {
-                            controller.launchURL("https://app.staging.wayagram.ng/post/${widget.post.id}");
+                            controller.launchURL("${Api.baseWebUrl}${widget.post.id}");
                           }else{
                             Get.to(()=> DonateScreen(post: widget.post));
                           }

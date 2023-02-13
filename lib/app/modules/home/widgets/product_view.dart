@@ -12,6 +12,7 @@ import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../controllers/home_controller.dart';
 import '../../../data/model/products_model_entity.dart';
+import '../../../data/providers/api.dart';
 import '../../../global_widgets/app_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -192,7 +193,7 @@ class _ProductRealViewState extends State<ProductRealView> {
                                   });
                                 }
                                 else if (value == 1) {
-                                  Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Post');
+                                  Share.share('${Api.baseWebUrl}${widget.post.id}', subject: 'Wayagram Post');
                                 }
                                 else if (value == 2) {
                                   //Get.to(() => Followers());
@@ -213,7 +214,7 @@ class _ProductRealViewState extends State<ProductRealView> {
                                   Get.to(() => ReportPost(post: widget.post,isPost: true));
                                 }*/
                               if (value == 1) {
-                                Share.share('https://app.staging.wayagram.ng/post/${widget.post.id}', subject: 'Wayagram Product');
+                                Share.share('${Api.baseWebUrl}${widget.post.id}', subject: 'Wayagram Product');
                               }
                               else if(value == 3){
                                 var body = {
