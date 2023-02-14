@@ -1,13 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
-import 'dart:math';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart';
 
-import '../model/full_user_profile_entity.dart';
-import '../model/profile_model_entity.dart';
 import 'api_response.dart';
 import 'my_pref.dart';
 
@@ -48,19 +43,18 @@ class Api {
     try {
       var head = {
         'Authorization': MyPref.authToken.val,
-        //'Authorization': "serial eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbeyJjcmVhdGVkQXQiOiIxNS0wMi0yMDIyIDA2OjI3OjEzIiwidXBkYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsImNyZWF0ZWRCeSI6Ik1HUiIsIm1vZGlmaWVkQnkiOiJNR1IiLCJpZCI6MTMsIm5hbWUiOiJST0xFX1VTRVJfT1dORVIiLCJkZXNjcmlwdGlvbiI6IlVTRVIgUk9MRSIsImRlZmF1bHQiOnRydWV9LHsiY3JlYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsInVwZGF0ZWRBdCI6IjE1LTAyLTIwMjIgMDY6Mjc6MTMiLCJjcmVhdGVkQnkiOiJNR1IiLCJtb2RpZmllZEJ5IjoiTUdSIiwiaWQiOjE0LCJuYW1lIjoiUk9MRV9VU0VSX01FUkNIQU5UIiwiZGVzY3JpcHRpb24iOiJDT1JQT1JBVEUgVVNFUiBST0xFIiwiZGVmYXVsdCI6dHJ1ZX1dLCJpZCI6NjM5LCJzdWIiOiJjZXBoYXNhcm93b2xvQGdtYWlsLmNvbSIsImlhdCI6MTY3Mzg2MTE2OSwiZXhwIjoxNzA1NDE4NzY5fQ.N6_l6-D2x9AgQun0dK8VA80jh9Sa09QkepRgL66wOuTMeRjtQO1S7x5VO0ixKIaUdsv7GVNec5FhZ_gGBowztg"
       };
-      var link = url;
+      if(pin != null){
+        head.addAll({'pin': pin});
+      }
 
+      var link = url;
       if(sso){
         if(url.contains("?")){
           link = '$url&sso_id=${MyPref.userId.val}';
         }else{
           link = '$url/?&sso_id=${MyPref.userId.val}';
         }
-      }
-      if(pin != null){
-        head.addAll({'pin': pin});
       }
 
       var request = await _client.request(
