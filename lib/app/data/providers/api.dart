@@ -34,7 +34,7 @@ class Api {
         headers: {
           'Content-Type': 'application/json',
         },
-        receiveTimeout: 100000,
+        //receiveTimeout: 100000,
       )
   );
 

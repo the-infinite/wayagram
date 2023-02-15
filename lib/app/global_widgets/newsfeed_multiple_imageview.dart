@@ -73,10 +73,13 @@ class NewsfeedMultipleImageView extends StatelessWidget {
 
 class ImageViewer extends StatefulWidget {
   final List<String> imageUrls;
+  final List<String>? heroTags;
   final int initialPage;
+
   const ImageViewer({Key? key,
     required this.imageUrls,
     this.initialPage = 0,
+    this.heroTags,
   }) : super(key: key);
 
   @override
@@ -198,7 +201,7 @@ class _ImageViewerState extends State<ImageViewer> {
                     },
                     children:widget.imageUrls.asMap().map((key, value){
                       return MapEntry(key, Hero(
-                        tag: "photo$key",
+                        tag: widget.heroTags == null ? "photo$key" : widget.heroTags![key],
                         child: Padding(
                           padding: EdgeInsets.only(bottom: Get.height * 0.025),
                           child: SmartImage(

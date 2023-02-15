@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ import '../../data/model/full_user_profile_entity.dart';
 import '../../data/model/products_model_entity.dart';
 import '../../data/providers/api_response.dart';
 import '../../data/providers/my_pref.dart';
+import '../../global_widgets/newsfeed_multiple_imageview.dart';
 import '../../global_widgets/person_view.dart';
 import '../home/widgets/posts_view.dart';
 import '../home/widgets/product_view.dart';
@@ -150,11 +152,12 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                 savedFollowingList.add(id);
                 savedFollowing.val = savedFollowingList.join(",");
               }
-            }else{
+            } else{
               if(savedFollowingList.contains(id)){
                 isFollowing = true;
                 followRequestSent.val = false;
-              }else{
+              }
+              else{
                 isFollowing = false;
               }
             }
@@ -177,6 +180,9 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const SizedBox(
+                            height: kToolbarHeight,
+                          ),
                           SizedBox(
                             height: Get.height * 0.25,
                             child: Stack(
@@ -198,20 +204,34 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                   child: SizedBox(
                                     height: Get.height * 0.2,
                                     width: Get.width,
-                                    child: Image.network(
-                                      coverImage.toString(),
-                                      fit: BoxFit.cover,
-                                      loadingBuilder: (BuildContext context, Widget child,ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null) return child;
-                                        return Container(
-                                          color: Colors.grey[300],
+                                    child: InkWell(
+                                      onTap: (){
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ImageViewer(
+                                              imageUrls: [coverImage.toString()],
+                                              initialPage: 0,
+                                              heroTags: [coverImage.toString()],
+                                            ),
+                                          ),
                                         );
                                       },
-                                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                        return Container(
-                                          color: Colors.grey[300],
-                                        );
-                                      },
+                                      child: Hero(
+                                        tag: coverImage.toString(),
+                                        child: CachedNetworkImage(
+                                          imageUrl: coverImage.toString(),
+                                          placeholder: (context, url) => Container(
+                                            color: Colors.grey[300],
+                                            child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.05),
+                                          ),
+                                          errorWidget: (context, url, error) => Container(
+                                              color: Colors.grey[300],
+                                              child: Icon(Icons.broken_image_rounded,color: Colors.grey,size: Get.height*0.05)
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -228,11 +248,23 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                     ),
                                     child: IconButton(
                                       padding: EdgeInsets.zero,
-                                      icon: AppAvatar(
-                                        imgUrl: userImage.toString(),
+                                      icon: Hero(
+                                        tag: userImage.toString(),
+                                        child: AppAvatar(
+                                          imgUrl: userImage.toString(),
+                                        ),
                                       ),
                                       onPressed: () {
-
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ImageViewer(
+                                              imageUrls: [userImage.toString()],
+                                              initialPage: 0,
+                                              heroTags: [userImage.toString()],
+                                            ),
+                                          ),
+                                        );
                                       },
                                     ),
                                   ),
@@ -452,13 +484,14 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                             TabBar(
                               controller: tabController,
                               padding: EdgeInsets.zero,
-                              labelColor: getAppColor(Colors.black),
+                              labelColor: AppColors.primary,
                               unselectedLabelColor: const Color(0xff9A9A9A),
                               indicatorColor: AppColors.primary,
                               indicatorSize: TabBarIndicatorSize.tab,
                               labelStyle: TextStyle(
                                 fontSize: Get.width*0.035,
                                 fontWeight: FontWeight.w500,
+                                color: AppColors.primary
                               ),
                               unselectedLabelStyle: TextStyle(
                                 fontSize: Get.width*0.035,
@@ -623,44 +656,26 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                       SizedBox(
                         height: 100,
                         child: AppBar(
-                          backgroundColor: showName ? getAppColor(AppColors.background) : Colors.transparent,
-                          title: Center(
-                            child: AnimatedOpacity(
-                              duration: const Duration(milliseconds: 300),
-                              opacity: showName ? 1.0 : 0.0,
-                              child: Text(
-                                displayName,
-                                style: AppTextStyle.subtitle1.copyWith(
-                                  color: getAppColor(getAppColor(const Color(0xff4F4F4F))),
-                                  fontSize: Get.textScaleFactor * 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                          backgroundColor: getAppColor(AppColors.background),
+                          title: Text(
+                            displayName,
+                            style: AppTextStyle.subtitle1.copyWith(
+                              color: getAppColor(getAppColor(const Color(0xff4F4F4F))),
+                              fontSize: Get.textScaleFactor * 18,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          leading: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: Container(
-                                width: Get.width * 0.1,
-                                height: Get.width * 0.1,
-                                decoration: BoxDecoration(
-                                  color: getAppColor(AppColors.background),
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: Icon(
-                                    FeatherIcons.arrowLeft,
-                                    color: getAppColor(Colors.black),
-                                  ),
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                  iconSize: Get.width * 0.06,
-                                ),
-                              ),
+                          centerTitle: false,
+                          leading: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: const Icon(
+                              FeatherIcons.arrowLeft,
+                              color: AppColors.primary,
                             ),
+                            onPressed: () {
+                              Get.back();
+                            },
+                            iconSize: Get.width * 0.06,
                           ),
                           actions: [
                             if(userName != "wayaOfficialHandle")
@@ -668,24 +683,14 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                                 color: getAppColor(Colors.white),
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 2.5,right: 5),
-                                  child: Center(
-                                    child: Container(
-                                      width: Get.width * 0.1,
-                                      height: Get.width * 0.1,
-                                      decoration: BoxDecoration(
-                                        color: getAppColor(AppColors.background),
-                                        borderRadius: BorderRadius.circular(100),
-                                      ),
-                                      child: IconButton(
-                                        padding: EdgeInsets.zero,
-                                        icon: Icon(
-                                          Icons.more_vert,
-                                          color: getAppColor(Colors.black),
-                                        ),
-                                        onPressed: null,
-                                        iconSize: Get.width * 0.06,
-                                      ),
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: const Icon(
+                                      Icons.more_vert,
+                                      color: AppColors.primary,
                                     ),
+                                    onPressed: null,
+                                    iconSize: Get.width * 0.06,
                                   ),
                                 ),
                                 onSelected: (value) {
@@ -910,19 +915,20 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                       if(!privateUser || isFollowing)
                         AnimatedOpacity(
                           duration: const Duration(milliseconds: 300),
-                          opacity: showTab ? 1.0 : 0.0,
+                          opacity: showTab && Get.currentRoute == "/OtherProfile" ? 1.0 : 0.0,
                           child: Container(
                             color: getAppColor(AppColors.background),
                             child: TabBar(
                               controller: tabController,
                               padding: EdgeInsets.zero,
-                              labelColor: getAppColor(Colors.black),
+                              labelColor: AppColors.primary,
                               unselectedLabelColor: const Color(0xff9A9A9A),
                               indicatorColor: AppColors.primary,
                               indicatorSize: TabBarIndicatorSize.tab,
                               labelStyle: TextStyle(
                                 fontSize: Get.width*0.035,
                                 fontWeight: FontWeight.w500,
+                                color: AppColors.primary
                               ),
                               unselectedLabelStyle: TextStyle(
                                 fontSize: Get.width*0.035,
@@ -946,7 +952,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
                       if(!privateUser || isFollowing)
                         AnimatedOpacity(
                           duration: const Duration(milliseconds: 300),
-                          opacity: showTab ? 1.0 : 0.0,
+                          opacity: showTab && Get.currentRoute == "/OtherProfile" ? 1.0 : 0.0,
                           child: const  Divider(
                             height: 0.5,
                             thickness: 0.5,
@@ -970,7 +976,7 @@ class _OtherProfileState extends State<OtherProfile> with TickerProviderStateMix
   }
 
   String shortenCount(String amount){
-    if(amount == "null" || amount.isEmpty){
+    if(amount == "null" || amount.isEmpty || int.tryParse(amount) == null){
       return "0";
     }
     if(num.parse(amount) >= 1000000000){

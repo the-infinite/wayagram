@@ -182,7 +182,7 @@ class AppAvatar extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(radius * 2),
           child: selectedImg == null
-              ? OptimizedCacheImage(
+              ? CachedNetworkImage(
                   imageUrl: imgUrl,
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) {
