@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/app/global_widgets/smart_image.dart';
 import 'package:wayagram/app/global_widgets/video_player/reusable_video_list_controller.dart';
 
 import '../../core/theme/app_styles.dart';
+import 'newsfeed_multiple_imageview.dart';
 
 class MultipleImageView extends StatelessWidget {
   final List<String> imageUrls;
@@ -57,12 +60,26 @@ class MultipleImageView extends StatelessWidget {
         flex: 1,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(radius),
-          child: SmartImage(
-            imageUrls.first,
-            fit: BoxFit.cover,
-            isPost: true,
-            useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,videoListController:  videoListController
+          child: InkWell(
+            onTap: (){
+              Navigator.push(
+                Get.context!,
+                MaterialPageRoute(
+                  builder: (context) => ImageViewer(
+                    imageUrls: imageUrls,
+                    initialPage: 0,
+                    heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                  ),
+                ),
+              );
+            },
+            child: SmartImage(
+              imageUrls.first,
+              fit: BoxFit.cover,
+              isPost: true,
+              useAspectRatio: useAspectRatio,
+              isSlideShow: isSlideShow,videoListController:  videoListController
+            ),
           ),
         ),
       ),
@@ -78,12 +95,26 @@ class MultipleImageView extends StatelessWidget {
             topLeft: Radius.circular(radius),
             bottomLeft: Radius.circular(radius),
           ),
-          child: SmartImage(
-            imageUrls.first,
-            fit: BoxFit.cover,
-            isPost: true,
-            useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,videoListController:  videoListController
+          child: InkWell(
+            onTap: (){
+              Navigator.push(
+                Get.context!,
+                MaterialPageRoute(
+                  builder: (context) => ImageViewer(
+                    imageUrls: imageUrls,
+                    initialPage: 0,
+                    heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                  ),
+                ),
+              );
+            },
+            child: SmartImage(
+              imageUrls.first,
+              fit: BoxFit.cover,
+              isPost: true,
+              useAspectRatio: useAspectRatio,
+              isSlideShow: isSlideShow,videoListController:  videoListController
+            ),
           ),
         ),
       ),
@@ -95,12 +126,26 @@ class MultipleImageView extends StatelessWidget {
             topRight: Radius.circular(radius),
             bottomRight: Radius.circular(radius),
           ),
-          child: SmartImage(
-            imageUrls.last,
-            fit: BoxFit.cover,
-            isPost: true,
-            useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,videoListController:  videoListController
+          child: InkWell(
+            onTap: (){
+              Navigator.push(
+                Get.context!,
+                MaterialPageRoute(
+                  builder: (context) => ImageViewer(
+                    imageUrls: imageUrls,
+                    initialPage: 1,
+                    heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                  ),
+                ),
+              );
+            },
+            child: SmartImage(
+              imageUrls.last,
+              fit: BoxFit.cover,
+              isPost: true,
+              useAspectRatio: useAspectRatio,
+              isSlideShow: isSlideShow,videoListController:  videoListController
+            ),
           ),
         ),
       )
@@ -116,12 +161,26 @@ class MultipleImageView extends StatelessWidget {
             topLeft: Radius.circular(radius),
             bottomLeft: Radius.circular(radius),
           ),
-          child: SmartImage(
-            imageUrls[0],
-            fit: BoxFit.cover,
-            isPost: true,
-            useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,videoListController:  videoListController
+          child: InkWell(
+            onTap: (){
+              Navigator.push(
+                Get.context!,
+                MaterialPageRoute(
+                  builder: (context) => ImageViewer(
+                    imageUrls: imageUrls,
+                    initialPage: 0,
+                    heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                  ),
+                ),
+              );
+            },
+            child: SmartImage(
+              imageUrls[0],
+              fit: BoxFit.cover,
+              isPost: true,
+              useAspectRatio: useAspectRatio,
+              isSlideShow: isSlideShow,videoListController:  videoListController
+            ),
           ),
         ),
       ),
@@ -139,12 +198,26 @@ class MultipleImageView extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(radius),
                 ),
-                child: SmartImage(
-                  imageUrls[1],
-                  fit: BoxFit.cover,
-                  isPost: true,
-                  useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,videoListController:  videoListController
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      Get.context!,
+                      MaterialPageRoute(
+                        builder: (context) => ImageViewer(
+                          imageUrls: imageUrls,
+                          initialPage: 1,
+                          heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: SmartImage(
+                    imageUrls[1],
+                    fit: BoxFit.cover,
+                    isPost: true,
+                    useAspectRatio: useAspectRatio,
+                    isSlideShow: isSlideShow,videoListController:  videoListController
+                  ),
                 ),
               ),
             ),
@@ -155,12 +228,26 @@ class MultipleImageView extends StatelessWidget {
                 borderRadius:BorderRadius.only(
                   bottomRight: Radius.circular(radius),
                 ),
-                child: SmartImage(
-                  imageUrls[2],
-                  fit: BoxFit.cover,
-                  isPost: true,
-                  useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,videoListController:  videoListController
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      Get.context!,
+                      MaterialPageRoute(
+                        builder: (context) => ImageViewer(
+                          imageUrls: imageUrls,
+                          initialPage: 2,
+                          heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: SmartImage(
+                    imageUrls[2],
+                    fit: BoxFit.cover,
+                    isPost: true,
+                    useAspectRatio: useAspectRatio,
+                    isSlideShow: isSlideShow,videoListController:  videoListController
+                  ),
                 ),
               ),
             ),
@@ -179,12 +266,26 @@ class MultipleImageView extends StatelessWidget {
             topLeft: Radius.circular(radius),
             bottomLeft: Radius.circular(radius),
           ),
-          child: SmartImage(
-            imageUrls[0],
-            fit: BoxFit.cover,
-            isPost: true,
-            useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,videoListController:  videoListController
+          child: InkWell(
+            onTap: (){
+              Navigator.push(
+                Get.context!,
+                MaterialPageRoute(
+                  builder: (context) => ImageViewer(
+                    imageUrls: imageUrls,
+                    initialPage: 0,
+                    heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                  ),
+                ),
+              );
+            },
+            child: SmartImage(
+              imageUrls[0],
+              fit: BoxFit.cover,
+              isPost: true,
+              useAspectRatio: useAspectRatio,
+              isSlideShow: isSlideShow,videoListController:  videoListController
+            ),
           ),
         ),
       ),
@@ -202,12 +303,26 @@ class MultipleImageView extends StatelessWidget {
                 borderRadius:BorderRadius.only(
                   topRight: Radius.circular(radius),
                 ),
-                child: SmartImage(
-                  imageUrls[1],
-                  fit: BoxFit.cover,
-                  isPost: true,
-                  useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,videoListController:  videoListController
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      Get.context!,
+                      MaterialPageRoute(
+                        builder: (context) => ImageViewer(
+                          imageUrls: imageUrls,
+                          initialPage: 1,
+                          heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: SmartImage(
+                    imageUrls[1],
+                    fit: BoxFit.cover,
+                    isPost: true,
+                    useAspectRatio: useAspectRatio,
+                    isSlideShow: isSlideShow,videoListController:  videoListController
+                  ),
                 ),
               ),
             ),
@@ -215,12 +330,26 @@ class MultipleImageView extends StatelessWidget {
             Expanded(
               flex: 1,
               child: ClipRRect(
-                child: SmartImage(
-                  imageUrls[2],
-                  fit: BoxFit.cover,
-                  isPost: true,
-                  useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,videoListController:  videoListController
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      Get.context!,
+                      MaterialPageRoute(
+                        builder: (context) => ImageViewer(
+                          imageUrls: imageUrls,
+                          initialPage: 2,
+                          heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: SmartImage(
+                    imageUrls[2],
+                    fit: BoxFit.cover,
+                    isPost: true,
+                    useAspectRatio: useAspectRatio,
+                    isSlideShow: isSlideShow,videoListController:  videoListController
+                  ),
                 ),
               ),
             ),
@@ -231,12 +360,26 @@ class MultipleImageView extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(radius),
                 ),
-                child: SmartImage(
-                  imageUrls[3],
-                  fit: BoxFit.cover,
-                  isPost: true,
-                  useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,videoListController:  videoListController
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      Get.context!,
+                      MaterialPageRoute(
+                        builder: (context) => ImageViewer(
+                          imageUrls: imageUrls,
+                          initialPage: 3,
+                          heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: SmartImage(
+                    imageUrls[3],
+                    fit: BoxFit.cover,
+                    isPost: true,
+                    useAspectRatio: useAspectRatio,
+                    isSlideShow: isSlideShow,videoListController:  videoListController
+                  ),
                 ),
               ),
             ),
@@ -255,12 +398,26 @@ class MultipleImageView extends StatelessWidget {
             topLeft: Radius.circular(radius),
             bottomLeft: Radius.circular(radius),
           ),
-          child: SmartImage(
-            imageUrls[0],
-            fit: BoxFit.cover,
-            isPost: true,
-            useAspectRatio: useAspectRatio,
-            isSlideShow: isSlideShow,videoListController:  videoListController
+          child: InkWell(
+            onTap: (){
+              Navigator.push(
+                Get.context!,
+                MaterialPageRoute(
+                  builder: (context) => ImageViewer(
+                    imageUrls: imageUrls,
+                    initialPage: 0,
+                    heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                  ),
+                ),
+              );
+            },
+            child: SmartImage(
+              imageUrls[0],
+              fit: BoxFit.cover,
+              isPost: true,
+              useAspectRatio: useAspectRatio,
+              isSlideShow: isSlideShow,videoListController:  videoListController
+            ),
           ),
         ),
       ),
@@ -278,12 +435,26 @@ class MultipleImageView extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(radius),
                 ),
-                child: SmartImage(
-                  imageUrls[1],
-                  fit: BoxFit.cover,
-                  isPost: true,
-                  useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,videoListController:  videoListController
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      Get.context!,
+                      MaterialPageRoute(
+                        builder: (context) => ImageViewer(
+                          imageUrls: imageUrls,
+                          initialPage: 1,
+                          heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: SmartImage(
+                    imageUrls[1],
+                    fit: BoxFit.cover,
+                    isPost: true,
+                    useAspectRatio: useAspectRatio,
+                    isSlideShow: isSlideShow,videoListController:  videoListController
+                  ),
                 ),
               ),
             ),
@@ -291,12 +462,26 @@ class MultipleImageView extends StatelessWidget {
             Expanded(
               flex: 1,
               child: ClipRRect(
-                child: SmartImage(
-                  imageUrls[2],
-                  fit: BoxFit.cover,
-                  isPost: true,
-                  useAspectRatio: useAspectRatio,
-                  isSlideShow: isSlideShow,videoListController:  videoListController
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      Get.context!,
+                      MaterialPageRoute(
+                        builder: (context) => ImageViewer(
+                          imageUrls: imageUrls,
+                          initialPage: 2,
+                          heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: SmartImage(
+                    imageUrls[2],
+                    fit: BoxFit.cover,
+                    isPost: true,
+                    useAspectRatio: useAspectRatio,
+                    isSlideShow: isSlideShow,videoListController:  videoListController
+                  ),
                 ),
               ),
             ),
@@ -311,12 +496,26 @@ class MultipleImageView extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(radius),
                     ),
-                    child: SmartImage(
-                      imageUrls[3],
-                      fit: BoxFit.cover,
-                      isPost: true,
-                      useAspectRatio: useAspectRatio,
-                      isSlideShow: isSlideShow,videoListController:  videoListController
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(
+                          Get.context!,
+                          MaterialPageRoute(
+                            builder: (context) => ImageViewer(
+                              imageUrls: imageUrls,
+                              initialPage: 3,
+                              heroTags: imageUrls.map((e) => e + UniqueKey().toString()).toList(),
+                            ),
+                          ),
+                        );
+                      },
+                      child: SmartImage(
+                        imageUrls[3],
+                        fit: BoxFit.cover,
+                        isPost: true,
+                        useAspectRatio: useAspectRatio,
+                        isSlideShow: isSlideShow,videoListController:  videoListController
+                      ),
                     ),
                   ),
                   Positioned.fill(

@@ -44,9 +44,9 @@ class NewsfeedMultipleImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, costraints) => Container(
-        width: costraints.maxWidth,
-        height: costraints.maxWidth,
+      builder: (context, constraints) => Container(
+        width: constraints.maxWidth,
+        height: constraints.maxWidth,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius),
           color: Colors.grey[200],
@@ -57,15 +57,7 @@ class NewsfeedMultipleImageView extends StatelessWidget {
           marginRight,
           marginBottom,
         ),
-        child: GestureDetector(
-          child: MultipleImageView(imageUrls: imageUrls,radius: radius,isSlideShow: isSlideShow,useAspectRatio: useAspectRatio,videoListController: videoListController,),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ImageViewer(imageUrls: imageUrls),
-            ),
-          ),
-        ),
+        child: MultipleImageView(imageUrls: imageUrls,radius: radius,isSlideShow: isSlideShow,useAspectRatio: useAspectRatio,videoListController: videoListController,),
       ),
     );
   }
