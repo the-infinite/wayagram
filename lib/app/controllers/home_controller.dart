@@ -228,7 +228,11 @@ class HomeControllerWayagram extends GetxController {
   Future<ApiResponse> updateProfile(dynamic body) async {
     final response = await userRepo.updateProfile(body);
     await userRepo.getFullUserProfile(profile.userId.toString());
-    update(['profile_page','home','settings','app_drawer']);
+    try{
+      update(['profile_page','home','settings','app_drawer']);
+    }catch(e){
+      debugPrint(e.toString());
+    }
     if(response.isSuccessful) {
       if(Get.currentRoute == '/UpdateProfile') {
         Get.back();
@@ -247,12 +251,20 @@ class HomeControllerWayagram extends GetxController {
       print(response.message);
     }
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
-      if(updatePages){
-        update(['profile_page','home','settings']);
-      }
-      getAllUserData().then((value){
+      try{
         if(updatePages){
           update(['profile_page','home','settings']);
+        }
+      }catch(e){
+        debugPrint(e.toString());
+      }
+      getAllUserData().then((value){
+        try{
+          if(updatePages){
+            update(['profile_page','home','settings']);
+          }
+        }catch(e){
+          debugPrint(e.toString());
         }
       });
     });
@@ -265,12 +277,20 @@ class HomeControllerWayagram extends GetxController {
       print(response.message);
     }
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
-      if(updatePages){
-        update(['profile_page','home','settings']);
-      }
-      getAllUserData().then((value){
+      try{
         if(updatePages){
           update(['profile_page','home','settings']);
+        }
+      }catch(e){
+        debugPrint(e.toString());
+      }
+      getAllUserData().then((value){
+        try{
+          if(updatePages){
+            update(['profile_page','home','settings']);
+          }
+        }catch(e){
+          debugPrint(e.toString());
         }
       });
     });
@@ -283,12 +303,20 @@ class HomeControllerWayagram extends GetxController {
       print(response.message);
     }
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
-      if(updatePages){
-        update(['profile_page','home','settings']);
-      }
-      getAllUserData().then((value){
+      try{
         if(updatePages){
           update(['profile_page','home','settings']);
+        }
+      }catch(e){
+        debugPrint(e.toString());
+      }
+      getAllUserData().then((value){
+        try{
+          if(updatePages){
+            update(['profile_page','home','settings']);
+          }
+        }catch(e){
+          debugPrint(e.toString());
         }
       });
     });
@@ -302,8 +330,12 @@ class HomeControllerWayagram extends GetxController {
         update(['profile_page','home','settings','home_tab']);
       }
       getAllUserData().then((value){
-        if(updatePages){
-          update(['profile_page','home','settings','home_tab']);
+        try{
+          if(updatePages){
+            update(['profile_page','home','settings']);
+          }
+        }catch(e){
+          debugPrint(e.toString());
         }
       });
     });
@@ -313,12 +345,20 @@ class HomeControllerWayagram extends GetxController {
   Future<ApiResponse> getData(String url,bool hasSSO,{bool updatePages = true,String? pin}) async {
     final response = await userRepo.getData(url, sso: hasSSO, pin: pin);
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){
-      if(updatePages){
-        update(['profile_page','home','settings']);
-      }
-      getAllUserData().then((value){
+      try{
         if(updatePages){
           update(['profile_page','home','settings']);
+        }
+      }catch(e){
+        debugPrint(e.toString());
+      }
+      getAllUserData().then((value){
+        try{
+          if(updatePages){
+            update(['profile_page','home','settings']);
+          }
+        }catch(e){
+          debugPrint(e.toString());
         }
       });
     });
@@ -326,14 +366,22 @@ class HomeControllerWayagram extends GetxController {
   }
 
   Future<void> getAllUserData() async {
-    //await userRepo.getFriends();
-    await userRepo.getMoments();
-    await userRepo.getPosts();
+    try{
+      await userRepo.getMoments();
+      await userRepo.getPosts();
 
-    await userRepo.getRestrictedAccount();
-    await userRepo.getMutedAccount();
-    await userRepo.getFollowers();
-    await userRepo.getFollowing();
+      await userRepo.getRestrictedAccount();
+      await userRepo.getMutedAccount();
+      await userRepo.getFollowers();
+      await userRepo.getFollowing();
+
+      await userRepo.getPageCategories();
+      await userRepo.getGroupCategories();
+    }catch(e){
+      debugPrint(e.toString());
+    }
+    //await userRepo.getFriends();
+
     //await userRepo.getFriendSuggestions();
 
     //await userRepo.getGroups();
@@ -345,8 +393,6 @@ class HomeControllerWayagram extends GetxController {
     //await userRepo.getAllNotifications();
     //await userRepo.getAccountNumber();
 
-    await userRepo.getPageCategories();
-    await userRepo.getGroupCategories();
   }
 
   void launchURL(String url) async {

@@ -430,6 +430,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                       Get.back();
                                       await MyPref.clearBoxes();
                                       Freshchat.resetUser();
+                                      controller.dispose();
                                       Get.offAll(() => const Multiplexor(),binding: WayagramBinding());
                                     },
                                     borderRadius: 10,
