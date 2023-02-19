@@ -77,23 +77,7 @@ class _PostsViewState extends State<PostsView> {
       padding: const EdgeInsets.all(0),
       itemBuilder: (context, index) {
         if(widget.isLoading){
-          return SizedBox(
-            height: Get.height * 0.18,
-            width: Get.width * 0.35,
-            child: Shimmer.fromColors(
-              baseColor: getAppColor(Colors.grey).withOpacity(0.8),
-              highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
-              child: Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-                height: Get.height * 0.18,
-                width: Get.width * 0.35,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: getAppColor(Colors.grey).withOpacity(.5),
-                ),
-              ),
-            ),
-          );
+          return const PostLoadingWidget();
         }
         var post = widget.posts![index];
         return InkWell(
@@ -119,6 +103,129 @@ class _PostsViewState extends State<PostsView> {
   void dispose() {
     videoListController.dispose();
     super.dispose();
+  }
+}
+
+class PostLoadingWidget extends StatelessWidget {
+  const PostLoadingWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Shimmer.fromColors(
+              baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+              highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
+              child: Container(
+                margin: const EdgeInsets.only(top: 5, bottom: 5, left: 5,right: 5),
+                width: Get.width * 0.1,
+                height: Get.width * 0.1,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(180),
+                  color: getAppColor(Colors.grey).withOpacity(.3),
+                ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Shimmer.fromColors(
+                  baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+                  highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 9, bottom: 5, left: 0,right: 5),
+                    height: Get.height * 0.015,
+                    width: Get.width * 0.4,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(2),
+                      color: getAppColor(Colors.grey).withOpacity(.3),
+                    ),
+                  ),
+                ),
+
+                Shimmer.fromColors(
+                  baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+                  highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 5, bottom: 5, left: 0,right: 5),
+                    height: Get.height * 0.01,
+                    width: Get.width * 0.2,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(2),
+                      color: getAppColor(Colors.grey).withOpacity(.3),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(child: SizedBox(
+              height: Get.width * 0.1,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+                    highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 20, bottom: 5, left: 0,right: 5),
+                      height: Get.height * 0.01,
+                      width: Get.width * 0.08,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: getAppColor(Colors.grey).withOpacity(.3),
+                      ),
+                    ),
+                  ),
+
+                  Shimmer.fromColors(
+                    baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+                    highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 20, bottom: 5, left: 0,right: 10),
+                      height: Get.height * 0.01,
+                      width: Get.width * 0.05,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: getAppColor(Colors.grey).withOpacity(.3),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ))
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 0, bottom: 0, left: 10,right: 10),
+          child: Divider(
+            height: 1.5,
+            thickness: 1.5,
+            color: getAppColor(const Color(0xffF2F2F2)),
+          ),
+        ),
+        Shimmer.fromColors(
+          baseColor: getAppColor(Colors.grey).withOpacity(0.8),
+          highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
+          child: Container(
+            margin: const EdgeInsets.only(top: 5, bottom: 20, left: 5,right: 5),
+            height: Get.height * 0.14,
+            width: Get.width * 0.35,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: getAppColor(Colors.grey).withOpacity(.3),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 

@@ -6,6 +6,7 @@ import 'package:hashtager/widgets/hashtag_text.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayagram/app/global_widgets/app_button.dart';
+import 'package:wayagram/app/modules/home/widgets/posts_view.dart';
 import 'package:wayagram/core/theme/app_colors.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
 
@@ -47,23 +48,7 @@ class ProductView extends StatelessWidget{
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           if(isLoading){
-            return SizedBox(
-              height: Get.height * 0.18,
-              width: Get.width * 0.35,
-              child: Shimmer.fromColors(
-                baseColor: getAppColor(Colors.grey).withOpacity(0.8),
-                highlightColor: getAppColor(Colors.grey).withOpacity(0.2),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 5, bottom: 10, left: 5,right: 5),
-                  height: Get.height * 0.18,
-                  width: Get.width * 0.35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: getAppColor(Colors.grey).withOpacity(.5),
-                  ),
-                ),
-              ),
-            );
+            return const PostLoadingWidget();
           }
           var post = posts![index];
           return ProductRealView(

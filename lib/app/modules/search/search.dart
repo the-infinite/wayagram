@@ -111,7 +111,7 @@ class _SearchState extends State<Search> with TickerProviderStateMixin{
                     TabBar(
                       controller: tabController,
                       padding: EdgeInsets.zero,
-                      labelColor: getAppColor(Colors.black),
+                      labelColor: AppColors.primary,
                       unselectedLabelColor: const Color(0xff9A9A9A),
                       indicatorColor: AppColors.primary,
                       indicatorSize: TabBarIndicatorSize.tab,
