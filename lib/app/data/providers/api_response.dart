@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 enum ApiStatus {
   success,
@@ -24,8 +25,6 @@ class ApiResponse {
 
   static ApiResponse response(Response response) {
     var json = response.data;
-
-    //print(response.statusCode);
     return ApiResponse(
       message: json['message'],
       isSuccessful: json['status'],
@@ -40,7 +39,6 @@ class ApiResponse {
 
   static ApiResponse responseFromBody(String json,int isSuccessful) {
     var jsonD = jsonDecode(json);
-    var id = 0;
     return ApiResponse(
       message: jsonD['message'],
       isSuccessful: jsonD['status'] == true,
@@ -50,15 +48,6 @@ class ApiResponse {
       interests: jsonD['interests'],
       groups: jsonD['groups'],
       url: jsonD['url'],
-    );
-  }
-
-  factory ApiResponse.timeout(Response response) {
-    print("timeout");
-    return ApiResponse(
-      data: null,
-      isSuccessful: false,
-      message: 'An error occurred. Please try again',
     );
   }
 }
@@ -84,7 +73,7 @@ extension ApiError on DioError {
         return ApiResponse(
           isSuccessful: false,
           data: null,
-          message: "Please check your internet connection or try again later",
+          message: "Server took too long to respond, please try again later",
         );
 
       case DioErrorType.sendTimeout:
@@ -111,7 +100,8 @@ extension ApiError on DioError {
             isSuccessful: false,
             message: val['message'] ?? val['error'].values.first[0],
           );
-        } else {
+        }
+        else {
           ApiResponse(
             isSuccessful: false,
             data: null,
@@ -125,6 +115,7 @@ extension ApiError on DioError {
         if (response!.statusCode! >= 400 && response!.statusCode! <= 499) {
           apiResponse.message = error.toString();
         }
+
         if (response!.statusCode! >= 500 && response!.statusCode! <= 599) {
           apiResponse.message = error.toString();
         }

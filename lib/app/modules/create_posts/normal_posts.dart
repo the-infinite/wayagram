@@ -299,31 +299,40 @@ class _CreatePostsState extends State<CreatePosts> {
                               postBody['hashtags'] = hashtags.join(",");
                               var postFormData = dio.FormData.fromMap(postBody);
                               response = await controller.postData(postFormData, "/wayagram-service/all-posts/create");
+
                               if(response.isSuccessful){
                                 if(images.isNotEmpty){
                                   images.removeAt(0);
                                 }
-                                postID = response.data['id'] as String;
-                                for (var element in images) {
-                                  body['post_id'] = postID;
-                                  body['type'] = null;
-                                  body['images'] = await dio.MultipartFile.fromFile(
-                                    element,
-                                    filename: element.split('/').last,
-                                  );
-                                  body.removeWhere((key, value) => key == "hashtags");
-                                  formData = dio.FormData.fromMap(body);
-                                  response = await controller.putData(formData, "/wayagram-service/all-posts/update");
-                                }
-                                if(response!.isSuccessful){
-                                  postID = "";
-                                  //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                                if(response.data['id'] == null){
                                   controller.getPosts.then((value){
                                     controller.update(['profile_page','home_tab','home']);
                                   });
-                                  //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
                                   Get.back();
                                   AppOverlay.showSuccessSnackBar(content: "Post created successfully");
+                                }else{
+                                  postID = response.data['id'] as String;
+                                  for (var element in images) {
+                                    body['post_id'] = postID;
+                                    body['type'] = null;
+                                    body['images'] = await dio.MultipartFile.fromFile(
+                                      element,
+                                      filename: element.split('/').last,
+                                    );
+                                    body.removeWhere((key, value) => key == "hashtags");
+                                    formData = dio.FormData.fromMap(body);
+                                    response = await controller.putData(formData, "/wayagram-service/all-posts/update");
+                                  }
+                                  if(response!.isSuccessful){
+                                    postID = "";
+                                    //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                                    controller.getPosts.then((value){
+                                      controller.update(['profile_page','home_tab','home']);
+                                    });
+                                    //AppOverlay.showInfoDialog(title: 'Success', content: response.message);
+                                    Get.back();
+                                    AppOverlay.showSuccessSnackBar(content: "Post created successfully");
+                                  }
                                 }
                               }else{
                                 AppOverlay.showInfoDialog(title: 'Error', content: response.message);

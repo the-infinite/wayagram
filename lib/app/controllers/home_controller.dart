@@ -248,6 +248,7 @@ class HomeControllerWayagram extends GetxController {
     final response = await userRepo.postData(url, body, pin: pin);
     if (kDebugMode) {
       print(body);
+      print(response.data);
       print(response.message);
     }
     userRepo.getFullUserProfile(profile.userId.toString()).then((value){

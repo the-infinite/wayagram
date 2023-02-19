@@ -20,12 +20,12 @@ import 'my_pref.dart';
 //Account Service https://services.wayagram.ng/account-service/swagger-ui/index.html#/
 
 class Api {
-  //static String baseUrl = 'https://services.wayagram.ng/';
-  //static String baseSocketUrl = 'wss://chats.wayagram.ng/';
-  //static String baseWebUrl = 'https://app.wayagram.ng/post/';
-  static String baseUrl = 'https://services.staging.wayagram.ng/';
-  static String baseSocketUrl = 'wss://chats.staging.wayagram.ng/';
-  static String baseWebUrl = 'https://app.staging.wayagram.ng/post/';
+  static String baseUrl = 'https://services.wayagram.ng/';
+  static String baseSocketUrl = 'wss://chats.wayagram.ng/';
+  static String baseWebUrl = 'https://app.wayagram.ng/post/';
+  //static String baseUrl = 'https://services.staging.wayagram.ng/';
+  //static String baseSocketUrl = 'wss://chats.staging.wayagram.ng/';
+  //static String baseWebUrl = 'https://app.staging.wayagram.ng/post/';
   CancelToken token = CancelToken();
 
   final Dio _client = Dio(
@@ -34,7 +34,7 @@ class Api {
         headers: {
           'Content-Type': 'application/json',
         },
-        //receiveTimeout: 100000,
+        receiveTimeout: 300000,
       )
   );
 
@@ -73,7 +73,7 @@ class Api {
       return ApiResponse(
         data: null,
         isSuccessful: false,
-        message: 'No Internet connection',
+        message: 'Please check your internet connection or try again later',
       );
     } on Exception catch (e) {
       return ApiResponse(
