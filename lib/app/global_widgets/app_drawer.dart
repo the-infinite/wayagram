@@ -14,6 +14,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
 import '../../main.dart';
 import '../bindings/wayagram_binding.dart';
+import '../controllers/chat_controller.dart';
 import '../controllers/home_controller.dart';
 import '../data/model/followers_model_entity.dart';
 import '../data/model/following_model_entity.dart';
@@ -45,6 +46,7 @@ class AppDrawer extends StatefulWidget {
 
 class _AppDrawerState extends State<AppDrawer> {
   var homeController = Get.find<HomeControllerWayagram>();
+  var chatXController = Get.find<ChatControllerWayagram>();
 
   @override
   void initState() {
@@ -431,6 +433,8 @@ class _AppDrawerState extends State<AppDrawer> {
                                       await MyPref.clearBoxes();
                                       Freshchat.resetUser();
                                       controller.dispose();
+                                      chatXController.userRepo.api.disconnect();
+                                      chatXController.dispose();
                                       Get.offAll(() => const Multiplexor(),binding: WayagramBinding());
                                     },
                                     borderRadius: 10,
