@@ -370,6 +370,7 @@ class AuthControllerWayagram extends GetxController {
     }else{
       password.text = "";
       emailOrPhone.text = "";
+      AppOverlay.showSuccessSnackBar(content: "Account Verified Successfully, Please Login");
       Get.to(() => const SignIn(),binding: WayagramBinding());
       //await signInFirst();
     }
@@ -634,5 +635,10 @@ class AuthControllerWayagram extends GetxController {
       MyPref.uniqueID.val = uniqueId;
       MyPref.fcmID.val = token.toString();
     }
+  }
+
+  Future<ApiResponse> deleteData(dynamic body,String url,{bool updatePages = true,String? pin}) async {
+    final response = await userRepo.deleteData(url, body, pin: pin);
+    return response;
   }
 }
