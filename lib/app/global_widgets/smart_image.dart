@@ -167,56 +167,35 @@ class _SmartImageState extends State<SmartImage> {
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 ));
-            /*return AspectRatio(
-              aspectRatio: 1,
-              child: controller != null ? BetterPlayer(
-                controller: controller!,
-              ) : Container(
-                color: Colors.black,
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    valueColor:
-                    AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                ),
-              ),
-            );*/
           },
         ),
       );
-
-      if(networkImage()){
-        return BetterPlayer(
-          controller: BetterPlayerController(betterPlayerConfiguration, betterPlayerDataSource: betterPlayerDataSource),
-        );
-      }else {
-        return BetterPlayer.file(
-          widget.src,
-          betterPlayerConfiguration: betterPlayerConfiguration,
-        );
-      }
     }
 
     return networkImage() ? CachedNetworkImage(
-      imageUrl: widget.src, placeholder: (context, url) => Container(
-      color: Colors.transparent,
-      child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.05),
-    ),
+      imageUrl: widget.src,
+      placeholder: (context, url) => Container(
+        color: Colors.transparent,
+        child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.05),
+      ),
       errorWidget: (context, url, error) => Container(
           color: Colors.transparent,
           child: Icon(Icons.broken_image_rounded,color: Colors.grey,size: Get.height*0.05)
       ),
       fit: widget.fit,
-    ) : widget.isPost
-        ? Image.file(
-                File(widget.src),
-                fit: widget.fit,
-              )
-        : CircleAvatar(
+    ) : widget.isPost ? Image.file(
+      File(widget.src),
+      fit: widget.fit,
+      errorBuilder: (context,object,s){
+        return Container(
+            color: Colors.transparent,
+            child: Icon(Icons.broken_image_rounded,color: Colors.grey,size: Get.height*0.05)
+        );
+      },
+    ) : CircleAvatar(
                 radius: widget.radius,
                 backgroundImage: MemoryImage(
                   imageDecoder(widget.src),
-                  //fit: fit,
                 ),
               );
   }

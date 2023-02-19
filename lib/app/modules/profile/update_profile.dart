@@ -38,7 +38,7 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-          statusBarColor: getAppColor(AppColors.background),
+          statusBarColor: Colors.transparent,
           statusBarIconBrightness: getAppBrightness(),
           statusBarBrightness: getAppBrightness(),
           systemNavigationBarColor: getAppColor(AppColors.background),
@@ -113,7 +113,7 @@ class UpdateProfile extends GetView<HomeControllerWayagram> {
                 )
               ],
                 systemOverlayStyle: SystemUiOverlayStyle(
-                    statusBarColor: getAppColor(AppColors.background),
+                    statusBarColor: Colors.transparent,
                     statusBarIconBrightness: getAppBrightness(),
                     statusBarBrightness: getAppBrightness(),
                     systemNavigationBarColor: getAppColor(AppColors.background),

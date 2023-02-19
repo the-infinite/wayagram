@@ -158,11 +158,11 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                         child: CachedNetworkImage(
                                           imageUrl: fullProfile.coverImage.toString(),
                                           placeholder: (context, url) => Container(
-                                            color: Colors.grey[300],
+                                            color: Colors.grey.shade200,
                                             child: Icon(Icons.image_rounded,color: Colors.grey,size: Get.height*0.05),
                                           ),
                                           errorWidget: (context, url, error) => Container(
-                                              color: Colors.grey[300],
+                                              color: Colors.grey.shade200,
                                               child: Icon(Icons.broken_image_rounded,color: Colors.grey,size: Get.height*0.05)
                                           ),
                                           fit: BoxFit.cover,

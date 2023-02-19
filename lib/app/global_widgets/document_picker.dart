@@ -12,6 +12,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_styles.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/home_controller.dart';
+import '../modules/home/widgets/bottom_sheet.dart';
 import 'overlays.dart';
 
 /// DocumentSaver saves [File] found on filepath to
@@ -192,14 +193,25 @@ class _DocumentPickerState extends State<DocumentPicker> {
   }
 
   void _onPressed() {
-    AppOverlay.showActionDialog(
+    Get.bottomSheet(
+        SelectImageBottomSheet(
+          onFirstTap: (){
+            _fromCamera();
+          },
+          onSecondTap: (){
+            _fromGallery();
+          },
+        ),
+        isScrollControlled: true
+    );
+   /* AppOverlay.showActionDialog(
         title: widget.actionWord,
         content: "",
         actions: {
           "Camera": _fromCamera,
           "Gallery": _fromGallery,
          // "Cancel": Get.back
-        });
+        });*/
   }
 
   void _fromGallery() async {

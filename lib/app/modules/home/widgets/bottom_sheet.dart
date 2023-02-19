@@ -978,3 +978,83 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 }
+
+class SelectImageBottomSheet extends StatelessWidget {
+  const SelectImageBottomSheet({Key? key, required this.onFirstTap, required this.onSecondTap}) : super(key: key);
+
+  final Function onFirstTap;
+  final Function onSecondTap;
+  @override
+  Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: getAppBrightness(),
+          statusBarBrightness: getAppBrightness(),
+          systemNavigationBarColor: getAppColor(AppColors.background),
+          systemNavigationBarIconBrightness: getAppBrightness()
+      ),
+      child: GetBuilder<HomeControllerWayagram>(builder: (controller) {
+        return Container(
+          //height: Get.height * 0.65,
+          decoration: BoxDecoration(
+            color: getAppColor(AppColors.background),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              //Create text
+              if(false)
+                Padding(
+                  padding: EdgeInsets.only(top: Get.height * 0.020, left: Get.width*0.15, right: 20,bottom: Get.height * 0.015),
+                  child: Text(
+                    'Create',
+                    style: AppTextStyle.subtitle1.copyWith(
+                      color: getAppColor(Colors.black),
+                      fontWeight: FontWeight.w600,
+                      fontSize: Get.width * 0.045,
+                    ),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: Get.height * 0.01,
+                    ),
+                    BottomSheetButton(
+                        icon: Icons.photo_camera_rounded,
+                        title: "CAMERA",
+                        subtitle: "Take a image with your phone camera",
+                        onTap: () {
+                          onFirstTap();
+                        }
+                    ),
+                    BottomSheetButton(
+                        icon: Icons.photo_album_rounded,
+                        title: "GALLERY",
+                        subtitle: "Select a image from your phone",
+                        onTap: () {
+                          onSecondTap();
+                        }
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+}
