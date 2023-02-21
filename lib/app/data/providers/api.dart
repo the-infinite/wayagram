@@ -20,7 +20,7 @@ import 'my_pref.dart';
 //Account Service https://services.wayagram.ng/account-service/swagger-ui/index.html#/
 
 class Api {
-  //static String baseUrl = 'https://services.wayagram.ng/';
+  //-static String baseUrl = 'https://services.wayagram.ng/';
   //static String baseSocketUrl = 'wss://chats.wayagram.ng/';
   //static String baseWebUrl = 'https://app.wayagram.ng/post/';
   static String baseUrl = 'https://services.staging.wayagram.ng/';
@@ -34,7 +34,7 @@ class Api {
         headers: {
           'Content-Type': 'application/json',
         },
-        receiveTimeout: 300000,
+        receiveTimeout: 100000,
       )
   );
 
@@ -172,7 +172,6 @@ class Api {
     token = CancelToken();
     var head = {
       'Authorization': MyPref.authToken.val,
-      //'Authorization':"serial eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbeyJjcmVhdGVkQXQiOiIxNS0wMi0yMDIyIDA2OjI3OjEzIiwidXBkYXRlZEF0IjoiMTUtMDItMjAyMiAwNjoyNzoxMyIsImNyZWF0ZWRCeSI6Ik1HUiIsIm1vZGlmaWVkQnkiOiJNR1IiLCJpZCI6MTMsIm5hbWUiOiJST0xFX1VTRVIiLCJkZXNjcmlwdGlvbiI6IlVTRVIgUk9MRSIsImRlZmF1bHQiOnRydWV9XSwiaWQiOjEyMjEsInN1YiI6ImdyZWVuMTBAeW9wbWFpbC5jb20iLCJpYXQiOjE2Njg3NjQ2MTIsImV4cCI6MTcwMDMyMjIxMn0.ITr_SLT4Zqm6G9w0c-H9vphGIhxv8hnZFdYTk0uW91eFVqutAkAZjkfwiSOMA70qZVF2NKfjyMgST7OauUd2gQ"
     };
     var link = url;
     if(sso){

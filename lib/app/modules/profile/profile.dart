@@ -413,7 +413,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                                 key: const ValueKey('posts'),
                                 physics: const NeverScrollableScrollPhysics(),
                                 child: FutureBuilder<ApiResponse>(
-                                    future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID&page=1&limit=40", true),
+                                  //&page=1&limit=40
+                                    future: controller.getData("/wayagram-service/all-posts/user-posts?profile_id=$postListID", true),
                                     builder: (context, snapshot) {
                                       var savedPosts = ReadWriteValue('wayagram_posts_$postListID', '', MyPref.box);
                                       if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {

@@ -213,6 +213,26 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
 
                       if (snapshot.connectionState == ConnectionState.done && snapshot.data!.isSuccessful) {
                         final posts = ActivityLogsModel.fromJsonList(snapshot.data!.data['data']);
+                        if(posts.isEmpty){
+                          return SizedBox(
+                            width: Get.width,
+                            height: Get.height,
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: Get.height*0.2,),
+                                  Icon(Icons.access_time_filled_outlined, color: AppColors.primary, size: Get.height*0.1,),
+                                  const SizedBox(height: 20,),
+                                  Text("No Activity Yet", style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: Get.textScaleFactor * 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
                         savedPosts.val = jsonEncode(posts);
                         allPosts.addAll(posts);
                         currentPage.val = 2;
@@ -295,6 +315,26 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                         );
                       } else if(savedPosts.val.isNotEmpty){
                         var posts = ActivityLogsModel.fromJsonList(jsonDecode(savedPosts.val));
+                        if(posts.isEmpty){
+                          return SizedBox(
+                            width: Get.width,
+                            height: Get.height,
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: Get.height*0.2,),
+                                  Icon(Icons.access_time_filled_outlined, color: AppColors.primary, size: Get.height*0.1,),
+                                  const SizedBox(height: 20,),
+                                  Text("No Activity Yet", style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: Get.textScaleFactor * 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
                         return ListView.builder(
                           itemCount: posts.length,
                           shrinkWrap: true,
@@ -374,7 +414,24 @@ class _ActivityLogState extends State<ActivityLog> with TickerProviderStateMixin
                         );
                       }else{
                         if(snapshot.connectionState == ConnectionState.done){
-                          return const SizedBox.shrink();
+                          return SizedBox(
+                            width: Get.width,
+                            height: Get.height,
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: Get.height*0.2,),
+                                  Icon(Icons.access_time_filled_outlined, color: AppColors.primary, size: Get.height*0.1,),
+                                  const SizedBox(height: 20,),
+                                  Text("No Activity Yet", style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: Get.textScaleFactor * 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),),
+                                ],
+                              ),
+                            ),
+                          );
                         }
                         return const GroupView(isLoading: true);
                       }

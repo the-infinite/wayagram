@@ -52,7 +52,7 @@ class Settings extends GetView<HomeControllerWayagram>{
           appBar: AppBar(
             elevation: 0,
             systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: getAppColor(AppColors.background),
+                statusBarColor: Colors.transparent,
                 statusBarIconBrightness: getAppBrightness(),
                 statusBarBrightness: getAppBrightness(),
                 systemNavigationBarColor: getAppColor(AppColors.background),
