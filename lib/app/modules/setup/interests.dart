@@ -835,7 +835,7 @@ class _InterestsState extends State<Interests> with TickerProviderStateMixin{
             ),
           ),
         );
-      },
+      }
     );
   }
 }

@@ -72,7 +72,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                           var posts = NotificationModelEntity.fromJson(jsonDecode(savedPosts));
                           return NotificationView(moments: posts.data!);
                         }else{
-                          return NotificationView(isLoading: true);
+                          return const NotificationView(isLoading: true);
                         }
                       }),
                 ],
@@ -383,7 +383,7 @@ class _NotificationsTabState extends State<NotificationsTab> with TickerProvider
                                             height: Get.height*0.7,
                                             child: const Center(child: Text('No Friend Requests'),));
                                       }
-                                      return NotificationView(isLoading: true);
+                                      return const NotificationView(isLoading: true);
                                     }
                                   }),
                             ],

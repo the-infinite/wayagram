@@ -92,7 +92,7 @@ class VerifyOTP extends GetView<AuthControllerWayagram> {
 
                   },
                   controller: controller.otpController,
-                  obscureText: true,
+                  obscureText: false,
                   onChanged: (value) {
                     controller.otp.text = value;
                   },

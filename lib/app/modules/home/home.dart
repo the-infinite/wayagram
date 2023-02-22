@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_chat_list/chat_list.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/app/global_widgets/global_widgets.dart';
 import 'package:wayagram/app/global_widgets/helpers/dark_mode_helper.dart';
@@ -17,6 +18,7 @@ import '../../data/model/full_user_profile_entity.dart';
 import '../../data/providers/my_pref.dart';
 import '../../global_widgets/app_drawer.dart';
 
+import '../../global_widgets/app_refresher.dart';
 import '../../global_widgets/wayagram_images_helpers/wayagram_image_helper.dart';
 import '../contacts/contact.dart';
 import '../search/search.dart';
@@ -31,6 +33,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin{
+  RefreshController refreshController = RefreshController(initialRefresh: false);
+  RefreshController refreshController1 = RefreshController(initialRefresh: false);
+  RefreshController refreshController2 = RefreshController(initialRefresh: false);
+  RefreshController refreshController3 = RefreshController(initialRefresh: false);
+  RefreshController refreshController4 = RefreshController(initialRefresh: false);
+
   var homeController = Get.find<HomeControllerWayagram>();
   var chatXController = Get.find<ChatControllerWayagram>();
   late TabController shopController;
@@ -312,14 +320,38 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                         color: getAppColor(Colors.grey.shade400),
                       ),
                       Expanded(
-                        child: SingleChildScrollView(
-                          physics: (controller.currentBottomNavPage.value == 2 || controller.currentBottomNavPage.value == 3 || controller.currentBottomNavPage.value == 4) ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              controller.pages[controller.currentBottomNavPage.value],
-                            ],
+                        child: AppRefresher(
+                          onRefresh: () async {
+                            if(controller.currentBottomNavPage.value == 0){
+                              await controller.getPosts;
+                              await controller.getMoments;
+                            }
+                            /*if(controller.currentBottomNavPage.value == 2){
+                              await controller.getAllProducts;
+                              await controller.getMyProducts;
+                            }
+                            if(controller.currentBottomNavPage.value == 3){
+                              await controller.getNotification;
+                            }*/
+                            refreshController.refreshCompleted();
+                            controller.update();
+                          },
+                          onLoading: () async {
+                            refreshController.loadComplete();
+                            controller.update();
+                          },
+                          enablePullUp: false,
+                          enablePullDown: (controller.currentBottomNavPage.value == 0),
+                          controller: getCurrentRefreshController(controller.currentBottomNavPage.value),
+                          child: SingleChildScrollView(
+                            physics: (controller.currentBottomNavPage.value == 2 || controller.currentBottomNavPage.value == 3 || controller.currentBottomNavPage.value == 4) ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                controller.pages[controller.currentBottomNavPage.value],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -420,5 +452,24 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
             ),
           );
         });
+  }
+
+  RefreshController getCurrentRefreshController(int position){
+    if(position == 0){
+      return refreshController;
+    }
+    if(position == 2){
+      return refreshController1;
+    }
+    if(position == 3){
+      return refreshController2;
+    }
+    if(position == 1){
+      return refreshController3;
+    }
+    if(position == 4){
+      return refreshController4;
+    }
+    return refreshController;
   }
 }

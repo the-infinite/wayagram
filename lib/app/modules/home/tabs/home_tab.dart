@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_chat_list/chat_list.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -30,6 +31,7 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
+  RefreshController refreshController = RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
