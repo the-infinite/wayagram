@@ -54,7 +54,7 @@ class Verify2FAOTP extends GetView<AuthControllerWayagram> {
                 ),
                 SizedBox(height: Get.height * 0.07),
                 Text(
-                  'Verify your Account',
+                  '2 Factor Authentication',
                   style: AppTextStyle.headline4.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -69,7 +69,7 @@ class Verify2FAOTP extends GetView<AuthControllerWayagram> {
                   ),
                 ),
                 Text(
-                  'to your phone number and email',
+                  'to your phone number or email',
                   style: AppTextStyle.headline4.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.normal,

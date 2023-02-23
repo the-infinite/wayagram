@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -30,6 +31,7 @@ import '../modules/setup/interests.dart';
 import '../modules/sign_in/sign_in.dart';
 import '../modules/verify_otp/verify_2fa_otp.dart';
 import '../modules/verify_otp/verify_otp.dart';
+import '../modules/verify_otp/verify_otp_on_sign_in.dart';
 import '../repository/user_repo.dart';
 
 class AuthControllerWayagram extends GetxController {
@@ -256,8 +258,10 @@ class AuthControllerWayagram extends GetxController {
         else{
           message = "An Error Occurred";
         }
-        print(response.message.toString());
-        print(response.data.toString());
+        if (kDebugMode) {
+          print(response.message.toString());
+          print(response.data.toString());
+        }
         AppOverlay.showErrorSnackBar(title: "Sign In Failed", content: message);
       }
       else{
@@ -384,14 +388,58 @@ class AuthControllerWayagram extends GetxController {
     }
   }
   Future<void> resendOTP() async {
-    print("Email is ${personalEmail.text}");
     ApiResponse response = await userRepo.resendAuthOTP(personalEmail.text);
-    var message = "";
-    var buttonMessage = "";
+    if (kDebugMode) {
+      print("Email is ${personalEmail.text}");
+      print(response.message);
+    }
     if(!response.isSuccessful){
       AppOverlay.showErrorSnackBar(content: response.message!=null ? response.message.toString() : "An Error Occurred");
     }else{
-      AppOverlay.showSuccessSnackBar(title: "Success", content: "OTP has been resent to your email address");
+      if(response.message == "Account has been Verified already"){
+        AppOverlay.showErrorSnackBar(content: "Account has been Verified already, Please Login");
+        Get.to(() => const SignIn(),binding: WayagramBinding());
+      }else{
+        AppOverlay.showSuccessSnackBar(title: "Success", content: "OTP has been resent to your email address");
+      }
+    }
+  }
+
+  Map<String, dynamic> get _getOTPOnLogin => {
+    'phoneOrEmail': GetUtils.isEmail(emailOrPhone.text) ?  emailOrPhone.text : emailOrPhone.text.startsWith("+234") ? emailOrPhone.text.substring(1,emailOrPhone.text.length) : emailOrPhone.text.startsWith("234") ? emailOrPhone.text : emailOrPhone.text.length == 10 ? "234${emailOrPhone.text}" : "234${emailOrPhone.text.substring(1,emailOrPhone.text.length)}",
+    "otp" : otp.text,
+    "wayaBankPayPosGram": "WAYAGRAM",
+  };
+  Future<void> confirmOTPOnLogin() async {
+    ApiResponse response = await userRepo.verifyOTP(_getOTPOnLogin);
+    var message = "";
+    if(!response.isSuccessful){
+      message = response.message.toString().toLowerCase() == "record with provided input not found" ? "Incorrect OTP Entered" : "An Error Occurred";
+      AppOverlay.showErrorSnackBar(title: "OTP Verification Error", content: message);
+    }else{
+      AppOverlay.showSuccessSnackBar(content: "Account Verified Successfully");
+      await signIn();
+    }
+  }
+  Future<void> resendOTPOnLogin(bool firstTime) async {
+    ApiResponse response = await userRepo.resendAuthOTP(_signIn['emailOrPhoneNumber']);
+    if (kDebugMode) {
+      print("Email is ${_signIn['emailOrPhoneNumber']}");
+      print(response.message);
+    }
+    if(!response.isSuccessful){
+      AppOverlay.showErrorSnackBar(content: response.message!=null ? response.message.toString() : "An Error Occurred");
+    }else{
+      if(response.message == "Account has been Verified already."){
+        await signIn();
+      }else{
+        if(firstTime){
+          AppOverlay.showSuccessSnackBar(title: "Success", content: "OTP for account verification has been sent to your email address");
+          Get.to(() => const VerifyOTPOnSignIn());
+        }else{
+          AppOverlay.showSuccessSnackBar(title: "Success", content: "OTP has been resent to your email address");
+        }
+      }
     }
   }
 

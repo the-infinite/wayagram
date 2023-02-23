@@ -70,7 +70,7 @@ class VerifyOTP extends GetView<AuthControllerWayagram> {
                   ),
                 ),
                 Text(
-                  'to your phone number and email',
+                  'to your phone number or email',
                   style: AppTextStyle.headline4.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.normal,
