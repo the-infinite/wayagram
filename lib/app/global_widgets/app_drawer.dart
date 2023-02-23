@@ -254,7 +254,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               children: [
                                 _TextButton(
                                   leading: Icon(Icons.person, color: getAppColor(Colors.black)),
-                                  text: "My Account",
+                                  text: "My Profile",
                                   onPressed: () {
                                     controller.imagePaths.clear();
                                     Get.back();

@@ -526,14 +526,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin{
                         child: AppBar(
                           backgroundColor: getAppColor(AppColors.background),
                           title: Text(
-                            '${fullProfile.displayName}',
+                            'Profile',
                             style: AppTextStyle.subtitle1.copyWith(
                               color: getAppColor(getAppColor(const Color(0xff4F4F4F))),
                               fontSize: Get.textScaleFactor * 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          centerTitle: false,
+                          centerTitle: true,
                           leading: IconButton(
                             padding: EdgeInsets.zero,
                             icon: const Icon(
