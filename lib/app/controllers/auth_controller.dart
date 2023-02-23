@@ -143,6 +143,10 @@ class AuthControllerWayagram extends GetxController {
         message = "This phone number is already in Use, Please enter another phone number or log in";
         buttonMessage = "Login";
       }
+      else if(response.message.toString() == "This user email or phone already exists"){
+        message = "This email or phone number is already in Use, Please enter another email or phone number or log in";
+        buttonMessage = "Login";
+      }
       else{
         message = "An Error Occurred";
         isLogin = false;
@@ -169,6 +173,10 @@ class AuthControllerWayagram extends GetxController {
       }
       else if(response.message.toString().contains("This Phone number already exists")) {
         message = "This phone number is already in Use, Please enter another phone number or log in";
+        buttonMessage = "Login";
+      }
+      else if(response.message.toString() == "This user email or phone already exists"){
+        message = "This email or phone number is already in Use, Please enter another email or phone number or log in";
         buttonMessage = "Login";
       }
       else{

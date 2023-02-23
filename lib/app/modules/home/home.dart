@@ -334,11 +334,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                               await controller.getNotification;
                             }*/
                             refreshController.refreshCompleted();
-                            controller.update();
+                            controller.update(['home_tab']);
                           },
                           onLoading: () async {
                             refreshController.loadComplete();
-                            controller.update();
+                            controller.update(['home_tab']);
                           },
                           enablePullUp: false,
                           enablePullDown: (controller.currentBottomNavPage.value == 0),
