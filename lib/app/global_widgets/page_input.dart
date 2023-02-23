@@ -118,7 +118,7 @@ class PageInput extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: Get.width * 0.65,
+                width: Get.width * 0.68,
                 child: AppInput(
                   hintText: hint,
                   keyboardType: TextInputType.phone,

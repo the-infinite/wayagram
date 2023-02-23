@@ -63,7 +63,10 @@ class PageDropButton extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 5),
+        if(label.isNotEmpty || isCompulsory)
+          const SizedBox(height: 5),
+        if(!(label.isNotEmpty || isCompulsory))
+          const SizedBox(height: 0.5),
         AppDropdownButton(
           value: value,
           borderRadius: 10,
