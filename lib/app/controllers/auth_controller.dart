@@ -424,7 +424,6 @@ class AuthControllerWayagram extends GetxController {
   Future<void> resendOTPOnLogin(bool firstTime) async {
     ApiResponse response = await userRepo.resendAuthOTP(_signIn['emailOrPhoneNumber']);
     if (kDebugMode) {
-      print("Email is ${_signIn['emailOrPhoneNumber']}");
       print(response.message);
     }
     if(!response.isSuccessful){
