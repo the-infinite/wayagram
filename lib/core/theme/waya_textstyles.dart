@@ -1,0 +1,24 @@
+import 'package:flutter/material.dart';
+
+import 'waya_colors.dart';
+
+class WayaTextStyles {
+  //
+  static const labelSmall = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: WayaColors.black);
+  static const labelMedium = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: WayaColors.black);
+  //
+  static const titleLarge = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: WayaColors.black);
+  static const titleMedium = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: WayaColors.black);
+//
+  static const headlineLarge = TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: WayaColors.black);
+  static const headlineMedium = TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: WayaColors.black);
+  //
+  static const bodyMedium = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: WayaColors.black,
+  );
+  static const bodySemiBold = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: WayaColors.black);
+  //
+  static const hintStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: WayaColors.greyColor400);
+}
