@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/account_creation/view/select_account.dart';
 import 'package:wayagram/features/onboarding/data/onboarding_data.dart';
@@ -33,3 +34,5 @@ class OnboardingVm extends ChangeNotifier {
     }
   }
 }
+
+final onboardingVmProvider = ChangeNotifierProvider((ref) => OnboardingVm());

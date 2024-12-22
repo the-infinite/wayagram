@@ -123,4 +123,3 @@ class OnboardingView extends ConsumerWidget {
   }
 }
 
-final onboardingVmProvider = ChangeNotifierProvider((ref) => OnboardingVm());
