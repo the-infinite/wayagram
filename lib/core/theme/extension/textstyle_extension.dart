@@ -31,7 +31,7 @@ extension WayaTextStyleX on TextStyle {
   }) {
     return copyWith(
       inherit: inherit,
-      color: Colors.red,
+      color: color,
       backgroundColor: backgroundColor,
       fontSize: fontSize,
       fontWeight: fontWeight,

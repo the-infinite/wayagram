@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -37,12 +38,10 @@ class ChangedPasswordSuccess extends ConsumerWidget {
               style: WayaTextStyles.descriptionStyle,
             ),
             const Gap(20),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: WayaColors.customPrimary,
-              ),
-              child: Text("Take Me to Login"),
+            WayaButton(
+              callback: () {},
+            
+              text:"Take Me to Login",
             ),
           ],
         ),

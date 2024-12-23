@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -44,14 +45,12 @@ class SetNotification extends ConsumerWidget {
                   style: WayaTextStyles.descriptionStyle,
                 ),
                 const Gap(20),
-                ElevatedButton(
-                  onPressed: () {
+                WayaButton(
+                  callback: () {
                    WayaNav.toNamed('/account-setup-success');
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: WayaColors.customPrimary,
-                  ),
-                  child: Text("Turn on Notification"),
+                 
+              text:"Turn on Notification",
                 ),
                 const Gap(20),
                 Align(

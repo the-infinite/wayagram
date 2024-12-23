@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 
-
 class WayaTextFormField extends StatefulWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
@@ -46,7 +45,7 @@ class WayaTextFormField extends StatefulWidget {
       this.validator,
       this.inputFormatters,
       this.fillColor,
-      this.showBorder = false,
+      this.showBorder = true,
       this.showFocusedBorder = true,
       this.borderColor = WayaColors.greyColor300,
       this.prefixIcon,
@@ -76,22 +75,24 @@ class _AppFieldState extends State<WayaTextFormField> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
-    fillColor = widget.fillColor ?? const Color(0xffF5F5F5);
+    fillColor = widget.fillColor ?? WayaColors.scaffoldColor;
     borderColor = WayaColors.greyColor300;
 
     _focusNode.addListener(() {
       setState(() {
-        borderColor =
-            _focusNode.hasFocus ? WayaColors.customPrimary : WayaColors.greyColor300;
+        borderColor = _focusNode.hasFocus
+            ? WayaColors.customPrimary
+            : WayaColors.greyColor300;
         fillColor = _focusNode.hasFocus
             ? Colors.transparent
-            : widget.fillColor ?? const Color(0xffF5F5F5);
+            : widget.fillColor ?? WayaColors.scaffoldColor;
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context).colorScheme;
     Widget textFormField = TextFormField(
       readOnly: widget.isReadOnly ?? false,
       focusNode: _focusNode,
@@ -108,17 +109,16 @@ class _AppFieldState extends State<WayaTextFormField> {
       textInputAction: widget.textInputAction,
       onSaved: widget.onSaved,
       decoration: InputDecoration(
-        border: InputBorder.none,
-        contentPadding: widget.padding,
-        fillColor: Colors.transparent,
-        filled: true,
-        prefixIcon: widget.prefixIcon,
-        prefixIconColor: widget.prefixIconColor,
-        hintText: widget.hintText,
-        suffixIcon: widget.suffixIcon,
-        hintStyle: WayaTextStyles.hintStyle,
-        labelStyle: WayaTextStyles.labelSmall
-      ),
+          border: InputBorder.none,
+          contentPadding: widget.padding,
+          fillColor: Colors.transparent,
+          filled: true,
+          prefixIcon: widget.prefixIcon,
+          prefixIconColor: widget.prefixIconColor,
+          hintText: widget.hintText,
+          suffixIcon: widget.suffixIcon,
+          hintStyle: WayaTextStyles.hintStyle,
+          labelStyle: WayaTextStyles.labelSmall),
     );
 
     if (widget.callback != null) {
@@ -146,9 +146,10 @@ class _AppFieldState extends State<WayaTextFormField> {
           decoration: BoxDecoration(
             //color: fillColor,
             border: Border.all(
-              color: widget.showBorder ? Colors.white : borderColor,
+              color: widget.showBorder
+                  ? (widget.borderColor ?? borderColor)
+                  : WayaColors.scaffoldColor,
               width: 1,
-
             ),
             borderRadius: BorderRadius.circular(8),
           ),

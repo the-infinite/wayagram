@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -175,14 +176,14 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                       ),
                     )),
                 const Gap(50),
-                ElevatedButton(
-                    onPressed: viewModelState.email.text.isNotEmpty ||
+                WayaButton(
+                    callback: viewModelState.email.text.isNotEmpty ||
                             viewModelState.phone.text.isNotEmpty
                         ? () {
                             widget.goToNextTab();
                           }
                         : null,
-                    child: Text("Send Reset Code"))
+                    text:"Send Reset Code")
               ],
             ))
       ],

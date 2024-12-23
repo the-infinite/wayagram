@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -70,8 +71,8 @@ class VerifyAccount extends ConsumerWidget {
               ]))),
         ),
         const Gap(50),
-        ElevatedButton(
-            onPressed: viewModelState.inputCode.isEmpty ||
+        WayaButton(
+            callback: viewModelState.inputCode.isEmpty ||
                     viewModelState.inputCode.length < 6
                 ? null
                 : () {
@@ -81,7 +82,7 @@ class VerifyAccount extends ConsumerWidget {
                       goToNextTab();
                     }
                   },
-            child: Text("Continue"))
+            text:"Continue")
       ],
     );
   }

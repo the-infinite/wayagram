@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
@@ -176,7 +177,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               padding: EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: WayaColors.greyColor300, width: 1),
+                                      color:formState.hasError &&
+                                        viewModelState.email.text.isEmpty
+                                    ? WayaColors.error: WayaColors.greyColor300, width: 1),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8.0))),
                               child: Row(
@@ -240,112 +243,114 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     );
                   }),
                   const Gap(5),
-                  FormField<String>(validator: (value) {
-                    if (viewModelState.password.text.isEmpty) {
-                      return 'Password is required';
-                    }
-                    if (viewModelState.password.text.length < 8) {
-                      return 'Password must be at least 8';
-                    }
+                  // FormField<String>(validator: (value) {
+                  //   if (viewModelState.password.text.isEmpty) {
+                  //     return 'Password is required';
+                  //   }
+                  //   if (viewModelState.password.text.length < 8) {
+                  //     return 'Password must be at least 8';
+                  //   }
 
-                    return null;
-                  }, builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaTextFormField(
-                          keyboardType: TextInputType.visiblePassword,
-                          controller: viewModelState.password,
-                          borderColor: formState.hasError &&
-                                  viewModelState.password.text.isEmpty
-                              ? WayaColors.error
-                              : null,
-                          hintText: 'Enter Your Password',
-                          label: 'Password',
-                          obscureText: !viewModelState.isPasswordVisible,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              viewModel.togglePasswordVisibility();
-                            },
-                            icon: Icon(viewModelState.isPasswordVisible
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
-                            color: WayaColors.greyColor300,
-                          ),
-                        ),
-                        if (formState.hasError &&
-                            viewModelState.password.text.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: const TextStyle(
-                                  color: WayaColors.error, fontSize: 12),
-                            ),
-                          ),
-                      ],
-                    );
-                  }),
-                  const Gap(5),
-                  FormField<String>(validator: (value) {
-                    if (viewModelState.confirmPassword.text.isEmpty) {
-                      return 'Password is required';
-                    }
-                    if (viewModelState.confirmPassword.text.length < 8) {
-                      return 'Password must be at least 8';
-                    }
-                    if (viewModelState.password.text !=
-                        viewModelState.confirmPassword.text) {
-                      return 'Password does not match';
-                    }
+                  //   return null;
+                  // }, builder: (formState) {
+                  //   return Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       WayaTextFormField(
+                  //         keyboardType: TextInputType.visiblePassword,
+                  //         controller: viewModelState.password,
+                  //         borderColor: formState.hasError &&
+                  //                 viewModelState.password.text.isEmpty
+                  //             ? WayaColors.error
+                  //             : null,
+                  //         hintText: 'Enter Your Password',
+                  //         label: 'Password',
+                  //         obscureText: !viewModelState.isPasswordVisible,
+                  //         suffixIcon: IconButton(
+                  //           onPressed: () {
+                  //             viewModel.togglePasswordVisibility();
+                  //           },
+                  //           autofocus: false,
+                  //           icon: Icon(viewModelState.isPasswordVisible
+                  //               ? Icons.visibility_outlined
+                  //               : Icons.visibility_off_outlined),
+                  //           color: WayaColors.greyColor300,
+                  //         ),
+                  //       ),
+                  //       if (formState.hasError &&
+                  //           viewModelState.password.text.isEmpty)
+                  //         Padding(
+                  //           padding: const EdgeInsets.only(top: 5),
+                  //           child: Text(
+                  //             formState.errorText!,
+                  //             style: const TextStyle(
+                  //                 color: WayaColors.error, fontSize: 12),
+                  //           ),
+                  //         ),
+                  //     ],
+                  //   );
+                  // }),
+                  // const Gap(5),
+                  // FormField<String>(validator: (value) {
+                  //   if (viewModelState.confirmPassword.text.isEmpty) {
+                  //     return 'Password is required';
+                  //   }
+                  //   if (viewModelState.confirmPassword.text.length < 8) {
+                  //     return 'Password must be at least 8';
+                  //   }
+                  //   if (viewModelState.password.text !=
+                  //       viewModelState.confirmPassword.text) {
+                  //     return 'Password does not match';
+                  //   }
 
-                    return null;
-                  }, builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaTextFormField(
-                          keyboardType: TextInputType.visiblePassword,
-                          controller: viewModelState.confirmPassword,
-                          borderColor: formState.hasError &&
-                                  viewModelState.confirmPassword.text.isEmpty
-                              ? WayaColors.error
-                              : null,
-                          hintText: 'Enter your Password',
-                          label: 'Confirm Password',
-                          obscureText: !viewModelState.isConfirmPasswordVisible,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              viewModel.toggleConfirmPasswordVisibility();
-                            },
-                            icon: Icon(viewModelState.isConfirmPasswordVisible
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
-                            color: WayaColors.greyColor300,
-                          ),
-                        ),
-                        if (formState.hasError &&
-                            viewModelState.confirmPassword.text.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: const TextStyle(
-                                  color: WayaColors.error, fontSize: 12),
-                            ),
-                          ),
-                      ],
-                    );
-                  }),
+                  //   return null;
+                  // }, builder: (formState) {
+                  //   return Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       WayaTextFormField(
+                  //         keyboardType: TextInputType.visiblePassword,
+                  //         controller: viewModelState.confirmPassword,
+                  //         borderColor: formState.hasError &&
+                  //                 viewModelState.confirmPassword.text.isEmpty
+                  //             ? WayaColors.error
+                  //             : null,
+                  //         hintText: 'Enter your Password',
+                  //         label: 'Confirm Password',
+                  //         obscureText: !viewModelState.isConfirmPasswordVisible,
+                  //         suffixIcon: IconButton(
+                  //           onPressed: () {
+                  //             viewModel.toggleConfirmPasswordVisibility();
+                  //           },
+                  //           autofocus: false,
+                  //           icon: Icon(viewModelState.isConfirmPasswordVisible
+                  //               ? Icons.visibility_outlined
+                  //               : Icons.visibility_off_outlined),
+                  //           color: WayaColors.greyColor300,
+                  //         ),
+                  //       ),
+                  //       if (formState.hasError &&
+                  //           viewModelState.confirmPassword.text.isEmpty)
+                  //         Padding(
+                  //           padding: const EdgeInsets.only(top: 5),
+                  //           child: Text(
+                  //             formState.errorText!,
+                  //             style: const TextStyle(
+                  //                 color: WayaColors.error, fontSize: 12),
+                  //           ),
+                  //         ),
+                  //     ],
+                  //   );
+                  // }),
                   const Gap(5),
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.start,
                     // crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Checkbox(
-                          value: viewModelState.isAgreeToTerm,
+                          value: true,
                           onChanged: (value) {
-                            viewModel.toggleTerm(value!);
+                            
                           }),
                       // const Gap(3),
                       Expanded(
@@ -368,14 +373,14 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     ],
                   ),
                   const Gap(20),
-                  ElevatedButton(
-                      onPressed: _formKey.currentState?.validate() == true && viewModelState.isAgreeToTerm ?() {
+                  WayaButton(
+                      callback: _formKey.currentState?.validate() == true  ?() {
                        
-                          print("i am here");
+                        //  print("i am here");
                            widget.goToNextTab();
                         
                       }: null,
-                      child: Text("Continue"))
+                      text:"Continue")
                 ],
               ))
         ],

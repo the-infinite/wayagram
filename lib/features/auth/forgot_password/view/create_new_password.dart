@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -136,13 +137,13 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                   );
                 }),
                 const Gap(50),
-                ElevatedButton(
-                    onPressed: _formKey.currentState?.validate() == true
+                WayaButton(
+                    callback: _formKey.currentState?.validate() == true
                         ? () {
                             WayaNav.toNamed('/changed-password-success');
                           }
                         : null,
-                    child: Text("Save New Password"))
+                   text:"Save New Password")
               ],
             ))
       ],

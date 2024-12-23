@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 
@@ -74,13 +75,13 @@ class SelectAccount extends ConsumerWidget {
             }),
       
         const Gap(50),
-        ElevatedButton(
-            onPressed: type.isNotEmpty
+        WayaButton(
+            callback: type.isNotEmpty
                 ? () {
                     goToNextTab(type);
                   }
                 : null,
-            child: Text("Continue"))
+            text:"Continue")
       ],
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -43,14 +44,12 @@ class Explore extends ConsumerWidget {
                 ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
+            WayaButton(
+              callback: () {
                 WayaNav.toNamed("/forgot-password");
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: WayaColors.customPrimary,
-              ),
-              child: Text("Explore Wayagram"),
+             
+              text:"Explore Wayagram",
             ),
             const Gap(20)
           ],
