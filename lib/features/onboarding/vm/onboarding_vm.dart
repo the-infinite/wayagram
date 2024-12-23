@@ -23,12 +23,14 @@ class OnboardingVm extends ChangeNotifier {
   }
 
   void nextPage() {
+
     if (_currentPage < onboardingViewData.length - 1) {
       pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
+          print("bdbdb $_currentPage");
       WayaNav.to(const SelectAccount());
     }
   }
