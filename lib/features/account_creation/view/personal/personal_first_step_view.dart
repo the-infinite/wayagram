@@ -350,7 +350,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       // const Gap(3),
                       Expanded(
                           child: RichText(
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.start,
                               text: const TextSpan(children: [
                                 TextSpan(
                                     text: "I agree to the ",
