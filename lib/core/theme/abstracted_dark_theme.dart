@@ -11,6 +11,7 @@ final abstractedDarkTheme = ThemeData(
     chipTheme: _chipThemeData(),
     elevatedButtonTheme: _elevatedButtonThemeData(),
     checkboxTheme: _checkBoxThemeData());
+    
 
 AppBarTheme _appBarThemeData() {
   return const AppBarTheme(

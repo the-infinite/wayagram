@@ -12,6 +12,7 @@ final abstractedLightTheme = ThemeData(
     headlineLarge: WayaTextStyles.headlineLarge,
     headlineMedium: WayaTextStyles.headlineMedium,
     bodyMedium: WayaTextStyles.bodyMedium,
+    
   ),
   scaffoldBackgroundColor: WayaColors.scaffoldColor2,
     appBarTheme: _appBarThemeData(),
@@ -44,7 +45,7 @@ ElevatedButtonThemeData _elevatedButtonThemeData() {
       disabledBackgroundColor: WayaColors.secondaryColor,
       disabledForegroundColor: WayaColors.onPrimary,
       minimumSize: const Size(double.infinity, 55.0),
-      backgroundColor: Colors.red, // Button color
+      backgroundColor: WayaColors.customPrimary, // Button color
       foregroundColor: Colors.white, // Text color
       padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 5), // Padding for height
       shape: RoundedRectangleBorder(
