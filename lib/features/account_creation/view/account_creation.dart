@@ -3,8 +3,11 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/features/account_creation/view/explore.dart';
 import 'package:wayagram/features/account_creation/view/personal/personal_first_step_view.dart';
 import 'package:wayagram/features/account_creation/view/select_account.dart';
+import 'package:wayagram/features/account_creation/view/set_notification.dart';
+import 'package:wayagram/features/account_creation/view/verify_account.dart';
 import 'package:wayagram/features/account_creation/vm/account_creation_vm.dart';
 
 class AccountCreation extends ConsumerStatefulWidget {
@@ -22,7 +25,7 @@ class _AccountCreationState extends ConsumerState<AccountCreation>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
   }
 
   void _goToNextTab() {
@@ -42,12 +45,20 @@ class _AccountCreationState extends ConsumerState<AccountCreation>
 
     return WayaScaffoldWithProgressbar(
         isLoading: false,
+        isScrollable: _tabController.index == 1 ? true : false,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
           SelectAccount(
             goToNextTab: updateSelected,
           ),
-          PersonalFirstStepView()
+           PersonalFirstStepView(
+            goToNextTab: _goToNextTab,
+          ),
+          VerifyAccount(goToNextTab: _goToNextTab),
+         
+          SetNotification(goToNextTab: _goToNextTab),
+          Explore(),
+          
         ],
         tabController: _tabController);
   }

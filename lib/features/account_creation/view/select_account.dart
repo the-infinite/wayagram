@@ -23,7 +23,8 @@ class SelectAccount extends ConsumerWidget {
         Text("Which type of account do you want to \n create",
             style: WayaTextStyles.hintStyle),
         const Gap(20),
-        ListView.builder(
+   
+       ListView.builder(
             itemCount: viewModel.data.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
@@ -71,6 +72,7 @@ class SelectAccount extends ConsumerWidget {
                 ],
               );
             }),
+      
         const Gap(50),
         ElevatedButton(
             onPressed: type.isNotEmpty

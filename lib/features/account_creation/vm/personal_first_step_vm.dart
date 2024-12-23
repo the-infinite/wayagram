@@ -31,6 +31,26 @@ class PersonalFirstStepState {
         referralCode = TextEditingController(text: referralCode),
         confirmPassword = TextEditingController(text: confirmPassword),
         phone = TextEditingController(text: phone);
+
+  PersonalFirstStepState copyWith({
+    bool? isPasswordVisible,
+    bool? isConfirmPasswordVisible,
+    bool? isAgreeToTerm,
+  }) {
+    return PersonalFirstStepState(
+      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
+      isConfirmPasswordVisible:
+          isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
+      isAgreeToTerm: isAgreeToTerm ?? this.isAgreeToTerm,
+      firstName: firstName.text,
+      lastName: lastName.text,
+      email: email.text,
+      phone: phone.text,
+      password: password.text,
+      confirmPassword: confirmPassword.text,
+      referralCode: referralCode.text,
+    );
+  }
 }
 
 class PersonalFirstStepVm extends Notifier<PersonalFirstStepState> {
@@ -40,21 +60,21 @@ class PersonalFirstStepVm extends Notifier<PersonalFirstStepState> {
   }
 
   void togglePasswordVisibility() {
-    state = PersonalFirstStepState(isPasswordVisible: !state.isPasswordVisible);
+    state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
   }
 
   void toggleConfirmPasswordVisibility() {
-    state = PersonalFirstStepState(isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
+    state = state.copyWith(
+        isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
   }
 
   void toggleTerm(bool value) {
-    state = PersonalFirstStepState(isAgreeToTerm: value);
+    state = state.copyWith(isAgreeToTerm: value);
   }
 
   void submit() {}
 }
 
-// Add provider
 final personalFirstStepProvider =
     NotifierProvider<PersonalFirstStepVm, PersonalFirstStepState>(() {
   return PersonalFirstStepVm();
