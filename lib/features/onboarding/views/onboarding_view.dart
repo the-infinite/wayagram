@@ -11,7 +11,8 @@ class OnboardingView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(onboardingVmProvider);
+    final viewModel = ref.watch(onboardingVmProvider.notifier);
+    final currPage = ref.watch(onboardingVmProvider).currentPage;
 
     return Scaffold(
         body: Padding(
@@ -73,19 +74,19 @@ class OnboardingView extends ConsumerWidget {
                   //   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      viewModel.pageData[viewModel.currentPage].title,
+                      viewModel.pageData[currPage].title,
                       textAlign: TextAlign.center,
                       style: WayaTextStyles.titleLarge,
                     ),
                     const Gap(20),
                     Text(
-                      viewModel.pageData[viewModel.currentPage].description,
+                      viewModel.pageData[currPage].description,
                       textAlign: TextAlign.center,
                       style: WayaTextStyles.descriptionStyle,
                     ),
                     const Gap(20),
                     WayaCustomIndicator(
-                        currentPage: viewModel.currentPage,
+                        currentPage: currPage,
                         pageCount: viewModel.pageData.length),
                     const Gap(30),
                     WayaButton(
@@ -119,5 +120,3 @@ class OnboardingView extends ConsumerWidget {
     ));
   }
 }
-
-final onboardingVmProvider = ChangeNotifierProvider((ref) => OnboardingVm());
