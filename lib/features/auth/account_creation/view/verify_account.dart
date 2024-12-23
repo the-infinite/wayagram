@@ -3,11 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
-import 'package:wayagram/features/account_creation/vm/verify_account_vm.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/account_creation/view/set_notification.dart';
+import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
 
 class VerifyAccount extends ConsumerWidget {
   final Function goToNextTab;
-  const VerifyAccount({super.key, required this.goToNextTab});
+  final type;
+  const VerifyAccount(
+      {super.key, required this.goToNextTab, required this.type});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -71,7 +75,11 @@ class VerifyAccount extends ConsumerWidget {
                     viewModelState.inputCode.length < 6
                 ? null
                 : () {
-                    goToNextTab();
+                    if (type == 'account-creation') {
+                      WayaNav.to(const SetNotification());
+                    } else {
+                      goToNextTab();
+                    }
                   },
             child: Text("Continue"))
       ],

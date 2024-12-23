@@ -4,7 +4,7 @@ import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/account_creation/vm/personal_first_step_vm.dart';
+import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
 
 class PersonalFirstStepView extends ConsumerStatefulWidget {
   final Function goToNextTab;

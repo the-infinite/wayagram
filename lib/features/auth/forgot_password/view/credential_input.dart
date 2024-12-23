@@ -1,0 +1,191 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/waya_text_form_field.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
+
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
+
+class CredentialInput extends ConsumerStatefulWidget {
+  final Function goToNextTab;
+  const CredentialInput({super.key, required this.goToNextTab});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CredentialInputState();
+}
+
+class _CredentialInputState extends ConsumerState<CredentialInput> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModelState = ref.watch(credentialInputProvider);
+    final viewModel = ref.watch(credentialInputProvider.notifier);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Forgot Password?", style: WayaTextStyles.titleLarge),
+        const Gap(5),
+        Text(
+            "Tell us your email address or Phone number so we can \n help you reset your password",
+            style: WayaTextStyles.hintStyle),
+        const Gap(30),
+        Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Gap(20),
+                viewModelState.isEmail
+                    ? FormField<String>(validator: (value) {
+                        if (viewModelState.isEmail &&
+                            viewModelState.email.text.isEmpty) {
+                          return 'Email is required';
+                        }
+                        final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                        if (viewModelState.isEmail &&
+                            !regexp.hasMatch(viewModelState.email.text)) {
+                          return 'Invalid email address';
+                        }
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WayaTextFormField(
+                              keyboardType: TextInputType.emailAddress,
+                              controller: viewModelState.email,
+                              hintText: 'example@gmail.com',
+                              
+                              borderColor: formState.hasError &&
+                                      viewModelState.email.text.isEmpty
+                                  ? WayaColors.error
+                                  : null,
+                              label: 'Email Address',
+                            ),
+                            if (formState.hasError &&
+                                viewModelState.email.text.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: const TextStyle(
+                                      color: WayaColors.error, fontSize: 12),
+                                ),
+                              ),
+                          ],
+                        );
+                      })
+                    : FormField<String>(validator: (value) {
+                        if (!viewModelState.isEmail &&
+                            viewModelState.phone.text.isEmpty) {
+                          return 'Phone is required';
+                        }
+
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Phone Number",
+                              style: WayaTextStyles.labelMedium,
+                            ),
+                            const Gap(3),
+                            Row(
+                              children: [
+                                //   Expanded(
+                                Container(
+                                  height: 55,
+                                  width: 90,
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: WayaColors.greyColor300,
+                                          width: 1),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0))),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/onboarding/flag.png',
+                                        width: 30,
+                                        height: 30,
+                                      ),
+                                      const Gap(3),
+                                      Text(
+                                        "+234",
+                                        style: WayaTextStyles.hintStyle,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                const Gap(4),
+                                Expanded(
+                                  child: WayaTextFormField(
+                                    keyboardType: TextInputType.phone,
+                                    controller: viewModelState.phone,
+                                    hintText: '000-000-000',
+                                    
+                                    borderColor: formState.hasError &&
+                                            viewModelState.email.text.isEmpty
+                                        ? WayaColors.error
+                                        : null,
+                                  ),
+                                )
+                              ],
+                            ),
+                            if (formState.hasError &&
+                                viewModelState.email.text.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: const TextStyle(
+                                      color: WayaColors.error, fontSize: 12),
+                                ),
+                              ),
+                          ],
+                        );
+                      }),
+                      const Gap(10),
+                Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        viewModel.toggle();
+                      },
+                      child: Text(
+                        !viewModelState.isEmail
+                            ? "Use Email Address"
+                            : "Use Phone Instead",
+                        style: TextStyle().wayaCopyWith(
+                            color: WayaColors.customPrimary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14),
+                      ),
+                    )),
+                const Gap(50),
+                ElevatedButton(
+                    onPressed: viewModelState.email.text.isNotEmpty ||
+                            viewModelState.phone.text.isNotEmpty
+                        ? () {
+                            widget.goToNextTab();
+                          }
+                        : null,
+                    child: Text("Send Reset Code"))
+              ],
+            ))
+      ],
+    );
+  }
+}
