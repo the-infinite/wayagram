@@ -29,12 +29,12 @@ class Wayagram extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: GetMaterialApp(
-        initialRoute: WayaAppRoutes.splash,
+        initialRoute: '/',
         title: WayaConstants.appName,
         theme: WayaTheme.lightTheme,
         darkTheme: WayaTheme.darkTheme,
         themeMode: ThemeMode.light,
-        getPages: WayaAppRoutes.routes,
+        getPages: WayaAppRoutes.getPages,
       ),
     );
   }
