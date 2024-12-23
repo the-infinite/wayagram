@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/onboarding/data/onboarding_data.dart';
 
 class AccountState {
@@ -28,13 +30,16 @@ class OnboardingVm extends StateNotifier<AccountState> {
   }
 
   void nextPage() {
+
     if (state.currentPage < onboardingViewData.length - 1) {
+
       pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
-     // WayaNav.to(const SelectAccount());
+
+      WayaNav.toNamed("/account-creation");
     }
   }
 }

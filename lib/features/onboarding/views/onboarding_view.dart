@@ -89,14 +89,11 @@ class OnboardingView extends ConsumerWidget {
                         currentPage: currPage,
                         pageCount: viewModel.pageData.length),
                     const Gap(30),
-                    ElevatedButton(
-                      onPressed: () {
+                    WayaButton(
+                      callback: () {
                         viewModel.nextPage();
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: WayaColors.customPrimary,
-                      ),
-                      child: Text("Get Started"),
+                      text: "Get Started",
                     ),
                     const Gap(20),
                     RichText(

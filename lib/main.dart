@@ -7,6 +7,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_theme.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/onboarding/views/splash_screen.dart';
 
 import 'core/components/components.dart';
@@ -28,11 +29,12 @@ class Wayagram extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: GetMaterialApp(
+        initialRoute: WayaAppRoutes.splash,
         title: WayaConstants.appName,
         theme: WayaTheme.lightTheme,
         darkTheme: WayaTheme.darkTheme,
         themeMode: ThemeMode.light,
-        home: const SplashScreen(),
+        getPages: WayaAppRoutes.routes,
       ),
     );
   }
