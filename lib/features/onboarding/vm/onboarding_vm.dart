@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/account_creation/view/select_account.dart';
 import 'package:wayagram/features/onboarding/data/onboarding_data.dart';
 
 class OnboardingVm extends ChangeNotifier {
@@ -30,8 +29,7 @@ class OnboardingVm extends ChangeNotifier {
         curve: Curves.easeInOut,
       );
     } else {
-          print("bdbdb $_currentPage");
-      WayaNav.to(const SelectAccount());
+      WayaNav.toNamed("/account-creation");
     }
   }
 }

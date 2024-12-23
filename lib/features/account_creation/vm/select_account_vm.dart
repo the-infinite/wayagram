@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/account_creation/data/select_account_data.dart';
 
 class AccountState {
@@ -14,8 +15,9 @@ class SelectAccountVm extends StateNotifier<AccountState> {
   List<SelectAccountData> get data => selectAccountData;
 
   void setSelectedType(String type) {
-    state.selectedType = type;
+    state = AccountState(selectedType: type);
   }
+
 }
 
 final selectAccountProvider =

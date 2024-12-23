@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/account_creation/vm/select_account_vm.dart';
 
 class SelectAccount extends ConsumerWidget {
-  const SelectAccount({super.key});
+  final Function(String type) goToNextTab;
+  const SelectAccount({super.key, required this.goToNextTab});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(selectAccountProvider.notifier);
     final type = ref.watch(selectAccountProvider).selectedType;
 
-    return WayaScaffold(
-        body: Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("Select Account Type", style: WayaTextStyles.titleLarge),
         const Gap(5),
@@ -28,35 +27,59 @@ class SelectAccount extends ConsumerWidget {
             itemCount: viewModel.data.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(6.0),
-                decoration: BoxDecoration(
-                    color: WayaColors.greyColor300,
-                    borderRadius: BorderRadius.all(Radius.circular(6))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(viewModel.data[index].avatar),
-                    const Gap(10),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(viewModel.data[index].title,
-                            style: WayaTextStyles.titleLarge),
-                        const Gap(3),
-                        Text(
-                          viewModel.data[index].description,
-                          style: WayaTextStyles.descriptionStyle,
-                        )
-                      ],
-                    )
-                  ],
-                ),
+              return Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      viewModel.setSelectedType(viewModel.data[index].type);
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 100,
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                          color: viewModel.data[index].type == type
+                              ? WayaColors.primary75
+                              : WayaColors.greyColor100,
+                          border: Border.all(
+                              color: viewModel.data[index].type == type
+                                  ? WayaColors.customPrimary
+                                  : WayaColors.greyColor100),
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(viewModel.data[index].avatar),
+                          const Gap(10),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(viewModel.data[index].title,
+                                  style: WayaTextStyles.titleMedium),
+                              const Gap(3),
+                              Text(viewModel.data[index].description,
+                                  style: WayaTextStyles.hintStyle)
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Gap(20)
+                ],
               );
-            })
+            }),
+        const Gap(50),
+        ElevatedButton(
+            onPressed: type.isNotEmpty
+                ? () {
+                    goToNextTab(type);
+                  }
+                : null,
+            child: Text("Continue"))
       ],
-    ));
+    );
   }
 }

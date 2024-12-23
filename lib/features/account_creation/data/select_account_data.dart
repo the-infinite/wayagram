@@ -13,13 +13,13 @@ class SelectAccountData {
 
 List<SelectAccountData> selectAccountData = [
   SelectAccountData(
-      avatar: "assets/svg/personal.svg",
+      avatar: "assets/icons/personal.svg",
       description: "Create your personal account to get started \n with us",
       title: "Personal Account",
       type: "personal"),
   SelectAccountData(
-      avatar: "assets/svg/business.svg",
-      description: "Create a business account for your business",
+      avatar: "assets/icons/business.svg",
+      description: "Create a business account for your  \n business",
       title: "Business Account",
       type: "business")
 ];
