@@ -43,7 +43,7 @@ class PersonalFirstStepVm extends ChangeNotifier {
         regexp.hasMatch(email.text) &&
         password.text.isNotEmpty &&
         password.text.length >= 8 &&
-        confirmPassword.text == password.text &&
+        confirmPassword.text == password.text && phone.text.isNotEmpty &&
         isAgreeToTerm;
     notifyListeners();
   }

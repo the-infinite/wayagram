@@ -30,7 +30,7 @@ class Wayagram extends ConsumerWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: GetMaterialApp(
-        initialRoute: '/add-business-account',
+        initialRoute: '/',
         title: WayaConstants.appName,
         theme: WayaTheme.lightTheme,
         darkTheme: WayaTheme.darkTheme,

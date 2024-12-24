@@ -1,10 +1,10 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/user/development/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/user/FlutterProjects/waya/WAYA-PAY-CHAT-2.0-WAYAGRAM-FLUTTER-APP"
+export "FLUTTER_ROOT=/Users/macintoshhd/Downloads/flutter"
+export "FLUTTER_APPLICATION_PATH=/Users/macintoshhd/Documents/WAYA-PAY-CHAT-2.0-WAYAGRAM-FLUTTER-APP"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
-export "FLUTTER_BUILD_NAME=1.3.68"
+export "FLUTTER_BUILD_NAME=1.0.0"
 export "FLUTTER_BUILD_NUMBER=1"
 export "DART_OBFUSCATION=false"
 export "TRACK_WIDGET_CREATION=true"

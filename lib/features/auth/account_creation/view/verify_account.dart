@@ -57,7 +57,7 @@ class VerifyAccount extends ConsumerWidget {
           child: Container(
               width: 200,
               alignment: Alignment.center,
-              padding: EdgeInsets.all(18),
+              padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                   color: WayaColors.primary75,
                   borderRadius: BorderRadius.all(Radius.circular(8))),

@@ -25,7 +25,8 @@ class WayaBackButton extends StatelessWidget {
               WayaNav.goBack();
               HapticFeedback.lightImpact();
             },
-        child: SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
+        child:
+            SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
       ),
     );
   }
@@ -79,8 +80,8 @@ class WayaButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         decoration: BoxDecoration(
           color: isButtonDisabled
-              ? wayaTheme.greyColor300
-              : (color ?? wayaTheme.customPrimary),
+              ? wayaTheme.colorScheme.greyColor300
+              : (color ?? wayaTheme.colorScheme.customPrimary),
           border: border,
           borderRadius: BorderRadius.circular(radius ?? 8),
         ),
@@ -96,7 +97,9 @@ class WayaButton extends StatelessWidget {
                     ),
                   Text(text,
                       style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                          fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
+                          fontWeight: FontWeight.w600,
+                          color: textColor ??
+                              wayaTheme.colorScheme.scaffoldColor2)),
                   Gap(10),
                   trailingIcon ?? SizedBox.shrink()
                 ],
@@ -104,7 +107,9 @@ class WayaButton extends StatelessWidget {
             : centerWidget ??
                 Text(text,
                     style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                        fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
+                        fontWeight: FontWeight.w600,
+                        color:
+                            textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
       ),
     );
   }

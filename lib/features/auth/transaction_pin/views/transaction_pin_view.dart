@@ -51,7 +51,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
             PinInputField(pin: confirmPin, label: "Re-enter your PIN"),
             const Gap(10),
             Visibility(
-                visible: !isInValid,
+                visible: pin.isNotEmpty && confirmPin.isNotEmpty && !isInValid,
                 child: Text("The PINs don't match. Pls try again",
                     style: TextStyle().wayaCopyWith(
                       fontWeight: FontWeight.w400,

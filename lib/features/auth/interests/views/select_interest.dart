@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:gap/gap.dart';
@@ -69,8 +70,15 @@ class SelectInterest extends ConsumerWidget {
           WayaButton(
             callback: selectedInterests.isEmpty
                 ? null
-                : () {
-                    WayaNav.to(const Explore());
+                : () async {
+                    final WayaLocalDataSource localDataSource =
+                        WayaLocalDataSource();
+
+                    if (localDataSource.getUserType() == 'business') {
+                      WayaNav.toNamed('/add-business-account');
+                    } else {
+                      WayaNav.to(const Explore());
+                    }
                   },
             text: "Save Interests",
           ),
