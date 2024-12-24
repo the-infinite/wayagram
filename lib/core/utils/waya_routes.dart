@@ -9,11 +9,12 @@ import 'package:wayagram/features/auth/login/view/login_cover_page.dart';
 import 'package:wayagram/features/auth/login/view/login_page.dart';
 import 'package:wayagram/features/auth/login/view/welcome_back.dart';
 import 'package:wayagram/features/onboarding/views/onboarding_view.dart';
+import 'package:wayagram/features/onboarding/views/splash_screen.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
-    '/': () => LoginCoverPage(),
-    // '/': () => SplashScreen(),
+    '/': () => SplashScreen(),
+    '/login-cover-page': () => LoginCoverPage(),
     '/onboarding': () => OnboardingView(),
     '/account-creation': () => AccountCreation(),
     '/changed-password-success': () => ChangedPasswordSuccess(),

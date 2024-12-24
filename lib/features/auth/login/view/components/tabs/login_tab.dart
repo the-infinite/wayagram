@@ -75,9 +75,12 @@ class PersonalAccountView extends StatelessWidget {
         Gap(15),
         Align(
           alignment: Alignment.centerRight,
-          child: Text('Forgot Password?',
-              style: wayaTheme.textTheme.bodySemiBold
-                  .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
+          child: GestureDetector(
+            onTap: () => WayaNav.toNamed('/forgot-password'),
+            child: Text('Forgot Password?',
+                style: wayaTheme.textTheme.bodySemiBold
+                    .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
+          ),
         ),
         Gap(20),
         WayaButton(
@@ -93,7 +96,9 @@ class PersonalAccountView extends StatelessWidget {
             label: WayaRichText(
           title1: "Don't have an account? ",
           title2: "Create new account",
-          onTap2: () {},
+          onTap2: () {
+            WayaNav.toNamed('/account-creation');
+          },
           style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
         )),
       ],
@@ -168,9 +173,12 @@ class BusinessAccountView extends StatelessWidget {
         Gap(15),
         Align(
           alignment: Alignment.centerRight,
-          child: Text('Forgot Password?',
-              style: wayaTheme.textTheme.bodySemiBold
-                  .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
+          child: GestureDetector(
+            onTap: () => WayaNav.toNamed('/forgot-password'),
+            child: Text('Forgot Password?',
+                style: wayaTheme.textTheme.bodySemiBold
+                    .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
+          ),
         ),
         Gap(20),
         WayaButton(

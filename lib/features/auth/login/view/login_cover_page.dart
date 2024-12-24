@@ -15,12 +15,12 @@ class LoginCoverPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-      automicallyImplyLeading: false,
+      removeAppBar: true,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Gap(Get.height * 0.18),
+            Gap(Get.height * 0.2),
             WayaAssests.images.wayalogoUnlabelled.image(scale: 2),
             Gap(10),
             Text(
@@ -35,7 +35,7 @@ class LoginCoverPage extends ConsumerWidget {
                 color: wayaTheme.colorScheme.greyColor600,
               ),
             ),
-            Gap(Get.height * 0.2),
+            Gap(Get.height * 0.22),
             WayaButton(
               color: wayaTheme.colorScheme.secondaryColor,
               callback: () {},
@@ -64,7 +64,9 @@ class LoginCoverPage extends ConsumerWidget {
             WayaRichText(
               title1: 'Don\'t have an account? ',
               title2: 'Create an account',
-              onTap2: () {},
+              onTap2: () {
+                WayaNav.toNamed("/account-creation");
+              },
             )
           ],
         ),
