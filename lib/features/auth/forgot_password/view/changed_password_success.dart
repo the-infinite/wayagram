@@ -4,6 +4,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class ChangedPasswordSuccess extends ConsumerWidget {
   const ChangedPasswordSuccess({super.key});
@@ -39,7 +40,9 @@ class ChangedPasswordSuccess extends ConsumerWidget {
             ),
             const Gap(20),
             WayaButton(
-              callback: () {},
+              callback: () {
+                 WayaNav.toNamed('/login-cover-page');
+              },
             
               text:"Take Me to Login",
             ),

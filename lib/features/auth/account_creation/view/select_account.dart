@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 
@@ -24,8 +25,7 @@ class SelectAccount extends ConsumerWidget {
         Text("Which type of account do you want to \n create",
             style: WayaTextStyles.hintStyle),
         const Gap(20),
-   
-       ListView.builder(
+        ListView.builder(
             itemCount: viewModel.data.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
@@ -73,15 +73,17 @@ class SelectAccount extends ConsumerWidget {
                 ],
               );
             }),
-      
         const Gap(50),
         WayaButton(
             callback: type.isNotEmpty
-                ? () {
+                ? () async {
+                    final WayaLocalDataSource localDataSource =
+                        WayaLocalDataSource();
+                    localDataSource.saveUserType(type);
                     goToNextTab(type);
                   }
                 : null,
-            text:"Continue")
+            text: "Continue")
       ],
     );
   }

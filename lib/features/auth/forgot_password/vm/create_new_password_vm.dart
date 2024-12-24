@@ -2,54 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
-class CreateNewPasswordState {
-  final TextEditingController password;
-  final TextEditingController confirmPassword;
+class CreateNewPasswordVm extends ChangeNotifier {
+  final TextEditingController password = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
+  bool _isButtonEnabled = false;
+  bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
 
-  bool isPasswordVisible;
-  bool isConfirmPasswordVisible;
+  final Ref ref;
 
-  CreateNewPasswordState(
-      {this.isConfirmPasswordVisible = false,
-      this.isPasswordVisible = false,
-      String password = '',
-      String confirmPassword = ''})
-      : password = TextEditingController(text: password),
-        confirmPassword = TextEditingController(text: confirmPassword);
+  CreateNewPasswordVm(this.ref);
 
-  CreateNewPasswordState copyWith(
-      {bool? isPasswordVisible, bool? isConfirmPasswordVisible}) {
-    return CreateNewPasswordState(
-      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
-      isConfirmPasswordVisible:
-          isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
-      password: password.text,
-      confirmPassword: confirmPassword.text,
-    );
-  }
-}
-
-class CreateNewPasswordVm extends Notifier<CreateNewPasswordState> {
-  @override
-  CreateNewPasswordState build() {
-    return CreateNewPasswordState();
-  }
+  bool get isButtonEnabled => _isButtonEnabled;
 
   void togglePasswordVisibility() {
-    state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
+    isPasswordVisible = !isPasswordVisible;
+    notifyListeners();
   }
 
   void toggleConfirmPasswordVisibility() {
-    state = state.copyWith(
-        isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
+    isConfirmPasswordVisible = !isConfirmPasswordVisible;
+    notifyListeners();
   }
 
   void submit() {
     WayaNav.toNamed('/changed-password-success');
   }
+
+  void validatePasswords() {
+    _isButtonEnabled = password.text.isNotEmpty &&
+        confirmPassword.text.isNotEmpty &&
+        password.text.length >= 8 &&
+        confirmPassword.text.length >= 8 &&
+        password.text == confirmPassword.text;
+    notifyListeners();
+  }
+
+  @override
+  void addListener(VoidCallback listener) {
+    super.addListener(listener);
+    password.addListener(validatePasswords);
+    confirmPassword.addListener(validatePasswords);
+  }
+
+  @override
+  void dispose() {
+    password.dispose();
+    confirmPassword.dispose();
+    super.dispose();
+  }
 }
 
-final createNewPasswordProvider =
-    NotifierProvider<CreateNewPasswordVm, CreateNewPasswordState>(() {
-  return CreateNewPasswordVm();
+final createNewPasswordProvider = ChangeNotifierProvider.autoDispose((ref) {
+  return CreateNewPasswordVm(ref);
 });
