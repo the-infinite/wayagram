@@ -46,6 +46,7 @@ dependencies:
   gap: ^3.0.1
   flutter_verification_code: ^1.1.7
   onscreen_num_keyboard: ^1.0.4
+  file_picker: ^8.1.6
 
 dev_dependencies:
   flutter_test:

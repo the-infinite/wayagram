@@ -8,8 +8,6 @@ import 'package:wayagram/core/theme/waya_theme.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
-import 'package:wayagram/features/onboarding/views/splash_screen.dart';
-
 import 'core/components/components.dart';
 
 void main() async {
@@ -29,7 +27,7 @@ class Wayagram extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: GetMaterialApp(
-        initialRoute: '/',
+        initialRoute: '/add-business-account',
         title: WayaConstants.appName,
         theme: WayaTheme.lightTheme,
         darkTheme: WayaTheme.darkTheme,
