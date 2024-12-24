@@ -43,6 +43,7 @@ class WayaButton extends StatelessWidget {
       this.textColor,
       this.centerWidget,
       this.horizontalPadding = 6,
+      this.height = 55,
       this.isDisabled});
   final String text;
   final Color? color;
@@ -53,6 +54,7 @@ class WayaButton extends StatelessWidget {
   final Widget? centerWidget;
   final bool? isDisabled;
   final double horizontalPadding;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -69,20 +71,23 @@ class WayaButton extends StatelessWidget {
               callback?.call();
             },
       child: Container(
-        height: 55,
-        padding: EdgeInsets.symmetric(
-             horizontal: horizontalPadding),
+        height: height,
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         decoration: BoxDecoration(
-          color: isButtonDisabled ? wayaTheme.greyColor300 : (color ?? wayaTheme.customPrimary),
+          color: isButtonDisabled
+              ? wayaTheme.greyColor300
+              : (color ?? wayaTheme.customPrimary),
           border: border,
           borderRadius: BorderRadius.circular(radius ?? 8),
         ),
         alignment: Alignment.center,
         child: centerWidget ??
-            Text(
-              text,
-              style: TextStyle().wayaCopyWith(fontWeight: FontWeight.w500, fontSize: 16, color: WayaColors.scaffoldColor,)
-            ),
+            Text(text,
+                style: TextStyle().wayaCopyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: WayaColors.scaffoldColor,
+                )),
       ),
     );
   }

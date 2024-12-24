@@ -20,8 +20,8 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModelState = ref.watch(createNewPasswordProvider);
-    final viewModel = ref.watch(createNewPasswordProvider.notifier);
+    final viewModel = ref.watch(createNewPasswordProvider);
+
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -40,10 +40,10 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
               children: [
                 const Gap(20),
                 FormField<String>(validator: (value) {
-                  if (viewModelState.password.text.isEmpty) {
+                  if (viewModel.password.text.isEmpty) {
                     return 'Password is required';
                   }
-                  if (viewModelState.password.text.length < 8) {
+                  if (viewModel.password.text.length < 8) {
                     return 'Password must be at least 8';
                   }
 
@@ -54,26 +54,26 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.visiblePassword,
-                        controller: viewModelState.password,
+                        controller: viewModel.password,
                         borderColor: formState.hasError &&
-                                viewModelState.password.text.isEmpty
+                                viewModel.password.text.isEmpty
                             ? WayaColors.error
                             : null,
                         hintText: 'Enter Your Password',
                         label: 'Password',
-                        obscureText: !viewModelState.isPasswordVisible,
+                        obscureText: !viewModel.isPasswordVisible,
                         suffixIcon: IconButton(
                           onPressed: () {
                             viewModel.togglePasswordVisibility();
                           },
-                          icon: Icon(viewModelState.isPasswordVisible
+                          icon: Icon(viewModel.isPasswordVisible
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined),
                           color: WayaColors.greyColor300,
                         ),
                       ),
                       if (formState.hasError &&
-                          viewModelState.password.text.isEmpty)
+                          viewModel.password.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -87,14 +87,14 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                 }),
                 const Gap(5),
                 FormField<String>(validator: (value) {
-                  if (viewModelState.confirmPassword.text.isEmpty) {
+                  if (viewModel.confirmPassword.text.isEmpty) {
                     return 'Password is required';
                   }
-                  if (viewModelState.confirmPassword.text.length < 8) {
+                  if (viewModel.confirmPassword.text.length < 8) {
                     return 'Password must be at least 8';
                   }
-                  if (viewModelState.password.text !=
-                      viewModelState.confirmPassword.text) {
+                  if (viewModel.password.text !=
+                      viewModel.confirmPassword.text) {
                     return 'Password does not match';
                   }
 
@@ -105,26 +105,26 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.visiblePassword,
-                        controller: viewModelState.confirmPassword,
+                        controller: viewModel.confirmPassword,
                         borderColor: formState.hasError &&
-                                viewModelState.confirmPassword.text.isEmpty
+                                viewModel.confirmPassword.text.isEmpty
                             ? WayaColors.error
                             : null,
                         hintText: 'Enter your Password',
                         label: 'Confirm Password',
-                        obscureText: !viewModelState.isConfirmPasswordVisible,
+                        obscureText: !viewModel.isConfirmPasswordVisible,
                         suffixIcon: IconButton(
                           onPressed: () {
                             viewModel.toggleConfirmPasswordVisibility();
                           },
-                          icon: Icon(viewModelState.isConfirmPasswordVisible
+                          icon: Icon(viewModel.isConfirmPasswordVisible
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined),
                           color: WayaColors.greyColor300,
                         ),
                       ),
                       if (formState.hasError &&
-                          viewModelState.confirmPassword.text.isEmpty)
+                          viewModel.confirmPassword.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -138,11 +138,15 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                 }),
                 const Gap(50),
                 WayaButton(
-                    callback: _formKey.currentState?.validate() == true
-                        ? () {
-                            WayaNav.toNamed('/changed-password-success');
+                 
+                    callback: 
+                        viewModel.isButtonEnabled ? () {
+                          if (_formKey.currentState?.validate() == true) {
+                             WayaNav.toNamed('/changed-password-success');
                           }
-                        : null,
+                           
+                          } : null
+                        ,
                    text:"Save New Password")
               ],
             ))

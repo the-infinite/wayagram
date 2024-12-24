@@ -7,6 +7,7 @@ import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/set_notification.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
+import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
 
 class VerifyAccount extends ConsumerWidget {
   final Function goToNextTab;
@@ -77,7 +78,7 @@ class VerifyAccount extends ConsumerWidget {
                 ? null
                 : () {
                     if (type == 'account-creation') {
-                      WayaNav.to(const SetNotification());
+                      WayaNav.to(const TransactionPinView());
                     } else {
                       goToNextTab();
                     }

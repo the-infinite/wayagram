@@ -45,6 +45,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   gap: ^3.0.1
   flutter_verification_code: ^1.1.7
+  onscreen_num_keyboard: ^1.0.4
 
 dev_dependencies:
   flutter_test:

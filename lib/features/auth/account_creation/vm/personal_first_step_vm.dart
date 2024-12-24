@@ -1,81 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PersonalFirstStepState {
-  final TextEditingController firstName;
-  final TextEditingController lastName;
-  final TextEditingController email;
-  final TextEditingController referralCode;
-  final TextEditingController password;
-  final TextEditingController confirmPassword;
-  final TextEditingController phone;
-  bool isPasswordVisible;
-  bool isConfirmPasswordVisible;
-  bool isAgreeToTerm;
+class PersonalFirstStepVm extends ChangeNotifier {
+  final TextEditingController firstName = TextEditingController();
+  final TextEditingController lastName = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController referralCode = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
+  final TextEditingController phone = TextEditingController();
+  bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
+  bool isAgreeToTerm = false;
+  bool _isButtonEnabled = false;
 
-  PersonalFirstStepState(
-      {this.isConfirmPasswordVisible = false,
-      this.isPasswordVisible = false,
-      this.isAgreeToTerm = false,
-      String firstName = '',
-      String lastName = '',
-      String email = '',
-      String referralCode = '',
-      String password = '',
-      String phone = '',
-      String confirmPassword = ''})
-      : firstName = TextEditingController(text: firstName),
-        lastName = TextEditingController(text: lastName),
-        email = TextEditingController(text: email),
-        password = TextEditingController(text: password),
-        referralCode = TextEditingController(text: referralCode),
-        confirmPassword = TextEditingController(text: confirmPassword),
-        phone = TextEditingController(text: phone);
+  final Ref ref;
 
-  PersonalFirstStepState copyWith({
-    bool? isPasswordVisible,
-    bool? isConfirmPasswordVisible,
-    bool? isAgreeToTerm,
-  }) {
-    return PersonalFirstStepState(
-      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
-      isConfirmPasswordVisible:
-          isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
-      isAgreeToTerm: isAgreeToTerm ?? this.isAgreeToTerm,
-      firstName: firstName.text,
-      lastName: lastName.text,
-      email: email.text,
-      phone: phone.text,
-      password: password.text,
-      confirmPassword: confirmPassword.text,
-      referralCode: referralCode.text,
-    );
-  }
-}
+  PersonalFirstStepVm(this.ref);
 
-class PersonalFirstStepVm extends Notifier<PersonalFirstStepState> {
-  @override
-  PersonalFirstStepState build() {
-    return PersonalFirstStepState();
-  }
+  bool get isButtonEnabled => _isButtonEnabled;
 
   void togglePasswordVisibility() {
-    state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
+    isPasswordVisible = !isPasswordVisible;
+    notifyListeners();
   }
 
   void toggleConfirmPasswordVisibility() {
-    state = state.copyWith(
-        isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
+    isConfirmPasswordVisible = !isConfirmPasswordVisible;
+    notifyListeners();
   }
 
-  void toggleTerm(bool value) {
-    state = state.copyWith(isAgreeToTerm: value);
+  void toggleTerm(bool? value) {
+    isAgreeToTerm = value!;
+    notifyListeners();
+  }
+
+  void validateInputs() {
+    final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    _isButtonEnabled = firstName.text.isNotEmpty &&
+        lastName.text.isNotEmpty &&
+        email.text.isNotEmpty &&
+        regexp.hasMatch(email.text) &&
+        password.text.isNotEmpty &&
+        password.text.length >= 8 &&
+        confirmPassword.text == password.text &&
+        isAgreeToTerm;
+    notifyListeners();
+  }
+
+  @override
+  void addListener(VoidCallback listener) {
+    super.addListener(listener);
+    email.addListener(validateInputs);
+    phone.addListener(validateInputs);
+    firstName.addListener(validateInputs);
+    lastName.addListener(validateInputs);
+    password.addListener(validateInputs);
+    confirmPassword.addListener(validateInputs);
+    
+  }
+
+   @override
+  void dispose() {
+    phone.dispose();
+    email.dispose();
+    firstName.dispose();
+    lastName.dispose();
+    password.dispose();
+    confirmPassword.dispose();
+    super.dispose();
   }
 
   void submit() {}
 }
 
 final personalFirstStepProvider =
-    NotifierProvider<PersonalFirstStepVm, PersonalFirstStepState>(() {
-  return PersonalFirstStepVm();
-});
+    ChangeNotifierProvider.autoDispose((ref) => PersonalFirstStepVm(ref));
