@@ -31,7 +31,7 @@ class BusinessAccountTypeWidget extends StatelessWidget {
                 color: isChosen
                     ? wayaTheme.customPrimary
                     : wayaTheme.secondaryColor2,
-                width: 1),
+                width: 2),
             borderRadius: BorderRadius.circular(12)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
