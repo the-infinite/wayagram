@@ -24,6 +24,7 @@ class TransactionPinVm extends StateNotifier<void> {
       ref.read(confirmPinProvider.notifier).state = confirmPin + value;
     }
   }
+  
 
   void handleBackspace() {
     final pin = ref.read(pinProvider);
