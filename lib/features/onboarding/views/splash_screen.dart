@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/features/onboarding/vm/splash_screen_vm.dart';
 
 class SplashScreen extends ConsumerWidget {
@@ -14,8 +15,8 @@ class SplashScreen extends ConsumerWidget {
       viewModel.runStartUpLogic();
     });
 
-    return Scaffold(
-     
+    return WayaScaffold(
+      removeAppBar: true,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -30,5 +31,4 @@ class SplashScreen extends ConsumerWidget {
   }
 }
 
-final splashScreenVmProvider =
-    ChangeNotifierProvider((ref) => SplashScreenVm());
+final splashScreenVmProvider = ChangeNotifierProvider((ref) => SplashScreenVm());

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 
@@ -32,7 +33,7 @@ class WayaTextFormField extends StatefulWidget {
   final bool? isReadOnly;
 
   const WayaTextFormField(
-      {Key? key,
+      {super.key,
       required this.controller,
       this.keyboardType = TextInputType.text,
       required this.hintText,
@@ -59,8 +60,7 @@ class WayaTextFormField extends StatefulWidget {
       this.hintStyle,
       this.obscureText,
       this.callback,
-      this.isReadOnly = false})
-      : super(key: key);
+      this.isReadOnly = false});
 
   @override
   State<WayaTextFormField> createState() => _AppFieldState();
@@ -81,11 +81,11 @@ class _AppFieldState extends State<WayaTextFormField> {
     _focusNode.addListener(() {
       setState(() {
         borderColor = _focusNode.hasFocus
-            ? WayaColors.customPrimary
-            : WayaColors.greyColor300;
+            ? Theme.of(context).colorScheme.customPrimary
+            : Theme.of(context).colorScheme.greyColor300;
         fillColor = _focusNode.hasFocus
-            ? Colors.transparent
-            : widget.fillColor ?? WayaColors.scaffoldColor;
+            ? Theme.of(context).colorScheme.customPrimary
+            : widget.fillColor ?? Theme.of(context).colorScheme.scaffoldColor;
       });
     });
   }
@@ -111,7 +111,7 @@ class _AppFieldState extends State<WayaTextFormField> {
       decoration: InputDecoration(
           border: InputBorder.none,
           contentPadding: widget.padding,
-          fillColor: Colors.transparent,
+          fillColor: Theme.of(context).colorScheme.transparent,
           filled: true,
           prefixIcon: widget.prefixIcon,
           prefixIconColor: widget.prefixIconColor,
@@ -146,9 +146,7 @@ class _AppFieldState extends State<WayaTextFormField> {
           decoration: BoxDecoration(
             //color: fillColor,
             border: Border.all(
-              color: widget.showBorder
-                  ? (widget.borderColor ?? borderColor)
-                  : WayaColors.scaffoldColor,
+              color: widget.showBorder ? (widget.borderColor ?? borderColor) : WayaColors.scaffoldColor,
               width: 1,
             ),
             borderRadius: BorderRadius.circular(8),

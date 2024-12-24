@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:svg_flutter/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-
 import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 
 class CredentialInput extends ConsumerStatefulWidget {
@@ -14,8 +12,7 @@ class CredentialInput extends ConsumerStatefulWidget {
   const CredentialInput({super.key, required this.goToNextTab});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CredentialInputState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CredentialInputState();
 }
 
 class _CredentialInputState extends ConsumerState<CredentialInput> {
@@ -32,8 +29,7 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
       children: [
         Text("Forgot Password?", style: WayaTextStyles.titleLarge),
         const Gap(5),
-        Text(
-            "Tell us your email address or Phone number so we can \n help you reset your password",
+        Text("Tell us your email address or Phone number so we can \n help you reset your password",
             style: WayaTextStyles.hintStyle),
         const Gap(30),
         Form(
@@ -45,13 +41,11 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                 const Gap(20),
                 viewModelState.isEmail
                     ? FormField<String>(validator: (value) {
-                        if (viewModelState.isEmail &&
-                            viewModelState.email.text.isEmpty) {
+                        if (viewModelState.isEmail && viewModelState.email.text.isEmpty) {
                           return 'Email is required';
                         }
                         final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                        if (viewModelState.isEmail &&
-                            !regexp.hasMatch(viewModelState.email.text)) {
+                        if (viewModelState.isEmail && !regexp.hasMatch(viewModelState.email.text)) {
                           return 'Invalid email address';
                         }
                         return null;
@@ -63,29 +57,23 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                               keyboardType: TextInputType.emailAddress,
                               controller: viewModelState.email,
                               hintText: 'example@gmail.com',
-                              
-                              borderColor: formState.hasError &&
-                                      viewModelState.email.text.isEmpty
-                                  ? WayaColors.error
-                                  : null,
+                              borderColor:
+                                  formState.hasError && viewModelState.email.text.isEmpty ? WayaColors.error : null,
                               label: 'Email Address',
                             ),
-                            if (formState.hasError &&
-                                viewModelState.email.text.isEmpty)
+                            if (formState.hasError && viewModelState.email.text.isEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   formState.errorText!,
-                                  style: const TextStyle(
-                                      color: WayaColors.error, fontSize: 12),
+                                  style: const TextStyle(color: WayaColors.error, fontSize: 12),
                                 ),
                               ),
                           ],
                         );
                       })
                     : FormField<String>(validator: (value) {
-                        if (!viewModelState.isEmail &&
-                            viewModelState.phone.text.isEmpty) {
+                        if (!viewModelState.isEmail && viewModelState.phone.text.isEmpty) {
                           return 'Phone is required';
                         }
 
@@ -107,15 +95,11 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                                   width: 90,
                                   padding: EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: WayaColors.greyColor300,
-                                          width: 1),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(8.0))),
+                                      border: Border.all(color: WayaColors.greyColor300, width: 1),
+                                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Image.asset(
                                         'assets/images/onboarding/flag.png',
@@ -136,29 +120,25 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                                     keyboardType: TextInputType.phone,
                                     controller: viewModelState.phone,
                                     hintText: '000-000-000',
-                                    
-                                    borderColor: formState.hasError &&
-                                            viewModelState.email.text.isEmpty
+                                    borderColor: formState.hasError && viewModelState.email.text.isEmpty
                                         ? WayaColors.error
                                         : null,
                                   ),
                                 )
                               ],
                             ),
-                            if (formState.hasError &&
-                                viewModelState.email.text.isEmpty)
+                            if (formState.hasError && viewModelState.email.text.isEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   formState.errorText!,
-                                  style: const TextStyle(
-                                      color: WayaColors.error, fontSize: 12),
+                                  style: const TextStyle(color: WayaColors.error, fontSize: 12),
                                 ),
                               ),
                           ],
                         );
                       }),
-                      const Gap(10),
+                const Gap(10),
                 Align(
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
@@ -166,24 +146,19 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                         viewModel.toggle();
                       },
                       child: Text(
-                        !viewModelState.isEmail
-                            ? "Use Email Address"
-                            : "Use Phone Instead",
-                        style: TextStyle().wayaCopyWith(
-                            color: WayaColors.customPrimary,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14),
+                        !viewModelState.isEmail ? "Use Email Address" : "Use Phone Instead",
+                        style: TextStyle()
+                            .wayaCopyWith(color: WayaColors.customPrimary, fontWeight: FontWeight.w500, fontSize: 14),
                       ),
                     )),
                 const Gap(50),
                 WayaButton(
-                    callback: viewModelState.email.text.isNotEmpty ||
-                            viewModelState.phone.text.isNotEmpty
+                    callback: viewModelState.email.text.isNotEmpty || viewModelState.phone.text.isNotEmpty
                         ? () {
                             widget.goToNextTab();
                           }
                         : null,
-                    text:"Send Reset Code")
+                    text: "Send Reset Code")
               ],
             ))
       ],
