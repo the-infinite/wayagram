@@ -7,9 +7,14 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 class WayaRichText extends StatelessWidget {
   final String title1;
   final String title2;
+  final TextStyle? style1;
+  final TextStyle? style2;
+
   final VoidCallback? onTap2;
   const WayaRichText({
     required this.title1,
+    this.style1,
+    this.style2,
     required this.title2,
     this.onTap2,
     super.key,
@@ -20,21 +25,23 @@ class WayaRichText extends StatelessWidget {
     final wayaTheme = Theme.of(context);
     return RichText(
       text: TextSpan(
-        style: TextStyle(
-          fontSize: 18.0, // Default font size
-          color: Colors.black, // Default color
+        style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+          fontSize: 18.0,
+          color: wayaTheme.colorScheme.black,
         ),
         children: [
           TextSpan(
               text: title1,
-              style: wayaTheme.textTheme.hintStyle
-                  .wayaCopyWith(fontWeight: FontWeight.w500, color: wayaTheme.colorScheme.black)),
+              style: style1 ??
+                  wayaTheme.textTheme.hintStyle
+                      .wayaCopyWith(fontWeight: FontWeight.w500, color: wayaTheme.colorScheme.black)),
           TextSpan(
             text: title2,
-            style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-              color: wayaTheme.colorScheme.primary,
-              fontWeight: FontWeight.w600,
-            ),
+            style: style2 ??
+                wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                  color: wayaTheme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
             recognizer: TapGestureRecognizer()..onTap = onTap2,
           ),
         ],

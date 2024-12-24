@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 
@@ -30,6 +32,7 @@ class WayaTextFormField extends StatefulWidget {
   final TextStyle? hintStyle;
   final bool? obscureText;
   final VoidCallback? callback;
+  final bool isPassword;
   final bool? isReadOnly;
 
   const WayaTextFormField(
@@ -41,6 +44,7 @@ class WayaTextFormField extends StatefulWidget {
       this.maxLength,
       this.hasError = false,
       this.errorMessage = "",
+      this.isPassword = false,
       this.padding,
       this.label,
       this.validator,
@@ -98,7 +102,7 @@ class _AppFieldState extends State<WayaTextFormField> {
       focusNode: _focusNode,
       controller: widget.controller,
       keyboardType: widget.keyboardType,
-      obscureText: widget.obscureText ?? false,
+      obscureText: widget.isPassword ? true : widget.obscureText ?? false,
       maxLines: widget.line ?? 1,
       maxLength: widget.maxLength,
       validator: widget.validator,
@@ -109,14 +113,37 @@ class _AppFieldState extends State<WayaTextFormField> {
       textInputAction: widget.textInputAction,
       onSaved: widget.onSaved,
       decoration: InputDecoration(
-          border: InputBorder.none,
+          errorBorder: OutlineInputBorder(
+            borderSide: widget.showBorder ? BorderSide(color: wayaTheme.error200, width: 1.w) : BorderSide.none,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          border: OutlineInputBorder(
+            borderSide: widget.showBorder
+                ? BorderSide(color: widget.borderColor ?? wayaTheme.greyColor300, width: 1.w)
+                : BorderSide.none,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: widget.showBorder ? BorderSide(color: wayaTheme.greyColor300, width: 1.w) : BorderSide.none,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: widget.showBorder ? BorderSide(color: wayaTheme.primary, width: 1.w) : BorderSide.none,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
           contentPadding: widget.padding,
           fillColor: Theme.of(context).colorScheme.transparent,
           filled: true,
           prefixIcon: widget.prefixIcon,
           prefixIconColor: widget.prefixIconColor,
           hintText: widget.hintText,
-          suffixIcon: widget.suffixIcon,
+          suffixIcon: widget.isPassword
+              ? Icon(
+                  Icons.visibility_off_outlined,
+                  size: 20,
+                  color: wayaTheme.greyColor500,
+                )
+              : widget.suffixIcon,
           hintStyle: WayaTextStyles.hintStyle,
           labelStyle: WayaTextStyles.labelSmall),
     );
@@ -138,22 +165,13 @@ class _AppFieldState extends State<WayaTextFormField> {
             padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: Text(
               widget.label!,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+                    fontSize: 14,
+                    color: wayaTheme.greyColor900,
+                  ),
             ),
           ),
-        Container(
-          height: 55,
-          decoration: BoxDecoration(
-            //color: fillColor,
-            border: Border.all(
-              color: widget.showBorder ? (widget.borderColor ?? borderColor) : WayaColors.scaffoldColor,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          alignment: Alignment.center,
-          child: textFormField,
-        ),
+        textFormField,
       ],
     );
   }

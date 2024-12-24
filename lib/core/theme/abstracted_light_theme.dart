@@ -69,7 +69,7 @@ ChipThemeData _chipThemeData() {
       borderRadius: BorderRadius.circular(8.0),
       side: const BorderSide(color: WayaColors.transparent, width: 1.0),
     ),
-    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 6.0), // Spacing inside the chip
+    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 6.0), // Spacing inside the chip
   );
 }
 

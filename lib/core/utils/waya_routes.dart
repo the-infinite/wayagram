@@ -7,6 +7,7 @@ import 'package:wayagram/features/auth/forgot_password/view/changed_password_suc
 import 'package:wayagram/features/auth/forgot_password/view/forgot_password_step.dart';
 import 'package:wayagram/features/auth/login/view/login_cover_page.dart';
 import 'package:wayagram/features/auth/login/view/login_page.dart';
+import 'package:wayagram/features/auth/login/view/welcome_back.dart';
 import 'package:wayagram/features/onboarding/views/onboarding_view.dart';
 
 class WayaAppRoutes {
@@ -20,6 +21,7 @@ class WayaAppRoutes {
     '/account-setup-success': () => Explore(),
     '/forgot-password': () => ForgotPasswordStep(),
     '/login': () => LoginPage(),
+    '/welcome-back': () => WelcomeBackPage(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {
