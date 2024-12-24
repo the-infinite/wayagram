@@ -3,18 +3,21 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 final abstractedLightTheme = ThemeData(
-  primaryColor: WayaColors.primary,
-  textTheme: TextTheme(
-    labelSmall: WayaTextStyles.labelSmall,
-    labelMedium: WayaTextStyles.labelMedium,
-    titleLarge: WayaTextStyles.titleLarge,
-    titleMedium: WayaTextStyles.titleMedium,
-    headlineLarge: WayaTextStyles.headlineLarge,
-    headlineMedium: WayaTextStyles.headlineMedium,
-    bodyMedium: WayaTextStyles.bodyMedium,
-    
-  ),
-  scaffoldBackgroundColor: WayaColors.scaffoldColor2,
+    primaryColor: WayaColors.primary,
+    colorScheme: ColorScheme.light(
+      primary: WayaColors.primary,
+      secondary: WayaColors.secondaryColor,
+    ),
+    textTheme: TextTheme(
+      labelSmall: WayaTextStyles.labelSmall,
+      labelMedium: WayaTextStyles.labelMedium,
+      titleLarge: WayaTextStyles.titleLarge,
+      titleMedium: WayaTextStyles.titleMedium,
+      headlineLarge: WayaTextStyles.headlineLarge,
+      headlineMedium: WayaTextStyles.headlineMedium,
+      bodyMedium: WayaTextStyles.bodyMedium,
+    ),
+    scaffoldBackgroundColor: WayaColors.scaffoldColor2,
     appBarTheme: _appBarThemeData(),
     switchTheme: _switchThemeData(),
     chipTheme: _chipThemeData(),
@@ -66,7 +69,7 @@ ChipThemeData _chipThemeData() {
       borderRadius: BorderRadius.circular(8.0),
       side: const BorderSide(color: WayaColors.transparent, width: 1.0),
     ),
-    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 6.0), // Spacing inside the chip
+    padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 6.0), // Spacing inside the chip
   );
 }
 

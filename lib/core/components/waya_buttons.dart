@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class WayaBackButton extends StatelessWidget {
@@ -25,8 +25,7 @@ class WayaBackButton extends StatelessWidget {
               WayaNav.goBack();
               HapticFeedback.lightImpact();
             },
-        child:
-            SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
+        child: SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
       ),
     );
   }
@@ -39,6 +38,8 @@ class WayaButton extends StatelessWidget {
       this.color,
       this.radius,
       this.border,
+      this.trailingIcon,
+      this.leadingIcon,
       required this.callback,
       this.textColor,
       this.centerWidget,
@@ -47,6 +48,9 @@ class WayaButton extends StatelessWidget {
       this.isDisabled});
   final String text;
   final Color? color;
+  final Widget? leadingIcon;
+  final Widget? trailingIcon;
+
   final double? radius;
   final BoxBorder? border;
   final VoidCallback? callback;
@@ -58,7 +62,7 @@ class WayaButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context).colorScheme;
+    final wayaTheme = Theme.of(context);
     final isButtonDisabled = callback == null || isDisabled == true;
 
     return InkWell(
@@ -81,13 +85,26 @@ class WayaButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius ?? 8),
         ),
         alignment: Alignment.center,
-        child: centerWidget ??
-            Text(text,
-                style: TextStyle().wayaCopyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                  color: WayaColors.scaffoldColor,
-                )),
+        child: leadingIcon != null
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  leadingIcon ?? SizedBox.shrink(),
+                  if (leadingIcon != null)
+                    SizedBox(
+                      width: 10,
+                    ),
+                  Text(text,
+                      style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                          fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
+                  Gap(10),
+                  trailingIcon ?? SizedBox.shrink()
+                ],
+              )
+            : centerWidget ??
+                Text(text,
+                    style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                        fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
       ),
     );
   }

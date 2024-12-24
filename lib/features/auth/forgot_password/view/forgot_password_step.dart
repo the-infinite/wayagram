@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -11,12 +10,10 @@ class ForgotPasswordStep extends ConsumerStatefulWidget {
   const ForgotPasswordStep({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ForgotPasswordStepState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ForgotPasswordStepState();
 }
 
-class _ForgotPasswordStepState extends ConsumerState<ForgotPasswordStep>
-    with SingleTickerProviderStateMixin {
+class _ForgotPasswordStepState extends ConsumerState<ForgotPasswordStep> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -33,7 +30,6 @@ class _ForgotPasswordStepState extends ConsumerState<ForgotPasswordStep>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return WayaScaffoldWithProgressbar(
         isLoading: false,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),

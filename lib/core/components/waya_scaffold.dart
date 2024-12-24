@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/vm/theme_vm.dart';
 
-class WayaScaffold extends StatelessWidget {
+class WayaScaffold extends ConsumerWidget {
   final Widget body;
   final Color? backgroundColor;
+  final bool removeAppBar;
+  final bool automicallyImplyLeading;
   final Widget? appBarTrailing;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
@@ -19,6 +23,8 @@ class WayaScaffold extends StatelessWidget {
   const WayaScaffold(
       {super.key,
       this.resizeToAvoidBottomInset,
+      this.automicallyImplyLeading = true,
+      this.removeAppBar = false,
       required this.body,
       this.isLoading = false,
       this.padding,
@@ -28,23 +34,28 @@ class WayaScaffold extends StatelessWidget {
       this.isScrollable = false,
       this.appBar,
       this.backgroundColor,
-    
       this.bottomNavigationBar});
 
   @override
-  Widget build(BuildContext context) {
-    final paddedBody =
-        padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeNotifier = ref.read(themeProvider.notifier);
+    final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
+      onDoubleTap: () {
+        themeNotifier.toggleTheme();
+        print('Taped');
+      },
       child: Scaffold(
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-        appBar: appBar ??
-            AppBar(
-              title: Text(title ?? ''),
-              leading: WayaBackButton(),
-              actions: appBarTrailing == null ? null : [appBarTrailing!],
-            ),
+        appBar: removeAppBar
+            ? null
+            : appBar ??
+                AppBar(
+                  title: Text(title ?? ''),
+                  leading: automicallyImplyLeading ? WayaBackButton() : null,
+                  actions: appBarTrailing == null ? null : [appBarTrailing!],
+                ),
         body: isScrollable
             ? Padding(
                 padding: paddedBody,
@@ -93,23 +104,19 @@ class WayaScaffoldWithProgressbar extends StatefulWidget {
       this.bottomNavigationBar});
 
   @override
-  State<WayaScaffoldWithProgressbar> createState() =>
-      _WayaScaffoldWithProgressbarState();
+  State<WayaScaffoldWithProgressbar> createState() => _WayaScaffoldWithProgressbarState();
 }
 
-class _WayaScaffoldWithProgressbarState
-    extends State<WayaScaffoldWithProgressbar> {
+class _WayaScaffoldWithProgressbarState extends State<WayaScaffoldWithProgressbar> {
   double _progress = 0.12;
   final double _progressBarHeight = 12;
 
   @override
   void initState() {
     super.initState();
-    // widget.tabController = TabController(length: 3, vsync: this);
     widget.tabController.addListener(() {
       setState(() {
-        _progress =
-            (widget.tabController.index + 0.5) / widget.tabController.length;
+        _progress = (widget.tabController.index + 0.5) / widget.tabController.length;
       });
     });
   }
@@ -168,8 +175,7 @@ class _WayaScaffoldWithProgressbarState
           ),
         ),
       ),
-      body: TabBarView(
-          controller: widget.tabController, children: widget.tabsView),
+      body: TabBarView(controller: widget.tabController, children: widget.tabsView),
     );
   }
 }
