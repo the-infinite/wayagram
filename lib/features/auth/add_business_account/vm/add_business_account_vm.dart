@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class DocType {
   final File file;
@@ -71,6 +74,17 @@ class AddBusinessAccountVm extends ChangeNotifier {
     businessAddress.dispose();
     cac.dispose();
     super.dispose();
+  }
+
+  void submit(BuildContext context) {
+    WayaHelpers.showNotice(
+        context: context,
+        title: 'KYC Documents Submitted \n Successfully',
+        message:
+            'Your documents are under review. We’ll notify you once the \n verification process is complete',
+        onPress: () => WayaNav.toNamed("/explore"),
+        icon: Image.asset('assets/images/auth/doc-success.png'),
+        buttonText: 'Go To HomePage');
   }
 }
 

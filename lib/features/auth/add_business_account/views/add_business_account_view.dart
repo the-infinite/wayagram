@@ -181,7 +181,11 @@ class _AddBusinessAccountViewState
             ),
             const Gap(30),
             WayaButton(
-              callback: viewModel.isButtonEnabled ? () {} : null,
+              callback: viewModel.isButtonEnabled
+                  ? () {
+                      viewModel.submit(context);
+                    }
+                  : null,
               text: 'Continue',
             )
           ],
