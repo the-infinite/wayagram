@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
@@ -21,7 +22,7 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(credentialInputProvider);
-   
+    final wayaTheme = Theme.of(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -62,7 +63,7 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                               
                               borderColor: formState.hasError &&
                                       viewModel.email.text.isEmpty
-                                  ? WayaColors.error
+                                  ? wayaTheme.colorScheme.error
                                   : null,
                               label: 'Email Address',
                             ),
@@ -72,7 +73,7 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   formState.errorText!,
-                                  style: const TextStyle(color: WayaColors.error, fontSize: 12),
+                                  style:  TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                                 ),
                               ),
                           ],
@@ -102,7 +103,7 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                                   width: 90,
                                   padding: EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: WayaColors.greyColor300, width: 1),
+                                      border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
                                       borderRadius: BorderRadius.all(Radius.circular(8.0))),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -130,7 +131,7 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                                     
                                     borderColor: formState.hasError &&
                                             viewModel.email.text.isEmpty
-                                        ? WayaColors.error
+                                        ? wayaTheme.colorScheme.error
                                         : null,
                                   ),
                                 )
@@ -142,7 +143,7 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   formState.errorText!,
-                                  style: const TextStyle(color: WayaColors.error, fontSize: 12),
+                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                                 ),
                               ),
                           ],
@@ -160,7 +161,7 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                             ? "Use Email Address"
                             : "Use Phone Instead",
                         style: TextStyle().wayaCopyWith(
-                            color: WayaColors.customPrimary,
+                            color: wayaTheme.colorScheme.customPrimary,
                             fontWeight: FontWeight.w500,
                             fontSize: 14),
                       ),

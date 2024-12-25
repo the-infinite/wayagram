@@ -74,6 +74,7 @@ class _AppFieldState extends State<WayaTextFormField> {
   late FocusNode _focusNode;
   late Color fillColor;
   late Color borderColor;
+  
 
   @override
   void initState() {
@@ -113,6 +114,7 @@ class _AppFieldState extends State<WayaTextFormField> {
       textInputAction: widget.textInputAction,
       onSaved: widget.onSaved,
       decoration: InputDecoration(
+        
           errorBorder: OutlineInputBorder(
             borderSide: widget.showBorder ? BorderSide(color: wayaTheme.error200, width: 1.w) : BorderSide.none,
             borderRadius: BorderRadius.circular(10.r),

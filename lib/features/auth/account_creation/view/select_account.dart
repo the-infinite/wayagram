@@ -4,6 +4,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 
@@ -15,6 +16,7 @@ class SelectAccount extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(selectAccountProvider.notifier);
     final type = ref.watch(selectAccountProvider).selectedType;
+    final wayaTheme = Theme.of(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -41,12 +43,12 @@ class SelectAccount extends ConsumerWidget {
                       padding: EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
                           color: viewModel.data[index].type == type
-                              ? WayaColors.primary75
-                              : WayaColors.greyColor100,
+                              ? wayaTheme.colorScheme.primary75
+                              : wayaTheme.colorScheme.greyColor100,
                           border: Border.all(
                               color: viewModel.data[index].type == type
-                                  ? WayaColors.customPrimary
-                                  : WayaColors.greyColor100),
+                                  ? wayaTheme.colorScheme.customPrimary
+                                  : wayaTheme.colorScheme.greyColor100),
                           borderRadius: BorderRadius.all(Radius.circular(12))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,

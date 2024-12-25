@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -19,6 +20,7 @@ class VerifyAccount extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModelState = ref.watch(verifyAccountProvider);
     final viewModel = ref.watch(verifyAccountProvider.notifier);
+     final wayaTheme = Theme.of(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -33,14 +35,14 @@ class VerifyAccount extends ConsumerWidget {
         VerificationCode(
           textStyle: const TextStyle(fontSize: 20.0),
           keyboardType: TextInputType.number,
-          underlineColor: WayaColors.customPrimary,
+          underlineColor: wayaTheme.colorScheme.customBlack,
           fullBorder: true,
           fillColor: Colors.transparent,
           itemSize: 50,
           length: 6,
           padding: const EdgeInsets.all(8.0),
           margin: const EdgeInsets.symmetric(horizontal: 3.0),
-          cursorColor: WayaColors.customPrimary,
+          cursorColor: wayaTheme.colorScheme.customPrimary,
           onCompleted: (String value) {
             viewModel.onCodeChanged(value);
           },
@@ -59,7 +61,7 @@ class VerifyAccount extends ConsumerWidget {
               alignment: Alignment.center,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                  color: WayaColors.primary75,
+                  color: wayaTheme.colorScheme.primary75,
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               child: RichText(
                   text: const TextSpan(children: [

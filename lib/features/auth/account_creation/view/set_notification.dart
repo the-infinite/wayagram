@@ -3,17 +3,19 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/auth/account_creation/view/explore.dart';
+import 'package:wayagram/features/auth/account_creation/view/successful_setup.dart';
 
 class SetNotification extends ConsumerWidget {
   const SetNotification({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+     final wayaTheme = Theme.of(context);
     return Scaffold(
         body: Padding(
       padding: WayaEdgeInsetsExtension.fromPercentage(
@@ -61,7 +63,7 @@ class SetNotification extends ConsumerWidget {
                   child: Text(
                     "Skip for now",
                     style: TextStyle().wayaCopyWith(
-                        color: WayaColors.customPrimary,
+                        color: wayaTheme.colorScheme.customPrimary,
                         fontSize: 14,
                         fontWeight: FontWeight.w600),
                   ),

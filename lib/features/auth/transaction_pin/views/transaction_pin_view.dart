@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -27,7 +28,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
     final confirmPin = ref.watch(confirmPinProvider);
     final isInValid = ref.watch(isPinValidProvider);
     final viewModel = ref.read(transactionPinProvider.notifier);
-
+     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         body: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,7 +57,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
                     style: TextStyle().wayaCopyWith(
                       fontWeight: FontWeight.w400,
                       fontSize: 13,
-                      color: WayaColors.error,
+                      color: wayaTheme.colorScheme.error,
                     )))
           ],
         )),
@@ -79,7 +80,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
               child: Text(
                 "Skip for now",
                 style: TextStyle().wayaCopyWith(
-                    color: WayaColors.customPrimary,
+                    color: wayaTheme.colorScheme.customPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w600),
               ),

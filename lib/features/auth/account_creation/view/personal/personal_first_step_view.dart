@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
@@ -22,6 +23,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
+     final wayaTheme = Theme.of(context);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -58,7 +60,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                 hintText: 'Enter Your First Name',
                                 borderColor: formState.hasError &&
                                         viewModel.firstName.text.isEmpty
-                                    ? WayaColors.error
+                                    ? wayaTheme.colorScheme.error
                                     : null,
                                 label: 'First Name',
                               ),
@@ -68,8 +70,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style: const TextStyle(
-                                        color: WayaColors.error, fontSize: 12),
+                                    style:  TextStyle(
+                                        color: wayaTheme.colorScheme.error, fontSize: 12),
                                   ),
                                 ),
                             ],
@@ -94,7 +96,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                 hintText: 'Enter Your Last Name',
                                 borderColor: formState.hasError &&
                                         viewModel.lastName.text.isEmpty
-                                    ? WayaColors.error
+                                    ? wayaTheme.colorScheme.error
                                     : null,
                                 label: 'Last Name',
                               ),
@@ -104,8 +106,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style: const TextStyle(
-                                        color: WayaColors.error, fontSize: 12),
+                                    style:  TextStyle(
+                                        color: wayaTheme.colorScheme.error, fontSize: 12),
                                   ),
                                 ),
                             ],
@@ -134,7 +136,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                           hintText: 'example@gmail.com',
                           borderColor:
                               formState.hasError && viewModel.email.text.isEmpty
-                                  ? WayaColors.error
+                                  ? wayaTheme.colorScheme.error
                                   : null,
                           label: 'Email Address',
                         ),
@@ -143,8 +145,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: const TextStyle(
-                                  color: WayaColors.error, fontSize: 12),
+                              style:  TextStyle(
+                                  color: wayaTheme.colorScheme.error, fontSize: 12),
                             ),
                           ),
                       ],
@@ -177,8 +179,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                   border: Border.all(
                                       color: formState.hasError &&
                                               viewModel.phone.text.isEmpty
-                                          ? WayaColors.error
-                                          : WayaColors.greyColor300,
+                                          ? wayaTheme.colorScheme.error
+                                          : wayaTheme.colorScheme.greyColor300,
                                       width: 1),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8.0))),
@@ -207,7 +209,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                 hintText: '000-000-000',
                                 borderColor: formState.hasError &&
                                         viewModel.phone.text.isEmpty
-                                    ? WayaColors.error
+                                    ? wayaTheme.colorScheme.error
                                     : null,
                               ),
                             )
@@ -218,8 +220,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: const TextStyle(
-                                  color: WayaColors.error, fontSize: 12),
+                              style:  TextStyle(
+                                  color: wayaTheme.colorScheme.error, fontSize: 12),
                             ),
                           ),
                       ],
@@ -260,7 +262,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                           controller: viewModel.password,
                           borderColor: formState.hasError &&
                                   viewModel.password.text.isEmpty
-                              ? WayaColors.error
+                              ? wayaTheme.colorScheme.error
                               : null,
                           hintText: 'Enter Your Password',
                           label: 'Password',
@@ -273,7 +275,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             icon: Icon(viewModel.isPasswordVisible
                                 ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined),
-                            color: WayaColors.greyColor300,
+                            color: wayaTheme.colorScheme.greyColor300,
                           ),
                         ),
                         if (formState.hasError &&
@@ -282,8 +284,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: const TextStyle(
-                                  color: WayaColors.error, fontSize: 12),
+                              style:  TextStyle(
+                                  color: wayaTheme.colorScheme.error, fontSize: 12),
                             ),
                           ),
                       ],
@@ -312,7 +314,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                           controller: viewModel.confirmPassword,
                           borderColor: formState.hasError &&
                                   viewModel.confirmPassword.text.isEmpty
-                              ? WayaColors.error
+                              ? wayaTheme.colorScheme.error
                               : null,
                           hintText: 'Enter your Password',
                           label: 'Confirm Password',
@@ -325,7 +327,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             icon: Icon(viewModel.isConfirmPasswordVisible
                                 ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined),
-                            color: WayaColors.greyColor300,
+                            color: wayaTheme.colorScheme.greyColor300,
                           ),
                         ),
                         if (formState.hasError &&
@@ -334,8 +336,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: const TextStyle(
-                                  color: WayaColors.error, fontSize: 12),
+                              style:  TextStyle(
+                                  color: wayaTheme.colorScheme.error, fontSize: 12),
                             ),
                           ),
                       ],
