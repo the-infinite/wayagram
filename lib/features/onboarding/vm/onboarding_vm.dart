@@ -10,7 +10,8 @@ class AccountState {
 }
 
 class OnboardingVm extends StateNotifier<AccountState> {
-  OnboardingVm() : super(AccountState());
+  final Ref ref;
+  OnboardingVm(this.ref) : super(AccountState());
 
   final _pageController = PageController();
 
@@ -19,7 +20,7 @@ class OnboardingVm extends StateNotifier<AccountState> {
   List<OnboardingData> get pageData => onboardingViewData;
 
   void changePage(int page) {
-    state.currentPage = page;
+    state = AccountState(currentPage: page);
   }
 
   @override
@@ -40,4 +41,5 @@ class OnboardingVm extends StateNotifier<AccountState> {
   }
 }
 
-final onboardingVmProvider = StateNotifierProvider<OnboardingVm, AccountState>((ref) => OnboardingVm());
+final onboardingVmProvider = StateNotifierProvider<OnboardingVm, AccountState>(
+    (ref) => OnboardingVm(ref));

@@ -25,7 +25,8 @@ class WayaBackButton extends StatelessWidget {
               WayaNav.goBack();
               HapticFeedback.lightImpact();
             },
-        child: SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
+        child:
+            SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
       ),
     );
   }
@@ -44,6 +45,7 @@ class WayaButton extends StatelessWidget {
       this.textColor,
       this.centerWidget,
       this.horizontalPadding = 6,
+      this.height = 55,
       this.isDisabled});
   final String text;
   final Color? color;
@@ -57,6 +59,7 @@ class WayaButton extends StatelessWidget {
   final Widget? centerWidget;
   final bool? isDisabled;
   final double horizontalPadding;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +76,12 @@ class WayaButton extends StatelessWidget {
               callback?.call();
             },
       child: Container(
-        height: 55,
+        height: height,
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         decoration: BoxDecoration(
-          color: isButtonDisabled ? wayaTheme.colorScheme.greyColor300 : (color ?? wayaTheme.colorScheme.customPrimary),
+          color: isButtonDisabled
+              ? wayaTheme.colorScheme.greyColor300
+              : (color ?? wayaTheme.colorScheme.customPrimary),
           border: border,
           borderRadius: BorderRadius.circular(radius ?? 8),
         ),
@@ -92,7 +97,9 @@ class WayaButton extends StatelessWidget {
                     ),
                   Text(text,
                       style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                          fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
+                          fontWeight: FontWeight.w600,
+                          color: textColor ??
+                              wayaTheme.colorScheme.scaffoldColor2)),
                   Gap(10),
                   trailingIcon ?? SizedBox.shrink()
                 ],
@@ -100,7 +107,9 @@ class WayaButton extends StatelessWidget {
             : centerWidget ??
                 Text(text,
                     style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                        fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
+                        fontWeight: FontWeight.w600,
+                        color:
+                            textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
       ),
     );
   }
