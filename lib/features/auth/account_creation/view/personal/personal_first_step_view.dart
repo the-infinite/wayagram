@@ -176,7 +176,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               decoration: BoxDecoration(
                                   border: Border.all(
                                       color: formState.hasError &&
-                                              viewModel.email.text.isEmpty
+                                              viewModel.phone.text.isEmpty
                                           ? WayaColors.error
                                           : WayaColors.greyColor300,
                                       width: 1),
@@ -206,14 +206,14 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                 controller: viewModel.phone,
                                 hintText: '000-000-000',
                                 borderColor: formState.hasError &&
-                                        viewModel.email.text.isEmpty
+                                        viewModel.phone.text.isEmpty
                                     ? WayaColors.error
                                     : null,
                               ),
                             )
                           ],
                         ),
-                        if (formState.hasError && viewModel.email.text.isEmpty)
+                        if (formState.hasError && viewModel.phone.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
