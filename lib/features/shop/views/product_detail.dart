@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/shop/data_model/data_model.dart';
+import 'package:wayagram/features/shop/vm/product_detail_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/shop/widgets/product_description_widget.dart';
@@ -23,6 +24,7 @@ class ProductDetail extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
+    final viewModel = ref.watch(productDetailVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       title: "Product Details",
@@ -175,8 +177,8 @@ class ProductDetail extends ConsumerWidget {
                       children: [
                         Image.asset(
                           "assets/images/avatars.png",
-                          width: 22,
-                          height: 22,
+                          width: 26,
+                          height: 26,
                         ),
                         const Gap(6),
                         Text(
@@ -249,22 +251,25 @@ class ProductDetail extends ConsumerWidget {
                   width: context.width * 0.45,
                   child: WayaButton(
                     callback: () {},
-                      centerWidget: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-Icon(
-                      Icons.shopping_cart_outlined,
-                      color: wayaTheme.colorScheme.customPrimary,
-                    ),
-                    const Gap(6),
-                    Text('Add To Cart', style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customPrimary, fontSize: 15, fontWeight: FontWeight.w500))
-                          ],
-                        ),
+                    centerWidget: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.shopping_cart_outlined,
+                            color: wayaTheme.colorScheme.customPrimary,
+                          ),
+                          const Gap(6),
+                          Text('Add To Cart',
+                              style: TextStyle().wayaCopyWith(
+                                  color: wayaTheme.colorScheme.customPrimary,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500))
+                        ],
                       ),
+                    ),
                     color: wayaTheme.colorScheme.transparent,
-                  
                     textColor: wayaTheme.colorScheme.customPrimary,
                     border: Border.all(
                         color: wayaTheme.colorScheme.customPrimary, width: 1),
@@ -273,7 +278,9 @@ Icon(
                 SizedBox(
                   width: context.width * 0.45,
                   child: WayaButton(
-                    callback: () {},
+                    callback: () {
+                      viewModel.testRequest(context);
+                    },
                     text: 'Buy Now',
                   ),
                 )

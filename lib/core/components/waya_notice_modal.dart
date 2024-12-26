@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 
 class WayaNoticeModal extends StatelessWidget {
   final String title;
   final String message;
   final VoidCallback onPress;
+  final VoidCallback? onCancel;
   final String buttonText;
   final Widget icon;
 
@@ -17,8 +19,8 @@ class WayaNoticeModal extends StatelessWidget {
       required this.message,
       required this.buttonText,
       required this.icon,
-      required this.onPress})
-     ;
+      this.onCancel,
+      required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +61,22 @@ class WayaNoticeModal extends StatelessWidget {
             const Gap(24),
             WayaButton(
                 callback: () {
-                 // Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
                   onPress();
                 },
-                text: buttonText)
+                text: buttonText),
+            const Gap(10),
+            Visibility(
+                visible: onCancel != null,
+                child: WayaButton(
+                    callback: () {
+                      Navigator.of(context).pop();
+                      onCancel?.call();
+                    },
+                    textColor: wayaTheme.greyColor500,
+                    color: wayaTheme.transparent,
+                    border: Border.all(color: wayaTheme.greyColor500, width: 1),
+                    text: 'Cancel'))
           ],
         ),
       ),
