@@ -20,6 +20,19 @@ class Review {
       required this.id});
 }
 
+class Order {
+  final String id;
+  final String status;
+  final String price;
+  final String createdDate;
+
+  Order(
+      {required this.createdDate,
+      required this.id,
+      required this.price,
+      required this.status});
+}
+
 List<Category> categories = [
   Category(id: 1, category: 'All Categories'),
   Category(id: 2, category: 'Fashion'),
