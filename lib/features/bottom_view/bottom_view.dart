@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
+import 'package:wayagram/features/shop/buyer/views/waya_buyer.dart';
 
 class BottomView extends ConsumerStatefulWidget {
   const BottomView({super.key});
@@ -25,7 +26,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
 
   final List<Widget> _pages = [
     Explore(),
-    Explore(),
+    WayaBuyer(),
     Explore(),
     Explore(),
     Explore(),

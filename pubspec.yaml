@@ -95,6 +95,7 @@ flutter:
     - assets/images/
     - assets/images/onboarding/
     - assets/images/auth/
+    - assets/images/explore/
 
     - assets/icons/
     # - assets/lottie/

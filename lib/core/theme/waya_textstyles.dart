@@ -24,6 +24,11 @@ class WayaTextStyles {
     fontWeight: FontWeight.w500,
     color: WayaColors.black,
   );
+   static const bodyXtraMedium = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: WayaColors.black,
+  );
   //
   static const hintStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: WayaColors.greyColor400);
   static const hintStyleBold = TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: WayaColors.greyColor400);
