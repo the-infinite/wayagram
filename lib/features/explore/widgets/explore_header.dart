@@ -27,7 +27,7 @@ class _ExploreHeaderState extends ConsumerState<ExploreHeader> {
         SizedBox(
           width: context.width * 0.5,
           child: WayaTextFormField(
-              suffixIcon: Icon(
+              prefixIcon: Icon(
                 Icons.search,
                 color: wayaTheme.colorScheme.greyColor400,
               ),

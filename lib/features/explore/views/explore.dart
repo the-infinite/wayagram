@@ -117,8 +117,8 @@ class Explore extends ConsumerWidget {
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisSpacing: 1,
-                    childAspectRatio: 0.5,
+                    mainAxisSpacing: 0,
+                    childAspectRatio: 0.65,
                     crossAxisSpacing: 12),
                 itemCount: viewModel.products.length,
                 itemBuilder: (context, index) {
