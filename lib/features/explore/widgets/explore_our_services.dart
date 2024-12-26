@@ -19,7 +19,7 @@ class ExploreOurServices extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Explore Our Services", style: wayaTheme.textTheme.bodySemiBold),
+        Text("Explore Our Services", style: wayaTheme.textTheme.titleLarge),
         const Gap(20),
         Container(
           padding: const EdgeInsets.all(12),

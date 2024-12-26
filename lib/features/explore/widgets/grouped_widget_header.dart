@@ -26,7 +26,7 @@ class GroupedWidgetHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(title, style: wayaTheme.textTheme.bodySemiBold),
+            Text(title, style: wayaTheme.textTheme.titleLarge),
             const Gap(3),
             Text(
               subTitle,

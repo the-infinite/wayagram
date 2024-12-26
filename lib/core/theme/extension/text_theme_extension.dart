@@ -7,4 +7,5 @@ extension WayaTextThemeX on TextTheme {
   TextStyle get hintStyleBold => WayaTextStyles.hintStyleBold;
   TextStyle get descriptionStyle => WayaTextStyles.descriptionStyle;
   TextStyle get bodyXtraMedium => WayaTextStyles.bodyXtraMedium;
+  TextStyle get titleLarge => WayaTextStyles.titleLarge;
 }

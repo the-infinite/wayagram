@@ -136,7 +136,7 @@ padding: EdgeInsets.all(16),
           const Gap(20),
           Text(
             quotation.name,
-            style: wayaTheme.textTheme.bodySemiBold,
+            style: wayaTheme.textTheme.titleLarge,
           ),
           const Gap(20),
           Text(
