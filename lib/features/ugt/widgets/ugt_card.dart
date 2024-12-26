@@ -65,6 +65,8 @@ class UgtCard extends StatelessWidget {
               Text(
                 ugt.about,
                 style: wayaTheme.textTheme.hintStyle,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
               const Gap(20),
               ListView.builder(

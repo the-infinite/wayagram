@@ -12,13 +12,13 @@ class WayaNoticeModal extends StatelessWidget {
   final Widget icon;
 
   const WayaNoticeModal(
-      {Key? key,
+      {super.key,
       required this.title,
       required this.message,
       required this.buttonText,
       required this.icon,
       required this.onPress})
-      : super(key: key);
+     ;
 
   @override
   Widget build(BuildContext context) {

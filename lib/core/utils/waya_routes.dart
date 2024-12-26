@@ -15,6 +15,7 @@ import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
 import 'package:wayagram/features/onboarding/views/onboarding_view.dart';
 import 'package:wayagram/features/onboarding/views/splash_screen.dart';
+import 'package:wayagram/features/shop/views/product_detail.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
@@ -31,7 +32,8 @@ class WayaAppRoutes {
     '/add-business-account': () => AddBusinessAccountView(),
     '/login': () => LoginPage(),
     '/welcome-back': () => WelcomeBackPage(),
-    '/explore': () => BottomView()
+    '/explore': () => BottomView(),
+    '/product-detail': () => ProductDetail()
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {
