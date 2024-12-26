@@ -8,43 +8,47 @@ class GroupedWidgetHeader extends StatelessWidget {
   final VoidCallback onTap;
   final String title;
   final String subTitle;
+  bool isVisible;
 
-  const GroupedWidgetHeader(
+   GroupedWidgetHeader(
       {super.key,
       required this.onTap,
       required this.subTitle,
+      this.isVisible = true,
       required this.title});
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
+    return Visibility(
+        visible: isVisible,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(title, style: wayaTheme.textTheme.titleLarge),
-            const Gap(3),
-            Text(
-              subTitle,
-              style: wayaTheme.textTheme.hintStyle,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(title, style: wayaTheme.textTheme.titleLarge),
+                const Gap(3),
+                Text(
+                  subTitle,
+                  style: wayaTheme.textTheme.hintStyle,
+                )
+              ],
+            ),
+            GestureDetector(
+              onTap: onTap,
+              child: Text(
+                "See All",
+                style: TextStyle().wayaCopyWith(
+                    color: wayaTheme.colorScheme.customPrimary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500),
+              ),
             )
           ],
-        ),
-        GestureDetector(
-          onTap: onTap,
-          child: Text(
-            "See All",
-            style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.customPrimary,
-                fontSize: 13,
-                fontWeight: FontWeight.w500),
-          ),
-        )
-      ],
-    );
+        ));
   }
 }

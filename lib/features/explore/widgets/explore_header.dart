@@ -23,10 +23,12 @@ class _ExploreHeaderState extends ConsumerState<ExploreHeader> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset('assets/images/wayalogo_unlabelled.png', scale: 3,),
+      //  Image.asset('assets/images/wayalogo_unlabelled.png', scale: 3,),
+       const Gap(1),
         SizedBox(
-          width: context.width * 0.5,
+          width: context.width * 0.55,
           child: WayaTextFormField(
+            padding: EdgeInsets.all(1),
               prefixIcon: Icon(
                 Icons.search,
                 color: wayaTheme.colorScheme.greyColor400,
@@ -34,19 +36,20 @@ class _ExploreHeaderState extends ConsumerState<ExploreHeader> {
               controller: viewModel.search,
               hintText: 'Search WayaGram'),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            InkWell(
-              onTap: () {},
-              child: Icon(Icons.notifications,
-                  size: 30, color: wayaTheme.colorScheme.greyColor500),
-            ),
-            const Gap(10),
-            Image.asset('assets/images/avatars.png'),
-          ],
-        )
+         const Gap(1),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     InkWell(
+        //       onTap: () {},
+        //       child: Icon(Icons.notifications,
+        //           size: 30, color: wayaTheme.colorScheme.greyColor500),
+        //     ),
+        //     const Gap(10),
+        //     Image.asset('assets/images/avatars.png'),
+        //   ],
+        // )
       ],
     );
   }

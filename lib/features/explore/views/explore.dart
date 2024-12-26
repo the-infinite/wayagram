@@ -5,14 +5,14 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/waya_textstyles.dart';
-import 'package:wayagram/features/auth/interests/data/interest_data.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
-import 'package:wayagram/features/shop/widget/product_card.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
+import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
+import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
 
 class Explore extends ConsumerWidget {
@@ -22,18 +22,40 @@ class Explore extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(exploreVmProvider.notifier);
-    final selectedCategory = ref.watch(selectedCategoryProvider);
-
+ 
     return WayaScaffold(
         isLoading: false,
-        appBar: AppBar(),
+        appBar: AppBar(
+          backgroundColor: wayaTheme.colorScheme.white,
+          title: ExploreHeader() ,
+          actions: [Container(
+            padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: () {},
+              child: Icon(Icons.notifications,
+                  size: 30, color: wayaTheme.colorScheme.greyColor500),
+            ),
+            const Gap(10),
+            Image.asset('assets/images/avatars.png'),
+          ],
+        ),
+          )],
+          leading:        Container(
+            padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+            child:  Image.asset('assets/images/wayalogo_unlabelled.png', ),
+          )
+        ),
         isScrollable: true,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ExploreHeader(),
-            const Gap(25),
+            // const ExploreHeader(),
+             const Gap(20),
             const ExploreOurServices(),
             const Gap(25),
             GroupedWidgetHeader(
@@ -77,40 +99,8 @@ class Explore extends ConsumerWidget {
                 onTap: () {},
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
-            const Gap(25),
-            SizedBox(
-              height: 45,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: trendingData.length,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        const Gap(6),
-                        WayaButton(
-                          callback: () {
-                            viewModel
-                                .updateSelectedCategory(trendingData[index]);
-                          },
-                          border: Border.all(
-                              color:
-                                  selectedCategory.contains(trendingData[index])
-                                      ? wayaTheme.colorScheme.customPrimary
-                                      : wayaTheme.colorScheme.greyColor300),
-                          horizontalPadding: 8,
-                          color: selectedCategory.contains(trendingData[index])
-                              ? wayaTheme.colorScheme.primaryBrown50
-                              : wayaTheme.colorScheme.transparent,
-                          radius: 10,
-                          height: 45,
-                          centerWidget: Text(trendingData[index],
-                              style: WayaTextStyles.hintStyle),
-                        ),
-                        const Gap(6),
-                      ],
-                    );
-                  }),
-            ),
+            const Gap(10),
+           CategoriesFilterWidget<Product>(allItems: []),
             const Gap(25),
             GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -120,9 +110,9 @@ class Explore extends ConsumerWidget {
                     mainAxisSpacing: 0,
                     childAspectRatio: 0.65,
                     crossAxisSpacing: 12),
-                itemCount: viewModel.products.length,
+                itemCount: products.length,
                 itemBuilder: (context, index) {
-                  return ProductCard(product: viewModel.products[index]);
+                  return ProductCard(product: products[index]);
                 }),
                     const Gap(25),
                      GroupedWidgetHeader(
