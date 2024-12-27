@@ -5,10 +5,12 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
+import 'package:wayagram/features/shop/data_model/data_model.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class OrderedProductCard extends StatelessWidget {
-  final Cart cart;
-  const OrderedProductCard({super.key, required this.cart});
+  final Product order;
+  const OrderedProductCard({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class OrderedProductCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  cart.product.images.isEmpty
+                  order.images.isEmpty
                       ? Container(
                           height: 70,
                           width: 50,
@@ -44,7 +46,7 @@ class OrderedProductCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Image.asset(
-                            cart.product.images[0],
+                            order.images[0],
                             fit: BoxFit.contain,
                           ),
                         ),

@@ -156,7 +156,7 @@ class ProductDetail extends ConsumerWidget {
             width: double.infinity,
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.greyColor100,
+                color: wayaTheme.colorScheme.scaffoldColor,
                 borderRadius: BorderRadius.circular(12)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

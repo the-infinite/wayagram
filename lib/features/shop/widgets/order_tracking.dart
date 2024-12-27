@@ -82,7 +82,7 @@ class StepWidget extends StatelessWidget {
     // TODO: implement build
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -104,7 +104,7 @@ class StepWidget extends StatelessWidget {
                   const Gap(8),
                   Text(
                     orderStatus.description,
-                    style: wayaTheme.textTheme.descriptionStyle,
+                    style: wayaTheme.textTheme.hintStyle,
                   ),
                 ],
               ),
@@ -117,12 +117,12 @@ class StepWidget extends StatelessWidget {
           children: [
             Text(
               orderStatus.date,
-              style: wayaTheme.textTheme.descriptionStyle,
+              style: wayaTheme.textTheme.hintStyle,
             ),
             const Gap(8),
             Text(
               orderStatus.time,
-              style: wayaTheme.textTheme.descriptionStyle,
+              style: wayaTheme.textTheme.hintStyle,
             ),
           ],
         )

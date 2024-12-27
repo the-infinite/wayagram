@@ -8,7 +8,12 @@ class WayaHelpers {
       required String message,
       required VoidCallback onPress,
       required Widget icon,
-      required String buttonText}) {
+       String? buttonText,
+       String? secondButtonText,
+       Widget? buttonCenterWidget,
+       Widget? secondButtonCenterWidget
+       }) {
+
     return showDialog(
       context: context,
       barrierDismissible: true,
@@ -19,6 +24,9 @@ class WayaHelpers {
           message: message,
           icon: icon,
           buttonText: buttonText,
+          secondButtonCenterWidget: secondButtonCenterWidget,
+          buttonCenterWidget: buttonCenterWidget,
+          secondButtonText: secondButtonText,
         );
       },
     );

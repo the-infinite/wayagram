@@ -7,14 +7,15 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class DeliveryCostRequest extends StatelessWidget {
-  final List<Cart> carts;
+  final List<Product> orders;
   final VoidCallback onPress;
 
   const DeliveryCostRequest(
-      {super.key, required this.onPress, required this.carts});
+      {super.key, required this.onPress, required this.orders});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,7 @@ class DeliveryCostRequest extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         width: context.width ,
+        height: context.height * 0.8,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         decoration: BoxDecoration(
           color: wayaTheme.colorScheme.white,
@@ -85,7 +87,7 @@ class DeliveryCostRequest extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                   itemCount: 2,
                   itemBuilder: (context, index) {
-                    return OrderedProductCard(cart: carts[index]);
+                    return OrderedProductCard(order: orders[index]);
                   }),
             
             const Gap(24),

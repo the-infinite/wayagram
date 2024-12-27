@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/widgets/copy_code.dart';
 import 'package:wayagram/features/shop/widgets/order_tracking.dart';
@@ -37,7 +38,7 @@ class OrderDetails extends ConsumerWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 2,
                 itemBuilder: (context, index) {
-                  return OrderedProductCard(cart: cart[index]);
+                  return OrderedProductCard(order: orders[index]);
                 }),
             const Gap(25),
             Container(

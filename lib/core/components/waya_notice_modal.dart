@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 
 class WayaNoticeModal extends StatelessWidget {
@@ -10,15 +9,21 @@ class WayaNoticeModal extends StatelessWidget {
   final String message;
   final VoidCallback onPress;
   final VoidCallback? onCancel;
-  final String buttonText;
+  final String? buttonText;
+  final String? secondButtonText;
+  final Widget? buttonCenterWidget;
+  final Widget? secondButtonCenterWidget;
   final Widget icon;
 
   const WayaNoticeModal(
       {super.key,
       required this.title,
       required this.message,
-      required this.buttonText,
+      this.buttonText,
       required this.icon,
+      this.secondButtonText = "",
+      this.buttonCenterWidget,
+      this.secondButtonCenterWidget,
       this.onCancel,
       required this.onPress});
 
@@ -60,11 +65,12 @@ class WayaNoticeModal extends StatelessWidget {
             ),
             const Gap(24),
             WayaButton(
+                centerWidget: buttonCenterWidget,
                 callback: () {
                   // Navigator.of(context).pop();
                   onPress();
                 },
-                text: buttonText),
+                text: buttonCenterWidget != null ? buttonText ?? '' : ''),
             const Gap(10),
             Visibility(
                 visible: onCancel != null,
@@ -75,8 +81,11 @@ class WayaNoticeModal extends StatelessWidget {
                     },
                     textColor: wayaTheme.greyColor500,
                     color: wayaTheme.transparent,
+                    centerWidget: secondButtonCenterWidget,
                     border: Border.all(color: wayaTheme.greyColor500, width: 1),
-                    text: 'Cancel'))
+                    text: secondButtonCenterWidget != null
+                        ? secondButtonText ?? 'Cancel'
+                        : ''))
           ],
         ),
       ),

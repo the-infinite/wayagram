@@ -40,7 +40,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<void> {
           message:
               'The code you entered is incorrect. Please double-check and try \n again',
           onPress: () => Navigator.of(context).pop(),
-          icon: Image.asset('assets/images/d-code-invalid/.png'),
+          icon: Image.asset('assets/images/d-code-invalid.png'),
           buttonText: 'Try Again');
     } else {
       WayaHelpers.showNotice(
@@ -49,7 +49,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<void> {
           message:
               'The confirmation code has been verified. The product is now \n officially handed over to the buyer',
           onPress: () => WayaNav.toNamed('/explore'),
-          icon: Image.asset('assets/images/auth/d-code-valid.png'),
+          icon: Image.asset('assets/images/d-code-valid.png'),
           buttonText: 'Go To Shop');
     }
   }
