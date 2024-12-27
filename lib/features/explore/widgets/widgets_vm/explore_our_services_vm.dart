@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/bottom_view/bottom_view.dart';
+import 'package:wayagram/features/explore/views/explore.dart';
 
 class Services {
   final String icon;
@@ -15,27 +18,23 @@ class ExploreOurServicesVm extends ChangeNotifier {
 
   List<Services> services = [
     Services(
-        icon: 'assets/icons/e-shop.svg', name: 'Shop', onTap: () {}),
+        icon: 'assets/icons/e-shop.svg',
+        name: 'Shop',
+        onTap: () {
+         
+          WayaNav.to( BottomView(index: 1));
+        }),
     Services(
         icon: 'assets/icons/e-quotation.svg',
         name: 'Get Quotation',
         onTap: () {}),
     Services(
-        icon: 'assets/icons/e-chat.svg',
-        name: 'Chat & Socials',
-        onTap: () {}),
+        icon: 'assets/icons/e-chat.svg', name: 'Chat & Socials', onTap: () {}),
     Services(
-        icon: 'assets/icons/e-donation.svg',
-        name: 'Donations',
-        onTap: () {}),
+        icon: 'assets/icons/e-donation.svg', name: 'Donations', onTap: () {}),
     Services(
-        icon: 'assets/icons/e-poll.svg',
-        name: 'Polls & Votes',
-        onTap: () {}),
-    Services(
-        icon: 'assets/icons/e-event.svg',
-        name: 'Events',
-        onTap: () {}),
+        icon: 'assets/icons/e-poll.svg', name: 'Polls & Votes', onTap: () {}),
+    Services(icon: 'assets/icons/e-event.svg', name: 'Events', onTap: () {}),
   ];
 }
 

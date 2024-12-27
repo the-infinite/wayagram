@@ -167,12 +167,15 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                       ),
                     )),
                 const Gap(50),
+                /**
+                 * viewModel.isButtonEnabled
+                        ?
+                 */
                 WayaButton(
-                    callback: viewModel.isButtonEnabled
-                        ? () {
+                    callback:  () {
                             widget.goToNextTab();
                           }
-                        : null,
+                        ,
                     text: "Send Reset Code")
               ],
             ))

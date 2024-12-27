@@ -172,7 +172,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                           children: [
                             //   Expanded(
                             Container(
-                              height: 55,
+                              height: 48,
                               width: 90,
                               padding: EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -183,7 +183,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                           : wayaTheme.colorScheme.greyColor300,
                                       width: 1),
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(8.0))),
+                                      BorderRadius.all(Radius.circular(6.0))),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -374,14 +374,15 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     ],
                   ),
                   const Gap(20),
+                  //viewModel.isButtonEnabled
+                          
                   WayaButton(
-                      callback: viewModel.isButtonEnabled
-                          ? () {
+                      callback:  () {
                               // _formKey.currentState?.validate() == true
                               //  print("i am here");
                               widget.goToNextTab();
                             }
-                          : null,
+                          ,
                       text: "Continue")
                 ],
               ))

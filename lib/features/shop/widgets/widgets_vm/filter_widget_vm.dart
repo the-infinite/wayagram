@@ -6,6 +6,7 @@ class FilterWidgetVm extends ChangeNotifier {
   FilterWidgetVm(this.ref);
   final TextEditingController search = TextEditingController();
 
+  
 
   @override
   void dispose() {

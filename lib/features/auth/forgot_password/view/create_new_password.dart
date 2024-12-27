@@ -139,14 +139,15 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                 }),
                 const Gap(50),
                 WayaButton(
-                 
+                 //     viewModel.isButtonEnabled ?
                     callback: 
-                        viewModel.isButtonEnabled ? () {
-                          if (_formKey.currentState?.validate() == true) {
-                             WayaNav.toNamed('/changed-password-success');
-                          }
+                    () {
+                          // if (_formKey.currentState?.validate() == true) {
+                             
+                          // }
+                          WayaNav.toNamed('/changed-password-success');
                            
-                          } : null
+                          } 
                         ,
                    text:"Save New Password")
               ],

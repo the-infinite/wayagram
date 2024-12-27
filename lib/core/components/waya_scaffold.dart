@@ -55,6 +55,7 @@ class WayaScaffold extends ConsumerWidget {
             ? null
             : appBar ??
                 AppBar(
+                 
                   title: Text(title ?? ''),
                   leading: automicallyImplyLeading ? WayaBackButton() : null,
                   actions: appBarTrailing == null ? null : [appBarTrailing!],

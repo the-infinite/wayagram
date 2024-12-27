@@ -18,6 +18,7 @@ import 'package:wayagram/features/onboarding/views/splash_screen.dart';
 import 'package:wayagram/features/shop/buyer/views/confirm_order_delivery.dart';
 import 'package:wayagram/features/shop/cart/views/cart_view.dart';
 import 'package:wayagram/features/shop/cart/views/checkout.dart';
+import 'package:wayagram/features/shop/filter/views/filter_view.dart';
 import 'package:wayagram/features/shop/views/order_details.dart';
 import 'package:wayagram/features/shop/views/product_detail.dart';
 
@@ -41,7 +42,8 @@ class WayaAppRoutes {
     '/order-detail': () => OrderDetails(),
     '/confirm-order-delivery': () => ConfirmOrderDelivery(),
     '/cart': () => CartView(),
-    '/checkout': () => Checkout()
+    '/checkout': () => Checkout(),
+    '/filter':() => FilterView()
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

@@ -34,6 +34,9 @@ class ExploreOurServices extends ConsumerWidget {
             itemCount: viewModel.services.length,
             itemBuilder: (context, index) {
               return GestureDetector(
+                onTap: () {
+                  viewModel.services[index].onTap();
+                },
                 child: Column(
                   children: [
                     SvgPicture.asset(

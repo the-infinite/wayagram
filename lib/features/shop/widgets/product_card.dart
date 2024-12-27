@@ -138,7 +138,7 @@ class ProductCard extends StatelessWidget {
                     height: 38,
                     radius: 6,
                     color: wayaTheme.colorScheme.greyColor300,
-                    text: 'Add To Cart',
+                    centerWidget: Text('Add To Cart', style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),),
                     textColor: wayaTheme.colorScheme.customBlack,
                   )
                 ],

@@ -39,7 +39,7 @@ class SuccessfulSetup extends ConsumerWidget {
           ),
           WayaButton(
             callback: () {
-              WayaNav.toNamed("/forgot-password");
+              WayaNav.toNamed("/explore");
             },
             text: "Explore Wayagram",
           ),

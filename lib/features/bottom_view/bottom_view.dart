@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -9,7 +10,8 @@ import 'package:wayagram/features/explore/views/explore.dart';
 import 'package:wayagram/features/shop/buyer/views/waya_buyer.dart';
 
 class BottomView extends ConsumerStatefulWidget {
-  const BottomView({super.key});
+  final int? index;
+   BottomView({super.key, this.index = 0});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _BottomViewState();
@@ -21,7 +23,10 @@ class _BottomViewState extends ConsumerState<BottomView> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = 0;
+   
+    _selectedIndex = widget.index ?? 0;
+
+ 
   }
 
   final List<Widget> _pages = [
@@ -37,7 +42,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(bottomViewVmProvider);
-
+   
     final List<BottomNavigationBarItem> bottomNavigationItem =
         viewModel.barItems.asMap().entries.map((entry) {
       final index = entry.key;

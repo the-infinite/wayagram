@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/widgets/widgets_vm/filter_widget_vm.dart';
 
 class FilterWidget<T> extends ConsumerStatefulWidget {
@@ -41,7 +42,9 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
           ),
           const Gap(2),
           WayaButton(
-            callback: () {},
+            callback: () {
+              WayaNav.toNamed('/filter');
+            },
             centerWidget: Center(
               child: Icon(
                 Icons.filter_list,

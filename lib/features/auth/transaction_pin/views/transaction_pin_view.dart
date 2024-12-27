@@ -71,7 +71,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
                     style: TextStyle().wayaCopyWith(
                       fontWeight: FontWeight.w400,
                       fontSize: 13,
-                      color: wayaTheme.colorScheme.error,
+                      color: wayaTheme.colorScheme.error500,
                     )))
           ],
         )),
