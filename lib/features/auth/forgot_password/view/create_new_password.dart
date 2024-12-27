@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/create_new_password_vm.dart';
@@ -21,7 +22,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createNewPasswordProvider);
-
+   final wayaTheme = Theme.of(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -57,7 +58,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                         controller: viewModel.password,
                         borderColor: formState.hasError &&
                                 viewModel.password.text.isEmpty
-                            ? WayaColors.error
+                            ? wayaTheme.colorScheme.error
                             : null,
                         hintText: 'Enter Your Password',
                         label: 'Password',
@@ -69,7 +70,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                           icon: Icon(viewModel.isPasswordVisible
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined),
-                          color: WayaColors.greyColor300,
+                          color: wayaTheme.colorScheme.greyColor300,
                         ),
                       ),
                       if (formState.hasError &&
@@ -78,8 +79,8 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: const TextStyle(
-                                color: WayaColors.error, fontSize: 12),
+                            style:  TextStyle(
+                                color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
@@ -108,7 +109,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                         controller: viewModel.confirmPassword,
                         borderColor: formState.hasError &&
                                 viewModel.confirmPassword.text.isEmpty
-                            ? WayaColors.error
+                            ? wayaTheme.colorScheme.error
                             : null,
                         hintText: 'Enter your Password',
                         label: 'Confirm Password',
@@ -120,7 +121,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                           icon: Icon(viewModel.isConfirmPasswordVisible
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined),
-                          color: WayaColors.greyColor300,
+                          color: wayaTheme.colorScheme.greyColor300,
                         ),
                       ),
                       if (formState.hasError &&
@@ -129,8 +130,8 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: const TextStyle(
-                                color: WayaColors.error, fontSize: 12),
+                            style:  TextStyle(
+                                color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
@@ -138,14 +139,15 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                 }),
                 const Gap(50),
                 WayaButton(
-                 
+                 //     viewModel.isButtonEnabled ?
                     callback: 
-                        viewModel.isButtonEnabled ? () {
-                          if (_formKey.currentState?.validate() == true) {
-                             WayaNav.toNamed('/changed-password-success');
-                          }
+                    () {
+                          // if (_formKey.currentState?.validate() == true) {
+                             
+                          // }
+                          WayaNav.toNamed('/changed-password-success');
                            
-                          } : null
+                          } 
                         ,
                    text:"Save New Password")
               ],

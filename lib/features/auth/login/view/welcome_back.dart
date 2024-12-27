@@ -8,11 +8,14 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/account_creation/view/account_creation.dart';
+import 'package:wayagram/features/bottom_view/bottom_view.dart';
 
 class WelcomeBackPage extends ConsumerStatefulWidget {
   const WelcomeBackPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _WelcomeBackPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _WelcomeBackPageState();
 }
 
 class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
@@ -34,8 +37,8 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
               width: 303.w,
               child: Text(
                 "Enter your login details to access your account",
-                style: wayaTheme.textTheme.bodyMedium
-                    ?.wayaCopyWith(fontSize: 15, color: wayaTheme.colorScheme.greyColor600),
+                style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                    fontSize: 15, color: wayaTheme.colorScheme.greyColor600),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -53,8 +56,9 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
             Text('Maleek Rufai', style: wayaTheme.textTheme.bodyMedium),
             Gap(10),
             Text('Remove Account',
-                style: wayaTheme.textTheme.hintStyleBold
-                    .wayaCopyWith(fontWeight: FontWeight.w500, color: wayaTheme.colorScheme.primary500)),
+                style: wayaTheme.textTheme.hintStyleBold.wayaCopyWith(
+                    fontWeight: FontWeight.w500,
+                    color: wayaTheme.colorScheme.primary500)),
             Gap(10),
             WayaTextFormField(
               keyboardType: TextInputType.name,
@@ -66,7 +70,9 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
             Gap(Get.height * 0.2),
             WayaButton(
               text: 'Login',
-              callback: () {},
+              callback: () {
+                WayaNav.to( BottomView());
+              },
               color: wayaTheme.colorScheme.primary500,
               textColor: wayaTheme.colorScheme.white,
             ),
@@ -78,7 +84,8 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
               onTap2: () {
                 WayaNav.toNamed("/account-creation");
               },
-              style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
+              style1: wayaTheme.textTheme.hintStyle
+                  .wayaCopyWith(color: wayaTheme.colorScheme.black),
             )),
           ],
         ),

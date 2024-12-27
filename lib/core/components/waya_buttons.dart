@@ -13,21 +13,26 @@ class WayaBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context).colorScheme;
-    return Container(
-      decoration: BoxDecoration(
-        color: wayaTheme.secondaryColor2,
-        shape: BoxShape.circle,
-      ),
-      margin: EdgeInsets.all(7),
-      child: InkWell(
-        onTap: onTap ??
-            () {
-              WayaNav.goBack();
-              HapticFeedback.lightImpact();
-            },
-        child:
-            SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
-      ),
+    return Row(
+      children: [
+        const Gap(15),
+        Container(
+          decoration: BoxDecoration(
+            color: wayaTheme.secondaryColor2,
+            shape: BoxShape.circle,
+          ),
+          padding: EdgeInsets.all(7),
+          child: InkWell(
+            onTap: onTap ??
+                () {
+                  WayaNav.goBack();
+                  HapticFeedback.lightImpact();
+                },
+            child: SvgPicture.asset('assets/icons/arrow-back.svg',
+                fit: BoxFit.none),
+          ),
+        )
+      ],
     );
   }
 }
@@ -45,7 +50,7 @@ class WayaButton extends StatelessWidget {
       this.textColor,
       this.centerWidget,
       this.horizontalPadding = 6,
-      this.height = 55,
+      this.height = 48,
       this.isDisabled});
   final String text;
   final Color? color;

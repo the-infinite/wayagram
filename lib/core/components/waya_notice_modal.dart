@@ -8,17 +8,24 @@ class WayaNoticeModal extends StatelessWidget {
   final String title;
   final String message;
   final VoidCallback onPress;
-  final String buttonText;
+  final VoidCallback? onCancel;
+  final String? buttonText;
+  final String? secondButtonText;
+  final Widget? buttonCenterWidget;
+  final Widget? secondButtonCenterWidget;
   final Widget icon;
 
   const WayaNoticeModal(
-      {Key? key,
+      {super.key,
       required this.title,
       required this.message,
-      required this.buttonText,
+      this.buttonText,
       required this.icon,
-      required this.onPress})
-      : super(key: key);
+      this.secondButtonText = "",
+      this.buttonCenterWidget,
+      this.secondButtonCenterWidget,
+      this.onCancel,
+      required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +37,7 @@ class WayaNoticeModal extends StatelessWidget {
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 60, 20, 60),
+        padding: const EdgeInsets.fromLTRB(20, 40, 20, 40),
         decoration: BoxDecoration(
           color: wayaTheme.white,
           borderRadius: BorderRadius.circular(16),
@@ -58,11 +65,27 @@ class WayaNoticeModal extends StatelessWidget {
             ),
             const Gap(24),
             WayaButton(
+                centerWidget: buttonCenterWidget,
                 callback: () {
-                 // Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
                   onPress();
                 },
-                text: buttonText)
+                text: buttonCenterWidget == null ? buttonText ?? '' : ''),
+            const Gap(10),
+            Visibility(
+                visible: onCancel != null,
+                child: WayaButton(
+                    callback: () {
+                      Navigator.of(context).pop();
+                      onCancel?.call();
+                    },
+                    textColor: wayaTheme.greyColor500,
+                    color: wayaTheme.transparent,
+                    centerWidget: secondButtonCenterWidget,
+                    border: Border.all(color: wayaTheme.greyColor500, width: 1),
+                    text: secondButtonCenterWidget == null
+                        ? secondButtonText ?? 'Cancel'
+                        : ''))
           ],
         ),
       ),

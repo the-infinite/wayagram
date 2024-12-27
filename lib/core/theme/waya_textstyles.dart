@@ -24,12 +24,18 @@ class WayaTextStyles {
     fontWeight: FontWeight.w500,
     color: WayaColors.black,
   );
+   static const bodyXtraMedium = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: WayaColors.black,
+  );
   //
   static const hintStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: WayaColors.greyColor400);
   static const hintStyleBold = TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: WayaColors.greyColor400);
 
   // description
   static const descriptionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: WayaColors.greyColor500);
+    static const mediumdescriptionStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: WayaColors.greyColor500);
   //
   static const smallactiveLinkStyle =
       TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: WayaColors.customPrimary);

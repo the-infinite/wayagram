@@ -1,47 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:gap/gap.dart';
 
 class PinInputField extends StatelessWidget {
   final String pin;
-  final String label;
+  final String? label;
+  final double ratio;
+  final double height;
+  final int digits;
+  final double margin;
 
-  const PinInputField({
-    super.key,
-    required this.pin,
-    required this.label,
-  });
+  const PinInputField(
+      {super.key,
+      required this.height,
+      required this.pin,
+      required this.digits,
+      required this.margin,
+      this.label = '',
+      required this.ratio});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: WayaTextStyles.labelMedium,
-        ),
-        const SizedBox(height: 8),
+        if (label != null)
+          Text(
+            label!,
+            style: WayaTextStyles.labelMedium,
+          ),
+        const Gap(8),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          
           children: List.generate(
-            4,
+            digits,
             (index) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              width: context.width * 0.17,
-              height: 55,
+              margin:  EdgeInsets.symmetric(horizontal: margin),
+              width: context.width * ratio,
+              height: height,
               decoration: BoxDecoration(
                 border: Border.all(color: WayaColors.greyColor300, width: 1),
                 borderRadius: BorderRadius.circular(6),
-              
               ),
-              child:  Center(
+              child: Center(
                 child: Text(
                   index < pin.length ? '*' : '',
                   style: TextStyle(
-                   // color: index < pin.length ? Colors.white : Colors.transparent,
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
