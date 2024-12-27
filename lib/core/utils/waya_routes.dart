@@ -7,16 +7,17 @@ import 'package:wayagram/features/auth/add_business_account/views/add_business_a
 import 'package:wayagram/features/auth/forgot_password/view/changed_password_success.dart';
 import 'package:wayagram/features/auth/forgot_password/view/forgot_password_step.dart';
 import 'package:wayagram/features/auth/interests/views/select_interest.dart';
-import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
 import 'package:wayagram/features/auth/login/view/login_cover_page.dart';
 import 'package:wayagram/features/auth/login/view/login_page.dart';
 import 'package:wayagram/features/auth/login/view/welcome_back.dart';
+import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
+import 'package:wayagram/features/general_settings/view/general_settings.dart';
 import 'package:wayagram/features/onboarding/views/onboarding_view.dart';
-import 'package:wayagram/features/onboarding/views/splash_screen.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
-    '/': () => SplashScreen(),
+    '/': () => GeneralSettingsPage(),
+    // '/': () => SplashScreen(),
     '/login-cover-page': () => LoginCoverPage(),
     '/onboarding': () => OnboardingView(),
     '/account-creation': () => AccountCreation(),

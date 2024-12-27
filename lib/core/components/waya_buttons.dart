@@ -25,8 +25,7 @@ class WayaBackButton extends StatelessWidget {
               WayaNav.goBack();
               HapticFeedback.lightImpact();
             },
-        child:
-            SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
+        child: SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
       ),
     );
   }
@@ -39,6 +38,7 @@ class WayaButton extends StatelessWidget {
       this.color,
       this.radius,
       this.border,
+      this.textStyle,
       this.trailingIcon,
       this.leadingIcon,
       required this.callback,
@@ -56,6 +56,7 @@ class WayaButton extends StatelessWidget {
   final BoxBorder? border;
   final VoidCallback? callback;
   final Color? textColor;
+  final TextStyle? textStyle;
   final Widget? centerWidget;
   final bool? isDisabled;
   final double horizontalPadding;
@@ -79,9 +80,7 @@ class WayaButton extends StatelessWidget {
         height: height,
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         decoration: BoxDecoration(
-          color: isButtonDisabled
-              ? wayaTheme.colorScheme.greyColor300
-              : (color ?? wayaTheme.colorScheme.customPrimary),
+          color: isButtonDisabled ? wayaTheme.colorScheme.greyColor300 : (color ?? wayaTheme.colorScheme.customPrimary),
           border: border,
           borderRadius: BorderRadius.circular(radius ?? 8),
         ),
@@ -97,19 +96,16 @@ class WayaButton extends StatelessWidget {
                     ),
                   Text(text,
                       style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                          fontWeight: FontWeight.w600,
-                          color: textColor ??
-                              wayaTheme.colorScheme.scaffoldColor2)),
+                          fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
                   Gap(10),
                   trailingIcon ?? SizedBox.shrink()
                 ],
               )
             : centerWidget ??
                 Text(text,
-                    style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                        fontWeight: FontWeight.w600,
-                        color:
-                            textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
+                    style: textStyle ??
+                        wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                            fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
       ),
     );
   }

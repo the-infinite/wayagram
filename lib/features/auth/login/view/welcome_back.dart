@@ -40,15 +40,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
               ),
             ),
             Gap(30),
-            CircleAvatar(
-              radius: 75,
-              backgroundColor: wayaTheme.colorScheme.greyColor200,
-              child: Icon(
-                Icons.person,
-                size: 50,
-                color: wayaTheme.colorScheme.greyColor600,
-              ),
-            ),
+            WayaDp(),
             Gap(10),
             Text('Maleek Rufai', style: wayaTheme.textTheme.bodyMedium),
             Gap(10),
@@ -86,3 +78,5 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
     );
   }
 }
+
+

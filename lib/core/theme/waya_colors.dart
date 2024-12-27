@@ -54,6 +54,8 @@ class WayaColors {
   static const scaffoldColor2 = Color(0xffFFFFFF);
   //
   static const cardBackgroudColor = Color(0xffFFFFFF);
+  static const cardBackgroudColor2 = Color(0xffF7F9FC);
+
   static const cardBorderColor200 = Color(0xffE4E7EC);
   static const cardBorderColor300 = Color(0xffD0D5DD);
 }

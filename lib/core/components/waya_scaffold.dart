@@ -44,7 +44,6 @@ class WayaScaffold extends ConsumerWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       onDoubleTap: () {
         themeNotifier.toggleTheme();
-        print('Taped');
       },
       child: Scaffold(
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,

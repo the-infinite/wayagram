@@ -57,6 +57,7 @@ extension WayaColorSchemeExtension on ColorScheme {
 
   // Card Background Colors
   Color get cardBackgroudColor => WayaColors.cardBackgroudColor;
+  Color get cardBackgroudColor2 => WayaColors.cardBackgroudColor2;
   Color get cardBorderColor200 => WayaColors.cardBorderColor200;
   Color get cardBorderColor300 => WayaColors.cardBorderColor300;
 }

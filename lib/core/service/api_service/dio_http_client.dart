@@ -162,7 +162,6 @@ class DioHttpClient implements WayaHttpClientInterface {
               ? 'application/x-www-form-urlencoded'
               : 'application/json',
       'Accept': '*/*',
-      
       'Authorization': 'token',
     };
   }
