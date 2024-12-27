@@ -36,8 +36,7 @@ android {
 
         
           release {
-            minifyEnabled false // Disable R8 temporarily
-            shrinkResources false
+            signingConfig signingConfigs.debug
         }
     }
 }

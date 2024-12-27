@@ -32,6 +32,7 @@ class PersonalFirstStepVm extends ChangeNotifier {
 
   void toggleTerm(bool? value) {
     isAgreeToTerm = value!;
+    validateInputs();
     notifyListeners();
   }
 
@@ -41,10 +42,11 @@ class PersonalFirstStepVm extends ChangeNotifier {
         lastName.text.isNotEmpty &&
         email.text.isNotEmpty &&
         regexp.hasMatch(email.text) &&
-        password.text.isNotEmpty &&
-        password.text.length >= 8 &&
-        confirmPassword.text == password.text && phone.text.isNotEmpty &&
-        isAgreeToTerm;
+        phone.text.isNotEmpty &&
+    password.text.isNotEmpty &&
+    password.text.length >= 8 &&
+    confirmPassword.text == password.text &&
+    isAgreeToTerm;
     notifyListeners();
   }
 
@@ -57,10 +59,9 @@ class PersonalFirstStepVm extends ChangeNotifier {
     lastName.addListener(validateInputs);
     password.addListener(validateInputs);
     confirmPassword.addListener(validateInputs);
-    
   }
 
-   @override
+  @override
   void dispose() {
     phone.dispose();
     email.dispose();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 
 class SelectInterestWidget extends StatelessWidget {
@@ -17,6 +18,7 @@ class SelectInterestWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
     final firstSection = interestData.sublist(0, 6);
     final secondSection = interestData.sublist(6);
     return Column(
@@ -40,12 +42,12 @@ class SelectInterestWidget extends StatelessWidget {
                       },
                       border: Border.all(
                           color: selectedInterets.contains(firstSection[index])
-                              ? WayaColors.customPrimary
-                              : WayaColors.greyColor300),
+                              ? wayaTheme.colorScheme.customPrimary
+                              : wayaTheme.colorScheme.greyColor300),
                       horizontalPadding: 8,
                       color: selectedInterets.contains(firstSection[index])
-                          ? WayaColors.primaryBrown50
-                          : WayaColors.transparent,
+                          ? wayaTheme.colorScheme.primaryBrown50
+                          : wayaTheme.colorScheme.transparent,
                       radius: 10,
                       height: 45,
                       centerWidget: Text(firstSection[index],
@@ -72,12 +74,12 @@ class SelectInterestWidget extends StatelessWidget {
                       },
                       border: Border.all(
                           color: selectedInterets.contains(secondSection[index])
-                              ? WayaColors.customPrimary
-                              : WayaColors.greyColor300),
+                              ? wayaTheme.colorScheme.customPrimary
+                              : wayaTheme.colorScheme.greyColor300),
                       horizontalPadding: 8,
                       color: selectedInterets.contains(secondSection[index])
-                          ? WayaColors.primaryBrown50
-                          : WayaColors.transparent,
+                          ? wayaTheme.colorScheme.primaryBrown50
+                          : wayaTheme.colorScheme.transparent,
                       radius: 10,
                       height: 45,
                       centerWidget: Text(secondSection[index],

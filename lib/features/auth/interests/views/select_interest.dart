@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/auth/account_creation/view/explore.dart';
+import 'package:wayagram/features/auth/account_creation/view/successful_setup.dart';
 import 'package:wayagram/features/auth/interests/data/interest_data.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/auth/interests/widget/select_interest_widget.dart';
@@ -17,6 +18,7 @@ class SelectInterest extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedInterests = ref.watch(selectedInterestsProvider);
+     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -77,7 +79,7 @@ class SelectInterest extends ConsumerWidget {
                     if (localDataSource.getUserType() == 'business') {
                       WayaNav.toNamed('/add-business-account');
                     } else {
-                      WayaNav.to(const Explore());
+                      WayaNav.to(const SuccessfulSetup());
                     }
                   },
             text: "Save Interests",
@@ -86,12 +88,12 @@ class SelectInterest extends ConsumerWidget {
           Align(
               child: GestureDetector(
             onTap: () {
-              WayaNav.to(const Explore());
+              WayaNav.to(const SuccessfulSetup());
             },
             child: Text(
               "Skip for now",
               style: TextStyle().wayaCopyWith(
-                  color: WayaColors.customPrimary,
+                  color: wayaTheme.colorScheme.customPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w600),
             ),

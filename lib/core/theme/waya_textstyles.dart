@@ -26,7 +26,10 @@ class WayaTextStyles {
   );
   static const bodyBold = TextStyle(
     fontSize: 12,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w600,);
+   static const bodyXtraMedium = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
     color: WayaColors.black,
   );
   //
@@ -37,6 +40,7 @@ class WayaTextStyles {
 
   // description
   static const descriptionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: WayaColors.greyColor500);
+    static const mediumdescriptionStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: WayaColors.greyColor500);
   //
   static const smallactiveLinkStyle =
       TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: WayaColors.customPrimary);

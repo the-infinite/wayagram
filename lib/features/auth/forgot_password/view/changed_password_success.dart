@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -12,15 +11,9 @@ class ChangedPasswordSuccess extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
-    return Scaffold(
-        body: Padding(
-      padding: WayaEdgeInsetsExtension.fromPercentage(
-          lefthorizontalPercentage: 24,
-          righthorizontalPercentage: 24,
-          topverticalPercentage: 12,
-          bottomverticalPercentage: 0,
-          context: context),
-      child: Center(
+    return WayaScaffold(
+      removeAppBar: true,
+        body:  Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,6 +42,6 @@ class ChangedPasswordSuccess extends ConsumerWidget {
           ],
         ),
       ),
-    ));
+    );
   }
 }

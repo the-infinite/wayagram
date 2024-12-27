@@ -24,7 +24,6 @@ class TransactionPinVm extends StateNotifier<void> {
       ref.read(confirmPinProvider.notifier).state = confirmPin + value;
     }
   }
-  
 
   void handleBackspace() {
     final pin = ref.read(pinProvider);
@@ -49,10 +48,10 @@ class TransactionPinVm extends StateNotifier<void> {
     ref.read(isPinValidProvider.notifier).state =
         pin.length == 4 && pin != confirmPin;
     if (pin.length == 4 && pin == confirmPin) {
-     WayaNav.toNamed('/select-interests');
-     
+      WayaNav.toNamed('/setup-pin');
     }
-       ref.read(isPinValidProvider.notifier).state = pin.length == 4 && pin == confirmPin;
+    ref.read(isPinValidProvider.notifier).state =
+        pin.length == 4 && pin == confirmPin;
   }
 
   void clearPins() {
