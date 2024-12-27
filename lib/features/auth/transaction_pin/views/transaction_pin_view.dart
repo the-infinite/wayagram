@@ -89,7 +89,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
             Align(
                 child: GestureDetector(
               onTap: () {
-                WayaNav.toNamed('/select-interests');
+                WayaNav.toNamed('/setup-pin');
               },
               child: Text(
                 "Skip for now",

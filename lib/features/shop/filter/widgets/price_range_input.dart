@@ -63,19 +63,20 @@ class PriceRangeInput extends StatelessWidget {
         suffixText: 'NGN',
         fillColor: Theme.of(context).colorScheme.transparent,
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
+            borderRadius: BorderRadius.circular(8.r),
             borderSide: BorderSide(
                 color: Theme.of(context).colorScheme.greyColor300, width: 1.w)),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
               color: Theme.of(context).colorScheme.greyColor300, width: 1.w),
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(8.r),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
               color: Theme.of(context).colorScheme.primary, width: 1.w),
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(8.r),
         ),
+        contentPadding: EdgeInsets.fromLTRB(12, 0, 12, 0)
       ),
       onChanged: onChanged,
       keyboardType: TextInputType.number,

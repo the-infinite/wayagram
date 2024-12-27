@@ -58,7 +58,7 @@ class SetNotification extends ConsumerWidget {
                 Align(
                     child: GestureDetector(
                   onTap: () {
-                    WayaNav.toNamed('/account-setup-success');
+                    WayaNav.toNamed('/select-interests');
                   },
                   child: Text(
                     "Skip for now",

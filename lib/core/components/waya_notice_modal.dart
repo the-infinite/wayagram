@@ -37,7 +37,7 @@ class WayaNoticeModal extends StatelessWidget {
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 60, 20, 60),
+        padding: const EdgeInsets.fromLTRB(20, 40, 20, 40),
         decoration: BoxDecoration(
           color: wayaTheme.white,
           borderRadius: BorderRadius.circular(16),
@@ -70,7 +70,7 @@ class WayaNoticeModal extends StatelessWidget {
                   // Navigator.of(context).pop();
                   onPress();
                 },
-                text: buttonCenterWidget != null ? buttonText ?? '' : ''),
+                text: buttonCenterWidget == null ? buttonText ?? '' : ''),
             const Gap(10),
             Visibility(
                 visible: onCancel != null,
@@ -83,7 +83,7 @@ class WayaNoticeModal extends StatelessWidget {
                     color: wayaTheme.transparent,
                     centerWidget: secondButtonCenterWidget,
                     border: Border.all(color: wayaTheme.greyColor500, width: 1),
-                    text: secondButtonCenterWidget != null
+                    text: secondButtonCenterWidget == null
                         ? secondButtonText ?? 'Cancel'
                         : ''))
           ],

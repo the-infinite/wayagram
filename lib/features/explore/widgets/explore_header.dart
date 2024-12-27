@@ -26,9 +26,9 @@ class _ExploreHeaderState extends ConsumerState<ExploreHeader> {
       //  Image.asset('assets/images/wayalogo_unlabelled.png', scale: 3,),
        const Gap(1),
         SizedBox(
-          width: context.width * 0.55,
+          width: context.width * 0.50,
           child: WayaTextFormField(
-            padding: EdgeInsets.all(1),
+            padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
               prefixIcon: Icon(
                 Icons.search,
                 color: wayaTheme.colorScheme.greyColor400,

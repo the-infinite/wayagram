@@ -116,10 +116,10 @@ class ProductDetail extends ConsumerWidget {
             ],
           ),
           const Gap(25),
-          ProductImageWidget(images: [
-            'assets/images/explore/product2.png',
-            'assets/images/explore/product1.png',
-          ]),
+          // ProductImageWidget(images: [
+          //   'assets/images/explore/product2.png',
+          //   'assets/images/explore/product1.png',
+          // ]),
           const Gap(25),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -237,11 +237,7 @@ class ProductDetail extends ConsumerWidget {
               }),
         ],
       ),
-      bottomNavigationBar: Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: Container(
+      bottomNavigationBar:Container(
             padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -286,7 +282,7 @@ class ProductDetail extends ConsumerWidget {
                 )
               ],
             ),
-          )),
+          )
     );
   }
 }

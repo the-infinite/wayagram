@@ -29,7 +29,7 @@ class FilterChipItem extends StatelessWidget {
       showCheckmark: false,
       padding: EdgeInsets.fromLTRB(15, 12, 15, 12),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         
         side: BorderSide(
           color: isSelected

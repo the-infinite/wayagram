@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/explore/widgets/widgets_vm/explore_our_services_vm.dart';
@@ -22,15 +23,16 @@ class ExploreOurServices extends ConsumerWidget {
         Text("Explore Our Services", style: wayaTheme.textTheme.titleLarge),
         const Gap(20),
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.fromLTRB(12, 20, 12,0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
+            color: wayaTheme.colorScheme.white
           ),
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3, mainAxisSpacing: 0, crossAxisSpacing: 34),
+                crossAxisCount: 3, mainAxisSpacing: 0, crossAxisSpacing: 40),
             itemCount: viewModel.services.length,
             itemBuilder: (context, index) {
               return GestureDetector(

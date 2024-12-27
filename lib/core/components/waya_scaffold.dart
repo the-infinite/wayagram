@@ -19,6 +19,7 @@ class WayaScaffold extends ConsumerWidget {
   final EdgeInsetsGeometry? padding;
   final bool isLoading;
   final bool? resizeToAvoidBottomInset;
+  final Color? color;
   final PreferredSizeWidget? appBar;
   const WayaScaffold(
       {super.key,
@@ -32,7 +33,7 @@ class WayaScaffold extends ConsumerWidget {
       this.title,
       this.appBarTrailing,
       this.isScrollable = false,
-     
+     this.color,
       this.appBar,
       this.backgroundColor,
       
@@ -61,10 +62,13 @@ class WayaScaffold extends ConsumerWidget {
                   actions: appBarTrailing == null ? null : [appBarTrailing!],
                 ),
         body:isScrollable
-                ? Padding(
+                ? Container(
+                  color: color,
+                  child: Padding(
                     padding: paddedBody,
                     child: SingleChildScrollView(child: body),
-                  )
+                  ),
+                )
                 : Padding(
                     padding: paddedBody,
                     child: body,

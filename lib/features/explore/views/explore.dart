@@ -25,6 +25,7 @@ class Explore extends ConsumerWidget {
  
     return WayaScaffold(
         isLoading: false,
+        color: wayaTheme.colorScheme.scaffoldColor,
         appBar: AppBar(
           backgroundColor: wayaTheme.colorScheme.white,
           title: ExploreHeader() ,
@@ -39,7 +40,7 @@ class Explore extends ConsumerWidget {
               child: Icon(Icons.notifications,
                   size: 30, color: wayaTheme.colorScheme.greyColor500),
             ),
-            const Gap(10),
+            const Gap(15),
             Image.asset('assets/images/avatars.png'),
           ],
         ),

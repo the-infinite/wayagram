@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 
 class CheckoutVm extends ChangeNotifier {
@@ -28,7 +29,7 @@ class CheckoutVm extends ChangeNotifier {
             ),
             Text(
               "Fund your Wallet",
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: TextStyle().wayaCopyWith(color: Theme.of(context).colorScheme.white, fontSize: 14, fontWeight: FontWeight.w500),
             )
           ],
         ));

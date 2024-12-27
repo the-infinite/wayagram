@@ -30,7 +30,7 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: context.width * 0.80,
+            width: context.width * 0.78,
             child: WayaTextFormField(
                 padding: EdgeInsets.all(1),
                 prefixIcon: Icon(

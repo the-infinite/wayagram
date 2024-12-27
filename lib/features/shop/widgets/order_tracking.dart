@@ -181,10 +181,10 @@ class StraightLineVertical extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 90,
+      height: 60,
       child: Container(
         width: 1,
-        height: 90,
+        height: 60,
         color: Theme.of(context).colorScheme.customPrimary,
       ),
     );
