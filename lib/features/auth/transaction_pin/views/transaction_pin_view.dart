@@ -28,7 +28,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
     final confirmPin = ref.watch(confirmPinProvider);
     final isInValid = ref.watch(isPinValidProvider);
     final viewModel = ref.read(transactionPinProvider.notifier);
-     final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
     return WayaScaffold(
         body: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,9 +47,23 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
                 "For added security, please create a 4-digit PIN \n to confirm your transactions",
                 style: WayaTextStyles.hintStyle),
             const Gap(30),
-            PinInputField(pin: pin, label: "Enter a 4-digit PIN"),
+            PinInputField(
+              pin: pin,
+              label: "Enter a 4-digit PIN",
+              digits: 4,
+              ratio: 0.17,
+                  margin: 8,
+              height: 55,
+            ),
             const Gap(10),
-            PinInputField(pin: confirmPin, label: "Re-enter your PIN"),
+            PinInputField(
+              pin: confirmPin,
+              label: "Re-enter your PIN",
+              digits: 4,
+              ratio: 0.17,
+              height: 55,
+              margin: 8,
+            ),
             const Gap(10),
             Visibility(
                 visible: pin.isNotEmpty && confirmPin.isNotEmpty && !isInValid,
@@ -75,7 +89,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
             Align(
                 child: GestureDetector(
               onTap: () {
-             WayaNav.toNamed('/select-interests');
+                WayaNav.toNamed('/select-interests');
               },
               child: Text(
                 "Skip for now",

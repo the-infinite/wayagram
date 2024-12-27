@@ -67,7 +67,7 @@ class _WayaBuyerState extends ConsumerState<WayaBuyer>
             ),
             const Gap(25),
             SizedBox(
-              // height: context.height,
+               height: context.height,
               child: PageView(
                 scrollDirection: Axis.horizontal,
                 allowImplicitScrolling: true,

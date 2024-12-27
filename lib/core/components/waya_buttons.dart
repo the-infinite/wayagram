@@ -50,7 +50,7 @@ class WayaButton extends StatelessWidget {
       this.textColor,
       this.centerWidget,
       this.horizontalPadding = 6,
-      this.height = 55,
+      this.height = 48,
       this.isDisabled});
   final String text;
   final Color? color;
