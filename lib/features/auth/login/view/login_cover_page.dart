@@ -35,7 +35,7 @@ class LoginCoverPage extends ConsumerWidget {
                 color: wayaTheme.colorScheme.greyColor600,
               ),
             ),
-            Gap(Get.height * 0.22),
+            Gap(Get.height * 0.25),
             WayaButton(
               color: wayaTheme.colorScheme.secondaryColor,
               callback: () {},
@@ -60,7 +60,7 @@ class LoginCoverPage extends ConsumerWidget {
               text: "Continue with Email Address",
               textColor: wayaTheme.colorScheme.onPrimary,
             ),
-            Gap(20),
+            Gap(30),
             WayaRichText(
               title1: 'Don\'t have an account? ',
               title2: 'Create an account',

@@ -42,7 +42,10 @@ class WayaRichText extends StatelessWidget {
                   color: wayaTheme.colorScheme.primary,
                   fontWeight: FontWeight.w600,
                 ),
-            recognizer: TapGestureRecognizer()..onTap = onTap2,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                onTap2!();
+              },
           ),
         ],
       ),

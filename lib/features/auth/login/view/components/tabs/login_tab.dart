@@ -33,7 +33,7 @@ class PersonalAccountView extends StatelessWidget {
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.onPrimary,
         ),
-        Gap(20),
+        Gap(25),
         Row(
           children: [
             Expanded(
@@ -58,7 +58,7 @@ class PersonalAccountView extends StatelessWidget {
             ),
           ],
         ),
-        Gap(20),
+        Gap(25),
         WayaTextFormField(
           keyboardType: TextInputType.emailAddress,
           controller: TextEditingController(),
@@ -82,7 +82,7 @@ class PersonalAccountView extends StatelessWidget {
                     .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
           ),
         ),
-        Gap(20),
+        Gap(30),
         WayaButton(
           color: wayaTheme.colorScheme.primary500,
           callback: () {
@@ -91,16 +91,18 @@ class PersonalAccountView extends StatelessWidget {
           text: "Login",
           textColor: wayaTheme.colorScheme.onPrimary,
         ),
-        Gap(20),
-        Chip(
-            label: WayaRichText(
-          title1: "Don't have an account? ",
-          title2: "Create new account",
-          onTap2: () {
-           WayaNav.toNamed("/account-creation");
+        Gap(25),
+        InkWell(
+          onTap: () {
+            WayaNav.toNamed("/account-creation");
           },
-          style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
-        )),
+          child: Chip(
+              label: WayaRichText(
+            title1: "Don't have an account? ",
+            title2: "Create new account",
+            style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
+          )),
+        ),
       ],
     );
   }
@@ -195,7 +197,7 @@ class BusinessAccountView extends StatelessWidget {
           title1: "Don't have an account? ",
           title2: "Create new account",
           onTap2: () {
-           WayaNav.toNamed("/account-creation");
+            WayaNav.toNamed("/account-creation");
           },
           style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
         )),
