@@ -4,11 +4,11 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 class WayaCustomIndicator extends StatelessWidget {
   final int currentPage;
   final int pageCount;
-  double? height;
-  double? width;
-  double? currentWidth;
+  final double? height;
+  final double? width;
+  final double? currentWidth;
 
-  WayaCustomIndicator(
+ const WayaCustomIndicator(
       {super.key,
       required this.currentPage,
       required this.pageCount,

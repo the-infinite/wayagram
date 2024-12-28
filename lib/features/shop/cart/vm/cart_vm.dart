@@ -1,3 +1,4 @@
+import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class Cart {

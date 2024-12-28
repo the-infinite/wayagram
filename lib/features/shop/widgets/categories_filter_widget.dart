@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/shop/data_model/data_model.dart';
+import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/widgets/widgets_vm/categories_filter_widget_vm.dart';
 import 'package:gap/gap.dart';
 

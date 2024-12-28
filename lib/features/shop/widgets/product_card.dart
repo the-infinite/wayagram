@@ -4,7 +4,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
+import 'package:wayagram/features/shop/data/model/model.dart';
+
 import 'package:gap/gap.dart';
 
 class ProductCard extends StatelessWidget {
@@ -34,20 +35,14 @@ class ProductCard extends StatelessWidget {
               ? Container(
                   height: 180,
                   decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.greyColor100,
+                      color: wayaTheme.colorScheme.scaffoldColor,
                       borderRadius: BorderRadius.circular(8)),
                 )
-              : Container(
+              : WayaImage(
+                  imageUrl: product.images[0],
                   height: 180,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: wayaTheme.colorScheme.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Image.asset(
-                    product.images[0],
-                    fit: BoxFit.contain,
-                  ),
+                  radius: BorderRadius.circular(8),
+                  color: wayaTheme.colorScheme.transparent,
                 ),
           Visibility(
               visible: isWayaGramDeal,
@@ -138,13 +133,154 @@ class ProductCard extends StatelessWidget {
                     height: 38,
                     radius: 6,
                     color: wayaTheme.colorScheme.greyColor300,
-                    centerWidget: Text('Add To Cart', style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),),
+                    centerWidget: Text(
+                      'Add To Cart',
+                      style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.customBlack,
+                          fontSize: 14),
+                    ),
                     textColor: wayaTheme.colorScheme.customBlack,
                   )
                 ],
               ))
         ],
       ),
+    );
+  }
+}
+
+class ProductCardSekeleton extends StatelessWidget {
+  final bool isWayaGramDeal;
+  final bool canbeAddedTocart;
+  final bool isExplore;
+  const ProductCardSekeleton(
+      {super.key,
+      this.canbeAddedTocart = false,
+      this.isExplore = true,
+      this.isWayaGramDeal = false});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+     final wayaTheme = Theme.of(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+                height: 180,
+                decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.greyColor100,
+                    borderRadius: BorderRadius.circular(8)),
+              )
+           ,
+        Visibility(
+            visible: isWayaGramDeal,
+            child: Column(
+              children: [
+                const Gap(3),
+                Container(
+                  width: 120,
+                  height: 24,
+                  padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                  decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.greyColor100,
+                      borderRadius: BorderRadius.circular(6)),
+                
+                )
+              ],
+            )),
+        Visibility(
+            visible: isExplore,
+            child: Column(
+              children: [
+                const Gap(3),
+                 Container(
+                  width: 80,
+                  height: 24,
+                  padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                  decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.greyColor100,
+                      borderRadius: BorderRadius.circular(6)),
+                
+                )
+              ],
+            )),
+        const Gap(3),
+         Container(
+                  width: 140,
+                  height: 24,
+                  padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                  decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.greyColor100,
+                      borderRadius: BorderRadius.circular(6)),
+                
+                ),
+        Visibility(
+            visible: !isExplore,
+            child: Column(
+              children: [
+                const Gap(3),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                  width: 40,
+                  height: 24,
+                  padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                  decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.greyColor100,
+                      borderRadius: BorderRadius.circular(6)),
+                
+                )
+                  ],
+                )
+              ],
+            )),
+        Visibility(
+            visible: !isExplore,
+            child: Column(
+              children: [
+                const Gap(3),
+                 Container(
+                  width: 60,
+                  height: 24,
+                  padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                  decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.greyColor100,
+                      borderRadius: BorderRadius.circular(6)),
+                
+                )
+              ],
+            )),
+        const Gap(3),
+       Container(
+                  width: 60,
+                  height: 24,
+                  padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                  decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.greyColor100,
+                      borderRadius: BorderRadius.circular(6)),
+                
+                ),
+        Visibility(
+            visible: canbeAddedTocart,
+            child: Column(
+              children: [
+                const Gap(3),
+                 Container(
+                  width: 120,
+                  height: 24,
+                  padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                  decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.greyColor100,
+                      borderRadius: BorderRadius.circular(6)),
+                
+                )
+              ],
+            ))
+      ],
     );
   }
 }

@@ -1,3 +1,20 @@
+class Product {
+  final List<String> images;
+  final String name;
+  final String category;
+  final String price;
+  final String discountPrice;
+  final String seller;
+
+  Product(
+      {required this.category,
+      required this.name,
+      required this.images,
+      required this.discountPrice,
+      required this.seller,
+      required this.price});
+}
+
 class Category {
   final int id;
   final String category;

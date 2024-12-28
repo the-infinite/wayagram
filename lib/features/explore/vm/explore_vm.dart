@@ -1,7 +1,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/quotation/vm/quotation_vm.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
 class ExploreVm extends StateNotifier<void> {

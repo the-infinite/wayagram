@@ -35,7 +35,11 @@ class ProductImageWidget extends ConsumerWidget {
               itemCount: images.length,
               onPageChanged: (value) => viewModel.changePage(value),
               itemBuilder: (context, index) {
-                return Image.asset(images[index], fit: BoxFit.contain);
+                return WayaImage(
+                  imageUrl: images[index],
+                  height: 280,
+                  fit: BoxFit.contain,
+                );
               }),
         ),
         const Gap(6),
