@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/shop/cart/data/model.dart';
 
 import 'package:wayagram/features/shop/data/model/model.dart';
 
 
 class OrderedProductCard extends StatelessWidget {
-  final Product order;
+  final Cart order;
   const OrderedProductCard({super.key, required this.order});
 
   @override
@@ -38,18 +40,8 @@ class OrderedProductCard extends StatelessWidget {
                               color: wayaTheme.colorScheme.greyColor100,
                               borderRadius: BorderRadius.circular(8)),
                         )
-                      : Container(
-                          height: 70,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: wayaTheme.colorScheme.white,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Image.asset(
-                            order.images[0],
-                            fit: BoxFit.contain,
-                          ),
-                        ),
+                      : WayaImage(imageUrl: order.images[0], height: 70, width: 
+                      50, fit: BoxFit.contain, radius: BorderRadius.circular(8),),
                   const Gap(5),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,

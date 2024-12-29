@@ -30,7 +30,7 @@ class ProductDetail extends ConsumerWidget {
       title: "Product Details",
       isScrollable: true,
       isLoading: false,
-      appBarTrailing: WayaCartIcon(count: 0),
+      appBarTrailing: WayaCartIcon(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

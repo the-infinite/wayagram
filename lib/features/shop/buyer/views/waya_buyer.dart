@@ -39,7 +39,7 @@ class _WayaBuyerState extends ConsumerState<WayaBuyer>
         isLoading: false,
         isScrollable: true,
         title: 'Shop',
-        appBarTrailing: WayaCartIcon(count: 0),
+        appBarTrailing: WayaCartIcon(),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

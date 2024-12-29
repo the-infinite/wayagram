@@ -78,13 +78,13 @@ class DeliveryCostUpdate extends StatelessWidget {
                   ),
                 ),
                 const Gap(24),
-                ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 2,
-                    itemBuilder: (context, index) {
-                      return OrderedProductCard(order: orders[index]);
-                    }),
+                // ListView.builder(
+                //     shrinkWrap: true,
+                //     physics: const NeverScrollableScrollPhysics(),
+                //     itemCount: 2,
+                //     itemBuilder: (context, index) {
+                //       return OrderedProductCard(order: orders[index]);
+                //     }),
                 const Gap(24),
                 Row(
                   children: [

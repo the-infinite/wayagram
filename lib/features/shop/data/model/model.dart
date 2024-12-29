@@ -2,9 +2,11 @@ class Product {
   final List<String> images;
   final String name;
   final String category;
-  final String price;
-  final String discountPrice;
+  final int price;
+  final int discountPrice;
   final String seller;
+  final int quantity;
+  final String id;
 
   Product(
       {required this.category,
@@ -12,6 +14,8 @@ class Product {
       required this.images,
       required this.discountPrice,
       required this.seller,
+      required this.id,
+      required this.quantity,
       required this.price});
 }
 

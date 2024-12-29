@@ -33,13 +33,13 @@ class OrderDetails extends ConsumerWidget {
             const Gap(25),
             Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
             const Gap(10),
-            ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 2,
-                itemBuilder: (context, index) {
-                  return OrderedProductCard(order: orders[index]);
-                }),
+            // ListView.builder(
+            //     shrinkWrap: true,
+            //     physics: const NeverScrollableScrollPhysics(),
+            //     itemCount: 2,
+            //     itemBuilder: (context, index) {
+            //       return OrderedProductCard(order: orders[index]);
+            //     }),
             const Gap(25),
             Container(
               padding: EdgeInsets.fromLTRB(8, 8, 8, 8),

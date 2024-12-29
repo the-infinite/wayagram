@@ -9,11 +9,11 @@ class ProductDetailVm extends ChangeNotifier {
   ProductDetailVm(this.ref);
 
   Future<void> testRequest(BuildContext context) async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return DeliveryCostRequest(onPress: () {}, orders: orders);
-        });
+    // showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return DeliveryCostRequest(onPress: () {}, orders: orders);
+    //     });
   }
 }
 
