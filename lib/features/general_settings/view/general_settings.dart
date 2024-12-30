@@ -37,7 +37,11 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                   title: 'Change Password',
                   iconPath: 'password',
                   onTap: () => WayaNav.toNamed('/change-password-gen-set')),
-              GeneralSettingsOptionModel(title: 'Change Transaction PIN', iconPath: 'password'),
+              GeneralSettingsOptionModel(
+                title: 'Change Transaction PIN',
+                iconPath: 'password',
+                // onTap: () => WayaNav.toNamed('/change-pin-page')
+              ),
             ],
           ),
           GeneralSettingsOptionTile(

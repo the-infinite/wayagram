@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/service/api_service/dio_http_client.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -208,27 +207,3 @@ class BusinessAccountView extends StatelessWidget {
     );
   }
 }
-
-
-
-class LoginService{
-
-  final DioHttpClient _dioHttpClient = DioHttpClient();
-  
-
-  Future<void> login() async {
-    try {
-      await _dioHttpClient.postHttp(
-        '/login',
-        {
-          'email': 'email',
-          'password': 'password',
-        },
-      );
-    } catch (e) {
-      print(e);
-    }
-  }
-}
-
-

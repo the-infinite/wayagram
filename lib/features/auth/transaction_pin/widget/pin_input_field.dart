@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 
 class PinInputField extends StatelessWidget {
   final String pin;
@@ -28,7 +29,7 @@ class PinInputField extends StatelessWidget {
         if (label != null)
           Text(
             label!,
-            style: WayaTextStyles.labelMedium,
+            style: WayaTextStyles.hintStyleSemiBold.wayaCopyWith(color: WayaColors.greyColor900),
           ),
         const Gap(8),
         Row(
@@ -36,7 +37,7 @@ class PinInputField extends StatelessWidget {
           children: List.generate(
             digits,
             (index) => Container(
-              margin:  EdgeInsets.symmetric(horizontal: margin),
+              margin: EdgeInsets.symmetric(horizontal: margin),
               width: context.width * ratio,
               height: height,
               decoration: BoxDecoration(
