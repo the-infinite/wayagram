@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
+import 'package:wayagram/features/shop/widgets/waya_shop_tab_button.dart';
 
 class WayaBuyer extends ConsumerStatefulWidget {
   const WayaBuyer({super.key});
@@ -20,15 +21,9 @@ class WayaBuyer extends ConsumerStatefulWidget {
 class _WayaBuyerState extends ConsumerState<WayaBuyer>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  @override
-  void initState() {
-    super.initState();
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +42,12 @@ class _WayaBuyerState extends ConsumerState<WayaBuyer>
             const Gap(10),
               Row(
               children: [
-                WayaBuyerTabButton(
+                WayaShopTabButton(
                   isSelected: _selectedIndex == 0,
                   text: 'All Products',
                   onTap: () => setState(() => _selectedIndex = 0),
                 ),
-                WayaBuyerTabButton(
+                WayaShopTabButton(
                   isSelected: _selectedIndex == 1,
                   text: 'Orders',
                   onTap: () => setState(() => _selectedIndex = 1),
@@ -68,48 +63,4 @@ class _WayaBuyerState extends ConsumerState<WayaBuyer>
   }
 }
 
-class WayaBuyerTabButton extends StatelessWidget {
-  final bool isSelected;
-  final String text;
-  final VoidCallback onTap;
 
-  const WayaBuyerTabButton({
-    super.key,
-    required this.isSelected,
-    required this.text,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: isSelected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.greyColor300,
-                width: isSelected ? 2 : 0.9,
-              ),
-            ),
-          ),
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isSelected
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.greyColor500,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

@@ -29,6 +29,7 @@ class Explore extends ConsumerWidget {
         isLoading: false,
         color: wayaTheme.colorScheme.scaffoldColor,
         appBar: AppBar(
+           toolbarHeight: 70,
             backgroundColor: wayaTheme.colorScheme.white,
             title: ExploreHeader(),
             actions: [
@@ -127,7 +128,8 @@ class Explore extends ConsumerWidget {
                       return ProductCard(
                           product: products.sublist(0, 2)[index]);
                     }),
-                error: (e, stack) => _buildProductLoadingState(context: context),
+                error: (e, stack) =>
+                    _buildProductLoadingState(context: context),
                 loading: () => _buildProductLoadingState(context: context)),
 
             const Gap(25),
@@ -144,6 +146,21 @@ class Explore extends ConsumerWidget {
                   return UgtCard(ugt: viewModel.ugtList[index]);
                 }),
           ],
+        ),
+        floatingActionButton: SizedBox(
+          height: 50,
+          width: 50,
+          child: WayaButton(
+            callback: () {},
+            height: 50,
+            centerWidget: Center(
+              child: Icon(
+                Icons.add,
+                color: wayaTheme.colorScheme.white,
+                size: 40,
+              ),
+            ),
+          ),
         ));
   }
 

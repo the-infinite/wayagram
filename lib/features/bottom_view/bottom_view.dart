@@ -8,10 +8,11 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
 import 'package:wayagram/features/shop/buyer/views/waya_buyer.dart';
+import 'package:wayagram/features/shop/seller/views/waya_seller.dart';
 
 class BottomView extends ConsumerStatefulWidget {
   final int? index;
-   BottomView({super.key, this.index = 0});
+ const  BottomView({super.key, this.index = 0});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _BottomViewState();
@@ -31,7 +32,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
 
   final List<Widget> _pages = [
     Explore(),
-    WayaBuyer(),
+    WayaSeller(),
     Explore(),
     Explore(),
     Explore(),

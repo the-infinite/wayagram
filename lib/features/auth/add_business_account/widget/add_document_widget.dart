@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget_vm.dart';
@@ -15,12 +16,14 @@ class AddDocumentWidget extends ConsumerStatefulWidget {
   final bool isUploaded;
   final String title;
   final String description;
+  final String? type;
   const AddDocumentWidget(
       {super.key,
       required this.addFile,
       required this.removeFile,
       required this.title,
       required this.isUploaded,
+      this.type,
       required this.description});
 
   @override
@@ -31,7 +34,7 @@ class AddDocumentWidget extends ConsumerStatefulWidget {
 class _AddDocumentWidgetState extends ConsumerState<AddDocumentWidget> {
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context).colorScheme;
+    final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(addDocumentWidgetProvider);
     return Column(
       children: [
@@ -39,57 +42,57 @@ class _AddDocumentWidgetState extends ConsumerState<AddDocumentWidget> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-           Row(
-            children: [
-               
-            widget.isUploaded
-                ? Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: wayaTheme.success50,
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.check_circle,
-                        size: 30,
-                        color: wayaTheme.success,
-                      ),
-                    ),
-                  )
-                : Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: wayaTheme.secondaryColor2,
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.cloud_upload_outlined,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  const Gap(20),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                Text(
-                  widget.title,
-                  style: WayaTextStyles.bodySemiBold,
+                widget.isUploaded
+                    ? Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: wayaTheme.colorScheme.success50,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.check_circle,
+                            size: 30,
+                            color: wayaTheme.colorScheme.success,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: wayaTheme.colorScheme.secondaryColor2,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.cloud_upload_outlined,
+                                color: wayaTheme.colorScheme.greyColor500,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                const Gap(20),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: wayaTheme.textTheme.bodySemiBold,
+                    ),
+                    const Gap(4),
+                    Text(
+                      widget.description,
+                      style: wayaTheme.textTheme.hintStyle,
+                    )
+                  ],
                 ),
-                const Gap(4),
-                Text(
-                  widget.description,
-                  style: WayaTextStyles.hintStyle,
-                )
               ],
             ),
-            ],
-           ),
             widget.isUploaded
                 ? GestureDetector(
                     onTap: () {
@@ -98,15 +101,15 @@ class _AddDocumentWidgetState extends ConsumerState<AddDocumentWidget> {
                     child: Icon(
                       Icons.delete_outlined,
                       size: 24,
-                      color: wayaTheme.error,
+                      color: wayaTheme.colorScheme.error,
                     ),
                   )
                 : WayaButton(
                     callback: () {
-                      viewModel.uploadFile(widget.addFile);
+                      viewModel.uploadFile(widget.addFile, widget.type);
                     },
                     text: "Upload",
-                    height: 44,
+                    height: 35,
                     horizontalPadding: 8,
                     radius: 6,
                   )

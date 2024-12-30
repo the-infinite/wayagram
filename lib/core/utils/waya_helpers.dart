@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/waya_bottom_sheet_content.dart';
+import 'package:wayagram/core/data/model.dart';
 
 class WayaHelpers {
   static Future<void> showNotice(
@@ -12,7 +14,9 @@ class WayaHelpers {
       String? buttonText,
       String? secondButtonText,
       Widget? buttonCenterWidget,
-      Widget? secondButtonCenterWidget}) {
+      Widget? secondButtonCenterWidget,
+      VoidCallback? onCancel
+      }) {
     return showDialog(
       context: context,
       barrierDismissible: true,
@@ -26,9 +30,31 @@ class WayaHelpers {
           secondButtonCenterWidget: secondButtonCenterWidget,
           buttonCenterWidget: buttonCenterWidget,
           secondButtonText: secondButtonText,
+          onCancel: onCancel,
         );
       },
     );
+  }
+
+  static Future<Select> showSelectModal({
+    required BuildContext context,
+    required String title,
+    required List<Select> items,
+  }) async {
+    final result = await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return WayaBottomSheetContent(
+          title: title,
+          items: items,
+        );
+      },
+      transitionAnimationController: AnimationController(
+        duration: const Duration(milliseconds: 300),
+        vsync: Navigator.of(context),
+      ),
+    );
+    return result;
   }
 
   static String toOrdinal(int number) {

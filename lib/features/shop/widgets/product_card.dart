@@ -16,11 +16,13 @@ class ProductCard extends ConsumerWidget {
   final bool isWayaGramDeal;
   final bool canbeAddedTocart;
   final bool isExplore;
+  final bool sellerProduct;
   const ProductCard(
       {super.key,
       required this.product,
       this.canbeAddedTocart = false,
       this.isExplore = true,
+      this.sellerProduct = false,
       this.isWayaGramDeal = false});
 
   @override
@@ -42,11 +44,14 @@ class ProductCard extends ConsumerWidget {
                       color: wayaTheme.colorScheme.scaffoldColor,
                       borderRadius: BorderRadius.circular(8)),
                 )
-              : WayaImage(
+              : 
+              
+              WayaImage(
                   imageUrl: product.images[0],
                   height: 180,
-                  radius: BorderRadius.circular(8),
-                  color: wayaTheme.colorScheme.transparent,
+                  fit: BoxFit.contain,
+                 radius: BorderRadius.circular(8),
+                 color: wayaTheme.colorScheme.transparent,
                 ),
           Visibility(
               visible: isWayaGramDeal,
@@ -148,6 +153,28 @@ class ProductCard extends ConsumerWidget {
                     textColor: wayaTheme.colorScheme.customBlack,
                   )
                 ],
+              )),
+          Visibility(
+              visible: sellerProduct,
+              child: Column(
+                children: [
+                  const Gap(3),
+                  WayaButton(
+                    callback: () {
+                      // ref.read(cartProvider.notifier).addToCart(product, 1);
+                    },
+                    height: 38,
+                    radius: 6,
+                    color: wayaTheme.colorScheme.greyColor300,
+                    centerWidget: Text(
+                      'Manage Product',
+                      style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.customBlack,
+                          fontSize: 14),
+                    ),
+                    textColor: wayaTheme.colorScheme.customBlack,
+                  )
+                ],
               ))
         ],
       ),
@@ -159,10 +186,12 @@ class ProductCardSekeleton extends StatelessWidget {
   final bool isWayaGramDeal;
   final bool canbeAddedTocart;
   final bool isExplore;
+  final bool sellerProduct;
   const ProductCardSekeleton(
       {super.key,
       this.canbeAddedTocart = false,
       this.isExplore = true,
+      this.sellerProduct = false,
       this.isWayaGramDeal = false});
 
   @override
@@ -264,6 +293,21 @@ class ProductCardSekeleton extends StatelessWidget {
         ),
         Visibility(
             visible: canbeAddedTocart,
+            child: Column(
+              children: [
+                const Gap(3),
+                Container(
+                  width: 120,
+                  height: 24,
+                  padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                  decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.greyColor100,
+                      borderRadius: BorderRadius.circular(6)),
+                )
+              ],
+            )),
+             Visibility(
+            visible: sellerProduct,
             child: Column(
               children: [
                 const Gap(3),

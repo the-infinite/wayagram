@@ -84,9 +84,9 @@ class Checkout extends ConsumerWidget {
             dashPattern: [5, 5],
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(8)),
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
-                decoration: BoxDecoration(),
+             
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,

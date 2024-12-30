@@ -23,7 +23,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
-     final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -70,8 +70,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style:  TextStyle(
-                                        color: wayaTheme.colorScheme.error, fontSize: 12),
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12),
                                   ),
                                 ),
                             ],
@@ -106,8 +107,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style:  TextStyle(
-                                        color: wayaTheme.colorScheme.error, fontSize: 12),
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12),
                                   ),
                                 ),
                             ],
@@ -145,8 +147,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style:  TextStyle(
-                                  color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
                             ),
                           ),
                       ],
@@ -220,8 +223,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style:  TextStyle(
-                                  color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
                             ),
                           ),
                       ],
@@ -284,8 +288,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style:  TextStyle(
-                                  color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
                             ),
                           ),
                       ],
@@ -336,8 +341,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style:  TextStyle(
-                                  color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
                             ),
                           ),
                       ],
@@ -375,14 +381,13 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                   ),
                   const Gap(20),
                   //viewModel.isButtonEnabled
-                          
+
                   WayaButton(
-                      callback:  () {
-                              // _formKey.currentState?.validate() == true
-                              //  print("i am here");
-                              widget.goToNextTab();
-                            }
-                          ,
+                      callback: () {
+                        // _formKey.currentState?.validate() == true
+                        //  print("i am here");
+                        widget.goToNextTab();
+                      },
                       text: "Continue")
                 ],
               ))

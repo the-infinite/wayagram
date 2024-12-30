@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -23,7 +22,6 @@ class ProductDetail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final viewModel = ref.watch(productDetailVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
@@ -175,11 +173,7 @@ class ProductDetail extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          "assets/images/avatars.png",
-                          width: 26,
-                          height: 26,
-                        ),
+                        WayaDp(radius: 18,),
                         const Gap(6),
                         Text(
                           "Maleek Ventures",

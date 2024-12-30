@@ -44,7 +44,7 @@ class GroupedWidgetHeader extends StatelessWidget {
                 "See All",
                 style: TextStyle().wayaCopyWith(
                     color: wayaTheme.colorScheme.customPrimary,
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500),
               ),
             )
