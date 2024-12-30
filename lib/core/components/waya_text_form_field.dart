@@ -22,6 +22,8 @@ class WayaTextFormField extends StatefulWidget {
   final bool showBorder, showFocusedBorder;
   final Color? borderColor;
   final Widget? prefixIcon;
+  final Color? suffixIconColor;
+
   final Color? prefixIconColor;
   final Widget? suffixIcon;
   final void Function()? onEditingComplete;
@@ -38,6 +40,7 @@ class WayaTextFormField extends StatefulWidget {
   const WayaTextFormField(
       {super.key,
       required this.controller,
+      this.suffixIconColor,
       this.keyboardType = TextInputType.text,
       required this.hintText,
       this.line = 1,
@@ -74,7 +77,6 @@ class _AppFieldState extends State<WayaTextFormField> {
   late FocusNode _focusNode;
   late Color fillColor;
   late Color borderColor;
-  
 
   @override
   void initState() {
@@ -114,7 +116,6 @@ class _AppFieldState extends State<WayaTextFormField> {
       textInputAction: widget.textInputAction,
       onSaved: widget.onSaved,
       decoration: InputDecoration(
-        
           errorBorder: OutlineInputBorder(
             borderSide: widget.showBorder ? BorderSide(color: wayaTheme.error200, width: 1.w) : BorderSide.none,
             borderRadius: BorderRadius.circular(8.r),
@@ -133,7 +134,7 @@ class _AppFieldState extends State<WayaTextFormField> {
             borderSide: widget.showBorder ? BorderSide(color: wayaTheme.primary, width: 1.w) : BorderSide.none,
             borderRadius: BorderRadius.circular(8.r),
           ),
-          contentPadding: widget.padding?? EdgeInsets.fromLTRB(12, 1, 12, 1)  ,
+          contentPadding: widget.padding ?? EdgeInsets.fromLTRB(12, 1, 12, 1),
           fillColor: Theme.of(context).colorScheme.transparent,
           filled: true,
           prefixIcon: widget.prefixIcon,
@@ -143,7 +144,7 @@ class _AppFieldState extends State<WayaTextFormField> {
               ? Icon(
                   Icons.visibility_off_outlined,
                   size: 20,
-                  color: wayaTheme.greyColor500,
+                  color: widget.suffixIconColor ?? wayaTheme.greyColor500,
                 )
               : widget.suffixIcon,
           hintStyle: WayaTextStyles.hintStyle,

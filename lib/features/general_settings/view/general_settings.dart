@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 import '../data/model/model.dart';
 import 'components/components.dart';
@@ -32,7 +33,10 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(title: 'Edit Profile', iconPath: 'edit'),
-              GeneralSettingsOptionModel(title: 'Change Password', iconPath: 'password'),
+              GeneralSettingsOptionModel(
+                  title: 'Change Password',
+                  iconPath: 'password',
+                  onTap: () => WayaNav.toNamed('/change-password-gen-set')),
               GeneralSettingsOptionModel(title: 'Change Transaction PIN', iconPath: 'password'),
             ],
           ),

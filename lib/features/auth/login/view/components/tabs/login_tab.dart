@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/service/api_service/dio_http_client.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -69,6 +70,7 @@ class PersonalAccountView extends StatelessWidget {
         WayaTextFormField(
           keyboardType: TextInputType.name,
           controller: TextEditingController(),
+          isPassword: true,
           hintText: 'Password',
           label: 'Enter your password',
         ),
@@ -82,7 +84,7 @@ class PersonalAccountView extends StatelessWidget {
                     .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
           ),
         ),
-        Gap(30),
+        Gap(25),
         WayaButton(
           color: wayaTheme.colorScheme.primary500,
           callback: () {
@@ -91,7 +93,7 @@ class PersonalAccountView extends StatelessWidget {
           text: "Login",
           textColor: wayaTheme.colorScheme.onPrimary,
         ),
-        Gap(25),
+        Gap(30),
         InkWell(
           onTap: () {
             WayaNav.toNamed("/account-creation");
@@ -133,7 +135,7 @@ class BusinessAccountView extends StatelessWidget {
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.onPrimary,
         ),
-        Gap(20),
+        Gap(25),
         Row(
           children: [
             Expanded(
@@ -149,7 +151,7 @@ class BusinessAccountView extends StatelessWidget {
                 color: wayaTheme.colorScheme.greyColor600,
               ),
             ),
-            Gap(10),
+            Gap(15),
             Expanded(
               child: Divider(
                 color: wayaTheme.colorScheme.greyColor200,
@@ -158,7 +160,7 @@ class BusinessAccountView extends StatelessWidget {
             ),
           ],
         ),
-        Gap(20),
+        Gap(25),
         WayaTextFormField(
           keyboardType: TextInputType.emailAddress,
           controller: TextEditingController(),
@@ -170,6 +172,7 @@ class BusinessAccountView extends StatelessWidget {
           keyboardType: TextInputType.name,
           controller: TextEditingController(),
           label: 'Password',
+          isPassword: true,
           hintText: 'Enter your password',
         ),
         Gap(15),
@@ -182,7 +185,7 @@ class BusinessAccountView extends StatelessWidget {
                     .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
           ),
         ),
-        Gap(20),
+        Gap(25),
         WayaButton(
           color: wayaTheme.colorScheme.primary500,
           callback: () {
@@ -191,7 +194,7 @@ class BusinessAccountView extends StatelessWidget {
           text: "Login",
           textColor: wayaTheme.colorScheme.onPrimary,
         ),
-        Gap(20),
+        Gap(30),
         Chip(
             label: WayaRichText(
           title1: "Don't have an account? ",
@@ -205,3 +208,27 @@ class BusinessAccountView extends StatelessWidget {
     );
   }
 }
+
+
+
+class LoginService{
+
+  final DioHttpClient _dioHttpClient = DioHttpClient();
+  
+
+  Future<void> login() async {
+    try {
+      await _dioHttpClient.postHttp(
+        '/login',
+        {
+          'email': 'email',
+          'password': 'password',
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+}
+
+

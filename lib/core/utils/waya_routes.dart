@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/general_settings/view/change_password_gen_set/change_password_gen_set.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
@@ -25,6 +26,7 @@ class WayaAppRoutes {
     '/checkout': () => Checkout(),
     '/filter': () => FilterView(),
     '/general-settings': () => GeneralSettingsPage(),
+    '/change-password-gen-set': () => ChangePasswordGenSettings(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {
