@@ -2,17 +2,32 @@ import 'dart:developer' as logger;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
 import 'package:wayagram/core/service/api_service/dio_exceptions.dart';
+import 'package:wayagram/core/service/api_service/dio_interceptor.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
+import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 
 class DioHttpClient implements WayaHttpClientInterface {
   late final Dio dio;
   final String baseURL = WayaConstants.baseUrl;
 
-  DioHttpClient() {
+  final _logger = getLogger('DioHttpClient');
+
+  final WayaSecureDataSource secureDataSource = WayaSecureDataSource();
+  final SnackbarService _snackBarService = SnackbarService();
+
+  static final DioHttpClient _instance = DioHttpClient._internal();
+
+  DioHttpClient._internal() {
     dio = initializeDio();
+  }
+
+  factory DioHttpClient() {
+    return _instance;
   }
 
   Dio initializeDio() {
@@ -22,12 +37,17 @@ class DioHttpClient implements WayaHttpClientInterface {
       connectTimeout: const Duration(seconds: 60),
       receiveTimeout: const Duration(seconds: 60),
     );
-    return Dio(options);
+    final dio = Dio(options);
+    dio.interceptors.add(DioInterceptor(dio, secureDataSource));
+    return dio;
   }
 
   @override
   Future<WayaRequestResponse> getHttp(String route,
-      {Map<String, dynamic>? body, Map<String, dynamic>? params, bool formdata = false, dynamic token}) async {
+      {Map<String, dynamic>? body,
+      Map<String, dynamic>? params,
+      bool formdata = false,
+      dynamic token}) async {
     _setHeader(
       formdata: formdata,
     );
@@ -53,6 +73,8 @@ class DioHttpClient implements WayaHttpClientInterface {
     );
     params?.removeWhere((key, value) => value == null);
     final fullRoute = '$baseURL$route';
+    _logger.f('fullRoute: $fullRoute');
+    // _logger.f('headers: ${dio.options.headers}');
     if (formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
     }
@@ -65,7 +87,8 @@ class DioHttpClient implements WayaHttpClientInterface {
         _showLoadingProgress(count, total);
       },
       onReceiveProgress: ((count, total) {
-        if (onRecieveProgress != null) onRecieveProgress(count: count, total: total);
+        if (onRecieveProgress != null)
+          onRecieveProgress(count: count, total: total);
         _showLoadingProgress(count, total);
       }),
       queryParameters: params,
@@ -140,13 +163,25 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<WayaRequestResponse> _makeRequest(Future<Response> future) async {
     try {
       final response = await future;
-      logger.log('data: ${response.data}');
+      _logger.i('data: ${response.data}');
       return WayaRequestResponse(
         data: response.data,
         success: response.statusCode?.toString().startsWith('2') ?? false,
         statusCode: response.statusCode,
       );
     } on DioException catch (e) {
+      if (e.response != null) {
+        _logger.e('message: ${e.response?.data['message'] ?? 'Unknown error'}');
+        _logger.e('error: ${e.response?.data['errors']}');
+
+        _snackBarService.showCustomSnackbar(
+          message: e.response?.data['errors'] != null
+              ? e.response?.data['errors'][0]
+              : e.response?.data['message'] ?? 'An error occurred',
+          variant: SnackbarType.failure,
+        );
+      }
+
       return WayaHttpException.handleDioError(e);
     }
   }
@@ -155,6 +190,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool formdata = false,
     bool formEncoded = false,
   }) {
+    
     dio.options.headers = {
       'content-type': formdata
           ? 'multipart/form-data'
@@ -162,7 +198,7 @@ class DioHttpClient implements WayaHttpClientInterface {
               ? 'application/x-www-form-urlencoded'
               : 'application/json',
       'Accept': '*/*',
-      'Authorization': 'token',
+      // if (token != null && token.isNotEmpty) 'Authorization': "Bearer $token",
     };
   }
 

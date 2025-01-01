@@ -27,4 +27,14 @@ class WayaLocalDataSource {
   List<Cart> getCart() {
     return wayaFastStorageService.read(key: 'cart');
   }
+
+  saveUser(dynamic user) {
+    return wayaFastStorageService.write(key: 'user', value: user);
+  }
+
+  dynamic getUser() {
+    return wayaFastStorageService.read(key: 'user');
+  }
+
+
 }

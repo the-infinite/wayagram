@@ -9,5 +9,6 @@ class WayaRequestResponse {
     this.data,
     this.responseCodeError,
     this.statusCode,
+
   });
 }

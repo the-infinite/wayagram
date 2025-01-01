@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/auth/interests/views/select_interest.dart';
 import 'package:wayagram/features/auth/transaction_pin/vm/transaction_pin_vm.dart';
 import 'package:wayagram/features/auth/transaction_pin/widget/pin_input_field.dart';
 import 'package:wayagram/features/auth/transaction_pin/widget/pin_keyboard.dart';
@@ -27,9 +26,11 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
     final pin = ref.watch(pinProvider);
     final confirmPin = ref.watch(confirmPinProvider);
     final isInValid = ref.watch(isPinValidProvider);
+    final loading = ref.watch(loadingProvider);
     final viewModel = ref.read(transactionPinProvider.notifier);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
+      isLoading: loading,
         body: Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +90,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
             Align(
                 child: GestureDetector(
               onTap: () {
-                WayaNav.toNamed('/setup-pin');
+                WayaNav.toNamed('/set-notification');
               },
               child: Text(
                 "Skip for now",

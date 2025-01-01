@@ -14,6 +14,8 @@ import 'core/components/components.dart';
 
 void main() async {
   await GetStorage.init();
+  WayaSnackBar.setUpSnackBarUI();
+
 
   runApp(ProviderScope(child: const Wayagram()));
 }
@@ -30,7 +32,7 @@ class Wayagram extends ConsumerWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: GetMaterialApp(
-        initialRoute: '/explore',
+        initialRoute: '/setup-pin',
         title: WayaConstants.appName,
         theme: WayaTheme.lightTheme,
         darkTheme: WayaTheme.darkTheme,

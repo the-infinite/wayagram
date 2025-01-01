@@ -185,6 +185,7 @@ class _WayaScaffoldWithProgressbarState
       ),
       body: widget.isScrollable
           ? SingleChildScrollView(
+            scrollDirection: Axis.vertical,
               child: Column(
                 children: [
                   widget.tabsView[widget.tabController.index],
@@ -192,11 +193,10 @@ class _WayaScaffoldWithProgressbarState
               ),
             )
           : TabBarView(
+             physics: NeverScrollableScrollPhysics(), 
               controller: widget.tabController, children: widget.tabsView),
     );
   }
 }
 
-/**
 
- */

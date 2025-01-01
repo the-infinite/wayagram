@@ -15,17 +15,153 @@ import 'package:vector_graphics/vector_graphics.dart' as _vg;
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/a-cart.svg
+  SvgGenImage get aCart => const SvgGenImage('assets/icons/a-cart.svg');
+
+  /// File path: assets/icons/apple.svg
+  SvgGenImage get apple => const SvgGenImage('assets/icons/apple.svg');
+
   /// File path: assets/icons/arrow-back.svg
   SvgGenImage get arrowBack => const SvgGenImage('assets/icons/arrow-back.svg');
+
+  /// File path: assets/icons/arrow_keyboard_right.svg
+  SvgGenImage get arrowKeyboardRight =>
+      const SvgGenImage('assets/icons/arrow_keyboard_right.svg');
+
+  /// File path: assets/icons/b-bid.svg
+  SvgGenImage get bBid => const SvgGenImage('assets/icons/b-bid.svg');
+
+  /// File path: assets/icons/b-chat.svg
+  SvgGenImage get bChat => const SvgGenImage('assets/icons/b-chat.svg');
+
+  /// File path: assets/icons/b-donation.svg
+  SvgGenImage get bDonation => const SvgGenImage('assets/icons/b-donation.svg');
+
+  /// File path: assets/icons/b-explore.svg
+  SvgGenImage get bExplore => const SvgGenImage('assets/icons/b-explore.svg');
+
+  /// File path: assets/icons/b-menu.svg
+  SvgGenImage get bMenu => const SvgGenImage('assets/icons/b-menu.svg');
+
+  /// File path: assets/icons/b-shop.svg
+  SvgGenImage get bShop => const SvgGenImage('assets/icons/b-shop.svg');
 
   /// File path: assets/icons/business.svg
   SvgGenImage get business => const SvgGenImage('assets/icons/business.svg');
 
+  /// File path: assets/icons/button-icon.svg
+  SvgGenImage get buttonIcon =>
+      const SvgGenImage('assets/icons/button-icon.svg');
+
+  /// File path: assets/icons/chat.svg
+  SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
+
+  /// File path: assets/icons/d-code-onvalid.svg
+  SvgGenImage get dCodeOnvalid =>
+      const SvgGenImage('assets/icons/d-code-onvalid.svg');
+
+  /// File path: assets/icons/d-code-valid.svg
+  SvgGenImage get dCodeValid =>
+      const SvgGenImage('assets/icons/d-code-valid.svg');
+
+  /// File path: assets/icons/doc-success.svg
+  SvgGenImage get docSuccess =>
+      const SvgGenImage('assets/icons/doc-success.svg');
+
+  /// File path: assets/icons/e-chat.svg
+  SvgGenImage get eChat => const SvgGenImage('assets/icons/e-chat.svg');
+
+  /// File path: assets/icons/e-donation.svg
+  SvgGenImage get eDonation => const SvgGenImage('assets/icons/e-donation.svg');
+
+  /// File path: assets/icons/e-event.svg
+  SvgGenImage get eEvent => const SvgGenImage('assets/icons/e-event.svg');
+
+  /// File path: assets/icons/e-poll.svg
+  SvgGenImage get ePoll => const SvgGenImage('assets/icons/e-poll.svg');
+
+  /// File path: assets/icons/e-quotation.svg
+  SvgGenImage get eQuotation =>
+      const SvgGenImage('assets/icons/e-quotation.svg');
+
+  /// File path: assets/icons/e-shop.svg
+  SvgGenImage get eShop => const SvgGenImage('assets/icons/e-shop.svg');
+
+  /// File path: assets/icons/empty-state.svg
+  SvgGenImage get emptyState =>
+      const SvgGenImage('assets/icons/empty-state.svg');
+
+  /// Directory path: assets/icons/gen_set
+  $AssetsIconsGenSetGen get genSet => const $AssetsIconsGenSetGen();
+
+  /// File path: assets/icons/google.svg
+  SvgGenImage get google => const SvgGenImage('assets/icons/google.svg');
+
+  /// File path: assets/icons/heart.svg
+  SvgGenImage get heart => const SvgGenImage('assets/icons/heart.svg');
+
+  /// File path: assets/icons/icon-right.svg
+  SvgGenImage get iconRight => const SvgGenImage('assets/icons/icon-right.svg');
+
+  /// File path: assets/icons/map.svg
+  SvgGenImage get map => const SvgGenImage('assets/icons/map.svg');
+
+  /// File path: assets/icons/order-van.svg
+  SvgGenImage get orderVan => const SvgGenImage('assets/icons/order-van.svg');
+
   /// File path: assets/icons/personal.svg
   SvgGenImage get personal => const SvgGenImage('assets/icons/personal.svg');
 
+  /// File path: assets/icons/r-cart.svg
+  SvgGenImage get rCart => const SvgGenImage('assets/icons/r-cart.svg');
+
+  /// File path: assets/icons/s-copy.svg
+  SvgGenImage get sCopy => const SvgGenImage('assets/icons/s-copy.svg');
+
+  /// File path: assets/icons/share-network.svg
+  SvgGenImage get shareNetwork =>
+      const SvgGenImage('assets/icons/share-network.svg');
+
+  /// File path: assets/icons/wallet-icon.svg
+  SvgGenImage get walletIcon =>
+      const SvgGenImage('assets/icons/wallet-icon.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [arrowBack, business, personal];
+  List<SvgGenImage> get values => [
+        aCart,
+        apple,
+        arrowBack,
+        arrowKeyboardRight,
+        bBid,
+        bChat,
+        bDonation,
+        bExplore,
+        bMenu,
+        bShop,
+        business,
+        buttonIcon,
+        chat,
+        dCodeOnvalid,
+        dCodeValid,
+        docSuccess,
+        eChat,
+        eDonation,
+        eEvent,
+        ePoll,
+        eQuotation,
+        eShop,
+        emptyState,
+        google,
+        heart,
+        iconRight,
+        map,
+        orderVan,
+        personal,
+        rCart,
+        sCopy,
+        shareNetwork,
+        walletIcon
+      ];
 }
 
 class $AssetsImagesGen {
@@ -34,9 +170,26 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/auth
   $AssetsImagesAuthGen get auth => const $AssetsImagesAuthGen();
 
+  /// File path: assets/images/avatars.png
+  AssetGenImage get avatars => const AssetGenImage('assets/images/avatars.png');
+
+  /// File path: assets/images/d-code-invalid.png
+  AssetGenImage get dCodeInvalid =>
+      const AssetGenImage('assets/images/d-code-invalid.png');
+
+  /// File path: assets/images/d-code-valid.png
+  AssetGenImage get dCodeValid =>
+      const AssetGenImage('assets/images/d-code-valid.png');
+
+  /// Directory path: assets/images/explore
+  $AssetsImagesExploreGen get explore => const $AssetsImagesExploreGen();
+
   /// Directory path: assets/images/onboarding
   $AssetsImagesOnboardingGen get onboarding =>
       const $AssetsImagesOnboardingGen();
+
+  /// Directory path: assets/images/shop
+  $AssetsImagesShopGen get shop => const $AssetsImagesShopGen();
 
   /// File path: assets/images/wayalogo.png
   AssetGenImage get wayalogo =>
@@ -47,11 +200,101 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/wayalogo_unlabelled.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [wayalogo, wayalogoUnlabelled];
+  List<AssetGenImage> get values =>
+      [avatars, dCodeInvalid, dCodeValid, wayalogo, wayalogoUnlabelled];
+}
+
+class $AssetsIconsGenSetGen {
+  const $AssetsIconsGenSetGen();
+
+  /// File path: assets/icons/gen_set/bell.svg
+  SvgGenImage get bell => const SvgGenImage('assets/icons/gen_set/bell.svg');
+
+  /// File path: assets/icons/gen_set/card_stacked.svg
+  SvgGenImage get cardStacked =>
+      const SvgGenImage('assets/icons/gen_set/card_stacked.svg');
+
+  /// File path: assets/icons/gen_set/chat.svg
+  SvgGenImage get chat => const SvgGenImage('assets/icons/gen_set/chat.svg');
+
+  /// File path: assets/icons/gen_set/chat2.svg
+  SvgGenImage get chat2 => const SvgGenImage('assets/icons/gen_set/chat2.svg');
+
+  /// File path: assets/icons/gen_set/confetti.svg
+  SvgGenImage get confetti =>
+      const SvgGenImage('assets/icons/gen_set/confetti.svg');
+
+  /// File path: assets/icons/gen_set/edit.svg
+  SvgGenImage get edit => const SvgGenImage('assets/icons/gen_set/edit.svg');
+
+  /// File path: assets/icons/gen_set/history.svg
+  SvgGenImage get history =>
+      const SvgGenImage('assets/icons/gen_set/history.svg');
+
+  /// File path: assets/icons/gen_set/info.svg
+  SvgGenImage get info => const SvgGenImage('assets/icons/gen_set/info.svg');
+
+  /// File path: assets/icons/gen_set/paper.svg
+  SvgGenImage get paper => const SvgGenImage('assets/icons/gen_set/paper.svg');
+
+  /// File path: assets/icons/gen_set/password.svg
+  SvgGenImage get password =>
+      const SvgGenImage('assets/icons/gen_set/password.svg');
+
+  /// File path: assets/icons/gen_set/shield_plus.svg
+  SvgGenImage get shieldPlus =>
+      const SvgGenImage('assets/icons/gen_set/shield_plus.svg');
+
+  /// File path: assets/icons/gen_set/shield_star.svg
+  SvgGenImage get shieldStar =>
+      const SvgGenImage('assets/icons/gen_set/shield_star.svg');
+
+  /// File path: assets/icons/gen_set/sync.svg
+  SvgGenImage get sync => const SvgGenImage('assets/icons/gen_set/sync.svg');
+
+  /// File path: assets/icons/gen_set/user_settings.svg
+  SvgGenImage get userSettings =>
+      const SvgGenImage('assets/icons/gen_set/user_settings.svg');
+
+  /// File path: assets/icons/gen_set/users.svg
+  SvgGenImage get users => const SvgGenImage('assets/icons/gen_set/users.svg');
+
+  /// File path: assets/icons/gen_set/users_group.svg
+  SvgGenImage get usersGroup =>
+      const SvgGenImage('assets/icons/gen_set/users_group.svg');
+
+  /// File path: assets/icons/gen_set/wallet.svg
+  SvgGenImage get wallet =>
+      const SvgGenImage('assets/icons/gen_set/wallet.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [
+        bell,
+        cardStacked,
+        chat,
+        chat2,
+        confetti,
+        edit,
+        history,
+        info,
+        paper,
+        password,
+        shieldPlus,
+        shieldStar,
+        sync,
+        userSettings,
+        users,
+        usersGroup,
+        wallet
+      ];
 }
 
 class $AssetsImagesAuthGen {
   const $AssetsImagesAuthGen();
+
+  /// File path: assets/images/auth/doc-success.png
+  AssetGenImage get docSuccess =>
+      const AssetGenImage('assets/images/auth/doc-success.png');
 
   /// File path: assets/images/auth/explore.png
   AssetGenImage get explore =>
@@ -61,13 +304,80 @@ class $AssetsImagesAuthGen {
   AssetGenImage get forgotPasswordLock =>
       const AssetGenImage('assets/images/auth/forgot-password-lock.png');
 
+  /// File path: assets/images/auth/icon-right.svg
+  SvgGenImage get iconRight =>
+      const SvgGenImage('assets/images/auth/icon-right.svg');
+
   /// File path: assets/images/auth/set-notification.png
   AssetGenImage get setNotification =>
       const AssetGenImage('assets/images/auth/set-notification.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [explore, forgotPasswordLock, setNotification];
+  List<dynamic> get values =>
+      [docSuccess, explore, forgotPasswordLock, iconRight, setNotification];
+}
+
+class $AssetsImagesExploreGen {
+  const $AssetsImagesExploreGen();
+
+  /// File path: assets/images/explore/bid1.png
+  AssetGenImage get bid1 =>
+      const AssetGenImage('assets/images/explore/bid1.png');
+
+  /// File path: assets/images/explore/bid2.png
+  AssetGenImage get bid2 =>
+      const AssetGenImage('assets/images/explore/bid2.png');
+
+  /// File path: assets/images/explore/e-chat.png
+  AssetGenImage get eChat =>
+      const AssetGenImage('assets/images/explore/e-chat.png');
+
+  /// File path: assets/images/explore/e-donation.png
+  AssetGenImage get eDonation =>
+      const AssetGenImage('assets/images/explore/e-donation.png');
+
+  /// File path: assets/images/explore/e-event.png
+  AssetGenImage get eEvent =>
+      const AssetGenImage('assets/images/explore/e-event.png');
+
+  /// File path: assets/images/explore/e-poll.png
+  AssetGenImage get ePoll =>
+      const AssetGenImage('assets/images/explore/e-poll.png');
+
+  /// File path: assets/images/explore/e-quotation.png
+  AssetGenImage get eQuotation =>
+      const AssetGenImage('assets/images/explore/e-quotation.png');
+
+  /// File path: assets/images/explore/e-shop.png
+  AssetGenImage get eShop =>
+      const AssetGenImage('assets/images/explore/e-shop.png');
+
+  /// File path: assets/images/explore/product1.png
+  AssetGenImage get product1 =>
+      const AssetGenImage('assets/images/explore/product1.png');
+
+  /// File path: assets/images/explore/product2.png
+  AssetGenImage get product2 =>
+      const AssetGenImage('assets/images/explore/product2.png');
+
+  /// File path: assets/images/explore/ugt-inst-logo.png
+  AssetGenImage get ugtInstLogo =>
+      const AssetGenImage('assets/images/explore/ugt-inst-logo.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+        bid1,
+        bid2,
+        eChat,
+        eDonation,
+        eEvent,
+        ePoll,
+        eQuotation,
+        eShop,
+        product1,
+        product2,
+        ugtInstLogo
+      ];
 }
 
 class $AssetsImagesOnboardingGen {
@@ -91,6 +401,26 @@ class $AssetsImagesOnboardingGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [flag, oFirst, oSecond, oThird];
+}
+
+class $AssetsImagesShopGen {
+  const $AssetsImagesShopGen();
+
+  /// File path: assets/images/shop/add-product-success.png
+  AssetGenImage get addProductSuccess =>
+      const AssetGenImage('assets/images/shop/add-product-success.png');
+
+  /// File path: assets/images/shop/d-code-invalid.png
+  AssetGenImage get dCodeInvalid =>
+      const AssetGenImage('assets/images/shop/d-code-invalid.png');
+
+  /// File path: assets/images/shop/d-code-valid.png
+  AssetGenImage get dCodeValid =>
+      const AssetGenImage('assets/images/shop/d-code-valid.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [addProductSuccess, dCodeInvalid, dCodeValid];
 }
 
 class WayaAssests {
