@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/features/shop/data_model/data_model.dart';
+import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:gap/gap.dart';
 
 class ProductReviewWidget extends StatelessWidget {

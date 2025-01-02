@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/service/repos/auth/auth_repository.dart';
+import 'package:wayagram/core/service/snackbar_service.dart';
 
 class CredentialInputVm extends ChangeNotifier {
+  final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
+  final _logger = getLogger("CredentialInputVm");
+  final AuthRepository _authRepository = AuthRepository();
   final TextEditingController email = TextEditingController();
   final TextEditingController phone = TextEditingController();
+  final SnackbarService _snackbarService = SnackbarService();
+
   bool isEmail = true;
   bool _isButtonEnabled = false;
+  bool _isLoading = false;
 
   final Ref ref;
 
   CredentialInputVm(this.ref);
 
   bool get isButtonEnabled => _isButtonEnabled;
+  bool get isLoading => _isLoading;
 
   void toggle() {
     if (isEmail) {
@@ -22,7 +33,25 @@ class CredentialInputVm extends ChangeNotifier {
     notifyListeners();
   }
 
-  void submit() {}
+  Future<void> onSubmit(VoidCallback onSuccess) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+      final response = await _authRepository.verifyEmail(email.text);
+
+      if (response.data["statusCode"] == 200) {
+        _snackbarService.showCustomSnackbar(
+            variant: SnackbarType.success,
+            message: "A Password reset Otp has been resend to ${email.text}");
+        onSuccess();
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   void validateInputs() {
     final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');

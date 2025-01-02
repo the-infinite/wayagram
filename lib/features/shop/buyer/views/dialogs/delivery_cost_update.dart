@@ -6,8 +6,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
+import 'package:wayagram/features/shop/data/model/model.dart';
+import 'package:wayagram/features/shop/widgets/order_info_widget.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class DeliveryCostUpdate extends StatelessWidget {
@@ -79,13 +79,13 @@ class DeliveryCostUpdate extends StatelessWidget {
                   ),
                 ),
                 const Gap(24),
-                ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 2,
-                    itemBuilder: (context, index) {
-                      return OrderedProductCard(order: orders[index]);
-                    }),
+                // ListView.builder(
+                //     shrinkWrap: true,
+                //     physics: const NeverScrollableScrollPhysics(),
+                //     itemCount: 2,
+                //     itemBuilder: (context, index) {
+                //       return OrderedProductCard(order: orders[index]);
+                //     }),
                 const Gap(24),
                 Row(
                   children: [
@@ -112,86 +112,14 @@ class DeliveryCostUpdate extends StatelessWidget {
                   ],
                 ),
                 const Gap(24),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.scaffoldColor,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Delivery Price",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor500,
-                            fontSize: 10),
-                      ),
-                      const Gap(6),
-                      Text(
-                        "N 5,000",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor500,
-                            fontSize: 13),
-                      )
-                    ],
-                  ),
-                ),
+                OrderInfoWidget(
+                    title: 'Delivery Price', description: 'N 5,000'),
                 const Gap(10),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.scaffoldColor,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Delivery Date",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor500,
-                            fontSize: 10),
-                      ),
-                      const Gap(6),
-                      Text(
-                        "Jan 30th, 2024",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor500,
-                            fontSize: 13),
-                      )
-                    ],
-                  ),
-                ),
+                OrderInfoWidget(
+                    title: 'Delivery Date', description: 'Jan 30th, 2024'),
                 const Gap(10),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.scaffoldColor,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Delivery Address",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor500,
-                            fontSize: 10),
-                      ),
-                      const Gap(6),
-                      Text(
-                        "Lekki, Lagos",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor500,
-                            fontSize: 13),
-                      )
-                    ],
-                  ),
-                ),
+                OrderInfoWidget(
+                    title: 'Delivery Address', description: 'Lekki, Lagos'),
                 const Gap(24),
                 WayaButton(
                     callback: () {

@@ -33,10 +33,9 @@ class WayaScaffold extends ConsumerWidget {
       this.title,
       this.appBarTrailing,
       this.isScrollable = false,
-     this.color,
+      this.color,
       this.appBar,
       this.backgroundColor,
-      
       this.bottomNavigationBar});
 
   @override
@@ -55,23 +54,22 @@ class WayaScaffold extends ConsumerWidget {
             ? null
             : appBar ??
                 AppBar(
-                 
                   title: Text(title ?? ''),
                   leading: automicallyImplyLeading ? WayaBackButton() : null,
                   actions: appBarTrailing == null ? null : [appBarTrailing!],
                 ),
-        body:isScrollable
-                ? Container(
-                  color: color,
-                  child: Padding(
-                    padding: paddedBody,
-                    child: SingleChildScrollView(child: body),
-                  ),
-                )
-                : Padding(
-                    padding: paddedBody,
-                    child: body,
-                  ),
+        body: isScrollable
+            ? Container(
+                color: color,
+                child: Padding(
+                  padding: paddedBody,
+                  child: SingleChildScrollView(child: body),
+                ),
+              )
+            : Padding(
+                padding: paddedBody,
+                child: body,
+              ),
         bottomNavigationBar: bottomNavigationBar,
         floatingActionButton: floatingActionButton,
       ),
@@ -185,8 +183,20 @@ class _WayaScaffoldWithProgressbarState
           ),
         ),
       ),
-      body: TabBarView(
-          controller: widget.tabController, children: widget.tabsView),
+      body: widget.isScrollable
+          ? SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  widget.tabsView[widget.tabController.index],
+                ],
+              ),
+            )
+          : TabBarView(
+             physics: NeverScrollableScrollPhysics(), 
+              controller: widget.tabController, children: widget.tabsView),
     );
   }
 }
+
+

@@ -115,6 +115,7 @@ class _AddBusinessAccountViewState
                             .name
                         : 'Upload your passport image',
                     description: 'PDF, JPG, and IMG format',
+                    type:"document"
                   ),
                   AddDocumentWidget(
                     addFile: (file) {
@@ -134,6 +135,7 @@ class _AddBusinessAccountViewState
                             .name
                         : 'Upload your NIN Slip',
                     description: 'PDF, JPG, and IMG format',
+                    type:"document"
                   ),
                   Visibility(
                     visible: viewModel.isSelected == 'WITH-CAC',
@@ -155,6 +157,7 @@ class _AddBusinessAccountViewState
                               .name
                           : 'Upload CAC Document',
                       description: 'PDF, JPG, and IMG format',
+                      type:"document"
                     ),
                   ),
                   AddDocumentWidget(
@@ -175,6 +178,7 @@ class _AddBusinessAccountViewState
                             .name
                         : 'Upload Utility Bill',
                     description: 'PDF, JPG, and IMG format',
+                    type:"document"
                   ),
                 ],
               ),

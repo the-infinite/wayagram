@@ -1,4 +1,5 @@
 import 'package:wayagram/core/service/storage_service/fast_storage/waya_fast_storage_interface.dart';
+import 'package:wayagram/features/shop/cart/data/model.dart';
 
 class WayaLocalDataSource {
   final wayaFastStorageService = WayaFastStorageService();
@@ -18,4 +19,22 @@ class WayaLocalDataSource {
   String getUserType() {
     return wayaFastStorageService.read(key: 'userType');
   }
+
+  saveToCart(List<Cart> cart) {
+    wayaFastStorageService.write<List<Cart>>(key: 'cart', value: cart);
+  }
+
+  List<Cart> getCart() {
+    return wayaFastStorageService.read(key: 'cart');
+  }
+
+  saveUser(dynamic user) {
+    return wayaFastStorageService.write(key: 'user', value: user);
+  }
+
+  dynamic getUser() {
+    return wayaFastStorageService.read(key: 'user');
+  }
+
+
 }

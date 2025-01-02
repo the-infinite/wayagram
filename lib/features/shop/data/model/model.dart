@@ -1,9 +1,32 @@
+class Product {
+  final List<String> images;
+  final String name;
+  final String category;
+  final int price;
+  final int discountPrice;
+  final String seller;
+  final int quantity;
+  final String id;
+
+  Product(
+      {required this.category,
+      required this.name,
+      required this.images,
+      required this.discountPrice,
+      required this.seller,
+      required this.id,
+      required this.quantity,
+      required this.price});
+}
+
 class Category {
   final int id;
   final String category;
 
   Category({required this.id, required this.category});
 }
+
+
 
 class Review {
   final String id;

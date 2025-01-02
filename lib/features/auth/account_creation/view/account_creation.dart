@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -46,16 +45,19 @@ class _AccountCreationState extends ConsumerState<AccountCreation>
         isScrollable: _tabController.index == 1 ? true : false,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
+        
           SelectAccount(
             goToNextTab: updateSelected,
           ),
-           PersonalFirstStepView(
+          PersonalFirstStepView(
             goToNextTab: _goToNextTab,
           ),
-          VerifyAccount(goToNextTab: _goToNextTab, type: "account-creation",),
+            VerifyAccount(
+            goToNextTab: _goToNextTab,
+            type: "account-creation",
+          ),
+           
          
-          
-          
         ],
         tabController: _tabController);
   }

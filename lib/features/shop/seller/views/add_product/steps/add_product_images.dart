@@ -1,0 +1,234 @@
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/waya_buttons.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
+import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
+
+class AddProductImages extends ConsumerStatefulWidget {
+  final Function gotoNextTab;
+  final Function gotoPreviousTab;
+  const AddProductImages(
+      {super.key, required this.gotoNextTab, required this.gotoPreviousTab});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AddProductImagesState();
+}
+
+class _AddProductImagesState extends ConsumerState<AddProductImages> {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    final viewModel = ref.watch(addProductProvider);
+    final provider = ref.read(addProductProvider.notifier);
+    final wayaTheme = Theme.of(context);
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Add Product Images", style: wayaTheme.textTheme.titleLarge),
+          const Gap(5),
+          Text(
+              "Upload images and review your product details \n before submission",
+              style: wayaTheme.textTheme.hintStyle),
+          const Gap(30),
+          Text(
+            "Product Images",
+            style: wayaTheme.textTheme.hintStyle,
+          ),
+          const Gap(20),
+          Text(
+            "Product Thumbnail",
+            style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+                  fontSize: 14,
+                  color: wayaTheme.colorScheme.greyColor900,
+                ),
+          ),
+          const Gap(10),
+          DottedBorder(
+              borderType: BorderType.RRect,
+              color: wayaTheme.colorScheme.greyColor300,
+              radius: Radius.circular(12),
+              padding: EdgeInsets.all(18),
+              dashPattern: [5, 5],
+              child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: wayaTheme.colorScheme.secondaryColor2,
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.cloud_upload_outlined,
+                              size: 30,
+                              color: wayaTheme.colorScheme.greyColor500,
+                            ),
+                          ),
+                        ),
+                        const Gap(10),
+                        InkWell(
+                          onTap: () {
+                            provider.uploadImage();
+                          },
+                          child: Text(
+                            "Click to upload",
+                            textAlign: TextAlign.center,
+                            style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.customPrimary,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        const Gap(8),
+                        Text(
+                          "PNG, JPG (max. 800px x 400px)",
+                          style: wayaTheme.textTheme.hintStyle,
+                        ),
+                        const Gap(20),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Divider(
+                                color: wayaTheme.colorScheme.greyColor200,
+                                thickness: 1,
+                              ),
+                            ),
+                            Gap(10),
+                            Text(
+                              "OR",
+                              style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                                color: wayaTheme.colorScheme.greyColor600,
+                              ),
+                            ),
+                            Gap(10),
+                            Expanded(
+                              child: Divider(
+                                color: wayaTheme.colorScheme.greyColor200,
+                                thickness: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Gap(25),
+                        SizedBox(
+                          width: 130,
+                          child: WayaButton(
+                            height: 35,
+                            callback: () {
+                             provider.uploadImage();
+                            },
+                            text: "Browse Files",
+                          ),
+                        )
+                      ],
+                    ),
+                  ))),
+          const Gap(30),
+          AddDocumentWidget(
+              addFile: (file) {
+                ref.read(addProductProvider.notifier).addFile(file, 'front');
+              },
+              removeFile: () {
+                ref.read(addProductProvider.notifier).removeFile('front');
+              },
+              isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
+                  viewModel.uploadedDocuments.any((doc) => doc.type == 'front'),
+              title: viewModel.uploadedDocuments.isNotEmpty &&
+                      viewModel.uploadedDocuments
+                          .any((doc) => doc.type == 'front')
+                  ? viewModel.uploadedDocuments
+                      .firstWhere((doc) => doc.type == 'front')
+                      .name
+                  : 'Upload Product Front View',
+              description: 'JPG, and IMG format',
+              type: "image"),
+          AddDocumentWidget(
+              addFile: (file) {
+                ref.read(addProductProvider.notifier).addFile(file, 'left');
+              },
+              removeFile: () {
+                ref.read(addProductProvider.notifier).removeFile('left');
+              },
+              isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
+                  viewModel.uploadedDocuments.any((doc) => doc.type == 'left'),
+              title: viewModel.uploadedDocuments.isNotEmpty &&
+                      viewModel.uploadedDocuments
+                          .any((doc) => doc.type == 'left')
+                  ? viewModel.uploadedDocuments
+                      .firstWhere((doc) => doc.type == 'left')
+                      .name
+                  : 'Upload Product Left View',
+              description: ' JPG, and IMG format',
+              type: "image"),
+          AddDocumentWidget(
+              addFile: (file) {
+                ref.read(addProductProvider.notifier).addFile(file, 'right');
+              },
+              removeFile: () {
+                ref.read(addProductProvider.notifier).removeFile('right');
+              },
+              isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
+                  viewModel.uploadedDocuments.any((doc) => doc.type == 'right'),
+              title: viewModel.uploadedDocuments.isNotEmpty &&
+                      viewModel.uploadedDocuments
+                          .any((doc) => doc.type == 'right')
+                  ? viewModel.uploadedDocuments
+                      .firstWhere((doc) => doc.type == 'right')
+                      .name
+                  : 'Upload Product Right View',
+              description: 'JPG, and IMG format',
+              type: "image"),
+          AddDocumentWidget(
+              addFile: (file) {
+                ref.read(addProductProvider.notifier).addFile(file, 'back');
+              },
+              removeFile: () {
+                ref.read(addProductProvider.notifier).removeFile('back');
+              },
+              isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
+                  viewModel.uploadedDocuments.any((doc) => doc.type == 'back'),
+              title: viewModel.uploadedDocuments.isNotEmpty &&
+                      viewModel.uploadedDocuments
+                          .any((doc) => doc.type == 'back')
+                  ? viewModel.uploadedDocuments
+                      .firstWhere((doc) => doc.type == 'back')
+                      .name
+                  : 'Upload Product Back View',
+              description: 'JPG, and IMG format',
+              type: "image"),
+          const Gap(30),
+          WayaButton(
+              text: 'Review Product Details',
+              callback: () {
+                //  ref.read(addProductProvider.notifier).submit();
+                widget.gotoNextTab();
+              }),
+          const Gap(8),
+          WayaButton(
+              text: 'Go Back',
+              color: wayaTheme.colorScheme.transparent,
+              textColor: wayaTheme.colorScheme.customBlack,
+              border: Border.all(
+                  width: 1, color: wayaTheme.colorScheme.greyColor300),
+              callback: () {
+                //  ref.read(addProductProvider.notifier).submit();
+                widget.gotoPreviousTab();
+              })
+        ]);
+  }
+}

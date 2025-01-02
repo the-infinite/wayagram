@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -9,7 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/shop/data_model/data_model.dart';
+import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/vm/product_detail_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
@@ -23,14 +22,13 @@ class ProductDetail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final viewModel = ref.watch(productDetailVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       title: "Product Details",
       isScrollable: true,
       isLoading: false,
-      appBarTrailing: WayaCartIcon(count: 0),
+      appBarTrailing: WayaCartIcon(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,10 +114,10 @@ class ProductDetail extends ConsumerWidget {
             ],
           ),
           const Gap(25),
-          // ProductImageWidget(images: [
-          //   'assets/images/explore/product2.png',
-          //   'assets/images/explore/product1.png',
-          // ]),
+          ProductImageWidget(images: [
+           'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
+        'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374117/Frame_1984078250_khms9k.png',
+          ]),
           const Gap(25),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,11 +173,7 @@ class ProductDetail extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          "assets/images/avatars.png",
-                          width: 26,
-                          height: 26,
-                        ),
+                        WayaDp(radius: 18,),
                         const Gap(6),
                         Text(
                           "Maleek Ventures",

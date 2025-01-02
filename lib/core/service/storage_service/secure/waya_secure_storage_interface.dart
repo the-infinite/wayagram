@@ -1,14 +1,17 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wayagram/core/service/storage_service/storage_interface.dart';
 
-abstract class WayaSecureStorageInterface implements StorageInterface {
+ class WayaSecureStorageService implements StorageInterface {
   final FlutterSecureStorage storage = FlutterSecureStorage();
 
-  Future<void> writeData({required String key, required String value}) async {
-    await storage.write(key: key, value: value);
+
+@override
+  Future<void> write<T>({required String key, required T value}) async {
+    await storage.write(key: key, value: value.toString());
   }
 
-  Future<dynamic> readData({required String key}) async {
+@override
+ read<T>({required String key}) async {
     return await storage.read(key: key);
   }
 

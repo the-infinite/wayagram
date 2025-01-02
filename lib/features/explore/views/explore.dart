@@ -10,6 +10,7 @@ import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
+import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
@@ -22,11 +23,13 @@ class Explore extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(exploreVmProvider.notifier);
+    final productState = ref.watch(productsProvider);
 
     return WayaScaffold(
         isLoading: false,
         color: wayaTheme.colorScheme.scaffoldColor,
         appBar: AppBar(
+           toolbarHeight: 70,
             backgroundColor: wayaTheme.colorScheme.white,
             title: ExploreHeader(),
             actions: [
@@ -38,7 +41,8 @@ class Explore extends ConsumerWidget {
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: Icon(Icons.notifications, size: 30, color: wayaTheme.colorScheme.greyColor500),
+                      child: Icon(Icons.notifications,
+                          size: 30, color: wayaTheme.colorScheme.greyColor500),
                     ),
                     const Gap(15),
                     WayaDp(
@@ -67,7 +71,9 @@ class Explore extends ConsumerWidget {
             const ExploreOurServices(),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
+                onTap: () {},
+                subTitle: 'Have a buy request, just create a quote',
+                title: 'Get Quotation'),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
@@ -83,7 +89,9 @@ class Explore extends ConsumerWidget {
                   Text(
                     "Create a Quote",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16),
                   ),
                 ],
               ),
@@ -99,21 +107,36 @@ class Explore extends ConsumerWidget {
                   return QuotationCard(quotation: viewModel.quotations[index]);
                 }),
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Explore Categories & Best Offers', title: 'Shop'),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Explore Categories & Best Offers',
+                title: 'Shop'),
             const Gap(10),
             CategoriesFilterWidget<Product>(allItems: []),
             const Gap(25),
-            GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, mainAxisSpacing: 0, childAspectRatio: 0.65, crossAxisSpacing: 12),
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  return ProductCard(product: products[index]);
-                }),
+            productState.when(
+                data: (products) => GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 0,
+                        childAspectRatio: 0.65,
+                        crossAxisSpacing: 12),
+                    itemCount: products.sublist(0, 2).length,
+                    itemBuilder: (context, index) {
+                      return ProductCard(
+                          product: products.sublist(0, 2)[index]);
+                    }),
+                error: (e, stack) =>
+                    _buildProductLoadingState(context: context),
+                loading: () => _buildProductLoadingState(context: context)),
+
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Join Upcoming Activities',
+                title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -123,6 +146,36 @@ class Explore extends ConsumerWidget {
                   return UgtCard(ugt: viewModel.ugtList[index]);
                 }),
           ],
+        ),
+        floatingActionButton: SizedBox(
+          height: 50,
+          width: 50,
+          child: WayaButton(
+            callback: () {},
+            height: 50,
+            centerWidget: Center(
+              child: Icon(
+                Icons.add,
+                color: wayaTheme.colorScheme.white,
+                size: 40,
+              ),
+            ),
+          ),
         ));
+  }
+
+  Widget _buildProductLoadingState({required BuildContext context}) {
+    return GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 0,
+            childAspectRatio: 0.65,
+            crossAxisSpacing: 12),
+        itemCount: 2,
+        itemBuilder: (context, index) {
+          return ProductCardSekeleton();
+        });
   }
 }

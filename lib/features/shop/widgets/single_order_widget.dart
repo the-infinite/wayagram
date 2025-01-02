@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
 
-class SingleOrderWidget extends StatelessWidget {
+class SingleOrderWidget extends ConsumerWidget {
   // final Order order;
   //required this.order
-  const SingleOrderWidget({
-    super.key,
-  });
+  final bool isSeller;
+  const SingleOrderWidget({super.key, this.isSeller = false});
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
+  Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(singleOrderWigdetViewModelProvider);
     return GestureDetector(
       onTap: () {
-        WayaNav.toNamed('/order-detail', arguments: "id");
+        if (isSeller) {
+          viewModel.sellerOrderAction(context);
+        } else {
+          WayaNav.toNamed('/order-detail', arguments: "id");
+        }
       },
       child: Column(
         children: [
@@ -90,3 +96,37 @@ class SingleOrderWidget extends StatelessWidget {
     );
   }
 }
+
+class SingleOrderWigdetViewModel extends ChangeNotifier {
+  final Ref ref;
+  SingleOrderWigdetViewModel(this.ref);
+
+  Future<void> addDeliveryDetail(BuildContext context) async {
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AddDeliveryDetails();
+        });
+  }
+
+  Future<void> sellerOrderAction(BuildContext context) async {
+    WayaHelpers.showNotice(
+        context: context,
+        buttonText: 'Add Delivery Details',
+        secondButtonText: 'See your Order Details',
+        title: 'Populate Delivery Details',
+        message:
+            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+        onPress: () async {
+          await addDeliveryDetail(context);
+        },
+        onCancel: () {
+          WayaNav.toNamed('/seller-order-detail', arguments: "id");
+        },
+        icon: Image.asset('assets/images/shop/delivery-van.png'));
+  }
+}
+
+final singleOrderWigdetViewModelProvider =
+    ChangeNotifierProvider<SingleOrderWigdetViewModel>(
+        (ref) => SingleOrderWigdetViewModel(ref));

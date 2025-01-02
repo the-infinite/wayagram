@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
+import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -23,7 +24,8 @@ class QuotationCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
+            border:
+                Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,20 +35,11 @@ class QuotationCard extends StatelessWidget {
                   ? Container(
                       height: 140,
                       decoration: BoxDecoration(
-                          color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
+                          color: wayaTheme.colorScheme.greyColor100,
+                          borderRadius: BorderRadius.circular(8)),
                     )
                   : quotation.images.length == 1
-                      ? Container(
-                          height: 140,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            image: DecorationImage(
-                              image: AssetImage(quotation.images[0]),
-                              scale: 2,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )
+                      ? WayaImage(imageUrl: quotation.images[0], height: 140)
                       : GridView.count(
                           shrinkWrap: true,
                           crossAxisCount: 2,
@@ -54,75 +47,53 @@ class QuotationCard extends StatelessWidget {
                           mainAxisSpacing: 20,
                           childAspectRatio: 1.3,
                           children: [
-                            Container(
+                            WayaImage(
+                                imageUrl: quotation.images[0], height: 100),
+                            WayaImage(
+                              imageUrl: quotation.images[1],
                               height: 100,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(quotation.images[0]),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8)),
-                            ),
-                            Container(
-                              height: 100,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(quotation.images[1]),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Center(
+                              overlay: Center(
                                 child: Text(
                                   "+${quotation.images.length - 1}",
                                   style: TextStyle().wayaCopyWith(
-                                      color: wayaTheme.colorScheme.white, fontSize: 50, fontWeight: FontWeight.w600),
+                                      color: wayaTheme.colorScheme.customBlack,
+                                      fontSize: 50,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
               const Gap(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: wayaTheme.colorScheme.success50, borderRadius: BorderRadius.circular(40)),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/b-bid.svg',
-                              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.success, BlendMode.srcIn),
-                            ),
-                            const Gap(5),
-                            Text(
-                              "Open Bid",
-                              style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.success, fontSize: 14),
-                            )
-                          ],
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    width: 110,
+                    decoration: BoxDecoration(
+                        color: wayaTheme.colorScheme.success50,
+                        borderRadius: BorderRadius.circular(40)),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/b-bid.svg',
+                          colorFilter: ColorFilter.mode(
+                              wayaTheme.colorScheme.success, BlendMode.srcIn),
                         ),
-                      ),
-                      const Gap(10),
-                      Text(quotation.category, style: wayaTheme.textTheme.hintStyle)
-                    ],
-                  ),
-                  WayaButton(
-                    callback: () {},
-                    height: 60,
-                    centerWidget: Center(
-                      child: Icon(
-                        Icons.add,
-                        color: wayaTheme.colorScheme.white,
-                        size: 50,
-                      ),
+                        const Gap(5),
+                        Text(
+                          "Open Bid",
+                          style: TextStyle().wayaCopyWith(
+                              color: wayaTheme.colorScheme.success,
+                              fontSize: 14),
+                        )
+                      ],
                     ),
-                  )
+                  ),
+                  const Gap(10),
+                  Text(quotation.category, style: wayaTheme.textTheme.hintStyle)
                 ],
               ),
               const Gap(20),
@@ -138,11 +109,15 @@ class QuotationCard extends StatelessWidget {
               const Gap(20),
               RichText(
                   text: TextSpan(children: [
-                TextSpan(text: 'Time Remaining | ', style: wayaTheme.textTheme.hintStyle),
+                TextSpan(
+                    text: 'Time Remaining | ',
+                    style: wayaTheme.textTheme.hintStyle),
                 TextSpan(
                     text: quotation.timeLeft,
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w400)),
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400)),
               ])),
               const Gap(20),
               WayaButton(

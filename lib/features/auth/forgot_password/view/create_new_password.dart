@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/create_new_password_vm.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 
 class CreateNewPassword extends ConsumerStatefulWidget {
   const CreateNewPassword({super.key});
@@ -22,7 +23,9 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createNewPasswordProvider);
-   final wayaTheme = Theme.of(context);
+    final credential = ref.watch(credentialInputProvider);
+    final verify = ref.watch(verifyAccountProvider);
+    final wayaTheme = Theme.of(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -73,14 +76,14 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                           color: wayaTheme.colorScheme.greyColor300,
                         ),
                       ),
-                      if (formState.hasError &&
-                          viewModel.password.text.isEmpty)
+                      if (formState.hasError && viewModel.password.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style:  TextStyle(
-                                color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -130,8 +133,9 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style:  TextStyle(
-                                color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -139,17 +143,17 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                 }),
                 const Gap(50),
                 WayaButton(
-                 //     viewModel.isButtonEnabled ?
-                    callback: 
-                    () {
-                          // if (_formKey.currentState?.validate() == true) {
-                             
-                          // }
-                          WayaNav.toNamed('/changed-password-success');
-                           
-                          } 
-                        ,
-                   text:"Save New Password")
+                  callback: !viewModel.isLoading
+                      ? () {
+                          if (_formKey.currentState?.validate() == true) {
+                            viewModel.onSubmit(
+                                credential.email.text, verify.inputCode);
+                          }
+                        }
+                      : null,
+                  centerWidget: LoadingState(
+                      loading: viewModel.isLoading, text: "Save New Password"),
+                )
               ],
             ))
       ],

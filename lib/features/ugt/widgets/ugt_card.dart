@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -34,15 +35,7 @@ class UgtCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(45),
-                      image: DecorationImage(
-                          image: AssetImage(ugt.logo), fit: BoxFit.cover),
-                    ),
-                  ),
+                 WayaImage(imageUrl: ugt.logo, height: 45, width: 45, radius: BorderRadius.circular(45),),
                   const Gap(10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
