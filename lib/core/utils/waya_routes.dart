@@ -27,8 +27,8 @@ import 'package:wayagram/features/shop/views/product_detail.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
-    // '/': () => SplashScreen(),
-    '/': () => WalletPage(),
+     '/': () => SplashScreen(),
+    // '/': () => WalletPage(),
     '/login-cover-page': () => LoginCoverPage(),
     '/onboarding': () => OnboardingView(),
     '/account-creation': () => AccountCreation(),

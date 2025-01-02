@@ -90,27 +90,6 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/explore
   $AssetsImagesExploreGen get explore => const $AssetsImagesExploreGen();
 
-  /// File path: assets/images/avatars.png
-  AssetGenImage get avatars => const AssetGenImage('assets/images/avatars.png');
-
-  /// File path: assets/images/d-code-invalid.png
-  AssetGenImage get dCodeInvalid =>
-      const AssetGenImage('assets/images/d-code-invalid.png');
-
-  /// File path: assets/images/d-code-valid.png
-  AssetGenImage get dCodeValid =>
-      const AssetGenImage('assets/images/d-code-valid.png');
-
-  /// Directory path: assets/images/explore
-  $AssetsImagesExploreGen get explore => const $AssetsImagesExploreGen();
-
-  /// Directory path: assets/images/onboarding
-  $AssetsImagesOnboardingGen get onboarding =>
-      const $AssetsImagesOnboardingGen();
-
-  /// Directory path: assets/images/shop
-  $AssetsImagesShopGen get shop => const $AssetsImagesShopGen();
-
   /// File path: assets/images/wayalogo.png
   AssetGenImage get wayalogo =>
       const AssetGenImage('assets/images/wayalogo.png');
