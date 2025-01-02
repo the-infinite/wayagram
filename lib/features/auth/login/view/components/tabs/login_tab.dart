@@ -230,7 +230,7 @@ class BusinessAccountView extends StatelessWidget {
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.onPrimary,
         ),
-        Gap(20),
+        Gap(25),
         Row(
           children: [
             Expanded(
@@ -246,7 +246,7 @@ class BusinessAccountView extends StatelessWidget {
                 color: wayaTheme.colorScheme.greyColor600,
               ),
             ),
-            Gap(10),
+            Gap(15),
             Expanded(
               child: Divider(
                 color: wayaTheme.colorScheme.greyColor200,
@@ -255,7 +255,7 @@ class BusinessAccountView extends StatelessWidget {
             ),
           ],
         ),
-        Gap(20),
+        Gap(25),
         WayaTextFormField(
           keyboardType: TextInputType.emailAddress,
           controller: TextEditingController(),
@@ -267,6 +267,7 @@ class BusinessAccountView extends StatelessWidget {
           keyboardType: TextInputType.name,
           controller: TextEditingController(),
           label: 'Password',
+          isPassword: true,
           hintText: 'Enter your password',
         ),
         Gap(15),
@@ -279,7 +280,7 @@ class BusinessAccountView extends StatelessWidget {
                     fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
           ),
         ),
-        Gap(20),
+        Gap(25),
         WayaButton(
           color: wayaTheme.colorScheme.primary500,
           callback: () {
@@ -288,7 +289,7 @@ class BusinessAccountView extends StatelessWidget {
           text: "Login",
           textColor: wayaTheme.colorScheme.onPrimary,
         ),
-        Gap(20),
+        Gap(30),
         Chip(
             label: WayaRichText(
           title1: "Don't have an account? ",

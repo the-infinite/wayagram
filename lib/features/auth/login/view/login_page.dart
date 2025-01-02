@@ -35,7 +35,7 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Gap(Get.height * 0.03),
+              Gap(Get.height * 0.05),
               WayaAssests.images.wayalogoUnlabelled.image(scale: 2),
               Gap(20),
               Text(

@@ -27,7 +27,8 @@ import 'package:wayagram/features/shop/views/product_detail.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
-    '/': () => SplashScreen(),
+    // '/': () => SplashScreen(),
+    '/': () => WalletPage(),
     '/login-cover-page': () => LoginCoverPage(),
     '/onboarding': () => OnboardingView(),
     '/account-creation': () => AccountCreation(),
@@ -48,9 +49,6 @@ class WayaAppRoutes {
     '/checkout': () => Checkout(),
     '/filter': () => FilterView(),
     '/general-settings': () => GeneralSettingsPage(),
-    '/add-product' :() => AddProduct(),
-    '/seller-orders': () => AllSellerOrders(),
-    '/seller-order-detail':() => SellerOrderDetails()
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

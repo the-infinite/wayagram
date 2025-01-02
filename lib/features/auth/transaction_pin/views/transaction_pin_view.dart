@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -16,8 +14,7 @@ class TransactionPinView extends ConsumerStatefulWidget {
   const TransactionPinView({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _TransactionPinViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TransactionPinViewState();
 }
 
 class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
@@ -41,11 +38,9 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Set Up Your Transaction Pin",
-                style: WayaTextStyles.titleLarge),
+            Text("Set Up Your Transaction Pin", style: WayaTextStyles.titleLarge),
             const Gap(5),
-            Text(
-                "For added security, please create a 4-digit PIN \n to confirm your transactions",
+            Text("For added security, please create a 4-digit PIN \n to confirm your transactions",
                 style: WayaTextStyles.hintStyle),
             const Gap(30),
             PinInputField(
@@ -53,7 +48,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
               label: "Enter a 4-digit PIN",
               digits: 4,
               ratio: 0.17,
-                  margin: 8,
+              margin: 8,
               height: 55,
             ),
             const Gap(10),
@@ -95,9 +90,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
               child: Text(
                 "Skip for now",
                 style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.customPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600),
+                    color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w600),
               ),
             )),
             const Gap(20),
