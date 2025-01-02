@@ -7,8 +7,6 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
-import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/widgets/copy_code.dart';
 import 'package:wayagram/features/shop/widgets/order_tracking.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
@@ -33,13 +31,13 @@ class OrderDetails extends ConsumerWidget {
             const Gap(25),
             Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
             const Gap(10),
-            // ListView.builder(
-            //     shrinkWrap: true,
-            //     physics: const NeverScrollableScrollPhysics(),
-            //     itemCount: 2,
-            //     itemBuilder: (context, index) {
-            //       return OrderedProductCard(order: orders[index]);
-            //     }),
+            ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 2,
+                itemBuilder: (context, index) {
+                  return OrderedProductCard();
+                }),
             const Gap(25),
             Container(
               padding: EdgeInsets.fromLTRB(8, 8, 8, 8),

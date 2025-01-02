@@ -20,6 +20,8 @@ import 'package:wayagram/features/shop/cart/views/cart_view.dart';
 import 'package:wayagram/features/shop/cart/views/checkout.dart';
 import 'package:wayagram/features/shop/filter/views/filter_view.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
+import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
+import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
 import 'package:wayagram/features/shop/views/order_details.dart';
 import 'package:wayagram/features/shop/views/product_detail.dart';
 
@@ -46,7 +48,9 @@ class WayaAppRoutes {
     '/checkout': () => Checkout(),
     '/filter': () => FilterView(),
     '/general-settings': () => GeneralSettingsPage(),
-    '/add-product' :() => AddProduct()
+    '/add-product' :() => AddProduct(),
+    '/seller-orders': () => AllSellerOrders(),
+    '/seller-order-detail':() => SellerOrderDetails()
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

@@ -11,8 +11,8 @@ import 'package:wayagram/features/shop/data/model/model.dart';
 
 
 class OrderedProductCard extends StatelessWidget {
-  final Cart order;
-  const OrderedProductCard({super.key, required this.order});
+
+  const OrderedProductCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,8 @@ class OrderedProductCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  order.images.isEmpty
+                  /**
+                     order.images.isEmpty
                       ? Container(
                           height: 70,
                           width: 50,
@@ -40,7 +41,9 @@ class OrderedProductCard extends StatelessWidget {
                               color: wayaTheme.colorScheme.greyColor100,
                               borderRadius: BorderRadius.circular(8)),
                         )
-                      : WayaImage(imageUrl: order.images[0], height: 70, width: 
+                      : 
+                   */
+                WayaImage(imageUrl: 'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374117/Frame_1984078250_khms9k.png', height: 70, width: 
                       50, fit: BoxFit.contain, radius: BorderRadius.circular(8),),
                   const Gap(5),
                   Column(

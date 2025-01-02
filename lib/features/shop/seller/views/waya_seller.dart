@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 import 'package:wayagram/features/shop/widgets/waya_shop_tab_button.dart';
@@ -45,17 +46,14 @@ class _WayaSellerState extends ConsumerState<WayaSeller>
                 WayaShopTabButton(
                   isSelected: _selectedIndex == 2,
                   text: 'Manage Shop',
-                  onTap: () => setState(() => _selectedIndex = 1),
+                  onTap: () => setState(() => _selectedIndex = 2),
                 ),
               ],
             ),
-
             const Gap(10),
-          if (_selectedIndex == 0)
-              AllProducts(),
-             if (_selectedIndex   == 1)
-               SellerProducts(),
-
+            if (_selectedIndex == 0) AllProducts(),
+            if (_selectedIndex == 1) SellerProducts(),
+            if (_selectedIndex == 2) ManageShop()
           ],
         ));
   }

@@ -32,7 +32,7 @@ class Wayagram extends ConsumerWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: GetMaterialApp(
-        initialRoute: '/setup-pin',
+        initialRoute: '/explore',
         title: WayaConstants.appName,
         theme: WayaTheme.lightTheme,
         darkTheme: WayaTheme.darkTheme,

@@ -69,11 +69,9 @@ class DeliveryCostRequest extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    "assets/images/avatars.png",
-                    width: 26,
-                    height: 26,
-                  ),
+                 WayaDp(
+                  radius: 24,
+                 ),
                   const Gap(6),
                   Text(
                     "Maleek Ventures",
@@ -89,7 +87,7 @@ class DeliveryCostRequest extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                   itemCount: 2,
                   itemBuilder: (context, index) {
-                    return OrderedProductCard(order: orders[index]);
+                    return OrderedProductCard();
                   }),
             
             const Gap(24),
