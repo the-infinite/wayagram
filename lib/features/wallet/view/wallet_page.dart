@@ -7,16 +7,13 @@ class WalletPage extends ConsumerStatefulWidget {
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _WalletPageState();
 }
+
 class _WalletPageState extends ConsumerState<WalletPage> {
   @override
   Widget build(BuildContext context) {
     return WayaScaffold(
-     title: "Wallet",
-      body: Column(
-        children: [
-         
-        ],
-      ),
+      title: 'Wallet',
+      body: Column(),
     );
   }
 }
