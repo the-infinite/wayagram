@@ -71,6 +71,8 @@ class WayaColorHelper {
           return WayaColors.customBlack;
         case WayaColors.white:
           return WayaColors.white;
+        case WayaColors.white50:
+          return WayaColors.white50;
         case WayaColors.scaffoldColor:
           return WayaColors.scaffoldColor;
         case WayaColors.scaffoldColor2:
@@ -158,6 +160,8 @@ class WayaColorHelper {
         case WayaColors.customBlack:
           return WayaColors.success;
         case WayaColors.white:
+          return WayaColors.success;
+        case WayaColors.white50:
           return WayaColors.success;
         case WayaColors.scaffoldColor:
           return WayaColors.success;

@@ -9,10 +9,12 @@ class WayaRichText extends StatelessWidget {
   final String title2;
   final TextStyle? style1;
   final TextStyle? style2;
+  final List<InlineSpan>? texts;
 
   final VoidCallback? onTap2;
   const WayaRichText({
     required this.title1,
+    this.texts,
     this.style1,
     this.style2,
     required this.title2,
@@ -29,7 +31,7 @@ class WayaRichText extends StatelessWidget {
           fontSize: 18.0,
           color: wayaTheme.colorScheme.black,
         ),
-        children: [
+        children:texts ?? [
           TextSpan(
               text: title1,
               style: style1 ??

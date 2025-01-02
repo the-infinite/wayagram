@@ -3,6 +3,7 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/general_settings/view/change_password_gen_set/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/view/change_pin/change_pin_page.dart';
+import 'package:wayagram/features/wallet/view/fund_wallet_page.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 class WayaAppRoutes {
@@ -31,6 +32,7 @@ class WayaAppRoutes {
     '/general-settings': () => GeneralSettingsPage(),
     '/change-password-gen-set': () => ChangePasswordGenSettings(),
     '/change-pin-page': () => ChangePinPage(),
+    '/fund-wallet-page': () => FundWalletPage(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

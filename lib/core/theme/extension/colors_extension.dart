@@ -50,6 +50,7 @@ extension WayaColorSchemeExtension on ColorScheme {
 
   // White Colors
   Color get white => WayaColors.white;
+  Color get white50 => WayaColors.white50;
 
   // Scaffold Colors
   Color get scaffoldColor => WayaColors.scaffoldColor;

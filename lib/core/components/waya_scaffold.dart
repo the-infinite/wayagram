@@ -33,45 +33,43 @@ class WayaScaffold extends ConsumerWidget {
       this.title,
       this.appBarTrailing,
       this.isScrollable = false,
-     this.color,
+      this.color,
       this.appBar,
       this.backgroundColor,
-      
       this.bottomNavigationBar});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeNotifier = ref.read(themeProvider.notifier);
-    final paddedBody =
-        padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
+    final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       onDoubleTap: () {
         themeNotifier.toggleTheme();
       },
       child: Scaffold(
+        backgroundColor: backgroundColor,
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         appBar: removeAppBar
             ? null
             : appBar ??
                 AppBar(
-                 
                   title: Text(title ?? ''),
-                  leading: automicallyImplyLeading ? WayaBackButton() : null,
+                  leading: automicallyImplyLeading ? WayaBackButton() : SizedBox.shrink(),
                   actions: appBarTrailing == null ? null : [appBarTrailing!],
                 ),
-        body:isScrollable
-                ? Container(
-                  color: color,
-                  child: Padding(
-                    padding: paddedBody,
-                    child: SingleChildScrollView(child: body),
-                  ),
-                )
-                : Padding(
-                    padding: paddedBody,
-                    child: body,
-                  ),
+        body: isScrollable
+            ? Container(
+                color: color,
+                child: Padding(
+                  padding: paddedBody,
+                  child: SingleChildScrollView(child: body),
+                ),
+              )
+            : Padding(
+                padding: paddedBody,
+                child: body,
+              ),
         bottomNavigationBar: bottomNavigationBar,
         floatingActionButton: floatingActionButton,
       ),
@@ -111,12 +109,10 @@ class WayaScaffoldWithProgressbar extends StatefulWidget {
       this.bottomNavigationBar});
 
   @override
-  State<WayaScaffoldWithProgressbar> createState() =>
-      _WayaScaffoldWithProgressbarState();
+  State<WayaScaffoldWithProgressbar> createState() => _WayaScaffoldWithProgressbarState();
 }
 
-class _WayaScaffoldWithProgressbarState
-    extends State<WayaScaffoldWithProgressbar> {
+class _WayaScaffoldWithProgressbarState extends State<WayaScaffoldWithProgressbar> {
   double _progress = 0.12;
   final double _progressBarHeight = 12;
 
@@ -125,8 +121,7 @@ class _WayaScaffoldWithProgressbarState
     super.initState();
     widget.tabController.addListener(() {
       setState(() {
-        _progress =
-            (widget.tabController.index + 0.5) / widget.tabController.length;
+        _progress = (widget.tabController.index + 0.5) / widget.tabController.length;
       });
     });
   }
@@ -185,8 +180,7 @@ class _WayaScaffoldWithProgressbarState
           ),
         ),
       ),
-      body: TabBarView(
-          controller: widget.tabController, children: widget.tabsView),
+      body: TabBarView(controller: widget.tabController, children: widget.tabsView),
     );
   }
 }

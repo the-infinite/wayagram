@@ -48,6 +48,8 @@ class WayaColors {
   static const customBlack = Color(0xff343330);
   //
   static const white = Color(0xffFFFFFF);
+  static const white50 = Color(0x80FFFFFF);
+
   //
 
   static const scaffoldColor = Color.fromARGB(255, 248, 249, 250);

@@ -106,6 +106,9 @@ class $AssetsIconsGen {
   SvgGenImage get shareNetwork =>
       const SvgGenImage('assets/icons/share-network.svg');
 
+  /// Directory path: assets/icons/wallet
+  $AssetsIconsWalletGen get wallet => const $AssetsIconsWalletGen();
+
   /// File path: assets/icons/wallet-icon.svg
   SvgGenImage get walletIcon =>
       const SvgGenImage('assets/icons/wallet-icon.svg');
@@ -170,6 +173,9 @@ class $AssetsImagesGen {
 
   /// Directory path: assets/images/shop
   $AssetsImagesShopGen get shop => const $AssetsImagesShopGen();
+
+  /// Directory path: assets/images/wallet
+  $AssetsImagesWalletGen get wallet => const $AssetsImagesWalletGen();
 
   /// File path: assets/images/wayalogo.png
   AssetGenImage get wayalogo =>
@@ -267,6 +273,19 @@ class $AssetsIconsGenSetGen {
         usersGroup,
         wallet
       ];
+}
+
+class $AssetsIconsWalletGen {
+  const $AssetsIconsWalletGen();
+
+  /// File path: assets/icons/wallet/card.svg
+  SvgGenImage get card => const SvgGenImage('assets/icons/wallet/card.svg');
+
+  /// File path: assets/icons/wallet/wallet.svg
+  SvgGenImage get wallet => const SvgGenImage('assets/icons/wallet/wallet.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [card, wallet];
 }
 
 class $AssetsImagesAuthGen {
@@ -396,6 +415,21 @@ class $AssetsImagesShopGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [dCodeInvalid, dCodeValid];
+}
+
+class $AssetsImagesWalletGen {
+  const $AssetsImagesWalletGen();
+
+  /// File path: assets/images/wallet/search_docu.png
+  AssetGenImage get searchDocu =>
+      const AssetGenImage('assets/images/wallet/search_docu.png');
+
+  /// File path: assets/images/wallet/wallet_bg.png
+  AssetGenImage get walletBg =>
+      const AssetGenImage('assets/images/wallet/wallet_bg.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [searchDocu, walletBg];
 }
 
 class WayaAssests {
