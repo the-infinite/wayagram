@@ -1,3 +1,4 @@
+import 'package:blurry_modal_progress_hud/blurry_modal_progress_hud.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,36 +43,39 @@ class WayaScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeNotifier = ref.read(themeProvider.notifier);
     final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      onDoubleTap: () {
-        themeNotifier.toggleTheme();
-      },
-      child: Scaffold(
-        backgroundColor: backgroundColor,
-        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-        appBar: removeAppBar
-            ? null
-            : appBar ??
-                AppBar(
-                  title: Text(title ?? ''),
-                  leading: automicallyImplyLeading ? WayaBackButton() : SizedBox.shrink(),
-                  actions: appBarTrailing == null ? null : [appBarTrailing!],
-                ),
-        body: isScrollable
-            ? Container(
-                color: color,
-                child: Padding(
+    return BlurryModalProgressHUD(
+      inAsyncCall: isLoading,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        onDoubleTap: () {
+          themeNotifier.toggleTheme();
+        },
+        child: Scaffold(
+          backgroundColor: backgroundColor,
+          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+          appBar: removeAppBar
+              ? null
+              : appBar ??
+                  AppBar(
+                    title: Text(title ?? ''),
+                    leading: automicallyImplyLeading ? WayaBackButton() : SizedBox.shrink(),
+                    actions: appBarTrailing == null ? null : [appBarTrailing!],
+                  ),
+          body: isScrollable
+              ? Container(
+                  color: color,
+                  child: Padding(
+                    padding: paddedBody,
+                    child: SingleChildScrollView(child: body),
+                  ),
+                )
+              : Padding(
                   padding: paddedBody,
-                  child: SingleChildScrollView(child: body),
+                  child: body,
                 ),
-              )
-            : Padding(
-                padding: paddedBody,
-                child: body,
-              ),
-        bottomNavigationBar: bottomNavigationBar,
-        floatingActionButton: floatingActionButton,
+          bottomNavigationBar: bottomNavigationBar,
+          floatingActionButton: floatingActionButton,
+        ),
       ),
     );
   }
@@ -182,7 +186,7 @@ class _WayaScaffoldWithProgressbarState extends State<WayaScaffoldWithProgressba
       ),
       body: widget.isScrollable
           ? SingleChildScrollView(
-            scrollDirection: Axis.vertical,
+              scrollDirection: Axis.vertical,
               child: Column(
                 children: [
                   widget.tabsView[widget.tabController.index],
@@ -190,10 +194,7 @@ class _WayaScaffoldWithProgressbarState extends State<WayaScaffoldWithProgressba
               ),
             )
           : TabBarView(
-             physics: NeverScrollableScrollPhysics(), 
-              controller: widget.tabController, children: widget.tabsView),
+              physics: NeverScrollableScrollPhysics(), controller: widget.tabController, children: widget.tabsView),
     );
   }
 }
-
-

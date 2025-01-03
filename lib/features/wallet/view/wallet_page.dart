@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/wallet/view/components/wallet_cards.dart';
 
 class WalletPage extends ConsumerStatefulWidget {
+  static const route = '/wallet';
   const WalletPage({super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _WalletPageState();

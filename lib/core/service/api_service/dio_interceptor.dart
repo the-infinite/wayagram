@@ -8,9 +8,7 @@ class DioInterceptor extends Interceptor {
   DioInterceptor(this.dio, this.secureDataSource);
 
   @override
-  Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
-
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await secureDataSource.getToken();
     if (token != null) {
       print('token: $token');
@@ -26,12 +24,10 @@ class DioInterceptor extends Interceptor {
       final refreshToken = await secureDataSource.getRefreshToken();
       if (refreshToken != null) {
         try {
-          final response = await dio.post(
-              'wayagram-profile/api/v2/client/auth/refresh-token',
-              data: {"token": refreshToken});
+          final response =
+              await dio.post('wayagram-profile/api/v2/client/auth/refresh-token', data: {"token": refreshToken});
           final newtoken = response.data['data']['token']['token'];
-          final newrefreshToken =
-              response.data['data']['token']['refreshToken'];
+          final newrefreshToken = response.data['data']['token']['refreshToken'];
 
           secureDataSource.saveToken(newtoken);
           secureDataSource.saveRefreshToken(newrefreshToken);
@@ -53,9 +49,8 @@ class DioInterceptor extends Interceptor {
           return handler.next(err);
         }
       }
-    }
-    else {
-       return handler.next(err);
+    } else {
+      return handler.next(err);
     }
   }
 }

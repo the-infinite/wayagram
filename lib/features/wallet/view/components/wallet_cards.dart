@@ -90,29 +90,25 @@ class WalletBalanceCard extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                width: Get.width * 0.28.w,
-                child: WayaButton(
-                  text: 'Fund Wallet',
-                  color: wayaTheme.colorScheme.onPrimary,
-                  height: 36.h,
-                  textStyle: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.primary),
-                  callback: () => WayaNav.toNamed('/fund-wallet-page'),
-                ),
+              WayaButton(
+                text: 'Fund Wallet',
+                horizontalPadding: 22,
+                color: wayaTheme.colorScheme.onPrimary,
+                height: 36.h,
+                textStyle: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.primary),
+                callback: () => WayaNav.toNamed('/fund-wallet-page'),
               ),
               SizedBox(width: 10.w),
-              SizedBox(
-                width: Get.width * 0.28.w,
-                child: WayaButton(
-                    height: 36.h,
-                    color: wayaTheme.colorScheme.onPrimary.withOpacity(0.4),
-                    text: 'Learn More',
-                    textStyle: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
-                    callback: () => WayaUtils.showModalSheet(
-                          context,
-                          child: LearnMoreInstructionsContent(),
-                        )),
-              ),
+              WayaButton(
+                  horizontalPadding: 22,
+                  height: 36.h,
+                  color: wayaTheme.colorScheme.onPrimary.withOpacity(0.4),
+                  text: 'Learn More',
+                  textStyle: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
+                  callback: () => WayaUtils.showModalSheet(
+                        context,
+                        child: LearnMoreInstructionsContent(),
+                      )),
             ],
           ),
         ],
