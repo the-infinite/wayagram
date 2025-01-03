@@ -10,9 +10,11 @@ class DioInterceptor extends Interceptor {
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final token = secureDataSource.getToken();
+    final token = await secureDataSource.getToken();
     if (token != null) {
-      options.headers['Authoriation'] = 'Bearer $token';
+     
+  print('token: $token');
+      options.headers['Authorization'] = 'Bearer $token';
     }
     return handler.next(options);
   }
@@ -20,7 +22,7 @@ class DioInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.data['statusCode'] == 401) {
-      final refreshToken = secureDataSource.getRefreshToken();
+      final refreshToken = await secureDataSource.getRefreshToken();
       if (refreshToken != null) {
         try {
           final response = await dio.post(

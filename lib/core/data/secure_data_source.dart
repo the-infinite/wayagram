@@ -12,11 +12,11 @@ class WayaSecureDataSource extends WayaSecureStorageService {
         key: 'refresh-token', value: token);
   }
 
-  String? getToken() {
+  Future<String?> getToken() async{
     return wayaSecureDataSource.read(key: 'token');
   }
 
-  String? getRefreshToken() {
+  Future<String?> getRefreshToken() async {
     return wayaSecureDataSource.read(key: 'refresh-token');
   }
 }

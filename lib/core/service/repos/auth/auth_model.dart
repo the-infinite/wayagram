@@ -20,6 +20,7 @@ class Register {
   bool? tcAgreement;
   bool? policyAgreement;
   String? referenceCode;
+  Map<String, dynamic>? business;
 
   Register({
     this.email,
@@ -37,6 +38,8 @@ class Register {
     this.tcAgreement,
     this.policyAgreement,
     this.confirmPassword,
+    this.business,
+    this.referenceCode
   });
 
   factory Register.fromJson(Map<String, dynamic> json) =>
@@ -46,6 +49,9 @@ class Register {
     final data = _$RegisterToJson(this);
     if (referenceCode == null || referenceCode!.isEmpty) {
       data.remove('referenceCode');
+    }
+    if (business == null || business!.isEmpty) {
+      data.remove('business');
     }
 
     return data;

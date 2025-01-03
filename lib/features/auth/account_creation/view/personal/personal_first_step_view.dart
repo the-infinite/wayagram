@@ -25,12 +25,16 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
     final wayaTheme = Theme.of(context);
+    print(viewModel.localDataSource.getUserType());
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Tell us About You", style: WayaTextStyles.titleLarge),
+          if (viewModel.localDataSource.getUserType() == "business")
+            Text("Tell us About Your Business", style: WayaTextStyles.titleLarge)
+          else
+            Text("Tell us About You", style: WayaTextStyles.titleLarge),
           const Gap(10),
           Text(
               "Fill in your required information as in your official \n documents and BVN",
@@ -157,6 +161,88 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     );
                   }),
                   const Gap(10),
+                  //*    business section*/ */
+                  Visibility(
+                      visible:
+                          viewModel.localDataSource.getUserType() == "business",
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FormField<String>(validator: (value) {
+                            if (viewModel.businessName.text.isEmpty) {
+                              return 'Business Name is required';
+                            }
+
+                            return null;
+                          }, builder: (formState) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                WayaTextFormField(
+                                  keyboardType: TextInputType.name,
+                                  controller: viewModel.businessName,
+                                  hintText: 'Enter Your Business Name',
+                                  borderColor: formState.hasError &&
+                                          viewModel.businessName.text.isEmpty
+                                      ? wayaTheme.colorScheme.error
+                                      : null,
+                                  label: 'Business Name',
+                                ),
+                                if (formState.hasError &&
+                                    viewModel.businessName.text.isEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      formState.errorText!,
+                                      style: TextStyle(
+                                          color: wayaTheme.colorScheme.error,
+                                          fontSize: 12),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          }),
+                          const Gap(10),
+                          FormField<String>(validator: (value) {
+                            if (viewModel.businessAddress.text.isEmpty) {
+                              return 'Business Address is required';
+                            }
+
+                            return null;
+                          }, builder: (formState) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                WayaTextFormField(
+                                  keyboardType: TextInputType.text,
+                                  controller: viewModel.businessAddress,
+                                  hintText: 'Enter Your Business Address',
+                                  borderColor: formState.hasError &&
+                                          viewModel.businessAddress.text.isEmpty
+                                      ? wayaTheme.colorScheme.error
+                                      : null,
+                                  label: 'Business Address',
+                                ),
+                                if (formState.hasError &&
+                                    viewModel.businessAddress.text.isEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      formState.errorText!,
+                                      style: TextStyle(
+                                          color: wayaTheme.colorScheme.error,
+                                          fontSize: 12),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          }),
+                        ],
+                      )),
+
+                  /** business section ends */
+                    const Gap(10),
                   FormField<String>(validator: (value) {
                     if (viewModel.phoneNumber.text.isEmpty) {
                       return 'Phone is required';
@@ -169,7 +255,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       children: [
                         Text(
                           "Phone Number",
-                          style: WayaTextStyles.labelMedium,
+                          style: wayaTheme.textTheme.labelMedium,
                         ),
                         const Gap(3),
                         Row(
@@ -648,12 +734,18 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                   //
 
                   WayaButton(
-                    callback: !viewModel.isLoading ?() async {
-                      if (_formKey.currentState!.validate()) {
-                        await viewModel.onSubmit(widget.goToNextTab);
+                    callback: !viewModel.isLoading
+                        ? () async {
+                         
+                               if (_formKey.currentState!.validate()) {
+                         await viewModel.onSubmit(widget.goToNextTab);
                       }
-                    } : null,
-                    centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Continue'),
+                          
+
+                          }
+                        : null,
+                    centerWidget: LoadingState(
+                        loading: viewModel.isLoading, text: 'Continue'),
                   )
                 ],
               ))

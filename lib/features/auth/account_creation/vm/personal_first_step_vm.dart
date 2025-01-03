@@ -19,9 +19,12 @@ class PersonalFirstStepVm extends ChangeNotifier {
   final TextEditingController city = TextEditingController();
   final TextEditingController state = TextEditingController();
   final TextEditingController country = TextEditingController();
+  final TextEditingController businessName = TextEditingController();
+  final TextEditingController businessAddress = TextEditingController();
+
   String dateOfBirth = '';
   String _gender = '';
-  final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
+  final WayaLocalDataSource localDataSource = WayaLocalDataSource();
   final _logger = getLogger('PersonalFirstStepVm');
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
@@ -70,7 +73,7 @@ class PersonalFirstStepVm extends ChangeNotifier {
 
   void toggleTerm(bool? value) {
     isAgreeToTerm = value!;
-    validateInputs();
+    // validateInputs();
     notifyListeners();
   }
 
@@ -84,40 +87,40 @@ class PersonalFirstStepVm extends ChangeNotifier {
     notifyListeners();
   }
 
-  void validateInputs() {
-    final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-    _isButtonEnabled = firstName.text.isNotEmpty &&
-        lastName.text.isNotEmpty &&
-        email.text.isNotEmpty &&
-        regexp.hasMatch(email.text) &&
-        phoneNumber.text.isNotEmpty &&
-        password.text.isNotEmpty &&
-        password.text.length >= 8 &&
-        confirmPassword.text == password.text &&
-        isAgreeToTerm &&
-        dateOfBirth.isNotEmpty &&
-        gender.isNotEmpty &&
-        address.text.isNotEmpty &&
-        city.text.isNotEmpty &&
-        state.text.isNotEmpty &&
-        country.text.isNotEmpty;
-    notifyListeners();
-  }
+  // void validateInputs() {
+  //   final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+  //   _isButtonEnabled = firstName.text.isNotEmpty &&
+  //       lastName.text.isNotEmpty &&
+  //       email.text.isNotEmpty &&
+  //       regexp.hasMatch(email.text) &&
+  //       phoneNumber.text.isNotEmpty &&
+  //       password.text.isNotEmpty &&
+  //       password.text.length >= 8 &&
+  //       confirmPassword.text == password.text &&
+  //       isAgreeToTerm &&
+  //       dateOfBirth.isNotEmpty &&
+  //       gender.isNotEmpty &&
+  //       address.text.isNotEmpty &&
+  //       city.text.isNotEmpty &&
+  //       state.text.isNotEmpty &&
+  //       country.text.isNotEmpty;
+  //   notifyListeners();
+  // }
 
-  @override
-  void addListener(VoidCallback listener) {
-    super.addListener(listener);
-    email.addListener(validateInputs);
-    phoneNumber.addListener(validateInputs);
-    firstName.addListener(validateInputs);
-    lastName.addListener(validateInputs);
-    password.addListener(validateInputs);
-    confirmPassword.addListener(validateInputs);
-    state.addListener(validateInputs);
-    city.addListener(validateInputs);
-    address.addListener(validateInputs);
-    country.addListener(validateInputs);
-  }
+  // @override
+  // void addListener(VoidCallback listener) {
+  //   super.addListener(listener);
+  //   email.addListener(validateInputs);
+  //   phoneNumber.addListener(validateInputs);
+  //   firstName.addListener(validateInputs);
+  //   lastName.addListener(validateInputs);
+  //   password.addListener(validateInputs);
+  //   confirmPassword.addListener(validateInputs);
+  //   state.addListener(validateInputs);
+  //   city.addListener(validateInputs);
+  //   address.addListener(validateInputs);
+  //   country.addListener(validateInputs);
+  // }
 
   @override
   void dispose() {
@@ -131,6 +134,8 @@ class PersonalFirstStepVm extends ChangeNotifier {
     city.dispose();
     address.dispose();
     country.dispose();
+    businessAddress.dispose();
+    businessName.dispose();
     super.dispose();
   }
 
@@ -156,6 +161,7 @@ class PersonalFirstStepVm extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
+      final bool isPersonal = localDataSource.getUserType() == 'personal';
       final response = await _authRepository.register(Register(
         email: email.text,
         password: password.text,
@@ -170,18 +176,23 @@ class PersonalFirstStepVm extends ChangeNotifier {
         dateOfBirth: _dateIsoFormat,
         tcAgreement: isAgreeToTerm,
         policyAgreement: isAgreeToTerm,
-        //  referenceCode: referenceCode.text.isNotEmpty? referenceCode.text : '',
         confirmPassword: confirmPassword.text,
         gender: gender,
-        accountTypeId: _localDataSource.getUserType() == 'personal'
+        accountTypeId: isPersonal
             ? '00ea33fd-0262-4238-a1a0-2cc2562a4dd0'
             : '',
+        business: isPersonal
+            ? null
+            : {
+              "name": businessName.text,
+              "address": businessAddress.text,
+            },
       ));
 
       _logger.d(" result ${response.data['message']}");
       if (response.data['statusCode'] == 200) {
         final user = response.data['data']['user'];
-        _localDataSource.saveUser(user);
+        localDataSource.saveUser(user);
 
         gotoNextTab();
       }
