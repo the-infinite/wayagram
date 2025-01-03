@@ -7,12 +7,17 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/cart/data/model.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/cart/widgets/cart_card_vm.dart';
+import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class CartCard extends ConsumerStatefulWidget {
-  const CartCard({super.key});
+  final RestructuredCart restructuredCart;
+  const CartCard({super.key, required this.restructuredCart});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CartCardState();
@@ -26,7 +31,10 @@ class _CartCardState extends ConsumerState<CartCard> {
     // TODO: implement build
 
     final wayaTheme = Theme.of(context);
-    //  final viewModel = ref.watch(cartCardVmProvider);
+    final viewModel = ref.watch(cartCardVmProvider);
+
+    final int totalPrice = widget.restructuredCart.cart
+        .fold(0, (sum, item) => sum + (item.count * item.price));
 
     return Column(
       children: [
@@ -50,10 +58,8 @@ class _CartCardState extends ConsumerState<CartCard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/images/avatars.png",
-                      width: 36,
-                      height: 36,
+                    WayaDp(
+                      radius: 20,
                     ),
                     const Gap(6),
                     Column(
@@ -61,7 +67,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Maleek Ventures",
+                          widget.restructuredCart.seller,
                           style: TextStyle().wayaCopyWith(
                               fontSize: 18,
                               color: wayaTheme.colorScheme.customBlack),
@@ -81,7 +87,9 @@ class _CartCardState extends ConsumerState<CartCard> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        viewModel.deliveryRequest(context,widget.restructuredCart.cart);
+                      },
                       child: SvgPicture.asset('assets/icons/chat.svg'),
                     ),
                     const Gap(10),
@@ -109,9 +117,10 @@ class _CartCardState extends ConsumerState<CartCard> {
               ? ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: products.length,
+                  itemCount: widget.restructuredCart.cart.length,
                   itemBuilder: (context, index) {
-                    return CartProductCard(cartProduct: products[index]);
+                    return CartProductCard(
+                        cartProduct: widget.restructuredCart.cart[index]);
                   })
               : SizedBox.shrink(),
         ),
@@ -129,8 +138,8 @@ class _CartCardState extends ConsumerState<CartCard> {
               SizedBox(
                 width: context.width * 0.40,
                 child: Center(
-                  child:
-                      Text("N 800,000", style: wayaTheme.textTheme.titleLarge),
+                  child: Text(WayaHelpers.formatPrice(totalPrice),
+                      style: wayaTheme.textTheme.titleLarge),
                 ),
               ),
               SizedBox(
@@ -144,19 +153,20 @@ class _CartCardState extends ConsumerState<CartCard> {
             ],
           ),
         ),
-        const Gap(20),
+        const Gap(30),
       ],
     );
   }
 }
 
-class CartProductCard extends StatelessWidget {
-  final Product cartProduct;
+class CartProductCard extends ConsumerWidget {
+  final Cart cartProduct;
   const CartProductCard({super.key, required this.cartProduct});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
+
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
@@ -177,20 +187,15 @@ class CartProductCard extends StatelessWidget {
                           height: 70,
                           width: 50,
                           decoration: BoxDecoration(
-                              color: wayaTheme.colorScheme.greyColor100,
+                              color: wayaTheme.colorScheme.scaffoldColor,
                               borderRadius: BorderRadius.circular(8)),
                         )
-                      : Container(
+                      : WayaImage(
+                          imageUrl: cartProduct.images[0],
                           height: 70,
                           width: 50,
-                          decoration: BoxDecoration(
-                            color: wayaTheme.colorScheme.white,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Image.asset(
-                            cartProduct.images[0],
-                            fit: BoxFit.contain,
-                          ),
+                          radius: BorderRadius.circular(8),
+                          fit: BoxFit.contain,
                         ),
                   const Gap(5),
                   Column(
@@ -200,7 +205,7 @@ class CartProductCard extends StatelessWidget {
                       SizedBox(
                         width: context.width * 0.3,
                         child: Text(
-                          "Itel Powerbank 60,000mah Fast charging",
+                          cartProduct.name,
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontWeight: FontWeight.w500,
@@ -210,12 +215,13 @@ class CartProductCard extends StatelessWidget {
                       ),
                       const Gap(5),
                       Text(
-                        "Quantity: 1 x N5,000",
+                        "Quantity: ${cartProduct.count} x ${WayaHelpers.formatPrice(cartProduct.price)}",
                         style: wayaTheme.textTheme.hintStyle,
                       ),
                       const Gap(5),
                       Text(
-                        "N 300,000",
+                        WayaHelpers.formatPrice(
+                            cartProduct.count * cartProduct.price),
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontWeight: FontWeight.w600,
@@ -228,12 +234,23 @@ class CartProductCard extends StatelessWidget {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      final Product product = Product(
+                          category: cartProduct.category,
+                          name: cartProduct.name,
+                          images: cartProduct.images,
+                          discountPrice: cartProduct.discountPrice,
+                          seller: cartProduct.seller,
+                          id: cartProduct.id,
+                          quantity: cartProduct.quantity,
+                          price: cartProduct.price);
+                      ref.read(cartProvider.notifier).addToCart(product, 1);
+                    },
                     child: SvgPicture.asset('assets/icons/a-cart.svg'),
                   ),
                   const Gap(4),
                   Text(
-                    "1",
+                    "${cartProduct.count}",
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.customPrimary,
                         fontWeight: FontWeight.w500,
@@ -241,7 +258,11 @@ class CartProductCard extends StatelessWidget {
                   ),
                   const Gap(6),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      ref
+                          .read(cartProvider.notifier)
+                          .removeFromCart(cartProduct.id);
+                    },
                     child: SvgPicture.asset('assets/icons/r-cart.svg'),
                   ),
                 ],

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/waya_validators.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
 
 class PersonalFirstStepView extends ConsumerStatefulWidget {
@@ -23,14 +24,18 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
-     final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
+    print(viewModel.localDataSource.getUserType());
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Tell us About You", style: WayaTextStyles.titleLarge),
-          const Gap(5),
+          if (viewModel.localDataSource.getUserType() == "business")
+            Text("Tell us About Your Business", style: WayaTextStyles.titleLarge)
+          else
+            Text("Tell us About You", style: WayaTextStyles.titleLarge),
+          const Gap(10),
           Text(
               "Fill in your required information as in your official \n documents and BVN",
               style: WayaTextStyles.hintStyle),
@@ -70,15 +75,16 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style:  TextStyle(
-                                        color: wayaTheme.colorScheme.error, fontSize: 12),
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12),
                                   ),
                                 ),
                             ],
                           );
                         }),
                       ),
-                      const Gap(8),
+                      const Gap(10),
                       Expanded(
                         child: FormField<String>(validator: (value) {
                           if (viewModel.lastName.text.isEmpty) {
@@ -106,8 +112,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style:  TextStyle(
-                                        color: wayaTheme.colorScheme.error, fontSize: 12),
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12),
                                   ),
                                 ),
                             ],
@@ -116,7 +123,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       )
                     ],
                   ),
-                  const Gap(5),
+                  const Gap(10),
                   FormField<String>(validator: (value) {
                     if (viewModel.email.text.isEmpty) {
                       return 'Email is required';
@@ -145,16 +152,99 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style:  TextStyle(
-                                  color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
                             ),
                           ),
                       ],
                     );
                   }),
-                  const Gap(5),
+                  const Gap(10),
+                  //*    business section*/ */
+                  Visibility(
+                      visible:
+                          viewModel.localDataSource.getUserType() == "business",
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FormField<String>(validator: (value) {
+                            if (viewModel.businessName.text.isEmpty) {
+                              return 'Business Name is required';
+                            }
+
+                            return null;
+                          }, builder: (formState) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                WayaTextFormField(
+                                  keyboardType: TextInputType.name,
+                                  controller: viewModel.businessName,
+                                  hintText: 'Enter Your Business Name',
+                                  borderColor: formState.hasError &&
+                                          viewModel.businessName.text.isEmpty
+                                      ? wayaTheme.colorScheme.error
+                                      : null,
+                                  label: 'Business Name',
+                                ),
+                                if (formState.hasError &&
+                                    viewModel.businessName.text.isEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      formState.errorText!,
+                                      style: TextStyle(
+                                          color: wayaTheme.colorScheme.error,
+                                          fontSize: 12),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          }),
+                          const Gap(10),
+                          FormField<String>(validator: (value) {
+                            if (viewModel.businessAddress.text.isEmpty) {
+                              return 'Business Address is required';
+                            }
+
+                            return null;
+                          }, builder: (formState) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                WayaTextFormField(
+                                  keyboardType: TextInputType.text,
+                                  controller: viewModel.businessAddress,
+                                  hintText: 'Enter Your Business Address',
+                                  borderColor: formState.hasError &&
+                                          viewModel.businessAddress.text.isEmpty
+                                      ? wayaTheme.colorScheme.error
+                                      : null,
+                                  label: 'Business Address',
+                                ),
+                                if (formState.hasError &&
+                                    viewModel.businessAddress.text.isEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      formState.errorText!,
+                                      style: TextStyle(
+                                          color: wayaTheme.colorScheme.error,
+                                          fontSize: 12),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          }),
+                        ],
+                      )),
+
+                  /** business section ends */
+                    const Gap(10),
                   FormField<String>(validator: (value) {
-                    if (viewModel.phone.text.isEmpty) {
+                    if (viewModel.phoneNumber.text.isEmpty) {
                       return 'Phone is required';
                     }
 
@@ -165,7 +255,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       children: [
                         Text(
                           "Phone Number",
-                          style: WayaTextStyles.labelMedium,
+                          style: wayaTheme.textTheme.labelMedium,
                         ),
                         const Gap(3),
                         Row(
@@ -178,7 +268,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               decoration: BoxDecoration(
                                   border: Border.all(
                                       color: formState.hasError &&
-                                              viewModel.phone.text.isEmpty
+                                              viewModel.phoneNumber.text.isEmpty
                                           ? wayaTheme.colorScheme.error
                                           : wayaTheme.colorScheme.greyColor300,
                                       width: 1),
@@ -205,29 +295,31 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             Expanded(
                               child: WayaTextFormField(
                                 keyboardType: TextInputType.phone,
-                                controller: viewModel.phone,
+                                controller: viewModel.phoneNumber,
                                 hintText: '000-000-000',
                                 borderColor: formState.hasError &&
-                                        viewModel.phone.text.isEmpty
+                                        viewModel.phoneNumber.text.isEmpty
                                     ? wayaTheme.colorScheme.error
                                     : null,
                               ),
                             )
                           ],
                         ),
-                        if (formState.hasError && viewModel.phone.text.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.phoneNumber.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style:  TextStyle(
-                                  color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
                             ),
                           ),
                       ],
                     );
                   }),
-                  const Gap(5),
+                  const Gap(10),
                   FormField<String>(validator: (value) {
                     return null;
                   }, builder: (formState) {
@@ -236,20 +328,17 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       children: [
                         WayaTextFormField(
                           keyboardType: TextInputType.text,
-                          controller: viewModel.referralCode,
+                          controller: viewModel.referenceCode,
                           hintText: 'Enter Referral Code',
                           label: 'Referral Code (Optional)',
                         ),
                       ],
                     );
                   }),
-                  const Gap(5),
+                  const Gap(10),
                   FormField<String>(validator: (value) {
-                    if (viewModel.password.text.isEmpty) {
-                      return 'Password is required';
-                    }
-                    if (viewModel.password.text.length < 8) {
-                      return 'Password must be at least 8';
+                    if (viewModel.address.text.isEmpty) {
+                      return 'Address is required';
                     }
 
                     return null;
@@ -258,40 +347,305 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaTextFormField(
-                          keyboardType: TextInputType.visiblePassword,
-                          controller: viewModel.password,
+                          keyboardType: TextInputType.text,
+                          controller: viewModel.address,
+                          hintText: 'Enter Your Address',
                           borderColor: formState.hasError &&
-                                  viewModel.password.text.isEmpty
+                                  viewModel.address.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
-                          hintText: 'Enter Your Password',
-                          label: 'Password',
-                          obscureText: !viewModel.isPasswordVisible,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              viewModel.togglePasswordVisibility();
-                            },
-                            autofocus: false,
-                            icon: Icon(viewModel.isPasswordVisible
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
-                            color: wayaTheme.colorScheme.greyColor300,
-                          ),
+                          label: 'Address',
                         ),
                         if (formState.hasError &&
-                            viewModel.password.text.isEmpty)
+                            viewModel.address.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style:  TextStyle(
-                                  color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
                             ),
                           ),
                       ],
                     );
                   }),
-                  const Gap(5),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FormField<String>(validator: (value) {
+                          if (viewModel.city.text.isEmpty) {
+                            return 'City is required';
+                          }
+
+                          return null;
+                        }, builder: (formState) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              WayaTextFormField(
+                                keyboardType: TextInputType.name,
+                                controller: viewModel.city,
+                                hintText: 'Enter Your City',
+                                borderColor: formState.hasError &&
+                                        viewModel.city.text.isEmpty
+                                    ? wayaTheme.colorScheme.error
+                                    : null,
+                                label: 'City',
+                              ),
+                              if (formState.hasError &&
+                                  viewModel.city.text.isEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    formState.errorText!,
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12),
+                                  ),
+                                ),
+                            ],
+                          );
+                        }),
+                      ),
+                      const Gap(10),
+                      Expanded(
+                        child: FormField<String>(validator: (value) {
+                          if (viewModel.state.text.isEmpty) {
+                            return 'State is required';
+                          }
+
+                          return null;
+                        }, builder: (formState) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              WayaTextFormField(
+                                keyboardType: TextInputType.name,
+                                controller: viewModel.state,
+                                hintText: 'Enter Your State',
+                                borderColor: formState.hasError &&
+                                        viewModel.state.text.isEmpty
+                                    ? wayaTheme.colorScheme.error
+                                    : null,
+                                label: 'State',
+                              ),
+                              if (formState.hasError &&
+                                  viewModel.state.text.isEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    formState.errorText!,
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12),
+                                  ),
+                                ),
+                            ],
+                          );
+                        }),
+                      )
+                    ],
+                  ),
+                  const Gap(10),
+                  FormField<String>(validator: (value) {
+                    if (viewModel.country.text.isEmpty) {
+                      return 'Country is required';
+                    }
+
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: viewModel.country,
+                          hintText: 'Enter Your Country',
+                          borderColor: formState.hasError &&
+                                  viewModel.country.text.isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
+                          label: 'Country',
+                        ),
+                        if (formState.hasError &&
+                            viewModel.country.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                  const Gap(10),
+                  FormField<String>(
+                    validator: (value) {
+                      if (viewModel.dateOfBirth.isEmpty) {
+                        return 'Date of Birth is required';
+                      }
+                      return null;
+                    },
+                    builder: (formState) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Date of Birth",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.wayaCopyWith(
+                                    fontSize: 14,
+                                    color: wayaTheme.colorScheme.greyColor900,
+                                  )),
+                          const Gap(4),
+                          WayaButton(
+                            callback: () {
+                              viewModel.showDatePickerDialog(context);
+                            },
+                            horizontalPadding: 0,
+                            color: wayaTheme.colorScheme.transparent,
+                            centerWidget: Focus(
+                                onFocusChange: (hasFocus) {
+                                  viewModel.focusChanged(hasFocus);
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          viewModel.dateOfBirth.isEmpty
+                                              ? 'Select Date'
+                                              : viewModel.dateOfBirth,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                              ?.wayaCopyWith(
+                                                fontSize: 14,
+                                                color: viewModel
+                                                        .dateOfBirth.isEmpty
+                                                    ? wayaTheme.colorScheme
+                                                        .greyColor300
+                                                    : wayaTheme.colorScheme
+                                                        .customBlack,
+                                              )),
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        color:
+                                            wayaTheme.colorScheme.greyColor300,
+                                      )
+                                    ],
+                                  ),
+                                )),
+                            border: Border.all(
+                                width: 1,
+                                color: viewModel.isFocused
+                                    ? wayaTheme.colorScheme.customPrimary
+                                    : wayaTheme.colorScheme.greyColor300),
+                          ),
+                          if (formState.hasError &&
+                              viewModel.dateOfBirth.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                formState.errorText!,
+                                style: TextStyle(
+                                    color: wayaTheme.colorScheme.error,
+                                    fontSize: 12),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                  const Gap(10),
+                  FormField<String>(validator: (value) {
+                    if (viewModel.gender.isEmpty) {
+                      return 'Gender is required';
+                    }
+
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaSelectField(
+                            height: 0.2,
+                            label: "Gender",
+                            hintText: 'Select Gender',
+                            items: viewModel.genders,
+                            onSelected: (value) =>
+                                viewModel.selectGender(value)),
+                        if (formState.hasError && viewModel.gender.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+
+                  const Gap(10),
+                  FormField<String>(validator: (value) {
+                    return WayaValidators.passwordValidator(
+                        viewModel.password.text);
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Focus(
+                          onFocusChange: (hasFocus) {
+                            viewModel.setPasswordFocus(hasFocus);
+                          },
+                          child: WayaTextFormField(
+                            keyboardType: TextInputType.visiblePassword,
+                            controller: viewModel.password,
+                            borderColor: formState.hasError &&
+                                    viewModel.password.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
+                            hintText: 'Enter Your Password',
+                            label: 'Password',
+                            obscureText: !viewModel.isPasswordVisible,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                viewModel.togglePasswordVisibility();
+                              },
+                              autofocus: false,
+                              icon: Icon(viewModel.isPasswordVisible
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined),
+                              color: wayaTheme.colorScheme.greyColor300,
+                            ),
+                          ),
+                        ),
+                        if (formState.hasError && !viewModel.isPasswordFocused)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                  const Gap(10),
                   FormField<String>(validator: (value) {
                     if (viewModel.confirmPassword.text.isEmpty) {
                       return 'Password is required';
@@ -309,51 +663,54 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WayaTextFormField(
-                          keyboardType: TextInputType.visiblePassword,
-                          controller: viewModel.confirmPassword,
-                          borderColor: formState.hasError &&
-                                  viewModel.confirmPassword.text.isEmpty
-                              ? wayaTheme.colorScheme.error
-                              : null,
-                          hintText: 'Enter your Password',
-                          label: 'Confirm Password',
-                          obscureText: !viewModel.isConfirmPasswordVisible,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              viewModel.toggleConfirmPasswordVisibility();
-                            },
-                            autofocus: false,
-                            icon: Icon(viewModel.isConfirmPasswordVisible
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
-                            color: wayaTheme.colorScheme.greyColor300,
+                        Focus(
+                          onFocusChange: (hasFocus) {
+                            viewModel.setConfirmPasswordFocus(hasFocus);
+                          },
+                          child: WayaTextFormField(
+                            keyboardType: TextInputType.visiblePassword,
+                            controller: viewModel.confirmPassword,
+                            borderColor: formState.hasError &&
+                                    viewModel.confirmPassword.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
+                            hintText: 'Enter your Password',
+                            label: 'Confirm Password',
+                            obscureText: !viewModel.isConfirmPasswordVisible,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                viewModel.toggleConfirmPasswordVisibility();
+                              },
+                              autofocus: false,
+                              icon: Icon(viewModel.isConfirmPasswordVisible
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined),
+                              color: wayaTheme.colorScheme.greyColor300,
+                            ),
                           ),
                         ),
                         if (formState.hasError &&
-                            viewModel.confirmPassword.text.isEmpty)
+                            !viewModel.isConfirmPasswordFocused)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style:  TextStyle(
-                                  color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
                             ),
                           ),
                       ],
                     );
                   }),
-                  const Gap(5),
+                  const Gap(10),
                   Row(
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    // crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Checkbox(
                           value: viewModel.isAgreeToTerm,
                           onChanged: (value) {
                             viewModel.toggleTerm(value);
                           }),
-                      // const Gap(3),
                       Expanded(
                           child: RichText(
                               textAlign: TextAlign.start,
@@ -374,16 +731,22 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     ],
                   ),
                   const Gap(20),
-                  //viewModel.isButtonEnabled
-                          
+                  //
+
                   WayaButton(
-                      callback:  () {
-                              // _formKey.currentState?.validate() == true
-                              //  print("i am here");
-                              widget.goToNextTab();
-                            }
-                          ,
-                      text: "Continue")
+                    callback: !viewModel.isLoading
+                        ? () async {
+                         
+                               if (_formKey.currentState!.validate()) {
+                         await viewModel.onSubmit(widget.goToNextTab);
+                      }
+                          
+
+                          }
+                        : null,
+                    centerWidget: LoadingState(
+                        loading: viewModel.isLoading, text: 'Continue'),
+                  )
                 ],
               ))
         ],

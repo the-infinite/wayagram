@@ -8,9 +8,9 @@ class GroupedWidgetHeader extends StatelessWidget {
   final VoidCallback onTap;
   final String title;
   final String subTitle;
-  bool isVisible;
+  final bool isVisible;
 
-   GroupedWidgetHeader(
+  const   GroupedWidgetHeader(
       {super.key,
       required this.onTap,
       required this.subTitle,
@@ -44,7 +44,7 @@ class GroupedWidgetHeader extends StatelessWidget {
                 "See All",
                 style: TextStyle().wayaCopyWith(
                     color: wayaTheme.colorScheme.customPrimary,
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500),
               ),
             )

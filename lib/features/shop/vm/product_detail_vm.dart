@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
-import 'package:wayagram/features/shop/buyer/views/delivery_cost_request.dart';
+import 'package:wayagram/features/shop/buyer/views/dialogs/delivery_cost_request.dart';
 
 
 class ProductDetailVm extends ChangeNotifier {
@@ -9,11 +9,11 @@ class ProductDetailVm extends ChangeNotifier {
   ProductDetailVm(this.ref);
 
   Future<void> testRequest(BuildContext context) async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return DeliveryCostRequest(onPress: () {}, orders: orders);
-        });
+    // showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return DeliveryCostRequest(onPress: () {}, orders: orders);
+    //     });
   }
 }
 

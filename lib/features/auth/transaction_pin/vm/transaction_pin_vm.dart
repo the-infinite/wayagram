@@ -1,9 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/service/repos/auth/auth_repository.dart';
+import 'package:wayagram/core/service/repos/wallet/wallet_model.dart';
+import 'package:wayagram/core/service/repos/wallet/wallet_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/interests/views/select_interest.dart';
 
 final pinProvider = StateProvider<String>((ref) => '');
 final confirmPinProvider = StateProvider<String>((ref) => '');
+final loadingProvider = StateProvider<bool>((ref) => false);
 final isPinValidProvider = StateProvider<bool>((ref) {
   final pin = ref.watch(pinProvider);
   final confirmPin = ref.watch(confirmPinProvider);
@@ -11,6 +17,9 @@ final isPinValidProvider = StateProvider<bool>((ref) {
 });
 
 class TransactionPinVm extends StateNotifier<void> {
+  final WalletRepository _walletRepository = WalletRepository();
+  final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
+  final _logger = getLogger("TransactionPinVm");
   TransactionPinVm(this.ref) : super(null);
   final Ref ref;
 
@@ -42,16 +51,33 @@ class TransactionPinVm extends StateNotifier<void> {
     ref.read(confirmPinProvider.notifier).state = '';
   }
 
-  void submitPins() {
+  Future<void> submitPins() async {
     final pin = ref.read(pinProvider);
     final confirmPin = ref.read(confirmPinProvider);
     ref.read(isPinValidProvider.notifier).state =
         pin.length == 4 && pin != confirmPin;
-    if (pin.length == 4 && pin == confirmPin) {
-      WayaNav.toNamed('/setup-pin');
-    }
+
     ref.read(isPinValidProvider.notifier).state =
         pin.length == 4 && pin == confirmPin;
+
+    if (pin.length == 4 && pin == confirmPin) {
+      try {
+        ref.read(loadingProvider.notifier).state = true;
+       final user = _localDataSource.getUser();
+        final response = await _walletRepository.createPin(CreateWalletPin(
+            confirmPin: confirmPin,
+            pin: pin,
+            userId: user["id"]));
+          _logger.d("  ${response.data}");
+        if (response.data["statusCode"] == 200) {
+          WayaNav.toNamed('/set-notification');
+        }
+      } catch (e) {
+        _logger.e(e);
+      } finally {
+        ref.read(loadingProvider.notifier).state = false;
+      }
+    }
   }
 
   void clearPins() {

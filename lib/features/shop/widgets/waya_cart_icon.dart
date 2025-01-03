@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 
-class WayaCartIcon extends StatelessWidget {
-  final int count;
-  const WayaCartIcon({super.key, required this.count});
+class WayaCartIcon extends ConsumerWidget {
+
+  const WayaCartIcon({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
+     final cartItemCount = ref.watch(cartProvider.select((cart) => 
+      cart.fold(0, (sum, item) => sum + item.count)
+    ));
     return GestureDetector(
       onTap: () {
         WayaNav.toNamed("/cart");
@@ -33,7 +38,7 @@ class WayaCartIcon extends StatelessWidget {
                       size: 22, color: wayaTheme.colorScheme.white),
                   const Gap(5),
                   Text(
-                    "$count",
+                    "$cartItemCount",
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.white,
                         fontWeight: FontWeight.w600,

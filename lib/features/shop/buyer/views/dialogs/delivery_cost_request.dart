@@ -6,12 +6,14 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/shop/cart/data/model.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
+import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class DeliveryCostRequest extends StatelessWidget {
-  final List<Product> orders;
+  final List<Cart> orders;
   final VoidCallback onPress;
 
   const DeliveryCostRequest(
@@ -67,11 +69,9 @@ class DeliveryCostRequest extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    "assets/images/avatars.png",
-                    width: 26,
-                    height: 26,
-                  ),
+                 WayaDp(
+                  radius: 24,
+                 ),
                   const Gap(6),
                   Text(
                     "Maleek Ventures",
@@ -87,7 +87,7 @@ class DeliveryCostRequest extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                   itemCount: 2,
                   itemBuilder: (context, index) {
-                    return OrderedProductCard(order: orders[index]);
+                    return OrderedProductCard();
                   }),
             
             const Gap(24),

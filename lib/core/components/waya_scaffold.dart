@@ -180,7 +180,20 @@ class _WayaScaffoldWithProgressbarState extends State<WayaScaffoldWithProgressba
           ),
         ),
       ),
-      body: TabBarView(controller: widget.tabController, children: widget.tabsView),
+      body: widget.isScrollable
+          ? SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+              child: Column(
+                children: [
+                  widget.tabsView[widget.tabController.index],
+                ],
+              ),
+            )
+          : TabBarView(
+             physics: NeverScrollableScrollPhysics(), 
+              controller: widget.tabController, children: widget.tabsView),
     );
   }
 }
+
+

@@ -4,12 +4,11 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/general_settings/view/change_password_gen_set/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/view/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_page.dart';
-import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
-    // '/': () => SplashScreen(),
-    '/': () => WalletPage(),
+     '/': () => SplashScreen(),
+    // '/': () => WalletPage(),
     '/login-cover-page': () => LoginCoverPage(),
     '/onboarding': () => OnboardingView(),
     '/account-creation': () => AccountCreation(),
