@@ -38,7 +38,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       receiveTimeout: const Duration(seconds: 30),
     );
     final dio = Dio(options);
-   dio.interceptors.add(DioInterceptor(dio, secureDataSource));
+    dio.interceptors.add(DioInterceptor(dio, secureDataSource));
     return dio;
   }
 
@@ -48,7 +48,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       Map<String, dynamic>? params,
       bool formdata = false,
       dynamic token}) async {
-  await  _setHeader(
+    await _setHeader(
       formdata: formdata,
     );
     params?.removeWhere((key, value) => value == null);
@@ -67,7 +67,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       bool formEncoded = false,
       void Function({int count, int total})? onSendProgress,
       void Function({int count, int total})? onRecieveProgress}) async {
-  await  _setHeader(
+    await _setHeader(
       formdata: formdata,
       formEncoded: formEncoded,
     );
@@ -77,6 +77,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     _logger.f('headers: ${dio.options.headers}');
     if (formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
+      _logger.d("hfhfvjgj $body");
     }
 
     return _makeRequest(dio.post(
@@ -103,7 +104,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool formdata = false,
     bool formEncoded = false,
   }) async {
-  await  _setHeader(
+    await _setHeader(
       formdata: formdata,
       formEncoded: formEncoded,
     );
@@ -150,7 +151,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     String route, {
     Map<String, dynamic>? params,
   }) async {
-   await _setHeader();
+    await _setHeader();
     params?.removeWhere((key, value) => value == null);
     final fullRoute = '$baseURL$route';
 
@@ -188,8 +189,6 @@ class DioHttpClient implements WayaHttpClientInterface {
     }
   }
 
- 
-
   Future<void> _setHeader({
     bool formdata = false,
     bool formEncoded = false,
@@ -201,7 +200,7 @@ class DioHttpClient implements WayaHttpClientInterface {
               ? 'application/x-www-form-urlencoded'
               : 'application/json',
       'Accept': '*/*',
-    //  'Authorization' : 'Bearer ${await secureDataSource.getToken()}',
+      //  'Authorization' : 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 

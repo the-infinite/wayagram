@@ -38,6 +38,15 @@ class WayaLocalDataSource {
     return wayaFastStorageService.read(key: 'user');
   }
 
+    saveBusiness(dynamic user) {
+    return wayaFastStorageService.write(key: 'business', value: user);
+  }
+
+  dynamic getBusiness() {
+    return wayaFastStorageService.read(key: 'business');
+  }
+
+
   saveSelectedBusinessType(Select biz) {
     return wayaFastStorageService.write<Select>(key: 'bizType', value: biz);
   }

@@ -99,7 +99,7 @@ class VerifyAccount extends ConsumerWidget {
         
          */
         WayaButton(
-            callback:() {
+            callback: !viewModelState.isLoading ? () {
                     if (type == 'account-creation') {
                        final code = ref.watch(verifyAccountProvider).inputCode;
                       viewModel.verifyAccount(
@@ -107,7 +107,7 @@ class VerifyAccount extends ConsumerWidget {
                     } else {
                       goToNextTab();
                     }
-                  },
+                  } : null,
             centerWidget: LoadingState(
                 loading: viewModelState.isLoading, text: 'Continue')),
       ],
