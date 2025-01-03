@@ -76,7 +76,7 @@ class SelectInterest extends ConsumerWidget {
                     final WayaLocalDataSource localDataSource =
                         WayaLocalDataSource();
 
-                    if (localDataSource.getUserType() == 'business') {
+                    if (localDataSource.getUserType().type == 'BUSINESS') {
                       WayaNav.toNamed('/add-business-account');
                     } else {
                       WayaNav.to(const SuccessfulSetup());
@@ -87,9 +87,16 @@ class SelectInterest extends ConsumerWidget {
           const Gap(20),
           Align(
               child: GestureDetector(
-            onTap: () {
-              WayaNav.to(const SuccessfulSetup());
-            },
+            onTap: () async {
+                    final WayaLocalDataSource localDataSource =
+                        WayaLocalDataSource();
+
+                    if (localDataSource.getUserType().type == 'BUSINESS') {
+                      WayaNav.toNamed('/add-business-account');
+                    } else {
+                      WayaNav.to(const SuccessfulSetup());
+                    }
+                  },
             child: Text(
               "Skip for now",
               style: TextStyle().wayaCopyWith(

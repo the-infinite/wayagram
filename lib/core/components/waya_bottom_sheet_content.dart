@@ -10,7 +10,7 @@ class WayaBottomSheetContent extends StatelessWidget {
   final List<Select> items;
   const WayaBottomSheetContent(
       {super.key,
-      this.contextHeight = 0.5,
+      this.contextHeight = 0.3,
       required this.items,
       required this.title});
 

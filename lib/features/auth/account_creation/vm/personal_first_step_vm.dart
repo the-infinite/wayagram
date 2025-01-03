@@ -24,6 +24,7 @@ class PersonalFirstStepVm extends ChangeNotifier {
 
   String dateOfBirth = '';
   String _gender = '';
+  String _businessTypeId = '';
   final WayaLocalDataSource localDataSource = WayaLocalDataSource();
   final _logger = getLogger('PersonalFirstStepVm');
   bool isPasswordVisible = false;
@@ -48,6 +49,7 @@ class PersonalFirstStepVm extends ChangeNotifier {
   bool get isButtonEnabled => _isButtonEnabled;
   bool get isFocused => _isFocused;
   String get gender => _gender;
+  String get businessTypeId => _businessTypeId;
   bool get isConfirmPasswordFocused => _isConfirmPasswordFocused;
   bool get isPasswordFocused => _isPasswordFocused;
   bool get isLoading => _isLoading;
@@ -84,6 +86,11 @@ class PersonalFirstStepVm extends ChangeNotifier {
 
   void selectGender(String value) {
     _gender = value;
+    notifyListeners();
+  }
+
+  void selectBizType(String value) {
+    _businessTypeId = value;
     notifyListeners();
   }
 
@@ -161,7 +168,8 @@ class PersonalFirstStepVm extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
-      final bool isPersonal = localDataSource.getUserType() == 'personal';
+      final bool isPersonal = localDataSource.getUserType().type == 'PERSONAL';
+      print("isPersonal $isPersonal");
       final response = await _authRepository.register(Register(
         email: email.text,
         password: password.text,
@@ -178,15 +186,14 @@ class PersonalFirstStepVm extends ChangeNotifier {
         policyAgreement: isAgreeToTerm,
         confirmPassword: confirmPassword.text,
         gender: gender,
-        accountTypeId: isPersonal
-            ? '00ea33fd-0262-4238-a1a0-2cc2562a4dd0'
-            : '',
+        accountTypeId: localDataSource.getUserType().id,
         business: isPersonal
             ? null
             : {
-              "name": businessName.text,
-              "address": businessAddress.text,
-            },
+                "name": businessName.text,
+                "address": businessAddress.text,
+                "businessTypeId": _businessTypeId,
+              },
       ));
 
       _logger.d(" result ${response.data['message']}");
@@ -207,3 +214,44 @@ class PersonalFirstStepVm extends ChangeNotifier {
 
 final personalFirstStepProvider =
     ChangeNotifierProvider.autoDispose((ref) => PersonalFirstStepVm(ref));
+
+class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {
+  final AuthRepository _authRepository;
+  final _logger = getLogger('BusinessTypes');
+
+  BusinessTypes(this._authRepository) : super(const AsyncValue.loading()) {
+    fetchBusinessTypes();
+  }
+
+  Future<void> fetchBusinessTypes() async {
+    try {
+      state = const AsyncValue.loading();
+      final response = await _authRepository.getBusinessTypes();
+      _logger.d(response.data);
+      final businesses = response.data['data']['docs'] as List;
+      final businessTypes = businesses
+          .map((item) => Select(
+                label: item['name'],
+                value: item['id'],
+              ))
+          .toList();
+
+      state = AsyncValue.data(businessTypes);
+    } catch (e, stack) {
+      state = AsyncValue.error(e, stack);
+      _logger.e(e);
+    }
+  }
+
+  Future<void> refresh() async {
+    await fetchBusinessTypes();
+  }
+}
+
+final authRepositoryProvider = Provider((ref) => AuthRepository());
+
+final businessTypesProvider =
+    StateNotifierProvider<BusinessTypes, AsyncValue<List<Select>>>((ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
+  return BusinessTypes(authRepository);
+});

@@ -9,8 +9,8 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> verifyOtp(VerifyOtp payload) {
-    return post(
-        'wayagram-profile/api/v2/client/auth/register/verify-email', payload.toJson());
+    return post('wayagram-profile/api/v2/client/auth/register/verify-email',
+        payload.toJson());
   }
 
   ///
@@ -32,5 +32,14 @@ class AuthRepository extends BaseRepository {
   Future<WayaRequestResponse> login(String email, String password) {
     return post('wayagram-profile/api/v2/client/auth/login',
         {"email": email, "password": password});
+  }
+
+  Future<WayaRequestResponse> getAccountType() async {
+    return get('wayagram-profile/api/v2/client/account-types');
+  }
+
+  Future<WayaRequestResponse> getBusinessTypes() async {
+    return get(
+        'wayagram-profile/api/v2/client/businesses/types/all');
   }
 }

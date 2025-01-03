@@ -3,14 +3,14 @@ import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 
 abstract class BaseRepository {
-  final _logger = getLogger( 'BaseRepository');
+  final _logger = getLogger('BaseRepository');
   final DioHttpClient httpClient;
-
 
   BaseRepository() : httpClient = DioHttpClient();
 
   Future<WayaRequestResponse> get(String route,
       {Map<String, dynamic>? params}) {
+  
     return httpClient.getHttp(route, params: params);
   }
 
@@ -20,7 +20,7 @@ abstract class BaseRepository {
       bool formEncoded = false,
       void Function({int count, int total})? onSendProgress,
       void Function({int count, int total})? onRecieveProgress}) {
-            _logger.i('Registering user base $body');
+    _logger.i('Registering user base $body');
     return httpClient.postHttp(route, body,
         params: params,
         formdata: formdata,

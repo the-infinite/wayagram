@@ -41,7 +41,7 @@ class _AccountCreationState extends ConsumerState<AccountCreation>
     }
 
     return WayaScaffoldWithProgressbar(
-        isLoading: false,
+        isLoading: true,
         isScrollable: _tabController.index == 1 ? true : false,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [

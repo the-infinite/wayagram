@@ -3,12 +3,15 @@ class SelectAccountData {
   final String title;
   final String description;
   final String type;
+  final String id;
 
   SelectAccountData(
       {required this.avatar,
       required this.description,
       required this.title,
-      required this.type});
+      required this.type,
+      required this.id
+      });
 }
 
 List<SelectAccountData> selectAccountData = [
@@ -16,10 +19,14 @@ List<SelectAccountData> selectAccountData = [
       avatar: "assets/icons/personal.svg",
       description: "Create your personal account to get started \n with us",
       title: "Personal Account",
-      type: "personal"),
+      type: "PERSONAL", 
+      id: "1"
+      ),
   SelectAccountData(
       avatar: "assets/icons/business.svg",
       description: "Create a business account for your  \n business",
       title: "Business Account",
-      type: "business")
+      type: "BUSINESS",
+      id: "2"
+      )
 ];

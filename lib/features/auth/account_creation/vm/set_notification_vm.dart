@@ -9,7 +9,7 @@ class SetNotificationVm extends ChangeNotifier {
   final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
 
   Future<void> setNotification() async {
-    if (_localDataSource.getUserType() == "personal") {
+    if (_localDataSource.getUserType().type == "PERSONAL") {
       WayaNav.toNamed('/account-setup-success');
     } else {
       WayaNav.toNamed('/add-business-account');

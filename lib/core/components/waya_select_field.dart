@@ -14,6 +14,7 @@ class WayaSelectField extends ConsumerWidget {
   final BorderRadius? radius;
   final List<Select> items;
   final Function(String value) onSelected;
+  final String uniqueKey;
 
   const WayaSelectField(
       {super.key,
@@ -22,12 +23,13 @@ class WayaSelectField extends ConsumerWidget {
       this.height = 48,
       required this.items,
       required this.onSelected,
-      this.radius});
+      this.radius,
+       this.uniqueKey = ''});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(wayaSelectFieldViewModelProvider);
+    final viewModel = ref.watch(wayaSelectFieldViewModelProvider(uniqueKey));
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,12 +108,12 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
     final result = await WayaHelpers.showSelectModal(
         context: context, title: title, items: items);
     _label = result.label;
-    // print("ewfegererger $result  $_value");
     onSelected(result.value);
 
     notifyListeners();
   }
 }
 
-final wayaSelectFieldViewModelProvider =
-    ChangeNotifierProvider((ref) => WayaSelectFieldViewModel(ref));
+final wayaSelectFieldViewModelProvider = ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>((ref, uniqueKey) {
+  return WayaSelectFieldViewModel(ref);
+});

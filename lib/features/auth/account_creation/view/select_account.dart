@@ -14,9 +14,10 @@ class SelectAccount extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(selectAccountProvider.notifier);
+   final viewModel = ref.watch(selectAccountProvider.notifier);
     final type = ref.watch(selectAccountProvider).selectedType;
     final wayaTheme = Theme.of(context);
+    final accountTypes = ref.watch(selectAccountTypesProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -27,66 +28,129 @@ class SelectAccount extends ConsumerWidget {
         Text("Which type of account do you want to \n create",
             style: WayaTextStyles.hintStyle),
         const Gap(20),
-        ListView.builder(
-            itemCount: viewModel.data.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      viewModel.setSelectedType(viewModel.data[index].type);
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 100,
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                          color: viewModel.data[index].type == type
-                              ? wayaTheme.colorScheme.primary75
-                              : wayaTheme.colorScheme.greyColor100,
-                          border: Border.all(
-                              color: viewModel.data[index].type == type
-                                  ? wayaTheme.colorScheme.customPrimary
-                                  : wayaTheme.colorScheme.greyColor100),
-                          borderRadius: BorderRadius.all(Radius.circular(12))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(viewModel.data[index].avatar),
-                          const Gap(10),
-                          Column(
+        accountTypes.when(
+            data: (accounts) => ListView.builder(
+                itemCount: accounts.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                         viewModel.setSelectedType(accounts[index]);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 100,
+                          padding: EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                              color: accounts[index].type == type
+                                  ? wayaTheme.colorScheme.primary75
+                                  : wayaTheme.colorScheme.greyColor100,
+                              border: Border.all(
+                                  color: accounts[index].type == type
+                                      ? wayaTheme.colorScheme.customPrimary
+                                      : wayaTheme.colorScheme.greyColor100),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12))),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(viewModel.data[index].title,
-                                  style: WayaTextStyles.titleMedium),
-                              const Gap(3),
-                              Text(viewModel.data[index].description,
-                                  style: WayaTextStyles.hintStyle)
+                              SvgPicture.asset(accounts[index].avatar),
+                              const Gap(10),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(accounts[index].title,
+                                      style: WayaTextStyles.titleMedium),
+                                  const Gap(3),
+                                  Text(accounts[index].description,
+                                      style: WayaTextStyles.hintStyle)
+                                ],
+                              )
                             ],
-                          )
-                        ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const Gap(20)
-                ],
-              );
-            }),
+                      const Gap(20)
+                    ],
+                  );
+                }),
+            error: (e, stack) => _buildAccountLoadingState(context: context),
+            loading: () => _buildAccountLoadingState(context: context)),
         const Gap(50),
         WayaButton(
             callback: type.isNotEmpty
                 ? () async {
-                    final WayaLocalDataSource localDataSource =
-                        WayaLocalDataSource();
-                    localDataSource.saveUserType(type);
+                   
                     goToNextTab(type);
                   }
                 : null,
             text: "Continue")
       ],
     );
+  }
+
+  Widget _buildAccountLoadingState({required BuildContext context}) {
+    final wayaTheme = Theme.of(context);
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: 2,
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 100,
+                padding: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.scaffoldColor,
+                    border:
+                        Border.all(color: wayaTheme.colorScheme.greyColor100),
+                    borderRadius: BorderRadius.all(Radius.circular(12))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                         color: wayaTheme.colorScheme.greyColor100,
+                      ),
+                     
+                    ),
+                    const Gap(10),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              color: wayaTheme.colorScheme.greyColor100,
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        const Gap(3),
+                        Container(
+                          width: 200,
+                          height: 20,
+                          decoration: BoxDecoration(
+                              color: wayaTheme.colorScheme.greyColor100,
+                              borderRadius: BorderRadius.circular(8)),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              const Gap(20)
+            ],
+          );
+        });
   }
 }

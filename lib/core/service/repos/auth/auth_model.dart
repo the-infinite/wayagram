@@ -50,7 +50,7 @@ class Register {
     if (referenceCode == null || referenceCode!.isEmpty) {
       data.remove('referenceCode');
     }
-    if (business == null || business!.isEmpty) {
+    if (business == null) {
       data.remove('business');
     }
 
