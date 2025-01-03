@@ -42,8 +42,11 @@ class DioHttpClient implements WayaHttpClientInterface {
 
   @override
   Future<WayaRequestResponse> getHttp(String route,
-      {Map<String, dynamic>? body, Map<String, dynamic>? params, bool formdata = false, dynamic token}) async {
-    _setHeader(
+      {Map<String, dynamic>? body,
+      Map<String, dynamic>? params,
+      bool formdata = false,
+      dynamic token}) async {
+  await  _setHeader(
       formdata: formdata,
     );
     params?.removeWhere((key, value) => value == null);
@@ -72,6 +75,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     _logger.f('headers: ${dio.options.headers}');
     if (formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
+      _logger.d("hfhfvjgj $body");
     }
 
     return _makeRequest(dio.post(
@@ -198,7 +202,7 @@ class DioHttpClient implements WayaHttpClientInterface {
               ? 'application/x-www-form-urlencoded'
               : 'application/json',
       'Accept': '*/*',
-      'Authorization': '${await secureDataSource.getToken()}',
+    //  'Authorization' : 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 

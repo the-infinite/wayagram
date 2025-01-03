@@ -8,7 +8,8 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/repos/auth/auth_repository.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-
+import 'package:mime/mime.dart';
+import 'package:dio/dio.dart';
 class DocType {
   final File file;
   final String name;
@@ -33,13 +34,13 @@ class AddBusinessAccountVm extends ChangeNotifier {
   final Ref ref;
 
   AddBusinessAccountVm(this.ref) {
-    
     selected = localDataSource.getSelectedBusinessType().label;
   }
 
   List<DocType> get uploadedDocuments => _uploadedDocuments;
   String get isSelected => selected;
   bool get isButtonEnabled => _isButtonEnabled;
+  bool get isLoading => _isLoading;
 
   void selectType(String type) {
     selected = type;
@@ -89,31 +90,64 @@ class AddBusinessAccountVm extends ChangeNotifier {
   }
 
   Future<void> submit(BuildContext context) async {
-    final formData = FormData.fromMap({
-      'nin': await MultipartFile.fromFile(_uploadedDocuments
-          .firstWhere((element) => element.type == 'nin')
-          .file
-          .path),
-      'cacDocument': await MultipartFile.fromFile(_uploadedDocuments
-          .firstWhere((element) => element.type == 'cac')
-          .file
-          .path),
-      'utilityBill': await MultipartFile.fromFile(_uploadedDocuments
-          .firstWhere((element) => element.type == 'bill')
-          .file
-          .path),
-      'passport': await MultipartFile.fromFile(_uploadedDocuments
-          .firstWhere((element) => element.type == 'passport')
-          .file
-          .path),
-      'businessId': localDataSource.getSelectedBusinessType().value,
-      'cacNumber': cac.text
-    });
+Future<MultipartFile> formattedImage(File file) async {
+  final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
+
+  return await MultipartFile.fromFile(
+    file.path,
+    filename: file.uri.pathSegments.last, 
+    contentType: DioMediaType.parse(mimeType),
+  );
+}
+
+    final formdata = isSelected == 'CAC'
+        ? {
+            'nin': await formattedImage(uploadedDocuments
+                .firstWhere((element) => element.type == 'nin')
+                .file),
+            'cacDocument': await formattedImage(uploadedDocuments
+                .firstWhere((element) => element.type == 'cac')
+                .file),
+            'utilityBill': await formattedImage(uploadedDocuments
+                .firstWhere((element) => element.type == 'bill')
+                .file),
+            'passport': await formattedImage(uploadedDocuments
+                .firstWhere((element) => element.type == 'passport')
+                .file),
+            'businessId': localDataSource.getBusiness()['id'],
+            'cacNumber': cac.text
+          }
+        : {
+            'nin': await formattedImage(uploadedDocuments
+                .firstWhere((element) => element.type == 'nin')
+                .file),
+            'utilityBill': await formattedImage(uploadedDocuments
+                .firstWhere((element) => element.type == 'bill')
+                .file),
+            'passport': await formattedImage(uploadedDocuments
+                .firstWhere((element) => element.type == 'passport')
+                .file),
+            'businessId': localDataSource.getBusiness()['id'],
+          };
+
+    //         FormData formData = FormData();
+
+    // for (var entry in formdata.entries) {
+    //   formData.fields.add(
+    //     MapEntry(
+    //       entry.key, // Field name
+    //       (await MultipartFile.fromFile(
+    //         entry.value.path,
+    //         filename: entry.value.path.split('/').last,
+    //       )).toString(),
+    //     ),
+    //   );
+    // }
 
     try {
       _isLoading = true;
       notifyListeners();
-      final response = await _authRepository.businessKyc(formData);
+      final response = await _authRepository.businessKyc(formdata);
       if (response.data['statusCode'] == 200 && context.mounted) {
         WayaHelpers.showNotice(
             context: context,

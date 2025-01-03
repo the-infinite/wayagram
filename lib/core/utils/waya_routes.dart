@@ -6,6 +6,13 @@ import 'package:wayagram/features/general_settings/change_pin/change_pin_page.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
+import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
+import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_page.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
@@ -29,6 +36,8 @@ class WayaAppRoutes {
     '/order-detail': () => OrderDetails(),
     '/confirm-order-delivery': () => ConfirmOrderDelivery(),
     '/cart': () => CartView(),
+    '/seller-orders': () => AllSellerOrders(),
+    '/seller-order-details': () => SellerOrderDetails(),
     '/checkout': () => Checkout(),
     '/filter': () => FilterView(),
     '/general-settings': () => GeneralSettingsPage(),
@@ -38,7 +47,12 @@ class WayaAppRoutes {
     WalletPage.route: () => WalletPage(),
     ProfilePage.route: () => ProfilePage(),
     EditNamePage.route: () => EditNamePage(),
-    EditProfilePage.route: () => EditProfilePage()
+    EditProfilePage.route: () => EditProfilePage(),
+    '/add-product': () => AddProduct(),
+    '/waya_product_listing': () => ProductListing(),
+    '/waya-deal-ad': () => WayaDealAd(),
+    '/wayagram-deal': () => WayaGramDeals(),
+    '/waya-application-product-detail': () => ApplicationProductDetails()
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

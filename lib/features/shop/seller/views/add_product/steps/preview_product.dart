@@ -11,16 +11,16 @@ import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 class PreviewProduct extends ConsumerStatefulWidget {
   final Function(int index) goBack;
   final Function gotoPreviousTab;
+  final bool isWayagramDeal;
   const PreviewProduct(
-      {super.key, required this.goBack, required this.gotoPreviousTab});
+      {super.key, required this.goBack, required this.gotoPreviousTab, this.isWayagramDeal =false});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PreviewProductState();
 }
 
 class _PreviewProductState extends ConsumerState<PreviewProduct> {
-
-    @override
+  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final provider = ref.watch(addProductProvider.notifier);
@@ -57,14 +57,12 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
             border:
                 Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
           ),
-          child: 
-            WayaImage(
-              imageUrl:
-                  'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
-              height: 250,
-              fit: BoxFit.contain,
-            ),
-          
+          child: WayaImage(
+            imageUrl:
+                'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
+            height: 250,
+            fit: BoxFit.contain,
+          ),
         ),
         const Gap(15),
         Text(
@@ -92,13 +90,12 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
                   border: Border.all(
                       color: wayaTheme.colorScheme.greyColor300, width: 1),
                 ),
-                child:  WayaImage(
-                    imageUrl:
-                        'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
-                    height: 100,
-                    fit: BoxFit.contain,
-                  ),
-                
+                child: WayaImage(
+                  imageUrl:
+                      'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
+                  height: 100,
+                  fit: BoxFit.contain,
+                ),
               );
             }),
         const Gap(30),
@@ -190,7 +187,7 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
         WayaButton(
             text: 'Submit Product',
             callback: () {
-              provider.submit(context);
+              provider.submit(context, widget.isWayagramDeal);
             }),
         const Gap(8),
         WayaButton(

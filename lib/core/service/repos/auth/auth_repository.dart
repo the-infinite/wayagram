@@ -38,7 +38,7 @@ class AuthRepository extends BaseRepository {
 
   //
   Future<WayaRequestResponse> businessKyc(dynamic data) {
-    return post('wayagram-profile/api/v2/kyc/add-business-kyc',data, formdata: true);
+    return post('wayagram-profile/api/v2/client/kyc/add-business-kyc',data, formdata: true);
   }
 
   Future<WayaRequestResponse> getAccountType() async {

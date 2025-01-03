@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
@@ -12,7 +13,7 @@ import 'package:wayagram/features/shop/seller/views/waya_seller.dart';
 
 class BottomView extends ConsumerStatefulWidget {
   final int? index;
- const  BottomView({super.key, this.index = 0});
+  const BottomView({super.key, this.index = 0});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _BottomViewState();
@@ -24,26 +25,33 @@ class _BottomViewState extends ConsumerState<BottomView> {
   @override
   void initState() {
     super.initState();
-   
-    _selectedIndex = widget.index ?? 0;
 
- 
+    _selectedIndex = widget.index ?? 0;
   }
 
-  final List<Widget> _pages = [
-    Explore(),
-    WayaSeller(),
-    Explore(),
-    Explore(),
-    Explore(),
-    Explore(),
-  ];
+  late final List<Widget> _pages;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
+    // final userType = _localDataSource.getUserType().type;
+//      userType == 'PERSONAL' ? WayaBuyer() :
+    _pages = [
+      Explore(),
+ WayaSeller(),
+      Explore(),
+      Explore(),
+      Explore(),
+      Explore(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(bottomViewVmProvider);
-   
+
     final List<BottomNavigationBarItem> bottomNavigationItem =
         viewModel.barItems.asMap().entries.map((entry) {
       final index = entry.key;

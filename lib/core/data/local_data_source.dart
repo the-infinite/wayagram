@@ -60,6 +60,13 @@ class WayaLocalDataSource {
   // UserModel getUserData() {
   //   return wayaFastStorageService.read<UserModel>(key: 'userData');
   // }
+  saveBusiness(dynamic user) {
+    return wayaFastStorageService.write(key: 'business', value: user);
+  }
+
+  dynamic getBusiness() {
+    return wayaFastStorageService.read(key: 'business');
+  }
 
   saveSelectedBusinessType(Select biz) {
     return wayaFastStorageService.write<Select>(key: 'bizType', value: biz);

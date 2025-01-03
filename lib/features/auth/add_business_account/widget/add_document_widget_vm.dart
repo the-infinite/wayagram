@@ -23,13 +23,14 @@ class AddDocumentWidgetVm extends ChangeNotifier {
       }
       notifyListeners();
     } else {
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
-      if (result != null) {
-        File file = File(result.files.single.path!);
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        File file = File(pickedFile.path);
 
         addFile(file);
       } else {
         // User canceled the picker
+        print('No image selected.');
       }
       notifyListeners();
     }

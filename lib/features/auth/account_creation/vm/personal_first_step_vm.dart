@@ -202,7 +202,12 @@ class PersonalFirstStepVm extends ChangeNotifier {
       _logger.d(" result ${response.data['message']}");
       if (response.data['statusCode'] == 200) {
         final user = response.data['data']['user'];
+
         localDataSource.saveUser(user);
+        if (!isPersonal) {
+          final biz = response.data['data']['business'];
+          localDataSource.saveBusiness(biz);
+        }
 
         gotoNextTab();
       }
