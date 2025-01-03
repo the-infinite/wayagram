@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'auth_model.g.dart';
@@ -22,25 +24,24 @@ class Register {
   String? referenceCode;
   Map<String, dynamic>? business;
 
-  Register({
-    this.email,
-    this.password,
-    this.firstName,
-    this.lastName,
-    this.phoneNumber,
-    this.address,
-    this.city,
-    this.state,
-    this.country,
-    this.dateOfBirth,
-    this.gender,
-    this.accountTypeId,
-    this.tcAgreement,
-    this.policyAgreement,
-    this.confirmPassword,
-    this.business,
-    this.referenceCode
-  });
+  Register(
+      {this.email,
+      this.password,
+      this.firstName,
+      this.lastName,
+      this.phoneNumber,
+      this.address,
+      this.city,
+      this.state,
+      this.country,
+      this.dateOfBirth,
+      this.gender,
+      this.accountTypeId,
+      this.tcAgreement,
+      this.policyAgreement,
+      this.confirmPassword,
+      this.business,
+      this.referenceCode});
 
   factory Register.fromJson(Map<String, dynamic> json) =>
       _$RegisterFromJson(json);
@@ -50,7 +51,7 @@ class Register {
     if (referenceCode == null || referenceCode!.isEmpty) {
       data.remove('referenceCode');
     }
-    if (business == null || business!.isEmpty) {
+    if (business == null) {
       data.remove('business');
     }
 
@@ -86,10 +87,13 @@ class ForgotPassword {
       required this.email,
       required this.otp});
 
-factory ForgotPassword.fromJson(Map<String, dynamic> json) =>
+  factory ForgotPassword.fromJson(Map<String, dynamic> json) =>
       _$ForgotPasswordFromJson(json);
 
   Map<String, dynamic> toJson() {
     return _$ForgotPasswordToJson(this);
   }
 }
+
+
+

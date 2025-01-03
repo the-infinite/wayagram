@@ -163,20 +163,20 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }).toList();
   }
 
-  void update(String value, String name) {
+  void update(Select value, String name) {
     switch (name) {
       case "productCategory":
-        state = state.copyWith(productCategory: value);
+        state = state.copyWith(productCategory: value.value);
       case "productCondition":
-        state = state.copyWith(productCondition: value);
+        state = state.copyWith(productCondition: value.value);
       case "productType":
-        state = state.copyWith(productType: value);
+        state = state.copyWith(productType: value.value);
       case "pickUpOption":
-        state = state.copyWith(pickUpOption: value);
+        state = state.copyWith(pickUpOption: value.value);
       case "discountType":
-        state = state.copyWith(discountType: value);
+        state = state.copyWith(discountType: value.value);
       default:
-        state = state.copyWith(productColor: value);
+        state = state.copyWith(productColor: value.value);
     }
   }
 

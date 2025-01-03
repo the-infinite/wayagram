@@ -25,13 +25,13 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
     final wayaTheme = Theme.of(context);
-    print(viewModel.localDataSource.getUserType());
+    final businessTypes = ref.watch(businessTypesProvider);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (viewModel.localDataSource.getUserType() == "business")
+          if (viewModel.localDataSource.getUserType().type == "BUSINESS")
             Text("Tell us About Your Business", style: WayaTextStyles.titleLarge)
           else
             Text("Tell us About You", style: WayaTextStyles.titleLarge),
@@ -164,7 +164,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                   //*    business section*/ */
                   Visibility(
                       visible:
-                          viewModel.localDataSource.getUserType() == "business",
+                          viewModel.localDataSource.getUserType().type == "BUSINESS",
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,6 +238,37 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               ],
                             );
                           }),
+                          businessTypes.when(data: (businesses) =>             FormField<String>(validator: (value) {
+                    if (viewModel.businessTypeId.isEmpty) {
+                      return 'Business Type is required';
+                    }
+
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaSelectField(
+                            height: 0.2,
+                            uniqueKey: 'business-type',
+                            label: "Business Type",
+                            hintText: 'Select Business Type',
+                            items: businesses,
+                            onSelected: (value) =>
+                                viewModel.selectBizType(value)),
+                        if (formState.hasError && viewModel.businessTypeId.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }), error: (e, stack) => SizedBox.shrink(), loading: SizedBox.shrink)
                         ],
                       )),
 
@@ -255,7 +286,10 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       children: [
                         Text(
                           "Phone Number",
-                          style: wayaTheme.textTheme.labelMedium,
+                          style:Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+                    fontSize: 14,
+                    color: wayaTheme.colorScheme.greyColor900,
+                  ),
                         ),
                         const Gap(3),
                         Row(
@@ -267,10 +301,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               padding: EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: formState.hasError &&
-                                              viewModel.phoneNumber.text.isEmpty
-                                          ? wayaTheme.colorScheme.error
-                                          : wayaTheme.colorScheme.greyColor300,
+                                      color: wayaTheme.colorScheme.greyColor300,
                                       width: 1),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(6.0))),
@@ -580,10 +611,11 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                         WayaSelectField(
                             height: 0.2,
                             label: "Gender",
+                            uniqueKey: 'gender',
                             hintText: 'Select Gender',
                             items: viewModel.genders,
                             onSelected: (value) =>
-                                viewModel.selectGender(value)),
+                                viewModel.selectGender(value.value)),
                         if (formState.hasError && viewModel.gender.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),

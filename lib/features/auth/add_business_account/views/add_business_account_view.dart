@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/auth/add_business_account/data/add_business_data.dart';
@@ -50,13 +48,13 @@ class _AddBusinessAccountViewState
                     onTap: (value) {
                       viewModel.selectType(value);
                     },
-                    isChosen: viewModel.isSelected == 'WITH-CAC'),
+                    isChosen: viewModel.isSelected == 'CAC'),
                 BusinessAccountTypeWidget(
                     data: businessDataType[1],
                     onTap: (value) {
                       viewModel.selectType(value);
                     },
-                    isChosen: viewModel.isSelected == 'NO-CAC')
+                    isChosen: viewModel.isSelected == 'Non-CAC')
               ],
             ),
             Visibility(
@@ -75,7 +73,7 @@ class _AddBusinessAccountViewState
                   ),
                   Visibility(
                       visible: viewModel.isSelected.isEmpty ||
-                          viewModel.isSelected == 'WITH-CAC',
+                          viewModel.isSelected == 'Non-CAC',
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +136,7 @@ class _AddBusinessAccountViewState
                     type:"document"
                   ),
                   Visibility(
-                    visible: viewModel.isSelected == 'WITH-CAC',
+                    visible: viewModel.isSelected == 'Non-CAC',
                     child: AddDocumentWidget(
                       addFile: (file) {
                         viewModel.addFile(file, 'cac');

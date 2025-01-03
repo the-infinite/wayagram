@@ -10,12 +10,13 @@ class DioInterceptor extends Interceptor {
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
+
     final token = await secureDataSource.getToken();
     if (token != null) {
-     
-  print('token: $token');
+      print('token: $token');
       options.headers['Authorization'] = 'Bearer $token';
     }
+    print('options: $options');
     return handler.next(options);
   }
 
@@ -52,6 +53,9 @@ class DioInterceptor extends Interceptor {
           return handler.next(err);
         }
       }
+    }
+    else {
+       return handler.next(err);
     }
   }
 }
