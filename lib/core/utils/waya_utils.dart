@@ -9,7 +9,7 @@ import '../components/components.dart';
 class WayaUtils {
   static copyText(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
-    WayaSnackbar.showToast('Copied');
+    WayaSnackBar.showToast('Copied');
   }
 
   static showModalSheet(BuildContext context, {required Widget child}) {

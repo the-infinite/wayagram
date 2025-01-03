@@ -22,7 +22,9 @@ Register _$RegisterFromJson(Map<String, dynamic> json) => Register(
       tcAgreement: json['tcAgreement'] as bool?,
       policyAgreement: json['policyAgreement'] as bool?,
       confirmPassword: json['confirmPassword'] as String?,
-    )..referenceCode = json['referenceCode'] as String?;
+      business: json['business'] as Map<String, dynamic>?,
+      referenceCode: json['referenceCode'] as String?,
+    );
 
 Map<String, dynamic> _$RegisterToJson(Register instance) => <String, dynamic>{
       'email': instance.email,
@@ -41,6 +43,7 @@ Map<String, dynamic> _$RegisterToJson(Register instance) => <String, dynamic>{
       'tcAgreement': instance.tcAgreement,
       'policyAgreement': instance.policyAgreement,
       'referenceCode': instance.referenceCode,
+      'business': instance.business,
     };
 
 VerifyOtp _$VerifyOtpFromJson(Map<String, dynamic> json) => VerifyOtp(

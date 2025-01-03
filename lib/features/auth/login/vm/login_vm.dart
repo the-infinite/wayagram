@@ -15,16 +15,16 @@ class LoginVm extends ChangeNotifier {
   final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
   bool _isPasswordFocused = false;
   bool _isLoading = false;
-    bool isPasswordVisible = false;
+  bool isPasswordVisible = false;
 
   bool get isPasswordFocused => _isPasswordFocused;
   bool get isLoading => _isLoading;
 
-
- void togglePasswordVisibility() {
+  void togglePasswordVisibility() {
     isPasswordVisible = !isPasswordVisible;
     notifyListeners();
   }
+
   void setPasswordFocus(bool hasFocus) {
     _isPasswordFocused = hasFocus;
     notifyListeners();
@@ -53,6 +53,7 @@ class LoginVm extends ChangeNotifier {
         WayaNav.toNamed("/welcome-back");
       }
     } catch (e) {
+      _isLoading = false;
       _logger.e(e);
     } finally {
       _isLoading = false;

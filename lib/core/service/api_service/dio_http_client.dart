@@ -1,5 +1,3 @@
-import 'dart:developer' as logger;
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -44,10 +42,7 @@ class DioHttpClient implements WayaHttpClientInterface {
 
   @override
   Future<WayaRequestResponse> getHttp(String route,
-      {Map<String, dynamic>? body,
-      Map<String, dynamic>? params,
-      bool formdata = false,
-      dynamic token}) async {
+      {Map<String, dynamic>? body, Map<String, dynamic>? params, bool formdata = false, dynamic token}) async {
     _setHeader(
       formdata: formdata,
     );
@@ -74,7 +69,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     params?.removeWhere((key, value) => value == null);
     final fullRoute = '$baseURL$route';
     _logger.f('fullRoute: $fullRoute');
-     _logger.f('headers: ${dio.options.headers}');
+    _logger.f('headers: ${dio.options.headers}');
     if (formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
     }
@@ -87,8 +82,7 @@ class DioHttpClient implements WayaHttpClientInterface {
         _showLoadingProgress(count, total);
       },
       onReceiveProgress: ((count, total) {
-        if (onRecieveProgress != null)
-          onRecieveProgress(count: count, total: total);
+        if (onRecieveProgress != null) onRecieveProgress(count: count, total: total);
         _showLoadingProgress(count, total);
       }),
       queryParameters: params,
@@ -164,12 +158,17 @@ class DioHttpClient implements WayaHttpClientInterface {
     try {
       final response = await future;
       _logger.i('data: ${response.data}');
+
+      print('got here tto');
+
+      print('got here tto${response.data}');
       return WayaRequestResponse(
         data: response.data,
         success: response.statusCode?.toString().startsWith('2') ?? false,
         statusCode: response.statusCode,
       );
     } on DioException catch (e) {
+      print('got here');
       if (e.response != null) {
         _logger.e('message: ${e.response?.data['message'] ?? 'Unknown error'}');
         _logger.e('error: ${e.response?.data['errors']}');
@@ -190,7 +189,6 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool formdata = false,
     bool formEncoded = false,
   }) {
-    
     dio.options.headers = {
       'content-type': formdata
           ? 'multipart/form-data'
@@ -198,7 +196,6 @@ class DioHttpClient implements WayaHttpClientInterface {
               ? 'application/x-www-form-urlencoded'
               : 'application/json',
       'Accept': '*/*',
-
     };
   }
 

@@ -51,7 +51,6 @@ dependencies:
   dotted_border: ^2.1.0
   intl: ^0.20.1
   cached_network_image: ^3.4.1
-  intl: ^0.20.1
   image_picker: ^1.1.2
   json_annotation: ^4.9.0
   logger: ^2.5.0

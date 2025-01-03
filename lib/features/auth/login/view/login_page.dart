@@ -35,7 +35,7 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Gap(Get.height * 0.05),
+              Gap(Get.height * 0.03),
               WayaAssests.images.wayalogoUnlabelled.image(scale: 2),
               Gap(20),
               Text(
@@ -48,7 +48,7 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
                   style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                     color: wayaTheme.colorScheme.greyColor600,
                   )),
-              Gap(Get.height * 0.03),
+              Gap(Get.height * 0.02),
               TabBar(
                 controller: _tabController,
                 onTap: (value) {
@@ -65,7 +65,7 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
               ),
               Gap(20),
               SizedBox(
-                height: Get.height * 0.65,
+                height: Get.height * 0.67,
                 child: PageView(
                   physics: NeverScrollableScrollPhysics(),
                   controller: _pageController,
