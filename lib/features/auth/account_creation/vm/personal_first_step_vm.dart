@@ -89,8 +89,9 @@ class PersonalFirstStepVm extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectBizType(String value) {
-    _businessTypeId = value;
+  void selectBizType(Select value) {
+    _businessTypeId = value.value;
+    localDataSource.saveSelectedBusinessType(value);
     notifyListeners();
   }
 

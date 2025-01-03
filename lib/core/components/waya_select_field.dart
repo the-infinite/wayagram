@@ -13,7 +13,7 @@ class WayaSelectField extends ConsumerWidget {
   final String hintText;
   final BorderRadius? radius;
   final List<Select> items;
-  final Function(String value) onSelected;
+  final Function(Select value) onSelected;
   final String uniqueKey;
 
   const WayaSelectField(
@@ -104,11 +104,11 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
   }
 
   Future<void> selectValue(BuildContext context, String title,
-      List<Select> items, Function(String value) onSelected) async {
+      List<Select> items, Function(Select value) onSelected) async {
     final result = await WayaHelpers.showSelectModal(
         context: context, title: title, items: items);
     _label = result.label;
-    onSelected(result.value);
+    onSelected(result);
 
     notifyListeners();
   }

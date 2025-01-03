@@ -286,7 +286,10 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       children: [
                         Text(
                           "Phone Number",
-                          style: wayaTheme.textTheme.labelMedium,
+                          style:Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+                    fontSize: 14,
+                    color: wayaTheme.colorScheme.greyColor900,
+                  ),
                         ),
                         const Gap(3),
                         Row(
@@ -298,10 +301,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               padding: EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: formState.hasError &&
-                                              viewModel.phoneNumber.text.isEmpty
-                                          ? wayaTheme.colorScheme.error
-                                          : wayaTheme.colorScheme.greyColor300,
+                                      color: wayaTheme.colorScheme.greyColor300,
                                       width: 1),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(6.0))),
@@ -615,7 +615,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             hintText: 'Select Gender',
                             items: viewModel.genders,
                             onSelected: (value) =>
-                                viewModel.selectGender(value)),
+                                viewModel.selectGender(value.value)),
                         if (formState.hasError && viewModel.gender.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),

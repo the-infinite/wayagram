@@ -1,3 +1,4 @@
+import 'package:wayagram/core/data/model.dart';
 import 'package:wayagram/core/service/storage_service/fast_storage/waya_fast_storage_interface.dart';
 import 'package:wayagram/features/auth/account_creation/data/select_account_data.dart';
 import 'package:wayagram/features/shop/cart/data/model.dart';
@@ -36,6 +37,15 @@ class WayaLocalDataSource {
   dynamic getUser() {
     return wayaFastStorageService.read(key: 'user');
   }
+
+  saveSelectedBusinessType(Select biz) {
+    return wayaFastStorageService.write<Select>(key: 'bizType', value: biz);
+  }
+
+  Select getSelectedBusinessType() {
+    return wayaFastStorageService.read(key: 'bizType');
+  }
+
 
 
 }

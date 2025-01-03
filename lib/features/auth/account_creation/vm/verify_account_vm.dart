@@ -101,7 +101,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
   }
 
   Future<void> resendOtp() async {
-    state = state.copyWith(isLoading: true);
+    //state = state.copyWith(isLoading: true);
     try {
       final user = _localDataSource.getUser();
       final response = await _authRepository.resendOtp(user['email']);
@@ -114,7 +114,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     } catch (e) {
       _logger.e(e.toString());
     } finally {
-      state = state.copyWith(isLoading: false);
+     // state = state.copyWith(isLoading: false);
     }
   }
 

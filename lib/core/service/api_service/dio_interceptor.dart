@@ -16,6 +16,7 @@ class DioInterceptor extends Interceptor {
       print('token: $token');
       options.headers['Authorization'] = 'Bearer $token';
     }
+    print('options: $options');
     return handler.next(options);
   }
 
@@ -52,6 +53,9 @@ class DioInterceptor extends Interceptor {
           return handler.next(err);
         }
       }
+    }
+    else {
+       return handler.next(err);
     }
   }
 }

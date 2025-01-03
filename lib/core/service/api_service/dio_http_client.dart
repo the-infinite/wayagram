@@ -34,11 +34,11 @@ class DioHttpClient implements WayaHttpClientInterface {
     final options = BaseOptions(
       baseUrl: baseURL,
       receiveDataWhenStatusError: true,
-      connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(seconds: 60),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
     );
     final dio = Dio(options);
-  //  dio.interceptors.add(DioInterceptor(dio, secureDataSource));
+   dio.interceptors.add(DioInterceptor(dio, secureDataSource));
     return dio;
   }
 
@@ -201,7 +201,7 @@ class DioHttpClient implements WayaHttpClientInterface {
               ? 'application/x-www-form-urlencoded'
               : 'application/json',
       'Accept': '*/*',
-      'Authorization' : 'Bearer ${await secureDataSource.getToken()}',
+    //  'Authorization' : 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 
