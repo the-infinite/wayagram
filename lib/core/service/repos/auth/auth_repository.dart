@@ -18,7 +18,7 @@ class AuthRepository extends BaseRepository {
   ///
   Future<WayaRequestResponse> resendOtp(String email) {
     return post(
-        'wayagram-profile/api/v2/client/auth/resend-otp', {"email": email});
+        'wayagram-profile/api/v2/client/auth/resend-otp', {"email": email, "purpose": 'USER_PASSWORD_RESET'});
   }
 
   Future<WayaRequestResponse> verifyEmail(String email) {

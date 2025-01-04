@@ -66,7 +66,7 @@ class VerifyAccount extends ConsumerWidget {
                     }
                   },
                   child: Container(
-                      width: 95,
+                        constraints: BoxConstraints(minWidth: 95),
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(

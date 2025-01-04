@@ -23,8 +23,9 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     final userState = ref.watch(profileVmProvider);
     return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(10), color: wayaTheme.colorScheme.cardBackgroudColor2),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: wayaTheme.colorScheme.cardBackgroudColor2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,11 +34,13 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
               WayaNav.toNamed(ProfilePage.route);
             },
             visualDensity: VisualDensity(horizontal: -2.0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r)),
             leading: WayaDp(
               radius: 25,
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10).copyWith(bottom: 0),
+            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10)
+                .copyWith(bottom: 0),
             title: Text(
               "${userState.userAccountModel?.data?.firstName ?? ''} ${userState.userAccountModel?.data?.lastName ?? ''}",
               style: wayaTheme.textTheme.hintStyleSemiBold.wayaCopyWith(color: wayaTheme.colorScheme.black),
@@ -50,8 +53,9 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
                 Gap(5),
                 Container(
                     padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                    decoration:
-                        BoxDecoration(color: wayaTheme.colorScheme.primar50, borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(
+                        color: wayaTheme.colorScheme.primar50,
+                        borderRadius: BorderRadius.circular(10)),
                     child: Text(
                       userState.userProfileModel?.data?.referenceCode ?? '',
                       style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.primary),
@@ -97,8 +101,9 @@ class GeneralSettingsOptionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(15), color: wayaTheme.colorScheme.cardBackgroudColor2),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: wayaTheme.colorScheme.cardBackgroudColor2),
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
       child: Column(
         children: [
@@ -109,12 +114,16 @@ class GeneralSettingsOptionTile extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 10.0, top: 10),
                 child: Row(
                   children: [
-                    SvgPicture.asset("assets/icons/gen_set/${option.iconPath}.svg", fit: BoxFit.none),
+                    SvgPicture.asset(
+                        "assets/icons/gen_set/${option.iconPath}.svg",
+                        fit: BoxFit.none),
                     Gap(10),
                     Text(option.title,
-                        style: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
+                        style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                            color: wayaTheme.colorScheme.greyColor700)),
                     Spacer(),
-                    Icon(Icons.arrow_forward_ios, size: 13, color: wayaTheme.colorScheme.greyColor700),
+                    Icon(Icons.arrow_forward_ios,
+                        size: 13, color: wayaTheme.colorScheme.greyColor700),
                   ],
                 ),
               ),
