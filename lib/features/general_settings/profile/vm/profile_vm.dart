@@ -3,6 +3,8 @@ import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
+import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/features/general_settings/profile/data/model/user_profile_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
 class ProfileVm extends StateNotifier<ProfileState> {
@@ -17,7 +19,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
     try {
       state = ProfileState(isLoading: true);
 
-      final response = await _profileRepo.updateAccount(userId: userId, dob: dob, address: address);
+      final response = await _profileRepo.updateAccountRepo(userId: userId, dob: dob, address: address);
       if (response.success) {
         WayaSnackBar.showToast('Account Updated Successfully');
         Future.delayed(Duration(seconds: 2), () {
@@ -30,20 +32,65 @@ class ProfileVm extends StateNotifier<ProfileState> {
     }
   }
 
-  void updateProfile({String? username, String? displayName, String? bio, bool? isPublic}) async {
+  Future<bool> updateProfile(
+      {String? username, String? displayName, String? bio, bool? isPublic, bool load = true}) async {
     final userId = _localDataSource.getUserId();
 
     try {
-      state = ProfileState(isLoading: true);
+      state = state.copyWith(isLoading: load);
 
-      final response = await _profileRepo.updateProfile(
+      final response = await _profileRepo.updateProfileRepo(
           userId: userId, username: username, displayName: displayName, bio: bio, isPublic: isPublic);
       if (response.success) {
         WayaSnackBar.showToast('Profile Updated Successfully');
+
+        state = state.copyWith(
+          isLoading: false,
+        );
+        return true;
+      } else {
+        state = state.copyWith(isLoading: false);
+        return false;
       }
-      state = ProfileState(isLoading: false);
     } catch (e) {
-      state = ProfileState(isLoading: false);
+      state = state.copyWith(isLoading: false);
+      return false;
+    }
+  }
+
+  void getUserData() async {
+    final userId = _localDataSource.getUserId();
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _profileRepo.getUserDataRepo(userId: userId);
+
+      if (response.success) {
+        UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
+        state = state.copyWith(userAccountModel: userAccountModel, isLoading: false);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  void getUserProfile() async {
+    final userId = _localDataSource.getUserId();
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _profileRepo.getUserProfileRepo(userId: userId);
+
+      if (response.success) {
+        UserProfileModel userProfileModel = UserProfileModel.fromJson(response.data);
+        state = state.copyWith(isLoading: false, userProfileModel: userProfileModel);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
     }
   }
 }

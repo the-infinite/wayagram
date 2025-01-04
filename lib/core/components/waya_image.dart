@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
-class WayaDp extends StatelessWidget {
+class WayaDp extends ConsumerWidget {
   final double? radius;
   final Function()? onTap;
   const WayaDp({
@@ -12,16 +14,57 @@ class WayaDp extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+
+    final avatar = ref.watch(profileVmProvider).userProfileModel?.data?.avatar;
     return GestureDetector(
       onTap: onTap,
       child: CircleAvatar(
-        
         radius: radius,
         backgroundColor: wayaTheme.colorScheme.greyColor200,
+        backgroundImage: avatar != null ? NetworkImage(avatar!) : null,
+        child: avatar == null
+            ? Icon(
+                Icons.person,
+                color: wayaTheme.colorScheme.greyColor600,
+              )
+            : null,
+      ),
+    );
+  }
+}
+
+class WayaImage2 extends ConsumerWidget {
+  const WayaImage2({
+    super.key,
+    required this.height,
+  });
+
+  final double height;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final wayaTheme = Theme.of(context);
+
+    final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
+    return coverImage == null
+        ? errorWidget(wayaTheme)
+        : CachedNetworkImage(
+            errorWidget: (context, url, error) => errorWidget(wayaTheme),
+            fit: BoxFit.fill,
+            width: double.infinity,
+            height: height,
+            imageUrl: coverImage);
+  }
+
+  Container errorWidget(ThemeData wayaTheme) {
+    return Container(
+      height: height,
+      color: wayaTheme.colorScheme.greyColor200,
+      child: Center(
         child: Icon(
-          Icons.person,
+          Icons.image,
           color: wayaTheme.colorScheme.greyColor600,
         ),
       ),
@@ -71,18 +114,16 @@ class WayaImage extends StatelessWidget {
         curve: Curves.easeInOut,
         height: height,
         width: width,
-        decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.scaffoldColor,
-            borderRadius: radius ?? BorderRadius.circular(8)),
+        decoration:
+            BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: radius ?? BorderRadius.circular(8)),
       ),
       errorWidget: (context, url, error) => AnimatedContainer(
         duration: const Duration(milliseconds: 700),
         curve: Curves.easeInOut,
         height: height,
         width: width,
-        decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.scaffoldColor,
-            borderRadius: radius ?? BorderRadius.circular(8)),
+        decoration:
+            BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: radius ?? BorderRadius.circular(8)),
       ),
     );
   }

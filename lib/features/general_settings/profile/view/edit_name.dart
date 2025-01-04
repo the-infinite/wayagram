@@ -19,6 +19,7 @@ class EditNamePage extends ConsumerStatefulWidget {
 
 class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
   TextEditingController nameController = TextEditingController();
+  dynamic dateIsoFormat;
 
   @override
   void dispose() {
@@ -41,7 +42,11 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
             isDisabled: nameController.text.isEmpty,
             height: 32,
             horizontalPadding: 10,
-            callback: getEditOperation(editType: editType, ref: ref, value: nameController.text).onSave,
+            callback: editType == ProfileEditType.dob
+                ? () {
+                    ref.read(profileVmProvider.notifier).updateAccount(dob: dateIsoFormat);
+                  }
+                : getEditOperation(editType: editType, ref: ref, value: nameController.text).onSave,
             text: 'Save',
           ),
           Gap(15)
@@ -51,6 +56,22 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
         children: [
           Gap(20),
           WayaTextFormField(
+            isReadOnly: editType == ProfileEditType.dob,
+            onTap: editType == ProfileEditType.dob
+                ? () async {
+                    final response = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime(1950),
+                        lastDate: DateTime.now(),
+                        initialDate: DateTime.now());
+
+                    if (response != null) {
+                      String dateOfBirth = "${response.year}-${response.month}-${response.day}";
+                      nameController.text = dateOfBirth;
+                      dateIsoFormat = response.toIso8601String();
+                    }
+                  }
+                : null,
             padding: EdgeInsets.all(10),
             fillColor: wayaTheme.colorScheme.white,
             line: editType == ProfileEditType.bio ? 4 : 1,

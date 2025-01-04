@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 import '../data/model/model.dart';
@@ -16,9 +17,20 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(profileVmProvider.notifier).getUserData();
+      ref.read(profileVmProvider.notifier).getUserProfile();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final userState = ref.watch(profileVmProvider);
     return WayaScaffold(
       isScrollable: true,
+      isLoading: userState.isLoading,
       title: "General Settings",
       body: Column(
         spacing: 15,

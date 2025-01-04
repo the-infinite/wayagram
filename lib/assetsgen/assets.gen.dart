@@ -56,6 +56,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
 
+  /// File path: assets/icons/check-icon.svg
+  SvgGenImage get checkIcon => const SvgGenImage('assets/icons/check-icon.svg');
+
   /// File path: assets/icons/d-code-onvalid.svg
   SvgGenImage get dCodeOnvalid =>
       const SvgGenImage('assets/icons/d-code-onvalid.svg');
@@ -109,6 +112,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/map.svg
   SvgGenImage get map => const SvgGenImage('assets/icons/map.svg');
 
+  /// File path: assets/icons/money-icon.svg
+  SvgGenImage get moneyIcon => const SvgGenImage('assets/icons/money-icon.svg');
+
   /// File path: assets/icons/order-van.svg
   SvgGenImage get orderVan => const SvgGenImage('assets/icons/order-van.svg');
 
@@ -150,6 +156,7 @@ class $AssetsIconsGen {
         business,
         buttonIcon,
         chat,
+        checkIcon,
         dCodeOnvalid,
         dCodeValid,
         dealIcon,
@@ -165,6 +172,7 @@ class $AssetsIconsGen {
         heart,
         iconRight,
         map,
+        moneyIcon,
         orderVan,
         personal,
         rCart,
@@ -192,6 +200,10 @@ class $AssetsImagesGen {
   AssetGenImage get dCodeValid =>
       const AssetGenImage('assets/images/d-code-valid.png');
 
+  /// File path: assets/images/delete-img.png
+  AssetGenImage get deleteImg =>
+      const AssetGenImage('assets/images/delete-img.png');
+
   /// Directory path: assets/images/explore
   $AssetsImagesExploreGen get explore => const $AssetsImagesExploreGen();
 
@@ -199,11 +211,19 @@ class $AssetsImagesGen {
   $AssetsImagesOnboardingGen get onboarding =>
       const $AssetsImagesOnboardingGen();
 
+  /// File path: assets/images/placeholder.png
+  AssetGenImage get placeholder =>
+      const AssetGenImage('assets/images/placeholder.png');
+
   /// Directory path: assets/images/shop
   $AssetsImagesShopGen get shop => const $AssetsImagesShopGen();
 
   /// Directory path: assets/images/wallet
   $AssetsImagesWalletGen get wallet => const $AssetsImagesWalletGen();
+
+  /// File path: assets/images/waya_deal_ad.png
+  AssetGenImage get wayaDealAd =>
+      const AssetGenImage('assets/images/waya_deal_ad.png');
 
   /// File path: assets/images/wayalogo.png
   AssetGenImage get wayalogo =>
@@ -214,8 +234,16 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/wayalogo_unlabelled.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [avatars, dCodeInvalid, dCodeValid, wayalogo, wayalogoUnlabelled];
+  List<AssetGenImage> get values => [
+        avatars,
+        dCodeInvalid,
+        dCodeValid,
+        deleteImg,
+        placeholder,
+        wayaDealAd,
+        wayalogo,
+        wayalogoUnlabelled
+      ];
 }
 
 class $AssetsIconsGenSetGen {

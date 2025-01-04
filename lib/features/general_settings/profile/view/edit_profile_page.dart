@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +9,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/auth/login/vm/login_vm.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_edit_type_model.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
@@ -25,20 +23,30 @@ class EditProfilePage extends ConsumerStatefulWidget {
 class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   String url =
       'https://static.vecteezy.com/system/resources/thumbnails/005/346/410/small_2x/close-up-portrait-of-smiling-handsome-young-caucasian-man-face-looking-at-camera-on-isolated-light-gray-studio-background-photo.jpg';
-  late bool isPrivate;
+  bool? isPrivate;
 
   @override
   void initState() {
-    isPrivate = ref.read(loginVmProvider).userData?.data?.userdata?.profile?.isPublic ?? false;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(profileVmProvider.notifier).getUserData();
+      ref.read(profileVmProvider.notifier).getUserProfile();
+    });
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final userData = ref.watch(loginVmProvider).userData?.data?.userdata;
+    final userState = ref.watch(profileVmProvider);
     return WayaScaffold(
       isScrollable: true,
+      isLoading: userState.isLoading,
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
       padding: EdgeInsets.zero,
       title: 'Edit Profile',
@@ -51,7 +59,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  CachedNetworkImage(fit: BoxFit.fill, width: double.infinity, height: 166, imageUrl: url),
+                  WayaImage2(
+                    height: Get.height * 0.2,
+                  ),
                   Gap(15),
                 ],
               ),
@@ -77,35 +87,35 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                 Gap(10),
                 ProfileTile(
                   title: 'Full Name',
-                  value: userData?.profile?.displayName ?? '',
+                  value:
+                      "${userState.userAccountModel?.data?.firstName ?? ''} ${userState.userAccountModel?.data?.lastName ?? ''}",
                   onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.name),
                 ),
                 Gap(10),
                 ProfileTile(
                   title: 'User Name',
-                  value: "@${userData?.profile?.username}" ?? '',
+                  value: '@${userState.userProfileModel?.data?.username ?? ''}',
                   onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.username),
                 ),
                 Gap(10),
                 ProfileTile(
                   title: 'Bio',
-                  value: userData?.profile?.bio ?? 'n/a',
+                  value: userState.userProfileModel?.data?.bio ?? 'n/a',
                   onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.bio),
                 ),
                 Gap(10),
                 ProfileTile(
                   title: 'Location',
-                  value: userData?.user?.address ?? 'n/a',
+                  value: userState.userAccountModel?.data?.address ?? 'n/a',
                   onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.location),
                 ),
                 Gap(10),
-                userData?.user?.dateOfBirth == null
-                    ? SizedBox.shrink()
-                    : ProfileTile(
-                        title: 'Date of Birth',
-                        value: WayaHelpers.formatDateString(userData?.user?.dateOfBirth.toString() ?? 'n/a'),
-                        onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.dob),
-                      ),
+                ProfileTile(
+                  title: 'Date of Birth',
+                  value: WayaHelpers.formatDateString(
+                      userState.userAccountModel?.data?.dateOfBirth.toString() ?? DateTime.now().toString()),
+                  onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.dob),
+                ),
                 Gap(12),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,12 +123,21 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     Transform.scale(
                         scale: 0.7,
                         child: Switch(
-                            value: isPrivate,
-                            onChanged: (value) {
+                            value: isPrivate ?? userState.userProfileModel?.data?.isPublic ?? false,
+                            onChanged: (value) async {
                               setState(() {
                                 isPrivate = value;
                               });
-                              ref.read(profileVmProvider.notifier).updateProfile(isPublic: isPrivate);
+                              final response = await ref
+                                  .read(profileVmProvider.notifier)
+                                  .updateProfile(isPublic: isPrivate, load: false);
+                              print(response);
+                              print(isPrivate);
+                              if (!response) {
+                                setState(() {
+                                  isPrivate = !isPrivate!;
+                                });
+                              }
                             })),
                     Gap(5),
                     Flexible(

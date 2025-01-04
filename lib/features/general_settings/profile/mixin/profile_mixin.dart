@@ -3,17 +3,15 @@ import 'package:wayagram/features/general_settings/profile/data/model/profile_ed
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
 mixin ProfileMixin {
-  ProfileEditOperationModel getEditOperation(
-      {required ProfileEditType editType, required WidgetRef ref, required String value}) {
+  ProfileEditOperationModel getEditOperation({
+    required ProfileEditType editType,
+    required WidgetRef ref,
+    required String value,
+  }) {
     switch (editType) {
       case ProfileEditType.dob:
         return ProfileEditOperationModel(
-            hintText: 'Aug 10 2021',
-            title: 'Edit Date of Birth',
-            label: 'Date of Birth',
-            onSave: () {
-              ref.read(profileVmProvider.notifier).updateAccount(dob: value);
-            });
+            hintText: 'Aug 10 2021', title: 'Edit Date of Birth', label: 'Date of Birth', onSave: () async {});
 
       case ProfileEditType.bio:
         return ProfileEditOperationModel(

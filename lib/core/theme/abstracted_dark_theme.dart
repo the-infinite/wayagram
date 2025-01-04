@@ -3,10 +3,10 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 final abstractedDarkTheme = ThemeData(
-    primaryColor: WayaColors.primary,
-    
+    primaryColor: WayaColors.success,
     scaffoldBackgroundColor: WayaColors.success,
     appBarTheme: _appBarThemeData(),
+    colorScheme: ColorScheme.dark(),
     switchTheme: _switchThemeData(),
     chipTheme: _chipThemeData(),
     elevatedButtonTheme: _elevatedButtonThemeData(),

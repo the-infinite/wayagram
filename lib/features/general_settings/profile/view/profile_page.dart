@@ -1,14 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
+import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   static const route = '/profile-page';
@@ -32,10 +34,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
     super.dispose();
   }
 
-  String url =
-      'https://static.vecteezy.com/system/resources/thumbnails/005/346/410/small_2x/close-up-portrait-of-smiling-handsome-young-caucasian-man-face-looking-at-camera-on-isolated-light-gray-studio-background-photo.jpg';
   @override
   Widget build(BuildContext context) {
+    final userState = ref.watch(profileVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       padding: EdgeInsets.zero,
@@ -58,7 +59,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  CachedNetworkImage(fit: BoxFit.fill, width: double.infinity, height: 166, imageUrl: url),
+                  WayaImage2(
+                    height: Get.height * 0.2,
+                  ),
                   Gap(15),
                   GestureDetector(
                     onTap: () {
@@ -98,21 +101,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Bruce Wayne',
+                  "${userState.userAccountModel?.data?.firstName ?? ''} ${userState.userAccountModel?.data?.lastName ?? ''}",
                   style: wayaTheme.textTheme.bodyMedium
                       ?.wayaCopyWith(fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.black),
                 ),
                 Text(
-                  '@jame_sinister',
+                  userState.userProfileModel?.data?.username ?? '',
                   style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
                 ),
                 Gap(10),
                 Text(
-                  '🌟 Passionate traveler | Coffee enthusiast ☕ | Tech geek 💻 | Sharing my adventures and insights on life! 🌍✨',
+                  userState.userProfileModel?.data?.bio ?? '',
                   style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700),
                 ),
                 Gap(10),
-                buildProfileOverview(wayaTheme),
+                buildProfileOverview(wayaTheme, userState),
               ],
             ),
           ),
@@ -122,34 +125,33 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
     );
   }
 
-  SingleChildScrollView buildProfileOverview(ThemeData wayaTheme) {
+  SingleChildScrollView buildProfileOverview(ThemeData wayaTheme, ProfileState userState) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
       child: Row(
-        spacing: 5.0,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           WayaRichText(
-            title1: '6K',
+            title1: '0',
             title2: ' Following',
             style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
             style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
           ),
           WayaRichText(
-            title1: '7K',
+            title1: '0',
             title2: ' Followers',
             style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
             style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
           ),
           WayaRichText(
-            title1: '600',
+            title1: '0',
             title2: ' Posts',
             style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
             style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
           ),
           WayaRichText(
             title1: 'Date Joined: ',
-            title2: 'December 2021',
+            title2: WayaHelpers.formatDateMonthYear(
+                userState.userProfileModel?.data?.createdAt.toString() ?? DateTime.now().toString()),
             style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
             style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
           ),

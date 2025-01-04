@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
@@ -8,17 +9,19 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
 import '../../data/model/model.dart';
 
-class GeneralSettingsProfileTile extends StatelessWidget {
+class GeneralSettingsProfileTile extends ConsumerWidget {
   const GeneralSettingsProfileTile({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final userState = ref.watch(profileVmProvider);
     return Container(
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(10), color: wayaTheme.colorScheme.cardBackgroudColor2),
@@ -36,13 +39,13 @@ class GeneralSettingsProfileTile extends StatelessWidget {
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10).copyWith(bottom: 0),
             title: Text(
-              'Rufai Maleek',
+              "${userState.userAccountModel?.data?.firstName ?? ''} ${userState.userAccountModel?.data?.lastName ?? ''}",
               style: wayaTheme.textTheme.hintStyleSemiBold.wayaCopyWith(color: wayaTheme.colorScheme.black),
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('@eyetwy',
+                Text(userState.userProfileModel?.data?.username ?? '',
                     style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500)),
                 Gap(5),
                 Container(
@@ -50,29 +53,31 @@ class GeneralSettingsProfileTile extends StatelessWidget {
                     decoration:
                         BoxDecoration(color: wayaTheme.colorScheme.primar50, borderRadius: BorderRadius.circular(10)),
                     child: Text(
-                      'WAYA7583',
+                      userState.userProfileModel?.data?.referenceCode ?? '',
                       style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.primary),
                     )),
               ],
             ),
             trailing: SvgPicture.asset("assets/icons/arrow_keyboard_right.svg"),
           ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 15),
-                child: SizedBox(
-                  child: WayaButton(
-                    textStyle: wayaTheme.textTheme.bodyBold.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
-                    height: 32,
-                    callback: () {},
-                    text: "Set up Business Account",
-                    color: wayaTheme.colorScheme.primary500,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          userState.userAccountModel?.data?.role?.name?.toLowerCase() == 'personal'
+              ? Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 15),
+                      child: SizedBox(
+                        child: WayaButton(
+                          textStyle: wayaTheme.textTheme.bodyBold.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
+                          height: 32,
+                          callback: () {},
+                          text: "Set up Business Account",
+                          color: wayaTheme.colorScheme.primary500,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : SizedBox.shrink(),
           Gap(15)
         ],
       ),

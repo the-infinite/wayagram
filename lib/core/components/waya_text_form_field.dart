@@ -37,6 +37,7 @@ class WayaTextFormField extends StatefulWidget {
   final bool? obscureText;
   final VoidCallback? callback;
   final bool isPassword;
+  final VoidCallback? onTap;
   final bool? isReadOnly;
 
   const WayaTextFormField(
@@ -49,6 +50,7 @@ class WayaTextFormField extends StatefulWidget {
       this.line = 1,
       this.maxLength,
       this.hasError = false,
+      this.onTap,
       this.errorMessage = "",
       this.isPassword = false,
       this.padding,
@@ -112,7 +114,7 @@ class _AppFieldState extends State<WayaTextFormField> {
     final wayaTheme = Theme.of(context).colorScheme;
     Widget textFormField = TextFormField(
       readOnly: widget.isReadOnly ?? false,
-
+      onTap: widget.onTap,
       onChanged: widget.onChanged,
       focusNode: _focusNode,
       controller: widget.controller,

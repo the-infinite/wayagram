@@ -4,7 +4,7 @@ import 'package:wayagram/core/service/repos/base_repository.dart';
 class ProfileRepo extends BaseRepository {
   String get serviceUrl => 'wayagram-profile/api/v2';
 
-  Future<WayaRequestResponse> updateAccount({
+  Future<WayaRequestResponse> updateAccountRepo({
     required String userId,
     String? dob,
     String? address,
@@ -14,13 +14,13 @@ class ProfileRepo extends BaseRepository {
             'address': address,
           }
         : {
-            'dob': dob,
+            'dateOfBirth': dob,
           };
 
     return patch('$serviceUrl/client/users/$userId/update', payload);
   }
 
-  Future<WayaRequestResponse> updateProfile(
+  Future<WayaRequestResponse> updateProfileRepo(
       {required String userId, String? username, String? displayName, String? bio, bool? isPublic}) {
     final payload = <String, dynamic>{};
 
@@ -38,5 +38,13 @@ class ProfileRepo extends BaseRepository {
     }
 
     return patch('$serviceUrl/client/users/$userId/profile/update', payload);
+  }
+
+  Future<WayaRequestResponse> getUserDataRepo({required String userId}) async {
+    return get("$serviceUrl/client/users/$userId");
+  }
+
+  Future<WayaRequestResponse> getUserProfileRepo({required String userId}) async {
+    return get("$serviceUrl/client/users/$userId/profile");
   }
 }

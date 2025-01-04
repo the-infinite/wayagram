@@ -87,15 +87,23 @@ class WayaHelpers {
       );
     }
   }
-  static  String formatDateString(String isoDateString) {
-  // Parse the ISO 8601 date string into a DateTime object
-  DateTime date = DateTime.parse(isoDateString);
 
-  // Define the desired format using DateFormat
-  DateFormat dateFormat = DateFormat('MMMM dd, yyyy');  // "August 10, 2020"
+  static String formatDateString(String isoDateString) {
+    // Parse the ISO 8601 date string into a DateTime object
+    DateTime date = DateTime.parse(isoDateString);
 
-  // Format the DateTime object into the desired string
-  return dateFormat.format(date);
-}
+    // Define the desired format using DateFormat
+    DateFormat dateFormat = DateFormat('MMMM dd, yyyy'); // "August 10, 2020"
 
+    // Format the DateTime object into the desired string
+    return dateFormat.format(date);
+  }
+
+  static String formatDateMonthYear(String isoDate) {
+    // Parse the ISO 8601 string into a DateTime object
+    DateTime dateTime = DateTime.parse(isoDate);
+
+    // Format the DateTime object to the desired string format (e.g., "December 2021")
+    return DateFormat('MMMM yyyy').format(dateTime);
+  }
 }
