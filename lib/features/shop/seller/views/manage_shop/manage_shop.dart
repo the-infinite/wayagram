@@ -121,7 +121,9 @@ class ManageShop extends ConsumerWidget {
                 title: "Wayagram Deals",
                 icon: SvgPicture.asset('assets/icons/deal-icon.svg'),
                 color: Color(0xffFFF0EB),
-                onTap: () {},
+               onTap: () {
+                  WayaNav.toNamed('/waya-deal-ad');
+                },
               ),
               QuickActionWidget(
                 title: "Disputes",

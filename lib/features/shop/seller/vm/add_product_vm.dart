@@ -180,10 +180,24 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }
   }
 
-  void submit(BuildContext context)  async{
+  void submit(BuildContext context, bool isWayagramDeal)  async{
      //final addProductData = ref.watch(addProductProvider.notifier);
 
-    // print("$addProductData");
+   if (isWayagramDeal) {
+ // print("$addProductData");
+    WayaHelpers.showNotice(
+        context: context,
+        title: "Your Application has been submitted Successfully! 🎉",
+        message:
+            "Your product has been submitted. We'll notify you \n once it's reviewed.",
+        onPress: () => WayaNav.toNamed('/wayagram-deal'),
+        icon: Image.asset('assets/images/shop/add-product-success.png'),
+        buttonText: 'View Application Status',
+        secondButtonText: 'Go to Dashboard',
+        onCancel: () => WayaNav.toNamed('/wayagram-deal'));
+   }
+   else {
+     // print("$addProductData");
     WayaHelpers.showNotice(
         context: context,
         title: "Product Added Successfully! 🎉",
@@ -196,5 +210,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
         onCancel: () => WayaNav.to(const BottomView(
               index: 1,
             )));
+   }
   }
 }
