@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/explore/widgets/widgets_vm/explore_our_services_vm.dart';
 
@@ -49,7 +48,7 @@ class ExploreOurServices extends ConsumerWidget {
                     const Gap(5),
                     Text(
                       viewModel.services[index].name,
-                      style: WayaTextStyles.labelSmall,
+                      style: wayaTheme.textTheme.labelSmall,
                     ),
                   ],
                 ),
