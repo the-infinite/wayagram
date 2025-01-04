@@ -1,3 +1,4 @@
+import 'package:blurry_modal_progress_hud/blurry_modal_progress_hud.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,37 +42,40 @@ class WayaScaffold extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeNotifier = ref.read(themeProvider.notifier);
-    final paddedBody =
-        padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      onDoubleTap: () {
-        themeNotifier.toggleTheme();
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-        appBar: removeAppBar
-            ? null
-            : appBar ??
-                AppBar(
-                  title: Text(title ?? ''),
-                  leading: automicallyImplyLeading ? WayaBackButton() : null,
-                  actions: appBarTrailing == null ? null : [appBarTrailing!],
-                ),
-        body: isScrollable
-            ? Container(
-                color: color,
-                child: Padding(
+    final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
+    return BlurryModalProgressHUD(
+      inAsyncCall: isLoading,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        onDoubleTap: () {
+          themeNotifier.toggleTheme();
+        },
+        child: Scaffold(
+          backgroundColor: backgroundColor,
+          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+          appBar: removeAppBar
+              ? null
+              : appBar ??
+                  AppBar(
+                    title: Text(title ?? ''),
+                    leading: automicallyImplyLeading ? WayaBackButton() : SizedBox.shrink(),
+                    actions: appBarTrailing == null ? null : [appBarTrailing!],
+                  ),
+          body: isScrollable
+              ? Container(
+                  color: color,
+                  child: Padding(
+                    padding: paddedBody,
+                    child: SingleChildScrollView(child: body),
+                  ),
+                )
+              : Padding(
                   padding: paddedBody,
-                  child: SingleChildScrollView(child: body),
+                  child: body,
                 ),
-              )
-            : Padding(
-                padding: paddedBody,
-                child: body,
-              ),
-        bottomNavigationBar: bottomNavigationBar,
-        floatingActionButton: floatingActionButton,
+          bottomNavigationBar: bottomNavigationBar,
+          floatingActionButton: floatingActionButton,
+        ),
       ),
     );
   }
@@ -109,12 +113,10 @@ class WayaScaffoldWithProgressbar extends StatefulWidget {
       this.bottomNavigationBar});
 
   @override
-  State<WayaScaffoldWithProgressbar> createState() =>
-      _WayaScaffoldWithProgressbarState();
+  State<WayaScaffoldWithProgressbar> createState() => _WayaScaffoldWithProgressbarState();
 }
 
-class _WayaScaffoldWithProgressbarState
-    extends State<WayaScaffoldWithProgressbar> {
+class _WayaScaffoldWithProgressbarState extends State<WayaScaffoldWithProgressbar> {
   double _progress = 0.12;
   final double _progressBarHeight = 12;
 
@@ -123,8 +125,7 @@ class _WayaScaffoldWithProgressbarState
     super.initState();
     widget.tabController.addListener(() {
       setState(() {
-        _progress =
-            (widget.tabController.index + 0.5) / widget.tabController.length;
+        _progress = (widget.tabController.index + 0.5) / widget.tabController.length;
       });
     });
   }
@@ -185,7 +186,7 @@ class _WayaScaffoldWithProgressbarState
       ),
       body: widget.isScrollable
           ? SingleChildScrollView(
-            scrollDirection: Axis.vertical,
+              scrollDirection: Axis.vertical,
               child: Column(
                 children: [
                   widget.tabsView[widget.tabController.index],
@@ -193,10 +194,7 @@ class _WayaScaffoldWithProgressbarState
               ),
             )
           : TabBarView(
-             physics: NeverScrollableScrollPhysics(), 
-              controller: widget.tabController, children: widget.tabsView),
+              physics: NeverScrollableScrollPhysics(), controller: widget.tabController, children: widget.tabsView),
     );
   }
 }
-
-

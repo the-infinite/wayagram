@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_bottom_sheet_content.dart';
 import 'package:wayagram/core/data/model.dart';
 
 class WayaHelpers {
@@ -15,8 +14,7 @@ class WayaHelpers {
       String? secondButtonText,
       Widget? buttonCenterWidget,
       Widget? secondButtonCenterWidget,
-      VoidCallback? onCancel
-      }) {
+      VoidCallback? onCancel}) {
     return showDialog(
       context: context,
       barrierDismissible: true,
@@ -75,9 +73,29 @@ class WayaHelpers {
   }
 
   static String formatPrice(int price) {
-    String formattedCurrency =
-        NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price);
+    String formattedCurrency = NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price);
 
     return formattedCurrency;
   }
+
+  static void countFormCharacters(TextEditingController contoller, int length) {
+    if (contoller.text.length >= length) {
+      contoller.text = contoller.text.substring(0, length);
+
+      contoller.selection = TextSelection.fromPosition(
+        TextPosition(offset: contoller.text.length),
+      );
+    }
+  }
+  static  String formatDateString(String isoDateString) {
+  // Parse the ISO 8601 date string into a DateTime object
+  DateTime date = DateTime.parse(isoDateString);
+
+  // Define the desired format using DateFormat
+  DateFormat dateFormat = DateFormat('MMMM dd, yyyy');  // "August 10, 2020"
+
+  // Format the DateTime object into the desired string
+  return dateFormat.format(date);
+}
+
 }

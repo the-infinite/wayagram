@@ -38,14 +38,35 @@ class WayaLocalDataSource {
     return wayaFastStorageService.read(key: 'user');
   }
 
-    saveBusiness(dynamic user) {
+  saveUserId(dynamic user) {
+    return wayaFastStorageService.write(key: 'userId', value: user);
+  }
+
+  dynamic getUserId() {
+    return wayaFastStorageService.read(key: 'userId');
+  }
+
+  savetoken(dynamic user) {
+    return wayaFastStorageService.write(key: 'token', value: user);
+  }
+
+  dynamic gettoken() {
+    return wayaFastStorageService.read(key: 'token');
+  }
+  // saveUserData(UserModel user) {
+  //   return wayaFastStorageService.write(key: 'userData', value: user);
+  // }
+
+  // UserModel getUserData() {
+  //   return wayaFastStorageService.read<UserModel>(key: 'userData');
+  // }
+  saveBusiness(dynamic user) {
     return wayaFastStorageService.write(key: 'business', value: user);
   }
 
   dynamic getBusiness() {
     return wayaFastStorageService.read(key: 'business');
   }
-
 
   saveSelectedBusinessType(Select biz) {
     return wayaFastStorageService.write<Select>(key: 'bizType', value: biz);
@@ -54,7 +75,4 @@ class WayaLocalDataSource {
   Select getSelectedBusinessType() {
     return wayaFastStorageService.read(key: 'bizType');
   }
-
-
-
 }

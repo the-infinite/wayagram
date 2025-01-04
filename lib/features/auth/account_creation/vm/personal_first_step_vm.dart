@@ -7,7 +7,9 @@ import 'package:wayagram/core/service/repos/auth/auth_model.dart';
 import 'package:wayagram/core/service/repos/auth/auth_repository.dart';
 
 class PersonalFirstStepVm extends ChangeNotifier {
-  final AuthRepository _authRepository = AuthRepository();
+ final AuthRepository _authRepository = AuthRepository();
+
+
   final TextEditingController firstName = TextEditingController();
   final TextEditingController lastName = TextEditingController();
   final TextEditingController email = TextEditingController();

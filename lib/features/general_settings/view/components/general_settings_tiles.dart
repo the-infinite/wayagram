@@ -6,6 +6,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
 
 import '../../data/model/model.dart';
 
@@ -24,7 +26,9 @@ class GeneralSettingsProfileTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
-            onTap: () {},
+            onTap: () {
+              WayaNav.toNamed(ProfilePage.route);
+            },
             visualDensity: VisualDensity(horizontal: -2.0),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
             leading: WayaDp(
@@ -53,18 +57,21 @@ class GeneralSettingsProfileTile extends StatelessWidget {
             ),
             trailing: SvgPicture.asset("assets/icons/arrow_keyboard_right.svg"),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 15),
-            child: SizedBox(
-              width: 164,
-              child: WayaButton(
-                textStyle: wayaTheme.textTheme.bodyBold.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
-                height: 32,
-                callback: () {},
-                text: "Set up Business Account",
-                color: wayaTheme.colorScheme.primary500,
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 15),
+                child: SizedBox(
+                  child: WayaButton(
+                    textStyle: wayaTheme.textTheme.bodyBold.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
+                    height: 32,
+                    callback: () {},
+                    text: "Set up Business Account",
+                    color: wayaTheme.colorScheme.primary500,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
           Gap(15)
         ],

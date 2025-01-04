@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 import '../data/model/model.dart';
 import 'components/components.dart';
@@ -24,7 +26,8 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           GeneralSettingsProfileTile(),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Wallet', iconPath: 'wallet'),
+              GeneralSettingsOptionModel(
+                  title: 'Wallet', iconPath: 'wallet', onTap: () => WayaNav.toNamed(WalletPage.route)),
               GeneralSettingsOptionModel(title: 'Referrals & Rewards', iconPath: 'confetti'),
               GeneralSettingsOptionModel(title: 'Roles & Access', iconPath: 'users'),
               GeneralSettingsOptionModel(title: 'Logs & Audit Trails', iconPath: 'history'),
@@ -32,7 +35,8 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Edit Profile', iconPath: 'edit'),
+              GeneralSettingsOptionModel(
+                  title: 'Edit Profile', iconPath: 'edit', onTap: () => WayaNav.toNamed(ProfilePage.route)),
               GeneralSettingsOptionModel(
                   title: 'Change Password',
                   iconPath: 'password',

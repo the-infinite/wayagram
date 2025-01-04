@@ -13,12 +13,13 @@ class WayaTextFormField extends StatefulWidget {
   final int? line;
   final int? maxLength;
   final bool hasError;
+
   final String errorMessage;
   final EdgeInsets? padding;
   final String? label;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
-  final Color? fillColor;
+  final Color? fillColor; // this will be depracated
   final bool showBorder, showFocusedBorder;
   final Color? borderColor;
   final Widget? prefixIcon;
@@ -26,6 +27,7 @@ class WayaTextFormField extends StatefulWidget {
 
   final Color? prefixIconColor;
   final Widget? suffixIcon;
+  final Function(String)? onChanged;
   final void Function()? onEditingComplete;
   final void Function(String)? onFieldSubmitted;
   final TextInputAction? textInputAction;
@@ -40,6 +42,7 @@ class WayaTextFormField extends StatefulWidget {
   const WayaTextFormField(
       {super.key,
       required this.controller,
+      this.onChanged,
       this.suffixIconColor,
       this.keyboardType = TextInputType.text,
       required this.hintText,
@@ -77,6 +80,7 @@ class _AppFieldState extends State<WayaTextFormField> {
   late FocusNode _focusNode;
   late Color fillColor;
   late Color borderColor;
+  bool isObscure = false;
 
   @override
   void initState() {
@@ -97,17 +101,28 @@ class _AppFieldState extends State<WayaTextFormField> {
     });
   }
 
+  void toggleObscure() {
+    setState(() {
+      isObscure = !isObscure;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context).colorScheme;
     Widget textFormField = TextFormField(
       readOnly: widget.isReadOnly ?? false,
+
+      onChanged: widget.onChanged,
       focusNode: _focusNode,
       controller: widget.controller,
       keyboardType: widget.keyboardType,
-      obscureText: widget.isPassword ? true : widget.obscureText ?? false,
+      obscureText: widget.obscureText ?? isObscure,
+      // widget.isPassword ? true : widget.obscureText ?? false,
       maxLines: widget.line ?? 1,
       maxLength: widget.maxLength,
+      minLines: widget.line ?? 1,
+
       validator: widget.validator,
       autofillHints: widget.autofillHints,
       inputFormatters: widget.inputFormatters,
@@ -115,6 +130,7 @@ class _AppFieldState extends State<WayaTextFormField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       textInputAction: widget.textInputAction,
       onSaved: widget.onSaved,
+
       decoration: InputDecoration(
           errorBorder: OutlineInputBorder(
             borderSide: widget.showBorder ? BorderSide(color: wayaTheme.error200, width: 1.w) : BorderSide.none,
@@ -135,16 +151,19 @@ class _AppFieldState extends State<WayaTextFormField> {
             borderRadius: BorderRadius.circular(8.r),
           ),
           contentPadding: widget.padding ?? EdgeInsets.fromLTRB(12, 1, 12, 1),
-          fillColor: Theme.of(context).colorScheme.transparent,
+          fillColor: widget.fillColor ?? Theme.of(context).colorScheme.transparent,
           filled: true,
           prefixIcon: widget.prefixIcon,
           prefixIconColor: widget.prefixIconColor,
           hintText: widget.hintText,
           suffixIcon: widget.isPassword
-              ? Icon(
-                  Icons.visibility_off_outlined,
-                  size: 20,
-                  color: widget.suffixIconColor ?? wayaTheme.greyColor500,
+              ? IconButton(
+                  onPressed: () => toggleObscure(),
+                  icon: Icon(
+                    isObscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                    size: 20,
+                    color: widget.suffixIconColor ?? wayaTheme.greyColor500,
+                  ),
                 )
               : widget.suffixIcon,
           hintStyle: WayaTextStyles.hintStyle,

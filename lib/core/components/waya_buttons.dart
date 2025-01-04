@@ -28,8 +28,7 @@ class WayaBackButton extends StatelessWidget {
                   WayaNav.goBack();
                   HapticFeedback.lightImpact();
                 },
-            child: SvgPicture.asset('assets/icons/arrow-back.svg',
-                fit: BoxFit.none),
+            child: SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
           ),
         )
       ],
@@ -46,6 +45,7 @@ class WayaButton extends StatelessWidget {
       this.border,
       this.textStyle,
       this.trailingIcon,
+      this.isLoading = false,
       this.leadingIcon,
       required this.callback,
       this.textColor,
@@ -56,6 +56,7 @@ class WayaButton extends StatelessWidget {
   final String text;
   final Color? color;
   final Widget? leadingIcon;
+  final bool isLoading;
   final Widget? trailingIcon;
 
   final double? radius;
@@ -75,7 +76,7 @@ class WayaButton extends StatelessWidget {
 
     return InkWell(
       splashFactory: NoSplash.splashFactory,
-      onTap: isButtonDisabled
+      onTap: isButtonDisabled || isLoading
           ? null
           : () async {
               FocusScope.of(context).unfocus();
@@ -86,7 +87,9 @@ class WayaButton extends StatelessWidget {
         height: height,
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         decoration: BoxDecoration(
-          color: isButtonDisabled ? wayaTheme.colorScheme.greyColor300 : (color ?? wayaTheme.colorScheme.customPrimary),
+          color: isButtonDisabled || isLoading
+              ? wayaTheme.colorScheme.greyColor300
+              : (color ?? wayaTheme.colorScheme.customPrimary),
           border: border,
           borderRadius: BorderRadius.circular(radius ?? 8),
         ),
@@ -108,10 +111,19 @@ class WayaButton extends StatelessWidget {
                 ],
               )
             : centerWidget ??
-                Text(text,
-                    style: textStyle ??
-                        wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                            fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
+                (isLoading
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: wayaTheme.colorScheme.white,
+                        ),
+                      )
+                    : Text(text,
+                        style: textStyle ??
+                            wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                                fontWeight: FontWeight.w600,
+                                color: textColor ?? wayaTheme.colorScheme.scaffoldColor2))),
       ),
     );
   }

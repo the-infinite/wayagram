@@ -1,0 +1,160 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
+
+class ProfilePage extends ConsumerStatefulWidget {
+  static const route = '/profile-page';
+  const ProfilePage({super.key});
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProviderStateMixin {
+  late TabController _accountActivityTabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _accountActivityTabController = TabController(length: 5, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _accountActivityTabController.dispose();
+    super.dispose();
+  }
+
+  String url =
+      'https://static.vecteezy.com/system/resources/thumbnails/005/346/410/small_2x/close-up-portrait-of-smiling-handsome-young-caucasian-man-face-looking-at-camera-on-isolated-light-gray-studio-background-photo.jpg';
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return WayaScaffold(
+      padding: EdgeInsets.zero,
+      appBarTrailing: Row(
+        spacing: 12,
+        children: [
+          WayaAssests.icons.genSet.search.svg(fit: BoxFit.none),
+          WayaAssests.icons.genSet.share.svg(fit: BoxFit.none),
+          WayaAssests.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+          Gap(8)
+        ],
+      ),
+      title: '',
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  CachedNetworkImage(fit: BoxFit.fill, width: double.infinity, height: 166, imageUrl: url),
+                  Gap(15),
+                  GestureDetector(
+                    onTap: () {
+                      WayaNav.toNamed(
+                        EditProfilePage.route,
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 20.w),
+                      padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
+                        color: wayaTheme.colorScheme.white,
+                        borderRadius: BorderRadius.circular(7.r),
+                      ),
+                      child: Text(
+                        'Edit Profile',
+                        style: wayaTheme.textTheme.labelSmall
+                            ?.wayaCopyWith(color: wayaTheme.colorScheme.primary600, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Positioned(
+                  left: 16.w,
+                  bottom: 3.h,
+                  child: WayaDp(
+                    radius: 28.r,
+                  )),
+            ],
+          ),
+          Gap(10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Bruce Wayne',
+                  style: wayaTheme.textTheme.bodyMedium
+                      ?.wayaCopyWith(fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.black),
+                ),
+                Text(
+                  '@jame_sinister',
+                  style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+                ),
+                Gap(10),
+                Text(
+                  '🌟 Passionate traveler | Coffee enthusiast ☕ | Tech geek 💻 | Sharing my adventures and insights on life! 🌍✨',
+                  style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700),
+                ),
+                Gap(10),
+                buildProfileOverview(wayaTheme),
+              ],
+            ),
+          ),
+          Gap(20),
+        ],
+      ),
+    );
+  }
+
+  SingleChildScrollView buildProfileOverview(ThemeData wayaTheme) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        spacing: 5.0,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          WayaRichText(
+            title1: '6K',
+            title2: ' Following',
+            style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+            style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+          ),
+          WayaRichText(
+            title1: '7K',
+            title2: ' Followers',
+            style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+            style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+          ),
+          WayaRichText(
+            title1: '600',
+            title2: ' Posts',
+            style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+            style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+          ),
+          WayaRichText(
+            title1: 'Date Joined: ',
+            title2: 'December 2021',
+            style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+            style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+          ),
+        ],
+      ),
+    );
+  }
+}
