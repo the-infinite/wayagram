@@ -10,6 +10,7 @@ import '../data/model/model.dart';
 import 'components/components.dart';
 
 class GeneralSettingsPage extends ConsumerStatefulWidget {
+  static const route = '/general-settings';
   const GeneralSettingsPage({super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GeneralSettingsPageState();
@@ -30,6 +31,10 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
     final userState = ref.watch(profileVmProvider);
     return WayaScaffold(
       isScrollable: true,
+      onRefresh: () async {
+        ref.read(profileVmProvider.notifier).getUserData();
+        ref.read(profileVmProvider.notifier).getUserProfile();
+      },
       isLoading: userState.isLoading,
       title: "General Settings",
       body: Column(

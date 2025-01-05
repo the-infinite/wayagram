@@ -48,7 +48,7 @@ class LoginCoverPage extends ConsumerWidget {
               color: wayaTheme.colorScheme.black,
               callback: () {},
               leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
-              text: "Continue with Google",
+              text: "Continue with Apple",
               textColor: wayaTheme.colorScheme.onPrimary,
             ),
             Gap(10),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -20,9 +19,6 @@ class ChangePinPage extends ConsumerStatefulWidget {
 class _ChangePinPageState extends ConsumerState<ChangePinPage> {
   @override
   Widget build(BuildContext context) {
-    print(WayaLocalDataSource().getUserId());
-    print(WayaLocalDataSource().gettoken());
-
     final pin = ref.watch(pinProvider);
     final confirmPin = ref.watch(confirmPinProvider);
     final confirmNewPin = ref.watch(newPinConfirmationProvider);
@@ -46,7 +42,7 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
                 const Gap(5),
                 Text("For added security, please create a 4-digit PIN \n to confirm your transactions",
                     style: WayaTextStyles.hintStyle),
-                const Gap(30),
+                const Gap(10),
                 PinInputField(
                   pin: pin,
                   label: "Enter your old 4-digit PIN",
@@ -89,7 +85,6 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
                     onKeyTap: viewModel.handleKeyPress,
                     onSubmit: viewModel.changeTransactionPin,
                     onBackspace: viewModel.handleBackspace)),
-            const Gap(20)
           ],
         ));
   }

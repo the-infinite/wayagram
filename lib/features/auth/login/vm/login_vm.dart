@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/repos/auth/auth_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -14,6 +15,8 @@ class LoginVm extends ChangeNotifier {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
+  final WayaSecureDataSource _secureDataSource = WayaSecureDataSource();
+
   bool _isPasswordFocused = false;
   bool _isLoading = false;
   bool isPasswordVisible = false;
@@ -52,15 +55,13 @@ class LoginVm extends ChangeNotifier {
         final remmoteUserData = UserModel.fromJson(response.data);
         userData = remmoteUserData;
         notifyListeners();
-        print(remmoteUserData.data);
         final user = response.data['data']['user'];
         _logger.i(user);
         _localDataSource.saveUser(user); // this will be depracated
 
-        print(user);
         _localDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id);
         _localDataSource.savetoken(remmoteUserData.data?.token?.token);
-
+        _secureDataSource.saveToken(remmoteUserData.data?.token?.token ?? '');
         WayaNav.toNamed("/welcome-back");
       }
     } catch (e) {
