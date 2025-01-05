@@ -46,7 +46,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       Map<String, dynamic>? params,
       bool formdata = false,
       dynamic token}) async {
-  await  _setHeader(
+    await _setHeader(
       formdata: formdata,
     );
     params?.removeWhere((key, value) => value == null);
@@ -86,7 +86,8 @@ class DioHttpClient implements WayaHttpClientInterface {
         _showLoadingProgress(count, total);
       },
       onReceiveProgress: ((count, total) {
-        if (onRecieveProgress != null) onRecieveProgress(count: count, total: total);
+        if (onRecieveProgress != null)
+          onRecieveProgress(count: count, total: total);
         _showLoadingProgress(count, total);
       }),
       queryParameters: params,
@@ -202,7 +203,7 @@ class DioHttpClient implements WayaHttpClientInterface {
               ? 'application/x-www-form-urlencoded'
               : 'application/json',
       'Accept': '*/*',
-    //  'Authorization' : 'Bearer ${await secureDataSource.getToken()}',
+      'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 

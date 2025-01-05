@@ -79,7 +79,7 @@ class ProductsNotifier extends StateNotifier<AsyncValue<List<Product>>> {
   }
 }
 
-// povider notifier
+// provider notifier
 final productsProvider =
     StateNotifierProvider<ProductsNotifier, AsyncValue<List<Product>>>((ref) {
   final productService = ref.watch(productServiceProvider);
