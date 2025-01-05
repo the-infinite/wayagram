@@ -78,7 +78,7 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
             label: getEditOperation(editType: editType, ref: ref, value: nameController.text).label,
             onChanged: (data) {
               setState(() {});
-              editType != ProfileEditType.name || editType != ProfileEditType.username
+              editType == ProfileEditType.name || editType == ProfileEditType.username
                   ? WayaHelpers.countFormCharacters(nameController, 60)
                   : null;
             },

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/service/repos/auth/auth_model.dart';
-import 'package:wayagram/core/service/repos/auth/auth_repository.dart';
+import 'package:wayagram/features/auth/data/model/auth_model.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class CreateNewPasswordVm extends ChangeNotifier {

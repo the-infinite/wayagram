@@ -27,9 +27,9 @@ class Explore extends ConsumerWidget {
 
     return WayaScaffold(
         isLoading: false,
-        color: wayaTheme.colorScheme.scaffoldColor,
+        backgroundColor: wayaTheme.colorScheme.scaffoldColor,
         appBar: AppBar(
-           toolbarHeight: 70,
+            toolbarHeight: 70,
             backgroundColor: wayaTheme.colorScheme.white,
             title: ExploreHeader(),
             actions: [
@@ -41,8 +41,7 @@ class Explore extends ConsumerWidget {
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: Icon(Icons.notifications,
-                          size: 30, color: wayaTheme.colorScheme.greyColor500),
+                      child: Icon(Icons.notifications, size: 30, color: wayaTheme.colorScheme.greyColor500),
                     ),
                     const Gap(15),
                     WayaDp(
@@ -71,9 +70,7 @@ class Explore extends ConsumerWidget {
             const ExploreOurServices(),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Have a buy request, just create a quote',
-                title: 'Get Quotation'),
+                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
@@ -89,9 +86,7 @@ class Explore extends ConsumerWidget {
                   Text(
                     "Create a Quote",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16),
+                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                 ],
               ),
@@ -107,10 +102,7 @@ class Explore extends ConsumerWidget {
                   return QuotationCard(quotation: viewModel.quotations[index]);
                 }),
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Explore Categories & Best Offers',
-                title: 'Shop'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Explore Categories & Best Offers', title: 'Shop'),
             const Gap(10),
             CategoriesFilterWidget<Product>(allItems: []),
             const Gap(25),
@@ -119,24 +111,16 @@ class Explore extends ConsumerWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 0,
-                        childAspectRatio: 0.65,
-                        crossAxisSpacing: 12),
+                        crossAxisCount: 2, mainAxisSpacing: 0, childAspectRatio: 0.65, crossAxisSpacing: 12),
                     itemCount: products.sublist(0, 2).length,
                     itemBuilder: (context, index) {
-                      return ProductCard(
-                          product: products.sublist(0, 2)[index]);
+                      return ProductCard(product: products.sublist(0, 2)[index]);
                     }),
-                error: (e, stack) =>
-                    _buildProductLoadingState(context: context),
+                error: (e, stack) => _buildProductLoadingState(context: context),
                 loading: () => _buildProductLoadingState(context: context)),
 
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Join Upcoming Activities',
-                title: 'University Got Talent'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -169,10 +153,7 @@ class Explore extends ConsumerWidget {
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 0,
-            childAspectRatio: 0.65,
-            crossAxisSpacing: 12),
+            crossAxisCount: 2, mainAxisSpacing: 0, childAspectRatio: 0.65, crossAxisSpacing: 12),
         itemCount: 2,
         itemBuilder: (context, index) {
           return ProductCardSekeleton();

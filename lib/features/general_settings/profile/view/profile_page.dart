@@ -125,38 +125,36 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
     );
   }
 
-  SingleChildScrollView buildProfileOverview(ThemeData wayaTheme, ProfileState userState) {
-    return SingleChildScrollView(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          WayaRichText(
-            title1: '0',
-            title2: ' Following',
-            style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-            style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-          ),
-          WayaRichText(
-            title1: '0',
-            title2: ' Followers',
-            style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-            style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-          ),
-          WayaRichText(
-            title1: '0',
-            title2: ' Posts',
-            style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-            style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-          ),
-          WayaRichText(
-            title1: 'Date Joined: ',
-            title2: WayaHelpers.formatDateMonthYear(
-                userState.userProfileModel?.data?.createdAt.toString() ?? DateTime.now().toString()),
-            style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-            style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-          ),
-        ],
-      ),
+  Widget buildProfileOverview(ThemeData wayaTheme, ProfileState userState) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        WayaRichText(
+          title1: '0',
+          title2: ' Following',
+          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+        ),
+        WayaRichText(
+          title1: '0',
+          title2: ' Followers',
+          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+        ),
+        WayaRichText(
+          title1: '0',
+          title2: ' Posts',
+          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+        ),
+        WayaRichText(
+          title1: 'Date Joined: ',
+          title2: WayaHelpers.formatDateMonthYear(
+              userState.userProfileModel?.data?.createdAt.toString() ?? DateTime.now().toString()),
+          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+        ),
+      ],
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
+import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
@@ -29,9 +30,9 @@ class WayaAppRoutes {
     '/setup-pin': () => TransactionPinView(),
     '/select-interests': () => SelectInterest(),
     '/add-business-account': () => AddBusinessAccountView(),
-    '/login': () => LoginPage(),
+    LoginPage.route: () => LoginPage(),
     '/welcome-back': () => WelcomeBackPage(),
-    '/explore': () => BottomView(),
+    BottomView.route: () => BottomView(),
     '/product-detail': () => ProductDetail(),
     '/order-detail': () => OrderDetails(),
     '/confirm-order-delivery': () => ConfirmOrderDelivery(),
@@ -40,7 +41,7 @@ class WayaAppRoutes {
     '/seller-order-details': () => SellerOrderDetails(),
     '/checkout': () => Checkout(),
     '/filter': () => FilterView(),
-    '/general-settings': () => GeneralSettingsPage(),
+    GeneralSettingsPage.route: () => GeneralSettingsPage(),
     '/change-password-gen-set': () => ChangePasswordGenSettings(),
     '/change-pin-page': () => ChangePinPage(),
     '/fund-wallet-page': () => FundWalletPage(),
@@ -52,7 +53,8 @@ class WayaAppRoutes {
     '/waya_product_listing': () => ProductListing(),
     '/waya-deal-ad': () => WayaDealAd(),
     '/wayagram-deal': () => WayaGramDeals(),
-    '/waya-application-product-detail': () => ApplicationProductDetails()
+    '/waya-application-product-detail': () => ApplicationProductDetails(),
+    CreateShop.route: () => CreateShop(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

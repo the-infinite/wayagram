@@ -4,8 +4,8 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 class DioInterceptor extends Interceptor {
   final Dio dio;
   final WayaSecureDataSource secureDataSource;
-
-  DioInterceptor(this.dio, this.secureDataSource);
+  final String baseURL;
+  DioInterceptor(this.dio, this.secureDataSource, this.baseURL);
 
   @override
   Future<void> onRequest(
@@ -19,18 +19,24 @@ class DioInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
+    final errData = err.response?.data['data'];
+
     if (err.response?.data['statusCode'] == 401 ||
-        err.response?.data['message'].contains("expired")) {
+        (err.response?.data['statusCode'] == 400 &&
+            errData != null &&
+            errData is String &&
+            errData.contains("token"))) {
       final refreshToken = await secureDataSource.getRefreshToken();
       if (refreshToken != null) {
         try {
           final response = await dio.post(
-              'wayagram-profile/api/v2/client/auth/refresh-token',
+              'https://services.staging.wayagram.ng/wayagram-profile/api/v2/client/auth/refresh-token',
               data: {"token": refreshToken});
+
           final newtoken = response.data['data']['token']['token'];
           final newrefreshToken =
               response.data['data']['token']['refreshToken'];
-
+          print(" new token $newtoken");
           secureDataSource.saveToken(newtoken);
           secureDataSource.saveRefreshToken(newrefreshToken);
 
@@ -48,6 +54,7 @@ class DioInterceptor extends Interceptor {
 
           return handler.resolve(retryResponse);
         } catch (e) {
+          print(" new token $e");
           return handler.next(err);
         }
       }

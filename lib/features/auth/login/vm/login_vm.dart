@@ -1,78 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/service/repos/auth/auth_repository.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/login/model/user_model.dart';
 
-class LoginVm extends ChangeNotifier {
-  final Ref ref;
-  LoginVm(this.ref);
-  final AuthRepository _authRepository = AuthRepository();
-  final _logger = getLogger("LoginVm");
-  final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
-  final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
-  bool _isPasswordFocused = false;
-  bool _isLoading = false;
-  bool isPasswordVisible = false;
-  UserModel? userData;
+class LoginState {
+  final bool isPasswordFocused;
+  final bool isLoading;
+  final bool isPasswordVisible;
+  final UserModel? userData;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
 
-  bool get isPasswordFocused => _isPasswordFocused;
-  bool get isLoading => _isLoading;
+  LoginState({
+    this.isPasswordFocused = false,
+    this.isLoading = false,
+    this.isPasswordVisible = false,
+    this.userData,
+    required this.emailController,
+    required this.passwordController,
+  });
+
+  LoginState copyWith({
+    bool? isPasswordFocused,
+    bool? isLoading,
+    bool? isPasswordVisible,
+    UserModel? userData,
+    TextEditingController? emailController,
+    TextEditingController? passwordController,
+  }) {
+    return LoginState(
+      isPasswordFocused: isPasswordFocused ?? this.isPasswordFocused,
+      isLoading: isLoading ?? this.isLoading,
+      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
+      userData: userData ?? this.userData,
+      emailController: emailController ?? this.emailController,
+      passwordController: passwordController ?? this.passwordController,
+    );
+  }
+}
+
+class LoginVm extends StateNotifier<LoginState> {
+  final AuthRepository _authRepository;
+  final WayaLocalDataSource _localDataSource;
+  final WayaSecureDataSource _secureDataSource;
+  final _logger = getLogger("LoginVm");
+
+  LoginVm(this._authRepository, this._localDataSource, this._secureDataSource)
+      : super(LoginState(
+          emailController: TextEditingController(),
+          passwordController: TextEditingController(),
+        ));
 
   void togglePasswordVisibility() {
-    isPasswordVisible = !isPasswordVisible;
-    notifyListeners();
+    state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
   }
 
   void setPasswordFocus(bool hasFocus) {
-    _isPasswordFocused = hasFocus;
-    notifyListeners();
+    state = state.copyWith(isPasswordFocused: hasFocus);
   }
 
   @override
   void dispose() {
-    email.dispose();
-
-    password.dispose();
-
+    state.emailController.dispose();
+    state.passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> onSubmit() async {
+  Future<void> onSubmit(String? email) async {
     try {
-      _isLoading = true;
-      notifyListeners();
-      final response = await _authRepository.login(email.text, password.text);
+      state = state.copyWith(isLoading: true);
+      final response = await _authRepository.login(
+          email ?? state.emailController.text, state.passwordController.text);
 
       _logger.d(" result ${response.data['message']}");
-      if (response.data['statusCode'] == 200) {
+      if (response.success) {
         final remmoteUserData = UserModel.fromJson(response.data);
-        userData = remmoteUserData;
-        notifyListeners();
-        print(remmoteUserData.data);
-        final user = response.data['data']['user'];
-        _logger.i(user);
-        _localDataSource.saveUser(user); // this will be depracated
+        state = state.copyWith(userData: remmoteUserData);
+           _localDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
+      await  _secureDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
+        await _secureDataSource
+            .saveToken(remmoteUserData.data?.token?.token as String);
 
-        print(user);
-        _localDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id);
-        _localDataSource.savetoken(remmoteUserData.data?.token?.token);
-
-        WayaNav.toNamed("/welcome-back");
+        WayaNav.toNamed("/explore");
       }
     } catch (e) {
-      _isLoading = false;
       _logger.e(e);
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      state = state.copyWith(isLoading: false);
     }
-
-    //
   }
 }
 
-final loginVmProvider = ChangeNotifierProvider((ref) => LoginVm(ref));
+final loginVmProvider = StateNotifierProvider<LoginVm, LoginState>((ref) {
+  return LoginVm(
+      AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource());
+});

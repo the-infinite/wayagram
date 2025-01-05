@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/model.dart';
+import 'package:wayagram/core/data/model/model.dart';
 
 class WayaHelpers {
   static Future<void> showNotice(

@@ -50,3 +50,4 @@ class AuthRepository extends BaseRepository {
     return get('wayagram-profile/api/v2/client/businesses/types/all');
   }
 }
+

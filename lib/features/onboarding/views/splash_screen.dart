@@ -15,7 +15,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      ref.read(splashScreenVmProvider).runStartUpLogic();
+      ref.read(splashScreenVmProvider.notifier).runStartUpLogic();
     });
 
     super.initState();
@@ -41,4 +41,3 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 }
 
-final splashScreenVmProvider = ChangeNotifierProvider((ref) => SplashScreenVm());

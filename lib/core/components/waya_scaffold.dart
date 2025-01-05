@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/vm/theme_vm.dart';
 
 class WayaScaffold extends ConsumerWidget {
@@ -16,6 +17,7 @@ class WayaScaffold extends ConsumerWidget {
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final bool isScrollable;
+  final Future<void> Function()? onRefresh;
   final String? title;
   final EdgeInsetsGeometry? padding;
   final bool isLoading;
@@ -27,6 +29,7 @@ class WayaScaffold extends ConsumerWidget {
       this.resizeToAvoidBottomInset,
       this.automicallyImplyLeading = true,
       this.removeAppBar = false,
+      this.onRefresh,
       required this.body,
       this.isLoading = false,
       this.padding,
@@ -41,6 +44,7 @@ class WayaScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final wayaTheme = Theme.of(context);
     final themeNotifier = ref.read(themeProvider.notifier);
     final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
     return BlurryModalProgressHUD(
@@ -57,18 +61,32 @@ class WayaScaffold extends ConsumerWidget {
               ? null
               : appBar ??
                   AppBar(
+                    elevation: 0,
+                    scrolledUnderElevation: 0,
+                    backgroundColor: wayaTheme.colorScheme.white,
                     title: Text(title ?? ''),
                     leading: automicallyImplyLeading ? WayaBackButton() : SizedBox.shrink(),
                     actions: appBarTrailing == null ? null : [appBarTrailing!],
                   ),
           body: isScrollable
-              ? Container(
-                  color: color,
-                  child: Padding(
-                    padding: paddedBody,
-                    child: SingleChildScrollView(child: body),
-                  ),
-                )
+              ? onRefresh != null
+                  ? RefreshIndicator(
+                      onRefresh: onRefresh!,
+                      child: Container(
+                        color: color,
+                        child: Padding(
+                          padding: paddedBody,
+                          child: SingleChildScrollView(child: body),
+                        ),
+                      ),
+                    )
+                  : Container(
+                      color: color,
+                      child: Padding(
+                        padding: paddedBody,
+                        child: SingleChildScrollView(child: body),
+                      ),
+                    )
               : Padding(
                   padding: paddedBody,
                   child: body,

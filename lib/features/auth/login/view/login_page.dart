@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/auth/login/view/components/tabs/login_tab.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
+  static const route = '/login';
   const LoginPage({super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
@@ -65,7 +66,7 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
               ),
               Gap(20),
               SizedBox(
-                height: Get.height * 0.67,
+                height: Get.height * 0.7,
                 child: PageView(
                   physics: NeverScrollableScrollPhysics(),
                   controller: _pageController,
