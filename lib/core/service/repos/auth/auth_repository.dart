@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/auth/auth_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/features/auth/data/model/auth_model.dart';
 
 class AuthRepository extends BaseRepository {
   Future<WayaRequestResponse> register(Register payload) {

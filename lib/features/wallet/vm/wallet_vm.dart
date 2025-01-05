@@ -11,8 +11,9 @@ class WalletVm extends StateNotifier<WalletState> {
     state = state.copyWith(isLoading: true);
     final response = await _walletRepository!.getUserWallet();
     if (response.success == true) {
-      state = state.copyWith(
-          data: Wallet.fromJson(response.data), isLoading: false);
+      final walletData = response.data["data"]["wallet"];
+      state =
+          state.copyWith(data: Wallet.fromJson(walletData), isLoading: false);
     } else {
       state = state.copyWith(isLoading: false);
     }
