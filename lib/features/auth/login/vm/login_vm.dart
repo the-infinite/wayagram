@@ -80,7 +80,8 @@ class LoginVm extends StateNotifier<LoginState> {
       if (response.success) {
         final remmoteUserData = UserModel.fromJson(response.data);
         state = state.copyWith(userData: remmoteUserData);
-        _localDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id);
+           _localDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
+      await  _secureDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
         await _secureDataSource
             .saveToken(remmoteUserData.data?.token?.token as String);
 

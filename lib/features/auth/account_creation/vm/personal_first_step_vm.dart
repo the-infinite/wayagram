@@ -108,6 +108,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         final user = responseModel.data.user;
         _localDataSource.saveUser(user);
         _secureDataSource.saveUserId(user.id!);
+         _localDataSource.saveUserId(user.id!);
        
 
         if (!isPersonal) {
