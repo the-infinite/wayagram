@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/personal_state_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/response_model.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 
-
 class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   final AuthRepository _authRepository;
   final WayaLocalDataSource _localDataSource;
+  final WayaSecureDataSource _secureDataSource;
   final _logger = getLogger('PersonalFirstStepVm');
 
-  PersonalFirstStepVm(this._authRepository, this._localDataSource)
+  PersonalFirstStepVm(this._authRepository, this._localDataSource, this._secureDataSource)
       : super(PersonalFirstStepState());
 
   void togglePasswordVisibility() {
@@ -22,7 +23,8 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   }
 
   void toggleConfirmPasswordVisibility() {
-    state = state.copyWith(isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
+    state = state.copyWith(
+        isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
   }
 
   void setConfirmPasswordFocus(bool hasFocus) {
@@ -59,9 +61,11 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
           initialDate: DateTime.now());
 
       if (response != null) {
-        final dateOfBirth = "${response.year}-${response.month}-${response.day}";
+        final dateOfBirth =
+            "${response.year}-${response.month}-${response.day}";
         final dateIsoFormat = response.toIso8601String();
-        state = state.copyWith(dateOfBirth: dateOfBirth, dateIsoFormat: dateIsoFormat);
+        state = state.copyWith(
+            dateOfBirth: dateOfBirth, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
       print(error);
@@ -103,6 +107,9 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         final responseModel = ResponseModel.fromJson(response.data);
         final user = responseModel.data.user;
         _localDataSource.saveUser(user);
+        _secureDataSource.saveUserId(user.id!);
+       
+
         if (!isPersonal) {
           final business = responseModel.data.business;
           _localDataSource.saveBusiness(business!);
@@ -116,17 +123,20 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     }
   }
 }
+
 final authRepositoryProvider = Provider((ref) => AuthRepository());
 
 final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
 
-final personalFirstStepProvider = StateNotifierProvider<PersonalFirstStepVm, PersonalFirstStepState>((ref) {
+final personalFirstStepProvider =
+    StateNotifierProvider<PersonalFirstStepVm, PersonalFirstStepState>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final localDataSource = ref.watch(localDataSourceProvider);
-  return PersonalFirstStepVm(authRepository, localDataSource);
+  return PersonalFirstStepVm(authRepository, localDataSource, WayaSecureDataSource());
 });
+
 class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {
   final AuthRepository _authRepository;
   final _logger = getLogger('BusinessTypes');
@@ -159,7 +169,6 @@ class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {
     await fetchBusinessTypes();
   }
 }
-
 
 final businessTypesProvider =
     StateNotifierProvider<BusinessTypes, AsyncValue<List<Select>>>((ref) {

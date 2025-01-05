@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -45,9 +46,10 @@ class LoginState {
 class LoginVm extends StateNotifier<LoginState> {
   final AuthRepository _authRepository;
   final WayaLocalDataSource _localDataSource;
+  final WayaSecureDataSource _secureDataSource;
   final _logger = getLogger("LoginVm");
 
-  LoginVm(this._authRepository, this._localDataSource)
+  LoginVm(this._authRepository, this._localDataSource, this._secureDataSource)
       : super(LoginState(
           emailController: TextEditingController(),
           passwordController: TextEditingController(),
@@ -72,14 +74,15 @@ class LoginVm extends StateNotifier<LoginState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.login(
-         email ?? state.emailController.text, state.passwordController.text);
+          email ?? state.emailController.text, state.passwordController.text);
 
       _logger.d(" result ${response.data['message']}");
       if (response.success) {
         final remmoteUserData = UserModel.fromJson(response.data);
         state = state.copyWith(userData: remmoteUserData);
         _localDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id);
-        _localDataSource.savetoken(remmoteUserData.data?.token?.token);
+        await _secureDataSource
+            .saveToken(remmoteUserData.data?.token?.token as String);
 
         WayaNav.toNamed("/explore");
       }
@@ -92,5 +95,6 @@ class LoginVm extends StateNotifier<LoginState> {
 }
 
 final loginVmProvider = StateNotifierProvider<LoginVm, LoginState>((ref) {
-  return LoginVm(AuthRepository(), WayaLocalDataSource());
+  return LoginVm(
+      AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource());
 });

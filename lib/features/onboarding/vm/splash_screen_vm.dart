@@ -23,7 +23,7 @@ class SplashScreenVm extends StateNotifier<void> {
       if (authToken == null) return WayaNav.toNamed("/onboarding");
 
       // check if user has an ID
-      final userId = _localDataSource.getUserId();
+      final userId = await _secureDataSource.getUserId();
 
       if (userId == null) return WayaNav.toNamed('/login-cover-page');
 
@@ -34,6 +34,7 @@ class SplashScreenVm extends StateNotifier<void> {
             UserAccountModel.fromJson(response.data);
 
         _localDataSource.saveUser(userAccountModel.data!);
+
         WayaNav.toNamed('/welcome-back');
       } else {
         WayaNav.toNamed('/login-cover-page');

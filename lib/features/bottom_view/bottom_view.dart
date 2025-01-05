@@ -32,12 +32,12 @@ class _BottomViewState extends ConsumerState<BottomView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final WayaLocalDataSource localDataSource = WayaLocalDataSource();
-    final userType = localDataSource.getUser().role;
-
+//     final WayaLocalDataSource localDataSource = WayaLocalDataSource();
+//     final userType = localDataSource.getUser().role;
+// userType!.name == 'PERSONAL' ? WayaBuyer() :
     _pages = [
       Explore(),
-      userType!.name == 'PERSONAL' ? WayaBuyer() : WayaSeller(),
+       WayaSeller(),
       Explore(),
       Explore(),
       Explore(),
