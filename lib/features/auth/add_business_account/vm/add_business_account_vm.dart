@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/service/repos/auth/auth_repository.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:mime/mime.dart';
@@ -114,7 +114,7 @@ Future<MultipartFile> formattedImage(File file) async {
             'passport': await formattedImage(uploadedDocuments
                 .firstWhere((element) => element.type == 'passport')
                 .file),
-            'businessId': localDataSource.getBusiness()['id'],
+            'businessId': localDataSource.getBusiness().id,
             'cacNumber': cac.text
           }
         : {
@@ -127,7 +127,7 @@ Future<MultipartFile> formattedImage(File file) async {
             'passport': await formattedImage(uploadedDocuments
                 .firstWhere((element) => element.type == 'passport')
                 .file),
-            'businessId': localDataSource.getBusiness()['id'],
+            'businessId': localDataSource.getBusiness().id,
           };
 
     //         FormData formData = FormData();

@@ -1,6 +1,8 @@
-import 'package:wayagram/core/data/model.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/storage_service/fast_storage/waya_fast_storage_interface.dart';
+import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/select_account_data.dart';
+import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/shop/cart/data/model.dart';
 
 class WayaLocalDataSource {
@@ -30,11 +32,11 @@ class WayaLocalDataSource {
     return wayaFastStorageService.read(key: 'cart');
   }
 
-  saveUser(dynamic user) {
+  saveUser(UserAccountData user) {
     return wayaFastStorageService.write(key: 'user', value: user);
   }
 
-  dynamic getUser() {
+  UserAccountData getUser() {
     return wayaFastStorageService.read(key: 'user');
   }
 
@@ -60,11 +62,11 @@ class WayaLocalDataSource {
   // UserModel getUserData() {
   //   return wayaFastStorageService.read<UserModel>(key: 'userData');
   // }
-  saveBusiness(dynamic user) {
+  saveBusiness(BusinessAccountData user) {
     return wayaFastStorageService.write(key: 'business', value: user);
   }
 
-  dynamic getBusiness() {
+  BusinessAccountData getBusiness() {
     return wayaFastStorageService.read(key: 'business');
   }
 

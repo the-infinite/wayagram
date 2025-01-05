@@ -75,15 +75,15 @@ class ManageShop extends ConsumerWidget {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: viewModel.salesMetrics.length,
+                crossAxisCount: ref.read(manageShopVmProvider.notifier).salesMetrics.length,
                 mainAxisSpacing: 0,
                 childAspectRatio: 1.2,
                 crossAxisSpacing: 8),
             itemBuilder: (context, index) {
               return InventoryWidget(
-                  metrics: viewModel.salesMetrics[index]["metrics"],
-                  color: viewModel.salesMetrics[index]['color'],
-                  title: viewModel.salesMetrics[index]['title']);
+                  metrics: ref.read(manageShopVmProvider.notifier).salesMetrics[index]["metrics"],
+                  color: ref.read(manageShopVmProvider.notifier).salesMetrics[index]['color'],
+                  title: ref.read(manageShopVmProvider.notifier).salesMetrics[index]['title']);
             }),
         const Gap(15),
         Text("Quick Action",
@@ -102,7 +102,7 @@ class ManageShop extends ConsumerWidget {
           child: GridView(
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: viewModel.salesMetrics.length,
+                crossAxisCount: ref.read(manageShopVmProvider.notifier).salesMetrics.length,
                 mainAxisSpacing: 0,
                 childAspectRatio: 1,
                 crossAxisSpacing: 8),

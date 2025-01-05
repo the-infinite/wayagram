@@ -18,7 +18,8 @@ class PersonalAccountView extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PersonalAccountViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PersonalAccountViewState();
 }
 
 class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
@@ -77,11 +78,11 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FormField<String>(validator: (value) {
-                  if (viewModel.email.text.isEmpty) {
+                  if (viewModel.emailController.text.isEmpty) {
                     return 'Email is required';
                   }
                   final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                  if (!regexp.hasMatch(viewModel.email.text)) {
+                  if (!regexp.hasMatch(viewModel.emailController.text)) {
                     return 'Invalid email address';
                   }
                   return null;
@@ -91,18 +92,23 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.emailAddress,
-                        controller: viewModel.email,
+                        controller: viewModel.emailController,
                         hintText: 'example@gmail.com',
-                        borderColor:
-                            formState.hasError && viewModel.email.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                        borderColor: formState.hasError &&
+                                viewModel.emailController.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
                         label: 'Email Address',
                       ),
-                      if (formState.hasError && viewModel.email.text.isEmpty)
+                      if (formState.hasError &&
+                          viewModel.emailController.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -110,19 +116,23 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-                  return WayaValidators.passwordValidator(viewModel.password.text);
+                  return WayaValidators.passwordValidator(
+                      viewModel.passwordController.text);
                 }, builder: (formState) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Focus(
                         onFocusChange: (hasFocus) {
-                          viewModel.setPasswordFocus(hasFocus);
+                          ref
+                              .read(loginVmProvider.notifier)
+                              .setPasswordFocus(hasFocus);
                         },
                         child: WayaTextFormField(
                           keyboardType: TextInputType.visiblePassword,
-                          controller: viewModel.password,
-                          borderColor: formState.hasError && viewModel.password.text.isEmpty
+                          controller: viewModel.passwordController,
+                          borderColor: formState.hasError &&
+                                  viewModel.passwordController.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           hintText: 'Enter Your Password',
@@ -130,7 +140,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                           obscureText: !viewModel.isPasswordVisible,
                           suffixIcon: IconButton(
                             onPressed: () {
-                              viewModel.togglePasswordVisibility();
+                              ref
+                                  .read(loginVmProvider.notifier)
+                                  .togglePasswordVisibility();
                             },
                             autofocus: false,
                             icon: Icon(viewModel.isPasswordVisible
@@ -145,7 +157,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -157,8 +171,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   child: GestureDetector(
                     onTap: () => WayaNav.toNamed('/forgot-password'),
                     child: Text('Forgot Password?',
-                        style: wayaTheme.textTheme.bodySemiBold
-                            .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
+                        style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
+                            fontSize: 14,
+                            color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),
                 Gap(30),
@@ -167,11 +182,12 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   callback: !viewModel.isLoading
                       ? () async {
                           if (_formKey.currentState!.validate()) {
-                            viewModel.onSubmit();
+                            ref.read(loginVmProvider.notifier).onSubmit(null);
                           }
                         }
                       : null,
-                  centerWidget: LoadingState(loading: viewModel.isLoading, text: "Login"),
+                  centerWidget:
+                      LoadingState(loading: viewModel.isLoading, text: "Login"),
                   textColor: wayaTheme.colorScheme.onPrimary,
                 ),
               ],
@@ -185,7 +201,8 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
               label: WayaRichText(
             title1: "Don't have an account? ",
             title2: "Create new account",
-            style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
+            style1: wayaTheme.textTheme.hintStyle
+                .wayaCopyWith(color: wayaTheme.colorScheme.black),
           )),
         ),
       ],
@@ -264,8 +281,8 @@ class BusinessAccountView extends StatelessWidget {
           child: GestureDetector(
             onTap: () => WayaNav.toNamed('/forgot-password'),
             child: Text('Forgot Password?',
-                style: wayaTheme.textTheme.bodySemiBold
-                    .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
+                style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
+                    fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
           ),
         ),
         Gap(25),
@@ -285,7 +302,8 @@ class BusinessAccountView extends StatelessWidget {
           onTap2: () {
             WayaNav.toNamed("/account-creation");
           },
-          style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
+          style1: wayaTheme.textTheme.hintStyle
+              .wayaCopyWith(color: wayaTheme.colorScheme.black),
         )),
       ],
     );

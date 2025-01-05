@@ -83,10 +83,9 @@ class TransactionPinVm extends StateNotifier<void> {
       try {
         ref.read(loadingProvider.notifier).state = true;
         final user = _localDataSource.getUser();
-        _logger.d("  $user");
+      
         final response =
-            await _walletRepository.createPin(CreateWalletPin(confirmPin: confirmPin, pin: pin, userId: user['id']));
-        _logger.d("  ${response.data}");
+            await _walletRepository.createPin(CreateWalletPin(confirmPin: confirmPin, pin: pin, userId: user.id!));
         if (response.data["statusCode"] == 200) {
           WayaNav.toNamed('/set-notification');
         }
