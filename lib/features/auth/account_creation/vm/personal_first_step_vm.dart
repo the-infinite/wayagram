@@ -1,152 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
-import 'package:wayagram/core/data/model.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/service/repos/auth/auth_model.dart';
-import 'package:wayagram/core/service/repos/auth/auth_repository.dart';
+import 'package:wayagram/features/auth/account_creation/data/model/personal_state_model.dart';
+import 'package:wayagram/features/auth/account_creation/data/model/response_model.dart';
+import 'package:wayagram/features/auth/data/model/auth_model.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 
-class PersonalFirstStepVm extends ChangeNotifier {
- final AuthRepository _authRepository = AuthRepository();
 
-
-  final TextEditingController firstName = TextEditingController();
-  final TextEditingController lastName = TextEditingController();
-  final TextEditingController email = TextEditingController();
-  final TextEditingController referenceCode = TextEditingController();
-  final TextEditingController password = TextEditingController();
-  final TextEditingController confirmPassword = TextEditingController();
-  final TextEditingController phoneNumber = TextEditingController();
-  final TextEditingController address = TextEditingController();
-  final TextEditingController city = TextEditingController();
-  final TextEditingController state = TextEditingController();
-  final TextEditingController country = TextEditingController();
-  final TextEditingController businessName = TextEditingController();
-  final TextEditingController businessAddress = TextEditingController();
-
-  String dateOfBirth = '';
-  String _gender = '';
-  String _businessTypeId = '';
-  final WayaLocalDataSource localDataSource = WayaLocalDataSource();
+class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
+  final AuthRepository _authRepository;
+  final WayaLocalDataSource _localDataSource;
   final _logger = getLogger('PersonalFirstStepVm');
-  bool isPasswordVisible = false;
-  bool isConfirmPasswordVisible = false;
-  bool isAgreeToTerm = false;
-  bool _isButtonEnabled = false;
-  String _dateIsoFormat = '';
-  bool _isFocused = false;
-  bool _isConfirmPasswordFocused = false;
-  bool _isPasswordFocused = false;
-  bool _isLoading = false;
-  final List<Select> genders = [
-    Select(label: 'Male', value: 'MALE'),
-    Select(label: 'Female', value: 'FEMALE'),
-    Select(label: 'Others', value: 'OTHERS'),
-  ];
 
-  final Ref ref;
+  PersonalFirstStepVm(this._authRepository, this._localDataSource)
+      : super(PersonalFirstStepState());
 
-  PersonalFirstStepVm(this.ref);
-
-  bool get isButtonEnabled => _isButtonEnabled;
-  bool get isFocused => _isFocused;
-  String get gender => _gender;
-  String get businessTypeId => _businessTypeId;
-  bool get isConfirmPasswordFocused => _isConfirmPasswordFocused;
-  bool get isPasswordFocused => _isPasswordFocused;
-  bool get isLoading => _isLoading;
   void togglePasswordVisibility() {
-    isPasswordVisible = !isPasswordVisible;
-    notifyListeners();
+    state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
   }
 
   void toggleConfirmPasswordVisibility() {
-    isConfirmPasswordVisible = !isConfirmPasswordVisible;
-    notifyListeners();
+    state = state.copyWith(isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
   }
 
   void setConfirmPasswordFocus(bool hasFocus) {
-    _isConfirmPasswordFocused = hasFocus;
-    notifyListeners();
+    state = state.copyWith(isConfirmPasswordFocused: hasFocus);
   }
 
   void setPasswordFocus(bool hasFocus) {
-    _isPasswordFocused = hasFocus;
-    notifyListeners();
+    state = state.copyWith(isPasswordFocused: hasFocus);
   }
 
   void toggleTerm(bool? value) {
-    isAgreeToTerm = value!;
-    // validateInputs();
-    notifyListeners();
+    state = state.copyWith(isAgreeToTerm: value!);
   }
 
   void focusChanged(bool hasFocus) {
-    _isFocused = hasFocus;
-    notifyListeners();
+    state = state.copyWith(isFocused: hasFocus);
   }
 
   void selectGender(String value) {
-    _gender = value;
-    notifyListeners();
+    state = state.copyWith(gender: value);
   }
 
   void selectBizType(Select value) {
-    _businessTypeId = value.value;
-    localDataSource.saveSelectedBusinessType(value);
-    notifyListeners();
-  }
-
-  // void validateInputs() {
-  //   final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-  //   _isButtonEnabled = firstName.text.isNotEmpty &&
-  //       lastName.text.isNotEmpty &&
-  //       email.text.isNotEmpty &&
-  //       regexp.hasMatch(email.text) &&
-  //       phoneNumber.text.isNotEmpty &&
-  //       password.text.isNotEmpty &&
-  //       password.text.length >= 8 &&
-  //       confirmPassword.text == password.text &&
-  //       isAgreeToTerm &&
-  //       dateOfBirth.isNotEmpty &&
-  //       gender.isNotEmpty &&
-  //       address.text.isNotEmpty &&
-  //       city.text.isNotEmpty &&
-  //       state.text.isNotEmpty &&
-  //       country.text.isNotEmpty;
-  //   notifyListeners();
-  // }
-
-  // @override
-  // void addListener(VoidCallback listener) {
-  //   super.addListener(listener);
-  //   email.addListener(validateInputs);
-  //   phoneNumber.addListener(validateInputs);
-  //   firstName.addListener(validateInputs);
-  //   lastName.addListener(validateInputs);
-  //   password.addListener(validateInputs);
-  //   confirmPassword.addListener(validateInputs);
-  //   state.addListener(validateInputs);
-  //   city.addListener(validateInputs);
-  //   address.addListener(validateInputs);
-  //   country.addListener(validateInputs);
-  // }
-
-  @override
-  void dispose() {
-    phoneNumber.dispose();
-    email.dispose();
-    firstName.dispose();
-    lastName.dispose();
-    password.dispose();
-    confirmPassword.dispose();
-    state.dispose();
-    city.dispose();
-    address.dispose();
-    country.dispose();
-    businessAddress.dispose();
-    businessName.dispose();
-    super.dispose();
+    state = state.copyWith(businessTypeId: value.value);
+    _localDataSource.saveSelectedBusinessType(value);
   }
 
   Future<void> showDatePickerDialog(BuildContext context) async {
@@ -158,9 +59,9 @@ class PersonalFirstStepVm extends ChangeNotifier {
           initialDate: DateTime.now());
 
       if (response != null) {
-        dateOfBirth = "${response.year}-${response.month}-${response.day}";
-        _dateIsoFormat = response.toIso8601String();
-        notifyListeners();
+        final dateOfBirth = "${response.year}-${response.month}-${response.day}";
+        final dateIsoFormat = response.toIso8601String();
+        state = state.copyWith(dateOfBirth: dateOfBirth, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
       print(error);
@@ -169,60 +70,63 @@ class PersonalFirstStepVm extends ChangeNotifier {
 
   Future<void> onSubmit(Function gotoNextTab) async {
     try {
-      _isLoading = true;
-      notifyListeners();
-      final bool isPersonal = localDataSource.getUserType().type == 'PERSONAL';
+      state = state.copyWith(isLoading: true);
+      final bool isPersonal = _localDataSource.getUserType().type == 'PERSONAL';
       print("isPersonal $isPersonal");
       final response = await _authRepository.register(Register(
-        email: email.text,
-        password: password.text,
-        firstName: firstName.text,
-        lastName: lastName.text,
+        email: state.email.text,
+        password: state.password.text,
+        firstName: state.firstName.text,
+        lastName: state.lastName.text,
         phoneNumber:
-            "234${phoneNumber.text.length > 10 ? phoneNumber.text.substring(1) : phoneNumber.text}",
-        address: address.text,
-        city: city.text,
-        state: state.text,
-        country: country.text,
-        dateOfBirth: _dateIsoFormat,
-        tcAgreement: isAgreeToTerm,
-        policyAgreement: isAgreeToTerm,
-        confirmPassword: confirmPassword.text,
-        gender: gender,
-        accountTypeId: localDataSource.getUserType().id,
+            "234${state.phoneNumber.text.length > 10 ? state.phoneNumber.text.substring(1) : state.phoneNumber.text}",
+        address: state.address.text,
+        city: state.city.text,
+        state: state.state.text,
+        country: state.country.text,
+        dateOfBirth: state.dateIsoFormat,
+        tcAgreement: state.isAgreeToTerm,
+        policyAgreement: state.isAgreeToTerm,
+        confirmPassword: state.confirmPassword.text,
+        gender: state.gender,
+        accountTypeId: _localDataSource.getUserType().id,
         business: isPersonal
             ? null
             : {
-                "name": businessName.text,
-                "address": businessAddress.text,
-                "businessTypeId": _businessTypeId,
+                "name": state.businessName.text,
+                "address": state.businessAddress.text,
+                "businessTypeId": state.businessTypeId,
               },
       ));
 
-      _logger.d(" result ${response.data['message']}");
-      if (response.data['statusCode'] == 200) {
-        final user = response.data['data']['user'];
-
-        localDataSource.saveUser(user);
+      if (response.success) {
+        final responseModel = ResponseModel.fromJson(response.data);
+        final user = responseModel.data.user;
+        _localDataSource.saveUser(user);
         if (!isPersonal) {
-          final biz = response.data['data']['business'];
-          localDataSource.saveBusiness(biz);
+          final business = responseModel.data.business;
+          _localDataSource.saveBusiness(business!);
         }
-
         gotoNextTab();
       }
     } catch (e) {
       _logger.e(e.toString());
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      state = state.copyWith(isLoading: false);
     }
   }
 }
+final authRepositoryProvider = Provider((ref) => AuthRepository());
 
-final personalFirstStepProvider =
-    ChangeNotifierProvider.autoDispose((ref) => PersonalFirstStepVm(ref));
+final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
+  return WayaLocalDataSource();
+});
 
+final personalFirstStepProvider = StateNotifierProvider<PersonalFirstStepVm, PersonalFirstStepState>((ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
+  final localDataSource = ref.watch(localDataSourceProvider);
+  return PersonalFirstStepVm(authRepository, localDataSource);
+});
 class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {
   final AuthRepository _authRepository;
   final _logger = getLogger('BusinessTypes');
@@ -256,7 +160,6 @@ class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {
   }
 }
 
-final authRepositoryProvider = Provider((ref) => AuthRepository());
 
 final businessTypesProvider =
     StateNotifierProvider<BusinessTypes, AsyncValue<List<Select>>>((ref) {

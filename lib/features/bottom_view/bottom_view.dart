@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -34,12 +32,12 @@ class _BottomViewState extends ConsumerState<BottomView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
-    // final userType = _localDataSource.getUserType().type;
-//      userType == 'PERSONAL' ? WayaBuyer() :
+    final WayaLocalDataSource localDataSource = WayaLocalDataSource();
+    final userType = localDataSource.getUser().role;
+
     _pages = [
       Explore(),
- WayaSeller(),
+      userType!.name == 'PERSONAL' ? WayaBuyer() : WayaSeller(),
       Explore(),
       Explore(),
       Explore(),
