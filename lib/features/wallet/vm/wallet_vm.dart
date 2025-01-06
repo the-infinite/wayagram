@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/service/repos/wallet/wallet_repository.dart';
-import 'package:wayagram/features/wallet/model/wallet_model.dart';
-import 'package:wayagram/features/wallet/model/wallet_state_model.dart';
+import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
+import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
+import 'package:wayagram/features/wallet/data/model/wallet_state_model.dart';
 
 class WalletVm extends StateNotifier<WalletState> {
   final WalletRepository? _walletRepository;

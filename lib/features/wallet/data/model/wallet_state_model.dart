@@ -1,4 +1,4 @@
-import 'package:wayagram/features/wallet/model/wallet_model.dart';
+import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
 
 class WalletState {
   final bool? isLoading;

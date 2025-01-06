@@ -8,6 +8,7 @@ import 'package:wayagram/features/shop/seller/views/add_product/steps/preview_pr
 import 'package:wayagram/features/shop/seller/views/waya_deals/vm/application_product_details_vm.dart';
 
 class ApplicationProductDetails extends ConsumerWidget {
+  static const route = '/waya-application-product-detail';
   const ApplicationProductDetails({super.key});
 
   @override

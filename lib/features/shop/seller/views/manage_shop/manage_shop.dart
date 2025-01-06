@@ -75,15 +75,22 @@ class ManageShop extends ConsumerWidget {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: ref.read(manageShopVmProvider.notifier).salesMetrics.length,
+                crossAxisCount:
+                    ref.read(manageShopVmProvider.notifier).salesMetrics.length,
                 mainAxisSpacing: 0,
                 childAspectRatio: 1.2,
                 crossAxisSpacing: 8),
             itemBuilder: (context, index) {
               return InventoryWidget(
-                  metrics: ref.read(manageShopVmProvider.notifier).salesMetrics[index]["metrics"],
-                  color: ref.read(manageShopVmProvider.notifier).salesMetrics[index]['color'],
-                  title: ref.read(manageShopVmProvider.notifier).salesMetrics[index]['title']);
+                  metrics: ref
+                      .read(manageShopVmProvider.notifier)
+                      .salesMetrics[index]["metrics"],
+                  color: ref
+                      .read(manageShopVmProvider.notifier)
+                      .salesMetrics[index]['color'],
+                  title: ref
+                      .read(manageShopVmProvider.notifier)
+                      .salesMetrics[index]['title']);
             }),
         const Gap(15),
         Text("Quick Action",
@@ -102,7 +109,8 @@ class ManageShop extends ConsumerWidget {
           child: GridView(
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: ref.read(manageShopVmProvider.notifier).salesMetrics.length,
+                crossAxisCount:
+                    ref.read(manageShopVmProvider.notifier).salesMetrics.length,
                 mainAxisSpacing: 0,
                 childAspectRatio: 1,
                 crossAxisSpacing: 8),
@@ -121,7 +129,7 @@ class ManageShop extends ConsumerWidget {
                 title: "Wayagram Deals",
                 icon: SvgPicture.asset('assets/icons/deal-icon.svg'),
                 color: Color(0xffFFF0EB),
-               onTap: () {
+                onTap: () {
                   WayaNav.toNamed('/waya-deal-ad');
                 },
               ),
@@ -135,7 +143,9 @@ class ManageShop extends ConsumerWidget {
                       ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
                 ),
                 color: Color(0xffFBEAE9),
-                onTap: () {},
+                onTap: () {
+                  WayaNav.toNamed('/seller-dispute');
+                },
               ),
             ],
           ),
@@ -152,7 +162,9 @@ class ManageShop extends ConsumerWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return SingleOrderWidget(isSeller: true,);
+              return SingleOrderWidget(
+                isSeller: true,
+              );
             })
       ],
     );

@@ -11,7 +11,9 @@ import 'package:wayagram/features/shop/widgets/widgets_vm/filter_widget_vm.dart'
 
 class FilterWidget<T> extends ConsumerStatefulWidget {
   final List<T> allItems;
-  const FilterWidget({super.key, required this.allItems});
+  final String? hintText;
+  const FilterWidget(
+      {super.key, required this.allItems, this.hintText = 'Search Shop'});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _FilterWidgetState();
@@ -38,7 +40,7 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
                   color: wayaTheme.colorScheme.greyColor400,
                 ),
                 controller: viewModel.search,
-                hintText: 'Search Shop'),
+                hintText: widget.hintText!),
           ),
           const Gap(2),
           WayaButton(

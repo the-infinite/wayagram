@@ -9,12 +9,10 @@ class SellerRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> createShop(CreateShopModel payload) {
-    return post("$serviceUrl/client/shops/create", payload.toJson());
+    return post("$serviceUrl/shops/create", payload.toJson());
   }
 
-  // Future<WayaRequestResponse> getShopById(String id) {
-  //   return get('shop/$id');
-  // }
+
 
   // Future<WayaRequestResponse> getShopBySellerId(String id) {
   //   return get('shop/seller/$id');

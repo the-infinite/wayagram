@@ -26,11 +26,10 @@ class _WayaSellerState extends ConsumerState<WayaSeller>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
-    @override
+  @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(manageShopVmProvider.notifier).getUserShop();
-      
     });
 
     super.initState();
@@ -41,54 +40,49 @@ class _WayaSellerState extends ConsumerState<WayaSeller>
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(manageShopVmProvider);
-    return  WayaScaffold(
-      removeAppBar: true,
-      body: Center(
-      child: !viewModel.hasShop ? SellerShopEmptyState() : WayaScaffold(
-        isLoading: false,
-        isScrollable: true,
-        title: 'Shop',
-        appBarTrailing: WayaCartIcon(),
-        body: Column(
-          children: [
-            const Gap(10),
-            Row(
+    return !viewModel.hasShop
+        ? WayaScaffold(
+            removeAppBar: true, body: Center(child: SellerShopEmptyState()))
+        : WayaScaffold(
+            isLoading: false,
+            isScrollable: true,
+            title: 'Shop',
+            appBarTrailing: WayaCartIcon(),
+            body: Column(
               children: [
-                WayaShopTabButton(
-                  isSelected: _selectedIndex == 0,
-                  text: 'All Products',
-                  onTap: () => setState(() => _selectedIndex = 0),
+                const Gap(10),
+                Row(
+                  children: [
+                    WayaShopTabButton(
+                      isSelected: _selectedIndex == 0,
+                      text: 'All Products',
+                      onTap: () => setState(() => _selectedIndex = 0),
+                    ),
+                    WayaShopTabButton(
+                      isSelected: _selectedIndex == 1,
+                      text: 'My Products',
+                      onTap: () => setState(() => _selectedIndex = 1),
+                    ),
+                    WayaShopTabButton(
+                      isSelected: _selectedIndex == 2,
+                      text: 'Manage Shop',
+                      onTap: () => setState(() => _selectedIndex = 2),
+                    ),
+                  ],
                 ),
-                WayaShopTabButton(
-                  isSelected: _selectedIndex == 1,
-                  text: 'My Products',
-                  onTap: () => setState(() => _selectedIndex = 1),
-                ),
-                WayaShopTabButton(
-                  isSelected: _selectedIndex == 2,
-                  text: 'Manage Shop',
-                  onTap: () => setState(() => _selectedIndex = 2),
-                ),
+                const Gap(10),
+                if (_selectedIndex == 0) AllProducts(),
+                if (_selectedIndex == 1) SellerProducts(),
+                if (_selectedIndex == 2) ManageShop()
               ],
-            ),
-            const Gap(10),
-            if (_selectedIndex == 0) AllProducts(),
-            if (_selectedIndex == 1) SellerProducts(),
-            if (_selectedIndex == 2) ManageShop()
-          ],
-        ))
-    ));
+            ));
   }
 }
-
-
-
 
 class SellerShopEmptyState extends StatelessWidget {
   const SellerShopEmptyState({super.key});
@@ -103,7 +97,7 @@ class SellerShopEmptyState extends StatelessWidget {
       children: [
         const Gap(40),
         SvgPicture.asset('assets/icons/empty-state.svg'),
-       // const Gap(30),
+        // const Gap(30),
         Text(
           "No Shop Created",
           textAlign: TextAlign.center,
@@ -112,7 +106,6 @@ class SellerShopEmptyState extends StatelessWidget {
         const Gap(25),
         Text(
           "Start adding creating a shop.",
-            
           textAlign: TextAlign.center,
           style: wayaTheme.textTheme.descriptionStyle,
         ),
@@ -120,26 +113,25 @@ class SellerShopEmptyState extends StatelessWidget {
         SizedBox(
           width: 250,
           child: WayaButton(
-          callback: () {
-            WayaNav.toNamed('/create-shop');
-          },
-          
-          centerWidget: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SvgPicture.asset('assets/icons/button-icon.svg'),
-              const Gap(6),
-              Text(
-                "Create Shop",
-                style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500),
-              )
-            ],
+            callback: () {
+              WayaNav.toNamed('/create-shop');
+            },
+            centerWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset('assets/icons/button-icon.svg'),
+                const Gap(6),
+                Text(
+                  "Create Shop",
+                  style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500),
+                )
+              ],
+            ),
           ),
-        ),
         )
       ],
     );
