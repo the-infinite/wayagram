@@ -11,6 +11,7 @@ import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
 import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute.dart';
+import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute_detail.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
@@ -56,7 +57,8 @@ class WayaAppRoutes {
     '/wayagram-deal': () => WayaGramDeals(),
     ApplicationProductDetails.route: () => ApplicationProductDetails(),
     CreateShop.route: () => CreateShop(),
-    SellerDispute.route: () => SellerDispute()
+    SellerDispute.route: () => SellerDispute(),
+    SellerDisputeDetail.route: () => SellerDisputeDetail()
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

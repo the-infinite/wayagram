@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class SingleDisputeWidget extends StatelessWidget {
   const SingleDisputeWidget({super.key});
@@ -12,7 +13,9 @@ class SingleDisputeWidget extends StatelessWidget {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        WayaNav.toNamed('/seller-dispute-details');
+      },
       child: Column(
         children: [
           Container(

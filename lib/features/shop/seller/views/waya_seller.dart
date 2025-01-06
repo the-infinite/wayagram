@@ -45,7 +45,7 @@ class _WayaSellerState extends ConsumerState<WayaSeller>
     // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(manageShopVmProvider);
-    return !viewModel.hasShop
+    return viewModel.hasShop
         ? WayaScaffold(
             removeAppBar: true, body: Center(child: SellerShopEmptyState()))
         : WayaScaffold(
