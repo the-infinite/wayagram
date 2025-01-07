@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/deal_applications.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/listed_products.dart';
 import 'package:wayagram/features/shop/widgets/waya_shop_tab_button.dart';
-import 'package:gap/gap.dart';
 
 class WayaGramDeals extends ConsumerStatefulWidget {
+  static const route = '/wayagram-deal';
   const WayaGramDeals({super.key});
 
   @override
@@ -38,16 +38,14 @@ class _WayaGramDealState extends ConsumerState<WayaGramDeals> {
                 ),
                 WayaShopTabButton(
                   isSelected: _selectedIndex == 1,
-                  text:  'Applications',
+                  text: 'Applications',
                   onTap: () => setState(() => _selectedIndex = 1),
                 ),
-                
               ],
             ),
-              const Gap(10),
-
-              if (_selectedIndex == 0) ListedProducts(),
-              if (_selectedIndex == 1) DealApplications(),
+            const Gap(10),
+            if (_selectedIndex == 0) ListedProducts(),
+            if (_selectedIndex == 1) DealApplications(),
           ],
         ));
   }

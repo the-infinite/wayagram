@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class LoginCoverPage extends ConsumerWidget {
+  static const route = '/login-cover-page';
   const LoginCoverPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {

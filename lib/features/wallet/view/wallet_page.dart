@@ -5,7 +5,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/wallet/transactions/routes/transaction_routes.dart';
+import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_history.dart';
 import 'package:wayagram/features/wallet/view/components/wallet_cards.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
@@ -50,11 +50,10 @@ class _WalletPageState extends ConsumerState<WalletPage> {
           style: wayaTheme.textTheme.titleMedium,
         ),
         GestureDetector(
-          onTap: () => WayaNav.toNamed(TransactionRoutes.allTransactions),
+          onTap: () => WayaNav.toNamed(AllTransactionHistory.route),
           child: Text(
             'See All',
-            style: wayaTheme.textTheme.titleMedium
-                ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500),
+            style: wayaTheme.textTheme.titleMedium?.wayaCopyWith(color: wayaTheme.colorScheme.primary500),
           ),
         ),
       ],

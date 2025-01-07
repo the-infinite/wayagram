@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
@@ -9,9 +9,9 @@ import 'package:wayagram/features/shop/seller/vm/seller_orders_vm.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
-import 'package:gap/gap.dart';
 
 class AllSellerOrders extends ConsumerWidget {
+  static const route = '/seller-orders';
   const AllSellerOrders({super.key});
 
   @override
@@ -74,7 +74,9 @@ class AllSellerOrders extends ConsumerWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return SingleOrderWidget(isSeller: true,);
+                  return SingleOrderWidget(
+                    isSeller: true,
+                  );
                 })
           ],
         ));

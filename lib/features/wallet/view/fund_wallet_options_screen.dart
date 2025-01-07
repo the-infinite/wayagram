@@ -8,17 +8,17 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/wallet/routes/wallet_routes.dart';
+import 'package:wayagram/features/wallet/view/fund_account_screen.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 import 'components/components.dart';
 
 class FundWalletOptionsScreen extends ConsumerStatefulWidget {
+  static const route = '/fund-wallet-page';
   const FundWalletOptionsScreen({super.key});
 
   @override
-  ConsumerState<FundWalletOptionsScreen> createState() =>
-      _FundWalletPageState();
+  ConsumerState<FundWalletOptionsScreen> createState() => _FundWalletPageState();
 }
 
 class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
@@ -26,9 +26,7 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref
-          .read(walletFundingOptionsVmProvider.notifier)
-          .getWalletFundingOptions();
+      ref.read(walletFundingOptionsVmProvider.notifier).getWalletFundingOptions();
     });
   }
 
@@ -37,6 +35,7 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
     final viewModel = ref.watch(walletFundingOptionsVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
+      isLoading: viewModel.isLoading!,
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
       title: 'Fund Wallet',
       body: SizedBox(
@@ -54,11 +53,7 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
               style: wayaTheme.textTheme.labelMedium,
             ),
             Gap(20),
-            if (viewModel.isLoading!)
-              const Center(child: CircularProgressIndicator.adaptive()),
-            if (viewModel.fundingOptions != null &&
-                viewModel.fundingOptions!.isEmpty &&
-                viewModel.isLoading == false)
+            if (viewModel.fundingOptions != null && viewModel.fundingOptions!.isEmpty && viewModel.isLoading == false)
               const Text("No funding options available at the moment"),
             if (viewModel.fundingOptions != null)
               ...viewModel.fundingOptions!.map(
@@ -72,8 +67,7 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
                     //     builder: (context) {
                     //       return const FundAmountDialog(initialAmount: 0);
                     //     });
-                    WayaNav.toNamed(WalletRoutes.fundAccount,
-                        arguments: {"name": e.name, "code": e.code});
+                    WayaNav.toNamed(FundAccountScreen.route, arguments: {"name": e.name, "code": e.code});
                     // switch (e.name) {
                     //   case "PAYSTACK":
                     //     if (amount != null) {

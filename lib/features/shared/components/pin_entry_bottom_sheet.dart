@@ -109,14 +109,12 @@ class _PinEntryBottomSheetState extends State<PinEntryBottomSheet> {
                   );
                 } else if (index == 11) {
                   return _buildKeypadButton(
-                    child:
-                        const Icon(Icons.arrow_forward, color: Colors.black54),
+                    child: const Icon(Icons.arrow_forward, color: Colors.black54),
                     onPressed: _submitPin,
                   );
                 } else {
                   return _buildKeypadButton(
-                    child: Text('${index + 1}',
-                        style: const TextStyle(fontSize: 24)),
+                    child: Text('${index + 1}', style: const TextStyle(fontSize: 24)),
                     onPressed: () => _addDigit('${index + 1}'),
                   );
                 }
@@ -128,17 +126,14 @@ class _PinEntryBottomSheetState extends State<PinEntryBottomSheet> {
     );
   }
 
-  Widget _buildKeypadButton(
-      {required Widget child, required VoidCallback onPressed}) {
+  Widget _buildKeypadButton({required Widget child, required VoidCallback onPressed}) {
     return Material(
       color: Colors.transparent,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(48),
-          side: BorderSide(color: Colors.grey[300]!, width: 1)),
+          borderRadius: BorderRadius.circular(48), side: BorderSide(color: Colors.grey[300]!, width: 1)),
       child: InkWell(
         customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(48),
-            side: BorderSide(color: Colors.grey[300]!, width: 1)),
+            borderRadius: BorderRadius.circular(48), side: BorderSide(color: Colors.grey[300]!, width: 1)),
         onTap: onPressed,
         child: Container(
           alignment: Alignment.center,

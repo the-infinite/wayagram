@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -9,14 +8,14 @@ import 'package:wayagram/features/shop/seller/views/add_product/steps/preview_pr
 import 'package:wayagram/features/shop/seller/views/add_product/steps/pricing_and_delivery.dart';
 
 class AddProduct extends ConsumerStatefulWidget {
+  static const route = '/add-product';
   const AddProduct({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _AddProductState();
 }
 
-class _AddProductState extends ConsumerState<AddProduct>
-    with SingleTickerProviderStateMixin {
+class _AddProductState extends ConsumerState<AddProduct> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -54,10 +53,14 @@ class _AddProductState extends ConsumerState<AddProduct>
             gotoNextTab: _goToNextTab,
             gotoPreviousTab: _goToPreviousTab,
           ),
-          AddProductImages(gotoNextTab: _goToNextTab,
-            gotoPreviousTab: _goToPreviousTab,),
-            PreviewProduct(goBack: _goBack,
-            gotoPreviousTab: _goToPreviousTab,)
+          AddProductImages(
+            gotoNextTab: _goToNextTab,
+            gotoPreviousTab: _goToPreviousTab,
+          ),
+          PreviewProduct(
+            goBack: _goBack,
+            gotoPreviousTab: _goToPreviousTab,
+          )
         ],
         tabController: _tabController);
   }

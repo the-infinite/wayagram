@@ -11,6 +11,7 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/vm/set_notification_vm.dart';
 
 class SetNotification extends ConsumerWidget {
+  static const route = '/set-notification';
   const SetNotification({super.key});
 
   @override

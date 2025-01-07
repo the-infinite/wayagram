@@ -7,6 +7,7 @@ import 'package:wayagram/features/auth/forgot_password/view/create_new_password.
 import 'package:wayagram/features/auth/forgot_password/view/credential_input.dart';
 
 class ForgotPasswordStep extends ConsumerStatefulWidget {
+  static const route = '/forgot-password';
   const ForgotPasswordStep({super.key});
 
   @override

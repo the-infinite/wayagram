@@ -3,10 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/wallet/transactions/routes/transaction_routes.dart';
+import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WayaWebview extends StatefulWidget {
+  static const route = '/webview';
   const WayaWebview({
     super.key,
   });
@@ -45,11 +46,8 @@ class _CustomWebViewState extends State<WayaWebview> {
           onUrlChange: (change) {
             if (fundingOption != null && fundingOption == "PAYSTACK") {
               if (change.url!.contains("wayagram")) {
-                WayaNav.offNamed(TransactionRoutes.verifyTransaction,
-                    arguments: {
-                      "transactionId": transactionId,
-                      "fundingOption": fundingOption
-                    });
+                WayaNav.offNamed(VerifyTransactionScreen.route,
+                    arguments: {"transactionId": transactionId, "fundingOption": fundingOption});
               }
             }
           },
@@ -63,8 +61,7 @@ class _CustomWebViewState extends State<WayaWebview> {
       ..loadRequest(Uri.parse(url ?? "https://www.google.com"));
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final args =
-          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+      final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
       if (args != null) {
         _controller.loadRequest(Uri.parse(args['url']));
         url = args['url'];
@@ -84,8 +81,7 @@ class _CustomWebViewState extends State<WayaWebview> {
     return WayaScaffold(
       appBar: showAppBar
           ? AppBar(
-              title: Text(title ?? "Waya Webview",
-                  style: wayaTheme.textTheme.titleLarge),
+              title: Text(title ?? "Waya Webview", style: wayaTheme.textTheme.titleLarge),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.refresh),

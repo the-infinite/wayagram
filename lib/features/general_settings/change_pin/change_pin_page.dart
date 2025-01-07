@@ -10,6 +10,7 @@ import 'package:wayagram/features/auth/transaction_pin/widget/pin_input_field.da
 import 'package:wayagram/features/auth/transaction_pin/widget/pin_keyboard.dart';
 
 class ChangePinPage extends ConsumerStatefulWidget {
+  static const route = '/change-pin-page';
   const ChangePinPage({super.key});
 
   @override

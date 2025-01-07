@@ -3,19 +3,19 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
+import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shared/components/loading_dialog.dart';
-import 'package:wayagram/features/shared/routes/shared_routes.dart';
-import 'package:wayagram/features/wallet/transactions/routes/transaction_routes.dart';
+import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class FundAccountScreen extends ConsumerStatefulWidget {
+  static const route = '/fund-account-screen';
   const FundAccountScreen({super.key});
 
   @override
-  ConsumerState<FundAccountScreen> createState() =>
-      _FundBankAccountScreenState();
+  ConsumerState<FundAccountScreen> createState() => _FundBankAccountScreenState();
 }
 
 class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
@@ -74,8 +74,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
       });
       return;
     }
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final fundOptionCode = args!["code"];
     final name = args["name"];
     // If validation passes, print to console
@@ -86,12 +85,11 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
         WayaLoadingDialog.show(context);
         final data = await ref
             .read(walletFundingOptionsVmProvider.notifier)
-            .walletFunding(
-                amount: double.parse(amount), fundOptionCode: fundOptionCode);
+            .walletFunding(amount: double.parse(amount), fundOptionCode: fundOptionCode);
         if (mounted) {
           WayaLoadingDialog.hide(context);
           if (data != null) {
-            WayaNav.toNamed(SharedRoutes.webview, arguments: {
+            WayaNav.toNamed(WayaWebview.route, arguments: {
               "url": data["authorizationUrl"],
               "title": "Waya Webview",
               "transactionId": data["transactionId"],
@@ -105,13 +103,11 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
         WayaLoadingDialog.show(context);
         final data = await ref
             .read(walletFundingOptionsVmProvider.notifier)
-            .walletFunding(
-                amount: double.parse(amount), fundOptionCode: fundOptionCode);
+            .walletFunding(amount: double.parse(amount), fundOptionCode: fundOptionCode);
         if (mounted) {
           WayaLoadingDialog.hide(context);
           if (data != null) {
-            WayaNav.toNamed(TransactionRoutes.bankTransfer,
-                arguments: {...data, "amount": amount});
+            WayaNav.toNamed(BankTransferScreen.route, arguments: {...data, "amount": amount});
           }
         }
         break;
@@ -124,8 +120,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final name = args?["name"];
     return WayaScaffold(
       backgroundColor: wayaTheme.colorScheme.greyColor50,
@@ -255,13 +250,13 @@ class NumPadButton extends StatelessWidget {
   final Color? iconColor;
 
   const NumPadButton({
-    Key? key,
+    super.key,
     this.text,
     this.icon,
     required this.onTap,
     this.backgroundColor,
     this.iconColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -270,9 +265,7 @@ class NumPadButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(32),
         side: BorderSide(
-          color: backgroundColor != null
-              ? Colors.transparent
-              : Colors.grey.shade300,
+          color: backgroundColor != null ? Colors.transparent : Colors.grey.shade300,
         ),
       ),
       child: InkWell(

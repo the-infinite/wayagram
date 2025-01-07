@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
+import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/shop/buyer/views/waya_buyer.dart';
 import 'package:wayagram/features/shop/seller/views/waya_seller.dart';
 
@@ -24,6 +25,9 @@ class _BottomViewState extends ConsumerState<BottomView> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(profileVmProvider.notifier).refetchUserData();
+    });
     super.initState();
     _selectedIndex = widget.index ?? 0;
     _userTypeFuture = _getUserType();
@@ -49,7 +53,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
           final userType = snapshot.data;
-          final List<Widget> _pages = [
+          final List<Widget> pages = [
             Explore(),
             userType == 'PERSONAL' ? WayaBuyer() : WayaSeller(),
             Explore(),
@@ -75,7 +79,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
           return Scaffold(
             body: IndexedStack(
               index: _selectedIndex,
-              children: _pages,
+              children: pages,
             ),
             bottomNavigationBar: Container(
               decoration: BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor),
@@ -88,10 +92,10 @@ class _BottomViewState extends ConsumerState<BottomView> {
                     });
                   },
                   type: BottomNavigationBarType.fixed,
-                  selectedLabelStyle: TextStyle()
-                      .wayaCopyWith(color: wayaTheme.colorScheme.customPrimary, fontSize: 12, fontWeight: FontWeight.w600),
-                  unselectedLabelStyle: TextStyle()
-                      .wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 12, fontWeight: FontWeight.w600),
+                  selectedLabelStyle: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.customPrimary, fontSize: 12, fontWeight: FontWeight.w600),
+                  unselectedLabelStyle: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.customBlack, fontSize: 12, fontWeight: FontWeight.w600),
                   items: bottomNavigationItem),
             ),
           );

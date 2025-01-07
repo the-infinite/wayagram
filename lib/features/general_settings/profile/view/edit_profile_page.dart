@@ -70,6 +70,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                   bottom: -28.h,
                   child: WayaDp(
                     radius: 28.r,
+                    isEdit: true,
                   )),
             ],
           ),

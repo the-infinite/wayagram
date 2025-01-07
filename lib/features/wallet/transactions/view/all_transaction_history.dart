@@ -8,6 +8,7 @@ import 'package:wayagram/features/wallet/transactions/view/transaction_history.d
 enum DateFilter { thisWeek, thisMonth, lastSixMonths, thisYear, customRange }
 
 class AllTransactionHistory extends StatefulWidget {
+  static const route = '/all-transactions';
   final currencyFormat = NumberFormat.currency(
     symbol: '₦',
     decimalDigits: 2,
@@ -48,8 +49,7 @@ class _AllTransactionHistoryState extends State<AllTransactionHistory> {
         leading: const BackButton(color: Colors.black),
         title: Text(
           'All Transactions',
-          style:
-              TextStyle(color: wayaTheme.colorScheme.customBlack, fontSize: 16),
+          style: TextStyle(color: wayaTheme.colorScheme.customBlack, fontSize: 16),
         ),
         actions: [
           IconButton(
@@ -57,8 +57,7 @@ class _AllTransactionHistoryState extends State<AllTransactionHistory> {
             onPressed: () {},
           ),
           IconButton(
-            icon: Icon(Icons.text_snippet_outlined,
-                color: wayaTheme.colorScheme.customBlack),
+            icon: Icon(Icons.text_snippet_outlined, color: wayaTheme.colorScheme.customBlack),
             onPressed: () {
               // showModalBottomSheet(
               //   context: context,

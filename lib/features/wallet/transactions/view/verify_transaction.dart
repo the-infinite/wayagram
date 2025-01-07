@@ -3,20 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/wallet/routes/wallet_routes.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
+import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 class VerifyTransactionScreen extends ConsumerStatefulWidget {
+  static const route = '/verify-transaction';
   const VerifyTransactionScreen({super.key});
 
   @override
-  ConsumerState<VerifyTransactionScreen> createState() =>
-      _VerifyTransactionScreenState();
+  ConsumerState<VerifyTransactionScreen> createState() => _VerifyTransactionScreenState();
 }
 
-class _VerifyTransactionScreenState
-    extends ConsumerState<VerifyTransactionScreen>
-    with SingleTickerProviderStateMixin {
+class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -27,17 +25,13 @@ class _VerifyTransactionScreenState
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    _animation =
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
+    _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
     _animationController.repeat(reverse: true);
 
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      final args =
-          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
       if (args != null) {
-        ref
-            .read(transactionVmProvider.notifier)
-            .verifyTransaction(args["transactionId"], args["fundingOption"]);
+        ref.read(transactionVmProvider.notifier).verifyTransaction(args["transactionId"], args["fundingOption"]);
       }
     });
   }
@@ -59,7 +53,7 @@ class _VerifyTransactionScreenState
             context,
             (route) => route.settings.name == "/general-settings",
           );
-          Navigator.pushNamed(context, WalletRoutes.wallet);
+          Navigator.pushNamed(context, WalletPage.route);
         }
       });
     }
@@ -130,14 +124,11 @@ class _VerifyTransactionScreenState
                             onPressed: () {
                               Navigator.popUntil(
                                 context,
-                                (route) =>
-                                    route.settings.name == "/general-settings",
+                                (route) => route.settings.name == "/general-settings",
                               );
-                              Navigator.pushNamed(context, WalletRoutes.wallet);
+                              Navigator.pushNamed(context, WalletPage.route);
                             },
-                            child: Text("Done",
-                                style: wayaTheme.textTheme.bodyLarge!
-                                    .copyWith(color: Colors.white)))
+                            child: Text("Done", style: wayaTheme.textTheme.bodyLarge!.copyWith(color: Colors.white)))
                       ] else ...[
                         Icon(
                           Icons.error_outline,
@@ -167,16 +158,14 @@ class _VerifyTransactionScreenState
               if (!state.isVerifying! && !state.verified!) ...[
                 const SizedBox(height: 32),
                 ElevatedButton(
-                  onPressed: () =>
-                      WayaNav.removeUntilNamed(WalletRoutes.wallet),
+                  onPressed: () => WayaNav.removeUntilNamed(WalletPage.route),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Back to Wallet',
-                      style: TextStyle(fontSize: 18)),
+                  child: const Text('Back to Wallet', style: TextStyle(fontSize: 18)),
                 ),
               ],
             ],

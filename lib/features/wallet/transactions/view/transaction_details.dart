@@ -1,44 +1,40 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/features/shared/components/loading_dialog.dart';
+import 'package:wayagram/features/wallet/mixin/wallet_mixin.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:screenshot/screenshot.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 
 class TransactionDetailsScreen extends ConsumerStatefulWidget {
+  static const route = '/transaction-history';
   const TransactionDetailsScreen({super.key});
 
   @override
-  ConsumerState<TransactionDetailsScreen> createState() =>
-      _TransactionDetailsScreenState();
+  ConsumerState<TransactionDetailsScreen> createState() => _TransactionDetailsScreenState();
 }
 
-class _TransactionDetailsScreenState
-    extends ConsumerState<TransactionDetailsScreen> {
+class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScreen> with WalletMixin {
   final screenshotController = ScreenshotController();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final transactionId =
-          ModalRoute.of(context)!.settings.arguments as String;
-      ref
-          .read(transactionVmProvider.notifier)
-          .getSingleTransactions(transactionId);
+      final transactionId = ModalRoute.of(context)!.settings.arguments as String;
+      ref.read(transactionVmProvider.notifier).getSingleTransactions(transactionId);
     });
   }
 
-  Widget _buildDetailRow(String label, String value,
-      {Color? valueColor, Widget? trailing}) {
+  Widget _buildDetailRow(String label, String value, {Color? valueColor, Widget? trailing}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -120,13 +116,11 @@ class _TransactionDetailsScreenState
           ),
           _buildDetailRow(
             'Date',
-            WayaHelpers.formatDateString(
-                state.transaction?.updatedAt.toString() ?? ""),
+            WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
           ),
           _buildDetailRow(
             'Time',
-            DateFormat.jm()
-                .format(state.transaction?.updatedAt ?? DateTime.now()),
+            DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
           ),
           _buildDetailRow(
             'Reference Number',
@@ -140,31 +134,6 @@ class _TransactionDetailsScreenState
         ],
       ),
     );
-  }
-
-  Future<void> _shareReceipt() async {
-    try {
-      final Uint8List imageBytes = await screenshotController.captureFromWidget(
-        _buildReceiptContent(),
-        delay: const Duration(milliseconds: 10),
-      );
-
-      final directory = await getTemporaryDirectory();
-      final imagePath = '${directory.path}/transaction_receipt.png';
-      final imageFile = File(imagePath);
-      await imageFile.writeAsBytes(imageBytes);
-
-      await Share.shareXFiles(
-        [XFile(imagePath)],
-        text: 'Transaction Receipt',
-        subject: 'Transaction Receipt from Wayagram',
-      );
-    } catch (e) {
-      //TODO REPLACE WITH WAYA SNACKBAR
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to share receipt')),
-      );
-    }
   }
 
   @override
@@ -249,13 +218,11 @@ class _TransactionDetailsScreenState
                           ),
                           _buildDetailRow(
                             'Date',
-                            WayaHelpers.formatDateString(
-                                state.transaction?.updatedAt.toString() ?? ""),
+                            WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
                           ),
                           _buildDetailRow(
                             'Time',
-                            DateFormat.jm().format(
-                                state.transaction?.updatedAt ?? DateTime.now()),
+                            DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
                           ),
                           _buildDetailRow(
                             'Reference Number',
@@ -288,9 +255,11 @@ class _TransactionDetailsScreenState
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
                     child: ElevatedButton(
-                      onPressed: _shareReceipt,
+                      onPressed: () {
+                        shareReceipt(screenshotController, _buildReceiptContent());
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: wayaTheme.primaryColor,
                         minimumSize: const Size(double.infinity, 50),
@@ -319,17 +288,11 @@ class _TransactionDetailsScreenState
                         onPressed: () async {
                           await ref
                               .read(transactionVmProvider.notifier)
-                              .verifyTransaction(
-                                  state.transaction!.transactionId,
-                                  state.transaction!.paymentMethod);
+                              .verifyTransaction(state.transaction!.transactionId, state.transaction!.paymentMethod);
                           WayaLoadingDialog.show(context);
                           if (state.verified!) {
-                            await ref
-                                .read(transactionVmProvider.notifier)
-                                .getSingleTransactions(state.transaction!.id);
-                            await ref
-                                .read(walletVmProvider.notifier)
-                                .getUserWallet();
+                            await ref.read(transactionVmProvider.notifier).getSingleTransactions(state.transaction!.id);
+                            await ref.read(walletVmProvider.notifier).getUserWallet();
                           }
                           WayaLoadingDialog.hide(context);
                         },

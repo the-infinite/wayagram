@@ -6,7 +6,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/wallet/transactions/routes/transaction_routes.dart';
+import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 
 class TransactionHistory extends ConsumerStatefulWidget {
@@ -38,7 +38,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
         : ListView.builder(
             itemBuilder: (_, index) => ListTile(
                   onTap: () {
-                    WayaNav.toNamed(TransactionRoutes.transactionDetails,
+                    WayaNav.toNamed(TransactionDetailsScreen.route,
                         arguments: viewModel.transactions?[index].id);
                   },
                   leading: Container(

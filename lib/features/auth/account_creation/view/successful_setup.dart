@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 
 class SuccessfulSetup extends ConsumerWidget {
+  static const route = '/account-setup-success';
   const SuccessfulSetup({super.key});
 
   @override

@@ -7,6 +7,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/vm/change_password_vm.dart';
 
 class ChangePasswordGenSettings extends ConsumerStatefulWidget {
+  static const route = '/change-password-gen-set';
   const ChangePasswordGenSettings({super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ChangePasswordGenSettingsState();

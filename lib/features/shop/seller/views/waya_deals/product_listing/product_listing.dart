@@ -7,14 +7,14 @@ import 'package:wayagram/features/shop/seller/views/add_product/steps/preview_pr
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/steps/add_product_for_listing.dart';
 
 class ProductListing extends ConsumerStatefulWidget {
+  static const route = '/waya_product_listing';
   const ProductListing({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ProductListingState();
 }
 
-class _ProductListingState extends ConsumerState<ProductListing>
-    with SingleTickerProviderStateMixin {
+class _ProductListingState extends ConsumerState<ProductListing> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override

@@ -91,7 +91,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
                   bottom: 3.h,
                   child: WayaDp(
                     radius: 28.r,
-                    isEdit: true,
                   )),
             ],
           ),

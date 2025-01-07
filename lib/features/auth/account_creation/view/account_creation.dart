@@ -8,15 +8,14 @@ import 'package:wayagram/features/auth/account_creation/view/verify_account.dart
 import 'package:wayagram/features/auth/account_creation/vm/account_creation_vm.dart';
 
 class AccountCreation extends ConsumerStatefulWidget {
+  static const route = '/account-creation';
   const AccountCreation({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _AccountCreationState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _AccountCreationState();
 }
 
-class _AccountCreationState extends ConsumerState<AccountCreation>
-    with SingleTickerProviderStateMixin {
+class _AccountCreationState extends ConsumerState<AccountCreation> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -45,19 +44,16 @@ class _AccountCreationState extends ConsumerState<AccountCreation>
         isScrollable: _tabController.index == 1 ? true : false,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
-        
           SelectAccount(
             goToNextTab: updateSelected,
           ),
           PersonalFirstStepView(
             goToNextTab: _goToNextTab,
           ),
-            VerifyAccount(
+          VerifyAccount(
             goToNextTab: _goToNextTab,
             type: "account-creation",
           ),
-           
-         
         ],
         tabController: _tabController);
   }

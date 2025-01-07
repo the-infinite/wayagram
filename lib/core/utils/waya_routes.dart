@@ -7,7 +7,6 @@ import 'package:wayagram/features/general_settings/change_pin/change_pin_page.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
-import 'package:wayagram/features/shared/routes/shared_routes.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
@@ -20,12 +19,10 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/application_produ
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
-import 'package:wayagram/features/wallet/routes/wallet_routes.dart';
-import 'package:wayagram/features/wallet/transactions/routes/transaction_routes.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
-import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
+import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
 import 'package:wayagram/features/wallet/view/fund_account_screen.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
@@ -33,45 +30,45 @@ import 'package:wayagram/features/wallet/view/wallet_page.dart';
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
     '/': () => SplashScreen(),
-    '/login-cover-page': () => LoginCoverPage(),
-    '/onboarding': () => OnboardingView(),
-    '/account-creation': () => AccountCreation(),
-    '/changed-password-success': () => ChangedPasswordSuccess(),
-    '/set-notification': () => SetNotification(),
-    '/account-setup-success': () => SuccessfulSetup(),
-    '/forgot-password': () => ForgotPasswordStep(),
-    '/setup-pin': () => TransactionPinView(),
-    '/select-interests': () => SelectInterest(),
-    '/add-business-account': () => AddBusinessAccountView(),
+    LoginCoverPage.route: () => LoginCoverPage(),
+    OnboardingView.route: () => OnboardingView(),
+    AccountCreation.route: () => AccountCreation(),
+    ChangedPasswordSuccess.route: () => ChangedPasswordSuccess(),
+    SetNotification.route: () => SetNotification(),
+    SuccessfulSetup.route: () => SuccessfulSetup(),
+    ForgotPasswordStep.route: () => ForgotPasswordStep(),
+    TransactionPinView.route: () => TransactionPinView(),
+    SelectInterest.route: () => SelectInterest(),
+    AddBusinessAccountView.route: () => AddBusinessAccountView(),
     LoginPage.route: () => LoginPage(),
-    '/welcome-back': () => WelcomeBackPage(),
+    WelcomeBackPage.route: () => WelcomeBackPage(),
     BottomView.route: () => BottomView(),
-    '/product-detail': () => ProductDetail(),
-    '/order-detail': () => OrderDetails(),
-    '/confirm-order-delivery': () => ConfirmOrderDelivery(),
-    '/cart': () => CartView(),
-    '/seller-orders': () => AllSellerOrders(),
-    '/seller-order-details': () => SellerOrderDetails(),
-    '/checkout': () => Checkout(),
-    '/filter': () => FilterView(),
+    ProductDetail.route: () => ProductDetail(),
+    OrderDetails.route: () => OrderDetails(),
+    ConfirmOrderDelivery.route: () => ConfirmOrderDelivery(),
+    CartView.route: () => CartView(),
+    AllSellerOrders.route: () => AllSellerOrders(),
+    SellerOrderDetails.route: () => SellerOrderDetails(),
+    Checkout.route: () => Checkout(),
+    FilterView.route: () => FilterView(),
     GeneralSettingsPage.route: () => GeneralSettingsPage(),
-    '/change-password-gen-set': () => ChangePasswordGenSettings(),
-    '/change-pin-page': () => ChangePinPage(),
-    SharedRoutes.webview: () => WayaWebview(),
-    WalletRoutes.fundWallet: () => FundWalletOptionsScreen(),
-    WalletRoutes.wallet: () => WalletPage(),
-    WalletRoutes.fundAccount: () => FundAccountScreen(),
-    TransactionRoutes.transactionDetails: () => TransactionDetailsScreen(),
-    TransactionRoutes.verifyTransaction: () => VerifyTransactionScreen(),
-    TransactionRoutes.allTransactions: () => AllTransactionHistory(),
-    TransactionRoutes.bankTransfer: () => BankTransferScreen(),
+    ChangePasswordGenSettings.route: () => ChangePasswordGenSettings(),
+    ChangePinPage.route: () => ChangePinPage(),
+    WayaWebview.route: () => WayaWebview(),
+    FundWalletOptionsScreen.route: () => FundWalletOptionsScreen(),
+    WalletPage.route: () => WalletPage(),
+    FundAccountScreen.route: () => FundAccountScreen(),
+    TransactionDetailsScreen.route: () => TransactionDetailsScreen(),
+    VerifyTransactionScreen.route: () => VerifyTransactionScreen(),
+    AllTransactionHistory.route: () => AllTransactionHistory(),
+    BankTransferScreen.route: () => BankTransferScreen(),
     ProfilePage.route: () => ProfilePage(),
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),
-    '/add-product': () => AddProduct(),
-    '/waya_product_listing': () => ProductListing(),
-    '/waya-deal-ad': () => WayaDealAd(),
-    '/wayagram-deal': () => WayaGramDeals(),
+    AddProduct.route: () => AddProduct(),
+    ProductListing.route: () => ProductListing(),
+    WayaDealAd.route: () => WayaDealAd(),
+    WayaGramDeals.route: () => WayaGramDeals(),
     ApplicationProductDetails.route: () => ApplicationProductDetails(),
     CreateShop.route: () => CreateShop(),
     SellerDispute.route: () => SellerDispute(),
