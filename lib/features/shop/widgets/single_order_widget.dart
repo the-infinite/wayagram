@@ -121,7 +121,7 @@ class SingleOrderWigdetViewModel extends ChangeNotifier {
           await addDeliveryDetail(context);
         },
         onCancel: () {
-          WayaNav.toNamed('/seller-order-detail', arguments: "id");
+          WayaNav.toNamed('/seller-order-details', arguments: "id");
         },
         icon: Image.asset('assets/images/shop/delivery-van.png'));
   }
