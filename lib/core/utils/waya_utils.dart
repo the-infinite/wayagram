@@ -5,14 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:wayagram/core/data/model/model.dart';import 'package:image_cropper/image_cropper.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 
 import '../components/components.dart';
 
 class WayaUtils {
-
-   static Future<void> showNotice(
+  static Future<void> showNotice(
       {required BuildContext context,
       required String title,
       required String message,
@@ -93,9 +94,9 @@ class WayaUtils {
 
   static Future<File?> pickAndCropImage() async {
     final image = await pickImageFromGallery();
-    // if (image != null) {
-    //   return cropImage(image);
-    // }
+    if (image != null) {
+      return cropImage(image);
+    }
     return image;
   }
 
@@ -106,8 +107,8 @@ class WayaUtils {
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Crop Image',
-          toolbarColor: Colors.blue,
-          toolbarWidgetColor: Colors.white,
+          toolbarColor: WayaColors.primary,
+          toolbarWidgetColor: WayaColors.white,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
         ),

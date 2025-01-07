@@ -8,20 +8,27 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
+import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
 class WelcomeBackPage extends ConsumerStatefulWidget {
   static const route = '/welcome-back';
   const WelcomeBackPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _WelcomeBackPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _WelcomeBackPageState();
 }
 
 class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
   final _formKey = GlobalKey<FormState>();
+  
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(profileVmProvider.notifier).refetchUserData();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,21 +55,18 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
               width: 303.w,
               child: Text(
                 "Enter your login details to access your account",
-                style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                    fontSize: 15, color: wayaTheme.colorScheme.greyColor600),
+                style: wayaTheme.textTheme.bodyMedium
+                    ?.wayaCopyWith(fontSize: 15, color: wayaTheme.colorScheme.greyColor600),
                 textAlign: TextAlign.center,
               ),
             ),
             Gap(30),
-            WayaDp(
-              radius: 50,
-            ),
+
             WayaDp(
               radius: 50,
             ),
             Gap(10),
-            Text("${setUp.user?.firstName ?? ''} ${setUp.user?.lastName ?? ''}",
-                style: wayaTheme.textTheme.bodyMedium),
+            Text("${setUp.user?.firstName ?? ''} ${setUp.user?.lastName ?? ''}", style: wayaTheme.textTheme.bodyMedium),
             Gap(10),
             // Text('Remove Account',
             //     style: wayaTheme.textTheme.hintStyleBold.wayaCopyWith(
@@ -76,23 +80,19 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     FormField<String>(validator: (value) {
-                      return WayaValidators.passwordValidator(
-                          viewModel.passwordController.text);
+                      return WayaValidators.passwordValidator(viewModel.passwordController.text);
                     }, builder: (formState) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Focus(
                             onFocusChange: (hasFocus) {
-                              ref
-                                  .read(loginVmProvider.notifier)
-                                  .setPasswordFocus(hasFocus);
+                              ref.read(loginVmProvider.notifier).setPasswordFocus(hasFocus);
                             },
                             child: WayaTextFormField(
                               keyboardType: TextInputType.visiblePassword,
                               controller: viewModel.passwordController,
-                              borderColor: formState.hasError &&
-                                      viewModel.passwordController.text.isEmpty
+                              borderColor: formState.hasError && viewModel.passwordController.text.isEmpty
                                   ? wayaTheme.colorScheme.error
                                   : null,
                               hintText: 'Enter Your Password',
@@ -100,9 +100,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                               obscureText: !viewModel.isPasswordVisible,
                               suffixIcon: IconButton(
                                 onPressed: () {
-                                  ref
-                                      .read(loginVmProvider.notifier)
-                                      .togglePasswordVisibility();
+                                  ref.read(loginVmProvider.notifier).togglePasswordVisibility();
                                 },
                                 autofocus: false,
                                 icon: Icon(viewModel.isPasswordVisible
@@ -112,15 +110,12 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                               ),
                             ),
                           ),
-                          if (formState.hasError &&
-                              !viewModel.isPasswordFocused)
+                          if (formState.hasError && !viewModel.isPasswordFocused)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
                                 formState.errorText!,
-                                style: TextStyle(
-                                    color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                               ),
                             ),
                         ],
@@ -133,10 +128,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                         onTap: () => WayaNav.toNamed('/forgot-password'),
                         child: Text('Forgot Password?',
                             style: wayaTheme.textTheme.bodySemiBold
-                                .wayaCopyWith(
-                                    fontSize: 14,
-                                    color:
-                                        wayaTheme.colorScheme.customPrimary)),
+                                .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
                       ),
                     ),
                     Gap(Get.height * 0.15),
@@ -144,9 +136,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                       text: 'Login',
                       callback: () {
                         if (_formKey.currentState!.validate()) {
-                          ref
-                              .read(loginVmProvider.notifier)
-                              .onSubmit(setUp.user?.email ?? '');
+                          ref.read(loginVmProvider.notifier).onSubmit(setUp.user?.email ?? '');
                         }
                       },
                       color: wayaTheme.colorScheme.primary500,
@@ -164,8 +154,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                   label: WayaRichText(
                 title1: "Don't have an account? ",
                 title2: "Create new account",
-                style1: wayaTheme.textTheme.hintStyle
-                    .wayaCopyWith(color: wayaTheme.colorScheme.black),
+                style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
               )),
             ),
           ],
