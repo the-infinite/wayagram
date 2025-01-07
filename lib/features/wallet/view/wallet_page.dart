@@ -36,18 +36,6 @@ class _WalletPageState extends ConsumerState<WalletPage> {
           _buildHistoryHeader(wayaTheme),
           Gap(10),
           Expanded(child: TransactionHistory()),
-          // WayaAssests.images.wallet.searchDocu.image(scale: 1.5),
-          // Text('No transaction yet',
-          //     style: wayaTheme.textTheme.headlineMedium),
-          // SizedBox(
-          //   width: 310,
-          //   child: Text(
-          //     'Looks like you haven’t performed any transaction yet',
-          //     textAlign: TextAlign.center,
-          //     style: wayaTheme.textTheme.labelMedium
-          //         ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-          //   ),
-          // ),
         ],
       ),
     );

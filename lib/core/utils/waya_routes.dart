@@ -19,9 +19,11 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.d
 import 'package:wayagram/features/wallet/routes/wallet_routes.dart';
 import 'package:wayagram/features/wallet/transactions/routes/transaction_routes.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
+import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
-import 'package:wayagram/features/wallet/view/fund_wallet_page.dart';
+import 'package:wayagram/features/wallet/view/fund_account_screen.dart';
+import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 class WayaAppRoutes {
@@ -52,11 +54,13 @@ class WayaAppRoutes {
     '/change-password-gen-set': () => ChangePasswordGenSettings(),
     '/change-pin-page': () => ChangePinPage(),
     SharedRoutes.webview: () => WayaWebview(),
-    WalletRoutes.fundWallet: () => FundWalletPage(),
+    WalletRoutes.fundWallet: () => FundWalletOptionsScreen(),
     WalletRoutes.wallet: () => WalletPage(),
+    WalletRoutes.fundAccount: () => FundAccountScreen(),
     TransactionRoutes.transactionDetails: () => TransactionDetailsScreen(),
     TransactionRoutes.verifyTransaction: () => VerifyTransactionScreen(),
     TransactionRoutes.allTransactions: () => AllTransactionHistory(),
+    TransactionRoutes.bankTransfer: () => BankTransferScreen(),
     ProfilePage.route: () => ProfilePage(),
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),

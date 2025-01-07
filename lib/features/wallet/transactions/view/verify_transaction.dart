@@ -135,7 +135,9 @@ class _VerifyTransactionScreenState
                               );
                               Navigator.pushNamed(context, WalletRoutes.wallet);
                             },
-                            child: Text("Back"))
+                            child: Text("Done",
+                                style: wayaTheme.textTheme.bodyLarge!
+                                    .copyWith(color: Colors.white)))
                       ] else ...[
                         Icon(
                           Icons.error_outline,

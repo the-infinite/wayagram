@@ -64,3 +64,25 @@ Map<String, dynamic> _$VerifyTransactionToJson(VerifyTransaction instance) =>
       'fundOptionCode': instance.fundOptionCode,
       'transactionId': instance.transactionId,
     };
+
+PayForService _$PayForServiceFromJson(Map<String, dynamic> json) =>
+    PayForService(
+      recipientId: json['recipientId'] as String,
+      userId: json['userId'] as String,
+      amount: (json['amount'] as num).toDouble(),
+      purpose: json['purpose'] as String,
+      referenceId: json['referenceId'] as String,
+      description: json['description'] as String,
+      metadata: json['metadata'] as Map<String, dynamic>?,
+    );
+
+Map<String, dynamic> _$PayForServiceToJson(PayForService instance) =>
+    <String, dynamic>{
+      'recipientId': instance.recipientId,
+      'userId': instance.userId,
+      'amount': instance.amount,
+      'purpose': instance.purpose,
+      'referenceId': instance.referenceId,
+      'description': instance.description,
+      'metadata': instance.metadata,
+    };

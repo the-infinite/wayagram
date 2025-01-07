@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
@@ -7,6 +8,10 @@ import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/features/shared/components/loading_dialog.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:screenshot/screenshot.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class TransactionDetailsScreen extends ConsumerStatefulWidget {
   const TransactionDetailsScreen({super.key});
@@ -18,6 +23,8 @@ class TransactionDetailsScreen extends ConsumerStatefulWidget {
 
 class _TransactionDetailsScreenState
     extends ConsumerState<TransactionDetailsScreen> {
+  final screenshotController = ScreenshotController();
+
   @override
   void initState() {
     super.initState();
@@ -65,9 +72,99 @@ class _TransactionDetailsScreenState
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  Widget _buildReceiptContent() {
+    final state = ref.read(transactionVmProvider);
+    final wayaTheme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      color: Colors.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Transaction Receipt',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            '₦${state.transaction?.netAmount ?? "0"}',
+            style: const TextStyle(
+              fontSize: 24,
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 20),
+          _buildDetailRow(
+            'Transaction Id',
+            state.transaction?.transactionId ?? "",
+          ),
+          _buildDetailRow(
+            'Transaction Category',
+            state.transaction?.purpose ?? "",
+            valueColor: wayaTheme.colorScheme.primary200,
+          ),
+          _buildDetailRow(
+            'Description',
+            state.transaction?.description ?? "",
+          ),
+          _buildDetailRow(
+            'Transaction Type',
+            state.transaction?.type ?? "",
+            valueColor: Colors.green,
+          ),
+          _buildDetailRow(
+            'Date',
+            WayaHelpers.formatDateString(
+                state.transaction?.updatedAt.toString() ?? ""),
+          ),
+          _buildDetailRow(
+            'Time',
+            DateFormat.jm()
+                .format(state.transaction?.updatedAt ?? DateTime.now()),
+          ),
+          _buildDetailRow(
+            'Reference Number',
+            state.transaction?.referenceId ?? "",
+          ),
+          _buildDetailRow(
+            'Transaction Status',
+            state.transaction?.status ?? "",
+            valueColor: Colors.green,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _shareReceipt() async {
+    try {
+      final Uint8List imageBytes = await screenshotController.captureFromWidget(
+        _buildReceiptContent(),
+        delay: const Duration(milliseconds: 10),
+      );
+
+      final directory = await getTemporaryDirectory();
+      final imagePath = '${directory.path}/transaction_receipt.png';
+      final imageFile = File(imagePath);
+      await imageFile.writeAsBytes(imageBytes);
+
+      await Share.shareXFiles(
+        [XFile(imagePath)],
+        text: 'Transaction Receipt',
+        subject: 'Transaction Receipt from Wayagram',
+      );
+    } catch (e) {
+      //TODO REPLACE WITH WAYA SNACKBAR
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to share receipt')),
+      );
+    }
   }
 
   @override
@@ -193,7 +290,7 @@ class _TransactionDetailsScreenState
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _shareReceipt,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: wayaTheme.primaryColor,
                         minimumSize: const Size(double.infinity, 50),

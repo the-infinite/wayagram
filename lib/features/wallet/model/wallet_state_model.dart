@@ -3,9 +3,15 @@ import 'package:wayagram/features/wallet/model/wallet_model.dart';
 
 class WalletState {
   final bool? isLoading;
+  final bool? ismakePaymentLoading;
   final Wallet? data;
   final List<ExternalWalletModel>? externalWallets;
-  WalletState({this.isLoading = false, this.data, this.externalWallets});
+  WalletState({
+    this.isLoading = false,
+    this.ismakePaymentLoading = false,
+    this.data,
+    this.externalWallets,
+  });
 
   WalletState copyWith(
           {bool? isLoading,

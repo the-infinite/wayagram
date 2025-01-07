@@ -96,6 +96,28 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
       return false;
     }
   }
+
+  Future<void> payForService(
+      {required double amount,
+      required String description,
+      required String purpose,
+      required String recipientId,
+      required String referenceId,
+      Map<String, dynamic>? metadata}) async {
+    final user = _localDataSource.getUser();
+    final response = await _walletRepository!.payForService(PayForService(
+      userId: user.id ?? "",
+      amount: amount,
+      description: description,
+      purpose: purpose,
+      recipientId: recipientId,
+      referenceId: recipientId,
+      metadata: metadata,
+    ));
+    if (response.success) {
+      return;
+    }
+  }
 }
 
 final walletFundingOptionsVmProvider =

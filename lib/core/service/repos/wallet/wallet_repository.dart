@@ -35,4 +35,9 @@ class WalletRepository extends BaseRepository {
     return post('wayagram-wallet/api/v2/client/wallet/verify-wallet-funding',
         payload.toJson());
   }
+
+  Future<WayaRequestResponse> payForService(PayForService payload) {
+    return post('wayagram-wallet/api/v2/client/payment/pay-for-service',
+        payload.toJson());
+  }
 }
