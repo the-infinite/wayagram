@@ -8,7 +8,7 @@ class WayaSnackBar {
     Get.showSnackbar(
       GetSnackBar(
         message: message,
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 1),
         snackPosition: SnackPosition.BOTTOM, // Position of the Toast
         backgroundColor: WayaColors.primary,
         isDismissible: true, // Whether the toast can be dismissed by tapping

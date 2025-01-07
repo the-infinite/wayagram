@@ -38,7 +38,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Gap(Get.height * 0.05),
+             Gap(20),
             Text(
               "Welcome Back ${user(ref).firstName}",
               style: wayaTheme.textTheme.headlineLarge,
@@ -54,7 +54,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
               ),
             ),
             Gap(30),
-            WayaDp(),
+            WayaDp(radius: 50,),
             Gap(10),
             Text("${user(ref).firstName} ${user(ref).lastName}", style: wayaTheme.textTheme.bodyMedium),
             Gap(10),
@@ -62,68 +62,91 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
             //     style: wayaTheme.textTheme.hintStyleBold.wayaCopyWith(
             //         fontWeight: FontWeight.w500,
             //         color: wayaTheme.colorScheme.primary500)),
-            Gap(10),
+            Gap(20),
             Form(
                 key: _formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FormField<String>(validator: (value) {
-                      return WayaValidators.passwordValidator(viewModel.passwordController.text);
-                    }, builder: (formState) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Focus(
-                            onFocusChange: (hasFocus) {
-                              ref.read(loginVmProvider.notifier).setPasswordFocus(hasFocus);
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FormField<String>(validator: (value) {
+                  return WayaValidators.passwordValidator(
+                      viewModel.passwordController.text);
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Focus(
+                        onFocusChange: (hasFocus) {
+                          ref
+                              .read(loginVmProvider.notifier)
+                              .setPasswordFocus(hasFocus);
+                        },
+                        child: WayaTextFormField(
+                          keyboardType: TextInputType.visiblePassword,
+                          controller: viewModel.passwordController,
+                          borderColor: formState.hasError &&
+                                  viewModel.passwordController.text.isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
+                          hintText: 'Enter Your Password',
+                          label: 'Password',
+                          obscureText: !viewModel.isPasswordVisible,
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              ref
+                                  .read(loginVmProvider.notifier)
+                                  .togglePasswordVisibility();
                             },
-                            child: WayaTextFormField(
-                              keyboardType: TextInputType.visiblePassword,
-                              controller: viewModel.passwordController,
-                              borderColor: formState.hasError && viewModel.passwordController.text.isEmpty
-                                  ? wayaTheme.colorScheme.error
-                                  : null,
-                              hintText: 'Enter Your Password',
-                              label: 'Password',
-                              obscureText: !viewModel.isPasswordVisible,
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  ref.read(loginVmProvider.notifier).togglePasswordVisibility();
-                                },
-                                autofocus: false,
-                                icon: Icon(viewModel.isPasswordVisible
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined),
-                                color: wayaTheme.colorScheme.greyColor300,
-                              ),
-                            ),
+                            autofocus: false,
+                            icon: Icon(viewModel.isPasswordVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined),
+                            color: wayaTheme.colorScheme.greyColor300,
                           ),
-                          if (formState.hasError && !viewModel.isPasswordFocused)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                formState.errorText!,
-                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
-                              ),
-                            ),
-                        ],
-                      );
-                    }),
-                    Gap(Get.height * 0.2),
-                    WayaButton(
-                      text: 'Login',
-                      callback: () {
-                        if (_formKey.currentState!.validate()) {
-                          ref.read(loginVmProvider.notifier).onSubmit(user(ref).email);
-                        }
-                      },
-                      color: wayaTheme.colorScheme.primary500,
-                      textColor: wayaTheme.colorScheme.white,
-                    ),
-                  ],
-                )),
+                        ),
+                      ),
+                      if (formState.hasError && !viewModel.isPasswordFocused)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () => WayaNav.toNamed('/forgot-password'),
+                    child: Text('Forgot Password?',
+                        style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
+                            fontSize: 14,
+                            color: wayaTheme.colorScheme.customPrimary)),
+                  ),
+                ),
+                Gap(Get.height * 0.15),
+
+                WayaButton(
+                  text: 'Login',
+                  callback: () {
+                
+                    if (_formKey.currentState!.validate()) {
+                      ref
+                          .read(loginVmProvider.notifier)
+                          .onSubmit(user(ref).email);
+                    }
+                  },
+                  color: wayaTheme.colorScheme.primary500,
+                  textColor: wayaTheme.colorScheme.white,
+                ),
+              ],
+            )),
 
             Gap(Get.height * 0.03),
             InkWell(

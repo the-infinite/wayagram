@@ -149,14 +149,16 @@ class Explore extends ConsumerWidget {
   }
 
   Widget _buildProductLoadingState({required BuildContext context}) {
-    return GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, mainAxisSpacing: 0, childAspectRatio: 0.65, crossAxisSpacing: 12),
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          return ProductCardSekeleton();
-        });
+    return Row(
+      children: [
+        Expanded(
+          child: ProductCardSekeleton(),
+        ),
+        Gap(12), 
+        Expanded(
+          child: ProductCardSekeleton(),
+        ),
+      ],
+    );
   }
 }

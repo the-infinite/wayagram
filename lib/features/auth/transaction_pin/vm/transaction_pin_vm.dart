@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/service/repos/wallet/wallet_model.dart';
-import 'package:wayagram/core/service/repos/wallet/wallet_repository.dart';
+import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
+import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/general_settings/change_pin/data/change_pin_repo.dart';
 

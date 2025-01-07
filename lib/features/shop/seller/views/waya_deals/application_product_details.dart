@@ -6,8 +6,10 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/steps/preview_product.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/vm/application_product_details_vm.dart';
+import 'package:wayagram/features/shop/widgets/about_product.dart';
 
 class ApplicationProductDetails extends ConsumerWidget {
+  static const route = '/waya-application-product-detail';
   const ApplicationProductDetails({super.key});
 
   @override

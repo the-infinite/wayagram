@@ -13,7 +13,6 @@ class AllProducts extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final productState = ref.watch(productsProvider);
     return Column(
       children: [
@@ -27,23 +26,7 @@ class AllProducts extends ConsumerWidget {
         CategoriesFilterWidget<Product>(allItems: []),
         const Gap(25),
         productState.when(
-            data: (products) => GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 0,
-                    childAspectRatio: 0.52,
-                    crossAxisSpacing: 12),
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  return ProductCard(
-                    product: products[index],
-                    isExplore: false,
-                    isWayaGramDeal: true,
-                    canbeAddedTocart: true,
-                  );
-                }),
+            data: (products) => _buildProductGrid(products),
             error: (e, stack) =>
                 _wayagramDealProductLoadingState(context: context),
             loading: () => _wayagramDealProductLoadingState(context: context)),
@@ -54,22 +37,7 @@ class AllProducts extends ConsumerWidget {
             title: 'Recommended Products'),
         const Gap(25),
         productState.when(
-            data: (products) => GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 0,
-                    childAspectRatio: 0.55,
-                    crossAxisSpacing: 12),
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  return ProductCard(
-                    product: products[index],
-                    isExplore: false,
-                    canbeAddedTocart: true,
-                  );
-                }),
+            data: (products) => _buildProductGrid(products),
             error: (e, stack) =>
                 _recommendedProductLoadingState(context: context),
             loading: () => _recommendedProductLoadingState(context: context))
@@ -77,40 +45,90 @@ class AllProducts extends ConsumerWidget {
     );
   }
 
+  Widget _buildProductGrid(List<Product> products) {
+    return Column(
+      children: [
+        for (int i = 0; i < products.length; i += 2)
+          Row(
+            children: [
+              Expanded(
+                child: ProductCard(
+                  product: products[i],
+                  isExplore: false,
+                  isWayaGramDeal: true,
+                  canbeAddedTocart: true,
+                ),
+              ),
+              if (i + 1 < products.length) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ProductCard(
+                    product: products[i + 1],
+                    isExplore: false,
+                    isWayaGramDeal: true,
+                    canbeAddedTocart: true,
+                  ),
+                ),
+              ],
+            ],
+          ),
+      ],
+    );
+  }
+
   Widget _wayagramDealProductLoadingState({required BuildContext context}) {
-    return GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 0,
-            childAspectRatio: 0.52,
-            crossAxisSpacing: 12),
-        itemCount: 6,
-        itemBuilder: (context, index) {
-          return ProductCardSekeleton(
-            isExplore: false,
-            isWayaGramDeal: true,
-            canbeAddedTocart: true,
-          );
-        });
+    return Column(
+      children: [
+        for (int i = 0; i < 6; i += 2)
+          Row(
+            children: [
+              Expanded(
+                child: ProductCardSekeleton(
+                  isExplore: false,
+                  isWayaGramDeal: true,
+                  canbeAddedTocart: true,
+                ),
+              ),
+              if (i + 1 < 6) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ProductCardSekeleton(
+                    isExplore: false,
+                    isWayaGramDeal: true,
+                    canbeAddedTocart: true,
+                  ),
+                ),
+              ],
+            ],
+          ),
+      ],
+    );
   }
 
   Widget _recommendedProductLoadingState({required BuildContext context}) {
-    return GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 0,
-            childAspectRatio: 0.55,
-            crossAxisSpacing: 12),
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return ProductCardSekeleton(
-            isExplore: false,
-            canbeAddedTocart: true,
-          );
-        });
+    return Column(
+      children: [
+        for (int i = 0; i < 4; i += 2)
+          Row(
+            children: [
+              Expanded(
+                child: ProductCardSekeleton(
+                  isExplore: false,
+                  canbeAddedTocart: true,
+                ),
+              ),
+              if (i + 1 < 4) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ProductCardSekeleton(
+                    isExplore: false,
+                    canbeAddedTocart: true,
+                  ),
+                ),
+              ],
+            ],
+          ),
+      ],
+    );
   }
 }

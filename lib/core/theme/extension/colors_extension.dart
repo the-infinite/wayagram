@@ -39,6 +39,7 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get greyColor400 => WayaColors.greyColor400;
   Color get greyColor200 => WayaColors.greyColor200;
   Color get greyColor100 => WayaColors.greyColor100;
+  Color get greyColor50 => WayaColors.greyColor50;
   Color get greyColor300 => WayaColors.greyColor300;
   Color get greyColor600 => WayaColors.greyColor600;
   Color get greyColor900 => WayaColors.greyColor900;

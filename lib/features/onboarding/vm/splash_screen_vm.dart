@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
@@ -34,6 +35,18 @@ class SplashScreenVm extends StateNotifier<void> {
             UserAccountModel.fromJson(response.data);
 
         _localDataSource.saveUser(userAccountModel.data!);
+
+        if (userAccountModel.data != null &&
+            userAccountModel.data!.role!.name != 'PERSONAL') {
+          final bizResponse =
+              await _profileRepo.getBusinessDataRepo(userId: userId);
+
+          if (bizResponse.success) {
+            BusinessAccountData bizData =
+                BusinessAccountData.fromJson(bizResponse.data);
+            _localDataSource.saveBusiness(bizData);
+          }
+        }
 
         WayaNav.toNamed('/welcome-back');
       } else {

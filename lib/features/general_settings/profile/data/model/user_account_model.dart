@@ -90,8 +90,50 @@ class UserAccountData {
   final DateTime? updatedAt;
   final Role? role;
 
-  factory UserAccountData.fromJson(Map<String, dynamic> json) =>
-      _$UserAccountDataFromJson(json);
+  factory UserAccountData.fromJson(Map<String, dynamic> json) {
+    return UserAccountData(
+      id: json['id'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
+      email: json['email'] as String?,
+      passwordHash: json['passwordHash'] as String?,
+      firstName: json['firstName'] as String?,
+      lastName: json['lastName'] as String?,
+      gender: json['gender'] as String?,
+      address: json['address'] as String?,
+      city: json['city'] as String?,
+      state: json['state'] as String?,
+      country: json['country'] as String?,
+      countryCode: json['countryCode'],
+      middleName: json['middleName'],
+      dateOfBirth: json['dateOfBirth'] == null
+          ? null
+          : DateTime.parse(json['dateOfBirth'] as String),
+      twoFactorEnabled: json['twoFactorEnabled'] as bool?,
+      profilePicture: json['profilePicture'],
+      fcmToken: json['fcmToken'],
+      emailVerified: json['emailVerified'] as bool?,
+      phoneVerified: json['phoneVerified'] as bool?,
+      accountStatus: json['accountStatus'] as String?,
+      tcAgreement: json['tcAgreement'] as bool?,
+      policyAgreement: json['policyAgreement'] as bool?,
+      emailVerifiedDate: json['emailVerifiedDate'] == null
+          ? null
+          : DateTime.parse(json['emailVerifiedDate'] as String),
+      deletedAt: json['deletedAt'],
+      roleId: json['roleId'] as String?,
+      accountTypeId: json['accountTypeId'] as String?,
+      v: json['_v'] as String?,
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+      role: json['role'] == null
+          ? null
+          : Role.fromJson(json['role'] as Map<String, dynamic>),
+    );
+  }
 
   Map<String, dynamic> toJson() => _$UserAccountDataToJson(this);
 }
@@ -108,5 +150,3 @@ class Role {
 
   Map<String, dynamic> toJson() => _$RoleToJson(this);
 }
-
-

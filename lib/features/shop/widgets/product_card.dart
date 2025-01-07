@@ -59,8 +59,8 @@ class ProductCard extends ConsumerWidget {
                 children: [
                   const Gap(3),
                   Container(
-                    width: 120,
-                    padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                    width: 110,
+                    padding: EdgeInsets.fromLTRB(3, 3, 3, 3),
                     decoration: BoxDecoration(
                         color: wayaTheme.colorScheme.customPrimary,
                         borderRadius: BorderRadius.circular(6)),
@@ -68,8 +68,8 @@ class ProductCard extends ConsumerWidget {
                       child: Text("WAYAGRAM DEAL",
                           style: TextStyle().wayaCopyWith(
                               color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12)),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 10)),
                     ),
                   )
                 ],

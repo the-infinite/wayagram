@@ -25,7 +25,11 @@ class ProfileRepo extends BaseRepository {
   }
 
   Future<WayaRequestResponse> updateProfileRepo(
-      {required String userId, String? username, String? displayName, String? bio, bool? isPublic}) {
+      {required String userId,
+      String? username,
+      String? displayName,
+      String? bio,
+      bool? isPublic}) {
     final payload = <String, dynamic>{};
 
     if (username != null) {
@@ -48,7 +52,8 @@ class ProfileRepo extends BaseRepository {
     return get("$serviceUrl/client/users/$userId");
   }
 
-  Future<WayaRequestResponse> getUserProfileRepo({required String userId}) async {
+  Future<WayaRequestResponse> getUserProfileRepo(
+      {required String userId}) async {
     return get("$serviceUrl/client/users/$userId/profile");
   }
 
@@ -62,5 +67,10 @@ class ProfileRepo extends BaseRepository {
     final payload = {'profilePicture': pictureImage};
 
     return patch('$serviceUrl/client/users/$userId/update-pfp', payload, formdata: true);
+  }
+
+  Future<WayaRequestResponse> getBusinessDataRepo(
+      {required String userId}) async {
+    return get("$serviceUrl/client/businesses/user-business/$userId");
   }
 }

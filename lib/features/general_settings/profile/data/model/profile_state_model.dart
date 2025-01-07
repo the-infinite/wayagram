@@ -8,7 +8,7 @@ class ProfileState {
   UserProfileModel? userProfileModel;
 
   // Constructor
-  ProfileState({this.isLoading = false, this.data, this.userAccountModel, this.userProfileModel});
+  ProfileState({this.isLoading = false, this.data, this.userAccountModel, this.userProfileModel}); 
 
   // From JSON
   factory ProfileState.fromJson(Map<String, dynamic> json) {
