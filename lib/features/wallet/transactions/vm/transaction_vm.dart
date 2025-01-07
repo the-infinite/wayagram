@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/repos/transactions/transaction_history_model.dart';
 import 'package:wayagram/core/service/repos/transactions/transaction_repository.dart';
-import 'package:wayagram/core/service/repos/wallet/wallet_model.dart';
-import 'package:wayagram/core/service/repos/wallet/wallet_repository.dart';
+import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
+import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_state_model.dart';
 
 class TransactionVm extends StateNotifier<TransactionHistoryState> {

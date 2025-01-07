@@ -10,7 +10,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/wallet/model/external_wallet_model.dart';
+import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/routes/wallet_routes.dart';
 import 'package:wayagram/features/wallet/view/components/modal_content.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
