@@ -1,9 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:developer';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -12,6 +10,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/wallet/model/external_wallet_model.dart';
+import 'package:wayagram/features/wallet/routes/wallet_routes.dart';
 import 'package:wayagram/features/wallet/view/components/modal_content.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
@@ -84,7 +84,6 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
-    log("${viewModel.data}");
     return Container(
       padding: EdgeInsets.only(left: 20.w, top: 15.h, bottom: 20),
       width: 1.sw,
@@ -122,7 +121,7 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
                 height: 36.h,
                 textStyle: wayaTheme.textTheme.labelSmall
                     ?.wayaCopyWith(color: wayaTheme.colorScheme.primary),
-                callback: () => WayaNav.toNamed('/fund-wallet-page'),
+                callback: () => WayaNav.toNamed(WalletRoutes.fundWallet),
               ),
               SizedBox(width: 10.w),
               WayaButton(
@@ -145,9 +144,8 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
 }
 
 class AccountDetailsCard extends StatelessWidget {
-  const AccountDetailsCard({
-    super.key,
-  });
+  final List<ExternalWalletModel>? externalAccounts;
+  const AccountDetailsCard({super.key, required this.externalAccounts});
 
   @override
   Widget build(BuildContext context) {
@@ -172,16 +170,16 @@ class AccountDetailsCard extends StatelessWidget {
                             .wayaCopyWith(color: wayaTheme.colorScheme.black),
                       ),
                       SizedBox(height: 5.h),
-                      Row(
-                        children: [
-                          buildAccountDetails(wayaTheme,
-                              accountType: 'Wayabank',
-                              accountNumber: '1234567890'),
-                          SizedBox(width: 12.w),
-                          buildAccountDetails(wayaTheme,
-                              accountType: '9PSB', accountNumber: '1234567890'),
-                        ],
-                      ),
+                      if (externalAccounts != null &&
+                          externalAccounts!.isNotEmpty)
+                        Row(
+                          children: externalAccounts!
+                              .map((externalAccount) => buildAccountDetails(
+                                  wayaTheme,
+                                  accountType: externalAccount.providerName,
+                                  accountNumber: externalAccount.accountNumber))
+                              .toList(),
+                        ),
                     ],
                   )
                 ],
@@ -191,10 +189,10 @@ class AccountDetailsCard extends StatelessWidget {
         ));
   }
 
-  Container buildAccountDetails(ThemeData wayaTheme,
+  Widget buildAccountDetails(ThemeData wayaTheme,
       {required String accountType, required String accountNumber}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       decoration: BoxDecoration(
         color: wayaTheme.colorScheme.onPrimary,
         borderRadius: BorderRadius.circular(8.r),
@@ -259,44 +257,27 @@ class PaymentMethodTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return InkWell(
+
+    return ListTile(
       onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            color: wayaTheme.colorScheme.onPrimary),
-        child: Row(
-          children: [
-            Container(
-                height: 40.h,
-                width: 40.w,
-                decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.primar50,
-                  shape: BoxShape.circle,
-                ),
-                child: iconPath.svg(fit: BoxFit.none)),
-            SizedBox(width: 12.w),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(paymentMethod,
-                    style: wayaTheme.textTheme.hintStyleSemiBold
-                        .wayaCopyWith(color: wayaTheme.colorScheme.black)),
-                SizedBox(height: 4.h),
-                Text(description,
-                    style: wayaTheme.textTheme.labelSmall
-                        ?.wayaCopyWith(color: wayaTheme.colorScheme.black)),
-              ],
-            ),
-            Spacer(),
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 12,
-              color: wayaTheme.colorScheme.greyColor500,
-            )
-          ],
-        ),
+      leading: Container(
+          height: 40.h,
+          width: 40.w,
+          decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.primar50,
+            shape: BoxShape.circle,
+          ),
+          child: iconPath.svg(fit: BoxFit.none)),
+      title: Text(paymentMethod,
+          style: wayaTheme.textTheme.hintStyleSemiBold
+              .wayaCopyWith(color: wayaTheme.colorScheme.black)),
+      subtitle: Text(description,
+          style: wayaTheme.textTheme.labelSmall!
+              .wayaCopyWith(color: wayaTheme.colorScheme.black)),
+      trailing: Icon(
+        Icons.arrow_forward_ios_rounded,
+        size: 12,
+        color: wayaTheme.colorScheme.greyColor500,
       ),
     );
   }
