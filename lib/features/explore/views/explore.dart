@@ -26,137 +26,167 @@ class Explore extends ConsumerWidget {
     final productState = ref.watch(productsProvider);
 
     return WayaScaffold(
-        isLoading: false,
-        backgroundColor: wayaTheme.colorScheme.scaffoldColor,
-        appBar: AppBar(
-            toolbarHeight: 70,
-            backgroundColor: wayaTheme.colorScheme.white,
-            title: ExploreHeader(),
-            actions: [
-              Container(
-                padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Icon(Icons.notifications, size: 30, color: wayaTheme.colorScheme.greyColor500),
-                    ),
-                    const Gap(15),
-                    WayaDp(
-                      onTap: () {
-                        WayaNav.toNamed('/general-settings');
-                      },
-                      radius: 18,
-                    ),
-                  ],
+      isLoading: false,
+      backgroundColor: wayaTheme.colorScheme.scaffoldColor,
+      appBar: AppBar(
+        toolbarHeight: 70,
+        backgroundColor: wayaTheme.colorScheme.white,
+        title: ExploreHeader(),
+        actions: [
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {},
+                  child: Icon(Icons.notifications, size: 30, color: wayaTheme.colorScheme.greyColor500),
                 ),
-              )
-            ],
-            leading: Container(
-              padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              child: Image.asset(
-                'assets/images/wayalogo_unlabelled.png',
-              ),
-            )),
-        isScrollable: true,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // const ExploreHeader(),
-            const Gap(20),
-            const ExploreOurServices(),
-            const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
-            const Gap(20),
-            WayaButton(
-              centerWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add,
-                    size: 28,
-                    color: wayaTheme.colorScheme.primary600,
-                  ),
-                  const Gap(8),
-                  Text(
-                    "Create a Quote",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
-                  ),
-                ],
-              ),
-              callback: () {},
-              color: wayaTheme.colorScheme.primar50,
+                const Gap(15),
+                WayaDp(
+                  onTap: () {
+                    WayaNav.toNamed('/general-settings');
+                  },
+                  radius: 18,
+                ),
+              ],
             ),
-            const Gap(25),
-            ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: viewModel.quotations.length,
-                itemBuilder: (context, index) {
-                  return QuotationCard(quotation: viewModel.quotations[index]);
-                }),
-            const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Explore Categories & Best Offers', title: 'Shop'),
-            const Gap(10),
-            CategoriesFilterWidget<Product>(allItems: []),
-            const Gap(25),
-            productState.when(
-                data: (products) => GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, mainAxisSpacing: 0, childAspectRatio: 0.65, crossAxisSpacing: 12),
-                    itemCount: products.sublist(0, 2).length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(product: products.sublist(0, 2)[index]);
-                    }),
-                error: (e, stack) => _buildProductLoadingState(context: context),
-                loading: () => _buildProductLoadingState(context: context)),
-
-            const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
-            const Gap(25),
-            ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: viewModel.ugtList.length,
-                itemBuilder: (context, index) {
-                  return UgtCard(ugt: viewModel.ugtList[index]);
-                }),
-          ],
+          )
+        ],
+        leading: Container(
+          padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+          child: Image.asset(
+            'assets/images/wayalogo_unlabelled.png',
+          ),
         ),
-        floatingActionButton: SizedBox(
-          height: 50,
-          width: 50,
-          child: WayaButton(
+      ),
+      isScrollable: true,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Gap(20),
+          const ExploreOurServices(),
+          const Gap(25),
+          GroupedWidgetHeader(
+            onTap: () {},
+            subTitle: 'Have a buy request, just create a quote',
+            title: 'Get Quotation',
+          ),
+          const Gap(20),
+          WayaButton(
+            centerWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.add,
+                  size: 28,
+                  color: wayaTheme.colorScheme.primary600,
+                ),
+                const Gap(8),
+                Text(
+                  "Create a Quote",
+                  style: TextStyle().wayaCopyWith(
+                    color: wayaTheme.colorScheme.customPrimary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
             callback: () {},
-            height: 50,
-            centerWidget: Center(
-              child: Icon(
-                Icons.add,
-                color: wayaTheme.colorScheme.white,
-                size: 40,
-              ),
+            color: wayaTheme.colorScheme.primar50,
+          ),
+          const Gap(25),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: viewModel.quotations.length,
+            itemBuilder: (context, index) {
+              return QuotationCard(quotation: viewModel.quotations[index]);
+            },
+          ),
+          const Gap(25),
+          GroupedWidgetHeader(
+            onTap: () {},
+            subTitle: 'Explore Categories & Best Offers',
+            title: 'Shop',
+          ),
+          const Gap(10),
+          CategoriesFilterWidget<Product>(allItems: []),
+          const Gap(25),
+          productState.when(
+            data: (products) {
+              return Column(
+                children: [
+                  if (products.isNotEmpty)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ProductCard(product: products[0]),
+                        ),
+                        if (products.length > 1) ...[
+                          Gap(12), 
+                          Expanded(
+                            child: ProductCard(product: products[1]),
+                          ),
+                        ],
+                      ],
+                    ),
+                ],
+              );
+            },
+            error: (e, stack) => _buildProductLoadingState(context: context),
+            loading: () => _buildProductLoadingState(context: context),
+          ),
+          const Gap(25),
+          GroupedWidgetHeader(
+            onTap: () {},
+            subTitle: 'Join Upcoming Activities',
+            title: 'University Got Talent',
+          ),
+          const Gap(25),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: viewModel.ugtList.length,
+            itemBuilder: (context, index) {
+              return UgtCard(ugt: viewModel.ugtList[index]);
+            },
+          ),
+        ],
+      ),
+      floatingActionButton: SizedBox(
+        height: 50,
+        width: 50,
+        child: WayaButton(
+          callback: () {},
+          height: 50,
+          centerWidget: Center(
+            child: Icon(
+              Icons.add,
+              color: wayaTheme.colorScheme.white,
+              size: 40,
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildProductLoadingState({required BuildContext context}) {
-    return GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, mainAxisSpacing: 0, childAspectRatio: 0.65, crossAxisSpacing: 12),
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          return ProductCardSekeleton();
-        });
+    return Row(
+      children: [
+        Expanded(
+          child: ProductCardSekeleton(),
+        ),
+        Gap(12), 
+        Expanded(
+          child: ProductCardSekeleton(),
+        ),
+      ],
+    );
   }
 }

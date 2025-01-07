@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
@@ -20,7 +19,6 @@ class SellerProducts extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final productState = ref.watch(productsProvider);
     final wayaTheme = Theme.of(context);
     return Column(
@@ -29,7 +27,6 @@ class SellerProducts extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           
             WayaButton(
               callback: () {
                 WayaNav.toNamed('/add-product');
@@ -66,51 +63,77 @@ class SellerProducts extends ConsumerWidget {
             CategoriesFilterWidget<Product>(allItems: []),
             const Gap(25),
             productState.when(
-                data: (products) => GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 0,
-                        childAspectRatio: 0.52,
-                        crossAxisSpacing: 12),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(
-                        product: products[index],
-                        isExplore: false,
-                        isWayaGramDeal: false,
-                        canbeAddedTocart: false,
-                        sellerProduct: true,
-                      );
-                    }),
+                data: (products) => _buildProductGrid(products),
                 error: (e, stack) => _productLoadingState(context: context),
                 loading: () => _productLoadingState(context: context))
           ],
         )
+      ],
+    );
+  }
 
-        // SellerProductEmptyState()
+  Widget _buildProductGrid(List<Product> products) {
+    return Column(
+      children: [
+        for (int i = 0; i < products.length; i += 2)
+          Row(
+            children: [
+              Expanded(
+                child: ProductCard(
+                  product: products[i],
+                  isExplore: false,
+                  isWayaGramDeal: false,
+                  canbeAddedTocart: false,
+                  sellerProduct: true,
+                ),
+              ),
+              if (i + 1 < products.length) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ProductCard(
+                    product: products[i + 1],
+                    isExplore: false,
+                    isWayaGramDeal: false,
+                    canbeAddedTocart: false,
+                    sellerProduct: true,
+                  ),
+                ),
+              ],
+            ],
+          ),
       ],
     );
   }
 
   Widget _productLoadingState({required BuildContext context}) {
-    return GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 0,
-            childAspectRatio: 0.52,
-            crossAxisSpacing: 12),
-        itemCount: 6,
-        itemBuilder: (context, index) {
-          return ProductCardSekeleton(
-              isExplore: false,
-              isWayaGramDeal: false,
-              canbeAddedTocart: false,
-              sellerProduct: true);
-        });
+    return Column(
+      children: [
+        for (int i = 0; i < 6; i += 2)
+          Row(
+            children: [
+              Expanded(
+                child: ProductCardSekeleton(
+                  isExplore: false,
+                  isWayaGramDeal: false,
+                  canbeAddedTocart: false,
+                  sellerProduct: true,
+                ),
+              ),
+              if (i + 1 < 6) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ProductCardSekeleton(
+                    isExplore: false,
+                    isWayaGramDeal: false,
+                    canbeAddedTocart: false,
+                    sellerProduct: true,
+                  ),
+                ),
+              ],
+            ],
+          ),
+      ],
+    );
   }
 }
 
@@ -119,7 +142,6 @@ class SellerProductEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

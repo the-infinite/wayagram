@@ -40,6 +40,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+             Gap(20),
             Text(
               "Welcome Back ${user(ref).firstName}",
               style: wayaTheme.textTheme.headlineLarge,
@@ -55,7 +56,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
               ),
             ),
             Gap(30),
-            WayaDp(),
+            WayaDp(radius: 50,),
             Gap(10),
             Text("${user(ref).firstName} ${user(ref).lastName}",
                 style: wayaTheme.textTheme.bodyMedium),
@@ -64,7 +65,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
             //     style: wayaTheme.textTheme.hintStyleBold.wayaCopyWith(
             //         fontWeight: FontWeight.w500,
             //         color: wayaTheme.colorScheme.primary500)),
-            Gap(10),
+            Gap(20),
             Form(
               key: _formKey,
                 child: Column(
@@ -121,7 +122,19 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                     ],
                   );
                 }),
-                Gap(Get.height * 0.2),
+                const Gap(10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () => WayaNav.toNamed('/forgot-password'),
+                    child: Text('Forgot Password?',
+                        style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
+                            fontSize: 14,
+                            color: wayaTheme.colorScheme.customPrimary)),
+                  ),
+                ),
+                Gap(Get.height * 0.15),
+
                 WayaButton(
                   text: 'Login',
                   callback: () {
