@@ -9,7 +9,36 @@ class WalletRepository extends BaseRepository {
         '$serviceUrl/api/v2/client/wallet-pin/create', payload.toJson());
   }
 
+  Future<WayaRequestResponse> confirmWalletPin(ConfirmWalletPin payload) {
+    return post('wayagram-wallet/api/v2/client/wallet-pin/confirm-pin',
+        payload.toJson());
+  }
+
+  Future<WayaRequestResponse> checkWalletPinStatus(String userId) {
+    return post('wayagram-wallet/api/v2/client/wallet-pin/check-status',
+        {"userId": userId});
+  }
+
   Future<WayaRequestResponse> getUserWallet() {
     return get('$serviceUrl/api/v2/client/wallet');
+  }
+
+  Future<WayaRequestResponse> getWalletFundingOptions() {
+    return get('wayagram-wallet/api/v2/client/wallet/fund-wallet-options');
+  }
+
+  Future<WayaRequestResponse> fundWallet(FundWallet payload) {
+    return post(
+        'wayagram-wallet/api/v2/client/wallet/fund-wallet', payload.toJson());
+  }
+
+  Future<WayaRequestResponse> verifyWalletFunding(VerifyTransaction payload) {
+    return post('wayagram-wallet/api/v2/client/wallet/verify-wallet-funding',
+        payload.toJson());
+  }
+
+  Future<WayaRequestResponse> payForService(PayForService payload) {
+    return post('wayagram-wallet/api/v2/client/payment/pay-for-service',
+        payload.toJson());
   }
 }

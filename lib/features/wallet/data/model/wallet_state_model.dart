@@ -1,10 +1,37 @@
-import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
+import 'package:wayagram/features/wallet/model/external_wallet_model.dart';
+import 'package:wayagram/features/wallet/model/wallet_model.dart';
 
 class WalletState {
   final bool? isLoading;
+  final bool? ismakePaymentLoading;
   final Wallet? data;
-  WalletState({this.isLoading = false, this.data});
+  final List<ExternalWalletModel>? externalWallets;
+  WalletState({
+    this.isLoading = false,
+    this.ismakePaymentLoading = false,
+    this.data,
+    this.externalWallets,
+  });
 
-  WalletState copyWith({bool? isLoading, Wallet? data}) => WalletState(
-      isLoading: isLoading ?? this.isLoading, data: data ?? this.data);
+  WalletState copyWith(
+          {bool? isLoading,
+          Wallet? data,
+          List<ExternalWalletModel>? externalWallets}) =>
+      WalletState(
+        isLoading: isLoading ?? this.isLoading,
+        data: data ?? this.data,
+        externalWallets: externalWallets ?? this.externalWallets,
+      );
+}
+
+class WalletFundingOptionState {
+  final bool? isLoading;
+  final List<WalletFundingOptionModel>? fundingOptions;
+  WalletFundingOptionState({this.isLoading = false, this.fundingOptions});
+
+  WalletFundingOptionState copyWith(
+          {bool? isLoading, List<WalletFundingOptionModel>? fundingOptions}) =>
+      WalletFundingOptionState(
+          isLoading: isLoading ?? this.isLoading,
+          fundingOptions: fundingOptions ?? this.fundingOptions);
 }

@@ -32,3 +32,22 @@ class Wallet {
 
   Map<String, dynamic> toJson() => _$WalletToJson(this);
 }
+
+@JsonSerializable()
+class WalletFundingOptionModel {
+  final String code;
+  final String name;
+  final String description;
+
+  WalletFundingOptionModel({
+    required this.code,
+    required this.name,
+    required this.description,
+  });
+
+  factory WalletFundingOptionModel.fromJson(Map<String, dynamic> json) =>
+      _$WalletFundingOptionModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WalletFundingOptionModelToJson(this);
+}
+

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/shared/routes/shared_routes.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
@@ -18,7 +20,14 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/application_produ
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
-import 'package:wayagram/features/wallet/view/fund_wallet_page.dart';
+import 'package:wayagram/features/wallet/routes/wallet_routes.dart';
+import 'package:wayagram/features/wallet/transactions/routes/transaction_routes.dart';
+import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
+import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
+import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
+import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
+import 'package:wayagram/features/wallet/view/fund_account_screen.dart';
+import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 class WayaAppRoutes {
@@ -48,8 +57,14 @@ class WayaAppRoutes {
     GeneralSettingsPage.route: () => GeneralSettingsPage(),
     '/change-password-gen-set': () => ChangePasswordGenSettings(),
     '/change-pin-page': () => ChangePinPage(),
-    '/fund-wallet-page': () => FundWalletPage(),
-    WalletPage.route: () => WalletPage(),
+    SharedRoutes.webview: () => WayaWebview(),
+    WalletRoutes.fundWallet: () => FundWalletOptionsScreen(),
+    WalletRoutes.wallet: () => WalletPage(),
+    WalletRoutes.fundAccount: () => FundAccountScreen(),
+    TransactionRoutes.transactionDetails: () => TransactionDetailsScreen(),
+    TransactionRoutes.verifyTransaction: () => VerifyTransactionScreen(),
+    TransactionRoutes.allTransactions: () => AllTransactionHistory(),
+    TransactionRoutes.bankTransfer: () => BankTransferScreen(),
     ProfilePage.route: () => ProfilePage(),
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),

@@ -31,3 +31,19 @@ Map<String, dynamic> _$WalletToJson(Wallet instance) => <String, dynamic>{
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };
+
+WalletFundingOptionModel _$WalletFundingOptionModelFromJson(
+        Map<String, dynamic> json) =>
+    WalletFundingOptionModel(
+      code: json['code'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String,
+    );
+
+Map<String, dynamic> _$WalletFundingOptionModelToJson(
+        WalletFundingOptionModel instance) =>
+    <String, dynamic>{
+      'code': instance.code,
+      'name': instance.name,
+      'description': instance.description,
+    };

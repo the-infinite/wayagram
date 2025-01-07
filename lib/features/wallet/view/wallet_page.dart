@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_core/get_core.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/wallet/transactions/routes/transaction_routes.dart';
+import 'package:wayagram/features/wallet/transactions/view/transaction_history.dart';
 import 'package:wayagram/features/wallet/view/components/wallet_cards.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class WalletPage extends ConsumerStatefulWidget {
   static const route = '/wallet';
@@ -20,32 +21,22 @@ class _WalletPageState extends ConsumerState<WalletPage> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final state = ref.watch(walletVmProvider);
     return WayaScaffold(
       color: wayaTheme.colorScheme.scaffoldColor2,
       title: 'Wallet',
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            WalletBalanceCard(),
-            Gap(10),
-            AccountDetailsCard(),
-            Gap(20),
-            _buildHistoryHeader(wayaTheme),
-            Gap(Get.height * 0.05),
-            WayaAssests.images.wallet.searchDocu.image(scale: 1.5),
-            Text('No transaction yet',
-                style: wayaTheme.textTheme.headlineMedium),
-            SizedBox(
-              width: 310,
-              child: Text(
-                'Looks like you haven’t performed any transaction yet',
-                textAlign: TextAlign.center,
-                style: wayaTheme.textTheme.labelMedium
-                    ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-              ),
-            ),
-          ],
-        ),
+      body: Column(
+        children: [
+          WalletBalanceCard(),
+          Gap(10),
+          AccountDetailsCard(
+            externalAccounts: state.externalWallets,
+          ),
+          Gap(20),
+          _buildHistoryHeader(wayaTheme),
+          Gap(10),
+          Expanded(child: TransactionHistory()),
+        ],
       ),
     );
   }
@@ -59,6 +50,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
           style: wayaTheme.textTheme.titleMedium,
         ),
         GestureDetector(
+          onTap: () => WayaNav.toNamed(TransactionRoutes.allTransactions),
           child: Text(
             'See All',
             style: wayaTheme.textTheme.titleMedium
