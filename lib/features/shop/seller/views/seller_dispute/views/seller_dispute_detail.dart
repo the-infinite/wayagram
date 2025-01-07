@@ -166,7 +166,7 @@ class SellerDisputeDetail extends ConsumerWidget {
                     width: 1, color: wayaTheme.colorScheme.customPrimary),
                 callback: () {
                   // to be removed
-                  WayaHelpers.showNotice(
+                  WayaUtils.showNotice(
                       context: context,
                       buttonText: 'Yes, Escalate to Mediator',
                       secondButtonText: 'Cancel',

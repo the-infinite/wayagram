@@ -8,21 +8,25 @@ import 'package:wayagram/features/general_settings/profile/data/repo/profile_rep
 
 class SuccessfulSetUpState {
   final bool isloading;
+  final UserAccountData? user;
+  final BusinessAccountData? business;
 
-  SuccessfulSetUpState({this.isloading = false});
+  SuccessfulSetUpState({this.isloading = false, this.business, this.user});
 
-  SuccessfulSetUpState copyWith({bool? isloading}) {
-    return SuccessfulSetUpState(isloading: isloading ?? this.isloading);
+  SuccessfulSetUpState copyWith(
+      {bool? isloading, BusinessAccountData? business, UserAccountData? user}) {
+    return SuccessfulSetUpState(
+        isloading: isloading ?? this.isloading,
+        user: user ?? this.user,
+        business: business ?? this.business);
   }
 }
 
 class SuccessfulSetupVm extends StateNotifier<SuccessfulSetUpState> {
   final ProfileRepo _profileRepo;
-  final WayaLocalDataSource _localDataSource;
   final WayaSecureDataSource _secureDataSource;
 
-  SuccessfulSetupVm(
-      this._profileRepo, this._localDataSource, this._secureDataSource)
+  SuccessfulSetupVm(this._profileRepo, this._secureDataSource)
       : super(SuccessfulSetUpState());
 
   void getUserData() async {
@@ -42,7 +46,7 @@ class SuccessfulSetupVm extends StateNotifier<SuccessfulSetUpState> {
         UserAccountModel userAccountModel =
             UserAccountModel.fromJson(response.data);
 
-        _localDataSource.saveUser(userAccountModel.data!);
+        state = state.copyWith(user: userAccountModel.data);
 
         if (userAccountModel.data != null &&
             userAccountModel.data!.role!.name != 'PERSONAL') {
@@ -52,7 +56,7 @@ class SuccessfulSetupVm extends StateNotifier<SuccessfulSetUpState> {
           if (bizResponse.success) {
             BusinessAccountData bizData =
                 BusinessAccountData.fromJson(bizResponse.data);
-            _localDataSource.saveBusiness(bizData);
+            state = state.copyWith(business: bizData);
           }
         }
 
@@ -66,6 +70,6 @@ class SuccessfulSetupVm extends StateNotifier<SuccessfulSetUpState> {
   }
 }
 
-final successfulSetupVmProvider = StateNotifierProvider<SuccessfulSetupVm, SuccessfulSetUpState>((ref) =>
-    SuccessfulSetupVm(
-        ProfileRepo(), WayaLocalDataSource(), WayaSecureDataSource()));
+final successfulSetupVmProvider =
+    StateNotifierProvider<SuccessfulSetupVm, SuccessfulSetUpState>(
+        (ref) => SuccessfulSetupVm(ProfileRepo(), WayaSecureDataSource()));

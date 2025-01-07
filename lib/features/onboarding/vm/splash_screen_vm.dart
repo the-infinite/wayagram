@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
+import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
 class SplashScreenVm extends StateNotifier<void> {
   final ProfileRepo _profileRepo;
-  final WayaLocalDataSource _localDataSource;
   final WayaSecureDataSource _secureDataSource;
+  final SuccessfulSetupVm _setupVm;
 
-  SplashScreenVm(
-      this._profileRepo, this._localDataSource, this._secureDataSource)
+  SplashScreenVm(this._profileRepo, this._secureDataSource, this._setupVm)
       : super(null);
 
   void getUserData() async {
@@ -34,7 +33,7 @@ class SplashScreenVm extends StateNotifier<void> {
         UserAccountModel userAccountModel =
             UserAccountModel.fromJson(response.data);
 
-        _localDataSource.saveUser(userAccountModel.data!);
+        _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data);
 
         if (userAccountModel.data != null &&
             userAccountModel.data!.role!.name != 'PERSONAL') {
@@ -44,7 +43,7 @@ class SplashScreenVm extends StateNotifier<void> {
           if (bizResponse.success) {
             BusinessAccountData bizData =
                 BusinessAccountData.fromJson(bizResponse.data);
-            _localDataSource.saveBusiness(bizData);
+            _setupVm.state = _setupVm.state.copyWith(business: bizData);
           }
         }
 
@@ -58,12 +57,12 @@ class SplashScreenVm extends StateNotifier<void> {
   }
 
   void runStartUpLogic() async {
-    // Future.delayed(Duration(seconds: 3), () {
-    // navigate to home
-    // });
     getUserData();
   }
 }
 
-final splashScreenVmProvider = StateNotifierProvider((ref) => SplashScreenVm(
-    ProfileRepo(), WayaLocalDataSource(), WayaSecureDataSource()));
+final splashScreenVmProvider = StateNotifierProvider((ref) {
+  final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
+  return SplashScreenVm(
+      ProfileRepo(), WayaSecureDataSource(), successfulSetupVm);
+});

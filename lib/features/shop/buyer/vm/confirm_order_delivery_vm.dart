@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
@@ -34,7 +35,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<void> {
     final pin = ref.read(orderPinProvider);
 
     if (pin.length < 10) {
-      WayaHelpers.showNotice(
+      WayaUtils.showNotice(
           context: context,
           title: 'Invalid Code Entered!',
           message:
@@ -43,7 +44,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<void> {
           icon: Image.asset('assets/icons/d-code-invalid.svg'),
           buttonText: 'Try Again');
     } else {
-      WayaHelpers.showNotice(
+      WayaUtils.showNotice(
           context: context,
           title: 'Handover Successful!',
           message:

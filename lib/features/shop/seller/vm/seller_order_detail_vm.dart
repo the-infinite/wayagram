@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/update_status.dart';
 
@@ -21,7 +22,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
   }
 
   Future<void> acceptOrder(BuildContext context) async {
-    WayaHelpers.showNotice(
+    WayaUtils.showNotice(
         context: context,
         buttonText: 'Accept Order',
         secondButtonText: 'Cancel',
@@ -33,7 +34,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
   }
 
   Future<void> rejectOrder(BuildContext context) async {
-    WayaHelpers.showNotice(
+    WayaUtils.showNotice(
         context: context,
         buttonText: 'Reject Order',
         secondButtonText: 'Cancel',

@@ -25,6 +25,9 @@ import 'package:wayagram/features/wallet/transactions/view/verify_transaction.da
 import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
 import 'package:wayagram/features/wallet/view/fund_account_screen.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
+import 'package:wayagram/features/ugt/create_contest/create_contest.dart';
+import 'package:wayagram/features/ugt/ugt_get_started.dart';
+import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 class WayaAppRoutes {
@@ -74,7 +77,10 @@ class WayaAppRoutes {
     SellerDispute.route: () => SellerDispute(),
     SellerDisputeDetail.route: () => SellerDisputeDetail(),
     AddEvidence.route: () => AddEvidence(),
-    DisputeChat.route: () => DisputeChat()
+    DisputeChat.route: () => DisputeChat(),
+    UgtGetStarted.route: () => UgtGetStarted(),
+    UgtHome.route: () => UgtHome(),
+    CreateContest.route: () => CreateContest()
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {
