@@ -1,8 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/routes.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_profile_model.dart';
@@ -13,6 +18,11 @@ class ProfileVm extends StateNotifier<ProfileState> {
 
   final WayaLocalDataSource _localDataSource;
   ProfileVm(this._profileRepo, this._localDataSource) : super(ProfileState());
+
+  void refetchUserData() {
+    getUserData();
+    getUserProfile();
+  }
 
   void updateAccount({String? dob, String? address}) async {
     final userId = _localDataSource.getUserId();
@@ -50,8 +60,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
                 WayaNav.removeUntilNamed(BottomView.route);
                 WayaNav.offNamed(GeneralSettingsPage.route);
               });
-        getUserData();
-        getUserProfile();
+        refetchUserData();
         state = state.copyWith(
           isLoading: false,
         );
@@ -99,6 +108,27 @@ class ProfileVm extends StateNotifier<ProfileState> {
       }
     } catch (e) {
       state = state.copyWith(isLoading: false);
+    }
+  }
+
+  void updateProfilePicture() async {
+    final userId = _localDataSource.getUserId();
+    File? profileImage = await WayaUtils.pickAndCropImage();
+    if (profileImage != null) {
+         Uint8List imageBytes = await profileImage.readAsBytes();
+ 
+      try {
+        state = state.copyWith(isLoading: true);
+        final response = await _profileRepo.updateProfileImageRepo(userId: userId,fileName :WayaHelpers.extractFileName(profileImage), image:    imageBytes);
+
+        if (response.success) {
+          WayaSnackBar.showToast('Profile Picture Updated Successfully');
+          refetchUserData();
+        }
+        state = state.copyWith(isLoading: false);
+      } catch (e) {
+        state = state.copyWith(isLoading: false);
+      }
     }
   }
 }

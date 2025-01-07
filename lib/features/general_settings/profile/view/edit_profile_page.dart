@@ -161,7 +161,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                 )
               ],
             ),
-          )
+          ),
+          Gap(10)
         ],
       ),
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
-import 'package:wayagram/features/explore/views/explore.dart';
 
 class Services {
   final String icon;
@@ -18,25 +18,17 @@ class ExploreOurServicesVm extends ChangeNotifier {
 
   List<Services> services = [
     Services(
-        icon: 'assets/icons/e-shop.svg',
+        icon: WayaAssests.icons.eShop.path,
         name: 'Shop',
         onTap: () {
-         
-          WayaNav.to( BottomView(index: 1));
+          WayaNav.to(BottomView(index: 1));
         }),
-    Services(
-        icon: 'assets/icons/e-quotation.svg',
-        name: 'Get Quotation',
-        onTap: () {}),
-    Services(
-        icon: 'assets/icons/e-chat.svg', name: 'Chat & Socials', onTap: () {}),
-    Services(
-        icon: 'assets/icons/e-donation.svg', name: 'Donations', onTap: () {}),
-    Services(
-        icon: 'assets/icons/e-poll.svg', name: 'Polls & Votes', onTap: () {}),
-    Services(icon: 'assets/icons/e-event.svg', name: 'Events', onTap: () {}),
+    Services(icon: WayaAssests.icons.eQuotation.path, name: 'Get Quotation', onTap: () {}),
+    Services(icon: WayaAssests.icons.eChat.path, name: 'Chat & Socials', onTap: () {}),
+    Services(icon: WayaAssests.icons.eDonation.path, name: 'Donations', onTap: () {}),
+    Services(icon: WayaAssests.icons.ePoll.path, name: 'Polls & Votes', onTap: () {}),
+    Services(icon: WayaAssests.icons.eEvent.path, name: 'Events', onTap: () {}),
   ];
 }
 
-final exploreOurServicesProvider =
-    ChangeNotifierProvider((ref) => ExploreOurServicesVm(ref));
+final exploreOurServicesProvider = ChangeNotifierProvider((ref) => ExploreOurServicesVm(ref));

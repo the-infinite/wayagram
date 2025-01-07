@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/features/explore/widgets/explore_mixin.dart';
 import 'package:wayagram/features/explore/widgets/widgets_vm/explore_our_services_vm.dart';
 
 class ExploreOurServices extends ConsumerWidget {
@@ -22,64 +20,18 @@ class ExploreOurServices extends ConsumerWidget {
         Text("Explore Our Services", style: wayaTheme.textTheme.titleLarge),
         const Gap(20),
         Container(
-          padding: const EdgeInsets.fromLTRB(12, 20, 12, 0),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: wayaTheme.colorScheme.white),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(3, (index) {
-                  return GestureDetector(
-                    onTap: () {
-                      viewModel.services[index].onTap();
-                    },
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          viewModel.services[index].icon,
-                          width: 40,
-                          height: 40,
-                        ),
-                        const Gap(5),
-                        Text(
-                          viewModel.services[index].name,
-                          style: wayaTheme.textTheme.labelSmall,
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ),
-              const Gap(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(3, (index) {
-                  return GestureDetector(
-                    onTap: () {
-                      viewModel.services[index + 3].onTap();
-                    },
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          viewModel.services[index + 3].icon,
-                          width: 40,
-                          height: 40,
-                        ),
-                        const Gap(5),
-                        Text(
-                          viewModel.services[index + 3].name,
-                          style: wayaTheme.textTheme.labelSmall,
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ),
-            ],
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: wayaTheme.colorScheme.white),
+          padding: const EdgeInsets.all(16.0),
+          child: GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, mainAxisSpacing: 16, crossAxisSpacing: 16, childAspectRatio: 1.5),
+            itemCount: viewModel.services.length,
+            itemBuilder: (context, index) {
+              return ServiceCard(service: viewModel.services[index]);
+            },
           ),
-        )
+        ),
       ],
     );
   }

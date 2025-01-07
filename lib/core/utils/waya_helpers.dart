@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
 
 class WayaHelpers {
+  static String extractFileName(File? imageFile) {
+    return imageFile == null ? 'file is null' : imageFile.path.split('/').last;
+  }
+
   static Future<void> showNotice(
       {required BuildContext context,
       required String title,

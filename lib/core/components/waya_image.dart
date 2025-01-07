@@ -7,9 +7,11 @@ import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 class WayaDp extends ConsumerWidget {
   final double? radius;
   final Function()? onTap;
+  final bool isEdit;
   const WayaDp({
     this.radius = 75,
     this.onTap,
+    this.isEdit = false,
     super.key,
   });
 
@@ -17,27 +19,52 @@ class WayaDp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final avatar = ref.watch(profileVmProvider).userProfileModel?.data?.avatar;
+    final avatar = ref.watch(profileVmProvider).userAccountModel?.data?.profilePicture;
     return GestureDetector(
-      onTap: onTap,
-      child: CircleAvatar(
-        radius: radius,
-        backgroundColor: wayaTheme.colorScheme.greyColor200,
-        backgroundImage: avatar != null ? NetworkImage(avatar!) : null,
-        child: avatar == null
-            ? Icon(
-                Icons.person,
-                color: wayaTheme.colorScheme.greyColor600,
-              )
-            : null,
+      onTap: isEdit
+          ? () {
+              updateProfileImage(ref);
+            }
+          : onTap,
+      child: Stack(
+        children: [
+          CircleAvatar(
+              radius: radius,
+              backgroundColor: wayaTheme.colorScheme.greyColor200,
+              backgroundImage: avatar != null && avatar is String ? NetworkImage(avatar) : null,
+              child: avatar == null
+                  ? Icon(
+                      Icons.person,
+                      color: wayaTheme.colorScheme.greyColor600,
+                    )
+                  : null),
+          isEdit
+              ? Positioned(
+                  child: CircleAvatar(
+                    radius: radius,
+                    backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
+                    child: Icon(
+                      Icons.camera_alt_outlined,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : SizedBox.shrink(),
+        ],
       ),
     );
+  }
+
+  void updateProfileImage(WidgetRef ref) {
+    ref.read(profileVmProvider.notifier).updateProfilePicture();
   }
 }
 
 class WayaImage2 extends ConsumerWidget {
+  final String? imageUrl;
   const WayaImage2({
     super.key,
+    this.imageUrl,
     required this.height,
   });
 
@@ -48,14 +75,14 @@ class WayaImage2 extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
 
     final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
-    return coverImage == null
+    return coverImage == null || imageUrl == null
         ? errorWidget(wayaTheme)
         : CachedNetworkImage(
             errorWidget: (context, url, error) => errorWidget(wayaTheme),
             fit: BoxFit.fill,
             width: double.infinity,
             height: height,
-            imageUrl: coverImage);
+            imageUrl: imageUrl ?? coverImage);
   }
 
   Container errorWidget(ThemeData wayaTheme) {

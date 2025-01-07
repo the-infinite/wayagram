@@ -67,7 +67,7 @@ class Explore extends ConsumerWidget {
           children: [
             // const ExploreHeader(),
             const Gap(20),
-            const ExploreOurServices(),
+          ExploreOurServices(),
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),

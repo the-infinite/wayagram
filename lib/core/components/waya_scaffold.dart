@@ -52,7 +52,7 @@ class WayaScaffold extends ConsumerWidget {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         onDoubleTap: () {
-          themeNotifier.toggleTheme();
+          // themeNotifier.toggleTheme();
         },
         child: Scaffold(
           backgroundColor: backgroundColor,
