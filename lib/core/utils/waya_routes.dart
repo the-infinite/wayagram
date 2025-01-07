@@ -10,6 +10,8 @@ import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
+import 'package:wayagram/features/shop/seller/views/seller_dispute/views/add_evidence.dart';
+import 'package:wayagram/features/shop/seller/views/seller_dispute/views/dispute_chat/dispute_chat.dart';
 import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute_detail.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
@@ -58,7 +60,9 @@ class WayaAppRoutes {
     ApplicationProductDetails.route: () => ApplicationProductDetails(),
     CreateShop.route: () => CreateShop(),
     SellerDispute.route: () => SellerDispute(),
-    SellerDisputeDetail.route: () => SellerDisputeDetail()
+    SellerDisputeDetail.route: () => SellerDisputeDetail(),
+    AddEvidence.route: () => AddEvidence(),
+    DisputeChat.route: () => DisputeChat()
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

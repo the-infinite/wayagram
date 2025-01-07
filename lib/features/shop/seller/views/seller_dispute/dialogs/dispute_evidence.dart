@@ -3,8 +3,8 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-
 
 class DisputeEvidence extends StatelessWidget {
   final String disputeImage;
@@ -46,7 +46,7 @@ class DisputeEvidence extends StatelessWidget {
                 Text(
                   "Here is the image of the evidence",
                   textAlign: TextAlign.start,
-                  style: WayaTextStyles.descriptionStyle,
+                  style: wayaTheme.textTheme.descriptionStyle,
                 ),
                 const Gap(24),
                 WayaImage(imageUrl: disputeImage, height: 300),

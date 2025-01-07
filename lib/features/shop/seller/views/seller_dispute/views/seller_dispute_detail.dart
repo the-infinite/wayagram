@@ -62,7 +62,9 @@ class SellerDisputeDetail extends ConsumerWidget {
                   ),
                 ],
               ),
-              callback: () {},
+              callback: () {
+                WayaNav.toNamed('/dispute-chat');
+              },
               color: wayaTheme.colorScheme.primar50,
             ),
             const Gap(20),
@@ -118,7 +120,13 @@ class SellerDisputeDetail extends ConsumerWidget {
                             disputeImage:
                                 "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374175/product1_owvv1d.png"));
                   },
-                  child: Text("View Evidence", style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customPrimary, fontSize: 13, fontWeight: FontWeight.w500),),
+                  child: Text(
+                    "View Evidence",
+                    style: TextStyle().wayaCopyWith(
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500),
+                  ),
                 )
               ],
             ),
@@ -144,7 +152,11 @@ class SellerDisputeDetail extends ConsumerWidget {
               ],
             ),
             const Gap(30),
-            WayaButton(text: 'Add Evidence', callback: () {}),
+            WayaButton(
+                text: 'Add Evidence',
+                callback: () {
+                  WayaNav.toNamed('/add-evidence');
+                }),
             const Gap(8),
             WayaButton(
                 text: 'Escalate to Mediator',
