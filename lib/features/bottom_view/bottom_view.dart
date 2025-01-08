@@ -7,6 +7,7 @@ import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.d
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
+import 'package:wayagram/features/quotation/buyer/views/waya_buyer_quotation.dart';
 import 'package:wayagram/features/shop/buyer/views/waya_buyer.dart';
 import 'package:wayagram/features/shop/seller/views/waya_seller.dart';
 
@@ -43,7 +44,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
       Explore(),
       userType == 'PERSONAL' ? WayaBuyer() : WayaSeller(),
       Explore(),
-      Explore(),
+      WayaBuyerQuotation(),
       Explore(),
       Explore(),
     ];
