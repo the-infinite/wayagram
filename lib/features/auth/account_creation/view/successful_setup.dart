@@ -33,7 +33,7 @@ class SuccessfulSetup extends ConsumerWidget {
                 ),
                 const Gap(15),
                 Text(
-                  "Your referral code and virtual account are now \n active! You can easily access them anytime on \n your profile.",
+                  "Your referral code and virtual account are now active! You can easily access them anytime on your profile.",
                   textAlign: TextAlign.center,
                   style: WayaTextStyles.descriptionStyle,
                 ),

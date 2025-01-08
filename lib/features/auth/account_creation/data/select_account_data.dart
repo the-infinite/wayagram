@@ -17,14 +17,14 @@ class SelectAccountData {
 List<SelectAccountData> selectAccountData = [
   SelectAccountData(
       avatar: "assets/icons/personal.svg",
-      description: "Create your personal account to get started \n with us",
+      description: "Create your personal account to get \n started with us",
       title: "Personal Account",
       type: "PERSONAL", 
       id: "1"
       ),
   SelectAccountData(
       avatar: "assets/icons/business.svg",
-      description: "Create a business account for your  \n business",
+      description: "Create a business account for \n your business",
       title: "Business Account",
       type: "BUSINESS",
       id: "2"

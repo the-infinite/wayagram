@@ -3,13 +3,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:mime/mime.dart';
-import 'package:dio/dio.dart';
+
 class DocType {
   final File file;
   final String name;
@@ -18,135 +21,149 @@ class DocType {
   DocType({required this.file, required this.type, required this.name});
 }
 
-class AddBusinessAccountVm extends ChangeNotifier {
-  final WayaLocalDataSource localDataSource = WayaLocalDataSource();
-  String selected = '';
-  final TextEditingController businessName = TextEditingController();
-  final TextEditingController businessAddress = TextEditingController();
-  final TextEditingController cac = TextEditingController();
-  final AuthRepository _authRepository = AuthRepository();
-  bool _isLoading = false;
-  final _logger = getLogger('AddBusinessAccountVm');
-  List<DocType> _uploadedDocuments = [];
+class AddBusinessAccountState {
+  final String selected;
+  final TextEditingController businessName;
+  final TextEditingController businessAddress;
+  final TextEditingController cac;
+  final bool isLoading;
+  final bool isButtonEnabled;
+  final List<DocType> uploadedDocuments;
 
-  bool _isButtonEnabled = false;
+  AddBusinessAccountState({
+    required this.selected,
+    required this.businessName,
+    required this.businessAddress,
+    required this.cac,
+    this.isLoading = false,
+    this.isButtonEnabled = false,
+    this.uploadedDocuments = const [],
+  });
 
-  final Ref ref;
-
-  AddBusinessAccountVm(this.ref) {
-    selected = localDataSource.getSelectedBusinessType().label;
+  AddBusinessAccountState copyWith({
+    String? selected,
+    TextEditingController? businessName,
+    TextEditingController? businessAddress,
+    TextEditingController? cac,
+    bool? isLoading,
+    bool? isButtonEnabled,
+    List<DocType>? uploadedDocuments,
+  }) {
+    return AddBusinessAccountState(
+      selected: selected ?? this.selected,
+      businessName: businessName ?? this.businessName,
+      businessAddress: businessAddress ?? this.businessAddress,
+      cac: cac ?? this.cac,
+      isLoading: isLoading ?? this.isLoading,
+      isButtonEnabled: isButtonEnabled ?? this.isButtonEnabled,
+      uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
+    );
   }
+}
 
-  List<DocType> get uploadedDocuments => _uploadedDocuments;
-  String get isSelected => selected;
-  bool get isButtonEnabled => _isButtonEnabled;
-  bool get isLoading => _isLoading;
+class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
+  final WayaLocalDataSource localDataSource;
+  final AuthRepository _authRepository;
+  final WayaSecureDataSource _secureDataSource;
+  final _logger = getLogger("AddBusinessAccountVm");
 
-  void selectType(String type) {
-    selected = type;
-    notifyListeners();
+  AddBusinessAccountVm(this._authRepository, this.localDataSource, this._secureDataSource)
+      : super(AddBusinessAccountState(
+          selected: localDataSource.getSelectedBusinessType().label,
+          businessName: TextEditingController(),
+          businessAddress: TextEditingController(),
+          cac: TextEditingController(),
+        )) {
+    state.businessName.addListener(validateInputs);
+    state.businessAddress.addListener(validateInputs);
+    state.cac.addListener(validateInputs);
   }
 
   void addFile(File? file, String type) {
     if (file != null) {
-      _uploadedDocuments.add(
-          DocType(file: file, type: type, name: file.path.split('/').last));
+      state = state.copyWith(
+        uploadedDocuments: [
+          ...state.uploadedDocuments,
+          DocType(file: file, type: type, name: file.path.split('/').last)
+        ],
+      );
     }
-
-    notifyListeners();
   }
 
-  void removeFile(type) {
-    _uploadedDocuments.removeWhere((element) => element.type == type);
-    notifyListeners();
+  void removeFile(String type) {
+    state = state.copyWith(
+      uploadedDocuments: state.uploadedDocuments
+          .where((element) => element.type != type)
+          .toList(),
+    );
   }
 
   void validateInputs() {
-    if (selected == 'CAC') {
-      _isButtonEnabled = businessName.text.isNotEmpty &&
-          businessAddress.text.isNotEmpty &&
-          cac.text.isNotEmpty;
+    bool isButtonEnabled;
+    if (state.selected == 'CAC') {
+      isButtonEnabled = state.businessName.text.isNotEmpty &&
+          state.businessAddress.text.isNotEmpty &&
+          state.cac.text.isNotEmpty;
     } else {
-      _isButtonEnabled =
-          businessName.text.isNotEmpty && businessAddress.text.isNotEmpty;
+      isButtonEnabled = state.businessName.text.isNotEmpty &&
+          state.businessAddress.text.isNotEmpty;
     }
-    notifyListeners();
-  }
-
-  @override
-  void addListener(VoidCallback listener) {
-    super.addListener(listener);
-    businessName.addListener(validateInputs);
-    businessAddress.addListener(validateInputs);
-    cac.addListener(validateInputs);
+    state = state.copyWith(isButtonEnabled: isButtonEnabled);
   }
 
   @override
   void dispose() {
-    businessName.dispose();
-    businessAddress.dispose();
-    cac.dispose();
+    state.businessName.dispose();
+    state.businessAddress.dispose();
+    state.cac.dispose();
     super.dispose();
   }
 
   Future<void> submit(BuildContext context) async {
-Future<MultipartFile> formattedImage(File file) async {
-  final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
+    Future<MultipartFile> formattedImage(File file) async {
+      final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
 
-  return await MultipartFile.fromFile(
-    file.path,
-    filename: file.uri.pathSegments.last, 
-    contentType: DioMediaType.parse(mimeType),
-  );
-}
+      return await MultipartFile.fromFile(
+        file.path,
+        filename: file.uri.pathSegments.last,
+        contentType: MediaType.parse(mimeType),
+      );
+    }
 
-    final formdata = isSelected == 'CAC'
+    final businessId = await _secureDataSource.getBusinessId();
+    print("feefer $businessId");
+    final formdata = state.selected == 'CAC'
         ? {
-            'nin': await formattedImage(uploadedDocuments
+            'nin': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'nin')
                 .file),
-            'cacDocument': await formattedImage(uploadedDocuments
+            'cacDocument': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'cac')
                 .file),
-            'utilityBill': await formattedImage(uploadedDocuments
+            'utilityBill': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'bill')
                 .file),
-            'passport': await formattedImage(uploadedDocuments
+            'passport': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'passport')
                 .file),
-            'businessId': localDataSource.getBusiness().id,
-            'cacNumber': cac.text
+            'businessId': businessId,
+            'cacNumber': state.cac.text
           }
         : {
-            'nin': await formattedImage(uploadedDocuments
+            'nin': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'nin')
                 .file),
-            'utilityBill': await formattedImage(uploadedDocuments
+            'utilityBill': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'bill')
                 .file),
-            'passport': await formattedImage(uploadedDocuments
+            'passport': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'passport')
                 .file),
-            'businessId': localDataSource.getBusiness().id,
+            'businessId': businessId,
           };
 
-    //         FormData formData = FormData();
-
-    // for (var entry in formdata.entries) {
-    //   formData.fields.add(
-    //     MapEntry(
-    //       entry.key, // Field name
-    //       (await MultipartFile.fromFile(
-    //         entry.value.path,
-    //         filename: entry.value.path.split('/').last,
-    //       )).toString(),
-    //     ),
-    //   );
-    // }
-
     try {
-      _isLoading = true;
-      notifyListeners();
+      state = state.copyWith(isLoading: true);
       final response = await _authRepository.businessKyc(formdata);
       if (response.data['statusCode'] == 200 && context.mounted) {
         WayaUtils.showNotice(
@@ -161,11 +178,14 @@ Future<MultipartFile> formattedImage(File file) async {
     } catch (e) {
       _logger.e(e);
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      state = state.copyWith(isLoading: false);
     }
   }
 }
 
-final addBusinessAccountProvider =
-    ChangeNotifierProvider.autoDispose((ref) => AddBusinessAccountVm(ref));
+final addBusinessAccountProvider = StateNotifierProvider.autoDispose<
+    AddBusinessAccountVm, AddBusinessAccountState>((ref) {
+ 
+  return AddBusinessAccountVm(
+      AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource());
+});

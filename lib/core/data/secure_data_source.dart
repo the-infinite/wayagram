@@ -27,4 +27,12 @@ class WayaSecureDataSource extends WayaSecureStorageService {
    Future<String?> getUserId() {
     return wayaSecureDataSource.read(key: 'userId');
   }
+
+     saveBusinessId(String user) {
+    return wayaSecureDataSource.write(key: 'businessId', value: user);
+  }
+
+   Future<String?> getBusinessId() {
+    return wayaSecureDataSource.read(key: 'businessId');
+  }
 }
