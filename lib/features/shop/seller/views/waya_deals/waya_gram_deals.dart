@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/deal_applications.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/listed_products.dart';
-import 'package:wayagram/features/shop/widgets/waya_shop_tab_button.dart';
+
 import 'package:gap/gap.dart';
 
 class WayaGramDeals extends ConsumerStatefulWidget {

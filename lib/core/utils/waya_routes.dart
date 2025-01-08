@@ -28,7 +28,6 @@ import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/ugt/create_contest/create_contest.dart';
 import 'package:wayagram/features/ugt/ugt_get_started.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
-import 'package:wayagram/features/wallet/view/fund_wallet_page.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 class WayaAppRoutes {
