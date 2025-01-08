@@ -15,7 +15,8 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   final WayaSecureDataSource _secureDataSource;
   final _logger = getLogger('PersonalFirstStepVm');
 
-  PersonalFirstStepVm(this._authRepository, this._localDataSource, this._secureDataSource)
+  PersonalFirstStepVm(
+      this._authRepository, this._localDataSource, this._secureDataSource)
       : super(PersonalFirstStepState());
 
   void togglePasswordVisibility() {
@@ -106,14 +107,14 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       if (response.success) {
         final responseModel = ResponseModel.fromJson(response.data);
         final user = responseModel.data.user;
-        _localDataSource.saveUser(user);
+        state = state.copyWith(user: user);
+
         _secureDataSource.saveUserId(user.id!);
-         _localDataSource.saveUserId(user.id!);
-       
+        _localDataSource.saveUserId(user.id!);
 
         if (!isPersonal) {
           final business = responseModel.data.business;
-          _localDataSource.saveBusiness(business!);
+          state = state.copyWith(business: business);
         }
         gotoNextTab();
       }
@@ -135,7 +136,8 @@ final personalFirstStepProvider =
     StateNotifierProvider<PersonalFirstStepVm, PersonalFirstStepState>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final localDataSource = ref.watch(localDataSourceProvider);
-  return PersonalFirstStepVm(authRepository, localDataSource, WayaSecureDataSource());
+  return PersonalFirstStepVm(
+      authRepository, localDataSource, WayaSecureDataSource());
 });
 
 class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {

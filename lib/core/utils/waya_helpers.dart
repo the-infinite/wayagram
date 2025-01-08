@@ -1,59 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/model/model.dart';
 
 class WayaHelpers {
-  static Future<void> showNotice(
-      {required BuildContext context,
-      required String title,
-      required String message,
-      required VoidCallback onPress,
-      required Widget icon,
-      String? buttonText,
-      String? secondButtonText,
-      Widget? buttonCenterWidget,
-      Widget? secondButtonCenterWidget,
-      VoidCallback? onCancel}) {
-    return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return WayaNoticeModal(
-          title: title,
-          onPress: onPress,
-          message: message,
-          icon: icon,
-          buttonText: buttonText,
-          secondButtonCenterWidget: secondButtonCenterWidget,
-          buttonCenterWidget: buttonCenterWidget,
-          secondButtonText: secondButtonText,
-          onCancel: onCancel,
-        );
-      },
-    );
-  }
-
-  static Future<Select> showSelectModal({
-    required BuildContext context,
-    required String title,
-    required List<Select> items,
-  }) async {
-    final result = await showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return WayaBottomSheetContent(
-          title: title,
-          items: items,
-        );
-      },
-      transitionAnimationController: AnimationController(
-        duration: const Duration(milliseconds: 300),
-        vsync: Navigator.of(context),
-      ),
-    );
-    return result;
-  }
+ 
 
   static String toOrdinal(int number) {
     if (number < 1) return number.toString();

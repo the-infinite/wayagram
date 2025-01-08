@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
@@ -185,7 +186,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
 
    if (isWayagramDeal) {
  // print("$addProductData");
-    WayaHelpers.showNotice(
+    WayaUtils.showNotice(
         context: context,
         title: "Your Application has been submitted Successfully! 🎉",
         message:
@@ -198,7 +199,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
    }
    else {
      // print("$addProductData");
-    WayaHelpers.showNotice(
+    WayaUtils.showNotice(
         context: context,
         title: "Product Added Successfully! 🎉",
         message:

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class ApplicationProductDetailsVm extends ChangeNotifier {
   void submit(BuildContext context) async {
-    WayaHelpers.showNotice(
+    WayaUtils.showNotice(
         context: context,
         title: "Confirm Your Action",
         message:
