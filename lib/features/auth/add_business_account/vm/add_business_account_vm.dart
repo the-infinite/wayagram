@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:mime/mime.dart';
 import 'package:dio/dio.dart';
@@ -149,7 +149,7 @@ Future<MultipartFile> formattedImage(File file) async {
       notifyListeners();
       final response = await _authRepository.businessKyc(formdata);
       if (response.data['statusCode'] == 200 && context.mounted) {
-        WayaHelpers.showNotice(
+        WayaUtils.showNotice(
             context: context,
             title: 'KYC Documents Submitted \n Successfully',
             message:

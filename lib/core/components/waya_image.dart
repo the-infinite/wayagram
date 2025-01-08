@@ -74,8 +74,9 @@ class WayaImage2 extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
-    return coverImage == null || imageUrl == null
+    final coverImage =
+        ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
+    return coverImage == null
         ? errorWidget(wayaTheme)
         : CachedNetworkImage(
             errorWidget: (context, url, error) => errorWidget(wayaTheme),
@@ -141,16 +142,18 @@ class WayaImage extends StatelessWidget {
         curve: Curves.easeInOut,
         height: height,
         width: width,
-        decoration:
-            BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: radius ?? BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.scaffoldColor,
+            borderRadius: radius ?? BorderRadius.circular(8)),
       ),
       errorWidget: (context, url, error) => AnimatedContainer(
         duration: const Duration(milliseconds: 700),
         curve: Curves.easeInOut,
         height: height,
         width: width,
-        decoration:
-            BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: radius ?? BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.scaffoldColor,
+            borderRadius: radius ?? BorderRadius.circular(8)),
       ),
     );
   }

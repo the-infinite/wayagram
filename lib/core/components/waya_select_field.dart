@@ -5,7 +5,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class WayaSelectField extends ConsumerWidget {
   final String? label;
@@ -105,7 +105,7 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
 
   Future<void> selectValue(BuildContext context, String title,
       List<Select> items, Function(Select value) onSelected) async {
-    final result = await WayaHelpers.showSelectModal(
+    final result = await WayaUtils.showSelectModal(
         context: context, title: title, items: items);
     _label = result.label;
     onSelected(result);

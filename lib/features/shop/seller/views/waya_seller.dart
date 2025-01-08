@@ -12,7 +12,6 @@ import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
-import 'package:wayagram/features/shop/widgets/waya_shop_tab_button.dart';
 import 'package:gap/gap.dart';
 
 class WayaSeller extends ConsumerStatefulWidget {
@@ -58,17 +57,17 @@ class _WayaSellerState extends ConsumerState<WayaSeller>
                 const Gap(10),
                 Row(
                   children: [
-                    WayaShopTabButton(
+                    WayaTabButton(
                       isSelected: _selectedIndex == 0,
                       text: 'All Products',
                       onTap: () => setState(() => _selectedIndex = 0),
                     ),
-                    WayaShopTabButton(
+                    WayaTabButton(
                       isSelected: _selectedIndex == 1,
                       text: 'My Products',
                       onTap: () => setState(() => _selectedIndex = 1),
                     ),
-                    WayaShopTabButton(
+                    WayaTabButton(
                       isSelected: _selectedIndex == 2,
                       text: 'Manage Shop',
                       onTap: () => setState(() => _selectedIndex = 2),

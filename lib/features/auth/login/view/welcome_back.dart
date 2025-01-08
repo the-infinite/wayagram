@@ -4,12 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
+import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 
 class WelcomeBackPage extends ConsumerStatefulWidget {
@@ -24,10 +26,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
 
   @override
   Widget build(BuildContext context) {
-    UserAccountData user(WidgetRef ref) {
-      final userData = ref.read(userDataProvider);
-      return userData.getUser();
-    }
+    final setUp = ref.watch(successfulSetupVmProvider);
 
     final viewModel = ref.watch(loginVmProvider);
     final wayaTheme = Theme.of(context);
@@ -42,7 +41,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
           children: [
             Gap(20),
             Text(
-              "Welcome Back ${user(ref).firstName}",
+              "Welcome Back ${setUp.user?.firstName ?? ''}",
               style: wayaTheme.textTheme.headlineLarge,
             ),
             Gap(20),
@@ -59,8 +58,12 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
             WayaDp(
               radius: 50,
             ),
+            WayaDp(
+              radius: 50,
+            ),
             Gap(10),
-            Text("${user(ref).firstName} ${user(ref).lastName}", style: wayaTheme.textTheme.bodyMedium),
+            Text("${setUp.user?.firstName ?? ''} ${setUp.user?.lastName ?? ''}",
+                style: wayaTheme.textTheme.bodyMedium),
             Gap(10),
             // Text('Remove Account',
             //     style: wayaTheme.textTheme.hintStyleBold.wayaCopyWith(
@@ -68,6 +71,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
             //         color: wayaTheme.colorScheme.primary500)),
             Gap(20),
             Form(
+                key: _formKey,
                 key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -158,6 +162,3 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
   }
 }
 
-final userDataProvider = Provider<WayaLocalDataSource>((ref) {
-  return WayaLocalDataSource();
-});

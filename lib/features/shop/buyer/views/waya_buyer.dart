@@ -9,8 +9,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
-import 'package:wayagram/features/shop/widgets/waya_shop_tab_button.dart';
-
 class WayaBuyer extends ConsumerStatefulWidget {
   const WayaBuyer({super.key});
 
@@ -42,12 +40,12 @@ class _WayaBuyerState extends ConsumerState<WayaBuyer>
             const Gap(10),
               Row(
               children: [
-                WayaShopTabButton(
+                WayaTabButton(
                   isSelected: _selectedIndex == 0,
                   text: 'All Products',
                   onTap: () => setState(() => _selectedIndex = 0),
                 ),
-                WayaShopTabButton(
+                WayaTabButton(
                   isSelected: _selectedIndex == 1,
                   text: 'Orders',
                   onTap: () => setState(() => _selectedIndex = 1),
