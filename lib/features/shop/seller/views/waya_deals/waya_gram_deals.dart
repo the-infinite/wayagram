@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/deal_applications.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/listed_products.dart';
-import 'package:wayagram/features/shop/widgets/waya_shop_tab_button.dart';
 import 'package:gap/gap.dart';
 
 class WayaGramDeals extends ConsumerStatefulWidget {
@@ -31,12 +30,12 @@ class _WayaGramDealState extends ConsumerState<WayaGramDeals> {
             const Gap(10),
             Row(
               children: [
-                WayaShopTabButton(
+                WayaTabButton(
                   isSelected: _selectedIndex == 0,
                   text: 'Listed Products',
                   onTap: () => setState(() => _selectedIndex = 0),
                 ),
-                WayaShopTabButton(
+                WayaTabButton(
                   isSelected: _selectedIndex == 1,
                   text:  'Applications',
                   onTap: () => setState(() => _selectedIndex = 1),

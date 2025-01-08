@@ -5,14 +5,14 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 class GroupedWidgetHeader extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final String title;
   final String subTitle;
   final bool isVisible;
 
   const   GroupedWidgetHeader(
       {super.key,
-      required this.onTap,
+       this.onTap,
       required this.subTitle,
       this.isVisible = true,
       required this.title});
@@ -38,7 +38,9 @@ class GroupedWidgetHeader extends StatelessWidget {
                 )
               ],
             ),
-            GestureDetector(
+           Visibility(
+            visible: onTap != null,
+            child:  GestureDetector(
               onTap: onTap,
               child: Text(
                 "See All",
@@ -47,7 +49,7 @@ class GroupedWidgetHeader extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w500),
               ),
-            )
+            ))
           ],
         ));
   }

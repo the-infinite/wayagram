@@ -18,6 +18,9 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/application_produ
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
+import 'package:wayagram/features/ugt/create_contest/create_contest.dart';
+import 'package:wayagram/features/ugt/ugt_get_started.dart';
+import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_page.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
@@ -62,7 +65,10 @@ class WayaAppRoutes {
     SellerDispute.route: () => SellerDispute(),
     SellerDisputeDetail.route: () => SellerDisputeDetail(),
     AddEvidence.route: () => AddEvidence(),
-    DisputeChat.route: () => DisputeChat()
+    DisputeChat.route: () => DisputeChat(),
+    UgtGetStarted.route: () => UgtGetStarted(),
+    UgtHome.route: () => UgtHome(),
+    CreateContest.route: () => CreateContest()
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

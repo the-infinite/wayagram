@@ -56,7 +56,7 @@ class ExploreOurServices extends ConsumerWidget {
                                 style: TextStyle().wayaCopyWith(
                                     color: wayaTheme.colorScheme.customBlack,
                                     fontSize: 11),
-                                maxLines: 1,
+                               
                               ),
                             ))
                       ],
@@ -64,7 +64,9 @@ class ExploreOurServices extends ConsumerWidget {
                   ),
                 );
               },
-            ))
+            )
+            
+            )
       ],
     );
   }
