@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/more/views/widgets/more_balance_card.dart';
 import 'package:gap/gap.dart';
@@ -22,6 +23,8 @@ class MoreView extends ConsumerWidget {
         title: "More",
         automicallyImplyLeading: false,
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MoreBalanceCard(),
             const Gap(20),
@@ -52,7 +55,10 @@ class MoreView extends ConsumerWidget {
 
   Widget buildMoreOption(MoreOptionModel moreOption, BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return Container(
+    return Column(
+      children: [
+        Container(
+      height: context.height * 0.18,
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
           color: wayaTheme.colorScheme.scaffoldColor,
@@ -71,6 +77,9 @@ class MoreView extends ConsumerWidget {
           )
         ],
       ),
+    ),
+   const SizedBox(height: 12),
+      ],
     );
   }
 }
