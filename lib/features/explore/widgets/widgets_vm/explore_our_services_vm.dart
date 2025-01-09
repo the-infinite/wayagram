@@ -42,5 +42,6 @@ class ExploreOurServicesVm  {
           icon: WayaAssests.icons.eEvent.path, name: 'Events', onTap: () {}),
     ];
   }
+
 }
 

@@ -7,6 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/features/quotation/buyer/views/my_request.dart';
 import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
@@ -81,13 +82,13 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation>
                 ],
               ),
               callback: () {
-                //WayaNav.toNamed('/create-request', arguments: "id");
+                WayaNav.toNamed('/create-request');
+                //WayaNav.toNamed(CreateRequest.route);
               },
               color: wayaTheme.colorScheme.primar50,
             ),
 
             const Gap(25),
-            // AllProducts()
             _selectedIndex == 0 ? BuyRequests() : _selectedIndex == 1 ? MyRequests() : AllOrders()
           ],
         ));
