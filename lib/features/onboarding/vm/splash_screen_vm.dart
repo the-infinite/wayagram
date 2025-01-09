@@ -33,10 +33,11 @@ class SplashScreenVm extends StateNotifier<void> {
         UserAccountModel userAccountModel =
             UserAccountModel.fromJson(response.data);
 
-        _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data);
+        _setupVm.state =
+            _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
 
         if (userAccountModel.data != null &&
-            userAccountModel.data!.role!.name != 'PERSONAL') {
+            userAccountModel.data!.userdata!.user!.role!.name != 'PERSONAL') {
           final bizResponse =
               await _profileRepo.getBusinessDataRepo(userId: userId);
 
@@ -44,6 +45,7 @@ class SplashScreenVm extends StateNotifier<void> {
             BusinessAccountData bizData =
                 BusinessAccountData.fromJson(bizResponse.data);
             _setupVm.state = _setupVm.state.copyWith(business: bizData);
+            await _secureDataSource.saveBusinessId(bizData.id);
           }
         }
 

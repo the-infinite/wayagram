@@ -13,7 +13,7 @@ UserAccountModel _$UserAccountModelFromJson(Map<String, dynamic> json) =>
       statusCode: (json['statusCode'] as num?)?.toInt(),
       data: json['data'] == null
           ? null
-          : UserAccountData.fromJson(json['data'] as Map<String, dynamic>),
+          : UserData.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserAccountModelToJson(UserAccountModel instance) =>
@@ -24,8 +24,33 @@ Map<String, dynamic> _$UserAccountModelToJson(UserAccountModel instance) =>
       'data': instance.data,
     };
 
+UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
+      userdata: json['userdata'] == null
+          ? null
+          : UserAccountData.fromJson(json['userdata'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
+      'userdata': instance.userdata,
+    };
+
 UserAccountData _$UserAccountDataFromJson(Map<String, dynamic> json) =>
     UserAccountData(
+      user: json['user'] == null
+          ? null
+          : User.fromJson(json['user'] as Map<String, dynamic>),
+      profile: json['profile'] == null
+          ? null
+          : UserProfile.fromJson(json['profile'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UserAccountDataToJson(UserAccountData instance) =>
+    <String, dynamic>{
+      'user': instance.user,
+      'profile': instance.profile,
+    };
+
+User _$UserFromJson(Map<String, dynamic> json) => User(
       id: json['id'] as String?,
       phoneNumber: json['phoneNumber'] as String?,
       email: json['email'] as String?,
@@ -68,8 +93,7 @@ UserAccountData _$UserAccountDataFromJson(Map<String, dynamic> json) =>
           : Role.fromJson(json['role'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$UserAccountDataToJson(UserAccountData instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'id': instance.id,
       'phoneNumber': instance.phoneNumber,
       'email': instance.email,
@@ -100,6 +124,55 @@ Map<String, dynamic> _$UserAccountDataToJson(UserAccountData instance) =>
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'role': instance.role,
+    };
+
+UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => UserProfile(
+      id: json['id'] as String?,
+      userId: json['userId'] as String?,
+      avatar: json['avatar'],
+      coverImage: json['coverImage'],
+      bio: json['bio'],
+      username: json['username'] as String?,
+      displayName: json['displayName'] as String?,
+      isPublic: json['isPublic'] as bool?,
+      isBanned: json['isBanned'] as bool?,
+      deletedAt: json['deletedAt'],
+      simulatedUser: json['simulatedUser'] as bool?,
+      isMuted: json['isMuted'] as bool?,
+      referenceCode: json['referenceCode'] as String?,
+      referredBy: json['referredBy'],
+      streamKey: json['streamKey'] as String?,
+      hasFollowedAll: json['hasFollowedAll'] as bool?,
+      v: json['_v'] as String?,
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+    );
+
+Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'userId': instance.userId,
+      'avatar': instance.avatar,
+      'coverImage': instance.coverImage,
+      'bio': instance.bio,
+      'username': instance.username,
+      'displayName': instance.displayName,
+      'isPublic': instance.isPublic,
+      'isBanned': instance.isBanned,
+      'deletedAt': instance.deletedAt,
+      'simulatedUser': instance.simulatedUser,
+      'isMuted': instance.isMuted,
+      'referenceCode': instance.referenceCode,
+      'referredBy': instance.referredBy,
+      'streamKey': instance.streamKey,
+      'hasFollowedAll': instance.hasFollowedAll,
+      '_v': instance.v,
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
     };
 
 Role _$RoleFromJson(Map<String, dynamic> json) => Role(

@@ -84,6 +84,8 @@ class LoginVm extends StateNotifier<LoginState> {
       await  _secureDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
         await _secureDataSource
             .saveToken(remmoteUserData.data?.token?.token as String);
+                    await _secureDataSource
+            .saveToken(remmoteUserData.data?.token?.refreshToken as String);
 
         WayaNav.toNamed("/explore");
       }

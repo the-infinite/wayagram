@@ -17,7 +17,8 @@ class EditProfilePage extends ConsumerStatefulWidget {
   static const route = '/edit-profile-page';
   const EditProfilePage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _EditProfilePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _EditProfilePageState();
 }
 
 class _EditProfilePageState extends ConsumerState<EditProfilePage> {
@@ -29,7 +30,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileVmProvider.notifier).getUserData();
-      ref.read(profileVmProvider.notifier).getUserProfile();
     });
 
     super.initState();
@@ -81,41 +81,82 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Change Photo',
-                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor600)),
+                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                        color: wayaTheme.colorScheme.greyColor600)),
                 Gap(20),
                 Text('Profile Information',
-                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor600)),
+                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                        color: wayaTheme.colorScheme.greyColor600)),
                 Gap(10),
                 ProfileTile(
                   title: 'Full Name',
                   value:
-                      "${userState.userAccountModel?.data?.firstName ?? ''} ${userState.userAccountModel?.data?.lastName ?? ''}",
-                  onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.name),
+                      "${userState.userAccountModel?.data?.userdata?.user?.firstName ?? ''} ${userState.userAccountModel?.data?.userdata?.user?.lastName ?? ''}",
+                  onTap: () => WayaNav.toNamed(EditNamePage.route,
+                      arguments: ProfileEditArguments(
+                          editType: ProfileEditType.name,
+                          initialValue:
+                              "${userState.userAccountModel?.data?.userdata?.user?.firstName ?? ''} ${userState.userAccountModel?.data?.userdata?.user?.lastName ?? ''}")
+                              ),
                 ),
                 Gap(10),
                 ProfileTile(
                   title: 'User Name',
-                  value: '@${userState.userProfileModel?.data?.username ?? ''}',
-                  onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.username),
+                  value:
+                      '@${userState.userAccountModel?.data?.userdata?.profile?.username ?? ''}',
+                  onTap: () => WayaNav.toNamed(EditNamePage.route,
+                              arguments: ProfileEditArguments(
+                          editType: ProfileEditType.username,
+                          initialValue:
+                              userState.userAccountModel?.data?.userdata?.profile?.username ?? '')
+                    ),
                 ),
                 Gap(10),
                 ProfileTile(
                   title: 'Bio',
-                  value: userState.userProfileModel?.data?.bio ?? 'n/a',
-                  onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.bio),
+                  value: userState
+                          .userAccountModel?.data?.userdata?.profile?.bio ??
+                      'n/a',
+                  onTap: () => WayaNav.toNamed(EditNamePage.route,
+                                              arguments: ProfileEditArguments(
+                          editType: ProfileEditType.bio,
+                          initialValue:
+                             userState
+                          .userAccountModel?.data?.userdata?.profile?.bio ??
+                      '',)
+                  )
                 ),
                 Gap(10),
                 ProfileTile(
                   title: 'Location',
-                  value: userState.userAccountModel?.data?.address ?? 'n/a',
-                  onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.location),
+                  value: userState
+                          .userAccountModel?.data?.userdata?.user?.address ??
+                      'n/a',
+                  onTap: () => WayaNav.toNamed(EditNamePage.route,
+                   arguments: ProfileEditArguments(
+                          editType: ProfileEditType.location,
+                          initialValue:
+                            userState
+                          .userAccountModel?.data?.userdata?.user?.address ??
+                      '',)
+                      ),
                 ),
                 Gap(10),
                 ProfileTile(
                   title: 'Date of Birth',
-                  value: WayaHelpers.formatDateString(
-                      userState.userAccountModel?.data?.dateOfBirth.toString() ?? DateTime.now().toString()),
-                  onTap: () => WayaNav.toNamed(EditNamePage.route, arguments: ProfileEditType.dob),
+                  value: WayaHelpers.formatDateString(userState
+                          .userAccountModel?.data?.userdata?.user?.dateOfBirth
+                          .toString() ??
+                      DateTime.now().toString()),
+                  onTap: () => WayaNav.toNamed(EditNamePage.route,
+                   arguments: ProfileEditArguments(
+                          editType: ProfileEditType.dob,
+                          initialValue:
+                            WayaHelpers.formatDateString(userState
+                          .userAccountModel?.data?.userdata?.user?.dateOfBirth
+                          .toString() ??
+                      DateTime.now().toString()))
+                    ),
                 ),
                 Gap(12),
                 Row(
@@ -124,14 +165,18 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     Transform.scale(
                         scale: 0.7,
                         child: Switch(
-                            value: isPrivate ?? userState.userProfileModel?.data?.isPublic ?? false,
+                            value: isPrivate ??
+                                userState.userAccountModel?.data?.userdata
+                                    ?.profile?.isPublic ??
+                                false,
                             onChanged: (value) async {
                               setState(() {
                                 isPrivate = value;
                               });
                               final response = await ref
                                   .read(profileVmProvider.notifier)
-                                  .updateProfile(isPublic: isPrivate, load: false);
+                                  .updateProfile(
+                                      isPublic: isPrivate, load: false);
                               print(response);
                               print(isPrivate);
                               if (!response) {
@@ -148,12 +193,16 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         children: [
                           Text('Private Account',
                               style: wayaTheme.textTheme.bodyMedium
-                                  ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor900)),
+                                  ?.wayaCopyWith(
+                                      color:
+                                          wayaTheme.colorScheme.greyColor900)),
                           SizedBox(
                             child: Text(
                                 'Note! if you make your account private, only your followers will be able to view your posts and profile.',
                                 style: wayaTheme.textTheme.labelSmall
-                                    ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor600)),
+                                    ?.wayaCopyWith(
+                                        color: wayaTheme
+                                            .colorScheme.greyColor600)),
                           ),
                         ],
                       ),
@@ -188,20 +237,25 @@ class ProfileTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: wayaTheme.colorScheme.onPrimary),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: wayaTheme.colorScheme.onPrimary),
         child: Row(
           children: [
             Text(title,
-                style: wayaTheme.textTheme.hintStyleSemiBold.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
+                style: wayaTheme.textTheme.hintStyleSemiBold
+                    .wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
             Spacer(),
             SizedBox(
               width: title == 'Bio' ? Get.width * 0.65 : Get.width * 0.5,
               child: Text(value,
                   textAlign: TextAlign.end,
-                  style: wayaTheme.textTheme.bodyXtraMedium.wayaCopyWith(color: wayaTheme.colorScheme.greyColor600)),
+                  style: wayaTheme.textTheme.bodyXtraMedium
+                      .wayaCopyWith(color: wayaTheme.colorScheme.greyColor600)),
             ),
             Gap(2),
-            Icon(Icons.arrow_forward_ios, size: 18, color: wayaTheme.colorScheme.greyColor600)
+            Icon(Icons.arrow_forward_ios,
+                size: 18, color: wayaTheme.colorScheme.greyColor600)
           ],
         ),
       ),
