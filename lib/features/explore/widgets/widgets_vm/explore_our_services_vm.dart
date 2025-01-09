@@ -23,7 +23,9 @@ class ExploreOurServicesVm extends ChangeNotifier {
         onTap: () {
           WayaNav.to(BottomView(index: 1));
         }),
-    Services(icon: WayaAssests.icons.eQuotation.path, name: 'Get Quotation', onTap: () {}),
+    Services(icon: WayaAssests.icons.eQuotation.path, name: 'Get Quotation', onTap: () {
+      WayaNav.to(BottomView(index: 3));
+    }),
     Services(icon: WayaAssests.icons.eChat.path, name: 'Chat & Socials', onTap: () {}),
     Services(icon: WayaAssests.icons.eDonation.path, name: 'Donations', onTap: () {}),
     Services(icon: WayaAssests.icons.ePoll.path, name: 'Polls & Votes', onTap: () {}),

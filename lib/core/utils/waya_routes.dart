@@ -30,6 +30,10 @@ import 'package:wayagram/features/ugt/ugt_get_started.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
+import '../../features/quotation/buyer/views/create_request/create_request.dart';
+
+
+
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
     '/': () => SplashScreen(),
@@ -80,7 +84,8 @@ class WayaAppRoutes {
     DisputeChat.route: () => DisputeChat(),
     UgtGetStarted.route: () => UgtGetStarted(),
     UgtHome.route: () => UgtHome(),
-    CreateContest.route: () => CreateContest()
+    CreateContest.route: () => CreateContest(),
+    CreateRequest.route: () => CreateRequest(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {
