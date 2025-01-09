@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:get/get.dart'; // Add this import for GetX
@@ -80,7 +81,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
               SizedBox(
                 width: 60,
                 child: WayaButton(
-                  callback: () => Navigator.of(context).pop(true),
+                  callback: () => SystemNavigator.pop(),
                   text: 'Yes',
                   height: 35,
                   radius: 6,
