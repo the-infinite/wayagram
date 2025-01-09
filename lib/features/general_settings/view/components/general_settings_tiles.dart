@@ -42,14 +42,17 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10)
                 .copyWith(bottom: 0),
             title: Text(
-              "${userState.userAccountModel?.data?.firstName ?? 'n/a'} ${userState.userAccountModel?.data?.lastName ?? ''}",
+              "${userState.userAccountModel?.data?.userdata?.user?.firstName ?? 'n/a'} ${userState.userAccountModel?.data?.userdata?.user?.lastName ?? ''}",
               style: wayaTheme.textTheme.hintStyleSemiBold
                   .wayaCopyWith(color: wayaTheme.colorScheme.black),
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(userState.userProfileModel?.data?.username ?? 'n/a',
+                Text(
+                    userState.userAccountModel?.data?.userdata?.profile
+                            ?.username ??
+                        'n/a',
                     style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                         color: wayaTheme.colorScheme.greyColor500)),
                 Gap(5),
@@ -59,7 +62,9 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
                         color: wayaTheme.colorScheme.primar50,
                         borderRadius: BorderRadius.circular(10)),
                     child: Text(
-                      userState.userProfileModel?.data?.referenceCode ?? '',
+                      userState.userAccountModel?.data?.userdata?.profile
+                              ?.referenceCode ??
+                          '',
                       style: wayaTheme.textTheme.labelSmall
                           ?.wayaCopyWith(color: wayaTheme.colorScheme.primary),
                     )),
@@ -67,7 +72,8 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
             ),
             trailing: SvgPicture.asset("assets/icons/arrow_keyboard_right.svg"),
           ),
-          userState.userAccountModel?.data?.role?.name?.toLowerCase() ==
+          userState.userAccountModel?.data?.userdata?.user?.role?.name
+                      ?.toLowerCase() ==
                   'personal'
               ? Row(
                   children: [

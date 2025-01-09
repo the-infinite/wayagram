@@ -17,7 +17,7 @@ class MoreView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final viewModel = MoreVm();
+    final viewModel = MoreVm(context);
     return WayaScaffold(
         isScrollable: true,
         title: "More",
@@ -57,7 +57,9 @@ class MoreView extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
-        Container(
+     GestureDetector(
+      onTap: moreOption.onTap,
+      child:    Container(
       height: context.height * 0.18,
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -78,6 +80,7 @@ class MoreView extends ConsumerWidget {
         ],
       ),
     ),
+     ),
    const SizedBox(height: 12),
       ],
     );

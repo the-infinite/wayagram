@@ -28,7 +28,7 @@ class PersonalFirstStepState {
   final bool isConfirmPasswordFocused;
   final bool isPasswordFocused;
   final bool isLoading;
-  final UserAccountData? user;
+  final User? user;
   final BusinessAccountData? business;
 
   PersonalFirstStepState(
@@ -100,7 +100,7 @@ class PersonalFirstStepState {
       bool? isConfirmPasswordFocused,
       bool? isPasswordFocused,
       bool? isLoading,
-      UserAccountData? user,
+      User? user,
       BusinessAccountData? business
       }) {
     return PersonalFirstStepState(

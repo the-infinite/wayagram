@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:get/get.dart'; // Add this import for GetX
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -14,8 +15,8 @@ import 'package:wayagram/features/shop/seller/views/waya_seller.dart';
 
 class BottomView extends ConsumerStatefulWidget {
   static const route = '/explore';
-  final int? index;
-  const BottomView({super.key, this.index = 0});
+
+  const BottomView({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _BottomViewState();
@@ -26,11 +27,21 @@ class _BottomViewState extends ConsumerState<BottomView> {
 
   @override
   void initState() {
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  
       ref.read(profileVmProvider.notifier).refetchUserData();
     });
-    super.initState();
-    _selectedIndex = widget.index ?? 0;
+  
+   
+    
+  }
+
+    @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final index = ModalRoute.of(context)?.settings.arguments as int?;
+    _selectedIndex = index ?? 0;
   }
 
   Future<bool> _onWillPop(BuildContext context) async {
@@ -38,12 +49,22 @@ class _BottomViewState extends ConsumerState<BottomView> {
           context: context,
           builder: (context) => AlertDialog(
             insetPadding: EdgeInsets.all(20),
-            
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            title: Text('Confirm Exit?', style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(fontSize: 16, color: Theme.of(context).colorScheme.customBlack),),
-            content: Text('Are you sure you want to exit?', style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(fontSize: 14, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor700)),
+            title: Text(
+              'Confirm Exit?',
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 16,
+                  color: Theme.of(context).colorScheme.customBlack),
+            ),
+            content: Text(
+              'Are you sure you want to exit?',
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.greyColor700),
+            ),
             actions: <Widget>[
               SizedBox(
                 width: 60,
@@ -51,7 +72,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
                   callback: () => Navigator.of(context).pop(false),
                   text: 'No',
                   height: 35,
-                    radius: 6,
+                  radius: 6,
                   color: Theme.of(context).colorScheme.greyColor400,
                 ),
               ),
@@ -75,9 +96,9 @@ class _BottomViewState extends ConsumerState<BottomView> {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(bottomViewVmProvider);
     final successfulSetupState = ref.watch(successfulSetupVmProvider);
-
-    final user = successfulSetupState.user;
-    final userType = user?.role?.name;
+  
+    final userData = successfulSetupState.user;
+    final userType = userData?.user?.role?.name;
     final List<Widget> _pages = [
       Explore(),
       userType == 'PERSONAL' ? WayaBuyer() : WayaSeller(),

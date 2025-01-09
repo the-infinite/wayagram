@@ -21,6 +21,18 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
   TextEditingController nameController = TextEditingController();
   dynamic dateIsoFormat;
 
+
+
+
+     @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final ProfileEditArguments? arg =
+        ModalRoute.of(context)?.settings.arguments as ProfileEditArguments?;
+    if (arg != null) {
+      nameController.text = arg.initialValue!;
+    }
+  }
   @override
   void dispose() {
     nameController.dispose();
@@ -30,23 +42,32 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
   @override
   Widget build(BuildContext context) {
     final profileState = ref.watch(profileVmProvider);
-    final ProfileEditType? editType = ModalRoute.of(context)?.settings.arguments as ProfileEditType?;
+    final ProfileEditArguments? arg =
+      ModalRoute.of(context)?.settings.arguments as ProfileEditArguments?;
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       isLoading: profileState.isLoading,
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
-      title: getEditOperation(editType: editType!, ref: ref, value: nameController.text).title,
+      title: getEditOperation(
+              editType: arg!.editType, ref: ref, value: nameController.text)
+          .title,
       appBarTrailing: Row(
         children: [
           WayaButton(
             isDisabled: nameController.text.isEmpty,
             height: 32,
             horizontalPadding: 10,
-            callback: editType == ProfileEditType.dob
+            callback: arg.editType == ProfileEditType.dob
                 ? () {
-                    ref.read(profileVmProvider.notifier).updateAccount(dob: dateIsoFormat);
+                    ref
+                        .read(profileVmProvider.notifier)
+                        .updateAccount(dob: dateIsoFormat);
                   }
-                : getEditOperation(editType: editType, ref: ref, value: nameController.text).onSave,
+                : getEditOperation(
+                        editType: arg.editType,
+                        ref: ref,
+                        value: nameController.text)
+                    .onSave,
             text: 'Save',
           ),
           Gap(15)
@@ -56,8 +77,11 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
         children: [
           Gap(20),
           WayaTextFormField(
-            isReadOnly: editType == ProfileEditType.dob,
-            onTap: editType == ProfileEditType.dob
+            inputFormatters: arg.editType == ProfileEditType.name ? [
+              CapitalizeWordsFormatter()
+            ] :[],
+            isReadOnly: arg.editType == ProfileEditType.dob,
+            onTap: arg.editType == ProfileEditType.dob
                 ? () async {
                     final response = await showDatePicker(
                         context: context,
@@ -66,7 +90,8 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
                         initialDate: DateTime.now());
 
                     if (response != null) {
-                      String dateOfBirth = "${response.year}-${response.month}-${response.day}";
+                      String dateOfBirth =
+                          "${response.year}-${response.month}-${response.day}";
                       nameController.text = dateOfBirth;
                       dateIsoFormat = response.toIso8601String();
                     }
@@ -74,15 +99,21 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
                 : null,
             padding: EdgeInsets.all(10),
             fillColor: wayaTheme.colorScheme.white,
-            line: editType == ProfileEditType.bio ? 4 : 1,
-            label: getEditOperation(editType: editType, ref: ref, value: nameController.text).label,
+            line: arg.editType == ProfileEditType.bio ? 4 : 1,
+            label: getEditOperation(
+                    editType: arg.editType,
+                    ref: ref,
+                    value: nameController.text)
+                .label,
             onChanged: (data) {
               setState(() {});
-              editType == ProfileEditType.name || editType == ProfileEditType.username
+              arg.editType == ProfileEditType.name ||
+                      arg.editType == ProfileEditType.username
                   ? WayaHelpers.countFormCharacters(nameController, 60)
                   : null;
             },
-            suffixIcon: editType != ProfileEditType.name || editType != ProfileEditType.username
+            suffixIcon: arg.editType != ProfileEditType.name ||
+                    arg.editType != ProfileEditType.username
                 ? null
                 : Padding(
                     padding: EdgeInsets.only(top: 13.0, right: 5, left: 5),
@@ -92,14 +123,24 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
                     ),
                   ),
             controller: nameController,
-            hintText: getEditOperation(editType: editType, ref: ref, value: nameController.text).hintText,
+            hintText: getEditOperation(
+                    editType: arg.editType,
+                    ref: ref,
+                    value: nameController.text)
+                .hintText,
           ),
           Gap(10),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              getEditOperation(editType: editType, ref: ref, value: nameController.text).description ?? '',
-              style: wayaTheme.textTheme.bodyXtraMedium.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+              getEditOperation(
+                          editType: arg.editType,
+                          ref: ref,
+                          value: nameController.text)
+                      .description ??
+                  '',
+              style: wayaTheme.textTheme.bodyXtraMedium
+                  .wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
             ),
           )
         ],

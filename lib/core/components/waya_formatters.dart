@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -56,12 +57,14 @@ class _WayaAmountFormatterState extends State<WayaAmountFormatter> {
                           color: widget.balanceColor ??
                               wayaTheme.colorScheme.onPrimary),
                       style2: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
-                        color: widget.koboValueColor ?? wayaTheme.colorScheme.white50,
+                        color: widget.koboValueColor ??
+                            wayaTheme.colorScheme.white50,
                       )),
                   Text(
                     'NGN',
                     style: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
-                        color: widget.koboValueColor ?? wayaTheme.colorScheme.white50,
+                        color: widget.koboValueColor ??
+                            wayaTheme.colorScheme.white50,
                         fontWeight: FontWeight.w400,
                         fontSize: 19.sp),
                   ),
@@ -137,5 +140,24 @@ class TextAmountFormatter extends StatelessWidget {
             : "${inFlow == true ? '+' : '- '}${formatter.format(amount)}",
         textAlign: align,
         style: textStyle ?? wayaTheme.textTheme.headlineLarge);
+  }
+}
+
+class CapitalizeWordsFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text;
+    final capitalizedText = text.split(' ').map((word) {
+      if (word.isEmpty) return word;
+      return word[0].toUpperCase() + word.substring(1);
+    }).join(' ');
+
+    return newValue.copyWith(
+      text: capitalizedText,
+      selection: newValue.selection,
+    );
   }
 }

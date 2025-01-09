@@ -72,7 +72,8 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
                   controller: _pageController,
                   children: [PersonalAccountView(), BusinessAccountView()],
                 ),
-              )
+              ),
+              Gap(50),
             ],
           ),
         ),

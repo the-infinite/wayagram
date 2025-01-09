@@ -205,6 +205,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                 .wayaCopyWith(color: wayaTheme.colorScheme.black),
           )),
         ),
+        
       ],
     );
   }

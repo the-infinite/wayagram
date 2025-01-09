@@ -14,7 +14,7 @@ class UserAccountModel {
   final String? message;
   final bool? status;
   final int? statusCode;
-  final UserAccountData? data;
+  final UserData? data;
 
   factory UserAccountModel.fromJson(Map<String, dynamic> json) =>
       _$UserAccountModelFromJson(json);
@@ -23,8 +23,38 @@ class UserAccountModel {
 }
 
 @JsonSerializable()
+class UserData {
+  UserData({
+    required this.userdata,
+  });
+
+  final UserAccountData? userdata;
+
+  factory UserData.fromJson(Map<String, dynamic> json) =>
+      _$UserDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserDataToJson(this);
+}
+
+@JsonSerializable()
 class UserAccountData {
   UserAccountData({
+    required this.user,
+    required this.profile,
+  });
+
+  final User? user;
+  final UserProfile? profile;
+
+  factory UserAccountData.fromJson(Map<String, dynamic> json) =>
+      _$UserAccountDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserAccountDataToJson(this);
+}
+
+@JsonSerializable()
+class User {
+  User({
     required this.id,
     required this.phoneNumber,
     required this.email,
@@ -90,52 +120,62 @@ class UserAccountData {
   final DateTime? updatedAt;
   final Role? role;
 
-  factory UserAccountData.fromJson(Map<String, dynamic> json) {
-    return UserAccountData(
-      id: json['id'] as String?,
-      phoneNumber: json['phoneNumber'] as String?,
-      email: json['email'] as String?,
-      passwordHash: json['passwordHash'] as String?,
-      firstName: json['firstName'] as String?,
-      lastName: json['lastName'] as String?,
-      gender: json['gender'] as String?,
-      address: json['address'] as String?,
-      city: json['city'] as String?,
-      state: json['state'] as String?,
-      country: json['country'] as String?,
-      countryCode: json['countryCode'],
-      middleName: json['middleName'],
-      dateOfBirth: json['dateOfBirth'] == null
-          ? null
-          : DateTime.parse(json['dateOfBirth'] as String),
-      twoFactorEnabled: json['twoFactorEnabled'] as bool?,
-      profilePicture: json['profilePicture'],
-      fcmToken: json['fcmToken'],
-      emailVerified: json['emailVerified'] as bool?,
-      phoneVerified: json['phoneVerified'] as bool?,
-      accountStatus: json['accountStatus'] as String?,
-      tcAgreement: json['tcAgreement'] as bool?,
-      policyAgreement: json['policyAgreement'] as bool?,
-      emailVerifiedDate: json['emailVerifiedDate'] == null
-          ? null
-          : DateTime.parse(json['emailVerifiedDate'] as String),
-      deletedAt: json['deletedAt'],
-      roleId: json['roleId'] as String?,
-      accountTypeId: json['accountTypeId'] as String?,
-      v: json['_v'] as String?,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-      role: json['role'] == null
-          ? null
-          : Role.fromJson(json['role'] as Map<String, dynamic>),
-    );
-  }
+  factory User.fromJson(Map<String, dynamic> json) =>
+      _$UserFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserAccountDataToJson(this);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+}
+
+@JsonSerializable()
+class UserProfile {
+  UserProfile({
+    required this.id,
+    required this.userId,
+    required this.avatar,
+    required this.coverImage,
+    required this.bio,
+    required this.username,
+    required this.displayName,
+    required this.isPublic,
+    required this.isBanned,
+    required this.deletedAt,
+    required this.simulatedUser,
+    required this.isMuted,
+    required this.referenceCode,
+    required this.referredBy,
+    required this.streamKey,
+    required this.hasFollowedAll,
+    required this.v,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  final String? id;
+  final String? userId;
+  final dynamic avatar;
+  final dynamic coverImage;
+  final dynamic bio;
+  final String? username;
+  final String? displayName;
+  final bool? isPublic;
+  final bool? isBanned;
+  final dynamic deletedAt;
+  final bool? simulatedUser;
+  final bool? isMuted;
+  final String? referenceCode;
+  final dynamic referredBy;
+  final String? streamKey;
+  final bool? hasFollowedAll;
+
+  @JsonKey(name: '_v')
+  final String? v;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserProfileToJson(this);
 }
 
 @JsonSerializable()
