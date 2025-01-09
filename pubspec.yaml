@@ -117,6 +117,7 @@ flutter:
 
     - assets/images/explore/
     - assets/images/shop/
+    - assets/images/bid/
     - assets/images/wallet/
 
     - assets/icons/
