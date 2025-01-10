@@ -1,13 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/features/wallet/transactions/components/export_transaction.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_history.dart';
+import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 
 enum DateFilter { thisWeek, thisMonth, lastSixMonths, thisYear, customRange }
 
-class AllTransactionHistory extends StatefulWidget {
+class AllTransactionHistory extends ConsumerStatefulWidget {
   static const route = '/all-transactions';
   final currencyFormat = NumberFormat.currency(
     symbol: '₦',
@@ -17,11 +22,12 @@ class AllTransactionHistory extends StatefulWidget {
   AllTransactionHistory({super.key});
 
   @override
-  State<AllTransactionHistory> createState() => _AllTransactionHistoryState();
+  ConsumerState<AllTransactionHistory> createState() =>
+      _AllTransactionHistoryState();
 }
 
-class _AllTransactionHistoryState extends State<AllTransactionHistory> {
-  DateFilter selectedFilter = DateFilter.thisMonth;
+class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
+  DateFilter selectedFilter = DateFilter.thisWeek;
 
   String _getFilterName(DateFilter filter) {
     switch (filter) {
@@ -38,9 +44,50 @@ class _AllTransactionHistoryState extends State<AllTransactionHistory> {
     }
   }
 
+  Future<void> _applyFilter(DateFilter filter) async {
+    String? appliedFilter;
+
+    if (filter == DateFilter.customRange) {
+      final firstDate = DateTime.now().year;
+      // Show date range picker
+      final DateTimeRange? dateRange = await showDateRangePicker(
+        context: context,
+        firstDate: DateTime(firstDate, 1, 1),
+        lastDate: DateTime.now(),
+        currentDate: DateTime.now(),
+        saveText: 'Apply',
+      );
+
+      if (dateRange != null) {
+        appliedFilter =
+            "startDate=${DateFormat('yyyy-MM-dd').format(dateRange.start)}&endDate=${DateFormat('yyyy-MM-dd').format(dateRange.end)}";
+      } else {
+        return;
+      }
+    } else if (filter == DateFilter.thisWeek) {
+      final weekday = DateTime.now().weekday;
+      appliedFilter =
+          "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: weekday)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 7 - weekday)))}";
+    } else if (filter == DateFilter.thisMonth) {
+      final day = DateTime.now().day;
+      appliedFilter =
+          "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: day)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 30 - day)))}";
+    } else if (filter == DateFilter.lastSixMonths) {
+      appliedFilter =
+          "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(const Duration(days: 30 * 6)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
+    } else if (filter == DateFilter.thisYear) {
+      appliedFilter =
+          "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(const Duration(days: 365)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
+    }
+    await ref
+        .read(transactionVmProvider.notifier)
+        .getUserTransactions(filters: appliedFilter);
+  }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final state = ref.watch(transactionVmProvider);
     return WayaScaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -49,7 +96,8 @@ class _AllTransactionHistoryState extends State<AllTransactionHistory> {
         leading: const BackButton(color: Colors.black),
         title: Text(
           'All Transactions',
-          style: TextStyle(color: wayaTheme.colorScheme.customBlack, fontSize: 16),
+          style:
+              TextStyle(color: wayaTheme.colorScheme.customBlack, fontSize: 16),
         ),
         actions: [
           IconButton(
@@ -57,15 +105,16 @@ class _AllTransactionHistoryState extends State<AllTransactionHistory> {
             onPressed: () {},
           ),
           IconButton(
-            icon: Icon(Icons.text_snippet_outlined, color: wayaTheme.colorScheme.customBlack),
+            icon: Icon(Icons.text_snippet_outlined,
+                color: wayaTheme.colorScheme.customBlack),
             onPressed: () {
-              // showModalBottomSheet(
-              //   context: context,
-              //   shape: const RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              //   ),
-              //   builder: (context) => const PinEntryBottomSheet(),
-              // );
+              showModalBottomSheet(
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (context) => const ExportTransaction(),
+              );
             },
           ),
         ],
@@ -104,7 +153,7 @@ class _AllTransactionHistoryState extends State<AllTransactionHistory> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Sort by',
+                      'Filter by',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -129,9 +178,9 @@ class _AllTransactionHistoryState extends State<AllTransactionHistory> {
                     children: [
                       Text(_getFilterName(filter)),
                       if (selectedFilter == filter)
-                        const Icon(
+                        Icon(
                           Icons.check,
-                          color: Colors.orange,
+                          color: wayaTheme.primaryColor,
                           size: 20,
                         ),
                     ],
@@ -143,9 +192,7 @@ class _AllTransactionHistoryState extends State<AllTransactionHistory> {
               setState(() {
                 selectedFilter = filter;
               });
-              if (filter == DateFilter.customRange) {
-                // TODO: Show date range picker
-              }
+              _applyFilter(filter);
             },
           ),
           const SizedBox(height: 16),
@@ -161,7 +208,7 @@ class _AllTransactionHistoryState extends State<AllTransactionHistory> {
               Expanded(
                 child: _OverviewCard(
                   title: 'Total Credit',
-                  amount: 1259500.00,
+                  amount: state.totalCreditTransaction,
                   isCredit: true,
                 ),
               ),
@@ -169,7 +216,7 @@ class _AllTransactionHistoryState extends State<AllTransactionHistory> {
               Expanded(
                 child: _OverviewCard(
                   title: 'Total Debit',
-                  amount: 250409.00,
+                  amount: state.totalDebitTransaction,
                   isCredit: false,
                 ),
               ),

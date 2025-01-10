@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +24,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final userState = ref.watch(profileVmProvider);
+    log("${userState.userAccountModel?.data}");
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -53,6 +56,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
                     userState.userAccountModel?.data?.userdata?.profile
                             ?.username ??
                         'n/a',
+
                     style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                         color: wayaTheme.colorScheme.greyColor500)),
                 Gap(5),
@@ -65,6 +69,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
                       userState.userAccountModel?.data?.userdata?.profile
                               ?.referenceCode ??
                           '',
+
                       style: wayaTheme.textTheme.labelSmall
                           ?.wayaCopyWith(color: wayaTheme.colorScheme.primary),
                     )),
@@ -74,6 +79,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
           ),
           userState.userAccountModel?.data?.userdata?.user?.role?.name
                       ?.toLowerCase() ==
+
                   'personal'
               ? Row(
                   children: [

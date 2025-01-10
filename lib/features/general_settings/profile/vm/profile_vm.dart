@@ -95,6 +95,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
       if (response.success) {
         UserAccountModel userAccountModel =
             UserAccountModel.fromJson(response.data);
+
         state = state.copyWith(
             userAccountModel: userAccountModel, isLoading: false);
       } else {
@@ -113,7 +114,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
     await _secureDataSource.saveUserId("");
 
     WayaNav.toNamed('/login-cover-page');
-  }
+
 
   // void getUserProfile() async {
   //   final userId = _localDataSource.getUserId();

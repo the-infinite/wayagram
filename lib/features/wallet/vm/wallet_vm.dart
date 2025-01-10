@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
@@ -73,6 +75,7 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
       required double amount,
       required String fundOptionCode}) async {
     final user = _setupState.user?.user;
+
     final response = await _walletRepository!.fundWallet(FundWallet(
         userId: user!.id ?? "",
         amount: amount,
