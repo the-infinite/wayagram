@@ -31,7 +31,7 @@ class BuyRequests extends ConsumerWidget {
         const Gap(10),
         CategoriesFilterWidget<Product>(allItems: []),
         const Gap(25),
-        WayaImage(imageUrl: 'assets/images/bid/deal.png', height: 206),
+        ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png'),),
         const Gap(25),
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),

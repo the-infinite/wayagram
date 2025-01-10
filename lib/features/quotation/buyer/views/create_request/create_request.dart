@@ -49,7 +49,7 @@ class _CreateRequestState extends ConsumerState<CreateRequest> with SingleTicker
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
-          CreateBuyingRequest(gotoNextTab: _goToNextTab),
+          CreateBuyingRequest(gotoNextTab: _goToNextTab, gotoPreviousTab: _goToPreviousTab,),
           PricingAndDeliveryRequest(
             gotoNextTab: _goToNextTab,
             gotoPreviousTab: _goToPreviousTab,
