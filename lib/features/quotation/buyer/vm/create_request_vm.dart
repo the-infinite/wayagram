@@ -254,7 +254,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
           "Your product is now live in your shop and ready \n for customers to discover.",
           onPress: () => WayaNav.toNamed('/add-product'),
           icon: Image.asset('assets/images/shop/add-product-success.png'),
-          buttonText: 'Add Another Product',
+          //buttonText: 'Add Another Product',
           secondButtonText: 'Go to Dashboard',
           onCancel: () => WayaNav.to(const BottomView(
             index: 3,

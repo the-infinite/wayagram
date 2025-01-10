@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/quotation/vm/quotation_vm.dart';
 
 class RequestCard extends StatelessWidget {
@@ -111,7 +112,9 @@ class RequestCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                callback: () {},
+                callback: () {
+                  WayaNav.toNamed('/seeSeller-bids');
+                },
                 color: wayaTheme.colorScheme.primar50,
               ),
 
