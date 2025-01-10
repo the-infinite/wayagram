@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
+import 'package:wayagram/features/ugt/create_contest/steps/participant_details.dart';
 
 class CreateContest extends ConsumerStatefulWidget {
   static const route = '/create-contest';
@@ -29,6 +30,8 @@ class _CreateContestState extends ConsumerState<CreateContest>
     }
   }
 
+
+
   void _goToPreviousTab() {
     if (_tabController.index > 1) {
       _tabController.animateTo(_tabController.index - 1);
@@ -47,7 +50,13 @@ class _CreateContestState extends ConsumerState<CreateContest>
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
-          CreateUltimate()
+
+          CreateUltimate(
+            goToNextTab: _goToNextTab,
+          ),
+          ParticipantDetails(
+            goToNextTab: _goToNextTab,
+          ),
         ],
         tabController: _tabController);
   }
