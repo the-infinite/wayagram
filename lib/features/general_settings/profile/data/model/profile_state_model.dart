@@ -8,15 +8,23 @@ class ProfileState {
   UserProfileModel? userProfileModel;
 
   // Constructor
-  ProfileState({this.isLoading = false, this.data, this.userAccountModel, this.userProfileModel}); 
+  ProfileState(
+      {this.isLoading = false,
+      this.data,
+      this.userAccountModel,
+      this.userProfileModel});
 
   // From JSON
   factory ProfileState.fromJson(Map<String, dynamic> json) {
     return ProfileState(
       isLoading: json['isLoading'] ?? false,
       data: json['data'], // data can be any type
-      userAccountModel: json['userAccountModel'] != null ? UserAccountModel.fromJson(json['userAccountModel']) : null,
-      userProfileModel: json['userProfileModel'] != null ? UserProfileModel.fromJson(json['userProfileModel']) : null,
+      userAccountModel: json['userAccountModel'] != null
+          ? UserAccountModel.fromJson(json['userAccountModel'])
+          : null,
+      userProfileModel: json['userProfileModel'] != null
+          ? UserProfileModel.fromJson(json['userProfileModel'])
+          : null,
     );
   }
 

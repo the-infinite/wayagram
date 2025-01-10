@@ -30,7 +30,8 @@ class ProfileVm extends StateNotifier<ProfileState> {
     try {
       state = ProfileState(isLoading: true);
 
-      final response = await _profileRepo.updateAccountRepo(userId: userId, dob: dob, address: address);
+      final response = await _profileRepo.updateAccountRepo(
+          userId: userId, dob: dob, address: address);
       if (response.success) {
         WayaSnackBar.showToast('Account Updated Successfully');
         Future.delayed(Duration(seconds: 2), () {
@@ -44,14 +45,22 @@ class ProfileVm extends StateNotifier<ProfileState> {
   }
 
   Future<bool> updateProfile(
-      {String? username, String? displayName, String? bio, bool? isPublic, bool load = true}) async {
+      {String? username,
+      String? displayName,
+      String? bio,
+      bool? isPublic,
+      bool load = true}) async {
     final userId = _localDataSource.getUserId();
 
     try {
       state = state.copyWith(isLoading: load);
 
       final response = await _profileRepo.updateProfileRepo(
-          userId: userId, username: username, displayName: displayName, bio: bio, isPublic: isPublic);
+          userId: userId,
+          username: username,
+          displayName: displayName,
+          bio: bio,
+          isPublic: isPublic);
       if (response.success) {
         WayaSnackBar.showToast('Profile Updated Successfully');
         isPublic != null
@@ -83,8 +92,10 @@ class ProfileVm extends StateNotifier<ProfileState> {
       final response = await _profileRepo.getUserDataRepo(userId: userId);
 
       if (response.success) {
-        UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
-        state = state.copyWith(userAccountModel: userAccountModel, isLoading: false);
+        UserAccountModel userAccountModel = UserAccountModel.fromJson(
+            response.data["data"]["userdata"]["user"]);
+        state = state.copyWith(
+            userAccountModel: userAccountModel, isLoading: false);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -101,8 +112,10 @@ class ProfileVm extends StateNotifier<ProfileState> {
       final response = await _profileRepo.getUserProfileRepo(userId: userId);
 
       if (response.success) {
-        UserProfileModel userProfileModel = UserProfileModel.fromJson(response.data);
-        state = state.copyWith(isLoading: false, userProfileModel: userProfileModel);
+        UserProfileModel userProfileModel =
+            UserProfileModel.fromJson(response.data);
+        state = state.copyWith(
+            isLoading: false, userProfileModel: userProfileModel);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -115,11 +128,14 @@ class ProfileVm extends StateNotifier<ProfileState> {
     final userId = _localDataSource.getUserId();
     File? profileImage = await WayaUtils.pickAndCropImage();
     if (profileImage != null) {
-         Uint8List imageBytes = await profileImage.readAsBytes();
- 
+      Uint8List imageBytes = await profileImage.readAsBytes();
+
       try {
         state = state.copyWith(isLoading: true);
-        final response = await _profileRepo.updateProfileImageRepo(userId: userId,fileName :WayaHelpers.extractFileName(profileImage), image:    imageBytes);
+        final response = await _profileRepo.updateProfileImageRepo(
+            userId: userId,
+            fileName: WayaHelpers.extractFileName(profileImage),
+            image: imageBytes);
 
         if (response.success) {
           WayaSnackBar.showToast('Profile Picture Updated Successfully');
