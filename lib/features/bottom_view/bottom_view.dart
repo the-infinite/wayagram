@@ -11,6 +11,8 @@ import 'package:wayagram/features/quotation/buyer/views/waya_buyer_quotation.dar
 import 'package:wayagram/features/shop/buyer/views/waya_buyer.dart';
 import 'package:wayagram/features/shop/seller/views/waya_seller.dart';
 
+import '../quotation/seller/views/waya_seller_quotation.dart';
+
 class BottomView extends ConsumerStatefulWidget {
   static const route = '/explore';
   final int? index;
@@ -44,7 +46,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
       Explore(),
       userType == 'PERSONAL' ? WayaBuyer() : WayaSeller(),
       Explore(),
-      WayaBuyerQuotation(),
+      userType == 'PERSONAL' ? WayaBuyerQuotation() : WayaSellerQuotation(),
       Explore(),
       Explore(),
     ];

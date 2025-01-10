@@ -6,6 +6,8 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:gap/gap.dart';
 
+import '../../../vm/create_request_vm.dart';
+
 class PricingAndDeliveryRequest extends ConsumerStatefulWidget {
   final Function gotoNextTab;
   final Function gotoPreviousTab;
@@ -23,7 +25,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    final viewModel = ref.watch(addProductProvider);
+    final viewModel = ref.watch(createRequestProvider);
     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -85,25 +87,29 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-                  if (viewModel.pickUpOption.isEmpty) {
-                    return 'Maximum Bid Amount (optional)';
+                  if (viewModel.pricePerUnit.text.isEmpty) {
+                    return 'Price is required';
                   }
+
                   return null;
                 }, builder: (formState) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
-                          height: 0.3,
-                          label: "Delivery/Pickup Option",
-                          hintText: 'Select Delivery or Pickup Option',
-                          items: ref
-                              .read(addProductProvider.notifier)
-                              .restructuredCategory(),
-                          onSelected: (value) => ref
-                              .read(addProductProvider.notifier)
-                              .update(value, "pickUpOption")),
-                      if (formState.hasError && viewModel.pickUpOption.isEmpty)
+                      WayaTextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: viewModel.pricePerUnit,
+                          hintText: 'Enter the maximum bid amount',
+                          borderColor: formState.hasError &&
+                              viewModel.pricePerUnit.text.isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
+                          label: 'Maximum Bid Amount (optional)',
+                          suffixIcon:Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text("NGN", style: wayaTheme.textTheme.hintStyle),)
+
+                      ),
+                      if (formState.hasError &&
+                          viewModel.pricePerUnit.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -116,7 +122,40 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                     ],
                   );
                 }),
-                const Gap(10),
+
+                const Gap(20),
+                Text(
+                  "Delivery",
+                  style: wayaTheme.textTheme.hintStyle,
+                ),
+                const Gap(20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Switch(
+                        value: viewModel.includeDeliveryFee,
+                        onChanged: (value) => ref
+                            .read(createRequestProvider.notifier)
+                            .updateIncludeDeliveryFee(value)),
+                    const Gap(10),
+
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Not yet",
+                            style: wayaTheme.textTheme.titleMedium),
+                        const Gap(6),
+                        Text(
+                          "You can skip adding a delivery address for now\nand doit later.",
+                          style: wayaTheme.textTheme.hintStyle,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                const Gap(20),
                 FormField<String>(validator: (value) {
                   if (viewModel.pickUpAddress.text.isEmpty) {
                     return 'Pickup is required';
@@ -130,12 +169,12 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                       WayaTextFormField(
                         keyboardType: TextInputType.streetAddress,
                         controller: viewModel.pickUpAddress,
-                        hintText: 'Enter Pickup Address',
+                        hintText: 'Enter Delivery Address',
                         borderColor: formState.hasError &&
                             viewModel.pickUpAddress.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
-                        label: 'PickUp Address',
+                        label: 'Delivery Address',
                         prefixIcon: Icon(
                           Icons.location_on_outlined,
                           color: wayaTheme.colorScheme.greyColor300,
@@ -156,32 +195,189 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                     ],
                   );
                 }),
-                const Gap(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Switch(
-                        value: viewModel.includeDeliveryFee,
-                        onChanged: (value) => ref
-                            .read(addProductProvider.notifier)
-                            .updateIncludeDeliveryFee(value)),
-                    const Gap(10),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Inlcude Delivery Charges",
-                            style: wayaTheme.textTheme.titleMedium),
-                        const Gap(6),
-                        Text(
-                          "This means a certain amount will be \n charged for delivery of this product",
-                          style: wayaTheme.textTheme.hintStyle,
-                        )
-                      ],
-                    )
-                  ],
+                const Gap(10),
+                Row(children: [
+                  Expanded(
+                    child: FormField<String>(validator: (value) {
+                      if (viewModel.productCondition.isEmpty) {
+                        return 'State is required';
+                      }
+                      return null;
+                    }, builder: (formState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WayaSelectField(
+                              height: 0.3,
+                              label: "State",
+                              hintText: 'Select state',
+                              items: ref
+                                  .read(createRequestProvider.notifier)
+                                  .restructuredCategory(),
+                              onSelected: (value) => ref
+                                  .read(createRequestProvider.notifier)
+                                  .update(value, "productCondition")),
+                          if (formState.hasError &&
+                              viewModel.productCondition.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                formState.errorText!,
+                                style: TextStyle(
+                                    color: wayaTheme.colorScheme.error,
+                                    fontSize: 12),
+                              ),
+                            ),
+                        ],
+                      );
+                    }),
+                  ),
+                  const Gap(10),
+                  Expanded(
+                    child: FormField<String>(validator: (value) {
+                      if (viewModel.productCondition.isEmpty) {
+                        return 'LGA is required';
+                      }
+                      return null;
+                    }, builder: (formState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WayaSelectField(
+                              height: 0.3,
+                              label: "LGA",
+                              hintText: 'Select LGA',
+                              items: ref
+                                  .read(createRequestProvider.notifier)
+                                  .restructuredCategory(),
+                              onSelected: (value) => ref
+                                  .read(createRequestProvider.notifier)
+                                  .update(value, "productCondition")),
+                          if (formState.hasError &&
+                              viewModel.productCondition.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                formState.errorText!,
+                                style: TextStyle(
+                                    color: wayaTheme.colorScheme.error,
+                                    fontSize: 12),
+                              ),
+                            ),
+                        ],
+                      );
+                    }),
+                  ),
+                ],),
+
+                const Gap(30),
+                Text(
+                  "Bid Timing",
+                  style: wayaTheme.textTheme.hintStyle,
                 ),
+                const Gap(20),
+                FormField<String>(validator: (value) {
+                  if (viewModel.productCondition.isEmpty) {
+                    return 'State is required';
+                  }
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaSelectField(
+                          height: 0.3,
+                          label: "Bidding Start Time",
+                          hintText: 'Select Bidding Start Time',
+                          items: ref
+                              .read(createRequestProvider.notifier)
+                              .restructuredCategory(),
+                          onSelected: (value) => ref
+                              .read(createRequestProvider.notifier)
+                              .update(value, "productCondition")),
+                      if (formState.hasError &&
+                          viewModel.productCondition.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(10),
+                Row(children: [
+                  Expanded(
+                    child: FormField<String>(validator: (value) {
+                      return null;
+                    }, builder: (formState)  {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WayaTextFormField(
+                              keyboardType: TextInputType.text,
+                              controller: viewModel.materialType,
+                              hintText: '00:00',
+                              borderColor: formState.hasError &&
+                                  viewModel.materialType.text.isEmpty
+                                  ? wayaTheme.colorScheme.error
+                                  : null,
+                              label: 'Start Time',
+                          ),
+                          if (formState.hasError &&
+                              viewModel.materialType.text.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                formState.errorText!,
+                                style: TextStyle(
+                                    color: wayaTheme.colorScheme.error,
+                                    fontSize: 12),
+                              ),
+                            ),
+                        ],
+                      );
+                    }),
+                  ),
+                  const Gap(10),
+                  Expanded(
+                    child: FormField<String>(validator: (value) {
+                      return null;
+                    }, builder: (formState)  {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WayaTextFormField(
+                              keyboardType: TextInputType.text,
+                              controller: viewModel.materialType,
+                              hintText: '00:00',
+                              borderColor: formState.hasError &&
+                                  viewModel.materialType.text.isEmpty
+                                  ? wayaTheme.colorScheme.error
+                                  : null,
+                              label: 'End Time',
+                          ),
+                          if (formState.hasError &&
+                              viewModel.materialType.text.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                formState.errorText!,
+                                style: TextStyle(
+                                    color: wayaTheme.colorScheme.error,
+                                    fontSize: 12),
+                              ),
+                            ),
+                        ],
+                      );
+                    }),
+                  ),
+                ],),
+
                 const Gap(20),
                 if (viewModel.includeDeliveryFee)
                   FormField<String>(validator: (value) {
@@ -199,10 +395,10 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                             label: "Discount Type",
                             hintText: 'Select Discount Type',
                             items: ref
-                                .read(addProductProvider.notifier)
+                                .read(createRequestProvider.notifier)
                                 .restructuredCategory(),
                             onSelected: (value) => ref
-                                .read(addProductProvider.notifier)
+                                .read(createRequestProvider.notifier)
                                 .update(value, "discountType")),
                         if (formState.hasError &&
                             viewModel.deliveryPrice.text.isEmpty)
@@ -218,39 +414,10 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                       ],
                     );
                   }),
+
+
                 const Gap(20),
-                Text(
-                  "Discount (Optional)",
-                  style: wayaTheme.textTheme.hintStyle,
-                ),
-                const Gap(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Switch(
-                        value: viewModel.applyDiscount,
-                        onChanged: (value) => ref
-                            .read(addProductProvider.notifier)
-                            .updateApplyDiscount(value)),
-                    const Gap(10),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Apply Discount to Product",
-                            style: wayaTheme.textTheme.titleMedium),
-                        const Gap(6),
-                        Text(
-                          "This means a certain amount will \n be charged for delivery of this product",
-                          style: wayaTheme.textTheme.hintStyle,
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                const Gap(20),
-                if (viewModel.applyDiscount)
+               /* if (viewModel.applyDiscount)
                   FormField<String>(validator: (value) {
                     return null;
                   }, builder: (formState) {
@@ -262,10 +429,10 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                             label: "Discount Type",
                             hintText: 'Select Discount Type',
                             items: ref
-                                .read(addProductProvider.notifier)
+                                .read(createRequestProvider.notifier)
                                 .restructuredCategory(),
                             onSelected: (value) => ref
-                                .read(addProductProvider.notifier)
+                                .read(createRequestProvider.notifier)
                                 .update(value, "discountType")),
                         if (formState.hasError &&
                             viewModel.discountType.isEmpty)
@@ -281,9 +448,9 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                       ],
                     );
                   }),
-                const Gap(20),
+                const Gap(20),*/
                 WayaButton(
-                    text: 'Add Product Images',
+                    text: 'Confirm Buy Request Details',
                     callback: () {
                       //  ref.read(addProductProvider.notifier).submit();
                       widget.gotoNextTab();

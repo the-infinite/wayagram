@@ -9,6 +9,8 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 
+import '../../../vm/create_request_vm.dart';
+
 class PreviewRequest extends ConsumerStatefulWidget {
   final Function(int index) goBack;
   final Function gotoPreviousTab;
@@ -24,7 +26,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final provider = ref.watch(addProductProvider.notifier);
+    final provider = ref.watch(createRequestProvider.notifier);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,72 +38,6 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
         const Gap(30),
         EditHeader(
           onTap: () {
-            widget.goBack(2);
-          },
-          title: 'Product Images',
-        ),
-        const Gap(30),
-        Text(
-          "Product Thumbnail",
-          style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-            fontSize: 14,
-            color: wayaTheme.colorScheme.greyColor900,
-          ),
-        ),
-        const Gap(10),
-        Container(
-          height: 280,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.white,
-            borderRadius: BorderRadius.circular(12),
-            border:
-            Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
-          ),
-          child: WayaImage(
-            imageUrl:
-            'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
-            height: 250,
-            fit: BoxFit.contain,
-          ),
-        ),
-        const Gap(15),
-        Text(
-          "Front, Left, Right, and Back View",
-          style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-            fontSize: 14,
-            color: wayaTheme.colorScheme.greyColor900,
-          ),
-        ),
-        const Gap(10),
-        GridView.builder(
-            itemCount: 4,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                mainAxisSpacing: 0,
-                childAspectRatio: 1,
-                crossAxisSpacing: 8),
-            itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                      color: wayaTheme.colorScheme.greyColor300, width: 1),
-                ),
-                child: WayaImage(
-                  imageUrl:
-                  'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
-                  height: 100,
-                  fit: BoxFit.contain,
-                ),
-              );
-            }),
-        const Gap(30),
-        EditHeader(
-          onTap: () {
             widget.goBack(0);
           },
           title: 'Product Information',
@@ -109,15 +45,15 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
         const Gap(30),
         AboutProduct(
             title: 'Product Name',
-            content: 'Dr Teal Body Wash Glow & Radiance'),
+            content: 'Samsung S24 Ultra'),
         const Gap(15),
-        AboutProduct(title: 'Product Category', content: 'SkinCare'),
+        AboutProduct(title: 'Brand Name', content: 'Samsung'),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(title: 'Product Type', content: 'Cosmetics'),
+              child: AboutProduct(title: 'Product Category', content: 'Technology'),
             ),
             Expanded(
               child: AboutProduct(
@@ -129,20 +65,34 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
         AboutProduct(
             title: 'Product Description',
             content:
-            'Dr Teal’s Ultra Moisturizing Body Wash hydrates, conditions and moisturizes skin with Aloe Vera, Shea Butter and Vitamin E, while Pure Epsom Salt helps revitalize tired, achy muscles. Vitamin C promotes youthful, glowing, skin. Citrus essential oils help uplift mood. Made with Pure Epsom Salt to help revitalize tired, achy muscles Vitamin C promotes youthful, glowing, skin. Citrus essential oils help uplift mood. '),
+            'Samsung S22 Ultra 5G Fairly Used in good condition. Graphite'),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(title: 'Height', content: '12cm'),
+              child: AboutProduct(title: 'Quantity', content: '1'),
             ),
             Expanded(
-              child: AboutProduct(title: 'Width', content: '45cm'),
+              flex: 2,
+              child: AboutProduct(title: 'State of Purchase', content: 'Lagos State'),
             ),
             Expanded(
-              child: AboutProduct(title: 'Depth', content: '56cm'),
+              child: AboutProduct(title: 'LGA', content: 'Alimosho'),
             )
+          ],
+        ),
+        const Gap(15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: AboutProduct(title: 'Min Distance', content: '10Km'),
+            ),
+            Expanded(
+              child: AboutProduct(title: 'Product Condition', content: 'Good'),
+            ),
+
           ],
         ),
         const Gap(30),
@@ -153,7 +103,18 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           title: 'Pricing & Delivery',
         ),
         const Gap(30),
-        AboutProduct(title: 'Price Per Unit', content: 'N 24,000'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: AboutProduct(title: 'Bid Starting Amount', content: '300,000 NGN'),
+            ),
+            Expanded(
+              child: AboutProduct(title: 'Maximum Bid Amount', content: '450,000 NGN'),
+            ),
+
+          ],
+        ),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -161,12 +122,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           children: [
             Expanded(
               child: AboutProduct(
-                  title: 'Delivery/Pickup Option',
-                  content: 'Available for pickup'),
-            ),
-            Expanded(
-              child: AboutProduct(
-                  title: 'PickUp Address',
+                  title: 'Delivery Address',
                   content: '62, Lekki Expressway, Lagos, Nigeria'),
             )
           ],
@@ -176,17 +132,36 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(title: 'Delivery Fee', content: 'N 5,000'),
+              child: AboutProduct(title: 'State', content: 'Lagos State'),
+            ),
+            Expanded(
+              child: AboutProduct(title: 'LGA', content: 'Alimosho'),
+            )
+          ],
+        ),
+        const Gap(30),
+        EditHeader(
+          onTap: () {
+            widget.goBack(1);
+          },
+          title: 'Bid Timing',
+        ),
+        const Gap(30),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: AboutProduct(title: 'Start Time', content: '00:00'),
             ),
             Expanded(
               child: AboutProduct(
-                  title: 'Discount Type', content: 'Mega Sales 20% Discount'),
+                  title: 'End Time', content: '02:00'),
             )
           ],
         ),
         const Gap(30),
         WayaButton(
-            text: 'Submit Product',
+            text: 'Find offers',
             callback: () {
               provider.submit(context, widget.isWayagramDeal);
             }),
