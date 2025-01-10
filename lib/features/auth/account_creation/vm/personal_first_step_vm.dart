@@ -13,6 +13,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   final AuthRepository _authRepository;
   final WayaLocalDataSource _localDataSource;
   final WayaSecureDataSource _secureDataSource;
+
   final _logger = getLogger('PersonalFirstStepVm');
 
   PersonalFirstStepVm(
@@ -113,8 +114,9 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         _localDataSource.saveUserId(user.id!);
 
         if (!isPersonal) {
-          final business = responseModel.data.business;
+          final business = responseModel.data.business!;
           state = state.copyWith(business: business);
+          _secureDataSource.saveBusinessId(business.id!);
         }
         gotoNextTab();
       }

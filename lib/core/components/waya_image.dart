@@ -19,7 +19,7 @@ class WayaDp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final avatar = ref.watch(profileVmProvider).userAccountModel?.data?.profilePicture;
+    final avatar = ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user?.profilePicture;
     return GestureDetector(
       onTap: isEdit
           ? () {

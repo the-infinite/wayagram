@@ -21,7 +21,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileVmProvider.notifier).getUserData();
-      ref.read(profileVmProvider.notifier).getUserProfile();
+     
     });
     super.initState();
   }
@@ -33,7 +33,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       isScrollable: true,
       onRefresh: () async {
         ref.read(profileVmProvider.notifier).getUserData();
-        ref.read(profileVmProvider.notifier).getUserProfile();
+      
       },
       isLoading: userState.isLoading,
       title: "General Settings",

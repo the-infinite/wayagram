@@ -46,10 +46,10 @@ class SuccessfulSetupVm extends StateNotifier<SuccessfulSetUpState> {
         UserAccountModel userAccountModel =
             UserAccountModel.fromJson(response.data);
 
-        state = state.copyWith(user: userAccountModel.data);
+        state = state.copyWith(user: userAccountModel.data?.userdata);
 
         if (userAccountModel.data != null &&
-            userAccountModel.data!.role!.name != 'PERSONAL') {
+            userAccountModel.data!.userdata!.user!.role!.name != 'PERSONAL') {
           final bizResponse =
               await _profileRepo.getBusinessDataRepo(userId: userId);
 

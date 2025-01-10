@@ -107,15 +107,7 @@ class Explore extends ConsumerWidget {
             CategoriesFilterWidget<Product>(allItems: []),
             const Gap(25),
             productState.when(
-                data: (products) => GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, mainAxisSpacing: 0, childAspectRatio: 0.65, crossAxisSpacing: 12),
-                    itemCount: products.sublist(0, 2).length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(product: products.sublist(0, 2)[index]);
-                    }),
+                data: (products) => _buildProductGrid(products.sublist(0, 2)),
                 error: (e, stack) => _buildProductLoadingState(context: context),
                 loading: () => _buildProductLoadingState(context: context)),
 
@@ -146,6 +138,34 @@ class Explore extends ConsumerWidget {
             ),
           ),
         ));
+  }
+
+
+    Widget _buildProductGrid(List<Product> products) {
+    return Column(
+      children: [
+        for (int i = 0; i < products.length; i += 2)
+          Row(
+            children: [
+              Expanded(
+                child: ProductCard(
+                  product: products[i],
+                
+                ),
+              ),
+              if (i + 1 < products.length) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ProductCard(
+                    product: products[i + 1],
+                  
+                  ),
+                ),
+              ],
+            ],
+          ),
+      ],
+    );
   }
 
   Widget _buildProductLoadingState({required BuildContext context}) {

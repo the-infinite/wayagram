@@ -73,12 +73,12 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     final fundingOptionCode =
         fundingOption.toLowerCase() == "paystack" ? "PS002" : "WQ001";
     try {
-      final user = _localDataSource.getUser();
+      final userId = _localDataSource.getUserId();
       state = state.copyWith(isVerifying: true);
       final response = await _walletRepository.verifyWalletFunding(
           VerifyTransaction(
               transactionId: transactionId,
-              userId: user.id ?? "",
+              userId: userId ?? "",
               fundOptionCode: fundingOptionCode));
       if (response.success) {
         log("${response.data}");

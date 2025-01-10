@@ -7,6 +7,9 @@ import 'package:wayagram/features/general_settings/change_pin/change_pin_page.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
@@ -30,6 +33,10 @@ import 'package:wayagram/features/ugt/ugt_get_started.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
+import '../../features/quotation/buyer/views/create_request/create_request.dart';
+
+
+
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
     '/': () => SplashScreen(),
@@ -52,6 +59,8 @@ class WayaAppRoutes {
     CartView.route: () => CartView(),
     AllSellerOrders.route: () => AllSellerOrders(),
     SellerOrderDetails.route: () => SellerOrderDetails(),
+    SellerBidDetails.route: () => SellerBidDetails(),
+    SellerSettlement.route: () => SellerSettlement(),
     Checkout.route: () => Checkout(),
     FilterView.route: () => FilterView(),
     GeneralSettingsPage.route: () => GeneralSettingsPage(),
@@ -80,7 +89,9 @@ class WayaAppRoutes {
     DisputeChat.route: () => DisputeChat(),
     UgtGetStarted.route: () => UgtGetStarted(),
     UgtHome.route: () => UgtHome(),
-    CreateContest.route: () => CreateContest()
+    CreateContest.route: () => CreateContest(),
+    CreateRequest.route: () => CreateRequest(),
+    AllSellerBids.route: () => AllSellerBids(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

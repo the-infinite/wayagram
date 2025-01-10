@@ -41,7 +41,7 @@ class SelectAccount extends ConsumerWidget {
                         },
                         child: Container(
                           width: double.infinity,
-                          height: 100,
+                          height: 110,
                           padding: EdgeInsets.all(10.0),
                           decoration: BoxDecoration(
                               color: accounts[index].type == type

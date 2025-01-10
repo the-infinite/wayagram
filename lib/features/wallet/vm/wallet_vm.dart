@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
@@ -50,7 +51,9 @@ final walletVmProvider = StateNotifierProvider<WalletVm, WalletState>((ref) {
 class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   final WalletRepository? _walletRepository;
   final WayaLocalDataSource _localDataSource;
-  WalletFundingOptionsVm(this._walletRepository, this._localDataSource)
+  final SuccessfulSetUpState _setupState;
+  WalletFundingOptionsVm(
+      this._walletRepository, this._localDataSource, this._setupState)
       : super(WalletFundingOptionState());
 
   Future<void> getWalletFundingOptions() async {
@@ -71,10 +74,10 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
       {String? decription,
       required double amount,
       required String fundOptionCode}) async {
-    final user = _localDataSource.getUser();
-    log("${user}");
+    final user = _setupState.user?.user;
+
     final response = await _walletRepository!.fundWallet(FundWallet(
-        userId: user.id ?? "",
+        userId: user!.id ?? "",
         amount: amount,
         description: decription ?? "Wallet funding",
         email: user.email ?? "",
@@ -90,9 +93,9 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   }
 
   Future<bool> verifyWalletPin(String pin) async {
-    final user = _localDataSource.getUser();
+    final user = _setupState.user?.user;
     final response = await _walletRepository!
-        .confirmWalletPin(ConfirmWalletPin(userId: user.id ?? "", pin: pin));
+        .confirmWalletPin(ConfirmWalletPin(userId: user!.id ?? "", pin: pin));
     if (response.success) {
       return true;
     } else {
@@ -107,9 +110,9 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
       required String recipientId,
       required String referenceId,
       Map<String, dynamic>? metadata}) async {
-    final user = _localDataSource.getUser();
+    final user = _setupState.user?.user;
     final response = await _walletRepository!.payForService(PayForService(
-      userId: user.id ?? "",
+      userId: user!.id ?? "",
       amount: amount,
       description: description,
       purpose: purpose,
@@ -126,5 +129,7 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 final walletFundingOptionsVmProvider =
     StateNotifierProvider<WalletFundingOptionsVm, WalletFundingOptionState>(
         (ref) {
-  return WalletFundingOptionsVm(WalletRepository(), WayaLocalDataSource());
+  final successfulSetupVm = ref.watch(successfulSetupVmProvider);
+  return WalletFundingOptionsVm(
+      WalletRepository(), WayaLocalDataSource(), successfulSetupVm);
 });
