@@ -228,7 +228,6 @@ class RadioSelect extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         ListTile(
           titleAlignment: ListTileTitleAlignment.top,
           contentPadding: EdgeInsets.all(0),
