@@ -6,8 +6,11 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 
+import '../../../../core/utils/waya_navigation.dart';
+
 class CreateUltimate extends ConsumerStatefulWidget {
-  const CreateUltimate({super.key});
+  final Function goToNextTab;
+  const CreateUltimate({super.key, required this.goToNextTab});
 
   @override
   ConsumerState<CreateUltimate> createState() => _CreateUltimateState();
@@ -192,8 +195,11 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
         const Gap(20),
         UploadImage(onUpload: () {}),
         const Gap(60),
+
         WayaButton(
-          callback: () {},
+          callback: () {
+
+          },
           text: "Submit",
         ),
         const Gap(8),
@@ -203,7 +209,9 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
             textColor: wayaTheme.colorScheme.customBlack,
             border:
                 Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-            callback: () {})
+            callback: () {
+              WayaNav.toNamed("/ugt-home");
+            })
       ],
     );
   }
@@ -220,6 +228,7 @@ class RadioSelect extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
         ListTile(
           titleAlignment: ListTileTitleAlignment.top,
           contentPadding: EdgeInsets.all(0),

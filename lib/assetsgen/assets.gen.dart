@@ -59,6 +59,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/check-icon.svg
   SvgGenImage get checkIcon => const SvgGenImage('assets/icons/check-icon.svg');
 
+  /// File path: assets/icons/create.svg
+  SvgGenImage get create => const SvgGenImage('assets/icons/create.svg');
+
   /// File path: assets/icons/d-code-onvalid.svg
   SvgGenImage get dCodeOnvalid =>
       const SvgGenImage('assets/icons/d-code-onvalid.svg');
@@ -225,6 +228,7 @@ class $AssetsIconsGen {
         buttonIcon,
         chat,
         checkIcon,
+        create,
         dCodeOnvalid,
         dCodeValid,
         dealIcon,
@@ -280,6 +284,9 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/avatars.png
   AssetGenImage get avatars => const AssetGenImage('assets/images/avatars.png');
+
+  /// Directory path: assets/images/bid
+  $AssetsImagesBidGen get bid => const $AssetsImagesBidGen();
 
   /// File path: assets/images/d-code-invalid.png
   AssetGenImage get dCodeInvalid =>
@@ -482,6 +489,16 @@ class $AssetsImagesAuthGen {
   /// List of all assets
   List<dynamic> get values =>
       [docSuccess, explore, forgotPasswordLock, iconRight, setNotification];
+}
+
+class $AssetsImagesBidGen {
+  const $AssetsImagesBidGen();
+
+  /// File path: assets/images/bid/deal.png
+  AssetGenImage get deal => const AssetGenImage('assets/images/bid/deal.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [deal];
 }
 
 class $AssetsImagesExploreGen {
