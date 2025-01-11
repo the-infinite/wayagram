@@ -32,7 +32,6 @@ class _AddNewRequirementModalState extends State<AddNewRequirementModal> {
                 style: wayaTheme.textTheme.bodyMedium),
             SizedBox(height: 3.h),
             const Gap(20),
-
             WayaSelectField(
               height: 0.3,
               label: "Requirement Type ",
