@@ -15,7 +15,8 @@ class FundAccountScreen extends ConsumerStatefulWidget {
   const FundAccountScreen({super.key});
 
   @override
-  ConsumerState<FundAccountScreen> createState() => _FundBankAccountScreenState();
+  ConsumerState<FundAccountScreen> createState() =>
+      _FundBankAccountScreenState();
 }
 
 class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
@@ -74,10 +75,10 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
       });
       return;
     }
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final fundOptionCode = args!["code"];
     final name = args["name"];
-    // If validation passes, print to console
     log('Submitted amount: $amount NGN');
     switch (name) {
       case "PAYSTACK":
@@ -85,7 +86,8 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
         WayaLoadingDialog.show(context);
         final data = await ref
             .read(walletFundingOptionsVmProvider.notifier)
-            .walletFunding(amount: double.parse(amount), fundOptionCode: fundOptionCode);
+            .walletFunding(
+                amount: double.parse(amount), fundOptionCode: fundOptionCode);
         if (mounted) {
           WayaLoadingDialog.hide(context);
           if (data != null) {
@@ -103,11 +105,13 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
         WayaLoadingDialog.show(context);
         final data = await ref
             .read(walletFundingOptionsVmProvider.notifier)
-            .walletFunding(amount: double.parse(amount), fundOptionCode: fundOptionCode);
+            .walletFunding(
+                amount: double.parse(amount), fundOptionCode: fundOptionCode);
         if (mounted) {
           WayaLoadingDialog.hide(context);
           if (data != null) {
-            WayaNav.toNamed(BankTransferScreen.route, arguments: {...data, "amount": amount});
+            WayaNav.toNamed(BankTransferScreen.route,
+                arguments: {...data, "amount": amount});
           }
         }
         break;
@@ -120,7 +124,8 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final name = args?["name"];
     return WayaScaffold(
       backgroundColor: wayaTheme.colorScheme.greyColor50,
@@ -265,7 +270,9 @@ class NumPadButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(32),
         side: BorderSide(
-          color: backgroundColor != null ? Colors.transparent : Colors.grey.shade300,
+          color: backgroundColor != null
+              ? Colors.transparent
+              : Colors.grey.shade300,
         ),
       ),
       child: InkWell(

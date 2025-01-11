@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -8,7 +10,8 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 class UploadImage extends StatelessWidget {
   final VoidCallback onUpload;
-  const UploadImage({super.key, required this.onUpload});
+  final File? imagePath;
+  const UploadImage({super.key, required this.onUpload, this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -96,5 +99,62 @@ class UploadImage extends StatelessWidget {
                 ],
               ),
             )));
+  }
+}
+
+class UploadLogo extends StatelessWidget {
+  final VoidCallback onUpload;
+  final File? imagePath;
+  const UploadLogo({super.key, required this.onUpload, this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Align(
+        alignment: Alignment.center,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(150),
+          child: Stack(
+            children: [
+              Container(
+                width: 150,
+                height: 150,
+                decoration:
+                    BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor),
+                child: imagePath != null
+                    ? Image.file(
+                        imagePath!,
+                        fit: BoxFit.cover,
+                        filterQuality: FilterQuality.high,
+                        scale: 1,
+                      )
+                    : SizedBox.shrink(),
+              ),
+              Positioned.fill(
+                child: Material(
+                  color: wayaTheme.colorScheme.customPrimary.withOpacity(0.3),
+                  child: InkWell(
+                    onTap: onUpload,
+                    child: Center(
+                        child: Container(
+                      padding: EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                              width: 1, color: wayaTheme.colorScheme.white)),
+                      child: Text(
+                        "Upload Logo",
+                        style: TextStyle().wayaCopyWith(
+                            color: wayaTheme.colorScheme.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    )),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }

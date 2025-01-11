@@ -19,22 +19,28 @@ class TransactionDetailsScreen extends ConsumerStatefulWidget {
   const TransactionDetailsScreen({super.key});
 
   @override
-  ConsumerState<TransactionDetailsScreen> createState() => _TransactionDetailsScreenState();
+  ConsumerState<TransactionDetailsScreen> createState() =>
+      _TransactionDetailsScreenState();
 }
 
-class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScreen> with WalletMixin {
+class _TransactionDetailsScreenState
+    extends ConsumerState<TransactionDetailsScreen> with WalletMixin {
   final screenshotController = ScreenshotController();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final transactionId = ModalRoute.of(context)!.settings.arguments as String;
-      ref.read(transactionVmProvider.notifier).getSingleTransactions(transactionId);
+      final transactionId =
+          ModalRoute.of(context)!.settings.arguments as String;
+      ref
+          .read(transactionVmProvider.notifier)
+          .getSingleTransactions(transactionId);
     });
   }
 
-  Widget _buildDetailRow(String label, String value, {Color? valueColor, Widget? trailing}) {
+  Widget _buildDetailRow(String label, String value,
+      {Color? valueColor, Widget? trailing}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -89,9 +95,9 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
           const SizedBox(height: 20),
           Text(
             '₦${state.transaction?.netAmount ?? "0"}',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 24,
-              color: Colors.green,
+              color: wayaTheme.colorScheme.success,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -112,15 +118,17 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
           _buildDetailRow(
             'Transaction Type',
             state.transaction?.type ?? "",
-            valueColor: Colors.green,
+            valueColor: wayaTheme.colorScheme.success,
           ),
           _buildDetailRow(
             'Date',
-            WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
+            WayaHelpers.formatDateString(
+                state.transaction?.updatedAt.toString() ?? ""),
           ),
           _buildDetailRow(
             'Time',
-            DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
+            DateFormat.jm()
+                .format(state.transaction?.updatedAt ?? DateTime.now()),
           ),
           _buildDetailRow(
             'Reference Number',
@@ -129,7 +137,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
           _buildDetailRow(
             'Transaction Status',
             state.transaction?.status ?? "",
-            valueColor: Colors.green,
+            valueColor: wayaTheme.colorScheme.success,
           ),
         ],
       ),
@@ -158,9 +166,10 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
           ),
         ),
       ),
+      isLoading: state.isLoadingSingle!,
       body: SingleChildScrollView(
         child: state.isLoadingSingle!
-            ? const Center(child: CircularProgressIndicator())
+            ? const SizedBox()
             : Column(
                 children: [
                   Container(
@@ -181,7 +190,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                           '+ ₦${state.transaction?.netAmount ?? "0"}',
                           style: TextStyle(
                             fontSize: 24,
-                            color: Colors.green,
+                            color: wayaTheme.colorScheme.success,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -214,15 +223,17 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                           _buildDetailRow(
                             'Transaction Type',
                             state.transaction?.type ?? "",
-                            valueColor: Colors.green,
+                            valueColor: wayaTheme.colorScheme.success,
                           ),
                           _buildDetailRow(
                             'Date',
-                            WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
+                            WayaHelpers.formatDateString(
+                                state.transaction?.updatedAt.toString() ?? ""),
                           ),
                           _buildDetailRow(
                             'Time',
-                            DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
+                            DateFormat.jm().format(
+                                state.transaction?.updatedAt ?? DateTime.now()),
                           ),
                           _buildDetailRow(
                             'Reference Number',
@@ -248,7 +259,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                           _buildDetailRow(
                             'Transaction Status',
                             state.transaction?.status ?? "",
-                            valueColor: Colors.green,
+                            valueColor: wayaTheme.colorScheme.success,
                           ),
                         ],
                       ),
@@ -258,7 +269,8 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: ElevatedButton(
                       onPressed: () {
-                        shareReceipt(screenshotController, _buildReceiptContent());
+                        shareReceipt(
+                            screenshotController, _buildReceiptContent());
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: wayaTheme.primaryColor,
@@ -288,11 +300,17 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                         onPressed: () async {
                           await ref
                               .read(transactionVmProvider.notifier)
-                              .verifyTransaction(state.transaction!.transactionId, state.transaction!.paymentMethod);
+                              .verifyTransaction(
+                                  state.transaction!.transactionId,
+                                  state.transaction!.paymentMethod);
                           WayaLoadingDialog.show(context);
                           if (state.verified!) {
-                            await ref.read(transactionVmProvider.notifier).getSingleTransactions(state.transaction!.id);
-                            await ref.read(walletVmProvider.notifier).getUserWallet();
+                            await ref
+                                .read(transactionVmProvider.notifier)
+                                .getSingleTransactions(state.transaction!.id);
+                            await ref
+                                .read(walletVmProvider.notifier)
+                                .getUserWallet();
                           }
                           WayaLoadingDialog.hide(context);
                         },

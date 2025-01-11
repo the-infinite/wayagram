@@ -25,6 +25,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
     return WayaScaffold(
       color: wayaTheme.colorScheme.scaffoldColor2,
       title: 'Wallet',
+      isLoading: state.isLoading!,
       body: Column(
         children: [
           WalletBalanceCard(),
@@ -53,7 +54,8 @@ class _WalletPageState extends ConsumerState<WalletPage> {
           onTap: () => WayaNav.toNamed(AllTransactionHistory.route),
           child: Text(
             'See All',
-            style: wayaTheme.textTheme.titleMedium?.wayaCopyWith(color: wayaTheme.colorScheme.primary500),
+            style: wayaTheme.textTheme.titleMedium
+                ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500),
           ),
         ),
       ],

@@ -43,9 +43,9 @@ class SplashScreenVm extends StateNotifier<void> {
 
           if (bizResponse.success) {
             BusinessAccountData bizData =
-                BusinessAccountData.fromJson(bizResponse.data);
+                BusinessAccountData.fromJson(bizResponse.data["data"]);
             _setupVm.state = _setupVm.state.copyWith(business: bizData);
-            await _secureDataSource.saveBusinessId(bizData.id);
+            await _secureDataSource.saveBusinessId(bizData.businessId);
           }
         }
 

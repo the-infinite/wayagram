@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:get/get.dart'; // Add this import for GetX
@@ -13,6 +14,8 @@ import 'package:wayagram/features/more/views/more.dart';
 import 'package:wayagram/features/quotation/buyer/views/waya_buyer_quotation.dart';
 import 'package:wayagram/features/shop/buyer/views/waya_buyer.dart';
 import 'package:wayagram/features/shop/seller/views/waya_seller.dart';
+
+import '../quotation/seller/views/waya_seller_quotation.dart';
 
 class BottomView extends ConsumerStatefulWidget {
   static const route = '/explore';
@@ -80,7 +83,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
               SizedBox(
                 width: 60,
                 child: WayaButton(
-                  callback: () => Navigator.of(context).pop(true),
+                  callback: () => SystemNavigator.pop(),
                   text: 'Yes',
                   height: 35,
                   radius: 6,
@@ -104,7 +107,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
       Explore(),
       userType == 'PERSONAL' ? WayaBuyer() : WayaSeller(),
       Explore(),
-      WayaBuyerQuotation(),
+      userType == 'PERSONAL' ? WayaBuyerQuotation() : WayaSellerQuotation(),
       Explore(),
       MoreView(),
     ];

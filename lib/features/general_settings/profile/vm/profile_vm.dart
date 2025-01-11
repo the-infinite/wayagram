@@ -95,6 +95,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
       if (response.success) {
         UserAccountModel userAccountModel =
             UserAccountModel.fromJson(response.data);
+
         state = state.copyWith(
             userAccountModel: userAccountModel, isLoading: false);
       } else {
@@ -113,50 +114,50 @@ class ProfileVm extends StateNotifier<ProfileState> {
     await _secureDataSource.saveUserId("");
 
     WayaNav.toNamed('/login-cover-page');
+
+    // void getUserProfile() async {
+    //   final userId = _localDataSource.getUserId();
+
+    //   try {
+    //     state = state.copyWith(isLoading: true);
+    //     final response = await _profileRepo.getUserProfileRepo(userId: userId);
+
+    //     if (response.success) {
+    //       UserProfileModel userProfileModel = UserProfileModel.fromJson(response.data);
+    //       state = state.copyWith(isLoading: false, userProfileModel: userProfileModel);
+    //     } else {
+    //       state = state.copyWith(isLoading: false);
+    //     }
+    //   } catch (e) {
+    //     state = state.copyWith(isLoading: false);
+    //   }
+    // }
   }
 
-  // void getUserProfile() async {
-  //   final userId = _localDataSource.getUserId();
+    void updateProfilePicture() async {
+      final userId = _localDataSource.getUserId();
+      File? profileImage = await WayaUtils.pickAndCropImage();
+      if (profileImage != null) {
+        Uint8List imageBytes = await profileImage.readAsBytes();
 
-  //   try {
-  //     state = state.copyWith(isLoading: true);
-  //     final response = await _profileRepo.getUserProfileRepo(userId: userId);
+        try {
+          state = state.copyWith(isLoading: true);
+          final response = await _profileRepo.updateProfileImageRepo(
+              userId: userId,
+              fileName: WayaHelpers.extractFileName(profileImage),
+              image: imageBytes);
 
-  //     if (response.success) {
-  //       UserProfileModel userProfileModel = UserProfileModel.fromJson(response.data);
-  //       state = state.copyWith(isLoading: false, userProfileModel: userProfileModel);
-  //     } else {
-  //       state = state.copyWith(isLoading: false);
-  //     }
-  //   } catch (e) {
-  //     state = state.copyWith(isLoading: false);
-  //   }
-  // }
-
-  void updateProfilePicture() async {
-    final userId = _localDataSource.getUserId();
-    File? profileImage = await WayaUtils.pickAndCropImage();
-    if (profileImage != null) {
-      Uint8List imageBytes = await profileImage.readAsBytes();
-
-      try {
-        state = state.copyWith(isLoading: true);
-        final response = await _profileRepo.updateProfileImageRepo(
-            userId: userId,
-            fileName: WayaHelpers.extractFileName(profileImage),
-            image: imageBytes);
-
-        if (response.success) {
-          WayaSnackBar.showToast('Profile Picture Updated Successfully');
-          refetchUserData();
+          if (response.success) {
+            WayaSnackBar.showToast('Profile Picture Updated Successfully');
+            refetchUserData();
+          }
+          state = state.copyWith(isLoading: false);
+        } catch (e) {
+          state = state.copyWith(isLoading: false);
         }
-        state = state.copyWith(isLoading: false);
-      } catch (e) {
-        state = state.copyWith(isLoading: false);
       }
     }
   }
-}
 
 final profileVmProvider = StateNotifierProvider<ProfileVm, ProfileState>((ref) {
   return ProfileVm(

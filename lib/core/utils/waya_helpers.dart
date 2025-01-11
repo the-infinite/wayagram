@@ -1,14 +1,15 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
+import 'package:mime/mime.dart';
 
 class WayaHelpers {
- 
   static String extractFileName(File? imageFile) {
     return imageFile == null ? 'file is null' : imageFile.path.split('/').last;
   }
-
 
   static String toOrdinal(int number) {
     if (number < 1) return number.toString();
@@ -28,7 +29,8 @@ class WayaHelpers {
   }
 
   static String formatPrice(int price) {
-    String formattedCurrency = NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price);
+    String formattedCurrency =
+        NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price);
 
     return formattedCurrency;
   }
@@ -60,5 +62,15 @@ class WayaHelpers {
 
     // Format the DateTime object to the desired string format (e.g., "December 2021")
     return DateFormat('MMMM yyyy').format(dateTime);
+  }
+
+  static Future<MultipartFile> formattedImage(File file) async {
+    final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
+
+    return await MultipartFile.fromFile(
+      file.path,
+      filename: file.uri.pathSegments.last,
+      contentType: MediaType.parse(mimeType),
+    );
   }
 }

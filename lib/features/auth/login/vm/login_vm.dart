@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/login/model/user_model.dart';
 
 class LoginState {
@@ -80,12 +80,14 @@ class LoginVm extends StateNotifier<LoginState> {
       if (response.success) {
         final remmoteUserData = UserModel.fromJson(response.data);
         state = state.copyWith(userData: remmoteUserData);
-           _localDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
-      await  _secureDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
+        _localDataSource
+            .saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
+        await _secureDataSource
+            .saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
         await _secureDataSource
             .saveToken(remmoteUserData.data?.token?.token as String);
-                    await _secureDataSource
-            .saveToken(remmoteUserData.data?.token?.refreshToken as String);
+        await _secureDataSource.saveRefreshToken(
+            remmoteUserData.data?.token?.refreshToken as String);
 
         WayaNav.toNamed("/explore");
       }

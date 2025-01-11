@@ -8,8 +8,12 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/quotation/buyer/views/my_request.dart';
+import 'package:wayagram/features/quotation/seller/views/bid_dashboard/bid_dashboard.dart';
 import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
+
+import '../../../../core/utils/waya_navigation.dart';
+import '../../buyer/views/buy_request.dart';
 
 class WayaSellerQuotation extends ConsumerStatefulWidget {
   const WayaSellerQuotation({super.key});
@@ -52,7 +56,7 @@ class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation>
                 ),
                 WayaTabButton(
                   isSelected: _selectedIndex == 2,
-                  text: 'Bid Dash',
+                  text: 'Bid Dashboard',
                   onTap: () => setState(() => _selectedIndex = 2),
                 ),
               ],
@@ -78,14 +82,14 @@ class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation>
                 ],
               ),
               callback: () {
-                //WayaNav.toNamed('/create-request', arguments: "id");
+                WayaNav.toNamed('/create-request');
+                //WayaNav.toNamed(CreateRequest.route);
               },
               color: wayaTheme.colorScheme.primar50,
             ),
 
             const Gap(25),
-            // AllProducts()
-            //_selectedIndex == 0 ? BuyRequests() : _selectedIndex == 1 ? MyRequests() : AllOrders()
+            _selectedIndex == 0 ? BuyRequests() : _selectedIndex == 1 ? MyRequests() : BidDashboard()
           ],
         ));
   }
