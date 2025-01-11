@@ -3,9 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
+import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/login/model/user_model.dart';
+import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
 class LoginState {
   final bool isPasswordFocused;
@@ -47,9 +51,12 @@ class LoginVm extends StateNotifier<LoginState> {
   final AuthRepository _authRepository;
   final WayaLocalDataSource _localDataSource;
   final WayaSecureDataSource _secureDataSource;
+  final SuccessfulSetupVm _setupVm;
+  final ProfileRepo _profileRepo;
   final _logger = getLogger("LoginVm");
 
-  LoginVm(this._authRepository, this._localDataSource, this._secureDataSource)
+  LoginVm(this._authRepository, this._localDataSource, this._secureDataSource,
+      this._setupVm, this._profileRepo)
       : super(LoginState(
           emailController: TextEditingController(),
           passwordController: TextEditingController(),
@@ -80,10 +87,40 @@ class LoginVm extends StateNotifier<LoginState> {
       if (response.success) {
         final remmoteUserData = UserModel.fromJson(response.data);
         state = state.copyWith(userData: remmoteUserData);
-           _localDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
-      await  _secureDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
+
+        _localDataSource
+            .saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
+        await _secureDataSource
+            .saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
         await _secureDataSource
             .saveToken(remmoteUserData.data?.token?.token as String);
+        await _secureDataSource.saveRefreshToken(
+            remmoteUserData.data?.token?.refreshToken as String);
+
+        //
+
+        if (remmoteUserData.data != null) {
+          final response = await _profileRepo.getUserDataRepo(
+              userId: remmoteUserData.data?.userdata?.user?.id as String);
+
+          if (response.success) {
+            UserAccountModel userAccountModel =
+                UserAccountModel.fromJson(response.data);
+            _setupVm.state =
+                _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+
+            if (userAccountModel.data != null &&
+                userAccountModel.data!.userdata!.user!.role!.name !=
+                    "PERSONAL") {
+              final bizResponse = await _profileRepo.getBusinessDataRepo(
+                  userId: remmoteUserData.data?.userdata?.user?.id as String);
+              BusinessAccountData bizData =
+                  BusinessAccountData.fromJson(bizResponse.data["data"]);
+              _setupVm.state = _setupVm.state.copyWith(business: bizData);
+              await _secureDataSource.saveBusinessId(bizData.businessId);
+            }
+          }
+        }
 
         WayaNav.toNamed("/explore");
       }
@@ -96,6 +133,7 @@ class LoginVm extends StateNotifier<LoginState> {
 }
 
 final loginVmProvider = StateNotifierProvider<LoginVm, LoginState>((ref) {
-  return LoginVm(
-      AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource());
+  final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
+  return LoginVm(AuthRepository(), WayaLocalDataSource(),
+      WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
 });

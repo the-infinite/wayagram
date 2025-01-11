@@ -65,6 +65,10 @@ class ManageShop extends ConsumerWidget {
             WayaButton(
               callback: () {},
               text: 'Shop Settings',
+              textStyle: TextStyle().wayaCopyWith(
+                        color: wayaTheme.colorScheme.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500),
               height: 35,
             )
           ],

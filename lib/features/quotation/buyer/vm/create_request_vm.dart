@@ -11,7 +11,6 @@ import 'package:wayagram/features/auth/add_business_account/vm/add_business_acco
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/quotation/data/model/model.dart';
 
-
 class CreateRequestState {
   final TextEditingController productName;
   final TextEditingController brandName;
@@ -71,8 +70,7 @@ class CreateRequestState {
     this.includeDeliveryFee = false,
     this.uploadedDocuments = const [],
     this.productImage,
-  })  :
-        productName = productName ?? TextEditingController(),
+  })  : productName = productName ?? TextEditingController(),
         brandName = brandName ?? TextEditingController(),
         productDescription = productDescription ?? TextEditingController(),
         materialType = materialType ?? TextEditingController(),
@@ -145,7 +143,8 @@ class CreateRequestState {
   }
 }
 
-final createRequestProvider = StateNotifierProvider<CreateRequestVm, CreateRequestState>(
+final createRequestProvider =
+    StateNotifierProvider<CreateRequestVm, CreateRequestState>(
         (ref) => CreateRequestVm(ref));
 
 class CreateRequestVm extends StateNotifier<CreateRequestState> {
@@ -229,7 +228,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     }
   }
 
-  void submit(BuildContext context, bool isWayagramDeal)  async{
+  void submit(BuildContext context, bool isWayagramDeal) async {
     //final addProductData = ref.watch(addProductProvider.notifier);
 
     if (isWayagramDeal) {
@@ -238,27 +237,24 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
           context: context,
           title: "Your Application has been submitted Successfully! 🎉",
           message:
-          "Your product has been submitted. We'll notify you \n once it's reviewed.",
+              "Your product has been submitted. We'll notify you \n once it's reviewed.",
           onPress: () => WayaNav.toNamed('/wayagram-deal'),
           icon: Image.asset('assets/images/shop/add-product-success.png'),
           buttonText: 'View Application Status',
           secondButtonText: 'Go to Dashboard',
           onCancel: () => WayaNav.toNamed('/wayagram-deal'));
-    }
-    else {
+    } else {
       // print("$addProductData");
-      WayaUtils.showNotice(
-          context: context,
-          title: "Product Added Successfully! 🎉",
-          message:
+    WayaUtils.showNotice(
+      context: context,
+      title: "Product Added Successfully! 🎉",
+      message:
           "Your product is now live in your shop and ready \n for customers to discover.",
-          onPress: () => WayaNav.toNamed('/add-product'),
-          icon: Image.asset('assets/images/shop/add-product-success.png'),
-          //buttonText: 'Add Another Product',
-          secondButtonText: 'Go to Dashboard',
-          onCancel: () => WayaNav.to(const BottomView(
-            index: 3,
-          )));
-    }
+      onPress: () => WayaNav.toNamed('/add-product'),
+      icon: Image.asset('assets/images/shop/add-product-success.png'),
+      buttonText: 'Add Another Product',
+      secondButtonText: 'Go to Dashboard',
+      onCancel: () => WayaNav.to(const BottomView(index: 3)),
+    );
   }
 }

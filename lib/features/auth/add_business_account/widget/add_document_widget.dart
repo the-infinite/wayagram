@@ -68,7 +68,7 @@ class _AddDocumentWidgetState extends ConsumerState<AddDocumentWidget> {
                         child: Center(
                           child: Icon(
                             Icons.cloud_upload_outlined,
-                                color: wayaTheme.colorScheme.greyColor500,
+                            color: wayaTheme.colorScheme.greyColor500,
                             size: 30,
                           ),
                         ),
@@ -80,12 +80,14 @@ class _AddDocumentWidgetState extends ConsumerState<AddDocumentWidget> {
                   children: [
                     Text(
                       widget.title,
-                      style: wayaTheme.textTheme.bodySemiBold,
+                      style: wayaTheme.textTheme.titleMedium,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const Gap(4),
                     Text(
                       widget.description,
                       style: wayaTheme.textTheme.hintStyle,
+                      overflow: TextOverflow.ellipsis,
                     )
                   ],
                 ),

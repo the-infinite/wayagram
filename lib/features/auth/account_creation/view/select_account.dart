@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 
@@ -14,7 +15,7 @@ class SelectAccount extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-   final viewModel = ref.watch(selectAccountProvider.notifier);
+    final viewModel = ref.watch(selectAccountProvider.notifier);
     final type = ref.watch(selectAccountProvider).selectedType;
     final wayaTheme = Theme.of(context);
     final accountTypes = ref.watch(selectAccountTypesProvider);
@@ -37,43 +38,45 @@ class SelectAccount extends ConsumerWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                         viewModel.setSelectedType(accounts[index]);
+                          viewModel.setSelectedType(accounts[index]);
                         },
-                        child: Container(
-                          width: double.infinity,
-                          height: 100,
-                          padding: EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                              color: accounts[index].type == type
-                                  ? wayaTheme.colorScheme.primary75
-                                  : wayaTheme.colorScheme.greyColor100,
-                              border: Border.all(
-                                  color: accounts[index].type == type
-                                      ? wayaTheme.colorScheme.customPrimary
-                                      : wayaTheme.colorScheme.greyColor100),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(accounts[index].avatar),
-                              const Gap(10),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(accounts[index].title,
-                                      style: WayaTextStyles.titleMedium),
-                                  const Gap(3),
-                                  Text(accounts[index].description,
-                                      style: WayaTextStyles.hintStyle)
-                                ],
-                              )
-                            ],
+                        child:  Container(
+                          height: 120,
+                            width: double.infinity,
+                            padding: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                                color: accounts[index].type == type
+                                    ? wayaTheme.colorScheme.primary75
+                                    : wayaTheme.colorScheme.greyColor100,
+                                border: Border.all(
+                                    color: accounts[index].type == type
+                                        ? wayaTheme.colorScheme.customPrimary
+                                        : wayaTheme.colorScheme.greyColor100),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(accounts[index].avatar),
+                                const Gap(10),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(accounts[index].title,
+                                        style: wayaTheme.textTheme.titleMedium),
+                                    const Gap(3),
+                                    Text(accounts[index].description,
+                                    textAlign: TextAlign.start,
+                                        style: wayaTheme.textTheme.hintStyle)
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                      
                       const Gap(20)
                     ],
                   );
@@ -84,7 +87,6 @@ class SelectAccount extends ConsumerWidget {
         WayaButton(
             callback: type.isNotEmpty
                 ? () async {
-                   
                     goToNextTab(type);
                   }
                 : null,
@@ -119,9 +121,8 @@ class SelectAccount extends ConsumerWidget {
                       height: 80,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                         color: wayaTheme.colorScheme.greyColor100,
+                        color: wayaTheme.colorScheme.greyColor100,
                       ),
-                     
                     ),
                     const Gap(10),
                     Column(

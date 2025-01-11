@@ -17,16 +17,31 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       this._localDataSource)
       : super(TransactionHistoryState());
 
-  Future<void> getUserTransactions({int? page = 1, int? limit = 10}) async {
+  Future<void> getUserTransactions(
+      {int? page = 1,
+      int? limit = 10,
+      bool? hasNextPage,
+      String? filters}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _transactionRepository.getUserTransactions(
-          page: page, limit: limit);
+          page: page, limit: limit, filters: filters);
       if (response.success) {
+        log("${response.data}");
         final transactions = (response.data["data"]["docs"] as List)
             .map((transaction) => TransactionDetail.fromJson(transaction))
             .toList();
-        state = state.copyWith(isLoading: false, transactions: transactions);
+        final totalCreditTransaction =
+            double.parse(response.data["data"]["totalCreditTransaction"]);
+        final totalDebitTransaction =
+            double.parse(response.data["data"]["totalDebitTransaction"]);
+        final hasNextPage = response.data["data"]["hasNextPage"];
+        state = state.copyWith(
+            isLoading: false,
+            transactions: transactions,
+            totalCreditTransaction: totalCreditTransaction,
+            totalDebitTransaction: totalDebitTransaction,
+            hasNextPage: hasNextPage);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -58,12 +73,12 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     final fundingOptionCode =
         fundingOption.toLowerCase() == "paystack" ? "PS002" : "WQ001";
     try {
-      final user = _localDataSource.getUser();
+      final userId = _localDataSource.getUserId();
       state = state.copyWith(isVerifying: true);
       final response = await _walletRepository.verifyWalletFunding(
           VerifyTransaction(
               transactionId: transactionId,
-              userId: user.id ?? "",
+              userId: userId ?? "",
               fundOptionCode: fundingOptionCode));
       if (response.success) {
         log("${response.data}");

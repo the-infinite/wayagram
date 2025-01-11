@@ -15,7 +15,8 @@ class AddProduct extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _AddProductState();
 }
 
-class _AddProductState extends ConsumerState<AddProduct> with SingleTickerProviderStateMixin {
+class _AddProductState extends ConsumerState<AddProduct>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override

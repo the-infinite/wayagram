@@ -24,6 +24,7 @@ class WayaScaffold extends ConsumerWidget {
   final bool? resizeToAvoidBottomInset;
   final Color? color;
   final PreferredSizeWidget? appBar;
+  final VoidCallback? onTapBackButton;
   const WayaScaffold(
       {super.key,
       this.resizeToAvoidBottomInset,
@@ -40,13 +41,15 @@ class WayaScaffold extends ConsumerWidget {
       this.color,
       this.appBar,
       this.backgroundColor,
-      this.bottomNavigationBar});
+      this.bottomNavigationBar,
+      this.onTapBackButton});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final themeNotifier = ref.read(themeProvider.notifier);
-    final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
+    final paddedBody =
+        padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
     return BlurryModalProgressHUD(
       inAsyncCall: isLoading,
       child: GestureDetector(
@@ -65,7 +68,11 @@ class WayaScaffold extends ConsumerWidget {
                     scrolledUnderElevation: 0,
                     backgroundColor: wayaTheme.colorScheme.white,
                     title: Text(title ?? ''),
-                    leading: automicallyImplyLeading ? WayaBackButton() : SizedBox.shrink(),
+                    leading: automicallyImplyLeading
+                        ? WayaBackButton(
+                            onTap: onTapBackButton,
+                          )
+                        : SizedBox.shrink(),
                     actions: appBarTrailing == null ? null : [appBarTrailing!],
                   ),
           body: isScrollable
@@ -131,10 +138,12 @@ class WayaScaffoldWithProgressbar extends StatefulWidget {
       this.bottomNavigationBar});
 
   @override
-  State<WayaScaffoldWithProgressbar> createState() => _WayaScaffoldWithProgressbarState();
+  State<WayaScaffoldWithProgressbar> createState() =>
+      _WayaScaffoldWithProgressbarState();
 }
 
-class _WayaScaffoldWithProgressbarState extends State<WayaScaffoldWithProgressbar> {
+class _WayaScaffoldWithProgressbarState
+    extends State<WayaScaffoldWithProgressbar> {
   double _progress = 0.12;
   final double _progressBarHeight = 12;
 
@@ -143,7 +152,8 @@ class _WayaScaffoldWithProgressbarState extends State<WayaScaffoldWithProgressba
     super.initState();
     widget.tabController.addListener(() {
       setState(() {
-        _progress = (widget.tabController.index + 0.5) / widget.tabController.length;
+        _progress =
+            (widget.tabController.index + 0.5) / widget.tabController.length;
       });
     });
   }
@@ -212,7 +222,9 @@ class _WayaScaffoldWithProgressbarState extends State<WayaScaffoldWithProgressba
               ),
             )
           : TabBarView(
-              physics: NeverScrollableScrollPhysics(), controller: widget.tabController, children: widget.tabsView),
+              physics: NeverScrollableScrollPhysics(),
+              controller: widget.tabController,
+              children: widget.tabsView),
     );
   }
 }

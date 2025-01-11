@@ -79,6 +79,18 @@ class WayaUtils {
         builder: (context) => child);
   }
 
+  static showModalSheetUgt(BuildContext context, {required Widget child}) {
+    return showModalBottomSheet(
+        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
+        context: context,
+        isScrollControlled: true,
+        useRootNavigator: true,
+        /*isDismissible: true,
+        enableDrag: false,*/
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+        builder: (context) => child);
+  }
+
   static Future<File?> pickImageFromGallery() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -124,4 +136,6 @@ class WayaUtils {
       return pickedImage;
     }
   }
+
+  
 }

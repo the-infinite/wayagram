@@ -25,7 +25,7 @@ class ResponseModel {
 
 @JsonSerializable()
 class Data {
-  final UserAccountData user;
+  final User user;
   final UserProfileData profile;
   final BusinessAccountData? business;
 

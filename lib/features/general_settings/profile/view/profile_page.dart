@@ -19,7 +19,8 @@ class ProfilePage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProviderStateMixin {
+class _ProfilePageState extends ConsumerState<ProfilePage>
+    with SingleTickerProviderStateMixin {
   late TabController _accountActivityTabController;
 
   @override
@@ -73,14 +74,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
                       margin: EdgeInsets.only(right: 20.w),
                       padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
-                        border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
+                        border: Border.all(
+                            color: wayaTheme.colorScheme.primary600,
+                            width: 1.5),
                         color: wayaTheme.colorScheme.white,
                         borderRadius: BorderRadius.circular(7.r),
                       ),
                       child: Text(
                         'Edit Profile',
-                        style: wayaTheme.textTheme.labelSmall
-                            ?.wayaCopyWith(color: wayaTheme.colorScheme.primary600, fontWeight: FontWeight.w600),
+                        style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                            color: wayaTheme.colorScheme.primary600,
+                            fontWeight: FontWeight.w600),
                       ),
                     ),
                   )
@@ -101,18 +105,24 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${userState.userAccountModel?.data?.firstName ?? ''} ${userState.userAccountModel?.data?.lastName ?? ''}",
-                  style: wayaTheme.textTheme.bodyMedium
-                      ?.wayaCopyWith(fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.black),
+                  "${userState.userAccountModel?.data?.userdata?.user?.firstName?.capitalizeFirst ?? ''} ${userState.userAccountModel?.data?.userdata?.user?.lastName?.capitalizeFirst ?? ''}",
+                  style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                      fontWeight: FontWeight.w600,
+                      color: wayaTheme.colorScheme.black),
                 ),
                 Text(
-                  userState.userProfileModel?.data?.username ?? '',
-                  style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+                  userState.userAccountModel?.data?.userdata?.profile
+                          ?.username ??
+                      '',
+                  style: wayaTheme.textTheme.labelSmall
+                      ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
                 ),
                 Gap(10),
                 Text(
-                  userState.userProfileModel?.data?.bio ?? '',
-                  style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700),
+                  userState.userAccountModel?.data?.userdata?.profile?.bio ??
+                      '',
+                  style: wayaTheme.textTheme.labelSmall
+                      ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700),
                 ),
                 Gap(10),
                 buildProfileOverview(wayaTheme, userState),
@@ -132,27 +142,36 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
         WayaRichText(
           title1: '0',
           title2: ' Following',
-          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+          style1: wayaTheme.textTheme.bodySmall
+              ?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+          style2: wayaTheme.textTheme.bodySmall
+              ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
         ),
         WayaRichText(
           title1: '0',
           title2: ' Followers',
-          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+          style1: wayaTheme.textTheme.bodySmall
+              ?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+          style2: wayaTheme.textTheme.bodySmall
+              ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
         ),
         WayaRichText(
           title1: '0',
           title2: ' Posts',
-          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+          style1: wayaTheme.textTheme.bodySmall
+              ?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+          style2: wayaTheme.textTheme.bodySmall
+              ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
         ),
         WayaRichText(
           title1: 'Date Joined: ',
           title2: WayaHelpers.formatDateMonthYear(
-              userState.userProfileModel?.data?.createdAt.toString() ?? DateTime.now().toString()),
-          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+              userState.userProfileModel?.data?.createdAt.toString() ??
+                  DateTime.now().toString()),
+          style1: wayaTheme.textTheme.bodySmall
+              ?.wayaCopyWith(color: wayaTheme.colorScheme.black),
+          style2: wayaTheme.textTheme.bodySmall
+              ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
         ),
       ],
     );

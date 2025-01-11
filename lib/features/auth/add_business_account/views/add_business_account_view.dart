@@ -14,13 +14,17 @@ class AddBusinessAccountView extends ConsumerStatefulWidget {
   const AddBusinessAccountView({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AddBusinessAccountViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AddBusinessAccountViewState();
 }
 
-class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView> {
+class _AddBusinessAccountViewState
+    extends ConsumerState<AddBusinessAccountView> {
   @override
   Widget build(BuildContext context) {
+ 
     final viewModel = ref.watch(addBusinessAccountProvider);
+
     return WayaScaffold(
         isLoading: false,
         isScrollable: true,
@@ -30,10 +34,12 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
           children: [
             Text("Add Business Account", style: WayaTextStyles.titleLarge),
             const Gap(5),
-            Text("Provide us with informations for your business \n account to get you started",
+            Text(
+                "Provide us with informations for your business \n account to get you started",
                 style: WayaTextStyles.hintStyle),
             const Gap(30),
-            Text("Select Business Account Type", style: WayaTextStyles.labelMedium),
+            Text("Select Business Account Type",
+                style: WayaTextStyles.labelMedium),
             const Gap(6),
             GridView.count(
               crossAxisCount: 2,
@@ -46,23 +52,23 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                     onTap: (value) {
                       // viewModel.selectType(value);
                     },
-                    isChosen: viewModel.isSelected == 'CAC'),
+                    isChosen: viewModel.selected == 'CAC'),
                 BusinessAccountTypeWidget(
                     data: businessDataType[1],
                     onTap: (value) {
                       // viewModel.selectType(value);
                     },
-                    isChosen: viewModel.isSelected == 'Non-CAC')
+                    isChosen: viewModel.selected == 'Non-CAC')
               ],
             ),
             Visibility(
-              visible: viewModel.isSelected.isNotEmpty,
+              visible: viewModel.selected.isNotEmpty,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Gap(20),
-                  Text("Business Information", style: WayaTextStyles.hintStyle),
+                  // Text("Business Information", style: WayaTextStyles.hintStyle),
                   const Gap(30),
                   // WayaTextFormField(
                   //   controller: viewModel.businessName,
@@ -70,7 +76,8 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                   //   label: 'Business Name',
                   // ),
                   Visibility(
-                      visible: viewModel.isSelected.isEmpty || viewModel.isSelected == 'CAC',
+                      visible: viewModel.selected.isEmpty ||
+                          viewModel.selected == 'CAC',
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,64 +101,96 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                   const Gap(30),
                   AddDocumentWidget(
                       addFile: (file) {
-                        viewModel.addFile(file, 'passport');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .addFile(file, 'passport');
                       },
                       removeFile: () {
-                        viewModel.removeFile('passport');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .removeFile('passport');
                       },
                       isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                          viewModel.uploadedDocuments.any((doc) => doc.type == 'passport'),
+                          viewModel.uploadedDocuments
+                              .any((doc) => doc.type == 'passport'),
                       title: viewModel.uploadedDocuments.isNotEmpty &&
-                              viewModel.uploadedDocuments.any((doc) => doc.type == 'passport')
-                          ? viewModel.uploadedDocuments.firstWhere((doc) => doc.type == 'passport').name
+                              viewModel.uploadedDocuments
+                                  .any((doc) => doc.type == 'passport')
+                          ? viewModel.uploadedDocuments
+                              .firstWhere((doc) => doc.type == 'passport')
+                              .name
                           : 'Upload your passport image',
                       description: 'PDF, JPG, and IMG format',
                       type: "document"),
                   AddDocumentWidget(
                       addFile: (file) {
-                        viewModel.addFile(file, 'nin');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .addFile(file, 'nin');
                       },
                       removeFile: () {
-                        viewModel.removeFile('nin');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .removeFile('nin');
                       },
                       isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                          viewModel.uploadedDocuments.any((doc) => doc.type == 'nin'),
+                          viewModel.uploadedDocuments
+                              .any((doc) => doc.type == 'nin'),
                       title: viewModel.uploadedDocuments.isNotEmpty &&
-                              viewModel.uploadedDocuments.any((doc) => doc.type == 'nin')
-                          ? viewModel.uploadedDocuments.firstWhere((doc) => doc.type == 'nin').name
+                              viewModel.uploadedDocuments
+                                  .any((doc) => doc.type == 'nin')
+                          ? viewModel.uploadedDocuments
+                              .firstWhere((doc) => doc.type == 'nin')
+                              .name
                           : 'Upload your NIN Slip',
                       description: 'PDF, JPG, and IMG format',
                       type: "document"),
                   Visibility(
-                    visible: viewModel.isSelected == 'CAC',
+                    visible: viewModel.selected == 'CAC',
                     child: AddDocumentWidget(
                         addFile: (file) {
-                          viewModel.addFile(file, 'cac');
+                          ref
+                              .read(addBusinessAccountProvider.notifier)
+                              .addFile(file, 'cac');
                         },
                         removeFile: () {
-                          viewModel.removeFile('cac');
+                          ref
+                              .read(addBusinessAccountProvider.notifier)
+                              .removeFile('cac');
                         },
                         isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                            viewModel.uploadedDocuments.any((doc) => doc.type == 'cac'),
+                            viewModel.uploadedDocuments
+                                .any((doc) => doc.type == 'cac'),
                         title: viewModel.uploadedDocuments.isNotEmpty &&
-                                viewModel.uploadedDocuments.any((doc) => doc.type == 'cac')
-                            ? viewModel.uploadedDocuments.firstWhere((doc) => doc.type == 'cac').name
+                                viewModel.uploadedDocuments
+                                    .any((doc) => doc.type == 'cac')
+                            ? viewModel.uploadedDocuments
+                                .firstWhere((doc) => doc.type == 'cac')
+                                .name
                             : 'Upload CAC Document',
                         description: 'PDF, JPG, and IMG format',
                         type: "document"),
                   ),
                   AddDocumentWidget(
                       addFile: (file) {
-                        viewModel.addFile(file, 'bill');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .addFile(file, 'bill');
                       },
                       removeFile: () {
-                        viewModel.removeFile('bill');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .removeFile('bill');
                       },
                       isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                          viewModel.uploadedDocuments.any((doc) => doc.type == 'bill'),
+                          viewModel.uploadedDocuments
+                              .any((doc) => doc.type == 'bill'),
                       title: viewModel.uploadedDocuments.isNotEmpty &&
-                              viewModel.uploadedDocuments.any((doc) => doc.type == 'bill')
-                          ? viewModel.uploadedDocuments.firstWhere((doc) => doc.type == 'bill').name
+                              viewModel.uploadedDocuments
+                                  .any((doc) => doc.type == 'bill')
+                          ? viewModel.uploadedDocuments
+                              .firstWhere((doc) => doc.type == 'bill')
+                              .name
                           : 'Upload Utility Bill',
                       description: 'PDF, JPG, and IMG format',
                       type: "document"),
@@ -162,7 +201,9 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
             WayaButton(
               callback: !viewModel.isLoading
                   ? () {
-                      viewModel.submit(context);
+                      ref
+                          .read(addBusinessAccountProvider.notifier)
+                          .submit(context);
                     }
                   : null,
               centerWidget: LoadingState(

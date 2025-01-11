@@ -22,6 +22,8 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/application_produ
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
+import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
+import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
@@ -92,6 +94,8 @@ class WayaAppRoutes {
     UgtGetStarted.route: () => UgtGetStarted(),
     UgtHome.route: () => UgtHome(),
     CreateContest.route: () => CreateContest(),
+    ContestSettingContent.route: ()=> ContestSettingContent(),
+    EditStagePreference.route: ()=> EditStagePreference(),
     CreateRequest.route: () => CreateRequest(),
     AllSellerBids.route: () => AllSellerBids(),
   };

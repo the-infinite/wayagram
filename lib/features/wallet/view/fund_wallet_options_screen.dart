@@ -18,7 +18,8 @@ class FundWalletOptionsScreen extends ConsumerStatefulWidget {
   const FundWalletOptionsScreen({super.key});
 
   @override
-  ConsumerState<FundWalletOptionsScreen> createState() => _FundWalletPageState();
+  ConsumerState<FundWalletOptionsScreen> createState() =>
+      _FundWalletPageState();
 }
 
 class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
@@ -26,7 +27,9 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(walletFundingOptionsVmProvider.notifier).getWalletFundingOptions();
+      ref
+          .read(walletFundingOptionsVmProvider.notifier)
+          .getWalletFundingOptions();
     });
   }
 
@@ -53,7 +56,9 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
               style: wayaTheme.textTheme.labelMedium,
             ),
             Gap(20),
-            if (viewModel.fundingOptions != null && viewModel.fundingOptions!.isEmpty && viewModel.isLoading == false)
+            if (viewModel.fundingOptions != null &&
+                viewModel.fundingOptions!.isEmpty &&
+                viewModel.isLoading == false)
               const Text("No funding options available at the moment"),
             if (viewModel.fundingOptions != null)
               ...viewModel.fundingOptions!.map(
@@ -67,30 +72,8 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
                     //     builder: (context) {
                     //       return const FundAmountDialog(initialAmount: 0);
                     //     });
-                    WayaNav.toNamed(FundAccountScreen.route, arguments: {"name": e.name, "code": e.code});
-                    // switch (e.name) {
-                    //   case "PAYSTACK":
-                    //     if (amount != null) {
-                    //       log("$amount");
-                    //       WayaLoadingDialog.show(context);
-                    //       final data = await ref
-                    //           .read(walletFundingOptionsVmProvider.notifier)
-                    //           .walletFunding(
-                    //               amount: amount, fundOptionCode: e.code);
-                    //       WayaLoadingDialog.hide(context);
-                    //       if (data != null) {
-                    //         WayaNav.toNamed(SharedRoutes.webview, arguments: {
-                    //           "url": data["authorizationUrl"],
-                    //           "title": "Waya Webview",
-                    //           "transactionId": data["transactionId"],
-                    //           "fundingOption": e.name
-                    //         });
-                    //       }
-                    //     }
-                    //     break;
-
-                    //   default:
-                    // }
+                    WayaNav.toNamed(FundAccountScreen.route,
+                        arguments: {"name": e.name, "code": e.code});
                   },
                 ),
               ),

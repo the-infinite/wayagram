@@ -182,6 +182,7 @@ class User {
   final String? v;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

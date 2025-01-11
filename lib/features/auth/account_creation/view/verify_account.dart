@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -31,16 +32,18 @@ class VerifyAccount extends ConsumerWidget {
         Text("Verify your Account", style: WayaTextStyles.titleLarge),
         const Gap(5),
         Text(
-            "Enter the 6-digits code sent to your email address \n and Phone number",
+            "Enter the 6-digits code sent to your email address and Phone number",
             style: WayaTextStyles.hintStyle),
         const Gap(20),
-        VerificationCode(
+       Align(
+        alignment: Alignment.center,
+        child:  VerificationCode(
           textStyle: const TextStyle(fontSize: 20.0),
           keyboardType: TextInputType.number,
           underlineColor: wayaTheme.colorScheme.customBlack,
           fullBorder: true,
           fillColor: Colors.transparent,
-          itemSize: 50,
+          itemSize: 42,
           length: 6,
           padding: const EdgeInsets.all(8.0),
           margin: const EdgeInsets.symmetric(horizontal: 3.0),
@@ -55,6 +58,7 @@ class VerifyAccount extends ConsumerWidget {
             }
           },
         ),
+       ),
         const Gap(20),
         Align(
           alignment: Alignment.center,

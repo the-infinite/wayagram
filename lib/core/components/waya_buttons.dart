@@ -28,7 +28,8 @@ class WayaBackButton extends StatelessWidget {
                   WayaNav.goBack();
                   HapticFeedback.lightImpact();
                 },
-            child: SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
+            child: SvgPicture.asset('assets/icons/arrow-back.svg',
+                fit: BoxFit.none),
           ),
         )
       ],
@@ -105,7 +106,9 @@ class WayaButton extends StatelessWidget {
                     ),
                   Text(text,
                       style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                          fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
+                          fontWeight: FontWeight.w600,
+                          color: textColor ??
+                              wayaTheme.colorScheme.scaffoldColor2)),
                   Gap(10),
                   trailingIcon ?? SizedBox.shrink()
                 ],
@@ -123,28 +126,33 @@ class WayaButton extends StatelessWidget {
                         style: textStyle ??
                             wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                                 fontWeight: FontWeight.w600,
-                                color: textColor ?? wayaTheme.colorScheme.scaffoldColor2))),
+                                color: textColor ??
+                                    wayaTheme.colorScheme.scaffoldColor2))),
       ),
     );
   }
 }
 
-
 class WayaTabButton extends StatelessWidget {
   final bool isSelected;
   final String text;
   final VoidCallback onTap;
+  final double? width;
 
-  const WayaTabButton({
-    super.key,
-    required this.isSelected,
-    required this.text,
-    required this.onTap,
-  });
+  const WayaTabButton(
+      {super.key,
+      required this.isSelected,
+      required this.text,
+      required this.onTap,
+      this.width});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    
+    final fontSize = screenWidth * 0.040; 
 
     return Expanded(
       child: GestureDetector(
@@ -165,6 +173,7 @@ class WayaTabButton extends StatelessWidget {
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
+              fontSize: fontSize,
               color: isSelected
                   ? theme.colorScheme.primary
                   : theme.colorScheme.greyColor500,
