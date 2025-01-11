@@ -55,7 +55,9 @@ class MoreVm {
           asset: WayaAssests.icons.mUgt.path,
           content: "A contest open for various school and other categories",
           title: "University Got Talent",
-          onTap: () {}),
+          onTap: () {
+            WayaNav.toNamed('/ugt-get-started');
+          }),
       MoreOptionModel(
           asset: WayaAssests.icons.mPoll.path,
           content: "Create both paid and free poll for your different audience",

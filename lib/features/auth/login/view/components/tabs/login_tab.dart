@@ -169,7 +169,8 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
-                    onTap: () => WayaNav.toNamed('/forgot-password'),
+                    onTap: () =>
+                        WayaNav.toNamed('/forgot-password'),
                     child: Text('Forgot Password?',
                         style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
                             fontSize: 14,

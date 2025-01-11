@@ -73,7 +73,7 @@ class ContestCard extends StatelessWidget {
                   ),
                   ),
                   SizedBox(
-                    width: 90,
+                    width: 80,
                     child: WayaButton(
                       callback: () {},
                       text: "Follow Back",

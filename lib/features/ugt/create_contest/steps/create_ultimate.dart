@@ -9,7 +9,7 @@ import 'package:wayagram/features/shop/widgets/upload_image.dart';
 import '../../../../core/utils/waya_navigation.dart';
 
 class CreateUltimate extends ConsumerStatefulWidget {
-  final Function goToNextTab;
+  final VoidCallback goToNextTab;
   const CreateUltimate({super.key, required this.goToNextTab});
 
   @override
@@ -197,20 +197,20 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
         const Gap(60),
 
         WayaButton(
-          callback: () {
-
+          callback: () async{
+            widget.goToNextTab();
           },
           text: "Submit",
         ),
         const Gap(8),
         WayaButton(
             text: 'Go Back',
-            color: wayaTheme.colorScheme.transparent,
+            color: wayaTheme.colorScheme.greyColor300,
             textColor: wayaTheme.colorScheme.customBlack,
             border:
                 Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              WayaNav.toNamed("/ugt-home");
+              Navigator.pop(context);
             })
       ],
     );
@@ -228,7 +228,6 @@ class RadioSelect extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         ListTile(
           titleAlignment: ListTileTitleAlignment.top,
           contentPadding: EdgeInsets.all(0),
