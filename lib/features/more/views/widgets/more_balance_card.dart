@@ -33,6 +33,7 @@ class _MoreBalanceCardState extends ConsumerState<MoreBalanceCard> {
     final viewModel = ref.watch(walletVmProvider);
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
+      
       child: Stack(
         children: [
           Container(

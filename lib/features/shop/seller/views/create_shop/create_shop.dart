@@ -6,7 +6,9 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
+import 'package:wayagram/features/shop/widgets/upload_image.dart';
 
 class CreateShop extends ConsumerStatefulWidget {
   static const route = '/create-shop';
@@ -27,10 +29,19 @@ class _CreateShopState extends ConsumerState<CreateShop> {
         isLoading: viewModel.isLoading,
         isScrollable: true,
         title: 'Create Shop',
+        onTapBackButton: () =>
+            Navigator.pushNamed(context, BottomView.route, arguments: 1),
         body: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                UploadLogo(
+                    imagePath: viewModel.image,
+                    onUpload: () {
+                      ref.read(createShopVmProvider.notifier).uploadFile();
+                    }),
+                const Gap(10),
                 FormField<String>(validator: (value) {
                   if (viewModel.name.text.isEmpty) {
                     return 'Name is required';
@@ -52,44 +63,6 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                         label: 'Shop Name',
                       ),
                       if (formState.hasError && viewModel.name.text.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
-                const Gap(10),
-                
-                FormField<String>(validator: (value) {
-                  if (viewModel.email.text.isEmpty) {
-                    return 'Email is required';
-                  }
-                  final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                  if (!regexp.hasMatch(viewModel.email.text)) {
-                    return 'Invalid email address';
-                  }
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaTextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        controller: viewModel.email,
-                        hintText: 'example@gmail.com',
-                        borderColor:
-                            formState.hasError && viewModel.email.text.isEmpty
-                                ? wayaTheme.colorScheme.error
-                                : null,
-                        label: 'Email Address',
-                      ),
-                      if (formState.hasError && viewModel.email.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -262,7 +235,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                       if (_formKey.currentState!.validate()) {
                         ref
                             .read(createShopVmProvider.notifier)
-                            .createSellerShop();
+                            .createSellerShop(context);
                       }
                     },
                     text: 'Create Shop'),
