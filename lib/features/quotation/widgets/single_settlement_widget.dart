@@ -11,8 +11,7 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
 
 class SingleSettlementWidget extends ConsumerWidget {
-  // final Order order;
-  //required this.order
+
   final bool isSeller;
   const SingleSettlementWidget({super.key, this.isSeller = false});
 

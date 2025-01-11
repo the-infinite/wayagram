@@ -36,6 +36,7 @@ import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 import '../../features/quotation/buyer/views/create_request/create_request.dart';
+import '../../features/quotation/seller/views/bids/see_seller_bids.dart';
 
 
 
@@ -63,6 +64,7 @@ class WayaAppRoutes {
     SellerOrderDetails.route: () => SellerOrderDetails(),
     SellerBidDetails.route: () => SellerBidDetails(),
     SellerSettlement.route: () => SellerSettlement(),
+    SeeSellerBids.route: () => SeeSellerBids(),
     Checkout.route: () => Checkout(),
     FilterView.route: () => FilterView(),
     GeneralSettingsPage.route: () => GeneralSettingsPage(),
