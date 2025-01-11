@@ -46,6 +46,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/b-shop.svg
   SvgGenImage get bShop => const SvgGenImage('assets/icons/b-shop.svg');
 
+  /// File path: assets/icons/bid-icon.svg
+  SvgGenImage get bidIcon => const SvgGenImage('assets/icons/bid-icon.svg');
+
+  /// File path: assets/icons/bid.svg
+  SvgGenImage get bid => const SvgGenImage('assets/icons/bid.svg');
+
   /// File path: assets/icons/business.svg
   SvgGenImage get business => const SvgGenImage('assets/icons/business.svg');
 
@@ -72,6 +78,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/deal-icon.svg
   SvgGenImage get dealIcon => const SvgGenImage('assets/icons/deal-icon.svg');
+
+  /// File path: assets/icons/dispute.svg
+  SvgGenImage get dispute => const SvgGenImage('assets/icons/dispute.svg');
 
   /// File path: assets/icons/doc-success.svg
   SvgGenImage get docSuccess =>
@@ -169,6 +178,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/order-van.svg
   SvgGenImage get orderVan => const SvgGenImage('assets/icons/order-van.svg');
 
+  /// File path: assets/icons/orders.svg
+  SvgGenImage get orders => const SvgGenImage('assets/icons/orders.svg');
+
   /// File path: assets/icons/personal.svg
   SvgGenImage get personal => const SvgGenImage('assets/icons/personal.svg');
 
@@ -181,6 +193,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/s-dispute-icon.svg
   SvgGenImage get sDisputeIcon =>
       const SvgGenImage('assets/icons/s-dispute-icon.svg');
+
+  /// File path: assets/icons/settlement-icon.svg
+  SvgGenImage get settlementIcon =>
+      const SvgGenImage('assets/icons/settlement-icon.svg');
+
+  /// File path: assets/icons/settlement.svg
+  SvgGenImage get settlement =>
+      const SvgGenImage('assets/icons/settlement.svg');
 
   /// File path: assets/icons/share-network.svg
   SvgGenImage get shareNetwork =>
@@ -224,6 +244,8 @@ class $AssetsIconsGen {
         bExplore,
         bMenu,
         bShop,
+        bidIcon,
+        bid,
         business,
         buttonIcon,
         chat,
@@ -232,6 +254,7 @@ class $AssetsIconsGen {
         dCodeOnvalid,
         dCodeValid,
         dealIcon,
+        dispute,
         docSuccess,
         eChat,
         eDonation,
@@ -261,10 +284,13 @@ class $AssetsIconsGen {
         moneyIcon,
         moreAcctBal,
         orderVan,
+        orders,
         personal,
         rCart,
         sCopy,
         sDisputeIcon,
+        settlementIcon,
+        settlement,
         shareNetwork,
         thumbsup,
         uLeaderboard,

@@ -23,6 +23,8 @@ class QuickActionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+        final screenWidth = MediaQuery.of(context).size.width;
+    final fontSize = screenWidth * 0.030;
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
@@ -66,7 +68,7 @@ class QuickActionWidget extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: TextStyle().wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: fontSize,
                   fontWeight: FontWeight.w500,
                   color: wayaTheme.colorScheme.customBlack),
             )

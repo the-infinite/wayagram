@@ -30,7 +30,7 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
         Text("Forgot Password?", style: WayaTextStyles.titleLarge),
         const Gap(5),
         Text(
-            "Tell us your email address or Phone number so we can \n help you reset your password",
+            "Tell us your email address or Phone number so we can help you reset your password",
             style: WayaTextStyles.hintStyle),
         const Gap(30),
         Form(
