@@ -68,7 +68,7 @@ class _AddBusinessAccountViewState
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Gap(20),
-                  Text("Business Information", style: WayaTextStyles.hintStyle),
+                  // Text("Business Information", style: WayaTextStyles.hintStyle),
                   const Gap(30),
                   // WayaTextFormField(
                   //   controller: viewModel.businessName,

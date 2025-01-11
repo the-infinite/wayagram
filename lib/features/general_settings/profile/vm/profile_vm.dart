@@ -53,6 +53,38 @@ class ProfileVm extends StateNotifier<ProfileState> {
       bool load = true}) async {
     final userId = _localDataSource.getUserId();
 
+    // Get the last update and creation dates
+    final lastUsernameUpdate =
+        state.userAccountModel!.data!.userdata!.profile!.updatedAt ??
+            DateTime.now();
+    final lastDisplayNameUpdate =
+        state.userAccountModel!.data!.userdata!.profile!.createdAt ??
+            DateTime.now();
+
+    // Check if the account is newly created
+    final isNewAccount =
+        lastUsernameUpdate.isAtSameMomentAs(lastDisplayNameUpdate);
+
+    // Determine if updates are allowed based on the conditions
+    final canUpdateUsername = isNewAccount ||
+        DateTime.now().difference(lastUsernameUpdate).inDays >= 30;
+    final canUpdateDisplayName = isNewAccount ||
+        DateTime.now().difference(lastDisplayNameUpdate).inDays >= 7;
+
+    // Check if username can be updated
+    if (username != null && !canUpdateUsername) {
+      WayaSnackBar.showToast(
+          'You can only update your username once every 30 days.');
+      return false;
+    }
+
+    // Check if display name can be updated
+    if (displayName != null && !canUpdateDisplayName) {
+      WayaSnackBar.showToast(
+          'You can only update your display name once every 7 days.');
+      return false;
+    }
+
     try {
       state = state.copyWith(isLoading: load);
 
@@ -134,30 +166,30 @@ class ProfileVm extends StateNotifier<ProfileState> {
     // }
   }
 
-    void updateProfilePicture() async {
-      final userId = _localDataSource.getUserId();
-      File? profileImage = await WayaUtils.pickAndCropImage();
-      if (profileImage != null) {
-        Uint8List imageBytes = await profileImage.readAsBytes();
+  void updateProfilePicture() async {
+    final userId = _localDataSource.getUserId();
+    File? profileImage = await WayaUtils.pickAndCropImage();
+    if (profileImage != null) {
+      Uint8List imageBytes = await profileImage.readAsBytes();
 
-        try {
-          state = state.copyWith(isLoading: true);
-          final response = await _profileRepo.updateProfileImageRepo(
-              userId: userId,
-              fileName: WayaHelpers.extractFileName(profileImage),
-              image: imageBytes);
+      try {
+        state = state.copyWith(isLoading: true);
+        final response = await _profileRepo.updateProfileImageRepo(
+            userId: userId,
+            fileName: WayaHelpers.extractFileName(profileImage),
+            image: imageBytes);
 
-          if (response.success) {
-            WayaSnackBar.showToast('Profile Picture Updated Successfully');
-            refetchUserData();
-          }
-          state = state.copyWith(isLoading: false);
-        } catch (e) {
-          state = state.copyWith(isLoading: false);
+        if (response.success) {
+          WayaSnackBar.showToast('Profile Picture Updated Successfully');
+          refetchUserData();
         }
+        state = state.copyWith(isLoading: false);
+      } catch (e) {
+        state = state.copyWith(isLoading: false);
       }
     }
   }
+}
 
 final profileVmProvider = StateNotifierProvider<ProfileVm, ProfileState>((ref) {
   return ProfileVm(

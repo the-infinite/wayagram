@@ -18,6 +18,10 @@ class InventoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final titlefontSize = screenWidth * 0.030;
+    final metricFontSize = screenWidth * 0.050;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
       decoration:
@@ -30,7 +34,7 @@ class InventoryWidget extends StatelessWidget {
             title,
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.greyColor400,
-                fontSize: 13,
+                fontSize: titlefontSize,
                 fontWeight: FontWeight.w400),
           ),
           const Gap(10),
@@ -39,9 +43,8 @@ class InventoryWidget extends StatelessWidget {
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.customBlack,
                 fontWeight: FontWeight.w600,
-                fontSize: 20),
+                fontSize: metricFontSize),
           ),
-
         ],
       ),
     );

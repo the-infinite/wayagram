@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -60,7 +61,7 @@ class MoreView extends ConsumerWidget {
      GestureDetector(
       onTap: moreOption.onTap,
       child:    Container(
-      height: context.height * 0.18,
+      height: 165.h,
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
           color: wayaTheme.colorScheme.scaffoldColor,
@@ -70,12 +71,13 @@ class MoreView extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SvgPicture.asset(moreOption.asset),
-          const Gap(10),
+           Gap(10.h),
           Text(moreOption.title, style: wayaTheme.textTheme.titleMedium),
-          const Gap(10),
+           Gap(10.h),
           Text(
             moreOption.content,
             style: wayaTheme.textTheme.hintStyle,
+            maxLines: 3,
           )
         ],
       ),

@@ -32,7 +32,7 @@ class VerifyAccount extends ConsumerWidget {
         Text("Verify your Account", style: WayaTextStyles.titleLarge),
         const Gap(5),
         Text(
-            "Enter the 6-digits code sent to your email address \n and Phone number",
+            "Enter the 6-digits code sent to your email address and Phone number",
             style: WayaTextStyles.hintStyle),
         const Gap(20),
        Align(
