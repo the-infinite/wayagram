@@ -148,6 +148,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
+ 
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -180,4 +181,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       '_v': instance.v,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      
     };
+
+

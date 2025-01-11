@@ -33,15 +33,11 @@ class _BottomViewState extends ConsumerState<BottomView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  
       ref.read(profileVmProvider.notifier).refetchUserData();
     });
-  
-   
-    
   }
 
-    @override
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final index = ModalRoute.of(context)?.settings.arguments as int?;
@@ -100,7 +96,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(bottomViewVmProvider);
     final successfulSetupState = ref.watch(successfulSetupVmProvider);
-  
+
     final userData = successfulSetupState.user;
     final userType = userData?.user?.role?.name;
     final List<Widget> _pages = [
@@ -128,8 +124,17 @@ class _BottomViewState extends ConsumerState<BottomView> {
           label: item.label);
     }).toList();
 
-    return WillPopScope(
-      onWillPop: () => _onWillPop(context),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (popDisposition) async {
+        if (_selectedIndex == 0) {
+          _onWillPop(context);
+        } else {
+          setState(() {
+            _selectedIndex = 0;
+          });
+        }
+      },
       child: Scaffold(
         body: IndexedStack(
           index: _selectedIndex,

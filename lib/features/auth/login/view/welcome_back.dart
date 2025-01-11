@@ -48,7 +48,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
           children: [
             Gap(20),
             Text(
-              "Welcome Back, ${setUp.user?.user?.firstName ?? ''}",
+              "Welcome Back, ${setUp.user?.user?.firstName?.capitalizeFirst ?? ''}",
               style: wayaTheme.textTheme.headlineLarge,
             ),
             Gap(20),
@@ -67,7 +67,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
             ),
             Gap(10),
             Text(
-                "${setUp.user?.user?.firstName ?? ''} ${setUp.user?.user?.lastName ?? ''}",
+                "${setUp.user?.user?.firstName?.capitalizeFirst ?? ''} ${setUp.user?.user?.lastName?.capitalizeFirst ?? ''}",
                 style: wayaTheme.textTheme.bodyMedium),
             Gap(10),
             GestureDetector(

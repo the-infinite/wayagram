@@ -56,7 +56,10 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              Column(
+             SizedBox(
+           
+              height: Get.height * 0.24,
+              child:  Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   WayaImage2(
@@ -65,16 +68,17 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                   Gap(15),
                 ],
               ),
+             ),
               Positioned(
                   left: 16.w,
-                  bottom: -28.h,
+                 bottom: 0,
                   child: WayaDp(
                     radius: 28.r,
                     isEdit: true,
                   )),
             ],
           ),
-          Gap(30),
+         
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Column(
