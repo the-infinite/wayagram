@@ -7,6 +7,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/ugt/for_you_contest.dart';
 import 'package:wayagram/features/ugt/my_contests.dart';
 
+import '../../core/utils/waya_navigation.dart';
+
 class UgtHome extends ConsumerStatefulWidget {
   static const route = '/ugt-home';
   const UgtHome({super.key});
@@ -52,7 +54,9 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () {},
+          callback: () {
+            WayaNav.toNamed('/create-contest');
+          },
           height: 50,
           centerWidget: Center(
             child: Icon(

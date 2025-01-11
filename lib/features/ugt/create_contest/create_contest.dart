@@ -24,7 +24,7 @@ class _CreateContestState extends ConsumerState<CreateContest>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   void _goToNextTab() {
@@ -53,16 +53,15 @@ class _CreateContestState extends ConsumerState<CreateContest>
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
-
-          /*CreateUltimate(
+          CreateUltimate(
             goToNextTab: _goToNextTab,
-          ),*/
-          /*ParticipantDetails(
+          ),
+          ParticipantDetails(
             goToNextTab: _goToNextTab,
-          ),*/
-         // ContestTimeline(),
-          //EditStagePreference(),
-          StageContestSettings(),
+          ),
+          ContestTimeline(),
+          EditStagePreference(),
+         // StageContestSettings(),
         ],
         tabController: _tabController);
   }

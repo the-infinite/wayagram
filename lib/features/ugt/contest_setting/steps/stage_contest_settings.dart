@@ -14,7 +14,8 @@ import '../../../../core/utils/waya_navigation.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 
 class StageContestSettings extends ConsumerStatefulWidget {
-  const StageContestSettings({super.key});
+  final VoidCallback goToNextTab;
+  const StageContestSettings({super.key, required this.goToNextTab});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _StageContestSettingsState();
@@ -73,7 +74,8 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                         ),
                         child: IconButton(
 
-                          icon: Icon(Icons.remove_circle, color: Colors.red),
+                          icon: Image.asset('assets/images/destructive.png',width: 30, height: 30, ),
+                          //Icon(Icons.remove_circle, color: Colors.red),
                           //SvgPicture.asset('assets/images/destructive.png'),
                           //,
                           onPressed: () => _removeStage(index),
@@ -87,7 +89,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                           height: 60,
                           decoration: BoxDecoration(
                             color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(2),
                             border: Border.all(color: Colors.grey.shade300),
                           ),
                           child: Row(
@@ -95,8 +97,11 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                             children: [
                               Text(stages[index], style: TextStyle(fontSize: 16, color: Colors.grey[700])),
                               IconButton(
-                                icon: Icon(Icons.edit, color: Colors.grey),
-                                onPressed: ( ) => Navigator.push(context, MaterialPageRoute(builder: (c) => EditStagePreference())),
+                                icon: Image.asset('assets/images/icon-right.png',width: 20, height: 20, ),
+                                //Icon(Icons.edit, color: Colors.grey),
+                                onPressed: ( ) => {
+                                WayaNav.toNamed("/edit-stage-preference"),
+                                },
                               ),
                             ],
                           ),
@@ -129,8 +134,8 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
 
         const Gap(60),
         WayaButton(
-          callback: () {
-
+          callback: () async{
+            widget.goToNextTab();
           },
           text: "Continue",
         ),
@@ -142,7 +147,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              WayaNav.toNamed("/ugt-home");
+              Navigator.pop(context);
             })
       ],
     );

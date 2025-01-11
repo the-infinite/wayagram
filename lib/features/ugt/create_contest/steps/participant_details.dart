@@ -79,7 +79,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                   WayaSelectField(
                   height: 0.3,
                   label: "Duration Type",
-                  hintText: 'Select Duration Type',
+                  hintText: 'Duration Type',
                   items: [],
                   onSelected: (value) {},
                   uniqueKey: 'contest-state',
@@ -230,8 +230,8 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
 
         const Gap(60),
         WayaButton(
-          callback: () {
-
+          callback: () async{
+             widget.goToNextTab();
           },
           text: "Continue",
         ),
@@ -243,7 +243,8 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              WayaNav.toNamed("/ugt-home");
+              Navigator.pop(context);
+             // WayaNav.toNamed("/ugt-home");
             })
       ],
     );

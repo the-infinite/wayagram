@@ -10,7 +10,10 @@ import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/components/waya_text_form_field.dart';
 import '../../../../core/utils/waya_navigation.dart';
+import '../../../../core/utils/waya_utils.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
+import '../../../wallet/view/components/modal_content.dart';
+import '../../ugt_buttomsheet_modal/ugt_modal.dart';
 
 class ContestTimeline extends ConsumerStatefulWidget  {
   const ContestTimeline({super.key});
@@ -218,6 +221,10 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
         const Gap(60),
         WayaButton(
           callback: () {
+            WayaUtils.showModalSheetUgt(
+              context,
+              child: UgtModal(),
+            );
 
           },
           text: "Save Contest",
@@ -230,7 +237,8 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              WayaNav.toNamed("/ugt-home");
+              Navigator.pop(context);
+              //WayaNav.toNamed("/ugt-home");
             })
       ],
     );
