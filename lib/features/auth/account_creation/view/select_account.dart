@@ -69,7 +69,7 @@ class SelectAccount extends ConsumerWidget {
                                     const Gap(3),
                                     Text(accounts[index].description,
                                     textAlign: TextAlign.start,
-                                        style: wayaTheme.textTheme.hintStyle.wayaCopyWith(fontSize: 11))
+                                        style: wayaTheme.textTheme.hintStyle)
                                   ],
                                 )
                               ],

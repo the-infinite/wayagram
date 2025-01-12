@@ -66,14 +66,14 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
               ),
               Gap(20),
               SizedBox(
-                height: Get.height * 0.7,
+                height: Get.height * 0.8,
                 child: PageView(
                   physics: NeverScrollableScrollPhysics(),
                   controller: _pageController,
                   children: [PersonalAccountView(), BusinessAccountView()],
                 ),
               ),
-              Gap(50),
+             Gap(50),
             ],
           ),
         ),

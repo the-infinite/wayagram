@@ -124,12 +124,16 @@ class _BottomViewState extends ConsumerState<BottomView> {
           label: item.label);
     }).toList();
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (_selectedIndex > 0) {
-          return _onWillPop(context);
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (popDisposition) async {
+        if (_selectedIndex == 0) {
+          _onWillPop(context);
+        } else {
+          setState(() {
+            _selectedIndex = 0;
+          });
         }
-        return true;
       },
       child: Scaffold(
         body: IndexedStack(
