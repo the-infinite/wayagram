@@ -245,16 +245,17 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
           onCancel: () => WayaNav.toNamed('/wayagram-deal'));
     } else {
       // print("$addProductData");
-    WayaUtils.showNotice(
-      context: context,
-      title: "Product Added Successfully! 🎉",
-      message:
-          "Your product is now live in your shop and ready \n for customers to discover.",
-      onPress: () => WayaNav.toNamed('/add-product'),
-      icon: Image.asset('assets/images/shop/add-product-success.png'),
-      buttonText: 'Add Another Product',
-      secondButtonText: 'Go to Dashboard',
-      onCancel: () => WayaNav.to(const BottomView(index: 3)),
-    );
+      WayaUtils.showNotice(
+        context: context,
+        title: "Product Added Successfully! 🎉",
+        message:
+            "Your product is now live in your shop and ready \n for customers to discover.",
+        onPress: () => WayaNav.toNamed('/add-product'),
+        icon: Image.asset('assets/images/shop/add-product-success.png'),
+        buttonText: 'Add Another Product',
+        secondButtonText: 'Go to Dashboard',
+        onCancel: () => WayaNav.toNamed(BottomView.route, arguments: 1),
+      );
+    }
   }
 }
