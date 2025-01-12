@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
@@ -31,6 +32,8 @@ class _WayaSellerState extends ConsumerState<WayaSeller>
         WayaScaffold(
             isLoading: false,
             isScrollable: true,
+          onTapBackButton: () =>
+            Navigator.pushNamed(context, BottomView.route, arguments: 0),
             title: 'Shop',
             appBarTrailing: WayaCartIcon(),
             body: Column(
