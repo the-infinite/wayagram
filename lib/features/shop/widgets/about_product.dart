@@ -15,7 +15,7 @@ class AboutProduct extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: Theme.of(context).textTheme.descriptionStyle),
+        Text(title, style: Theme.of(context).textTheme.mediumdescriptionStyle),
         const Gap(5),
         Text(content,
             style: TextStyle().wayaCopyWith(

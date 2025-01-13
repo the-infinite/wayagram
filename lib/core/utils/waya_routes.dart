@@ -7,6 +7,8 @@ import 'package:wayagram/features/general_settings/change_pin/change_pin_page.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart';
+import 'package:wayagram/features/quotation/buyer/views/buyer_checkout.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
@@ -65,7 +67,9 @@ class WayaAppRoutes {
     SellerBidDetails.route: () => SellerBidDetails(),
     SellerSettlement.route: () => SellerSettlement(),
     SeeSellerBids.route: () => SeeSellerBids(),
+    SeeBuyerBids.route: () => SeeBuyerBids(),
     Checkout.route: () => Checkout(),
+    BuyerCheckout.route: () => BuyerCheckout(),
     FilterView.route: () => FilterView(),
     GeneralSettingsPage.route: () => GeneralSettingsPage(),
     ChangePasswordGenSettings.route: () => ChangePasswordGenSettings(),
