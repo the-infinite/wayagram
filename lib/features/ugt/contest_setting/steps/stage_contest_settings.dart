@@ -73,7 +73,6 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                           shape: BoxShape.rectangle,
                         ),
                         child: IconButton(
-
                           icon: Image.asset('assets/images/destructive.png',width: 30, height: 30, ),
                           //Icon(Icons.remove_circle, color: Colors.red),
                           //SvgPicture.asset('assets/images/destructive.png'),
