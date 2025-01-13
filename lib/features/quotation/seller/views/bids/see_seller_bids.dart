@@ -17,13 +17,19 @@ import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
-class SeeSellerBids extends ConsumerWidget {
+
+
+class SeeSellerBids extends ConsumerStatefulWidget {
   static const route = '/seeSeller-bids';
   const SeeSellerBids({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
+  ConsumerState<ConsumerStatefulWidget> createState() => _SeeSellerBidsState();
+}
+
+class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
+  @override
+  Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     //final viewModel = ref.watch(sellerBidsVmProvider);
     return WayaScaffold(
@@ -32,19 +38,30 @@ class SeeSellerBids extends ConsumerWidget {
         padding: EdgeInsets.zero,
         body: Stack(
           children: [
-          Image.asset('assets/images/bid/map.png', fit: BoxFit.contain,),
-          const Gap(10),
-          ListView.builder(
-            padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-              itemCount: 10,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return SingleSeeBidWidget(
-                  isSeller: true,
-                );
-              })
+            Image.asset('assets/images/bid/map.png', fit: BoxFit.contain,),
+            const Gap(10),
+           /* Container(
+              height: 200,
+              child: ListView(
+                children: [
+                  Text('data'),
+                  Text('data'),
+                  Text('CLickable'),
+                ],
+              ),
+            ),*/
 
-        ],));
+            ListView.builder(
+                padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                itemCount: 10,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return SingleSeeBidWidget(
+                    isSeller: true,
+                  );
+                }),
+          ],));
   }
 }
+

@@ -62,68 +62,67 @@ class BidDashboard extends ConsumerWidget {
                 fontWeight: FontWeight.w600,
                 color: wayaTheme.colorScheme.customBlack)),
         const Gap(15),
+
         Container(
-          width: double.infinity,
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.scaffoldColor,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: GridView(
-            shrinkWrap: true,
-            //scrollDirection: Axis.horizontal,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount:
-                ref.read(bidDashboardVmProvider.notifier).salesMetrics.length,
-                mainAxisSpacing: 0,
-                childAspectRatio: 1,
-                crossAxisSpacing: 8),
-            children: [
-              QuickActionWidget(
-                title: "Bids",
-                icon: SvgPicture.asset('assets/icons/bid.svg'),
-                color: Color(0xffE7F6EC),
-                onTap: () {
-                  WayaNav.toNamed('/seller-bids');
-                },
-                metric: 4,
-                isStacked: true,
-              ),
-              QuickActionWidget(
-                title: "Orders",
-                icon: SvgPicture.asset('assets/icons/orders.svg'),
-                color: Color(0xffFFF0EB),
-                onTap: () {
-                  WayaNav.toNamed('/waya-deal-ad');
-                },
-              ),
-              QuickActionWidget(
-                title: "Disputes",
-                icon: SvgPicture.asset(
-                  'assets/icons/dispute.svg',
-                  width: 28,
-                  height: 28,
+          child:FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                QuickActionWidget(
+                  title: "Bids",
+                  icon: SvgPicture.asset('assets/icons/bid.svg'),
+                  color: Color(0xffE7F6EC),
+                  onTap: () {
+                    WayaNav.toNamed('/seller-bids');
+                  },
+                  metric: 4,
+                  isStacked: true,
                 ),
-                color: Color(0xffE3EFFC),
-                onTap: () {
-                  WayaNav.toNamed('/seller-dispute');
-                },
-              ),
-              QuickActionWidget(
-                title: "Settlements",
-                icon: SvgPicture.asset(
-                  'assets/icons/settlement.svg',
-                  width: 28,
-                  height: 28,
-                  colorFilter:
-                  ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
+                const Gap(5),
+                QuickActionWidget(
+                  title: "Orders",
+                  icon: SvgPicture.asset('assets/icons/orders.svg'),
+                  color: Color(0xffFFF0EB),
+                  onTap: () {
+                    WayaNav.toNamed('/waya-deal-ad');
+                  },
                 ),
-                color: Color(0xffFBEAE9),
-                onTap: () {
-                  WayaNav.toNamed('/seller-settlement');
-                },
-              ),
-            ],
+                const Gap(5),
+                QuickActionWidget(
+                  title: "Disputes",
+                  icon: SvgPicture.asset(
+                    'assets/icons/dispute.svg',
+                    width: 28,
+                    height: 28,
+                  ),
+                  color: Color(0xffE3EFFC),
+                  onTap: () {
+                    WayaNav.toNamed('/seller-dispute');
+                  },
+                ),
+                const Gap(5),
+                QuickActionWidget(
+                  title: "Settlements",
+                  icon: SvgPicture.asset(
+                    'assets/icons/settlement.svg',
+                    width: 28,
+                    height: 28,
+                    colorFilter:
+                    ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
+                  ),
+                  color: Color(0xffFBEAE9),
+                  onTap: () {
+                    WayaNav.toNamed('/seller-settlement');
+                  },
+                ),
+              ],
+            ),
           ),
         ),
         const Gap(15),

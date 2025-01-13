@@ -8,6 +8,7 @@ import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 
+import '../../../../core/utils/waya_navigation.dart';
 import '../../vm/bid_vm.dart';
 import '../../widgets/quotation_card.dart';
 import '../../widgets/request_card.dart';
@@ -35,7 +36,10 @@ class MyRequests extends ConsumerWidget {
             shrinkWrap: true,
             itemCount: viewModel.quotations.length,
             itemBuilder: (context, index) {
-              return RequestCard(quotation: viewModel.quotations[index]);
+              return RequestCard(quotation: viewModel.quotations[index],
+              onTap: () {
+                WayaNav.toNamed('/seeSeller-bids');
+              },);
             }),
         const Gap(25),
         GroupedWidgetHeader(
@@ -48,7 +52,10 @@ class MyRequests extends ConsumerWidget {
             shrinkWrap: true,
             itemCount: viewModel.quotations.length,
             itemBuilder: (context, index) {
-              return RequestCard(quotation: viewModel.quotations[index]);
+              return RequestCard(quotation: viewModel.quotations[index],
+              onTap: () {
+                WayaNav.toNamed('/seeSeller-bids');
+              },);
             }),
       ],
     );

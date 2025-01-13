@@ -11,7 +11,8 @@ import 'package:wayagram/features/quotation/vm/quotation_vm.dart';
 
 class RequestCard extends StatelessWidget {
   final Quotation quotation;
-  const RequestCard({super.key, required this.quotation});
+  final VoidCallback onTap;
+  const RequestCard({super.key, required this.quotation, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +113,7 @@ class RequestCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                callback: () {
-                  WayaNav.toNamed('/seeSeller-bids');
-                },
+                callback: onTap,
                 color: wayaTheme.colorScheme.primar50,
               ),
 

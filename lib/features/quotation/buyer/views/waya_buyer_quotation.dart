@@ -11,10 +11,12 @@ import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/features/quotation/buyer/views/my_request.dart';
 import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
 import '../../../../core/utils/waya_navigation.dart';
 import 'buy_request.dart';
+import 'manage_shop/manage_shop_quotation.dart';
 class WayaBuyerQuotation extends ConsumerStatefulWidget {
   const WayaBuyerQuotation({super.key});
 
@@ -56,7 +58,7 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation>
                 ),
                 WayaTabButton(
                   isSelected: _selectedIndex == 2,
-                  text: 'Orders',
+                  text: 'Manage Shop',
                   onTap: () => setState(() => _selectedIndex = 2),
                 ),
               ],
@@ -89,7 +91,8 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation>
             ),
 
             const Gap(25),
-            _selectedIndex == 0 ? BuyRequests() : _selectedIndex == 1 ? MyRequests() : AllOrders()
+            _selectedIndex == 0 ? BuyRequests() : _selectedIndex == 1 ? MyRequests() : ManageShopQuotation()
+            //AllOrders()
           ],
         ));
   }
