@@ -40,14 +40,13 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
         isScrollable: true,
         padding: EdgeInsets.zero,
         body: Stack(
+          clipBehavior: Clip.none,
           children: [
             Image.asset('assets/images/bid/map.png', fit: BoxFit.contain,),
             const Gap(10),
-
-
             ListView.builder(
-                padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                itemCount: 10,
+                padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+                itemCount: 4,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
@@ -78,6 +77,16 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                             Column(
                               children: [
                                 Row(children: [
+                                  selectAmount('₦20,500', wayaTheme.colorScheme.primar50, wayaTheme.colorScheme.customPrimary),
+                                  const Gap(10),
+                                  selectAmount('₦21,000', wayaTheme.colorScheme.primar50, wayaTheme.colorScheme.customPrimary),
+                                  const Gap(10),
+                                  selectAmount('₦21,500', wayaTheme.colorScheme.primar50, wayaTheme.colorScheme.customPrimary),
+
+                                ],),
+                                const Gap(10),
+
+                                Row(children: [
                                   SizedBox(
                                     width: context.width * 0.35,
                                     child: WayaButton(callback: (){
@@ -107,6 +116,24 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                   );
                 }),
           ],));
+  }
+
+  selectAmount(amt, color, color2){
+    return Container(
+      decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(6)
+      ),
+      height: 36.h,
+      width: 80.w,
+      child:Center(
+        child: Text(
+          amt,
+          style: TextStyle().wayaCopyWith(
+              color: color2, fontWeight: FontWeight.w600, fontSize: 16),
+        ),
+      ),
+    );
   }
 }
 
