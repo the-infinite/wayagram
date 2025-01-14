@@ -18,32 +18,34 @@ class LoginState {
   final UserModel? userData;
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final TextEditingController businessIdController;
 
-  LoginState({
-    this.isPasswordFocused = false,
-    this.isLoading = false,
-    this.isPasswordVisible = false,
-    this.userData,
-    required this.emailController,
-    required this.passwordController,
-  });
+  LoginState(
+      {this.isPasswordFocused = false,
+      this.isLoading = false,
+      this.isPasswordVisible = false,
+      this.userData,
+      required this.emailController,
+      required this.passwordController,
+      required this.businessIdController});
 
-  LoginState copyWith({
-    bool? isPasswordFocused,
-    bool? isLoading,
-    bool? isPasswordVisible,
-    UserModel? userData,
-    TextEditingController? emailController,
-    TextEditingController? passwordController,
-  }) {
+  LoginState copyWith(
+      {bool? isPasswordFocused,
+      bool? isLoading,
+      bool? isPasswordVisible,
+      UserModel? userData,
+      TextEditingController? emailController,
+      TextEditingController? passwordController,
+      TextEditingController? businessIdController}) {
     return LoginState(
-      isPasswordFocused: isPasswordFocused ?? this.isPasswordFocused,
-      isLoading: isLoading ?? this.isLoading,
-      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
-      userData: userData ?? this.userData,
-      emailController: emailController ?? this.emailController,
-      passwordController: passwordController ?? this.passwordController,
-    );
+        isPasswordFocused: isPasswordFocused ?? this.isPasswordFocused,
+        isLoading: isLoading ?? this.isLoading,
+        isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
+        userData: userData ?? this.userData,
+        emailController: emailController ?? this.emailController,
+        passwordController: passwordController ?? this.passwordController,
+        businessIdController:
+            businessIdController ?? this.businessIdController);
   }
 }
 
@@ -58,9 +60,9 @@ class LoginVm extends StateNotifier<LoginState> {
   LoginVm(this._authRepository, this._localDataSource, this._secureDataSource,
       this._setupVm, this._profileRepo)
       : super(LoginState(
-          emailController: TextEditingController(),
-          passwordController: TextEditingController(),
-        ));
+            emailController: TextEditingController(),
+            passwordController: TextEditingController(),
+            businessIdController: TextEditingController()));
 
   void togglePasswordVisibility() {
     state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
@@ -74,14 +76,18 @@ class LoginVm extends StateNotifier<LoginState> {
   void dispose() {
     state.emailController.dispose();
     state.passwordController.dispose();
+    state.businessIdController.dispose();
     super.dispose();
   }
 
-  Future<void> onSubmit(String? email) async {
+  Future<void> onSubmit({String? email, bool? isBusinessLogin}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.login(
-          email ?? state.emailController.text, state.passwordController.text);
+          isBusinessLogin: isBusinessLogin,
+          email: email ?? state.emailController.text,
+          businessId: state.businessIdController.text,
+          password: state.passwordController.text);
 
       _logger.d(" result ${response.data['message']}");
       if (response.success) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 class InventoryWidget extends StatelessWidget {
@@ -18,7 +19,7 @@ class InventoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = context.width;
 
     final titlefontSize = screenWidth * 0.030;
     final metricFontSize = screenWidth * 0.050;
