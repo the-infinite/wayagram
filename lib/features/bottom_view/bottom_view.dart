@@ -103,9 +103,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
       Explore(),
       userType == 'PERSONAL' ? WayaBuyer() : WayaSeller(),
       Explore(),
-      //userType == 'PERSONAL' ? WayaBuyerQuotation() : WayaSellerQuotation(),
-      //userType == 'PERSONAL' ? WayaBuyerQuotation() :
-      WayaSellerQuotation(),
+      userType == 'PERSONAL' ? WayaBuyerQuotation() : WayaSellerQuotation(),
       Explore(),
       MoreView(),
     ];
