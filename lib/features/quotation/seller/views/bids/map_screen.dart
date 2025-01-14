@@ -9,8 +9,10 @@ import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 import 'package:wayagram/features/quotation/widgets/single_see_bid_widget.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
@@ -76,6 +78,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = ref.watch(createRequestProvider);
     final wayaTheme = Theme.of(context);
     return Scaffold(
       //appBarTrailing: bidIcon(context),
@@ -92,8 +95,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             myLocationButtonEnabled: true,
             minMaxZoomPreference: const MinMaxZoomPreference(3,13)
         ),
-        Positioned(
-          top: 30,
+        /*Positioned(
+          top: 130,
+          bottom: 40,
           child: Padding(
             padding: EdgeInsets.only(top: 150.h, left: 20.w, right: 20.w),
             child: Row(children: [
@@ -110,19 +114,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   onTap:()=>Navigator.pop(context),
                   child: Image.asset('assets/images/bid/back-arrow.png', height: 24, width: 24,)),],),
           ),
-        ),
-        // Padding(
-        //   padding: EdgeInsets.only(top: 60.h, left: 20.w, right: 20.w),
-        //   child: Row(
-        //     children: [
-        //       //MainClass.txtBLS6('Tracking Details', AppColor.colorAppGray6, 18),
-        //       const Spacer(),
-        //       InkWell(
-        //           onTap:()=>Navigator.pop(context),
-        //           child: Image.asset('assets/home/cancel.png', height: 24, width: 24,))
-        //     ],
-        //   ),
-        // ),
+        ),*/
 
         Padding(
           padding:  EdgeInsets.only( top: 340.h),
@@ -163,6 +155,43 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               ],),
           ),
         ),
+
+        Padding(
+          padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+          child: Row(children: [
+
+            Padding(
+              padding:  EdgeInsets.only(bottom: 630.h),
+              child: InkWell(
+                  onTap:()=>Navigator.pop(context),
+                  child: Image.asset('assets/images/bid/back-arrow.png', height: 60.h,)),
+            ),
+
+           Flexible(
+             child: FormField<String>(validator: (value) {
+               return null;
+             }, builder: (formState)  {
+               return WayaTextFormField(
+                 keyboardType: TextInputType.text,
+                 controller: viewModel.maxDistance,
+                 hintText: 'Ikeja city, Lagos state',
+                 borderColor: formState.hasError &&
+                     viewModel.maxDistance.text.isEmpty
+                     ? wayaTheme.colorScheme.error
+                     : null,
+                 label: '',
+                 fillColor: Colors.white,
+                 //prefixIcon:Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text("Km", style: wayaTheme.textTheme.hintStyle),)
+               );
+             }),
+           )
+          ],
+
+
+          ),
+        ),
+
+
 
       ],),
 
