@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
@@ -10,6 +11,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
+import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
@@ -60,7 +62,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                 children: [
                   WayaButton(
                     callback: () {
-                      WayaNav.toNamed('/add-product');
+                      WayaNav.toNamed(AddProduct.route);
                     },
                     color: wayaTheme.colorScheme.primar50,
                     centerWidget: Row(
@@ -68,7 +70,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          'assets/icons/button-icon.svg',
+                          WayaAssests.icons.buttonIcon.path,
                           colorFilter: ColorFilter.mode(
                               wayaTheme.colorScheme.customPrimary,
                               BlendMode.srcIn),

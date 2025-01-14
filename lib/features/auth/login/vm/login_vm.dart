@@ -89,7 +89,7 @@ class LoginVm extends StateNotifier<LoginState> {
           businessId: state.businessIdController.text,
           password: state.passwordController.text);
 
-      _logger.d(" result ${response.data['message']}");
+     // _logger.d(" result ${response.data['message']}");
       if (response.success) {
         final remmoteUserData = UserModel.fromJson(response.data);
         state = state.copyWith(userData: remmoteUserData);

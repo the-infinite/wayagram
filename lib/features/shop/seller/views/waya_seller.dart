@@ -10,6 +10,8 @@ import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 import 'package:gap/gap.dart';
 
+@Deprecated(
+    'Use WayaShop instead of WayaSeller for the new shop implementation')
 class WayaSeller extends ConsumerStatefulWidget {
   const WayaSeller({super.key});
 
@@ -21,52 +23,45 @@ class _WayaSellerState extends ConsumerState<WayaSeller>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
- 
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
-  
-    return 
-        WayaScaffold(
-            isLoading: false,
-            isScrollable: true,
-          onTapBackButton: () =>
+
+    return WayaScaffold(
+        isLoading: false,
+        isScrollable: true,
+        onTapBackButton: () =>
             Navigator.pushNamed(context, BottomView.route, arguments: 0),
-            title: 'Shop',
-            appBarTrailing: WayaCartIcon(),
-            body: Column(
+        title: 'Shop',
+        appBarTrailing: WayaCartIcon(),
+        body: Column(
+          children: [
+            const Gap(10),
+            Row(
               children: [
-                const Gap(10),
-                Row(
-                  children: [
-                    WayaTabButton(
-                    
-                      isSelected: _selectedIndex == 0,
-                      text: 'All Products',
-                      onTap: () => setState(() => _selectedIndex = 0),
-                    ),
-                    WayaTabButton(
-                    
-                      isSelected: _selectedIndex == 1,
-                      text: 'My Products',
-                      onTap: () => setState(() => _selectedIndex = 1),
-                    ),
-                    WayaTabButton(
-                   
-                      isSelected: _selectedIndex == 2,
-                      text: 'Manage Shop',
-                      onTap: () => setState(() => _selectedIndex = 2),
-                    ),
-                  ],
+                WayaTabButton(
+                  isSelected: _selectedIndex == 0,
+                  text: 'All Products',
+                  onTap: () => setState(() => _selectedIndex = 0),
                 ),
-                const Gap(10),
-                if (_selectedIndex == 0) AllProducts(),
-                if (_selectedIndex == 1) SellerProducts(),
-                if (_selectedIndex == 2) ManageShop()
+                WayaTabButton(
+                  isSelected: _selectedIndex == 1,
+                  text: 'My Products',
+                  onTap: () => setState(() => _selectedIndex = 1),
+                ),
+                WayaTabButton(
+                  isSelected: _selectedIndex == 2,
+                  text: 'Manage Shop',
+                  onTap: () => setState(() => _selectedIndex = 2),
+                ),
               ],
-            ));
+            ),
+            const Gap(10),
+            // if (_selectedIndex == 0) AllProducts(),
+            // if (_selectedIndex == 1) SellerProducts(),
+            // if (_selectedIndex == 2) ManageShop()
+          ],
+        ));
   }
 }
-

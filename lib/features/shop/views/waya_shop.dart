@@ -1,0 +1,64 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/utils/routes.dart';
+import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
+import 'package:wayagram/features/shop/buyer/views/all_products.dart';
+import 'package:wayagram/features/shop/seller/views/seller_shop/seller_shop.dart';
+import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
+import 'package:gap/gap.dart';
+
+class WayaShop extends ConsumerStatefulWidget {
+  const WayaShop({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _WayaShopState();
+}
+
+class _WayaShopState extends ConsumerState<WayaShop>
+    with SingleTickerProviderStateMixin {
+  int _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    final wayaTheme = Theme.of(context);
+
+    return WayaScaffold(
+        isLoading: false,
+        isScrollable: true,
+        onTapBackButton: () =>
+            Navigator.pushNamed(context, BottomView.route, arguments: 0),
+        title: 'Shop',
+        appBarTrailing: WayaCartIcon(),
+        body: Column(
+          children: [
+            const Gap(10),
+            Row(
+              children: [
+                WayaTabButton(
+                  isSelected: _selectedIndex == 0,
+                  text: 'All Products',
+                  onTap: () => setState(() => _selectedIndex = 0),
+                ),
+                WayaTabButton(
+                  isSelected: _selectedIndex == 1,
+                  text: 'Orders',
+                  onTap: () => setState(() => _selectedIndex = 1),
+                ),
+                WayaTabButton(
+                  isSelected: _selectedIndex == 2,
+                  text: 'Manage Shop',
+                  onTap: () => setState(() => _selectedIndex = 2),
+                ),
+              ],
+            ),
+            const Gap(10),
+            if (_selectedIndex == 0) AllProducts(),
+            if (_selectedIndex == 1) AllOrders(),
+            if (_selectedIndex == 2) SellerShop()
+          ],
+        ));
+  }
+}
