@@ -54,6 +54,39 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     _localDataSource.saveSelectedBusinessType(value);
   }
 
+  void selectState(Select value) {
+    state = state.copyWith(state: value.value);
+  }
+
+  void selectCountry(Select value) {
+    state = state.copyWith(country: value.value);
+  }
+
+  void selectLGA(Select value) {
+    state = state.copyWith(lga: value.value);
+  }
+
+  Future<void> fetchBusinessTypes() async {
+    try {
+      state = state.copyWith(isLoadingBusinessType: true);
+      final response = await _authRepository.getBusinessTypes();
+      _logger.d(response.data);
+      final businesses = response.data['data']['docs'] as List;
+      final businessTypes = businesses
+          .map((item) => Select(
+                label: item['name'],
+                value: item['id'],
+              ))
+          .toList();
+
+      state = state.copyWith(businessTypes: businessTypes);
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoadingBusinessType: false);
+    }
+  }
+
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
       final response = await showDatePicker(
@@ -88,13 +121,14 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
             "234${state.phoneNumber.text.length > 10 ? state.phoneNumber.text.substring(1) : state.phoneNumber.text}",
         address: state.address.text,
         city: state.city.text,
-        state: state.state.text,
-        country: state.country.text,
+        state: state.state,
+        country: state.country,
         dateOfBirth: state.dateIsoFormat,
         tcAgreement: state.isAgreeToTerm,
         policyAgreement: state.isAgreeToTerm,
         confirmPassword: state.confirmPassword.text,
         gender: state.gender,
+        lga: state.lga,
         accountTypeId: _localDataSource.getUserType().id,
         business: isPersonal
             ? null

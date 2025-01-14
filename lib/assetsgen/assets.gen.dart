@@ -194,6 +194,9 @@ class $AssetsIconsGen {
   SvgGenImage get sDisputeIcon =>
       const SvgGenImage('assets/icons/s-dispute-icon.svg');
 
+  /// File path: assets/icons/s-shop.svg
+  SvgGenImage get sShop => const SvgGenImage('assets/icons/s-shop.svg');
+
   /// File path: assets/icons/settlement-icon.svg
   SvgGenImage get settlementIcon =>
       const SvgGenImage('assets/icons/settlement-icon.svg');
@@ -205,6 +208,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/share-network.svg
   SvgGenImage get shareNetwork =>
       const SvgGenImage('assets/icons/share-network.svg');
+
+  /// File path: assets/icons/soraj.svg
+  SvgGenImage get soraj => const SvgGenImage('assets/icons/soraj.svg');
 
   /// File path: assets/icons/thumbsup.svg
   SvgGenImage get thumbsup => const SvgGenImage('assets/icons/thumbsup.svg');
@@ -289,9 +295,11 @@ class $AssetsIconsGen {
         rCart,
         sCopy,
         sDisputeIcon,
+        sShop,
         settlementIcon,
         settlement,
         shareNetwork,
+        soraj,
         thumbsup,
         uLeaderboard,
         uPlus,
@@ -326,8 +334,16 @@ class $AssetsImagesGen {
   AssetGenImage get deleteImg =>
       const AssetGenImage('assets/images/delete-img.png');
 
+  /// File path: assets/images/destructive.png
+  AssetGenImage get destructive =>
+      const AssetGenImage('assets/images/destructive.png');
+
   /// Directory path: assets/images/explore
   $AssetsImagesExploreGen get explore => const $AssetsImagesExploreGen();
+
+  /// File path: assets/images/icon-right.png
+  AssetGenImage get iconRight =>
+      const AssetGenImage('assets/images/icon-right.png');
 
   /// Directory path: assets/images/onboarding
   $AssetsImagesOnboardingGen get onboarding =>
@@ -339,6 +355,10 @@ class $AssetsImagesGen {
 
   /// Directory path: assets/images/shop
   $AssetsImagesShopGen get shop => const $AssetsImagesShopGen();
+
+  /// File path: assets/images/successugt.png
+  AssetGenImage get successugt =>
+      const AssetGenImage('assets/images/successugt.png');
 
   /// File path: assets/images/u-emptystate.png
   AssetGenImage get uEmptystate =>
@@ -368,7 +388,10 @@ class $AssetsImagesGen {
         dCodeInvalid,
         dCodeValid,
         deleteImg,
+        destructive,
+        iconRight,
         placeholder,
+        successugt,
         uEmptystate,
         uStart,
         wayaDealAd,
@@ -520,11 +543,23 @@ class $AssetsImagesAuthGen {
 class $AssetsImagesBidGen {
   const $AssetsImagesBidGen();
 
+  /// File path: assets/images/bid/clock.png
+  AssetGenImage get clock => const AssetGenImage('assets/images/bid/clock.png');
+
   /// File path: assets/images/bid/deal.png
   AssetGenImage get deal => const AssetGenImage('assets/images/bid/deal.png');
 
+  /// File path: assets/images/bid/down.png
+  AssetGenImage get down => const AssetGenImage('assets/images/bid/down.png');
+
+  /// File path: assets/images/bid/map.png
+  AssetGenImage get map => const AssetGenImage('assets/images/bid/map.png');
+
+  /// File path: assets/images/bid/store.png
+  AssetGenImage get store => const AssetGenImage('assets/images/bid/store.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [deal];
+  List<AssetGenImage> get values => [clock, deal, down, map, store];
 }
 
 class $AssetsImagesExploreGen {
