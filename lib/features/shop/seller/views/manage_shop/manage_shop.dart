@@ -23,7 +23,7 @@ class ManageShop extends ConsumerWidget {
     final viewModel = ref.watch(manageShopVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-        automicallyImplyLeading: false,
+    
         title: 'Maleek Ventures',
         isLoading: false,
         isScrollable: true,

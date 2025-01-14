@@ -5,6 +5,8 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 
 class SingleShopCard extends ConsumerStatefulWidget {
   const SingleShopCard({
@@ -64,7 +66,12 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                 ],
               ),
               PopupMenuButton(
+                  onSelected: (value) {
+                   
+                  },
                   iconColor: wayaTheme.colorScheme.greyColor400,
+                  position: PopupMenuPosition.under,
+                  
                   itemBuilder: (context) {
                     return [
                       PopupMenuItem<int>(
@@ -72,7 +79,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {
-                              //WayaNav.toNamed(ManageShop.route);
+                              WayaNav.toNamed(ManageShop.route);
                             },
                             asset: WayaAssests.icons.bShop.path,
                             text: "Shop Dashboard"),
@@ -104,12 +111,13 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
     return InkWell(
       onTap: onTap,
       splashFactory: NoSplash.splashFactory,
+      
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SvgPicture.asset(asset),
-          const Gap(3),
+          const Gap(4),
           Text(
             text,
             style: TextStyle().wayaCopyWith(

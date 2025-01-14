@@ -29,6 +29,7 @@ class BottomView extends ConsumerStatefulWidget {
 
 class _BottomViewState extends ConsumerState<BottomView> {
   late int _selectedIndex;
+  bool _isInitialized = false;
 
   @override
   void initState() {
@@ -38,11 +39,19 @@ class _BottomViewState extends ConsumerState<BottomView> {
     });
   }
 
+
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final index = ModalRoute.of(context)?.settings.arguments as int?;
-    _selectedIndex = index ?? 0;
+
+    if (!_isInitialized) {
+      final index = ModalRoute.of(context)?.settings.arguments as int?;
+      if (index != null) {
+        _selectedIndex = index;
+      }
+      _isInitialized = true;
+    }
   }
 
   Future<bool> _onWillPop(BuildContext context) async {
@@ -97,7 +106,6 @@ class _BottomViewState extends ConsumerState<BottomView> {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(bottomViewVmProvider);
     final successfulSetupState = ref.watch(successfulSetupVmProvider);
-
     final userData = successfulSetupState.user;
     final userType = userData?.user?.role?.name;
     final List<Widget> _pages = [
@@ -128,12 +136,12 @@ class _BottomViewState extends ConsumerState<BottomView> {
     return PopScope(
       canPop: false,
       onPopInvoked: (popDisposition) async {
-        if (_selectedIndex == 0) {
-          _onWillPop(context);
-        } else {
+        if (_selectedIndex != 0) {
           setState(() {
             _selectedIndex = 0;
           });
+        } else {
+          _onWillPop(context);
         }
       },
       child: Scaffold(
