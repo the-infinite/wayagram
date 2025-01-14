@@ -26,6 +26,10 @@ class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
+  PageController pageController = PageController(
+    initialPage: 0,
+  );
+
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +87,6 @@ class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation>
               ),
               callback: () {
                 WayaNav.toNamed('/create-request');
-                //WayaNav.toNamed(CreateRequest.route);
               },
               color: wayaTheme.colorScheme.primar50,
             ),

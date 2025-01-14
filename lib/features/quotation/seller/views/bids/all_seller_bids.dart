@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
 import 'package:wayagram/features/quotation/vm/seller_bids_vm.dart';
 import 'package:wayagram/features/quotation/widgets/single_bid_widget.dart';
@@ -80,7 +81,7 @@ class AllSellerBids extends ConsumerWidget {
     final wayaTheme = Theme.of(ctx);
     return GestureDetector(
       onTap: () {
-        // WayaNav.toNamed("/cart");
+         WayaNav.toNamed("/map");
       },
       child: Row(
         children: [

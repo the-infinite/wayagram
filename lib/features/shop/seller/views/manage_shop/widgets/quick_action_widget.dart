@@ -37,6 +37,7 @@ class QuickActionWidget extends StatelessWidget {
               children: [
                 Container(
                   height: 70,
+                  width: 80,
                   padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
                   decoration: BoxDecoration(
                       color: color, borderRadius: BorderRadius.circular(10)),

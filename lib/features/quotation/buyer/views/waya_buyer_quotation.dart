@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,10 +13,12 @@ import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/features/quotation/buyer/views/my_request.dart';
 import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
 import '../../../../core/utils/waya_navigation.dart';
 import 'buy_request.dart';
+import 'manage_shop/manage_shop_quotation.dart';
 class WayaBuyerQuotation extends ConsumerStatefulWidget {
   const WayaBuyerQuotation({super.key});
 
@@ -25,7 +29,6 @@ class WayaBuyerQuotation extends ConsumerStatefulWidget {
 class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-
 
   @override
   Widget build(BuildContext context) {
@@ -56,12 +59,13 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation>
                 ),
                 WayaTabButton(
                   isSelected: _selectedIndex == 2,
-                  text: 'Orders',
+                  text: 'Manage Shop',
                   onTap: () => setState(() => _selectedIndex = 2),
                 ),
               ],
             ),
             const Gap(20),
+            _selectedIndex == 0 || _selectedIndex == 1 ?
             WayaButton(
               centerWidget: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -86,10 +90,11 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation>
                 //WayaNav.toNamed(CreateRequest.route);
               },
               color: wayaTheme.colorScheme.primar50,
-            ),
-
-            const Gap(25),
-            _selectedIndex == 0 ? BuyRequests() : _selectedIndex == 1 ? MyRequests() : AllOrders()
+            ) : Container(),
+            _selectedIndex == 0 || _selectedIndex == 1 ?
+            const Gap(25) : const Gap(10),
+            _selectedIndex == 0 ? BuyRequests() : _selectedIndex == 1 ? MyRequests() : ManageShopQuotation()
+            //AllOrders()
           ],
         ));
   }

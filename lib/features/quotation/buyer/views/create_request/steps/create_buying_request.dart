@@ -21,9 +21,13 @@ class CreateBuyingRequest extends ConsumerStatefulWidget {
 
 class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
   final _formKey = GlobalKey<FormState>();
+  
+  RangeValues values = RangeValues(0.1, 0.5);
+
 
   @override
   Widget build(BuildContext context) {
+    RangeLabels labels = RangeLabels(values.start.toString(), values.end.toString());
     final viewModel = ref.watch(createRequestProvider);
     final wayaTheme = Theme.of(context);
     return  Column(
@@ -330,6 +334,12 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                       color: wayaTheme.colorScheme.black, fontWeight: FontWeight.w500, fontSize: 14),
                 ),
                 const Gap(10),
+                RangeSlider(values: values, divisions: 10, labels: labels,
+                onChanged: (newValues){
+                  setState(() {
+                    values = newValues;
+                  });
+                },),
                 Row(children: [
                   Expanded(
                     child: FormField<String>(validator: (value) {

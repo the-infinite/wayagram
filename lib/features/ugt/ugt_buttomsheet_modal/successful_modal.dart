@@ -1,0 +1,63 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+
+import '../../../core/components/waya_buttons.dart';
+import '../../../core/components/waya_select_field.dart';
+import '../../../core/components/waya_text_form_field.dart';
+import '../../../core/utils/waya_navigation.dart';
+
+class SuccessfulModal extends StatefulWidget {
+  const SuccessfulModal({super.key});
+
+  @override
+  State<SuccessfulModal> createState() => _SuccessfulModalState();
+}
+
+class _SuccessfulModalState extends State<SuccessfulModal> {
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset('assets/images/successugt.png', ),
+            SizedBox(height: 20.h),
+            Text(
+                "Contest created Successfully",
+                style: wayaTheme.textTheme.bodyMedium),
+            SizedBox(height: 3.h),
+            Text(
+              "Your contest is now live and visible to the public. Manage or \n share your contest details from your dashboard.",
+
+              style: wayaTheme.textTheme.hintStyle, textAlign: TextAlign.center,),
+
+            SizedBox(height: 17.h),
+            WayaButton(
+              callback: () async{
+                WayaNav.toNamed("/contest-setting-content");
+              },
+              text: "Manage Contest",
+            ),
+            const Gap(10),
+            WayaButton(
+                text: 'Copy Contest Invite Link',
+                color: wayaTheme.colorScheme.greyColor300,
+                textColor: wayaTheme.colorScheme.customBlack,
+                border:
+                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                callback: () {
+
+                })
+          ],
+        ),
+      ),
+    );
+  }
+}
