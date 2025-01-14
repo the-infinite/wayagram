@@ -5,6 +5,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/ugt/for_you_contest.dart';
+import 'package:wayagram/features/ugt/my_contest_details/my_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contests.dart';
 
 import '../../core/utils/waya_navigation.dart';
@@ -47,7 +48,7 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
           ),
           const Gap(10),
           if (_selectedIndex == 0) ForYouContest(),
-          if (_selectedIndex == 1) MyContests()
+          if (_selectedIndex == 1) MyContestDetails(),
         ],
       ),
       floatingActionButton: SizedBox(
