@@ -46,7 +46,10 @@ class ManageShopQuotation extends ConsumerWidget {
             itemBuilder: (context, index) {
               return SingleShopWidget(
                 isSeller: true,
-                onTap: ()=> popUpMenu(context),
+                onTap: (){
+                  print('TESTING mkn');
+                  popUpMenu(context);
+                },
               );
             }),
 
@@ -76,7 +79,7 @@ class ManageShopQuotation extends ConsumerWidget {
     await showMenu(
       context: context,
       elevation: 4,
-      color: Colors.white,
+      color: Colors.red,
       surfaceTintColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(

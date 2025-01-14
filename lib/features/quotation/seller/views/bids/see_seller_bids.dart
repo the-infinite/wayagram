@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
 import 'package:wayagram/features/quotation/vm/seller_bids_vm.dart';
 import 'package:wayagram/features/quotation/widgets/single_bid_widget.dart';
@@ -40,16 +43,7 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
           children: [
             Image.asset('assets/images/bid/map.png', fit: BoxFit.contain,),
             const Gap(10),
-           /* Container(
-              height: 200,
-              child: ListView(
-                children: [
-                  Text('data'),
-                  Text('data'),
-                  Text('CLickable'),
-                ],
-              ),
-            ),*/
+
 
             ListView.builder(
                 padding: EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -57,8 +51,59 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return SingleSeeBidWidget(
-                    isSeller: true,
+                  return Padding(
+                    padding: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 10.h),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Theme(
+                        data: ThemeData(
+                          colorScheme: const ColorScheme.dark().copyWith(
+                            primary: Colors.transparent, // Custom color for the tile's header
+                          ),
+                        ),
+                        child: ExpansionTile(
+                          iconColor: Colors.white,
+                          collapsedIconColor: Colors.white,
+                          childrenPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+                          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                          title: SingleSeeBidWidget(
+                            isSeller: true,
+                            color: Colors.white,
+                          ),
+                          showTrailingIcon:  false,
+                          children: [
+                            Column(
+                              children: [
+                                Row(children: [
+                                  SizedBox(
+                                    width: context.width * 0.35,
+                                    child: WayaButton(callback: (){
+
+                                    },
+                                      text: 'Cancel Bid',
+                                      color: WayaColors.error500,
+                                    ),
+                                  ),
+                                  const Gap(15),
+                                  SizedBox(
+                                    width: context.width * 0.35,
+                                    child: WayaButton(callback: (){
+
+                                    },
+                                      text: 'Send Offer',
+                                    ),
+                                  ),
+                                ],)
+                              ],
+                            ),
+                          ],
+
+                        ),
+                      ),
+                    ),
                   );
                 }),
           ],));

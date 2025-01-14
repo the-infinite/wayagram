@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,7 +29,6 @@ class WayaBuyerQuotation extends ConsumerStatefulWidget {
 class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +65,7 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation>
               ],
             ),
             const Gap(20),
+            _selectedIndex == 0 || _selectedIndex == 1 ?
             WayaButton(
               centerWidget: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -88,9 +90,9 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation>
                 //WayaNav.toNamed(CreateRequest.route);
               },
               color: wayaTheme.colorScheme.primar50,
-            ),
-
-            const Gap(25),
+            ) : Container(),
+            _selectedIndex == 0 || _selectedIndex == 1 ?
+            const Gap(25) : const Gap(10),
             _selectedIndex == 0 ? BuyRequests() : _selectedIndex == 1 ? MyRequests() : ManageShopQuotation()
             //AllOrders()
           ],
