@@ -39,7 +39,7 @@ class ContestCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: context.width * 0.6,
+                    width: context.width * 0.8,
                     child: Row(
                     children: [
                       WayaImage(
@@ -54,15 +54,15 @@ class ContestCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           SizedBox(
-                            width: context.width * 0.4,
+                            width: context.width * 0.6,
                             child: Text(
                             "Best University Musician 2024",
                             overflow: TextOverflow.ellipsis,
-                           
+
                             style: wayaTheme.textTheme.bodyMedium,
                           ),
                           ),
-                          const Gap(10),
+                          const Gap(8),
                           Text(
                             '20 Participants',
                             style: wayaTheme.textTheme.hintStyle,
@@ -72,15 +72,7 @@ class ContestCard extends StatelessWidget {
                     ],
                   ),
                   ),
-                  SizedBox(
-                    width: 80,
-                    child: WayaButton(
-                      callback: () {},
-                      text: "Follow Back",
-                      height: 35,
-                      textStyle: TextStyle().wayaCopyWith(fontSize: 11),
-                    ),
-                  )
+
                 ],
               ),
               const Gap(20),
@@ -113,7 +105,7 @@ class ContestCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AboutUgtWidget(title: "Status", content: "Ongoing"),
+                  AboutUgtWidget(title: "Status", content: "Ongoing", ),
                   const Gap(30),
                   AboutUgtWidget(title: "Prize", content: "N100,000"),
                   const Gap(30),
