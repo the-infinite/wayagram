@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 class QuickActionWidget extends StatelessWidget {
@@ -23,7 +24,7 @@ class QuickActionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-        final screenWidth = MediaQuery.of(context).size.width;
+        final screenWidth = context.width;
     final fontSize = screenWidth * 0.030;
     return GestureDetector(
       onTap: onTap,

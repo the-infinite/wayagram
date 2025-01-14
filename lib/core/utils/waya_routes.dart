@@ -15,6 +15,7 @@ import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
 import 'package:wayagram/features/shop/seller/views/seller_dispute/views/add_evidence.dart';
@@ -104,6 +105,8 @@ class WayaAppRoutes {
     EditStagePreference.route: ()=> EditStagePreference(),
     CreateRequest.route: () => CreateRequest(),
     AllSellerBids.route: () => AllSellerBids(),
+    ManageShop.route:() => ManageShop()
+    
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

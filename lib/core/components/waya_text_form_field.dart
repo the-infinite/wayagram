@@ -307,8 +307,7 @@ class WayaFormField extends StatelessWidget {
     return FormField<String>(
       validator: validator,
       builder: (formState) {
-        //formState.hasError &&
-        bool isFocused = controller.text.isEmpty;
+        bool isFocused = formState.hasError && controller.text.isEmpty;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -346,7 +345,7 @@ class WayaFormField extends StatelessWidget {
               onTap: onTap,
               isReadOnly: isReadOnly,
             ),
-            if (!isFocused)
+            if (formState.hasError && controller.text.isEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Text(

@@ -23,6 +23,7 @@ Register _$RegisterFromJson(Map<String, dynamic> json) => Register(
       policyAgreement: json['policyAgreement'] as bool?,
       confirmPassword: json['confirmPassword'] as String?,
       business: json['business'] as Map<String, dynamic>?,
+      lga: json['lga'] as String?,
       referenceCode: json['referenceCode'] as String?,
     );
 
@@ -43,6 +44,7 @@ Map<String, dynamic> _$RegisterToJson(Register instance) => <String, dynamic>{
       'tcAgreement': instance.tcAgreement,
       'policyAgreement': instance.policyAgreement,
       'referenceCode': instance.referenceCode,
+      'lga': instance.lga,
       'business': instance.business,
     };
 

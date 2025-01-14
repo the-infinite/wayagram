@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
@@ -22,11 +24,18 @@ class PersonalFirstStepView extends ConsumerStatefulWidget {
 class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
   final _formKey = GlobalKey<FormState>();
 
+   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(personalFirstStepProvider.notifier).fetchBusinessTypes();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
     final wayaTheme = Theme.of(context);
-    final businessTypes = ref.watch(businessTypesProvider);
     final userTypeProvider = ref.watch(localDataSourceProvider);
     return SingleChildScrollView(
       child: Column(
@@ -35,13 +44,13 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
         children: [
           if (userTypeProvider.getUserType().type == "BUSINESS")
             Text("Tell us About Your Business",
-                style: WayaTextStyles.titleLarge)
+                style: wayaTheme.textTheme.titleLarge)
           else
-            Text("Tell us About You", style: WayaTextStyles.titleLarge),
+            Text("Tell us About You", style: wayaTheme.textTheme.titleLarge),
           const Gap(10),
           Text(
               "Fill in your required information as in your official \n documents and BVN",
-              style: WayaTextStyles.hintStyle),
+              style: wayaTheme.textTheme.hintStyle),
           const Gap(20),
           Form(
               key: _formKey,
@@ -166,8 +175,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                   const Gap(10),
                   //*    business section*/ */
                   Visibility(
-                      visible: userTypeProvider.getUserType().type ==
-                          "BUSINESS",
+                      visible:
+                          userTypeProvider.getUserType().type == "BUSINESS",
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,9 +250,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               ],
                             );
                           }),
-                          businessTypes.when(
-                              data: (businesses) =>
-                                  FormField<String>(validator: (value) {
+                           FormField<String>(validator: (value) {
                                     if (viewModel.businessTypeId.isEmpty) {
                                       return 'Business Type is required';
                                     }
@@ -259,9 +266,11 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                             uniqueKey: 'business-type',
                                             label: "Business Type",
                                             hintText: 'Select Business Type',
-                                            items: businesses,
-                                            onSelected: (value) =>
-                                                ref.read(personalFirstStepProvider.notifier).selectBizType(value)),
+                                            items: viewModel.businessTypes,
+                                            onSelected: (value) => ref
+                                                .read(personalFirstStepProvider
+                                                    .notifier)
+                                                .selectBizType(value)),
                                         if (formState.hasError &&
                                             viewModel.businessTypeId.isEmpty)
                                           Padding(
@@ -278,8 +287,6 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                       ],
                                     );
                                   }),
-                              error: (e, stack) => SizedBox.shrink(),
-                              loading: SizedBox.shrink)
                         ],
                       )),
 
@@ -416,6 +423,39 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     );
                   }),
                   const Gap(10),
+                  FormField<String>(validator: (value) {
+                    if (viewModel.country.isEmpty) {
+                      return 'Country is required';
+                    }
+
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaSelectField(
+                            height: 0.2,
+                            uniqueKey: 'country',
+                            label: "Country",
+                            hintText: 'Select Country',
+                            items: [Select(label: "Nigeria", value: "Nigeria")],
+                            onSelected: (value) => ref
+                                .read(personalFirstStepProvider.notifier)
+                                .selectCountry(value)),
+                        if (formState.hasError && viewModel.country.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                  const Gap(10),
                   Row(
                     children: [
                       Expanded(
@@ -456,47 +496,44 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       ),
                       const Gap(10),
                       Expanded(
-                        child: FormField<String>(validator: (value) {
-                          if (viewModel.state.text.isEmpty) {
-                            return 'State is required';
-                          }
+                          child: FormField<String>(validator: (value) {
+                        if (viewModel.state.isEmpty) {
+                          return 'State is required';
+                        }
 
-                          return null;
-                        }, builder: (formState) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              WayaTextFormField(
-                                keyboardType: TextInputType.name,
-                                controller: viewModel.state,
-                                hintText: 'Enter Your State',
-                                borderColor: formState.hasError &&
-                                        viewModel.state.text.isEmpty
-                                    ? wayaTheme.colorScheme.error
-                                    : null,
-                                label: 'State',
-                              ),
-                              if (formState.hasError &&
-                                  viewModel.state.text.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
-                                  ),
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WayaSelectField(
+                                height: 0.2,
+                                uniqueKey: 'state',
+                                label: "State",
+                                hintText: 'Select State',
+                                items: [Select(label: "Lagos", value: "Lagos")],
+                                onSelected: (value) => ref
+                                    .read(personalFirstStepProvider.notifier)
+                                    .selectState(value)),
+                            if (formState.hasError && viewModel.state.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(
+                                      color: wayaTheme.colorScheme.error,
+                                      fontSize: 12),
                                 ),
-                            ],
-                          );
-                        }),
-                      )
+                              ),
+                          ],
+                        );
+                      }))
                     ],
                   ),
                   const Gap(10),
                   FormField<String>(validator: (value) {
-                    if (viewModel.country.text.isEmpty) {
-                      return 'Country is required';
+                    if (viewModel.lga.isEmpty) {
+                      return 'LGA is required';
                     }
 
                     return null;
@@ -504,18 +541,16 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WayaTextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: viewModel.country,
-                          hintText: 'Enter Your Country',
-                          borderColor: formState.hasError &&
-                                  viewModel.country.text.isEmpty
-                              ? wayaTheme.colorScheme.error
-                              : null,
-                          label: 'Country',
-                        ),
-                        if (formState.hasError &&
-                            viewModel.country.text.isEmpty)
+                        WayaSelectField(
+                            height: 0.2,
+                            uniqueKey: 'lga',
+                            label: "LGA",
+                            hintText: 'Select LGA',
+                            items: [Select(label: "Surulere", value: "Surulere")],
+                            onSelected: (value) => ref
+                                .read(personalFirstStepProvider.notifier)
+                                .selectLGA(value)),
+                        if (formState.hasError && viewModel.lga.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
@@ -552,13 +587,17 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                           const Gap(4),
                           WayaButton(
                             callback: () {
-                              ref.read(personalFirstStepProvider.notifier).showDatePickerDialog(context);
+                              ref
+                                  .read(personalFirstStepProvider.notifier)
+                                  .showDatePickerDialog(context);
                             },
                             horizontalPadding: 0,
                             color: wayaTheme.colorScheme.transparent,
                             centerWidget: Focus(
                                 onFocusChange: (hasFocus) {
-                                  ref.read(personalFirstStepProvider.notifier).focusChanged(hasFocus);
+                                  ref
+                                      .read(personalFirstStepProvider.notifier)
+                                      .focusChanged(hasFocus);
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 10),
@@ -628,8 +667,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             uniqueKey: 'gender',
                             hintText: 'Select Gender',
                             items: genders,
-                            onSelected: (value) =>
-                                ref.read(personalFirstStepProvider.notifier).selectGender(value.value)),
+                            onSelected: (value) => ref
+                                .read(personalFirstStepProvider.notifier)
+                                .selectGender(value.value)),
                         if (formState.hasError && viewModel.gender.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
@@ -654,7 +694,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       children: [
                         Focus(
                           onFocusChange: (hasFocus) {
-                            ref.read(personalFirstStepProvider.notifier).setPasswordFocus(hasFocus);
+                            ref
+                                .read(personalFirstStepProvider.notifier)
+                                .setPasswordFocus(hasFocus);
                           },
                           child: WayaTextFormField(
                             keyboardType: TextInputType.visiblePassword,
@@ -668,7 +710,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             obscureText: !viewModel.isPasswordVisible,
                             suffixIcon: IconButton(
                               onPressed: () {
-                                ref.read(personalFirstStepProvider.notifier).togglePasswordVisibility();
+                                ref
+                                    .read(personalFirstStepProvider.notifier)
+                                    .togglePasswordVisibility();
                               },
                               autofocus: false,
                               icon: Icon(viewModel.isPasswordVisible
@@ -711,7 +755,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       children: [
                         Focus(
                           onFocusChange: (hasFocus) {
-                            ref.read(personalFirstStepProvider.notifier).setConfirmPasswordFocus(hasFocus);
+                            ref
+                                .read(personalFirstStepProvider.notifier)
+                                .setConfirmPasswordFocus(hasFocus);
                           },
                           child: WayaTextFormField(
                             keyboardType: TextInputType.visiblePassword,
@@ -725,7 +771,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             obscureText: !viewModel.isConfirmPasswordVisible,
                             suffixIcon: IconButton(
                               onPressed: () {
-                                ref.read(personalFirstStepProvider.notifier).toggleConfirmPasswordVisibility();
+                                ref
+                                    .read(personalFirstStepProvider.notifier)
+                                    .toggleConfirmPasswordVisibility();
                               },
                               autofocus: false,
                               icon: Icon(viewModel.isConfirmPasswordVisible
@@ -755,7 +803,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       Checkbox(
                           value: viewModel.isAgreeToTerm,
                           onChanged: (value) {
-                            ref.read(personalFirstStepProvider.notifier).toggleTerm(value);
+                            ref
+                                .read(personalFirstStepProvider.notifier)
+                                .toggleTerm(value);
                           }),
                       Expanded(
                           child: RichText(
@@ -783,7 +833,9 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     callback: !viewModel.isLoading
                         ? () async {
                             if (_formKey.currentState!.validate()) {
-                              await ref.read(personalFirstStepProvider.notifier).onSubmit(widget.goToNextTab);
+                              await ref
+                                  .read(personalFirstStepProvider.notifier)
+                                  .onSubmit(widget.goToNextTab);
                             }
                           }
                         : null,
