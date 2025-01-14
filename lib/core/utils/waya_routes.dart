@@ -10,6 +10,7 @@ import 'package:wayagram/features/general_settings/profile/view/profile_page.dar
 import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart';
 import 'package:wayagram/features/quotation/buyer/views/buyer_checkout.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
@@ -93,6 +94,7 @@ class WayaAppRoutes {
     CreateShop.route: () => CreateShop(),
     SellerDispute.route: () => SellerDispute(),
     SellerDisputeDetail.route: () => SellerDisputeDetail(),
+    MapScreen.route: () => MapScreen(),
     AddEvidence.route: () => AddEvidence(),
     DisputeChat.route: () => DisputeChat(),
     UgtGetStarted.route: () => UgtGetStarted(),

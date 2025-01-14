@@ -16,7 +16,8 @@ import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details
 
 class SingleSeeBidWidget extends ConsumerWidget {
   final bool isSeller;
-  const SingleSeeBidWidget({super.key, this.isSeller = false});
+  Color color;
+ SingleSeeBidWidget({super.key, this.isSeller = false, required this.color});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +37,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
             decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.scaffoldColor,
+              color: color,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -163,8 +164,10 @@ class SingleSeeBidWidget extends ConsumerWidget {
                       ),
                     ),
                     const Spacer(),
+                    //const Gap(2),
                     SizedBox(
-                      width: context.width * 0.45,
+                      width: context.width * 0.35,
+                     // width: context.width * 0.45,
                       child: WayaButton(
                         callback: () {},
 
