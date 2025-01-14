@@ -28,7 +28,7 @@ class BottomView extends ConsumerStatefulWidget {
 }
 
 class _BottomViewState extends ConsumerState<BottomView> {
-  late int _selectedIndex;
+   int _selectedIndex = 0;
   bool _isInitialized = false;
 
   @override
@@ -48,7 +48,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
     if (!_isInitialized) {
       final index = ModalRoute.of(context)?.settings.arguments as int?;
       if (index != null) {
-        _selectedIndex = index;
+        _selectedIndex = index ?? 0;
       }
       _isInitialized = true;
     }
