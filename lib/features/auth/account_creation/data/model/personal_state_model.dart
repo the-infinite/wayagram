@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 
@@ -12,8 +13,9 @@ class PersonalFirstStepState {
   final TextEditingController phoneNumber;
   final TextEditingController address;
   final TextEditingController city;
-  final TextEditingController state;
-  final TextEditingController country;
+  final String state;
+  final String country;
+  final String lga;
   final TextEditingController businessName;
   final TextEditingController businessAddress;
   final String dateOfBirth;
@@ -30,6 +32,11 @@ class PersonalFirstStepState {
   final bool isLoading;
   final User? user;
   final BusinessAccountData? business;
+  final bool? isLoadingBusinessType;
+  final List<Select>  businessTypes;
+  final List<Select> countries;
+  final List<Select>  lgas;
+  final List<Select>  states;
 
   PersonalFirstStepState(
       {TextEditingController? firstName,
@@ -41,8 +48,9 @@ class PersonalFirstStepState {
       TextEditingController? phoneNumber,
       TextEditingController? address,
       TextEditingController? city,
-      TextEditingController? state,
-      TextEditingController? country,
+      this.state = '',
+      this.country = '',
+      this.lga = '',
       TextEditingController? businessName,
       TextEditingController? businessAddress,
       this.dateOfBirth = '',
@@ -57,9 +65,13 @@ class PersonalFirstStepState {
       this.isConfirmPasswordFocused = false,
       this.isPasswordFocused = false,
       this.isLoading = false,
+      this.isLoadingBusinessType = false,
       this.user,
-      this.business
-      })
+      this.businessTypes = const [],
+      this.countries = const [],
+      this.states = const [],
+      this.lgas = const [],
+      this.business})
       : firstName = firstName ?? TextEditingController(),
         lastName = lastName ?? TextEditingController(),
         email = email ?? TextEditingController(),
@@ -69,8 +81,6 @@ class PersonalFirstStepState {
         phoneNumber = phoneNumber ?? TextEditingController(),
         address = address ?? TextEditingController(),
         city = city ?? TextEditingController(),
-        state = state ?? TextEditingController(),
-        country = country ?? TextEditingController(),
         businessName = businessName ?? TextEditingController(),
         businessAddress = businessAddress ?? TextEditingController();
 
@@ -84,8 +94,9 @@ class PersonalFirstStepState {
       TextEditingController? phoneNumber,
       TextEditingController? address,
       TextEditingController? city,
-      TextEditingController? state,
-      TextEditingController? country,
+      String? state,
+      String? country,
+      String? lga,
       TextEditingController? businessName,
       TextEditingController? businessAddress,
       String? dateOfBirth,
@@ -100,9 +111,13 @@ class PersonalFirstStepState {
       bool? isConfirmPasswordFocused,
       bool? isPasswordFocused,
       bool? isLoading,
+      bool? isLoadingBusinessType,
+      List<Select>? countries,
+       List<Select>? states,
+        List<Select>? lgas,
+         List<Select>? businessTypes,
       User? user,
-      BusinessAccountData? business
-      }) {
+      BusinessAccountData? business}) {
     return PersonalFirstStepState(
         firstName: firstName ?? this.firstName,
         lastName: lastName ?? this.lastName,
@@ -114,6 +129,7 @@ class PersonalFirstStepState {
         address: address ?? this.address,
         city: city ?? this.city,
         state: state ?? this.state,
+        lga: lga ?? this.lga,
         country: country ?? this.country,
         businessName: businessName ?? this.businessName,
         businessAddress: businessAddress ?? this.businessAddress,
@@ -132,7 +148,13 @@ class PersonalFirstStepState {
         isPasswordFocused: isPasswordFocused ?? this.isPasswordFocused,
         isLoading: isLoading ?? this.isLoading,
         user: user ?? this.user,
-        business: business ?? this.business
-        );
+        businessTypes: businessTypes ?? this.businessTypes,
+          countries: countries ?? this.countries,
+            states: states ?? this.states,
+              lgas: lgas ?? this.lgas,
+        isLoadingBusinessType:
+            isLoadingBusinessType ?? this.isLoadingBusinessType,
+        
+        business: business ?? this.business);
   }
 }

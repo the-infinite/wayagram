@@ -21,9 +21,13 @@ class CreateBuyingRequest extends ConsumerStatefulWidget {
 
 class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
   final _formKey = GlobalKey<FormState>();
+  
+  RangeValues values = RangeValues(0.1, 0.5);
+
 
   @override
   Widget build(BuildContext context) {
+    RangeLabels labels = RangeLabels(values.start.toString(), values.end.toString());
     final viewModel = ref.watch(createRequestProvider);
     final wayaTheme = Theme.of(context);
     return  Column(
@@ -330,6 +334,12 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                       color: wayaTheme.colorScheme.black, fontWeight: FontWeight.w500, fontSize: 14),
                 ),
                 const Gap(10),
+                RangeSlider(values: values, divisions: 10, labels: labels,
+                onChanged: (newValues){
+                  setState(() {
+                    values = newValues;
+                  });
+                },),
                 Row(children: [
                   Expanded(
                     child: FormField<String>(validator: (value) {
@@ -425,116 +435,6 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                     )
                   ],
                 ),
-                const Gap(20),
-                if (viewModel.includeMeasurement)
-                  Column(
-                    children: [
-                      FormField<String>(validator: (value) {
-                        if (viewModel.productHeight.text.isEmpty) {
-                          return 'Product Height is required';
-                        }
-
-                        return null;
-                      }, builder: (formState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            WayaTextFormField(
-                              keyboardType: TextInputType.text,
-                              controller: viewModel.productHeight,
-                              hintText: 'Enter Product Height',
-                              borderColor: formState.hasError &&
-                                  viewModel.productHeight.text.isEmpty
-                                  ? wayaTheme.colorScheme.error
-                                  : null,
-                              label: 'Product Height',
-                            ),
-                            if (formState.hasError &&
-                                viewModel.productHeight.text.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      }),
-                      const Gap(10),
-                      FormField<String>(validator: (value) {
-                        if (viewModel.productWidth.text.isEmpty) {
-                          return 'Product Width is required';
-                        }
-
-                        return null;
-                      }, builder: (formState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            WayaTextFormField(
-                              keyboardType: TextInputType.text,
-                              controller: viewModel.productWidth,
-                              hintText: 'Enter Product Width',
-                              borderColor: formState.hasError &&
-                                  viewModel.productWidth.text.isEmpty
-                                  ? wayaTheme.colorScheme.error
-                                  : null,
-                              label: 'Product Width',
-                            ),
-                            if (formState.hasError &&
-                                viewModel.productWidth.text.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      }),
-                      const Gap(10),
-                      FormField<String>(validator: (value) {
-                        if (viewModel.productDepth.text.isEmpty) {
-                          return 'Product Depth is required';
-                        }
-
-                        return null;
-                      }, builder: (formState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            WayaTextFormField(
-                              keyboardType: TextInputType.text,
-                              controller: viewModel.productDepth,
-                              hintText: 'Enter Product Depth',
-                              borderColor: formState.hasError &&
-                                  viewModel.productDepth.text.isEmpty
-                                  ? wayaTheme.colorScheme.error
-                                  : null,
-                              label: 'Product Depth',
-                            ),
-                            if (formState.hasError &&
-                                viewModel.productDepth.text.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      })
-                    ],
-                  ),
                 const Gap(20),
                 WayaButton(
                     text: 'Setup Pricing & Delivery',

@@ -22,6 +22,7 @@ class Register {
   bool? tcAgreement;
   bool? policyAgreement;
   String? referenceCode;
+  String? lga;
   Map<String, dynamic>? business;
 
   Register(
@@ -41,6 +42,7 @@ class Register {
       this.policyAgreement,
       this.confirmPassword,
       this.business,
+      this.lga,
       this.referenceCode});
 
   factory Register.fromJson(Map<String, dynamic> json) =>
@@ -94,6 +96,3 @@ class ForgotPassword {
     return _$ForgotPasswordToJson(this);
   }
 }
-
-
-

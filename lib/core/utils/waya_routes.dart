@@ -7,11 +7,15 @@ import 'package:wayagram/features/general_settings/change_pin/change_pin_page.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart';
+import 'package:wayagram/features/quotation/buyer/views/buyer_checkout.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
 import 'package:wayagram/features/shop/seller/views/seller_dispute/views/add_evidence.dart';
@@ -36,6 +40,7 @@ import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 import '../../features/quotation/buyer/views/create_request/create_request.dart';
+import '../../features/quotation/seller/views/bids/see_seller_bids.dart';
 
 
 
@@ -63,7 +68,10 @@ class WayaAppRoutes {
     SellerOrderDetails.route: () => SellerOrderDetails(),
     SellerBidDetails.route: () => SellerBidDetails(),
     SellerSettlement.route: () => SellerSettlement(),
+    SeeSellerBids.route: () => SeeSellerBids(),
+    SeeBuyerBids.route: () => SeeBuyerBids(),
     Checkout.route: () => Checkout(),
+    BuyerCheckout.route: () => BuyerCheckout(),
     FilterView.route: () => FilterView(),
     GeneralSettingsPage.route: () => GeneralSettingsPage(),
     ChangePasswordGenSettings.route: () => ChangePasswordGenSettings(),
@@ -87,6 +95,7 @@ class WayaAppRoutes {
     CreateShop.route: () => CreateShop(),
     SellerDispute.route: () => SellerDispute(),
     SellerDisputeDetail.route: () => SellerDisputeDetail(),
+    MapScreen.route: () => MapScreen(),
     AddEvidence.route: () => AddEvidence(),
     DisputeChat.route: () => DisputeChat(),
     UgtGetStarted.route: () => UgtGetStarted(),
@@ -96,6 +105,8 @@ class WayaAppRoutes {
     EditStagePreference.route: ()=> EditStagePreference(),
     CreateRequest.route: () => CreateRequest(),
     AllSellerBids.route: () => AllSellerBids(),
+    ManageShop.route:() => ManageShop()
+    
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

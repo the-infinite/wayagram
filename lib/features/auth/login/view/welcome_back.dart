@@ -155,9 +155,9 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                       text: 'Login',
                       callback: () {
                         if (_formKey.currentState!.validate()) {
-                          ref
-                              .read(loginVmProvider.notifier)
-                              .onSubmit(setUp.user?.user?.email ?? '');
+                          ref.read(loginVmProvider.notifier).onSubmit(
+                              email: setUp.user?.user?.email ?? '',
+                              isBusinessLogin: false);
                         }
                       },
                       color: wayaTheme.colorScheme.primary500,

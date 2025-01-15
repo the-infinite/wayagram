@@ -23,6 +23,7 @@ class MoreView extends ConsumerWidget {
         isScrollable: true,
         title: "More",
         automicallyImplyLeading: false,
+        
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,6 +32,7 @@ class MoreView extends ConsumerWidget {
             const Gap(20),
             Text("Explore Wayagram", style: wayaTheme.textTheme.titleLarge),
             const Gap(20),
+               
             buildMoreOptionsList(viewModel.moreOptions, context)
           ],
         ));

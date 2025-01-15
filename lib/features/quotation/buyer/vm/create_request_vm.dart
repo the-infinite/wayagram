@@ -254,9 +254,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
         icon: Image.asset('assets/images/shop/add-product-success.png'),
         buttonText: 'Add Another Product',
         secondButtonText: 'Go to Dashboard',
-        // onCancel: () => WayaNav.to(const BottomView(
-        //   index: 3,
-        // )),
+        onCancel: () => WayaNav.toNamed(BottomView.route, arguments: 1),
       );
     }
   }

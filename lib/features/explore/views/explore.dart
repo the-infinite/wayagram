@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -11,6 +13,7 @@ import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
+import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
@@ -41,7 +44,8 @@ class Explore extends ConsumerWidget {
                   children: [
                     InkWell(
                       onTap: () {},
-                      child: Icon(Icons.notifications, size: 30, color: wayaTheme.colorScheme.greyColor500),
+                      child: Icon(Icons.notifications,
+                          size: 30, color: wayaTheme.colorScheme.greyColor500),
                     ),
                     const Gap(15),
                     WayaDp(
@@ -67,10 +71,12 @@ class Explore extends ConsumerWidget {
           children: [
             // const ExploreHeader(),
             const Gap(20),
-          ExploreOurServices(),
+            ExploreOurServices(),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
+                onTap: () {},
+                subTitle: 'Have a buy request, just create a quote',
+                title: 'Get Quotation'),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
@@ -86,7 +92,9 @@ class Explore extends ConsumerWidget {
                   Text(
                     "Create a Quote",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16),
                   ),
                 ],
               ),
@@ -102,17 +110,51 @@ class Explore extends ConsumerWidget {
                   return QuotationCard(quotation: viewModel.quotations[index]);
                 }),
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Explore Categories & Best Offers', title: 'Shop'),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Explore Categories & Best Offers',
+                title: 'Shop'),
             const Gap(10),
             CategoriesFilterWidget<Product>(allItems: []),
+            const Gap(10),
+                 WayaButton(
+                    callback: () {
+                      WayaNav.toNamed(AddProduct.route);
+                    },
+                    color: wayaTheme.colorScheme.primar50,
+                    centerWidget: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          WayaAssests.icons.buttonIcon.path,
+                          colorFilter: ColorFilter.mode(
+                              wayaTheme.colorScheme.customPrimary,
+                              BlendMode.srcIn),
+                        ),
+                        const Gap(6),
+                        Text(
+                          "Add New Product",
+                          style: TextStyle().wayaCopyWith(
+                              color: wayaTheme.colorScheme.customPrimary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                        )
+                      ],
+                    ),
+                  ),
             const Gap(25),
             productState.when(
                 data: (products) => _buildProductGrid(products.sublist(0, 2)),
-                error: (e, stack) => _buildProductLoadingState(context: context),
+                error: (e, stack) =>
+                    _buildProductLoadingState(context: context),
                 loading: () => _buildProductLoadingState(context: context)),
 
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Join Upcoming Activities',
+                title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -140,8 +182,7 @@ class Explore extends ConsumerWidget {
         ));
   }
 
-
-    Widget _buildProductGrid(List<Product> products) {
+  Widget _buildProductGrid(List<Product> products) {
     return Column(
       children: [
         for (int i = 0; i < products.length; i += 2)
@@ -150,7 +191,6 @@ class Explore extends ConsumerWidget {
               Expanded(
                 child: ProductCard(
                   product: products[i],
-                
                 ),
               ),
               if (i + 1 < products.length) ...[
@@ -158,7 +198,6 @@ class Explore extends ConsumerWidget {
                 Expanded(
                   child: ProductCard(
                     product: products[i + 1],
-                  
                   ),
                 ),
               ],
@@ -174,7 +213,7 @@ class Explore extends ConsumerWidget {
         Expanded(
           child: ProductCardSekeleton(),
         ),
-        Gap(12), 
+        Gap(12),
         Expanded(
           child: ProductCardSekeleton(),
         ),

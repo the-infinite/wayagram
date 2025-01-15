@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 
@@ -57,7 +58,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
             ),
             Expanded(
               child: AboutProduct(
-                  title: 'Product Condition', content: 'Brand New'),
+                  title: 'Product Condition', content: 'Fairly Used'),
             )
           ],
         ),
@@ -163,7 +164,8 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
         WayaButton(
             text: 'Find offers',
             callback: () {
-              provider.submit(context, widget.isWayagramDeal);
+              WayaNav.toNamed('/seeBuyer-bids');
+              //provider.submit(context, widget.isWayagramDeal);
             }),
         const Gap(8),
         WayaButton(
