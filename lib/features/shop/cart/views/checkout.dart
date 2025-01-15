@@ -1,18 +1,16 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
-import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
 import 'package:wayagram/features/shop/cart/vm/checkout_vm.dart';
-import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class Checkout extends ConsumerWidget {
+  static const route = '/checkout';
   const Checkout({super.key});
 
   @override
@@ -32,8 +30,7 @@ class Checkout extends ConsumerWidget {
           Container(
             padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
             decoration: BoxDecoration(
-                border: Border.all(
-                    color: wayaTheme.colorScheme.greyColor300, width: 1),
+                border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
                 borderRadius: BorderRadius.circular(8)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -45,8 +42,7 @@ class Checkout extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Pickup Address",
-                        style: wayaTheme.textTheme.bodyMedium),
+                    Text("Pickup Address", style: wayaTheme.textTheme.bodyMedium),
                     const Gap(5),
                     SizedBox(
                       width: context.width * 0.8,
@@ -86,23 +82,18 @@ class Checkout extends ConsumerWidget {
               borderRadius: BorderRadius.all(Radius.circular(8)),
               child: SizedBox(
                 width: double.infinity,
-             
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       "Sub Total",
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13),
                     ),
                     const Gap(6),
                     Text(
                       "N 175,000",
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
                     )
                   ],
                 ),
@@ -127,16 +118,12 @@ class Checkout extends ConsumerWidget {
                   children: [
                     Text(
                       "Delivery Charges",
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13),
                     ),
                     const Gap(6),
                     Text(
                       "N 5,000",
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
                     )
                   ],
                 ),
@@ -161,16 +148,12 @@ class Checkout extends ConsumerWidget {
                   children: [
                     Text(
                       "Total",
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13),
                     ),
                     const Gap(6),
                     Text(
                       "N 180,000",
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 18),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 18),
                     )
                   ],
                 ),
@@ -182,9 +165,8 @@ class Checkout extends ConsumerWidget {
           const Gap(10),
           Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.scaffoldColor,
-                borderRadius: BorderRadius.circular(8)),
+            decoration:
+                BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: BorderRadius.circular(8)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -201,16 +183,12 @@ class Checkout extends ConsumerWidget {
                       children: [
                         Text(
                           "Wayagram Wallet",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 16),
+                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 16),
                         ),
                         const Gap(6),
                         Text(
                           "This transaction will be deducted from \n your wallet  balance",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.greyColor400,
-                              fontSize: 14),
+                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 14),
                         )
                       ],
                     )
@@ -220,10 +198,7 @@ class Checkout extends ConsumerWidget {
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          width: 1,
-                          color: wayaTheme.colorScheme.customPrimary)),
+                      shape: BoxShape.circle, border: Border.all(width: 1, color: wayaTheme.colorScheme.customPrimary)),
                   child: Center(
                       child: Container(
                     width: 10,
@@ -259,18 +234,14 @@ class Checkout extends ConsumerWidget {
                       child: Text(
                         "Total",
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor500,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 14),
+                            color: wayaTheme.colorScheme.greyColor500, fontWeight: FontWeight.normal, fontSize: 14),
                       ),
                     ),
                     Positioned(
                         top: 25,
                         child: Text(
                           "N 180,000",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 18),
+                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 18),
                         ))
                   ],
                 )),

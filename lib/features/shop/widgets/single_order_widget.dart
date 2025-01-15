@@ -4,6 +4,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
@@ -110,7 +111,7 @@ class SingleOrderWigdetViewModel extends ChangeNotifier {
   }
 
   Future<void> sellerOrderAction(BuildContext context) async {
-    WayaHelpers.showNotice(
+    WayaUtils.showNotice(
         context: context,
         buttonText: 'Add Delivery Details',
         secondButtonText: 'See your Order Details',
@@ -121,7 +122,7 @@ class SingleOrderWigdetViewModel extends ChangeNotifier {
           await addDeliveryDetail(context);
         },
         onCancel: () {
-          WayaNav.toNamed('/seller-order-detail', arguments: "id");
+          WayaNav.toNamed('/seller-order-details', arguments: "id");
         },
         icon: Image.asset('assets/images/shop/delivery-van.png'));
   }

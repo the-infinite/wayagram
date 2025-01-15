@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wayagram/core/data/model.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 
@@ -10,7 +10,7 @@ class WayaBottomSheetContent extends StatelessWidget {
   final List<Select> items;
   const WayaBottomSheetContent(
       {super.key,
-      this.contextHeight = 0.5,
+      this.contextHeight = 0.3,
       required this.items,
       required this.title});
 

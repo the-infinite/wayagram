@@ -38,6 +38,7 @@ class WayaColors {
   static const greyColor400 = Color(0xff98A2B3);
   static const greyColor200 = Color(0xffE4E7EC);
   static const greyColor100 = Color(0xffF0F2F5);
+  static const greyColor50 = Color(0xffF9FAFB);
   static const greyColor300 = Color(0xffD0D5DD);
   static const greyColor600 = Color(0xff475367);
   static const greyColor900 = Color(0xff101928);
@@ -48,6 +49,8 @@ class WayaColors {
   static const customBlack = Color(0xff343330);
   //
   static const white = Color(0xffFFFFFF);
+  static const white50 = Color(0x80FFFFFF);
+
   //
 
   static const scaffoldColor = Color.fromARGB(255, 248, 249, 250);

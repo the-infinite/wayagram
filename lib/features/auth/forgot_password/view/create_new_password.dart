@@ -33,7 +33,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
       children: [
         Text("Create New Password", style: WayaTextStyles.titleLarge),
         const Gap(5),
-        Text("Create new password and try not forget \n this time",
+        Text("Create new password and try not forget this time",
             style: WayaTextStyles.hintStyle),
         const Gap(30),
         Form(

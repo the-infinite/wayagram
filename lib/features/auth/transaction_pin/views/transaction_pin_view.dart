@@ -11,6 +11,7 @@ import 'package:wayagram/features/auth/transaction_pin/widget/pin_input_field.da
 import 'package:wayagram/features/auth/transaction_pin/widget/pin_keyboard.dart';
 
 class TransactionPinView extends ConsumerStatefulWidget {
+  static const route = '/setup-pin';
   const TransactionPinView({super.key});
 
   @override
@@ -27,76 +28,76 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
     final viewModel = ref.read(transactionPinProvider.notifier);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-      isLoading: loading,
+        isLoading: loading,
         body: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-            //height: context.height * 0.35,
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Set Up Your Transaction Pin", style: WayaTextStyles.titleLarge),
-            const Gap(5),
-            Text("For added security, please create a 4-digit PIN \n to confirm your transactions",
-                style: WayaTextStyles.hintStyle),
-            const Gap(30),
-            PinInputField(
-              pin: pin,
-              label: "Enter a 4-digit PIN",
-              digits: 4,
-              ratio: 0.17,
-              margin: 8,
-              height: 55,
-            ),
-            const Gap(10),
-            PinInputField(
-              pin: confirmPin,
-              label: "Re-enter your PIN",
-              digits: 4,
-              ratio: 0.17,
-              height: 55,
-              margin: 8,
-            ),
-            const Gap(10),
-            Visibility(
-                visible: pin.isNotEmpty && confirmPin.isNotEmpty && !isInValid,
-                child: Text("The PINs don't match. Pls try again",
-                    style: TextStyle().wayaCopyWith(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: wayaTheme.colorScheme.error500,
-                    )))
-          ],
-        )),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-                // height: context.height * 0.40,
-                child: PinKeyboard(
-                    onKeyTap: viewModel.handleKeyPress,
-                    onSubmit: viewModel.submitPins,
-                    onBackspace: viewModel.handleBackspace)),
-            const Gap(20),
-            Align(
-                child: GestureDetector(
-              onTap: () {
-                WayaNav.toNamed('/set-notification');
-              },
-              child: Text(
-                "Skip for now",
-                style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w600),
-              ),
+                //height: context.height * 0.35,
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Set Up Your Transaction Pin", style: WayaTextStyles.titleLarge),
+                const Gap(5),
+                Text("For added security, please create a 4-digit PIN \n to confirm your transactions",
+                    style: WayaTextStyles.hintStyle),
+                const Gap(30),
+                PinInputField(
+                  pin: pin,
+                  label: "Enter a 4-digit PIN",
+                  digits: 4,
+                  ratio: 0.17,
+                  margin: 8,
+                  height: 55,
+                ),
+                const Gap(10),
+                PinInputField(
+                  pin: confirmPin,
+                  label: "Re-enter your PIN",
+                  digits: 4,
+                  ratio: 0.17,
+                  height: 55,
+                  margin: 8,
+                ),
+                const Gap(10),
+                Visibility(
+                    visible: pin.isNotEmpty && confirmPin.isNotEmpty && !isInValid,
+                    child: Text("The PINs don't match. Pls try again",
+                        style: TextStyle().wayaCopyWith(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                          color: wayaTheme.colorScheme.error500,
+                        )))
+              ],
             )),
-            const Gap(20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                    // height: context.height * 0.40,
+                    child: PinKeyboard(
+                        onKeyTap: viewModel.handleKeyPress,
+                        onSubmit: viewModel.submitPins,
+                        onBackspace: viewModel.handleBackspace)),
+                const Gap(20),
+                Align(
+                    child: GestureDetector(
+                  onTap: () {
+                    WayaNav.toNamed('/set-notification');
+                  },
+                  child: Text(
+                    "Skip for now",
+                    style: TextStyle().wayaCopyWith(
+                        color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                )),
+                const Gap(20),
+              ],
+            )
           ],
-        )
-      ],
-    ));
+        ));
   }
 }

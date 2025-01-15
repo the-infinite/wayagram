@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/service/repos/auth/auth_model.dart';
-import 'package:wayagram/core/service/repos/auth/auth_repository.dart';
+import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
+import 'package:wayagram/features/auth/data/model/auth_model.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
 
 class VerifyAccountState {
@@ -41,12 +42,14 @@ class VerifyAccountState {
 }
 
 class VerifyAccountVm extends Notifier<VerifyAccountState> {
-  final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
+  final WayaLocalDataSource _localDataSource;
+  final AuthRepository _authRepository;
   final WayaSecureDataSource _secureDataSource = WayaSecureDataSource();
   final _logger = getLogger("VerifyAccountVm");
-  final AuthRepository _authRepository = AuthRepository();
   Timer? _timer;
   final SnackbarService _snackbarService = SnackbarService();
+
+  VerifyAccountVm(this._localDataSource, this._authRepository);
 
   @override
   VerifyAccountState build() {
@@ -80,15 +83,13 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final user = _localDataSource.getUser();
-      final response = await _authRepository
-          .verifyOtp(VerifyOtp(email: user["email"], otp: code));
-      _logger.d(" result ${response.data['message']}");
-      if (response.data["statusCode"] == 200) {
-        final user = response.data['data']['user'];
+      final email = ref.watch(personalFirstStepProvider).email.text;
+      final response =
+          await _authRepository.verifyOtp(VerifyOtp(email: email, otp: code));
+      if (response.success) {
         final token = response.data['data']['token']['token'];
         final refreshToken = response.data['data']['token']['refreshToken'];
-        _localDataSource.saveUser(user);
+
         _secureDataSource.saveToken(token);
         _secureDataSource.saveRefreshToken(refreshToken);
         onSucess();
@@ -101,20 +102,17 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
   }
 
   Future<void> resendOtp() async {
-    state = state.copyWith(isLoading: true);
     try {
-      final user = _localDataSource.getUser();
-      final response = await _authRepository.resendOtp(user['email']);
+      final email = ref.watch(personalFirstStepProvider).email.text;
+      final response = await _authRepository.resendOtp(email);
       _logger.d(" result ${response.data['message']}");
       if (response.data["statusCode"] == 200) {
         _snackbarService.showCustomSnackbar(
             variant: SnackbarType.success,
-            message: "Otp has been resend to ${user['email']}");
+            message: "Otp has been resend to $email");
       }
     } catch (e) {
       _logger.e(e.toString());
-    } finally {
-      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -125,5 +123,5 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
 final verifyAccountProvider =
     NotifierProvider<VerifyAccountVm, VerifyAccountState>(() {
-  return VerifyAccountVm();
+  return VerifyAccountVm(WayaLocalDataSource(), AuthRepository());
 });

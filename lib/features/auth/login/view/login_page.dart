@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/auth/login/view/components/tabs/login_tab.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
+  static const route = '/login';
   const LoginPage({super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
@@ -35,7 +36,7 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Gap(Get.height * 0.05),
+              Gap(Get.height * 0.03),
               WayaAssests.images.wayalogoUnlabelled.image(scale: 2),
               Gap(20),
               Text(
@@ -48,7 +49,7 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
                   style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                     color: wayaTheme.colorScheme.greyColor600,
                   )),
-              Gap(Get.height * 0.03),
+              Gap(Get.height * 0.02),
               TabBar(
                 controller: _tabController,
                 onTap: (value) {
@@ -65,13 +66,14 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
               ),
               Gap(20),
               SizedBox(
-                height: Get.height * 0.65,
+                height: Get.height * 0.8,
                 child: PageView(
                   physics: NeverScrollableScrollPhysics(),
                   controller: _pageController,
                   children: [PersonalAccountView(), BusinessAccountView()],
                 ),
-              )
+              ),
+             Gap(50),
             ],
           ),
         ),

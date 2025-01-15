@@ -4,17 +4,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/features/onboarding/vm/splash_screen_vm.dart';
 
-class SplashScreen extends ConsumerWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(splashScreenVmProvider);
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
+}
 
+class _SplashScreenState extends ConsumerState<SplashScreen> {
+  @override
+  void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      viewModel.runStartUpLogic();
+      ref.read(splashScreenVmProvider.notifier).runStartUpLogic();
     });
 
+    super.initState();
+  }
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
     return WayaScaffold(
       removeAppBar: true,
       body: Center(
@@ -31,4 +41,3 @@ class SplashScreen extends ConsumerWidget {
   }
 }
 
-final splashScreenVmProvider = ChangeNotifierProvider((ref) => SplashScreenVm());
