@@ -16,7 +16,8 @@ class UserModel {
   final int? statusCode;
   final UserModelData? data;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 }
@@ -31,7 +32,8 @@ class UserModelData {
   final Userdata? userdata;
   final Token? token;
 
-  factory UserModelData.fromJson(Map<String, dynamic> json) => _$UserModelDataFromJson(json);
+  factory UserModelData.fromJson(Map<String, dynamic> json) =>
+      _$UserModelDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserModelDataToJson(this);
 }
@@ -61,7 +63,8 @@ class Userdata {
   final User? user;
   final Profile? profile;
 
-  factory Userdata.fromJson(Map<String, dynamic> json) => _$UserdataFromJson(json);
+  factory Userdata.fromJson(Map<String, dynamic> json) =>
+      _$UserdataFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserdataToJson(this);
 }
@@ -112,7 +115,8 @@ class Profile {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  factory Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
+  factory Profile.fromJson(Map<String, dynamic> json) =>
+      _$ProfileFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProfileToJson(this);
 }
@@ -149,6 +153,7 @@ class User {
     required this.v,
     required this.createdAt,
     required this.updatedAt,
+    required this.lga
   });
 
   final String? id;
@@ -177,12 +182,12 @@ class User {
   final dynamic deletedAt;
   final String? roleId;
   final String? accountTypeId;
+  final String? lga;
 
   @JsonKey(name: '_v')
   final String? v;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

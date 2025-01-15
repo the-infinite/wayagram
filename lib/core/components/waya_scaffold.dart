@@ -25,6 +25,7 @@ class WayaScaffold extends ConsumerWidget {
   final Color? color;
   final PreferredSizeWidget? appBar;
   final VoidCallback? onTapBackButton;
+  final Widget? progressIndicator;
   const WayaScaffold(
       {super.key,
       this.resizeToAvoidBottomInset,
@@ -42,6 +43,7 @@ class WayaScaffold extends ConsumerWidget {
       this.appBar,
       this.backgroundColor,
       this.bottomNavigationBar,
+      this.progressIndicator,
       this.onTapBackButton});
 
   @override
@@ -52,6 +54,7 @@ class WayaScaffold extends ConsumerWidget {
         padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
     return BlurryModalProgressHUD(
       inAsyncCall: isLoading,
+      progressIndicator:progressIndicator ?? CircularProgressIndicator(), 
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         onDoubleTap: () {

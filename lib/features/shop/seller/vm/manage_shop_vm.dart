@@ -5,14 +5,18 @@ import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart'
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/repo/seller_repository.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
 
 class ManageShopVm extends StateNotifier<ManageShopState> {
   final SellerRepository _sellerRepository;
-  final SuccessfulSetUpState _setUpState;
+  final Ref ref;
+
   final _logger = getLogger('ManageShopVm');
 
-  ManageShopVm(this._sellerRepository, this._setUpState)
-      : super(ManageShopState());
+  ManageShopVm(this._sellerRepository, this.ref)
+      : super(ManageShopState.initial()) {
+    getSellerShops();
+  }
 
   List<Map<String, dynamic>> salesMetrics = [
     {"title": "Total Sales", "metrics": "N100,000", "color": Color(0xffE3EFFC)},
@@ -20,29 +24,42 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     {"title": "Pending Orders", "metrics": "100", "color": Color(0xffFEF6E7)},
   ];
   Future<void> getSellerShops() async {
+    state = state.copyWith(isLoading: true);
+    final businessId = ref.watch(successfulSetupVmProvider).business!.id!;
+
     try {
-      state = state.copyWith(isLoading: true);
-      final response =
-          await _sellerRepository.getShopBySellerId(_setUpState.business!.id!);
+      final response = await _sellerRepository.getShopBySellerId(businessId);
+      
+      if (response.data['statusCode'] == 400 &&
+          response.data['data'] == 'Shop not found') {
+
+        await ref
+            .read(createShopVmProvider.notifier)
+            .createSellerShop(hasNoShop: true);
+        return;
+      }
       if (response.success) {
         ShopResponseModel responseModel =
             ShopResponseModel.fromJson(response.data);
 
         state = state.copyWith(hasShop: responseModel.data.isNotEmpty);
         // state = state.copyWith(shop: responseModel.data);
-        print(state.hasShop);
+
+        state = state.copyWith(shop: responseModel.data);
       }
     } catch (e) {
-      _logger.e(e);
+      _logger.e("wefewfewfe $e");
     } finally {
-       state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoading: false);
     }
-   
+  }
+
+  Future<void> refreshShops() async {
+    await getSellerShops();
   }
 }
 
 final manageShopVmProvider =
     StateNotifierProvider.autoDispose<ManageShopVm, ManageShopState>((ref) {
-  final setUp = ref.watch(successfulSetupVmProvider);
-  return ManageShopVm(SellerRepository(), setUp);
+  return ManageShopVm(SellerRepository(), ref);
 });

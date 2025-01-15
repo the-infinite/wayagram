@@ -13,6 +13,6 @@ class SellerRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getShopBySellerId(String id) {
-    return get('$serviceUrl/shops/3814919c-37fe-49a8-a2e7-0d58059697b7');
+    return get('$serviceUrl/shops/$id');
   }
 }

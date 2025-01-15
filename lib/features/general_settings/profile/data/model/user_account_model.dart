@@ -54,38 +54,38 @@ class UserAccountData {
 
 @JsonSerializable()
 class User {
-  User({
-    required this.id,
-    required this.phoneNumber,
-    required this.email,
-    required this.passwordHash,
-    required this.firstName,
-    required this.lastName,
-    required this.gender,
-    required this.address,
-    required this.city,
-    required this.state,
-    required this.country,
-    required this.countryCode,
-    required this.middleName,
-    required this.dateOfBirth,
-    required this.twoFactorEnabled,
-    required this.profilePicture,
-    required this.fcmToken,
-    required this.emailVerified,
-    required this.phoneVerified,
-    required this.accountStatus,
-    required this.tcAgreement,
-    required this.policyAgreement,
-    required this.emailVerifiedDate,
-    required this.deletedAt,
-    required this.roleId,
-    required this.accountTypeId,
-    required this.v,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.role,
-  });
+  User(
+      {required this.id,
+      required this.phoneNumber,
+      required this.email,
+      required this.passwordHash,
+      required this.firstName,
+      required this.lastName,
+      required this.gender,
+      required this.address,
+      required this.city,
+      required this.state,
+      required this.country,
+      required this.countryCode,
+      required this.middleName,
+      required this.dateOfBirth,
+      required this.twoFactorEnabled,
+      required this.profilePicture,
+      required this.fcmToken,
+      required this.emailVerified,
+      required this.phoneVerified,
+      required this.accountStatus,
+      required this.tcAgreement,
+      required this.policyAgreement,
+      required this.emailVerifiedDate,
+      required this.deletedAt,
+      required this.roleId,
+      required this.accountTypeId,
+      required this.v,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.role,
+      required this.lga});
 
   final String? id;
   final String? phoneNumber;
@@ -113,6 +113,7 @@ class User {
   final dynamic deletedAt;
   final String? roleId;
   final String? accountTypeId;
+  final String? lga;
 
   @JsonKey(name: '_v')
   final String? v;
@@ -120,8 +121,7 @@ class User {
   final DateTime? updatedAt;
   final Role? role;
 
-  factory User.fromJson(Map<String, dynamic> json) =>
-      _$UserFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }
