@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
 import '../widgets/contest_card.dart';
@@ -107,10 +106,15 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                     buttonText: "Host a Contest",
                     onTap: () {
                       WayaNav.toNamed("/create-contest");
-                    })
+                    }),
 
               /// Applied Contests
 
+                Column(
+                  children: [
+
+                  ],
+                ),
               ],
             ),
           ),

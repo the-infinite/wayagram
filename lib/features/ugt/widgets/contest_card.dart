@@ -42,12 +42,27 @@ class ContestCard extends StatelessWidget {
                     width: context.width * 0.8,
                     child: Row(
                     children: [
-                      WayaImage(
-                        imageUrl: "",
+                      /*SvgPicture.asset(
+                        '',
+                        colorFilter: ColorFilter.mode(
+                            wayaTheme.colorScheme.success, BlendMode.srcIn),
+                      ),*/
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(45), // Adjust the radius as needed
+                        child: Image.asset(
+                          'assets/images/uni.png',
+                          width: 45,
+                          height: 45,
+                          fit: BoxFit.cover, // Ensures the image covers the area properly
+                        ),
+                      ),
+                      /*WayaImage(
+                        imageUrl: 'assets/images/destructive.png',
                         height: 45,
                         width: 45,
+                        fit:BoxFit.cover ,
                         radius: BorderRadius.circular(45),
-                      ),
+                      ),*/
                       const Gap(10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,11 +91,19 @@ class ContestCard extends StatelessWidget {
                 ],
               ),
               const Gap(20),
-              WayaImage(
-                imageUrl: "",
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16), // Adjust the radius as needed
+                child: Image.asset(
+                  'assets/images/frameuni.png',
+                  height: 200,
+                  fit: BoxFit.cover, // Ensures the image covers the area properly
+                ),
+              ),
+              /*WayaImage(
+                imageUrl: "assets/images/frameuni.png",
                 height: 200,
                 radius: BorderRadius.circular(16),
-              ),
+              ),*/
               const Gap(20),
               Text(
                 "Discover and support the most talented students competing for the top spot! Browse through unique performances, vote for your favorite candidates, and watch them rise to the top",
@@ -97,7 +120,7 @@ class ContestCard extends StatelessWidget {
                       title: "Start Date", content: "21st of July 2024"),
                   const Gap(30),
                   AboutUgtWidget(
-                      title: "Start Date", content: "21st of July 2024"),
+                      title: "End Date", content: "21st of July 2024"),
                 ],
               ),
               const Gap(10),
