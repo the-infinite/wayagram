@@ -25,7 +25,9 @@ class ExploreOurServicesVm  {
       Services(
           icon: WayaAssests.icons.eQuotation.path,
           name: 'Get Quotation',
-          onTap: () {}),
+          onTap: () {
+            Navigator.pushNamed(context, BottomView.route, arguments: 3);
+          }),
       Services(
           icon: WayaAssests.icons.eChat.path,
           name: 'Chat & Socials',

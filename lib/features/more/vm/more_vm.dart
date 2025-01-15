@@ -40,7 +40,9 @@ class MoreVm {
           content:
               "Create groups and manage who is following you and who you follow.",
           title: "Get Quotation",
-          onTap: () {}),
+          onTap: () {
+            Navigator.pushNamed(context, BottomView.route, arguments: 3);
+          }),
       MoreOptionModel(
           asset: WayaAssests.icons.mStream.path,
           content: "Start a live conversation and allows friends to interact",
