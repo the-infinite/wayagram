@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class CheckoutVm extends ChangeNotifier {
   final Ref ref;
   CheckoutVm(this.ref);
 
   void checkout(BuildContext context) {
-    WayaHelpers.showNotice(
+    WayaUtils.showNotice(
         context: context,
         title: 'Payment Unsuccessful',
         message:

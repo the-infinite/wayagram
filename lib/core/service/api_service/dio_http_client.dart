@@ -1,5 +1,3 @@
-import 'dart:developer' as logger;
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -34,11 +32,11 @@ class DioHttpClient implements WayaHttpClientInterface {
     final options = BaseOptions(
       baseUrl: baseURL,
       receiveDataWhenStatusError: true,
-      connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(seconds: 60),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
     );
     final dio = Dio(options);
-    dio.interceptors.add(DioInterceptor(dio, secureDataSource));
+    dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
     return dio;
   }
 
@@ -48,7 +46,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       Map<String, dynamic>? params,
       bool formdata = false,
       dynamic token}) async {
-    _setHeader(
+    await _setHeader(
       formdata: formdata,
     );
     params?.removeWhere((key, value) => value == null);
@@ -67,16 +65,17 @@ class DioHttpClient implements WayaHttpClientInterface {
       bool formEncoded = false,
       void Function({int count, int total})? onSendProgress,
       void Function({int count, int total})? onRecieveProgress}) async {
-    _setHeader(
+    await _setHeader(
       formdata: formdata,
       formEncoded: formEncoded,
     );
     params?.removeWhere((key, value) => value == null);
     final fullRoute = '$baseURL$route';
     _logger.f('fullRoute: $fullRoute');
-    // _logger.f('headers: ${dio.options.headers}');
+    _logger.f('headers: ${dio.options.headers}');
     if (formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
+      _logger.d("hfhfvjgj $body");
     }
 
     return _makeRequest(dio.post(
@@ -103,7 +102,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool formdata = false,
     bool formEncoded = false,
   }) async {
-    _setHeader(
+    await _setHeader(
       formdata: formdata,
       formEncoded: formEncoded,
     );
@@ -150,7 +149,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     String route, {
     Map<String, dynamic>? params,
   }) async {
-    _setHeader();
+    await _setHeader();
     params?.removeWhere((key, value) => value == null);
     final fullRoute = '$baseURL$route';
 
@@ -162,14 +161,21 @@ class DioHttpClient implements WayaHttpClientInterface {
 
   Future<WayaRequestResponse> _makeRequest(Future<Response> future) async {
     try {
+      print("vv");
       final response = await future;
       _logger.i('data: ${response.data}');
+
+      print('got here tto');
+
+      print('got here tto${response.data}');
       return WayaRequestResponse(
         data: response.data,
         success: response.statusCode?.toString().startsWith('2') ?? false,
         statusCode: response.statusCode,
       );
     } on DioException catch (e) {
+      print('got here');
+      _logger.e('statusCode: ${e.response}');
       if (e.response != null) {
         _logger.e('message: ${e.response?.data['message'] ?? 'Unknown error'}');
         _logger.e('error: ${e.response?.data['errors']}');
@@ -186,11 +192,10 @@ class DioHttpClient implements WayaHttpClientInterface {
     }
   }
 
-  void _setHeader({
+  Future<void> _setHeader({
     bool formdata = false,
     bool formEncoded = false,
-  }) {
-    
+  }) async {
     dio.options.headers = {
       'content-type': formdata
           ? 'multipart/form-data'
@@ -198,10 +203,11 @@ class DioHttpClient implements WayaHttpClientInterface {
               ? 'application/x-www-form-urlencoded'
               : 'application/json',
       'Accept': '*/*',
-      // if (token != null && token.isNotEmpty) 'Authorization': "Bearer $token",
+      'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 
+  // token != null ? 'Authorization' : 'Bearer $token': '',
   Map<String, dynamic>? sanitizeParams(Map<String, dynamic>? params) {
     return params?..removeWhere((key, value) => value == null);
   }

@@ -46,8 +46,140 @@ class $AssetsIconsGen {
   /// File path: assets/icons/b-shop.svg
   SvgGenImage get bShop => const SvgGenImage('assets/icons/b-shop.svg');
 
+  /// File path: assets/icons/bid-icon.svg
+  SvgGenImage get bidIcon => const SvgGenImage('assets/icons/bid-icon.svg');
+
+  /// File path: assets/icons/bid.svg
+  SvgGenImage get bid => const SvgGenImage('assets/icons/bid.svg');
+
   /// File path: assets/icons/business.svg
   SvgGenImage get business => const SvgGenImage('assets/icons/business.svg');
+
+  /// File path: assets/icons/button-icon.svg
+  SvgGenImage get buttonIcon =>
+      const SvgGenImage('assets/icons/button-icon.svg');
+
+  /// File path: assets/icons/chat.svg
+  SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
+
+  /// File path: assets/icons/check-icon.svg
+  SvgGenImage get checkIcon => const SvgGenImage('assets/icons/check-icon.svg');
+
+  /// File path: assets/icons/create.svg
+  SvgGenImage get create => const SvgGenImage('assets/icons/create.svg');
+
+  /// File path: assets/icons/d-code-onvalid.svg
+  SvgGenImage get dCodeOnvalid =>
+      const SvgGenImage('assets/icons/d-code-onvalid.svg');
+
+  /// File path: assets/icons/d-code-valid.svg
+  SvgGenImage get dCodeValid =>
+      const SvgGenImage('assets/icons/d-code-valid.svg');
+
+  /// File path: assets/icons/deal-icon.svg
+  SvgGenImage get dealIcon => const SvgGenImage('assets/icons/deal-icon.svg');
+
+  /// File path: assets/icons/dispute.svg
+  SvgGenImage get dispute => const SvgGenImage('assets/icons/dispute.svg');
+
+  /// File path: assets/icons/doc-success.svg
+  SvgGenImage get docSuccess =>
+      const SvgGenImage('assets/icons/doc-success.svg');
+
+  /// File path: assets/icons/e-chat.svg
+  SvgGenImage get eChat => const SvgGenImage('assets/icons/e-chat.svg');
+
+  /// File path: assets/icons/e-donation.svg
+  SvgGenImage get eDonation => const SvgGenImage('assets/icons/e-donation.svg');
+
+  /// File path: assets/icons/e-event.svg
+  SvgGenImage get eEvent => const SvgGenImage('assets/icons/e-event.svg');
+
+  /// File path: assets/icons/e-poll.svg
+  SvgGenImage get ePoll => const SvgGenImage('assets/icons/e-poll.svg');
+
+  /// File path: assets/icons/e-quotation.svg
+  SvgGenImage get eQuotation =>
+      const SvgGenImage('assets/icons/e-quotation.svg');
+
+  /// File path: assets/icons/e-shop.svg
+  SvgGenImage get eShop => const SvgGenImage('assets/icons/e-shop.svg');
+
+  /// File path: assets/icons/empty-state.svg
+  SvgGenImage get emptyState =>
+      const SvgGenImage('assets/icons/empty-state.svg');
+
+  /// Directory path: assets/icons/gen_set
+  $AssetsIconsGenSetGen get genSet => const $AssetsIconsGenSetGen();
+
+  /// File path: assets/icons/google.svg
+  SvgGenImage get google => const SvgGenImage('assets/icons/google.svg');
+
+  /// File path: assets/icons/heart.svg
+  SvgGenImage get heart => const SvgGenImage('assets/icons/heart.svg');
+
+  /// File path: assets/icons/icon-right.svg
+  SvgGenImage get iconRight => const SvgGenImage('assets/icons/icon-right.svg');
+
+  /// File path: assets/icons/m-chat.svg
+  SvgGenImage get mChat => const SvgGenImage('assets/icons/m-chat.svg');
+
+  /// File path: assets/icons/m-donation.svg
+  SvgGenImage get mDonation => const SvgGenImage('assets/icons/m-donation.svg');
+
+  /// File path: assets/icons/m-events.svg
+  SvgGenImage get mEvents => const SvgGenImage('assets/icons/m-events.svg');
+
+  /// File path: assets/icons/m-follow.svg
+  SvgGenImage get mFollow => const SvgGenImage('assets/icons/m-follow.svg');
+
+  /// File path: assets/icons/m-group.svg
+  SvgGenImage get mGroup => const SvgGenImage('assets/icons/m-group.svg');
+
+  /// File path: assets/icons/m-pages.svg
+  SvgGenImage get mPages => const SvgGenImage('assets/icons/m-pages.svg');
+
+  /// File path: assets/icons/m-poll.svg
+  SvgGenImage get mPoll => const SvgGenImage('assets/icons/m-poll.svg');
+
+  /// File path: assets/icons/m-promotion.svg
+  SvgGenImage get mPromotion =>
+      const SvgGenImage('assets/icons/m-promotion.svg');
+
+  /// File path: assets/icons/m-quotation.svg
+  SvgGenImage get mQuotation =>
+      const SvgGenImage('assets/icons/m-quotation.svg');
+
+  /// File path: assets/icons/m-shop.svg
+  SvgGenImage get mShop => const SvgGenImage('assets/icons/m-shop.svg');
+
+  /// File path: assets/icons/m-stream.svg
+  SvgGenImage get mStream => const SvgGenImage('assets/icons/m-stream.svg');
+
+  /// File path: assets/icons/m-support.svg
+  SvgGenImage get mSupport => const SvgGenImage('assets/icons/m-support.svg');
+
+  /// File path: assets/icons/m-ugt.svg
+  SvgGenImage get mUgt => const SvgGenImage('assets/icons/m-ugt.svg');
+
+  /// File path: assets/icons/m-wallet.svg
+  SvgGenImage get mWallet => const SvgGenImage('assets/icons/m-wallet.svg');
+
+  /// File path: assets/icons/map.svg
+  SvgGenImage get map => const SvgGenImage('assets/icons/map.svg');
+
+  /// File path: assets/icons/money-icon.svg
+  SvgGenImage get moneyIcon => const SvgGenImage('assets/icons/money-icon.svg');
+
+  /// File path: assets/icons/more-acct-bal.svg
+  SvgGenImage get moreAcctBal =>
+      const SvgGenImage('assets/icons/more-acct-bal.svg');
+
+  /// File path: assets/icons/order-van.svg
+  SvgGenImage get orderVan => const SvgGenImage('assets/icons/order-van.svg');
+
+  /// File path: assets/icons/orders.svg
+  SvgGenImage get orders => const SvgGenImage('assets/icons/orders.svg');
 
   /// File path: assets/icons/personal.svg
   SvgGenImage get personal => const SvgGenImage('assets/icons/personal.svg');
@@ -58,16 +190,124 @@ class $AssetsIconsGen {
   /// File path: assets/icons/s-copy.svg
   SvgGenImage get sCopy => const SvgGenImage('assets/icons/s-copy.svg');
 
+  /// File path: assets/icons/s-dispute-icon.svg
+  SvgGenImage get sDisputeIcon =>
+      const SvgGenImage('assets/icons/s-dispute-icon.svg');
+
+  /// File path: assets/icons/s-shop.svg
+  SvgGenImage get sShop => const SvgGenImage('assets/icons/s-shop.svg');
+
+  /// File path: assets/icons/settlement-icon.svg
+  SvgGenImage get settlementIcon =>
+      const SvgGenImage('assets/icons/settlement-icon.svg');
+
+  /// File path: assets/icons/settlement.svg
+  SvgGenImage get settlement =>
+      const SvgGenImage('assets/icons/settlement.svg');
+
   /// File path: assets/icons/share-network.svg
   SvgGenImage get shareNetwork =>
       const SvgGenImage('assets/icons/share-network.svg');
+
+  /// File path: assets/icons/soraj.svg
+  SvgGenImage get soraj => const SvgGenImage('assets/icons/soraj.svg');
+
+  /// File path: assets/icons/thumbsup.svg
+  SvgGenImage get thumbsup => const SvgGenImage('assets/icons/thumbsup.svg');
+
+  /// File path: assets/icons/u-leaderboard.svg
+  SvgGenImage get uLeaderboard =>
+      const SvgGenImage('assets/icons/u-leaderboard.svg');
+
+  /// File path: assets/icons/u-plus.svg
+  SvgGenImage get uPlus => const SvgGenImage('assets/icons/u-plus.svg');
+
+  /// File path: assets/icons/u-share.svg
+  SvgGenImage get uShare => const SvgGenImage('assets/icons/u-share.svg');
+
+  /// File path: assets/icons/u-tag.svg
+  SvgGenImage get uTag => const SvgGenImage('assets/icons/u-tag.svg');
+
+  /// File path: assets/icons/van-icon.svg
+  SvgGenImage get vanIcon => const SvgGenImage('assets/icons/van-icon.svg');
+
+  /// Directory path: assets/icons/wallet
+  $AssetsIconsWalletGen get wallet => const $AssetsIconsWalletGen();
 
   /// File path: assets/icons/wallet-icon.svg
   SvgGenImage get walletIcon =>
       const SvgGenImage('assets/icons/wallet-icon.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [arrowBack, business, personal];
+  List<SvgGenImage> get values => [
+        aCart,
+        apple,
+        arrowBack,
+        arrowKeyboardRight,
+        bBid,
+        bChat,
+        bDonation,
+        bExplore,
+        bMenu,
+        bShop,
+        bidIcon,
+        bid,
+        business,
+        buttonIcon,
+        chat,
+        checkIcon,
+        create,
+        dCodeOnvalid,
+        dCodeValid,
+        dealIcon,
+        dispute,
+        docSuccess,
+        eChat,
+        eDonation,
+        eEvent,
+        ePoll,
+        eQuotation,
+        eShop,
+        emptyState,
+        google,
+        heart,
+        iconRight,
+        mChat,
+        mDonation,
+        mEvents,
+        mFollow,
+        mGroup,
+        mPages,
+        mPoll,
+        mPromotion,
+        mQuotation,
+        mShop,
+        mStream,
+        mSupport,
+        mUgt,
+        mWallet,
+        map,
+        moneyIcon,
+        moreAcctBal,
+        orderVan,
+        orders,
+        personal,
+        rCart,
+        sCopy,
+        sDisputeIcon,
+        sShop,
+        settlementIcon,
+        settlement,
+        shareNetwork,
+        soraj,
+        thumbsup,
+        uLeaderboard,
+        uPlus,
+        uShare,
+        uTag,
+        vanIcon,
+        walletIcon
+      ];
 }
 
 class $AssetsImagesGen {
@@ -79,6 +319,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/avatars.png
   AssetGenImage get avatars => const AssetGenImage('assets/images/avatars.png');
 
+  /// Directory path: assets/images/bid
+  $AssetsImagesBidGen get bid => const $AssetsImagesBidGen();
+
   /// File path: assets/images/d-code-invalid.png
   AssetGenImage get dCodeInvalid =>
       const AssetGenImage('assets/images/d-code-invalid.png');
@@ -87,8 +330,49 @@ class $AssetsImagesGen {
   AssetGenImage get dCodeValid =>
       const AssetGenImage('assets/images/d-code-valid.png');
 
+  /// File path: assets/images/delete-img.png
+  AssetGenImage get deleteImg =>
+      const AssetGenImage('assets/images/delete-img.png');
+
+  /// File path: assets/images/destructive.png
+  AssetGenImage get destructive =>
+      const AssetGenImage('assets/images/destructive.png');
+
   /// Directory path: assets/images/explore
   $AssetsImagesExploreGen get explore => const $AssetsImagesExploreGen();
+
+  /// File path: assets/images/icon-right.png
+  AssetGenImage get iconRight =>
+      const AssetGenImage('assets/images/icon-right.png');
+
+  /// Directory path: assets/images/onboarding
+  $AssetsImagesOnboardingGen get onboarding =>
+      const $AssetsImagesOnboardingGen();
+
+  /// File path: assets/images/placeholder.png
+  AssetGenImage get placeholder =>
+      const AssetGenImage('assets/images/placeholder.png');
+
+  /// Directory path: assets/images/shop
+  $AssetsImagesShopGen get shop => const $AssetsImagesShopGen();
+
+  /// File path: assets/images/successugt.png
+  AssetGenImage get successugt =>
+      const AssetGenImage('assets/images/successugt.png');
+
+  /// File path: assets/images/u-emptystate.png
+  AssetGenImage get uEmptystate =>
+      const AssetGenImage('assets/images/u-emptystate.png');
+
+  /// File path: assets/images/u-start.png
+  AssetGenImage get uStart => const AssetGenImage('assets/images/u-start.png');
+
+  /// Directory path: assets/images/wallet
+  $AssetsImagesWalletGen get wallet => const $AssetsImagesWalletGen();
+
+  /// File path: assets/images/waya_deal_ad.png
+  AssetGenImage get wayaDealAd =>
+      const AssetGenImage('assets/images/waya_deal_ad.png');
 
   /// File path: assets/images/wayalogo.png
   AssetGenImage get wayalogo =>
@@ -99,8 +383,21 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/wayalogo_unlabelled.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [avatars, dCodeInvalid, dCodeValid, wayalogo, wayalogoUnlabelled];
+  List<AssetGenImage> get values => [
+        avatars,
+        dCodeInvalid,
+        dCodeValid,
+        deleteImg,
+        destructive,
+        iconRight,
+        placeholder,
+        successugt,
+        uEmptystate,
+        uStart,
+        wayaDealAd,
+        wayalogo,
+        wayalogoUnlabelled
+      ];
 }
 
 class $AssetsIconsGenSetGen {
@@ -133,12 +430,23 @@ class $AssetsIconsGenSetGen {
   /// File path: assets/icons/gen_set/info.svg
   SvgGenImage get info => const SvgGenImage('assets/icons/gen_set/info.svg');
 
+  /// File path: assets/icons/gen_set/more_horz.svg
+  SvgGenImage get moreHorz =>
+      const SvgGenImage('assets/icons/gen_set/more_horz.svg');
+
   /// File path: assets/icons/gen_set/paper.svg
   SvgGenImage get paper => const SvgGenImage('assets/icons/gen_set/paper.svg');
 
   /// File path: assets/icons/gen_set/password.svg
   SvgGenImage get password =>
       const SvgGenImage('assets/icons/gen_set/password.svg');
+
+  /// File path: assets/icons/gen_set/search.svg
+  SvgGenImage get search =>
+      const SvgGenImage('assets/icons/gen_set/search.svg');
+
+  /// File path: assets/icons/gen_set/share.svg
+  SvgGenImage get share => const SvgGenImage('assets/icons/gen_set/share.svg');
 
   /// File path: assets/icons/gen_set/shield_plus.svg
   SvgGenImage get shieldPlus =>
@@ -176,8 +484,11 @@ class $AssetsIconsGenSetGen {
         edit,
         history,
         info,
+        moreHorz,
         paper,
         password,
+        search,
+        share,
         shieldPlus,
         shieldStar,
         sync,
@@ -186,6 +497,19 @@ class $AssetsIconsGenSetGen {
         usersGroup,
         wallet
       ];
+}
+
+class $AssetsIconsWalletGen {
+  const $AssetsIconsWalletGen();
+
+  /// File path: assets/icons/wallet/card.svg
+  SvgGenImage get card => const SvgGenImage('assets/icons/wallet/card.svg');
+
+  /// File path: assets/icons/wallet/wallet.svg
+  SvgGenImage get wallet => const SvgGenImage('assets/icons/wallet/wallet.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [card, wallet];
 }
 
 class $AssetsImagesAuthGen {
@@ -214,6 +538,28 @@ class $AssetsImagesAuthGen {
   /// List of all assets
   List<dynamic> get values =>
       [docSuccess, explore, forgotPasswordLock, iconRight, setNotification];
+}
+
+class $AssetsImagesBidGen {
+  const $AssetsImagesBidGen();
+
+  /// File path: assets/images/bid/clock.png
+  AssetGenImage get clock => const AssetGenImage('assets/images/bid/clock.png');
+
+  /// File path: assets/images/bid/deal.png
+  AssetGenImage get deal => const AssetGenImage('assets/images/bid/deal.png');
+
+  /// File path: assets/images/bid/down.png
+  AssetGenImage get down => const AssetGenImage('assets/images/bid/down.png');
+
+  /// File path: assets/images/bid/map.png
+  AssetGenImage get map => const AssetGenImage('assets/images/bid/map.png');
+
+  /// File path: assets/images/bid/store.png
+  AssetGenImage get store => const AssetGenImage('assets/images/bid/store.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [clock, deal, down, map, store];
 }
 
 class $AssetsImagesExploreGen {
@@ -300,6 +646,49 @@ class $AssetsImagesOnboardingGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [flag, oFirst, oSecond, oThird];
+}
+
+class $AssetsImagesShopGen {
+  const $AssetsImagesShopGen();
+
+  /// File path: assets/images/shop/add-product-success.png
+  AssetGenImage get addProductSuccess =>
+      const AssetGenImage('assets/images/shop/add-product-success.png');
+
+  /// File path: assets/images/shop/d-code-invalid.png
+  AssetGenImage get dCodeInvalid =>
+      const AssetGenImage('assets/images/shop/d-code-invalid.png');
+
+  /// File path: assets/images/shop/d-code-valid.png
+  AssetGenImage get dCodeValid =>
+      const AssetGenImage('assets/images/shop/d-code-valid.png');
+
+  /// File path: assets/images/shop/delivery-van.png
+  AssetGenImage get deliveryVan =>
+      const AssetGenImage('assets/images/shop/delivery-van.png');
+
+  /// File path: assets/images/shop/mediator.png
+  AssetGenImage get mediator =>
+      const AssetGenImage('assets/images/shop/mediator.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values =>
+      [addProductSuccess, dCodeInvalid, dCodeValid, deliveryVan, mediator];
+}
+
+class $AssetsImagesWalletGen {
+  const $AssetsImagesWalletGen();
+
+  /// File path: assets/images/wallet/search_docu.png
+  AssetGenImage get searchDocu =>
+      const AssetGenImage('assets/images/wallet/search_docu.png');
+
+  /// File path: assets/images/wallet/wallet_bg.png
+  AssetGenImage get walletBg =>
+      const AssetGenImage('assets/images/wallet/wallet_bg.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [searchDocu, walletBg];
 }
 
 class WayaAssests {

@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class LoginCoverPage extends ConsumerWidget {
+  static const route = '/login-cover-page';
   const LoginCoverPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,7 +49,7 @@ class LoginCoverPage extends ConsumerWidget {
               color: wayaTheme.colorScheme.black,
               callback: () {},
               leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
-              text: "Continue with Google",
+              text: "Continue with Apple",
               textColor: wayaTheme.colorScheme.onPrimary,
             ),
             Gap(10),

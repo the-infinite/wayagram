@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
@@ -46,6 +47,7 @@ class WayaButton extends StatelessWidget {
       this.border,
       this.textStyle,
       this.trailingIcon,
+      this.isLoading = false,
       this.leadingIcon,
       required this.callback,
       this.textColor,
@@ -56,6 +58,7 @@ class WayaButton extends StatelessWidget {
   final String text;
   final Color? color;
   final Widget? leadingIcon;
+  final bool isLoading;
   final Widget? trailingIcon;
 
   final double? radius;
@@ -75,7 +78,7 @@ class WayaButton extends StatelessWidget {
 
     return InkWell(
       splashFactory: NoSplash.splashFactory,
-      onTap: isButtonDisabled
+      onTap: isButtonDisabled || isLoading
           ? null
           : () async {
               FocusScope.of(context).unfocus();
@@ -86,7 +89,9 @@ class WayaButton extends StatelessWidget {
         height: height,
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         decoration: BoxDecoration(
-          color: isButtonDisabled ? wayaTheme.colorScheme.greyColor300 : (color ?? wayaTheme.colorScheme.customPrimary),
+          color: isButtonDisabled || isLoading
+              ? wayaTheme.colorScheme.greyColor300
+              : (color ?? wayaTheme.colorScheme.customPrimary),
           border: border,
           borderRadius: BorderRadius.circular(radius ?? 8),
         ),
@@ -102,16 +107,79 @@ class WayaButton extends StatelessWidget {
                     ),
                   Text(text,
                       style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                          fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
+                          fontWeight: FontWeight.w600,
+                          color: textColor ??
+                              wayaTheme.colorScheme.scaffoldColor2)),
                   Gap(10),
                   trailingIcon ?? SizedBox.shrink()
                 ],
               )
             : centerWidget ??
-                Text(text,
-                    style: textStyle ??
-                        wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                            fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
+                (isLoading
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: wayaTheme.colorScheme.white,
+                        ),
+                      )
+                    : Text(text,
+                        style: textStyle ??
+                            wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                                fontWeight: FontWeight.w600,
+                                color: textColor ??
+                                    wayaTheme.colorScheme.scaffoldColor2))),
+      ),
+    );
+  }
+}
+
+class WayaTabButton extends StatelessWidget {
+  final bool isSelected;
+  final String text;
+  final VoidCallback onTap;
+  final double? width;
+
+  const WayaTabButton(
+      {super.key,
+      required this.isSelected,
+      required this.text,
+      required this.onTap,
+      this.width});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final screenWidth = context.width;
+
+    final fontSize = screenWidth * 0.040;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: isSelected
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.greyColor300,
+                width: isSelected ? 2 : 0.9,
+              ),
+            ),
+          ),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: fontSize,
+              color: isSelected
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.greyColor500,
+            ),
+          ),
+        ),
       ),
     );
   }

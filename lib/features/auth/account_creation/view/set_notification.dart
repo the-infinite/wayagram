@@ -4,16 +4,20 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/account_creation/vm/set_notification_vm.dart';
 
 class SetNotification extends ConsumerWidget {
+  static const route = '/set-notification';
   const SetNotification({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(setNotificationVmProvider);
     return Scaffold(
         body: Padding(
       padding: WayaEdgeInsetsExtension.fromPercentage(
@@ -36,21 +40,20 @@ class SetNotification extends ConsumerWidget {
                 Text(
                   "Don’t miss out on what your \n friends are up to",
                   textAlign: TextAlign.center,
-                  style: WayaTextStyles.titleLarge,
+                  style: wayaTheme.textTheme.titleLarge,
                 ),
                 const Gap(20),
                 Text(
                   "Enable notifications so you won’t miss anything \n important",
                   textAlign: TextAlign.center,
-                  style: WayaTextStyles.descriptionStyle,
+                  style: wayaTheme.textTheme.descriptionStyle,
                 ),
                 const Gap(20),
                 WayaButton(
                   callback: () {
-                   WayaNav.toNamed('/account-setup-success');
+                    viewModel.setNotification();
                   },
-                 
-              text:"Turn on Notification",
+                  text: "Turn on Notification",
                 ),
                 const Gap(20),
                 Align(

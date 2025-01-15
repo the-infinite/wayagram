@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class ChangedPasswordSuccess extends ConsumerWidget {
+  static const route = '/changed-password-success';
   const ChangedPasswordSuccess({super.key});
 
   @override
@@ -13,7 +14,7 @@ class ChangedPasswordSuccess extends ConsumerWidget {
     // TODO: implement build
     return WayaScaffold(
       removeAppBar: true,
-        body:  Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,10 +35,9 @@ class ChangedPasswordSuccess extends ConsumerWidget {
             const Gap(20),
             WayaButton(
               callback: () {
-                 WayaNav.toNamed('/login-cover-page');
+                WayaNav.toNamed('/login-cover-page');
               },
-            
-              text:"Take Me to Login",
+              text: "Take Me to Login",
             ),
           ],
         ),

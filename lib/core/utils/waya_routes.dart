@@ -1,54 +1,112 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:wayagram/features/auth/account_creation/view/account_creation.dart';
-import 'package:wayagram/features/auth/account_creation/view/set_notification.dart';
-import 'package:wayagram/features/auth/account_creation/view/successful_setup.dart';
-import 'package:wayagram/features/auth/add_business_account/views/add_business_account_view.dart';
-import 'package:wayagram/features/auth/forgot_password/view/changed_password_success.dart';
-import 'package:wayagram/features/auth/forgot_password/view/forgot_password_step.dart';
-import 'package:wayagram/features/auth/interests/views/select_interest.dart';
-import 'package:wayagram/features/auth/login/view/login_cover_page.dart';
-import 'package:wayagram/features/auth/login/view/login_page.dart';
-import 'package:wayagram/features/auth/login/view/welcome_back.dart';
-import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
-import 'package:wayagram/features/bottom_view/bottom_view.dart';
-import 'package:wayagram/features/general_settings/view/general_settings.dart';
-import 'package:wayagram/features/onboarding/views/onboarding_view.dart';
-import 'package:wayagram/features/onboarding/views/splash_screen.dart';
-import 'package:wayagram/features/shop/buyer/views/confirm_order_delivery.dart';
-import 'package:wayagram/features/shop/cart/views/cart_view.dart';
-import 'package:wayagram/features/shop/cart/views/checkout.dart';
-import 'package:wayagram/features/shop/filter/views/filter_view.dart';
+import 'package:wayagram/core/components/waya_webview.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
+import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
+import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
+import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
+import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart';
+import 'package:wayagram/features/quotation/buyer/views/buyer_checkout.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
+import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
-import 'package:wayagram/features/shop/views/order_details.dart';
-import 'package:wayagram/features/shop/views/product_detail.dart';
+import 'package:wayagram/features/shop/seller/views/seller_dispute/views/add_evidence.dart';
+import 'package:wayagram/features/shop/seller/views/seller_dispute/views/dispute_chat/dispute_chat.dart';
+import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute.dart';
+import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute_detail.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
+import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
+import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
+import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
+import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
+import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
+import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
+import 'package:wayagram/features/wallet/view/fund_account_screen.dart';
+import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
+import 'package:wayagram/features/ugt/create_contest/create_contest.dart';
+import 'package:wayagram/features/ugt/ugt_get_started.dart';
+import 'package:wayagram/features/ugt/ugt_home.dart';
+import 'package:wayagram/features/wallet/view/wallet_page.dart';
+
+import '../../features/quotation/buyer/views/create_request/create_request.dart';
+import '../../features/quotation/seller/views/bids/see_seller_bids.dart';
+
+
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
-     '/': () => SplashScreen(),
-    // '/': () => WalletPage(),
-    '/login-cover-page': () => LoginCoverPage(),
-    '/onboarding': () => OnboardingView(),
-    '/account-creation': () => AccountCreation(),
-    '/changed-password-success': () => ChangedPasswordSuccess(),
-    '/set-notification': () => SetNotification(),
-    '/account-setup-success': () => SuccessfulSetup(),
-    '/forgot-password': () => ForgotPasswordStep(),
-    '/setup-pin': () => TransactionPinView(),
-    '/select-interests': () => SelectInterest(),
-    '/add-business-account': () => AddBusinessAccountView(),
-    '/login': () => LoginPage(),
-    '/welcome-back': () => WelcomeBackPage(),
-    '/explore': () => BottomView(),
-    '/product-detail': () => ProductDetail(),
-    '/order-detail': () => OrderDetails(),
-    '/confirm-order-delivery': () => ConfirmOrderDelivery(),
-    '/cart': () => CartView(),
-    '/checkout': () => Checkout(),
-    '/filter': () => FilterView(),
-    '/general-settings': () => GeneralSettingsPage(),
+    '/': () => SplashScreen(),
+    LoginCoverPage.route: () => LoginCoverPage(),
+    OnboardingView.route: () => OnboardingView(),
+    AccountCreation.route: () => AccountCreation(),
+    ChangedPasswordSuccess.route: () => ChangedPasswordSuccess(),
+    SetNotification.route: () => SetNotification(),
+    SuccessfulSetup.route: () => SuccessfulSetup(),
+    ForgotPasswordStep.route: () => ForgotPasswordStep(),
+    TransactionPinView.route: () => TransactionPinView(),
+    SelectInterest.route: () => SelectInterest(),
+    AddBusinessAccountView.route: () => AddBusinessAccountView(),
+    LoginPage.route: () => LoginPage(),
+    WelcomeBackPage.route: () => WelcomeBackPage(),
+    BottomView.route: () => BottomView(),
+    ProductDetail.route: () => ProductDetail(),
+    OrderDetails.route: () => OrderDetails(),
+    ConfirmOrderDelivery.route: () => ConfirmOrderDelivery(),
+    CartView.route: () => CartView(),
+    AllSellerOrders.route: () => AllSellerOrders(),
+    SellerOrderDetails.route: () => SellerOrderDetails(),
+    SellerBidDetails.route: () => SellerBidDetails(),
+    SellerSettlement.route: () => SellerSettlement(),
+    SeeSellerBids.route: () => SeeSellerBids(),
+    SeeBuyerBids.route: () => SeeBuyerBids(),
+    Checkout.route: () => Checkout(),
+    BuyerCheckout.route: () => BuyerCheckout(),
+    FilterView.route: () => FilterView(),
+    GeneralSettingsPage.route: () => GeneralSettingsPage(),
+    ChangePasswordGenSettings.route: () => ChangePasswordGenSettings(),
+    ChangePinPage.route: () => ChangePinPage(),
+    WayaWebview.route: () => WayaWebview(),
+    FundWalletOptionsScreen.route: () => FundWalletOptionsScreen(),
+    WalletPage.route: () => WalletPage(),
+    FundAccountScreen.route: () => FundAccountScreen(),
+    TransactionDetailsScreen.route: () => TransactionDetailsScreen(),
+    VerifyTransactionScreen.route: () => VerifyTransactionScreen(),
+    AllTransactionHistory.route: () => AllTransactionHistory(),
+    BankTransferScreen.route: () => BankTransferScreen(),
+    ProfilePage.route: () => ProfilePage(),
+    EditNamePage.route: () => EditNamePage(),
+    EditProfilePage.route: () => EditProfilePage(),
+    AddProduct.route: () => AddProduct(),
+    ProductListing.route: () => ProductListing(),
+    WayaDealAd.route: () => WayaDealAd(),
+    WayaGramDeals.route: () => WayaGramDeals(),
+    ApplicationProductDetails.route: () => ApplicationProductDetails(),
+    CreateShop.route: () => CreateShop(),
+    SellerDispute.route: () => SellerDispute(),
+    SellerDisputeDetail.route: () => SellerDisputeDetail(),
+    MapScreen.route: () => MapScreen(),
+    AddEvidence.route: () => AddEvidence(),
+    DisputeChat.route: () => DisputeChat(),
+    UgtGetStarted.route: () => UgtGetStarted(),
+    UgtHome.route: () => UgtHome(),
+    CreateContest.route: () => CreateContest(),
+    ContestSettingContent.route: ()=> ContestSettingContent(),
+    EditStagePreference.route: ()=> EditStagePreference(),
+    CreateRequest.route: () => CreateRequest(),
+    AllSellerBids.route: () => AllSellerBids(),
+    ManageShop.route:() => ManageShop()
+    
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

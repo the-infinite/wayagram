@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/onboarding/vm/onboarding_vm.dart';
 
 class OnboardingView extends ConsumerWidget {
+  static const route = '/onboarding';
   const OnboardingView({super.key});
 
   @override

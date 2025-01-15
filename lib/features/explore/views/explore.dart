@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -11,6 +13,7 @@ import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
+import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
@@ -27,9 +30,9 @@ class Explore extends ConsumerWidget {
 
     return WayaScaffold(
         isLoading: false,
-        color: wayaTheme.colorScheme.scaffoldColor,
+        backgroundColor: wayaTheme.colorScheme.scaffoldColor,
         appBar: AppBar(
-           toolbarHeight: 70,
+            toolbarHeight: 70,
             backgroundColor: wayaTheme.colorScheme.white,
             title: ExploreHeader(),
             actions: [
@@ -68,7 +71,7 @@ class Explore extends ConsumerWidget {
           children: [
             // const ExploreHeader(),
             const Gap(20),
-            const ExploreOurServices(),
+            ExploreOurServices(),
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {},
@@ -113,21 +116,36 @@ class Explore extends ConsumerWidget {
                 title: 'Shop'),
             const Gap(10),
             CategoriesFilterWidget<Product>(allItems: []),
+            const Gap(10),
+                 WayaButton(
+                    callback: () {
+                      WayaNav.toNamed(AddProduct.route);
+                    },
+                    color: wayaTheme.colorScheme.primar50,
+                    centerWidget: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          WayaAssests.icons.buttonIcon.path,
+                          colorFilter: ColorFilter.mode(
+                              wayaTheme.colorScheme.customPrimary,
+                              BlendMode.srcIn),
+                        ),
+                        const Gap(6),
+                        Text(
+                          "Add New Product",
+                          style: TextStyle().wayaCopyWith(
+                              color: wayaTheme.colorScheme.customPrimary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                        )
+                      ],
+                    ),
+                  ),
             const Gap(25),
             productState.when(
-                data: (products) => GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 0,
-                        childAspectRatio: 0.65,
-                        crossAxisSpacing: 12),
-                    itemCount: products.sublist(0, 2).length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(
-                          product: products.sublist(0, 2)[index]);
-                    }),
+                data: (products) => _buildProductGrid(products.sublist(0, 2)),
                 error: (e, stack) =>
                     _buildProductLoadingState(context: context),
                 loading: () => _buildProductLoadingState(context: context)),
@@ -164,18 +182,42 @@ class Explore extends ConsumerWidget {
         ));
   }
 
+  Widget _buildProductGrid(List<Product> products) {
+    return Column(
+      children: [
+        for (int i = 0; i < products.length; i += 2)
+          Row(
+            children: [
+              Expanded(
+                child: ProductCard(
+                  product: products[i],
+                ),
+              ),
+              if (i + 1 < products.length) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ProductCard(
+                    product: products[i + 1],
+                  ),
+                ),
+              ],
+            ],
+          ),
+      ],
+    );
+  }
+
   Widget _buildProductLoadingState({required BuildContext context}) {
-    return GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 0,
-            childAspectRatio: 0.65,
-            crossAxisSpacing: 12),
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          return ProductCardSekeleton();
-        });
+    return Row(
+      children: [
+        Expanded(
+          child: ProductCardSekeleton(),
+        ),
+        Gap(12),
+        Expanded(
+          child: ProductCardSekeleton(),
+        ),
+      ],
+    );
   }
 }

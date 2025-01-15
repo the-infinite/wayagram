@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wayagram/core/data/model.dart';
+import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
@@ -163,38 +164,50 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }).toList();
   }
 
-  void update(String value, String name) {
+  void update(Select value, String name) {
     switch (name) {
       case "productCategory":
-        state = state.copyWith(productCategory: value);
+        state = state.copyWith(productCategory: value.value);
       case "productCondition":
-        state = state.copyWith(productCondition: value);
+        state = state.copyWith(productCondition: value.value);
       case "productType":
-        state = state.copyWith(productType: value);
+        state = state.copyWith(productType: value.value);
       case "pickUpOption":
-        state = state.copyWith(pickUpOption: value);
+        state = state.copyWith(pickUpOption: value.value);
       case "discountType":
-        state = state.copyWith(discountType: value);
+        state = state.copyWith(discountType: value.value);
       default:
-        state = state.copyWith(productColor: value);
+        state = state.copyWith(productColor: value.value);
     }
   }
 
-  void submit(BuildContext context)  async{
-     //final addProductData = ref.watch(addProductProvider.notifier);
+  void submit(BuildContext context, bool isWayagramDeal) async {
+    //final addProductData = ref.watch(addProductProvider.notifier);
 
-    // print("$addProductData");
-    WayaHelpers.showNotice(
-        context: context,
-        title: "Product Added Successfully! 🎉",
-        message:
-            "Your product is now live in your shop and ready \n for customers to discover.",
-        onPress: () => WayaNav.toNamed('/add-product'),
-        icon: Image.asset('assets/images/shop/add-product-success.png'),
-        buttonText: 'Add Another Product',
-        secondButtonText: 'Go to Dashboard',
-        onCancel: () => WayaNav.to(const BottomView(
-              index: 1,
-            )));
+    if (isWayagramDeal) {
+      // print("$addProductData");
+      WayaUtils.showNotice(
+          context: context,
+          title: "Your Application has been submitted Successfully! 🎉",
+          message:
+              "Your product has been submitted. We'll notify you \n once it's reviewed.",
+          onPress: () => WayaNav.toNamed('/wayagram-deal'),
+          icon: Image.asset('assets/images/shop/add-product-success.png'),
+          buttonText: 'View Application Status',
+          secondButtonText: 'Go to Dashboard',
+          onCancel: () => WayaNav.toNamed('/wayagram-deal'));
+    } else {
+      // print("$addProductData");
+      WayaUtils.showNotice(
+          context: context,
+          title: "Product Added Successfully! 🎉",
+          message:
+              "Your product is now live in your shop and ready \n for customers to discover.",
+          onPress: () => WayaNav.toNamed('/add-product'),
+          icon: Image.asset('assets/images/shop/add-product-success.png'),
+          buttonText: 'Add Another Product',
+          secondButtonText: 'Go to Dashboard',
+          onCancel: () => WayaNav.toNamed(BottomView.route, arguments: 1));
+    }
   }
 }
