@@ -40,13 +40,32 @@ class AuthRepository extends BaseRepository {
     if (isBusinessLogin == true) {
       payload['businessId'] = businessId;
       payload['password'] = password;
-    }
-    else {
-       payload['email'] = email;
+    } else {
+      payload['email'] = email;
       payload['password'] = password;
     }
 
     return post('$serviceUrl/client/auth/login', payload);
+  }
+
+  Future<WayaRequestResponse> getAllCountries() {
+    return get("$serviceUrl/client/location/countries?countryCode=NG");
+  }
+
+  Future<WayaRequestResponse> getAllStates() {
+    return get("$serviceUrl/client/location/states?countryCode=NG");
+  }
+
+  Future<WayaRequestResponse> getAllLGA(
+      {required String stateCode, required String countryCode}) {
+    return get(
+        "$serviceUrl/client/location/lgas?stateCode=$stateCode&countryCode=$countryCode");
+  }
+
+  Future<WayaRequestResponse> getAllCities(
+      {required String stateCode, required String countryCode}) {
+    return get(
+        "$serviceUrl/client/location/cities?stateCode=$stateCode&countryCode=$countryCode");
   }
 
   Future<WayaRequestResponse> businessKyc(dynamic data) {

@@ -1,13 +1,19 @@
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 
 class ManageShopState {
-  ManageShopState(
-      {this.isLoading = false, this.data, this.hasShop = false, this.shop});
-
-  final bool? isLoading;
+  final bool isLoading;
   final dynamic data;
   final bool hasShop;
-  final List<ShopData>? shop;
+  final List<ShopData> shop;
+
+  const ManageShopState({
+    this.isLoading = false,
+    this.data,
+    this.hasShop = false,
+    this.shop = const [],
+  });
+
+  factory ManageShopState.initial() => ManageShopState();
 
   ManageShopState copyWith(
       {bool? isLoading, dynamic data, bool? hasShop, List<ShopData>? shop}) {
@@ -22,7 +28,7 @@ class ManageShopState {
     return ManageShopState(
         isLoading: json["isLoading"],
         data: json["data"],
-        hasShop: json["hasShop"] ,
+        hasShop: json["hasShop"],
         shop: json['shop']);
   }
 

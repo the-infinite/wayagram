@@ -232,11 +232,11 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                 const Gap(30),
                 WayaButton(
                     callback: () {
-                      if (_formKey.currentState!.validate()) {
-                        ref
-                            .read(createShopVmProvider.notifier)
-                            .createSellerShop(context);
-                      }
+                      // if (_formKey.currentState!.validate()) {
+                      //   ref
+                      //       .read(createShopVmProvider.notifier)
+                      //       .createSellerShop(context);
+                      // }
                     },
                     text: 'Create Shop'),
               ],

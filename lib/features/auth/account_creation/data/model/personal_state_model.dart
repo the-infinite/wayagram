@@ -12,7 +12,7 @@ class PersonalFirstStepState {
   final TextEditingController confirmPassword;
   final TextEditingController phoneNumber;
   final TextEditingController address;
-  final TextEditingController city;
+  final String city;
   final String state;
   final String country;
   final String lga;
@@ -33,10 +33,11 @@ class PersonalFirstStepState {
   final User? user;
   final BusinessAccountData? business;
   final bool? isLoadingBusinessType;
-  final List<Select>  businessTypes;
+  final List<Select> businessTypes;
   final List<Select> countries;
-  final List<Select>  lgas;
-  final List<Select>  states;
+  final List<Select> lgas;
+  final List<Select> states;
+  final List<Select> cities;
 
   PersonalFirstStepState(
       {TextEditingController? firstName,
@@ -47,7 +48,7 @@ class PersonalFirstStepState {
       TextEditingController? confirmPassword,
       TextEditingController? phoneNumber,
       TextEditingController? address,
-      TextEditingController? city,
+      this.city = '',
       this.state = '',
       this.country = '',
       this.lga = '',
@@ -71,6 +72,7 @@ class PersonalFirstStepState {
       this.countries = const [],
       this.states = const [],
       this.lgas = const [],
+      this.cities = const [],
       this.business})
       : firstName = firstName ?? TextEditingController(),
         lastName = lastName ?? TextEditingController(),
@@ -80,7 +82,7 @@ class PersonalFirstStepState {
         confirmPassword = confirmPassword ?? TextEditingController(),
         phoneNumber = phoneNumber ?? TextEditingController(),
         address = address ?? TextEditingController(),
-        city = city ?? TextEditingController(),
+     
         businessName = businessName ?? TextEditingController(),
         businessAddress = businessAddress ?? TextEditingController();
 
@@ -93,7 +95,7 @@ class PersonalFirstStepState {
       TextEditingController? confirmPassword,
       TextEditingController? phoneNumber,
       TextEditingController? address,
-      TextEditingController? city,
+      String? city,
       String? state,
       String? country,
       String? lga,
@@ -113,10 +115,13 @@ class PersonalFirstStepState {
       bool? isLoading,
       bool? isLoadingBusinessType,
       List<Select>? countries,
-       List<Select>? states,
-        List<Select>? lgas,
-         List<Select>? businessTypes,
+      List<Select>? states,
+      List<Select>? lgas,
+      List<Select>? businessTypes,
+          List<Select>? cities,
+
       User? user,
+
       BusinessAccountData? business}) {
     return PersonalFirstStepState(
         firstName: firstName ?? this.firstName,
@@ -149,12 +154,13 @@ class PersonalFirstStepState {
         isLoading: isLoading ?? this.isLoading,
         user: user ?? this.user,
         businessTypes: businessTypes ?? this.businessTypes,
-          countries: countries ?? this.countries,
-            states: states ?? this.states,
-              lgas: lgas ?? this.lgas,
+        countries: countries ?? this.countries,
+        states: states ?? this.states,
+        lgas: lgas ?? this.lgas,
         isLoadingBusinessType:
             isLoadingBusinessType ?? this.isLoadingBusinessType,
-        
-        business: business ?? this.business);
+        business: business ?? this.business,
+        cities: cities ?? this.cities
+        );
   }
 }
