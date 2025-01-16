@@ -6,12 +6,14 @@ class ManageShopState {
   final bool hasShop;
   final List<ShopData> shop;
   final ShopData? singleShop;
+  final bool isPersonalNotUpgradedToBusiness;
 
   const ManageShopState(
       {this.isLoading = false,
       this.data,
       this.hasShop = false,
       this.shop = const [],
+      this.isPersonalNotUpgradedToBusiness = false,
       this.singleShop});
 
   factory ManageShopState.initial() => ManageShopState();
@@ -21,13 +23,17 @@ class ManageShopState {
       dynamic data,
       bool? hasShop,
       List<ShopData>? shop,
-      ShopData? singleShop}) {
+      ShopData? singleShop,
+      bool? isPersonalNotUpgradedToBusiness
+      }) {
     return ManageShopState(
         isLoading: isLoading ?? this.isLoading,
         data: data ?? this.data,
         hasShop: hasShop ?? this.hasShop,
         singleShop: singleShop ?? this.singleShop,
-        shop: shop ?? this.shop);
+        shop: shop ?? this.shop,
+        isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ?? this.isPersonalNotUpgradedToBusiness
+        );
   }
 
   factory ManageShopState.fromJson(Map<String, dynamic> json) {
@@ -36,6 +42,7 @@ class ManageShopState {
         data: json["data"],
         hasShop: json["hasShop"],
         singleShop: json['singleShop'],
+        isPersonalNotUpgradedToBusiness: json['isPersonalNotUpgradedToBusiness'],
         shop: json['shop']);
   }
 
@@ -44,6 +51,7 @@ class ManageShopState {
         "data": data,
         "hasShop": hasShop,
         "shop": shop,
-        "singleShop": singleShop
+        "singleShop": singleShop,
+        "isPersonalNotUpgradedToBusiness":isPersonalNotUpgradedToBusiness
       };
 }

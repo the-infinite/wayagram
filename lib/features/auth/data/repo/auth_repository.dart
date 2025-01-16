@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to_business_model.dart';
 
 class AuthRepository extends BaseRepository {
   static const serviceUrl = "wayagram-profile/api/v2";
@@ -80,4 +81,12 @@ class AuthRepository extends BaseRepository {
   Future<WayaRequestResponse> getBusinessTypes() async {
     return get('$serviceUrl/client/businesses/types/all');
   }
+
+
+    Future<WayaRequestResponse> upgradeToBusiness(UpgradeToBusinessModel payload) {
+    return post(
+        '$serviceUrl/client/users/:userId/upgrade-to-business', payload.toJson());
+  }
+
+///
 }

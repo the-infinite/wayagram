@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/repo/seller_repository.dart';
@@ -24,15 +25,22 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     {"title": "Pending Orders", "metrics": "100", "color": Color(0xffFEF6E7)},
   ];
   Future<void> getSellerShops() async {
-    state = state.copyWith(isLoading: true);
+    final isBusiness = ref.watch(successfulSetupVmProvider).business;
+    if (isBusiness == null) {
+      // account is most likely a personal account
+      state = state.copyWith(isPersonalNotUpgradedToBusiness: true);
+      return;
+    }
     final businessId = ref.watch(successfulSetupVmProvider).business!.id;
 
+    state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
+
     try {
+      state = state.copyWith(isLoading: true);
       final response = await _sellerRepository.getShopBySellerId(businessId!);
 
       if (response.data['statusCode'] == 400 &&
           response.data['data'] == 'Shop not found') {
-        print("oke okeefwefewfefeffefefefefeeee");
         await ref
             .read(createShopVmProvider.notifier)
             .createSellerShop(hasNoShop: true);
