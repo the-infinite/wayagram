@@ -18,10 +18,11 @@ class SellerShop extends ConsumerStatefulWidget {
 class _SellerShopState extends ConsumerState<SellerShop> {
   @override
   void initState() {
-    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(manageShopVmProvider.notifier).getSellerShops();
     });
+
+    super.initState();
   }
 
   @override
@@ -96,7 +97,7 @@ Widget buildSellerShopSkeleton({required BuildContext context}) {
             color: wayaTheme.colorScheme.greyColor100,
             borderRadius: BorderRadius.circular(8)),
       ),
-       const Gap(3),
+      const Gap(3),
       buildShopCardLoadingState(context: context),
       const Gap(20),
       Container(
@@ -106,7 +107,7 @@ Widget buildSellerShopSkeleton({required BuildContext context}) {
             color: wayaTheme.colorScheme.greyColor100,
             borderRadius: BorderRadius.circular(8)),
       ),
-       const Gap(3),
+      const Gap(3),
       buildShopCardLoadingState(context: context),
     ],
   );

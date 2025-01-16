@@ -36,7 +36,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       receiveTimeout: const Duration(seconds: 30),
     );
     final dio = Dio(options);
-    dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
+  //  dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
     return dio;
   }
 

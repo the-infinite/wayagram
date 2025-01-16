@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -8,30 +9,44 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
 
-class ManageShop extends ConsumerWidget {
+class ManageShop extends ConsumerStatefulWidget {
   static const route = '/manage-shop';
   const ManageShop({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
+  ConsumerState<ConsumerStatefulWidget> createState() => _ManageShopState();
+}
+
+class _ManageShopState extends ConsumerState<ManageShop> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final ShopData shop =
+          ModalRoute.of(context)!.settings.arguments as ShopData;
+     ref.read(manageShopVmProvider.notifier).getCurrentShop(shop);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final viewModel = ref.watch(manageShopVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-    
-        title: 'Maleek Ventures',
+        title: viewModel.singleShop!.name.capitalizeFirst ?? '',
         isLoading: false,
         isScrollable: true,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Maleek's Ventures", style: wayaTheme.textTheme.titleLarge),
+            Text(viewModel.singleShop!.name.capitalizeFirst ?? '', style: wayaTheme.textTheme.titleLarge),
             const Gap(3),
             Text(
               'Manage your shop activity',

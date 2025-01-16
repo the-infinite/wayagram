@@ -52,7 +52,7 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
           await _sellerRepository.createShop(state.createShopModel);
 
       _logger.i(response.data);
-      //P await ref.read(manageShopVmProvider.notifier).refreshShops();
+       await ref.read(manageShopVmProvider.notifier).refreshShops();
     } catch (e) {
       _logger.e(e);
     } finally {
