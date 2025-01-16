@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
@@ -153,7 +154,11 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     final wayaTheme = Theme.of(ctx);
     return GestureDetector(
       onTap: () {
-        WayaNav.toNamed("/add-choices");
+        WayaUtils.showModalSheet(
+          context,
+          child: PollsModal(),
+        );
+       // confirmPoll(context);
       },
       child: Row(
         children: [
@@ -186,5 +191,45 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         ],
       ),
     );
+  }
+  confirmPoll(BuildContext context) {
+    WayaUtils.showNotice(
+        context: context,
+        title: 'Payment Information',
+        message:
+        'Waya will take a commission from the payment\nand the rest of the money will be paid into your\naccount at the end of post duration or its\nexpiry date.',
+        onPress: () => Navigator.of(context).pop(),
+        icon: Image.asset('assets/images/d-code-invalid.png', height: 10,),
+        buttonCenterWidget: Column(
+          children: [
+
+            const Gap(8),
+            InkWell(
+              onTap: (){
+                Navigator.of(context).pop();
+                WayaUtils.showModalSheet(
+                  context,
+                  child: PollsModal(),
+                );
+              },
+              child: Text(
+                'Ok, I Agree',
+                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Theme.of(context).colorScheme.greyColor500 ),
+              ),
+            )
+            /*  WayaButton(
+                text: 'Go Back',
+                // color: wayaTheme.colorScheme.transparent,
+                // textColor: wayaTheme.colorScheme.customBlack,
+                //border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                callback: () {
+                  //  ref.read(addProductProvider.notifier).submit();
+                  //widget.gotoPreviousTab();
+                })*/
+          ],
+        ));
   }
 }
