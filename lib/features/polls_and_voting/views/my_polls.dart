@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 
 class MyPolls extends ConsumerWidget {
   const MyPolls({super.key});
@@ -118,37 +119,47 @@ class MyPolls extends ConsumerWidget {
     );
   }
   presImage(img, name, ctx, chk){
-    return Container(
-      padding: EdgeInsets.only(left: 20.w),
-      height: 60.h,
-      decoration: BoxDecoration(
-        border: Border.all(color: WayaColors.primary600, ),
-        borderRadius: BorderRadius.circular(12),
+    return InkWell(
+      splashColor: Colors.transparent,
+      splashFactory: NoSplash.splashFactory,
+      onTap: (){
+        WayaUtils.showModalSheet(
+          ctx,
+          child: VoteOptionModal(),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.only(left: 20.w),
+        height: 60.h,
+        decoration: BoxDecoration(
+          border: Border.all(color: WayaColors.primary600, ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: chk ? Row(children: [
+         Image.asset(img, height: 44.h,),
+          const Gap(40),
+          Text(
+            name,
+            style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(ctx).colorScheme.primary600 ),
+          ),
+
+        ],) : Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+
+          Text(
+            name,
+            style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(ctx).colorScheme.primary600 ),
+          ),
+
+        ],),
       ),
-      child: chk ? Row(children: [
-       Image.asset(img, height: 44.h,),
-        const Gap(40),
-        Text(
-          name,
-          style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(ctx).colorScheme.primary600 ),
-        ),
-
-      ],) : Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-
-        Text(
-          name,
-          style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(ctx).colorScheme.primary600 ),
-        ),
-
-      ],),
     );
   }
 }

@@ -208,6 +208,8 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InkWell(
+                          splashColor: Colors.transparent,
+                          splashFactory: NoSplash.splashFactory,
                           onTap: (){
                             setState(() {
                               sel = !sel;
