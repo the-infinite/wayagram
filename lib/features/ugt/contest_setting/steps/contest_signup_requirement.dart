@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/Add_new_requirement_modal.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/components/waya_text_form_field.dart';
@@ -275,7 +276,10 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
 
         WayaButton(
           callback: () {
-            Navigator.pop(context);
+            WayaUtils.showModalSheetUgt(
+              context,
+              child: SuccessfulModal(),
+            );
           },
           text: "Continue",
         ),
