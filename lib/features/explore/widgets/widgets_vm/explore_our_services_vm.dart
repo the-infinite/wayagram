@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
 
 class Services {
@@ -25,7 +26,9 @@ class ExploreOurServicesVm  {
       Services(
           icon: WayaAssests.icons.eQuotation.path,
           name: 'Get Quotation',
-          onTap: () {}),
+          onTap: () {
+            Navigator.pushNamed(context, BottomView.route, arguments: 3);
+          }),
       Services(
           icon: WayaAssests.icons.eChat.path,
           name: 'Chat & Socials',
@@ -37,7 +40,9 @@ class ExploreOurServicesVm  {
       Services(
           icon: WayaAssests.icons.ePoll.path,
           name: 'Polls & Votes',
-          onTap: () {}),
+          onTap: () {
+            WayaNav.toNamed('/poll-and-voting');
+          }),
       Services(
           icon: WayaAssests.icons.eEvent.path, name: 'Events', onTap: () {}),
     ];

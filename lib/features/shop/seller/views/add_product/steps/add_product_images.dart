@@ -1,4 +1,5 @@
-import 'package:dotted_border/dotted_border.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,88 +45,109 @@ class _AddProductImagesState extends ConsumerState<AddProductImages> {
             style: wayaTheme.textTheme.hintStyle,
           ),
           const Gap(20),
-          Text(
-            "Product Thumbnail",
-            style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                  fontSize: 14,
-                  color: wayaTheme.colorScheme.greyColor900,
-                ),
+          // Text(
+          //   "Product Thumbnail",
+          //   style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+          //         fontSize: 14,
+          //         color: wayaTheme.colorScheme.greyColor900,
+          //       ),
+          // ),
+          // const Gap(10),
+
+          Align(
+            alignment: Alignment.center,
+            child: UploadProductImage(
+                onUpload: ref.read(addProductProvider.notifier).uploadImages),
           ),
-          const Gap(10),
-          UploadImage(onUpload: () => provider.uploadImage()),
-          const Gap(30),
-          AddDocumentWidget(
-              addFile: (file) {
-                ref.read(addProductProvider.notifier).addFile(file, 'front');
-              },
-              removeFile: () {
-                ref.read(addProductProvider.notifier).removeFile('front');
-              },
-              isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                  viewModel.uploadedDocuments.any((doc) => doc.type == 'front'),
-              title: viewModel.uploadedDocuments.isNotEmpty &&
-                      viewModel.uploadedDocuments
-                          .any((doc) => doc.type == 'front')
-                  ? viewModel.uploadedDocuments
-                      .firstWhere((doc) => doc.type == 'front')
-                      .name
-                  : 'Upload Product Front View',
-              description: 'JPG, and IMG format',
-              type: "image"),
-          AddDocumentWidget(
-              addFile: (file) {
-                ref.read(addProductProvider.notifier).addFile(file, 'left');
-              },
-              removeFile: () {
-                ref.read(addProductProvider.notifier).removeFile('left');
-              },
-              isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                  viewModel.uploadedDocuments.any((doc) => doc.type == 'left'),
-              title: viewModel.uploadedDocuments.isNotEmpty &&
-                      viewModel.uploadedDocuments
-                          .any((doc) => doc.type == 'left')
-                  ? viewModel.uploadedDocuments
-                      .firstWhere((doc) => doc.type == 'left')
-                      .name
-                  : 'Upload Product Left View',
-              description: ' JPG, and IMG format',
-              type: "image"),
-          AddDocumentWidget(
-              addFile: (file) {
-                ref.read(addProductProvider.notifier).addFile(file, 'right');
-              },
-              removeFile: () {
-                ref.read(addProductProvider.notifier).removeFile('right');
-              },
-              isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                  viewModel.uploadedDocuments.any((doc) => doc.type == 'right'),
-              title: viewModel.uploadedDocuments.isNotEmpty &&
-                      viewModel.uploadedDocuments
-                          .any((doc) => doc.type == 'right')
-                  ? viewModel.uploadedDocuments
-                      .firstWhere((doc) => doc.type == 'right')
-                      .name
-                  : 'Upload Product Right View',
-              description: 'JPG, and IMG format',
-              type: "image"),
-          AddDocumentWidget(
-              addFile: (file) {
-                ref.read(addProductProvider.notifier).addFile(file, 'back');
-              },
-              removeFile: () {
-                ref.read(addProductProvider.notifier).removeFile('back');
-              },
-              isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                  viewModel.uploadedDocuments.any((doc) => doc.type == 'back'),
-              title: viewModel.uploadedDocuments.isNotEmpty &&
-                      viewModel.uploadedDocuments
-                          .any((doc) => doc.type == 'back')
-                  ? viewModel.uploadedDocuments
-                      .firstWhere((doc) => doc.type == 'back')
-                      .name
-                  : 'Upload Product Back View',
-              description: 'JPG, and IMG format',
-              type: "image"),
+
+          // UploadImage(onUpload: () => provider.uploadImage()),
+          const Gap(20),
+          GridView.builder(
+              itemCount: viewModel.uploadedDocuments.length,
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 1),
+              itemBuilder: (context, index) {
+                return AddedImageWidget(
+                    ref: ref,
+                    id: index,
+                    imagePath: viewModel.uploadedDocuments[index].file);
+              }),
+          // AddDocumentWidget(
+          //     addFile: (file) {
+          //       ref.read(addProductProvider.notifier).addFile(file, 'front');
+          //     },
+          //     removeFile: () {
+          //       ref.read(addProductProvider.notifier).removeFile('front');
+          //     },
+          //     isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
+          //         viewModel.uploadedDocuments.any((doc) => doc.type == 'front'),
+          //     title: viewModel.uploadedDocuments.isNotEmpty &&
+          //             viewModel.uploadedDocuments
+          //                 .any((doc) => doc.type == 'front')
+          //         ? viewModel.uploadedDocuments
+          //             .firstWhere((doc) => doc.type == 'front')
+          //             .name
+          //         : 'Upload Product Front View',
+          //     description: 'JPG, and IMG format',
+          //     type: "image"),
+          // AddDocumentWidget(
+          //     addFile: (file) {
+          //       ref.read(addProductProvider.notifier).addFile(file, 'left');
+          //     },
+          //     removeFile: () {
+          //       ref.read(addProductProvider.notifier).removeFile('left');
+          //     },
+          //     isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
+          //         viewModel.uploadedDocuments.any((doc) => doc.type == 'left'),
+          //     title: viewModel.uploadedDocuments.isNotEmpty &&
+          //             viewModel.uploadedDocuments
+          //                 .any((doc) => doc.type == 'left')
+          //         ? viewModel.uploadedDocuments
+          //             .firstWhere((doc) => doc.type == 'left')
+          //             .name
+          //         : 'Upload Product Left View',
+          //     description: ' JPG, and IMG format',
+          //     type: "image"),
+          // AddDocumentWidget(
+          //     addFile: (file) {
+          //       ref.read(addProductProvider.notifier).addFile(file, 'right');
+          //     },
+          //     removeFile: () {
+          //       ref.read(addProductProvider.notifier).removeFile('right');
+          //     },
+          //     isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
+          //         viewModel.uploadedDocuments.any((doc) => doc.type == 'right'),
+          //     title: viewModel.uploadedDocuments.isNotEmpty &&
+          //             viewModel.uploadedDocuments
+          //                 .any((doc) => doc.type == 'right')
+          //         ? viewModel.uploadedDocuments
+          //             .firstWhere((doc) => doc.type == 'right')
+          //             .name
+          //         : 'Upload Product Right View',
+          //     description: 'JPG, and IMG format',
+          //     type: "image"),
+          // AddDocumentWidget(
+          //     addFile: (file) {
+          //       ref.read(addProductProvider.notifier).addFile(file, 'back');
+          //     },
+          //     removeFile: () {
+          //       ref.read(addProductProvider.notifier).removeFile('back');
+          //     },
+          //     isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
+          //         viewModel.uploadedDocuments.any((doc) => doc.type == 'back'),
+          //     title: viewModel.uploadedDocuments.isNotEmpty &&
+          //             viewModel.uploadedDocuments
+          //                 .any((doc) => doc.type == 'back')
+          //         ? viewModel.uploadedDocuments
+          //             .firstWhere((doc) => doc.type == 'back')
+          //             .name
+          //         : 'Upload Product Back View',
+          //     description: 'JPG, and IMG format',
+          //     type: "image"),
           const Gap(30),
           WayaButton(
               text: 'Review Product Details',
@@ -145,5 +167,59 @@ class _AddProductImagesState extends ConsumerState<AddProductImages> {
                 widget.gotoPreviousTab();
               })
         ]);
+  }
+}
+
+class AddedImageWidget extends StatelessWidget {
+  final WidgetRef ref;
+  final int id;
+  final File imagePath;
+
+  const AddedImageWidget(
+      {super.key,
+      required this.ref,
+      required this.id,
+      required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    final wayaTheme = Theme.of(context);
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.file(
+            imagePath,
+            fit: BoxFit.cover,
+            height: 100,
+            width: double.infinity,
+            filterQuality: FilterQuality.high,
+            scale: 1,
+          ),
+        ),
+        Positioned(
+            top: 3,
+            right: 3,
+            child: GestureDetector(
+              onTap: () {
+                ref.read(addProductProvider.notifier).removeFile(id);
+              },
+              child: Container(
+                  width: 26,
+                  height: 26,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: wayaTheme.colorScheme.error),
+                  child: Center(
+                    child: Icon(
+                      Icons.delete_forever_outlined,
+                      size: 20,
+                      color: wayaTheme.colorScheme.white,
+                    ),
+                  )),
+            ))
+      ],
+    );
   }
 }

@@ -40,7 +40,9 @@ class MoreVm {
           content:
               "Create groups and manage who is following you and who you follow.",
           title: "Get Quotation",
-          onTap: () {}),
+          onTap: () {
+            Navigator.pushNamed(context, BottomView.route, arguments: 3);
+          }),
       MoreOptionModel(
           asset: WayaAssests.icons.mStream.path,
           content: "Start a live conversation and allows friends to interact",
@@ -62,7 +64,9 @@ class MoreVm {
           asset: WayaAssests.icons.mPoll.path,
           content: "Create both paid and free poll for your different audience",
           title: "Poll & Vote",
-          onTap: () {}),
+          onTap: () {
+            WayaNav.toNamed('/poll-and-voting');
+          }),
       MoreOptionModel(
           asset: WayaAssests.icons.mDonation.path,
           content: "Create Donation Posts and also help people in need",

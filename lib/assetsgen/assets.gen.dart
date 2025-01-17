@@ -65,6 +65,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/check-icon.svg
   SvgGenImage get checkIcon => const SvgGenImage('assets/icons/check-icon.svg');
 
+  /// File path: assets/icons/coin-in-hand.svg
+  SvgGenImage get coinInHand =>
+      const SvgGenImage('assets/icons/coin-in-hand.svg');
+
   /// File path: assets/icons/create.svg
   SvgGenImage get create => const SvgGenImage('assets/icons/create.svg');
 
@@ -168,6 +172,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/map.svg
   SvgGenImage get map => const SvgGenImage('assets/icons/map.svg');
 
+  /// File path: assets/icons/menu.svg
+  SvgGenImage get menu => const SvgGenImage('assets/icons/menu.svg');
+
   /// File path: assets/icons/money-icon.svg
   SvgGenImage get moneyIcon => const SvgGenImage('assets/icons/money-icon.svg');
 
@@ -183,6 +190,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/personal.svg
   SvgGenImage get personal => const SvgGenImage('assets/icons/personal.svg');
+
+  /// File path: assets/icons/quick-icon.svg
+  SvgGenImage get quickIcon => const SvgGenImage('assets/icons/quick-icon.svg');
 
   /// File path: assets/icons/r-cart.svg
   SvgGenImage get rCart => const SvgGenImage('assets/icons/r-cart.svg');
@@ -208,6 +218,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/share-network.svg
   SvgGenImage get shareNetwork =>
       const SvgGenImage('assets/icons/share-network.svg');
+
+  /// File path: assets/icons/shop-icon.svg
+  SvgGenImage get shopIcon => const SvgGenImage('assets/icons/shop-icon.svg');
 
   /// File path: assets/icons/soraj.svg
   SvgGenImage get soraj => const SvgGenImage('assets/icons/soraj.svg');
@@ -256,6 +269,7 @@ class $AssetsIconsGen {
         buttonIcon,
         chat,
         checkIcon,
+        coinInHand,
         create,
         dCodeOnvalid,
         dCodeValid,
@@ -287,11 +301,13 @@ class $AssetsIconsGen {
         mUgt,
         mWallet,
         map,
+        menu,
         moneyIcon,
         moreAcctBal,
         orderVan,
         orders,
         personal,
+        quickIcon,
         rCart,
         sCopy,
         sDisputeIcon,
@@ -299,6 +315,7 @@ class $AssetsIconsGen {
         settlementIcon,
         settlement,
         shareNetwork,
+        shopIcon,
         soraj,
         thumbsup,
         uLeaderboard,
@@ -543,8 +560,27 @@ class $AssetsImagesAuthGen {
 class $AssetsImagesBidGen {
   const $AssetsImagesBidGen();
 
+  /// File path: assets/images/bid/accept.png
+  AssetGenImage get accept =>
+      const AssetGenImage('assets/images/bid/accept.png');
+
+  /// File path: assets/images/bid/back-arrow.png
+  AssetGenImage get backArrow =>
+      const AssetGenImage('assets/images/bid/back-arrow.png');
+
+  /// File path: assets/images/bid/cancel.png
+  AssetGenImage get cancel =>
+      const AssetGenImage('assets/images/bid/cancel.png');
+
+  /// File path: assets/images/bid/check.png
+  AssetGenImage get check => const AssetGenImage('assets/images/bid/check.png');
+
   /// File path: assets/images/bid/clock.png
   AssetGenImage get clock => const AssetGenImage('assets/images/bid/clock.png');
+
+  /// File path: assets/images/bid/coin_in_hand.png
+  AssetGenImage get coinInHand =>
+      const AssetGenImage('assets/images/bid/coin_in_hand.png');
 
   /// File path: assets/images/bid/deal.png
   AssetGenImage get deal => const AssetGenImage('assets/images/bid/deal.png');
@@ -555,11 +591,26 @@ class $AssetsImagesBidGen {
   /// File path: assets/images/bid/map.png
   AssetGenImage get map => const AssetGenImage('assets/images/bid/map.png');
 
+  /// File path: assets/images/bid/star.png
+  AssetGenImage get star => const AssetGenImage('assets/images/bid/star.png');
+
   /// File path: assets/images/bid/store.png
   AssetGenImage get store => const AssetGenImage('assets/images/bid/store.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [clock, deal, down, map, store];
+  List<AssetGenImage> get values => [
+        accept,
+        backArrow,
+        cancel,
+        check,
+        clock,
+        coinInHand,
+        deal,
+        down,
+        map,
+        star,
+        store
+      ];
 }
 
 class $AssetsImagesExploreGen {

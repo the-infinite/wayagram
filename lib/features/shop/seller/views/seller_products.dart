@@ -18,6 +18,8 @@ import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 
+
+@Deprecated("No more in use")
 class SellerProducts extends ConsumerStatefulWidget {
   const SellerProducts({super.key});
 
@@ -26,13 +28,7 @@ class SellerProducts extends ConsumerStatefulWidget {
 }
 
 class _SellerProductsState extends ConsumerState<SellerProducts> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(manageShopVmProvider.notifier).getSellerShops();
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {

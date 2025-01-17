@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
@@ -156,5 +157,67 @@ class UploadLogo extends StatelessWidget {
             ],
           ),
         ));
+  }
+}
+
+class UploadProductImage extends StatelessWidget {
+  final VoidCallback onUpload;
+  final File? imagePath;
+  const UploadProductImage({super.key, required this.onUpload, this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return DottedBorder(
+        borderType: BorderType.RRect,
+        color: wayaTheme.colorScheme.greyColor300,
+        radius: Radius.circular(12),
+        padding: EdgeInsets.all(12),
+        dashPattern: [5, 5],
+        child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            child: SizedBox(
+              width: context.width * 0.3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: wayaTheme.colorScheme.secondaryColor2,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.cloud_upload_outlined,
+                        size: 30,
+                        color: wayaTheme.colorScheme.greyColor500,
+                      ),
+                    ),
+                  ),
+                  const Gap(10),
+                  InkWell(
+                    onTap: onUpload,
+                    child: Text(
+                      "Click to upload",
+                      textAlign: TextAlign.center,
+                      style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.customPrimary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  const Gap(8),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "PNG, JPG (max. 800px x 400px)",
+                    style: wayaTheme.textTheme.hintStyle,
+                  ),
+                  const Gap(20),
+                ],
+              ),
+            )));
   }
 }

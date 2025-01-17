@@ -48,6 +48,7 @@ class WayaColors {
   //
   static const black = Color(0xff000000);
   static const customBlack = Color(0xff343330);
+  static const customBlack200 = Color(0xff344054);
   //
   static const white = Color(0xffFFFFFF);
   static const white50 = Color(0x80FFFFFF);

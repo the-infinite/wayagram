@@ -10,6 +10,8 @@ class CreateShopModel {
   final String email;
   final MultipartFile logo;
   final String vendorId;
+  final String lga;
+  final String state;
 
   CreateShopModel(
       {required this.name,
@@ -18,7 +20,10 @@ class CreateShopModel {
       required this.phone,
       required this.email,
       required this.logo,
-      required this.vendorId});
+      required this.vendorId,
+      required this.lga,
+      required this.state
+      });
 
   factory CreateShopModel.fromJson(Map<String, dynamic> json) {
     return CreateShopModel(
@@ -28,7 +33,10 @@ class CreateShopModel {
         phone: json['phone'],
         email: json['email'],
         vendorId: json['vendorId'],
-        logo: json['logo']);
+        logo: json['logo'],
+        lga: json['lga'],
+        state: json['state']
+        );
   }
 
   Map<String, dynamic> toJson() {
@@ -39,7 +47,9 @@ class CreateShopModel {
       'phone': phone,
       'email': email,
       'logo': logo,
-      'vendorId': vendorId
+      'vendorId': vendorId,
+      'lga':lga,
+      'state': state
     };
   }
 }

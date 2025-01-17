@@ -6,6 +6,7 @@ import 'package:wayagram/features/shop/seller/views/add_product/steps/add_produc
 import 'package:wayagram/features/shop/seller/views/add_product/steps/basic_product_info.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/steps/preview_product.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/steps/pricing_and_delivery.dart';
+import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 
 class AddProduct extends ConsumerStatefulWidget {
   static const route = '/add-product';
@@ -45,7 +46,7 @@ class _AddProductState extends ConsumerState<AddProduct>
   Widget build(BuildContext context) {
     // TODO: implement build
     return WayaScaffoldWithProgressbar(
-        isLoading: false,
+        isLoading: ref.watch(addProductProvider).isLoading,
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
