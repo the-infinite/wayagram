@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -173,29 +174,29 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                   ],
                 ),
                 const Gap(20),
-                if (viewModel.includeDeliveryFee)
-                  FormField<String>(validator: (value) {
+                // if (viewModel.includeDeliveryFee)
+                //   FormField<String>(validator: (value) {
                    
 
-                    return null;
-                  }, builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                       WayaTextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: viewModel.deliveryPrice,
-                        hintText: 'Enter Price',
+                //     return null;
+                //   }, builder: (formState) {
+                //     return Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //        WayaTextFormField(
+                //         keyboardType: TextInputType.number,
+                //         controller: viewModel.deliveryPrice,
+                //         hintText: 'Enter Price',
 
-                        label: 'Delivery Price',
-                        suffixIcon:Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text("NGN", style: wayaTheme.textTheme.hintStyle),)
+                //         label: 'Delivery Price',
+                //         suffixIcon:Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text("NGN", style: wayaTheme.textTheme.hintStyle),)
                             
-                      ),
+                //       ),
                        
-                      ],
-                    );
-                  }),
-                const Gap(20),
+                //       ],
+                //     );
+                //   }),
+                // const Gap(20),
                 Text(
                   "Discount (Optional)",
                   style: wayaTheme.textTheme.hintStyle,
@@ -234,27 +235,18 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WayaSelectField(
-                            height: 0.3,
-                            label: "Discount Type",
-                            hintText: 'Select Discount Type',
-                            items: ref
-                                .read(addProductProvider.notifier)
-                                .restructuredCategory(),
-                            onSelected: (value) => ref
-                                .read(addProductProvider.notifier)
-                                .update(value, "discountType")),
-                        if (formState.hasError &&
-                            viewModel.discountType.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
-                            ),
-                          ),
+                        WayaTextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(3),
+                            FilteringTextInputFormatter.allow(RegExp(r'^(100|[1-9][0-9]?)$')),
+                          ],
+                          keyboardType: TextInputType.number,
+                            label: "Discount Percentage",
+                            hintText: 'Enter percentage between 1-100',
+                            controller: viewModel.discountPercentage ,
+                        ),
+                       
                       ],
                     );
                   }),

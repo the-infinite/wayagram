@@ -85,14 +85,15 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
       state = state.copyWith(isLoading: true);
       final userid = await _secureDataSource.getUserId();
       final response = await _authRepository.upgradeToBusiness(
-          payload: state.upgradeToBusinessModel, id: userid!);
+        payload: state.upgradeToBusinessModel,
+        id: userid!
+      );
       if (response.success) {
         // get the business data
-
         //  ref.watch(successfulSetupVmProvider).copyWith(business: )
       }
     } catch (e) {
-      print(e);
+      _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
     }

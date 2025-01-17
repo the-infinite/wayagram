@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -10,6 +11,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
+import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
@@ -30,7 +32,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final ShopData shop =
           ModalRoute.of(context)!.settings.arguments as ShopData;
-     ref.read(manageShopVmProvider.notifier).getCurrentShop(shop);
+      ref.read(manageShopVmProvider.notifier).getCurrentShop(shop);
     });
   }
 
@@ -46,7 +48,8 @@ class _ManageShopState extends ConsumerState<ManageShop> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(viewModel.singleShop!.name.capitalizeFirst ?? '', style: wayaTheme.textTheme.titleLarge),
+            Text(viewModel.singleShop!.name.capitalizeFirst ?? '',
+                style: wayaTheme.textTheme.titleLarge),
             const Gap(3),
             Text(
               'Manage your shop activity',
@@ -58,21 +61,22 @@ class _ManageShopState extends ConsumerState<ManageShop> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 WayaButton(
-                  callback: () {},
+                  callback: () {
+                    WayaNav.toNamed(AddProduct.route);
+                  },
                   border: Border.all(
                       width: 1, color: wayaTheme.colorScheme.customPrimary),
                   centerWidget: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.filter_alt_outlined,
-                        color: wayaTheme.colorScheme.customPrimary,
-                        size: 18,
-                      ),
+                      SvgPicture.asset(WayaAssests.icons.buttonIcon.path,
+                          colorFilter: ColorFilter.mode(
+                              wayaTheme.colorScheme.customPrimary,
+                              BlendMode.srcIn)),
                       const Gap(5),
                       Text(
-                        "Filter",
+                        "Add Product",
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customPrimary,
                             fontSize: 14,
@@ -82,6 +86,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                   ),
                   height: 35,
                   color: wayaTheme.colorScheme.transparent,
+                  radius: 6,
                 ),
                 const Gap(10),
                 WayaButton(
@@ -92,6 +97,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                       fontSize: 13,
                       fontWeight: FontWeight.w500),
                   height: 35,
+                  radius: 6,
                 )
               ],
             ),
@@ -147,7 +153,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 children: [
                   QuickActionWidget(
                     title: "Orders",
-                    icon: SvgPicture.asset('assets/icons/van-icon.svg'),
+                    icon: SvgPicture.asset(WayaAssests.icons.orderVan.path),
                     color: Color(0xffE7F6EC),
                     onTap: () {
                       WayaNav.toNamed('/seller-orders');
@@ -157,7 +163,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                   ),
                   QuickActionWidget(
                     title: "Wayagram Deals",
-                    icon: SvgPicture.asset('assets/icons/deal-icon.svg'),
+                    icon: SvgPicture.asset(WayaAssests.icons.dealIcon.path),
                     color: Color(0xffFFF0EB),
                     onTap: () {
                       WayaNav.toNamed('/waya-deal-ad');
@@ -166,7 +172,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                   QuickActionWidget(
                     title: "Disputes",
                     icon: SvgPicture.asset(
-                      'assets/icons/button-icon.svg',
+                      WayaAssests.icons.buttonIcon.path,
                       width: 28,
                       height: 28,
                       colorFilter:

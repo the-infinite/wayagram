@@ -119,7 +119,7 @@ class Explore extends ConsumerWidget {
             const Gap(10),
                  WayaButton(
                     callback: () {
-                      WayaNav.toNamed(AddProduct.route);
+                  //    WayaNav.toNamed(AddProduct.route);
                     },
                     color: wayaTheme.colorScheme.primar50,
                     centerWidget: Row(

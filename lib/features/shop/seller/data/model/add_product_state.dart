@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_model.dart';
 
@@ -22,6 +23,7 @@ class AddProductState {
   final bool includeDeliveryFee;
   final bool applyDiscount;
   final String productCategory;
+  final Select? selectedCategory;
 
   final String productType;
 
@@ -30,34 +32,41 @@ class AddProductState {
   final String productColor;
   final String pickUpOption;
   final String discountType;
+  final List<Select> categories;
   List<DocType> uploadedDocuments;
   File? productImage;
+  final TextEditingController discountPercentage;
+  final bool isLoading;
 
-  AddProductState({
-    TextEditingController? productName,
-    TextEditingController? productDescription,
-    TextEditingController? materialType,
-    TextEditingController? pricePerUnit,
-    TextEditingController? pickUpAddress,
-    TextEditingController? deliveryPrice,
-    this.productCategory = '',
-    this.productColor = '',
-    this.productCondition = '',
-    this.productType = '',
-    TextEditingController? productDepth,
-    TextEditingController? productHeight,
-    TextEditingController? productWidth,
-    this.discountType = '',
-    this.pickUpOption = '',
-    this.includeMeasurement = false,
-    this.applyDiscount = false,
-    this.includeDeliveryFee = false,
-    this.uploadedDocuments = const [],
-    this.shopId = '',
-    this.images = const [],
-    this.productImage,
-    this.isWayagramDeal = false
-  })  : productName = productName ?? TextEditingController(),
+  AddProductState(
+      {TextEditingController? productName,
+      TextEditingController? productDescription,
+      TextEditingController? materialType,
+      TextEditingController? pricePerUnit,
+      TextEditingController? pickUpAddress,
+      TextEditingController? deliveryPrice,
+      this.productCategory = '',
+      this.selectedCategory,
+      this.productColor = '',
+      this.productCondition = '',
+      this.productType = '',
+      TextEditingController? productDepth,
+      TextEditingController? productHeight,
+      TextEditingController? productWidth,
+      this.discountType = '',
+      this.pickUpOption = '',
+      this.includeMeasurement = false,
+      this.applyDiscount = false,
+      this.includeDeliveryFee = false,
+      this.uploadedDocuments = const [],
+      this.shopId = '',
+      this.images = const [],
+      this.productImage,
+      this.categories = const [],
+      TextEditingController? discountPercentage,
+      this.isLoading  = false,
+      this.isWayagramDeal = false})
+      : productName = productName ?? TextEditingController(),
         productDescription = productDescription ?? TextEditingController(),
         materialType = materialType ?? TextEditingController(),
         pricePerUnit = pricePerUnit ?? TextEditingController(),
@@ -65,6 +74,7 @@ class AddProductState {
         deliveryPrice = deliveryPrice ?? TextEditingController(),
         productDepth = productDepth ?? TextEditingController(),
         productHeight = productHeight ?? TextEditingController(),
+        discountPercentage = discountPercentage ?? TextEditingController(),
         productWidth = productWidth ?? TextEditingController();
 
   AddProductState copyWith(
@@ -78,6 +88,7 @@ class AddProductState {
       TextEditingController? productHeight,
       TextEditingController? productDepth,
       String? productCategory,
+      Select? selectedCategory,
       String? productColor,
       String? productCondition,
       String? productType,
@@ -87,9 +98,12 @@ class AddProductState {
       bool? applyDiscount,
       bool? includeDeliveryFee,
       List<DocType>? uploadedDocuments,
+      TextEditingController? discountPercentage,
       List<MultipartFile>? images,
       File? productImage,
       bool? isWayagramDeal,
+      List<Select>? categories,
+      bool? isLoading,
       String? shopId}) {
     return AddProductState(
         productName: productName ?? this.productName,
@@ -114,6 +128,10 @@ class AddProductState {
         productImage: productImage ?? this.productImage,
         shopId: shopId ?? this.shopId,
         isWayagramDeal: isWayagramDeal ?? this.isWayagramDeal,
+        categories: categories ?? this.categories,
+        discountPercentage: discountPercentage ?? this.discountPercentage,
+        selectedCategory: selectedCategory ?? this.selectedCategory,
+        isLoading: isLoading ?? this.isLoading,
         images: images ?? this.images);
   }
 
@@ -122,19 +140,19 @@ class AddProductState {
         name: productName.text,
         description: productDescription.text,
         shopId: shopId,
-        categoryId: productCategory,
+        categoryId: selectedCategory!.value,
         condition: productCondition,
         price: pricePerUnit.text,
         options: pickUpOption,
         wayagramDeal: isWayagramDeal,
-        discountTypeId: discountType,
+        discountTypeId: 'a575da9a-aa72-4222-bcf8-9345994b35b3',
         height: productHeight.text,
         width: productWidth.text,
         depth: productDepth.text,
         pickupAddress: pickUpAddress.text,
-        deliveryCharge: deliveryPrice.text,
+        deliveryCharge: includeDeliveryFee,
         materialType: materialType.text,
-        discountPercentage: '',
+        discountPercentage: discountPercentage.text,
         images: images);
   }
 }

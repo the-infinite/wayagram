@@ -2,21 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
-import 'package:wayagram/features/shop/seller/data/repo/seller_repository.dart';
+import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
 
 class ManageShopVm extends StateNotifier<ManageShopState> {
-  final SellerRepository _sellerRepository;
+  final ShopRepository _shopRepository;
   final WayaSecureDataSource _secureDataSource;
   final Ref ref;
 
   final _logger = getLogger('ManageShopVm');
 
-  ManageShopVm(this._sellerRepository, this._secureDataSource, this.ref)
+  ManageShopVm(this._shopRepository, this._secureDataSource, this.ref)
       : super(ManageShopState.initial());
 
   List<Map<String, dynamic>> salesMetrics = [
@@ -37,7 +36,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _sellerRepository.getShopBySellerId(businessId!);
+      final response = await _shopRepository.getShopBySellerId(businessId!);
 
       if (response.data['statusCode'] == 400 &&
           response.data['data'] == 'Shop not found') {
@@ -73,5 +72,5 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
 final manageShopVmProvider =
     StateNotifierProvider.autoDispose<ManageShopVm, ManageShopState>((ref) {
-  return ManageShopVm(SellerRepository(), WayaSecureDataSource(), ref);
+  return ManageShopVm(ShopRepository(), WayaSecureDataSource(), ref);
 });

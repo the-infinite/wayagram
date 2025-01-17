@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,13 +11,23 @@ import 'package:wayagram/features/auth/add_business_account/vm/add_business_acco
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
+import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
+import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
+import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
+import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 
 final addProductProvider = StateNotifierProvider<AddProductVm, AddProductState>(
-    (ref) => AddProductVm(ref));
+    (ref) => AddProductVm(ShopRepository(), ref));
 
 class AddProductVm extends StateNotifier<AddProductState> {
+  final ShopRepository _shopRepository;
   final Ref ref;
-  AddProductVm(this.ref) : super(AddProductState());
+  AddProductVm(this._shopRepository, this.ref) : super(AddProductState()) {
+    state = state.copyWith(isWayagramDeal: false);
+    state =
+        state.copyWith(shopId: ref.watch(manageShopVmProvider).singleShop!.id);
+  }
   final ImagePicker _picker = ImagePicker();
 
   void updateIncludeMeasurement(bool value) {
@@ -31,25 +42,35 @@ class AddProductVm extends StateNotifier<AddProductState> {
     state = state.copyWith(includeDeliveryFee: value);
   }
 
-  void addFile(File? file, String type) {
-    if (file != null) {
-      state.uploadedDocuments.add(
-          DocType(file: file, type: type, name: file.path.split('/').last));
-    }
+  void removeFile(int index) {
+    state.uploadedDocuments.removeAt(index);
     state = state.copyWith(uploadedDocuments: state.uploadedDocuments);
   }
 
-  void removeFile(String type) {
-    state.uploadedDocuments.removeWhere((doc) => doc.type == type);
-    state = state.copyWith(uploadedDocuments: state.uploadedDocuments);
-  }
+  // void uploadImage() {
+  //   _picker.pickImage(source: ImageSource.gallery).then((value) {
+  //     if (value != null) {
+  //       File file = File(value.path);
+  //       state = state.copyWith(productImage: file);
+  //     }
+  //   });
+  // }
 
-  void uploadImage() {
-    _picker.pickImage(source: ImageSource.gallery).then((value) {
-      if (value != null) {
-        File file = File(value.path);
-        state = state.copyWith(productImage: file);
+  void uploadImages() {
+    _picker.pickMultiImage().then((value) {
+      if (value.isNotEmpty) {
+        List<DocType> updatedDocuments = List.from(state.uploadedDocuments);
+        for (var image in value) {
+          File file = File(image.path);
+          updatedDocuments.add(DocType(
+              file: file, type: 'image', name: file.path.split('/').last));
+        }
+        state = state.copyWith(uploadedDocuments: updatedDocuments);
+      } else {
+        print("No images were selected.");
       }
+    }).catchError((error) {
+      print("Error picking images: $error");
     });
   }
 
@@ -59,7 +80,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
     Select(label: 'Both', value: 'Both')
   ];
 
-    List<Select> conditions = [
+  List<Select> conditions = [
     Select(label: 'New', value: 'New'),
     Select(label: 'Used', value: 'Used'),
   ];
@@ -71,10 +92,65 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }).toList();
   }
 
+  Future<void> allCategories() async {
+    try {
+      final response = await _shopRepository.getAllCategories();
+
+      if (response.success) {
+        CategoryResponseModel responseModel =
+            CategoryResponseModel.fromJson(response.data);
+
+        final List<CategoryData?> categories = responseModel.data;
+        final List<Select> selectCategories = categories.map((val) {
+          return Select(label: val!.name, value: val.id);
+        }).toList();
+
+        state = state.copyWith(categories: selectCategories);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> onSubmit(BuildContext context) async {
+    try {
+      state = state.copyWith(isLoading: true);
+
+      List<MultipartFile> addedimages = [];
+
+      for (DocType doc in state.uploadedDocuments) {
+        final imgPartFile = await WayaHelpers.formattedImage(doc.file);
+        addedimages.add(imgPartFile);
+      }
+      state = state.copyWith(images: addedimages);
+
+      final response =
+          await _shopRepository.createProduct(state.addProductModel);
+      if (response.success && context.mounted) {
+        WayaUtils.showNotice(
+            context: context,
+            title: "Product Added Successfully! 🎉",
+            message:
+                "Your product is now live in your shop and ready \n for customers to discover.",
+            onPress: () => WayaNav.toNamed(ManageShop.route),
+            icon: Image.asset('assets/images/shop/add-product-success.png'),
+            buttonText: 'Add Another Product',
+            secondButtonText: 'Go to Shop',
+            onCancel: () => WayaNav.toNamed(BottomView.route, arguments: 1));
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   void update(Select value, String name) {
     switch (name) {
       case "productCategory":
-        state = state.copyWith(productCategory: value.value);
+        state = state.copyWith(productCategory: value.label);
+        state = state.copyWith(selectedCategory: value);
+
       case "productCondition":
         state = state.copyWith(productCondition: value.value);
       case "productType":
