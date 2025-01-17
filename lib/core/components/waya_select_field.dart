@@ -9,11 +9,12 @@ import 'package:wayagram/core/utils/utils.dart';
 
 class WayaSelectField extends ConsumerWidget {
   final String? label;
+  final String? value;
   final double? height;
   final String hintText;
   final BorderRadius? radius;
   final List<Select> items;
-  final Function(Select value) onSelected;
+  final  Function(Select value) onSelected;
   final String uniqueKey;
 
   const WayaSelectField(
@@ -23,8 +24,9 @@ class WayaSelectField extends ConsumerWidget {
       this.height = 48,
       required this.items,
       required this.onSelected,
+      this.value = '',
       this.radius,
-       this.uniqueKey = ''});
+      this.uniqueKey = ''});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,13 +60,13 @@ class WayaSelectField extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(viewModel.label.isEmpty ? hintText : viewModel.label,
+                    Text((value == null || value!.isEmpty ) ? hintText :value!,
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
                             ?.wayaCopyWith(
                               fontSize: 14,
-                              color: viewModel.label.isEmpty
+                              color: (value == null || value!.isEmpty )
                                   ? wayaTheme.colorScheme.greyColor300
                                   : wayaTheme.colorScheme.customBlack,
                             )),
@@ -107,13 +109,14 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
       List<Select> items, Function(Select value) onSelected) async {
     final result = await WayaUtils.showSelectModal(
         context: context, title: title, items: items);
-    _label = result.label;
-    onSelected(result);
+ onSelected(result);
 
     notifyListeners();
   }
 }
 
-final wayaSelectFieldViewModelProvider = ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>((ref, uniqueKey) {
+final wayaSelectFieldViewModelProvider =
+    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>(
+        (ref, uniqueKey) {
   return WayaSelectFieldViewModel(ref);
 });

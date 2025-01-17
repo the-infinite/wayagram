@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
+import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
+import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/views/seller_shop/seller_shop.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 import 'package:gap/gap.dart';
@@ -26,8 +31,9 @@ class _WayaShopState extends ConsumerState<WayaShop>
     final wayaTheme = Theme.of(context);
 
     return WayaScaffold(
-        isLoading: false,
+        isLoading: ref.watch(createShopVmProvider).isLoading,
         isScrollable: true,
+        progressIndicator: loadingState(context: context),
         onTapBackButton: () =>
             Navigator.pushNamed(context, BottomView.route, arguments: 0),
         title: 'Shop',
@@ -59,6 +65,44 @@ class _WayaShopState extends ConsumerState<WayaShop>
             if (_selectedIndex == 1) AllOrders(),
             if (_selectedIndex == 2) SellerShop()
           ],
+        ),
+        floatingActionButton: Visibility(
+          visible: ref.read(successfulSetupVmProvider).user!.user!.role!.name !=
+              'PERSONAL' && _selectedIndex == 2,
+          child: SizedBox(
+            height: 50,
+            width: 50,
+            child: WayaButton(
+              callback: () {
+                WayaNav.toNamed(CreateShop.route);
+              },
+              height: 50,
+              centerWidget: Center(
+                child: Icon(
+                  Icons.add,
+                  color: wayaTheme.colorScheme.white,
+                  size: 40,
+                ),
+              ),
+            ),
+          ),
         ));
+  }
+
+  Widget loadingState({required BuildContext context}) {
+    final wayaTheme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CircularProgressIndicator(),
+        SizedBox(height: 10),
+        Text(
+          "Creating your shop",
+          style: wayaTheme.textTheme.bodyMedium?.copyWith(
+              color: wayaTheme.colorScheme.customPrimary,
+              fontWeight: FontWeight.w600),
+        ),
+      ],
+    );
   }
 }

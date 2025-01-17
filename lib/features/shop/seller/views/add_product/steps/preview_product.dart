@@ -6,6 +6,9 @@ import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/shop/seller/views/add_product/steps/add_product_images.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 
@@ -14,7 +17,10 @@ class PreviewProduct extends ConsumerStatefulWidget {
   final Function gotoPreviousTab;
   final bool isWayagramDeal;
   const PreviewProduct(
-      {super.key, required this.goBack, required this.gotoPreviousTab, this.isWayagramDeal =false});
+      {super.key,
+      required this.goBack,
+      required this.gotoPreviousTab,
+      this.isWayagramDeal = false});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PreviewProductState();
@@ -25,6 +31,7 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final provider = ref.watch(addProductProvider.notifier);
+    final viewModel = ref.watch(addProductProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,64 +48,78 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
           title: 'Product Images',
         ),
         const Gap(30),
-        Text(
-          "Product Thumbnail",
-          style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                fontSize: 14,
-                color: wayaTheme.colorScheme.greyColor900,
-              ),
-        ),
-        const Gap(10),
-        Container(
-          height: 280,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.white,
-            borderRadius: BorderRadius.circular(12),
-            border:
-                Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
-          ),
-          child: WayaImage(
-            imageUrl:
-                'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
-            height: 250,
-            fit: BoxFit.contain,
-          ),
-        ),
-        const Gap(15),
-        Text(
-          "Front, Left, Right, and Back View",
-          style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                fontSize: 14,
-                color: wayaTheme.colorScheme.greyColor900,
-              ),
-        ),
-        const Gap(10),
         GridView.builder(
-            itemCount: 4,
-            physics: const NeverScrollableScrollPhysics(),
+            itemCount: viewModel.uploadedDocuments.length,
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                mainAxisSpacing: 0,
-                childAspectRatio: 1,
-                crossAxisSpacing: 8),
+                crossAxisCount: 3,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1),
             itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                      color: wayaTheme.colorScheme.greyColor300, width: 1),
-                ),
-                child: WayaImage(
-                  imageUrl:
-                      'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
-                  height: 100,
-                  fit: BoxFit.contain,
-                ),
-              );
+              return AddedImageWidget(
+                  ref: ref,
+                  id: index,
+                  imagePath: viewModel.uploadedDocuments[index].file);
             }),
+        // Text(
+        //   "Product Thumbnail",
+        //   style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+        //         fontSize: 14,
+        //         color: wayaTheme.colorScheme.greyColor900,
+        //       ),
+        // ),
+        // const Gap(10),
+        // Container(
+        //   height: 280,
+        //   width: double.infinity,
+        //   decoration: BoxDecoration(
+        //     color: wayaTheme.colorScheme.white,
+        //     borderRadius: BorderRadius.circular(12),
+        //     border:
+        //         Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
+        //   ),
+        //   child: WayaImage(
+        //     imageUrl:
+        //         'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
+        //     height: 250,
+        //     fit: BoxFit.contain,
+        //   ),
+        // ),
+        // const Gap(15),
+        // Text(
+        //   "Front, Left, Right, and Back View",
+        //   style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+        //         fontSize: 14,
+        //         color: wayaTheme.colorScheme.greyColor900,
+        //       ),
+        // ),
+        // const Gap(10),
+        // GridView.builder(
+        //     itemCount: 4,
+        //     physics: const NeverScrollableScrollPhysics(),
+        //     shrinkWrap: true,
+        //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //         crossAxisCount: 4,
+        //         mainAxisSpacing: 0,
+        //         childAspectRatio: 1,
+        //         crossAxisSpacing: 8),
+        //     itemBuilder: (context, index) {
+        //       return Container(
+        //         decoration: BoxDecoration(
+        //           color: wayaTheme.colorScheme.white,
+        //           borderRadius: BorderRadius.circular(8),
+        //           border: Border.all(
+        //               color: wayaTheme.colorScheme.greyColor300, width: 1),
+        //         ),
+        //         child: WayaImage(
+        //           imageUrl:
+        //               'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
+        //           height: 100,
+        //           fit: BoxFit.contain,
+        //         ),
+        //       );
+        //     }),
         const Gap(30),
         EditHeader(
           onTap: () {
@@ -108,10 +129,13 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
         ),
         const Gap(30),
         AboutProduct(
-            title: 'Product Name',
-            content: 'Dr Teal Body Wash Glow & Radiance'),
+            title: 'Product Name', content: viewModel.productName.text),
         const Gap(15),
-        AboutProduct(title: 'Product Category', content: 'SkinCare'),
+        AboutProduct(
+            title: 'Product Category',
+            content: viewModel.selectedCategory == null
+                ? ""
+                : viewModel.selectedCategory!.label),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,27 +145,30 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
             ),
             Expanded(
               child: AboutProduct(
-                  title: 'Product Condition', content: 'Brand New'),
+                  title: 'Product Condition',
+                  content: viewModel.productCondition),
             )
           ],
         ),
         const Gap(15),
         AboutProduct(
             title: 'Product Description',
-            content:
-                'Dr Teal’s Ultra Moisturizing Body Wash hydrates, conditions and moisturizes skin with Aloe Vera, Shea Butter and Vitamin E, while Pure Epsom Salt helps revitalize tired, achy muscles. Vitamin C promotes youthful, glowing, skin. Citrus essential oils help uplift mood. Made with Pure Epsom Salt to help revitalize tired, achy muscles Vitamin C promotes youthful, glowing, skin. Citrus essential oils help uplift mood. '),
+            content: viewModel.productDescription.text),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(title: 'Height', content: '12cm'),
+              child: AboutProduct(
+                  title: 'Height(cm)', content: viewModel.productHeight.text),
             ),
             Expanded(
-              child: AboutProduct(title: 'Width', content: '45cm'),
+              child: AboutProduct(
+                  title: 'Width(cm)', content: viewModel.productWidth.text),
             ),
             Expanded(
-              child: AboutProduct(title: 'Depth', content: '56cm'),
+              child: AboutProduct(
+                  title: 'Depth(cm)', content: viewModel.productDepth.text),
             )
           ],
         ),
@@ -153,7 +180,10 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
           title: 'Pricing & Delivery',
         ),
         const Gap(30),
-        AboutProduct(title: 'Price Per Unit', content: 'N 24,000'),
+        AboutProduct(
+            title: 'Price Per Unit',
+            content: WayaHelpers.formatPrice(
+                int.parse(viewModel.pricePerUnit.text))),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,12 +192,12 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
             Expanded(
               child: AboutProduct(
                   title: 'Delivery/Pickup Option',
-                  content: 'Available for pickup'),
+                  content: viewModel.pickUpOption),
             ),
             Expanded(
               child: AboutProduct(
                   title: 'PickUp Address',
-                  content: '62, Lekki Expressway, Lagos, Nigeria'),
+                  content: viewModel.pickUpAddress.text),
             )
           ],
         ),
@@ -175,21 +205,29 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: AboutProduct(title: 'Delivery Fee', content: 'N 5,000'),
-            ),
+            // Expanded(
+            //   child: AboutProduct(
+            //       title: 'Delivery Fee',
+            //       content: WayaHelpers.formatPrice(
+            //           int.parse(viewModel.deliveryPrice.text))),
+            // ),
             Expanded(
               child: AboutProduct(
-                  title: 'Discount Type', content: 'Mega Sales 20% Discount'),
+                  title: 'Discount(%)',
+                  content: viewModel.discountPercentage.text),
             )
           ],
         ),
         const Gap(30),
         WayaButton(
-            text: 'Submit Product',
-            callback: () {
-              provider.submit(context, widget.isWayagramDeal);
-            }),
+            centerWidget: LoadingState(
+                loading: viewModel.isLoading, text: 'Submit Product'),
+            callback: !viewModel.isLoading
+                ? () {
+                    ref.read(addProductProvider.notifier).onSubmit(context);
+                    //   provider.submit(context, widget.isWayagramDeal);
+                  }
+                : null),
         const Gap(8),
         WayaButton(
             text: 'Go Back',
@@ -204,8 +242,6 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
     );
   }
 }
-
-
 
 class EditHeader extends StatelessWidget {
   final VoidCallback onTap;

@@ -53,6 +53,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                       color: _selectedIndex == index ? wayaTheme.colorScheme.customPrimary : Colors.black,
                       fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.bold,
                       fontSize: 12
+
                     ),
                   ),
                 ),
@@ -124,6 +125,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                         return ContestAppliedCard();
                       },
                     ),
+
                   ],
                 ),
               ],
