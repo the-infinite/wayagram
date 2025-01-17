@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -12,18 +11,18 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
-import 'package:wayagram/features/shop/seller/data/repo/seller_repository.dart';
+import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 
 class CreateShopVm extends StateNotifier<CreateShopState> {
-  final SellerRepository _sellerRepository;
+  final ShopRepository _shopRepository;
   final ImagePicker _picker;
   final WayaSecureDataSource _secureDataSource;
   final SuccessfulSetUpState _setUpState;
   final Ref ref;
 
   final _logger = getLogger('CreateShopVm');
-  CreateShopVm(this._sellerRepository, this._picker, this._secureDataSource,
+  CreateShopVm(this._shopRepository, this._picker, this._secureDataSource,
       this._setUpState, this.ref)
       : super(CreateShopState()) {
     state = state.copyWith(vendorId: _setUpState.business?.id);
@@ -49,10 +48,10 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
         state = state.copyWith(logo: shopLogo);
       }
       final response =
-          await _sellerRepository.createShop(state.createShopModel);
+          await _shopRepository.createShop(state.createShopModel);
 
       _logger.i(response.data);
-      //P await ref.read(manageShopVmProvider.notifier).refreshShops();
+       await ref.read(manageShopVmProvider.notifier).refreshShops();
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -105,5 +104,5 @@ final createShopVmProvider =
     StateNotifierProvider<CreateShopVm, CreateShopState>((ref) {
   final setUp = ref.watch(successfulSetupVmProvider);
   return CreateShopVm(
-      SellerRepository(), ImagePicker(), WayaSecureDataSource(), setUp, ref);
+      ShopRepository(), ImagePicker(), WayaSecureDataSource(), setUp, ref);
 });

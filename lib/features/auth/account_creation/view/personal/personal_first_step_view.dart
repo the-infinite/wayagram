@@ -525,7 +525,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               ),
                           ],
                         );
-                      }))
+                      })
+                      )
                     ],
                   ),
                   const Gap(10),

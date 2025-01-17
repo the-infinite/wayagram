@@ -3,8 +3,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/shop/seller/views/seller_shop/widgets/single_shop_card.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 
@@ -18,10 +20,21 @@ class SellerShop extends ConsumerStatefulWidget {
 class _SellerShopState extends ConsumerState<SellerShop> {
   @override
   void initState() {
-    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(manageShopVmProvider.notifier).getSellerShops();
+      if (ref.read(manageShopVmProvider).isPersonalNotUpgradedToBusiness) {
+        WayaUtils.showNotice(
+            context: context,
+            title: "You don't Have a Shop Yet",
+            message: 'Please upgrade to a business account to create a shop',
+            onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
+            buttonText: 'Ugrade to Business',
+            secondButtonText: 'Cancel',
+            icon: Image.asset('assets/images/cp-shop.png'),
+            onCancel: Navigator.of(context).pop);
+      }
     });
+    super.initState();
   }
 
   @override
@@ -96,7 +109,7 @@ Widget buildSellerShopSkeleton({required BuildContext context}) {
             color: wayaTheme.colorScheme.greyColor100,
             borderRadius: BorderRadius.circular(8)),
       ),
-       const Gap(3),
+      const Gap(3),
       buildShopCardLoadingState(context: context),
       const Gap(20),
       Container(
@@ -106,7 +119,7 @@ Widget buildSellerShopSkeleton({required BuildContext context}) {
             color: wayaTheme.colorScheme.greyColor100,
             borderRadius: BorderRadius.circular(8)),
       ),
-       const Gap(3),
+      const Gap(3),
       buildShopCardLoadingState(context: context),
     ],
   );

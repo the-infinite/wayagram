@@ -7,6 +7,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
+import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_additional_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 
@@ -20,11 +21,20 @@ class CreateShop extends ConsumerStatefulWidget {
 
 class _CreateShopState extends ConsumerState<CreateShop> {
   final _formKey = GlobalKey<FormState>();
+
+   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+     
+      ref.read(createAdditionalShopVmProvider.notifier).fetchStates();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createShopVmProvider);
+    final viewModel = ref.watch(createAdditionalShopVmProvider);
     return WayaScaffold(
         isLoading: viewModel.isLoading,
         isScrollable: true,
@@ -39,7 +49,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                 UploadLogo(
                     imagePath: viewModel.image,
                     onUpload: () {
-                      ref.read(createShopVmProvider.notifier).uploadFile();
+                      ref.read(createAdditionalShopVmProvider.notifier).uploadFile();
                     }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
@@ -154,6 +164,43 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                     ],
                   );
                 }),
+                 const Gap(10),
+                  FormField<String>(validator: (value) {
+                    if (viewModel.email.text.isEmpty) {
+                      return 'Email is required';
+                    }
+                    final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                    if (!regexp.hasMatch(viewModel.email.text)) {
+                      return 'Invalid email address';
+                    }
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: viewModel.email,
+                          hintText: 'example@gmail.com',
+                          borderColor:
+                              formState.hasError && viewModel.email.text.isEmpty
+                                  ? wayaTheme.colorScheme.error
+                                  : null,
+                          label: 'Email Address',
+                        ),
+                        if (formState.hasError && viewModel.email.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
                   if (viewModel.description.text.isEmpty) {
@@ -178,6 +225,72 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                       ),
                       if (formState.hasError &&
                           viewModel.description.text.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(10),
+                FormField<String>(validator: (value) {
+                  if (viewModel.state.isEmpty) {
+                    return 'State is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaSelectField(
+                          uniqueKey: 'shop-state',
+                          label: "State",
+                          value: viewModel.state,
+                          hintText: 'Select State',
+                          items: viewModel.states,
+                          onSelected: (value) => ref
+                              .read(createAdditionalShopVmProvider.notifier)
+                              .selectState(value)),
+                      if (formState.hasError && viewModel.state.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(10),
+                FormField<String>(validator: (value) {
+                  if (viewModel.lga.isEmpty) {
+                    return 'LGA is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaSelectField(
+                          uniqueKey: 'shop-lga',
+                          label: "LGA",
+                          hintText: 'Select LGA',
+                          value: viewModel.lga,
+                          items: viewModel.lgas,
+                          onSelected: (value) => ref
+                              .read(createAdditionalShopVmProvider.notifier)
+                              .selectLGA(value)),
+                      if (formState.hasError && viewModel.lga.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -232,11 +345,11 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                 const Gap(30),
                 WayaButton(
                     callback: () {
-                      // if (_formKey.currentState!.validate()) {
-                      //   ref
-                      //       .read(createShopVmProvider.notifier)
-                      //       .createSellerShop(context);
-                      // }
+                      if (_formKey.currentState!.validate()) {
+                        ref
+                            .read(createAdditionalShopVmProvider.notifier)
+                            .createSellerShop();
+                      }
                     },
                     text: 'Create Shop'),
               ],

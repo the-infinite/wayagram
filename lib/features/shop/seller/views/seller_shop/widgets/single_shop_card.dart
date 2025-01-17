@@ -86,7 +86,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {
-                              WayaNav.toNamed(ManageShop.route);
+                              WayaNav.toNamed(ManageShop.route, arguments: widget.shop);
                             },
                             asset: WayaAssests.icons.bShop.path,
                             text: "Shop Dashboard"),
