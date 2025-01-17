@@ -7,6 +7,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/steps/add_product_images.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
@@ -219,11 +220,14 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
         ),
         const Gap(30),
         WayaButton(
-            text: 'Submit Product',
-            callback: () {
-              ref.read(addProductProvider.notifier).onSubmit(context);
-              //   provider.submit(context, widget.isWayagramDeal);
-            }),
+            centerWidget: LoadingState(
+                loading: viewModel.isLoading, text: 'Submit Product'),
+            callback: !viewModel.isLoading
+                ? () {
+                    ref.read(addProductProvider.notifier).onSubmit(context);
+                    //   provider.submit(context, widget.isWayagramDeal);
+                  }
+                : null),
         const Gap(8),
         WayaButton(
             text: 'Go Back',
