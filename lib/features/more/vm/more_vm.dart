@@ -64,7 +64,9 @@ class MoreVm {
           asset: WayaAssests.icons.mPoll.path,
           content: "Create both paid and free poll for your different audience",
           title: "Poll & Vote",
-          onTap: () {}),
+          onTap: () {
+            WayaNav.toNamed('/poll-and-voting');
+          }),
       MoreOptionModel(
           asset: WayaAssests.icons.mDonation.path,
           content: "Create Donation Posts and also help people in need",
