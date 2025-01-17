@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:gap/gap.dart';
@@ -26,14 +24,14 @@ class _SellerShopState extends ConsumerState<SellerShop> {
       ref.read(manageShopVmProvider.notifier).getSellerShops();
       if (ref.read(manageShopVmProvider).isPersonalNotUpgradedToBusiness) {
         WayaUtils.showNotice(
-          context: context,
-          title: "You don't Have a Shop Yet",
-          message: 'Please upgrade to a business account to create a shop',
-          onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
-          buttonText: 'Ugrade to Business',
-          secondButtonText: 'Cancel',
-          icon: Image.asset('assets/images/cp-shop.png'),
-        );
+            context: context,
+            title: "You don't Have a Shop Yet",
+            message: 'Please upgrade to a business account to create a shop',
+            onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
+            buttonText: 'Ugrade to Business',
+            secondButtonText: 'Cancel',
+            icon: Image.asset('assets/images/cp-shop.png'),
+            onCancel: Navigator.of(context).pop);
       }
     });
     super.initState();

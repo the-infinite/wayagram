@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
@@ -11,10 +12,12 @@ import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to
 class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
   final AuthRepository _authRepository;
   final WayaLocalDataSource _localDataSource;
+  final WayaSecureDataSource _secureDataSource;
   final _logger = getLogger('Upgrade');
   final Ref ref;
 
-  UpgradeToBusinessVm(this._authRepository, this._localDataSource, this.ref)
+  UpgradeToBusinessVm(this._authRepository, this._localDataSource,
+      this._secureDataSource, this.ref)
       : super(UpgradeToBusinessState()) {
     final user = ref.watch(successfulSetupVmProvider).user!.user;
     state =
@@ -80,8 +83,9 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
   Future<void> onSubmit() async {
     try {
       state = state.copyWith(isLoading: true);
-      final response =
-          await _authRepository.upgradeToBusiness(state.upgradeToBusinessModel);
+      final userid = await _secureDataSource.getUserId();
+      final response = await _authRepository.upgradeToBusiness(
+          payload: state.upgradeToBusinessModel, id: userid!);
       if (response.success) {
         // get the business data
 
@@ -190,5 +194,6 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
 
 final upgradeToBusinessVmProvider =
     StateNotifierProvider<UpgradeToBusinessVm, UpgradeToBusinessState>((ref) {
-  return UpgradeToBusinessVm(AuthRepository(), WayaLocalDataSource(), ref);
+  return UpgradeToBusinessVm(
+      AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource(), ref);
 });

@@ -83,9 +83,9 @@ class AuthRepository extends BaseRepository {
   }
 
 
-    Future<WayaRequestResponse> upgradeToBusiness(UpgradeToBusinessModel payload) {
+    Future<WayaRequestResponse> upgradeToBusiness({required UpgradeToBusinessModel payload, required String id}) {
     return post(
-        '$serviceUrl/client/users/:userId/upgrade-to-business', payload.toJson());
+        '$serviceUrl/client/users/$id/upgrade-to-business', payload.toJson());
   }
 
 ///

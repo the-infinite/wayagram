@@ -95,11 +95,13 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                     children: [
                       WayaSelectField(
                           height: 0.3,
+                          uniqueKey: 'pickup-option',
                           label: "Delivery/Pickup Option",
                           hintText: 'Select Delivery or Pickup Option',
+                          value: viewModel.pickUpOption,
                           items: ref
                               .read(addProductProvider.notifier)
-                              .restructuredCategory(),
+                              .options,
                           onSelected: (value) => ref
                               .read(addProductProvider.notifier)
                               .update(value, "pickUpOption")),
@@ -118,9 +120,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-                  if (viewModel.pickUpAddress.text.isEmpty) {
-                    return 'Pickup is required';
-                  }
+             
 
                   return null;
                 }, builder: (formState) {
@@ -142,17 +142,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                           size: 24,
                         ),
                       ),
-                      if (formState.hasError &&
-                          viewModel.pickUpAddress.text.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
-                          ),
-                        ),
+                   
                     ],
                   );
                 }),
@@ -185,36 +175,23 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                 const Gap(20),
                 if (viewModel.includeDeliveryFee)
                   FormField<String>(validator: (value) {
-                    if (viewModel.deliveryPrice.text.isEmpty) {
-                      return 'Delivery fee is required';
-                    }
+                   
 
                     return null;
                   }, builder: (formState) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WayaSelectField(
-                            height: 0.3,
-                            label: "Discount Type",
-                            hintText: 'Select Discount Type',
-                            items: ref
-                                .read(addProductProvider.notifier)
-                                .restructuredCategory(),
-                            onSelected: (value) => ref
-                                .read(addProductProvider.notifier)
-                                .update(value, "discountType")),
-                        if (formState.hasError &&
-                            viewModel.deliveryPrice.text.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
-                            ),
-                          ),
+                       WayaTextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: viewModel.deliveryPrice,
+                        hintText: 'Enter Price',
+
+                        label: 'Delivery Price',
+                        suffixIcon:Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text("NGN", style: wayaTheme.textTheme.hintStyle),)
+                            
+                      ),
+                       
                       ],
                     );
                   }),

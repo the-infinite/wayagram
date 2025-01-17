@@ -150,6 +150,8 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                       children: [
                         WayaSelectField(
                             height: 0.3,
+                            uniqueKey: 'product-category',
+                            value: viewModel.productCategory,
                             label: "Product Category",
                             hintText: 'Select Product Category',
                             items: ref
@@ -174,40 +176,40 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                   }),
                   const Gap(10),
 
-                      FormField<String>(validator: (value) {
-                    if (viewModel.productType.isEmpty) {
-                      return 'Type is required';
-                    }
-                    return null;
-                  }, builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaSelectField(
-                            height: 0.3,
-                            label: "Product Type",
-                            hintText: 'Select Product Type',
-                            items: ref
-                                .read(addProductProvider.notifier)
-                                .restructuredCategory(),
-                            onSelected: (value) => ref
-                                .read(addProductProvider.notifier)
-                                .update(value, "productType")),
-                        if (formState.hasError &&
-                            viewModel.productType.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
-                            ),
-                          ),
-                      ],
-                    );
-                  }),
-                  const Gap(10),
+                  //     FormField<String>(validator: (value) {
+                  //   if (viewModel.productType.isEmpty) {
+                  //     return 'Type is required';
+                  //   }
+                  //   return null;
+                  // }, builder: (formState) {
+                  //   return Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       WayaSelectField(
+                  //           height: 0.3,
+                  //           label: "Product Type",
+                  //           hintText: 'Select Product Type',
+                  //           items: ref
+                  //               .read(addProductProvider.notifier)
+                  //               .restructuredCategory(),
+                  //           onSelected: (value) => ref
+                  //               .read(addProductProvider.notifier)
+                  //               .update(value, "productType")),
+                  //       if (formState.hasError &&
+                  //           viewModel.productType.isEmpty)
+                  //         Padding(
+                  //           padding: const EdgeInsets.only(top: 5),
+                  //           child: Text(
+                  //             formState.errorText!,
+                  //             style: TextStyle(
+                  //                 color: wayaTheme.colorScheme.error,
+                  //                 fontSize: 12),
+                  //           ),
+                  //         ),
+                  //     ],
+                  //   );
+                  // }),
+                  // const Gap(10),
                       FormField<String>(validator: (value) {
                     if (viewModel.productCondition.isEmpty) {
                       return 'Product Condition is required';
@@ -219,11 +221,13 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                       children: [
                         WayaSelectField(
                             height: 0.3,
-                            label: "Product Category",
-                            hintText: 'Select Product Category',
+                            uniqueKey: 'product-condition',
+                            label: "Product Conditon",
+                            value: viewModel.productCondition,
+                            hintText: 'Select Product Condition',
                             items: ref
                                 .read(addProductProvider.notifier)
-                                .restructuredCategory(),
+                                .conditions,
                             onSelected: (value) => ref
                                 .read(addProductProvider.notifier)
                                 .update(value, "productCondition")),
@@ -272,9 +276,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     Column(
                       children: [
                         FormField<String>(validator: (value) {
-                          if (viewModel.productHeight.text.isEmpty) {
-                            return 'Product Height is required';
-                          }
+                         
 
                           return null;
                         }, builder: (formState) {
@@ -282,7 +284,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               WayaTextFormField(
-                                keyboardType: TextInputType.text,
+                                keyboardType: TextInputType.number,
                                 controller: viewModel.productHeight,
                                 hintText: 'Enter Product Height',
                                 borderColor: formState.hasError &&
@@ -291,25 +293,13 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                                     : null,
                                 label: 'Product Height',
                               ),
-                              if (formState.hasError &&
-                                  viewModel.productHeight.text.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
-                                  ),
-                                ),
+                             
                             ],
                           );
                         }),
                         const Gap(10),
                         FormField<String>(validator: (value) {
-                          if (viewModel.productWidth.text.isEmpty) {
-                            return 'Product Width is required';
-                          }
+                         
 
                           return null;
                         }, builder: (formState) {
@@ -317,7 +307,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               WayaTextFormField(
-                                keyboardType: TextInputType.text,
+                                keyboardType: TextInputType.number,
                                 controller: viewModel.productWidth,
                                 hintText: 'Enter Product Width',
                                 borderColor: formState.hasError &&
@@ -326,25 +316,13 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                                     : null,
                                 label: 'Product Width',
                               ),
-                              if (formState.hasError &&
-                                  viewModel.productWidth.text.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
-                                  ),
-                                ),
+                             
                             ],
                           );
                         }),
                         const Gap(10),
                         FormField<String>(validator: (value) {
-                          if (viewModel.productDepth.text.isEmpty) {
-                            return 'Product Depth is required';
-                          }
+                        
 
                           return null;
                         }, builder: (formState) {
@@ -352,7 +330,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               WayaTextFormField(
-                                keyboardType: TextInputType.text,
+                                keyboardType: TextInputType.number,
                                 controller: viewModel.productDepth,
                                 hintText: 'Enter Product Depth',
                                 borderColor: formState.hasError &&
@@ -361,17 +339,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                                     : null,
                                 label: 'Product Depth',
                               ),
-                              if (formState.hasError &&
-                                  viewModel.productDepth.text.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
-                                  ),
-                                ),
+                              
                             ],
                           );
                         })

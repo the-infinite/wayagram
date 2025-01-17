@@ -422,7 +422,11 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
 
                   WayaButton(
                     callback: () async {
-                      if (_formKey.currentState!.validate()) {}
+                      if (_formKey.currentState!.validate()) {
+                        ref
+                            .read(upgradeToBusinessVmProvider.notifier)
+                            .onSubmit();
+                      }
                     },
                     text: 'Upgrade',
                   )
