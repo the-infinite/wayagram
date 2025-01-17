@@ -25,6 +25,7 @@ class BusinessAccountData {
   final String? verifiedAt;
   @JsonKey(name: '_v')
   final String? v;
+  final String? lga;
 
   BusinessAccountData({
     required this.id,
@@ -47,6 +48,7 @@ class BusinessAccountData {
     this.state,
     this.country,
     this.verifiedAt,
+    this.lga,
   });
 
   factory BusinessAccountData.fromJson(Map<String, dynamic> json) {
@@ -71,6 +73,7 @@ class BusinessAccountData {
       state: json['state'] as String?,
       country: json['country'] as String?,
       verifiedAt: json['verifiedAt'] as String?,
+      lga: json['lga'] as String?
     );
   }
 

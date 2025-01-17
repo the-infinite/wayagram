@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 
@@ -34,14 +35,15 @@ class _SuccessfulModalState extends State<SuccessfulModal> {
                 style: wayaTheme.textTheme.bodyMedium),
             SizedBox(height: 3.h),
             Text(
-              "Your contest is now live and visible to the public. Manage or \n share your contest details from your dashboard.",
+              "Your contest is now live and visible to the public.\n Manage or  share your contest details from your dashboard.",
 
               style: wayaTheme.textTheme.hintStyle, textAlign: TextAlign.center,),
 
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async{
-                WayaNav.toNamed("/contest-setting-content");
+                Navigator.pop(context);
+              //  WayaNav.toNamed("/contest-setting-content");
               },
               text: "Manage Contest",
             ),

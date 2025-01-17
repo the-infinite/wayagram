@@ -6,7 +6,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 class AboutUgtWidget extends StatelessWidget {
   final String title;
   final String content;
-
   const AboutUgtWidget({super.key, required this.title, required this.content});
 
   @override

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_model.dart';
 
 class CreateShopState {
@@ -14,6 +15,11 @@ class CreateShopState {
   final MultipartFile? logo;
   final File? image;
   final String vendorId;
+  final String lga;
+  final String state;
+   final List<Select> lgas;
+  final List<Select> states;
+  
   CreateShopState(
       {this.isLoading = false,
       TextEditingController? phone,
@@ -23,8 +29,11 @@ class CreateShopState {
       TextEditingController? name,
       this.image,
       this.logo,
-      this.vendorId = ''
-      })
+      this.lga = '',
+      this.state = '',
+           this.states = const [],
+      this.lgas = const [],
+      this.vendorId = ''})
       : phone = phone ?? TextEditingController(),
         address = address ?? TextEditingController(),
         email = email ?? TextEditingController(),
@@ -38,10 +47,13 @@ class CreateShopState {
       TextEditingController? email,
       TextEditingController? description,
       TextEditingController? name,
+      String? lga,
+      String? state,
+         List<Select>? states,
+      List<Select>? lgas,
       MultipartFile? logo,
       File? image,
-      String? vendorId
-      }) {
+      String? vendorId}) {
     return CreateShopState(
         isLoading: isLoading ?? this.isLoading,
         phone: phone ?? this.phone,
@@ -51,19 +63,25 @@ class CreateShopState {
         name: name ?? this.name,
         logo: logo ?? this.logo,
         image: image ?? this.image,
-        vendorId: vendorId ?? this.vendorId
+        vendorId: vendorId ?? this.vendorId,
+        lga: lga ??  this.lga,
+        state: state ?? this.state,
+        states: states ?? this.states,
+        lgas: lgas ?? this.lgas,
         );
   }
 
   CreateShopModel get createShopModel {
     return CreateShopModel(
-      phone: "+234${phone.text}",
-      address: address.text,
-      email: email.text,
-      description: description.text,
-      name: name.text,
-      logo: logo!,
-      vendorId: vendorId
-    );
+        phone: "+234${phone.text}",
+        address: address.text,
+        email: email.text,
+        description: description.text,
+        name: name.text,
+        logo: logo!,
+        vendorId: vendorId,
+        state: state,
+        lga: lga,
+        );
   }
 }

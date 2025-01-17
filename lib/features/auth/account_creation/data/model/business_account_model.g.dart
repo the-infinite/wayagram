@@ -28,6 +28,7 @@ BusinessAccountData _$BusinessAccountDataFromJson(Map<String, dynamic> json) =>
       state: json['state'] as String?,
       country: json['country'] as String?,
       verifiedAt: json['verifiedAt'] as String?,
+      lga: json['lga'] as String?,
     );
 
 Map<String, dynamic> _$BusinessAccountDataToJson(
@@ -53,4 +54,5 @@ Map<String, dynamic> _$BusinessAccountDataToJson(
       'country': instance.country,
       'verifiedAt': instance.verifiedAt,
       '_v': instance.v,
+      'lga': instance.lga,
     };

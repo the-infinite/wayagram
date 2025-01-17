@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -10,6 +9,7 @@ import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/ugt/widgets/about_ugt_widget.dart';
+import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 
 class ContestCard extends StatelessWidget {
   const ContestCard({super.key});
@@ -42,12 +42,27 @@ class ContestCard extends StatelessWidget {
                     width: context.width * 0.8,
                     child: Row(
                     children: [
-                      WayaImage(
-                        imageUrl: "",
+                      /*SvgPicture.asset(
+                        '',
+                        colorFilter: ColorFilter.mode(
+                            wayaTheme.colorScheme.success, BlendMode.srcIn),
+                      ),*/
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(45), // Adjust the radius as needed
+                        child: Image.asset(
+                          'assets/images/uni.png',
+                          width: 45,
+                          height: 45,
+                          fit: BoxFit.cover, // Ensures the image covers the area properly
+                        ),
+                      ),
+                      /*WayaImage(
+                        imageUrl: 'assets/images/destructive.png',
                         height: 45,
                         width: 45,
+                        fit:BoxFit.cover ,
                         radius: BorderRadius.circular(45),
-                      ),
+                      ),*/
                       const Gap(10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,15 +87,22 @@ class ContestCard extends StatelessWidget {
                     ],
                   ),
                   ),
-
                 ],
               ),
               const Gap(20),
-              WayaImage(
-                imageUrl: "",
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16), // Adjust the radius as needed
+                child: Image.asset(
+                  'assets/images/frameuni.png',
+                  height: 200,
+                  fit: BoxFit.cover, // Ensures the image covers the area properly
+                ),
+              ),
+              /*WayaImage(
+                imageUrl: "assets/images/frameuni.png",
                 height: 200,
                 radius: BorderRadius.circular(16),
-              ),
+              ),*/
               const Gap(20),
               Text(
                 "Discover and support the most talented students competing for the top spot! Browse through unique performances, vote for your favorite candidates, and watch them rise to the top",
@@ -97,7 +119,7 @@ class ContestCard extends StatelessWidget {
                       title: "Start Date", content: "21st of July 2024"),
                   const Gap(30),
                   AboutUgtWidget(
-                      title: "Start Date", content: "21st of July 2024"),
+                      title: "End Date", content: "21st of July 2024"),
                 ],
               ),
               const Gap(10),
@@ -105,7 +127,8 @@ class ContestCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AboutUgtWidget(title: "Status", content: "Ongoing", ),
+                  StatusOngoing(title: "Status", content: "Ongoing",),
+                //  AboutUgtWidget(title: "Status", content: "Ongoing", ),
                   const Gap(30),
                   AboutUgtWidget(title: "Prize", content: "N100,000"),
                   const Gap(30),
