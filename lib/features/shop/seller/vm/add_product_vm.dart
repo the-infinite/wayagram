@@ -112,7 +112,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }
   }
 
-  Future<void> onSubmit(BuildContext context) async {
+  Future<void> onSubmit(BuildContext context, {Function? onSuccess}) async {
     try {
       state = state.copyWith(isLoading: true);
 
@@ -124,9 +124,9 @@ class AddProductVm extends StateNotifier<AddProductState> {
       }
       state = state.copyWith(images: addedimages);
 
-      final response =
-          await _shopRepository.createProduct(state.addProductModel);
+      final response = await _shopRepository.createProduct(state.addProductModel);
       if (response.success && context.mounted) {
+        onSuccess?.call();
         WayaUtils.showNotice(
             context: context,
             title: "Product Added Successfully! 🎉",

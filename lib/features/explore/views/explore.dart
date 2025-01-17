@@ -179,7 +179,8 @@ class Explore extends ConsumerWidget {
               ),
             ),
           ),
-        ));
+        )
+        );
   }
 
   Widget _buildProductGrid(List<Product> products) {
