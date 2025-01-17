@@ -8,6 +8,11 @@ import 'package:wayagram/features/general_settings/change_pin/change_pin_page.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
+import 'package:wayagram/features/polls_and_voting/views/create_poll.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_summary.dart';
+import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart';
 import 'package:wayagram/features/quotation/buyer/views/buyer_checkout.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
@@ -108,6 +113,12 @@ class WayaAppRoutes {
     AllSellerBids.route: () => AllSellerBids(),
     ManageShop.route:() => ManageShop(),
     UpgradeToBusiness.route:() => UpgradeToBusiness()
+    CreatePoll.route: ()=> CreatePoll(),
+    PollAndVoting.route: ()=> PollAndVoting(),
+    AddChoices.route: ()=> AddChoices(),
+    PollSummary.route: () => PollSummary(),
+    PollDashboard.route: () => PollDashboard()
+
     
   };
 

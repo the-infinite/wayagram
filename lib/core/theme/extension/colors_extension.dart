@@ -48,6 +48,7 @@ extension WayaColorSchemeExtension on ColorScheme {
   // Black Colors
   Color get black => WayaColors.black;
   Color get customBlack => WayaColors.customBlack;
+  Color get customBlack200 => WayaColors.customBlack200;
 
   // White Colors
   Color get white => WayaColors.white;
