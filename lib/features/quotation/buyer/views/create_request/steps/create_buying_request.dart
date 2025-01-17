@@ -7,7 +7,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 
-import '../../../vm/create_request_vm.dart';
+import '../../../model/create_request_state_model.dart';
 
 class CreateBuyingRequest extends ConsumerStatefulWidget {
   final Function gotoNextTab;
@@ -128,6 +128,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                     children: [
                       WayaSelectField(
                           height: 0.3,
+                          uniqueKey: 'buyer_product_category',
                           label: "Product Category",
                           hintText: 'Select Product Category',
                           items: ref
@@ -267,6 +268,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                        children: [
                          WayaSelectField(
                              height: 0.3,
+                             uniqueKey: 'buyer_state',
                              label: "State of Purchase",
                              hintText: 'Select state',
                              items: ref
@@ -304,6 +306,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                          WayaSelectField(
                              height: 0.3,
                              label: "LGA",
+                             uniqueKey: 'buyer_lga',
                              hintText: 'Select LGA',
                              items: ref
                                  .read(createRequestProvider.notifier)
@@ -416,9 +419,9 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                   children: [
                     Switch(
                         value: viewModel.includeMeasurement,
-                        onChanged: (value) => ref
-                            .read(createRequestProvider.notifier)
-                            .updateIncludeMeasurement(value)),
+                        onChanged: (value){},
+                        //onChanged: (value) => ref.read(createRequestProvider.notifier).updateIncludeMeasurement(value)
+                    ),
                     const Gap(10),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
