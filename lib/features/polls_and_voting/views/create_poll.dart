@@ -49,8 +49,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
-            // Text("Create engaging polls that captivate and spark conversations in just a few clicks",
-            //     style: wayaTheme.textTheme.hintStyle),
+
             const Gap(30),
             Form(
                 key: _formKey,
@@ -201,8 +200,8 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                       );
                     }),
 
-                    const Gap(10),
-                    const Gap(10),
+                    const Gap(20),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -472,6 +471,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
     return GestureDetector(
       onTap: () {
         WayaNav.toNamed("/add-choices");
+
       },
       child: Row(
         children: [

@@ -23,6 +23,10 @@ class BuyerCheckout extends ConsumerStatefulWidget  {
 }
 
 class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
+
+  bool payWithWallet = false;
+  bool payWithWayaquick = false;
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -232,7 +236,15 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                     )
                   ],
                 ),
-                Container(
+                InkWell(
+                    onTap: (){
+                      setState(() {
+                        payWithWallet = true;
+                        payWithWayaquick = false;
+                      });
+                    },
+                    child: payWithWallet ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,))
+               /* Container(
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
@@ -246,7 +258,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                           shape: BoxShape.circle,
                         ),
                       )),
-                )
+                )*/
               ],
             ),
           ),
@@ -282,12 +294,20 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                     )
                   ],
                 ),
-                Container(
+                InkWell(
+                    onTap: (){
+                      setState(() {
+                        payWithWallet = false;
+                        payWithWayaquick = true;
+                      });
+                    },
+                    child: payWithWayaquick ? Image.asset('assets/images/polls/check.png', height: 20.h,):Image.asset('assets/images/polls/uncheck.png', height: 20.h,))
+               /* Container(
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle, border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300)),
-                )
+                )*/
               ],
             ),
           )

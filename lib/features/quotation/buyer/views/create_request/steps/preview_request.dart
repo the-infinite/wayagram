@@ -10,7 +10,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 
-import '../../../vm/create_request_vm.dart';
+import '../../../model/create_request_state_model.dart';
 
 class PreviewRequest extends ConsumerStatefulWidget {
   final Function(int index) goBack;
@@ -165,7 +165,6 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
             text: 'Find offers',
             callback: () {
               WayaNav.toNamed('/seeBuyer-bids');
-              //provider.submit(context, widget.isWayagramDeal);
             }),
         const Gap(8),
         WayaButton(
