@@ -20,7 +20,7 @@ class BuyRequests extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(bidVmProvider.notifier);
-    final productState = ref.watch(productsProvider);
+   
     return Column(
       children: [
         FilterWidget<Product>(allItems: [], hintText: 'Search Requests'),

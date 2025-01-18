@@ -24,8 +24,8 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(personalFirstStepProvider.notifier).fetchBusinessTypes();
-      ref.read(personalFirstStepProvider.notifier).fetchLocation();
+      ref.read(upgradeToBusinessVmProvider.notifier).fetchBusinessTypes();
+      ref.read(upgradeToBusinessVmProvider.notifier).fetchLocation();
     });
     super.initState();
   }
@@ -172,12 +172,12 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                         WayaSelectField(
                             height: 0.2,
                             uniqueKey: 'business-type',
-                            value: viewModel.businessTypeId,
+                            value: viewModel.businessTypeName,
                             label: "Business Type",
                             hintText: 'Select Business Type',
                             items: viewModel.businessTypes,
                             onSelected: (value) => ref
-                                .read(personalFirstStepProvider.notifier)
+                                .read(upgradeToBusinessVmProvider.notifier)
                                 .selectBizType(value)),
                         if (formState.hasError &&
                             viewModel.businessTypeId.isEmpty)
@@ -293,7 +293,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                             hintText: 'Select Country',
                             items: viewModel.countries,
                             onSelected: (value) => ref
-                                .read(personalFirstStepProvider.notifier)
+                                .read(upgradeToBusinessVmProvider.notifier)
                                 .selectCountry(value)),
                         if (formState.hasError && viewModel.country.isEmpty)
                           Padding(
@@ -329,7 +329,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                                   hintText: 'Select City',
                                   items: viewModel.cities,
                                   onSelected: (value) => ref
-                                      .read(personalFirstStepProvider.notifier)
+                                      .read(upgradeToBusinessVmProvider.notifier)
                                       .selectCity(value)),
                               if (formState.hasError && viewModel.city.isEmpty)
                                 Padding(
@@ -365,7 +365,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                                 hintText: 'Select State',
                                 items: viewModel.states,
                                 onSelected: (value) => ref
-                                    .read(personalFirstStepProvider.notifier)
+                                    .read(upgradeToBusinessVmProvider.notifier)
                                     .selectState(value)),
                             if (formState.hasError && viewModel.state.isEmpty)
                               Padding(
@@ -401,7 +401,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                             value: viewModel.lga,
                             items: viewModel.lgas,
                             onSelected: (value) => ref
-                                .read(personalFirstStepProvider.notifier)
+                                .read(upgradeToBusinessVmProvider.notifier)
                                 .selectLGA(value)),
                         if (formState.hasError && viewModel.lga.isEmpty)
                           Padding(

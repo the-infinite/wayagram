@@ -30,8 +30,7 @@ class _SellerShopState extends ConsumerState<SellerShop> {
             onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
             buttonText: 'Ugrade to Business',
             secondButtonText: 'Cancel',
-            icon: Image.asset('assets/images/cp-shop.png'),
-            onCancel: Navigator.of(context).pop);
+            icon: Image.asset('assets/images/cp-shop.png'));
       }
     });
     super.initState();

@@ -112,7 +112,7 @@ class WayaAppRoutes {
     CreateRequest.route: () => CreateRequest(),
     AllSellerBids.route: () => AllSellerBids(),
     ManageShop.route:() => ManageShop(),
-    UpgradeToBusiness.route:() => UpgradeToBusiness()
+    UpgradeToBusiness.route:() => UpgradeToBusiness(),
     CreatePoll.route: ()=> CreatePoll(),
     PollAndVoting.route: ()=> PollAndVoting(),
     AddChoices.route: ()=> AddChoices(),

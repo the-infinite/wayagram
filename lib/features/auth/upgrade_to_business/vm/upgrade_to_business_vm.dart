@@ -4,6 +4,7 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
@@ -25,16 +26,17 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
     state = state.copyWith(
         contactPhone: TextEditingController(text: user?.phoneNumber));
 
-    state = state.copyWith(city: user?.city);
-    state = state.copyWith(state: user?.state);
-    state = state.copyWith(country: user?.country);
-    state = state.copyWith(lga: user?.lga);
+    // state = state.copyWith(city: user?.city);
+    // state = state.copyWith(state: user?.state);
+    // state = state.copyWith(country: user?.country);
+    // state = state.copyWith(lga: user?.lga);
     state = state.copyWith(roleId: user?.roleId);
-    state = state.copyWith(accountTypeId: user?.accountTypeId);
+    // state = state.copyWith(accountTypeId: user?.accountTypeId);
   }
 
   void selectBizType(Select value) {
-    state = state.copyWith(businessTypeId: value.label);
+    state = state.copyWith(businessTypeId: value.value);
+    state = state.copyWith(businessTypeName: value.label);
     _localDataSource.saveSelectedBusinessType(value);
   }
 
@@ -85,11 +87,10 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
       state = state.copyWith(isLoading: true);
       final userid = await _secureDataSource.getUserId();
       final response = await _authRepository.upgradeToBusiness(
-        payload: state.upgradeToBusinessModel,
-        id: userid!
-      );
+          payload: state.upgradeToBusinessModel, id: userid!);
       if (response.success) {
         // get the business data
+        WayaNav.toNamed(AddBusinessAccountView.route);
         //  ref.watch(successfulSetupVmProvider).copyWith(business: )
       }
     } catch (e) {

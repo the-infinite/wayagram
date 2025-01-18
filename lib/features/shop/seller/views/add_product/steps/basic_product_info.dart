@@ -20,7 +20,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(addProductProvider.notifier).allCategories();
+      ref.read(addProductProvider.notifier).getAllCategories();
     });
     super.initState();
   }

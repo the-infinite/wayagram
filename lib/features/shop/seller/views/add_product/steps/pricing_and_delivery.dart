@@ -22,6 +22,14 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(addProductProvider.notifier).getAllDiscounts();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final viewModel = ref.watch(addProductProvider);
@@ -59,17 +67,19 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       WayaTextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: viewModel.pricePerUnit,
-                        hintText: 'Enter Price',
-                        borderColor: formState.hasError &&
-                                viewModel.pricePerUnit.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
-                        label: 'Price per Unit',
-                        suffixIcon:Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text("NGN", style: wayaTheme.textTheme.hintStyle),)
-                            
-                      ),
+                          keyboardType: TextInputType.number,
+                          controller: viewModel.pricePerUnit,
+                          hintText: 'Enter Price',
+                          borderColor: formState.hasError &&
+                                  viewModel.pricePerUnit.text.isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
+                          label: 'Price per Unit',
+                          suffixIcon: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            child: Text("NGN",
+                                style: wayaTheme.textTheme.hintStyle),
+                          )),
                       if (formState.hasError &&
                           viewModel.pricePerUnit.text.isEmpty)
                         Padding(
@@ -100,9 +110,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                           label: "Delivery/Pickup Option",
                           hintText: 'Select Delivery or Pickup Option',
                           value: viewModel.pickUpOption,
-                          items: ref
-                              .read(addProductProvider.notifier)
-                              .options,
+                          items: ref.read(addProductProvider.notifier).options,
                           onSelected: (value) => ref
                               .read(addProductProvider.notifier)
                               .update(value, "pickUpOption")),
@@ -121,8 +129,6 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-             
-
                   return null;
                 }, builder: (formState) {
                   return Column(
@@ -143,7 +149,6 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                           size: 24,
                         ),
                       ),
-                   
                     ],
                   );
                 }),
@@ -176,7 +181,6 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                 const Gap(20),
                 // if (viewModel.includeDeliveryFee)
                 //   FormField<String>(validator: (value) {
-                   
 
                 //     return null;
                 //   }, builder: (formState) {
@@ -190,9 +194,9 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
 
                 //         label: 'Delivery Price',
                 //         suffixIcon:Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text("NGN", style: wayaTheme.textTheme.hintStyle),)
-                            
+
                 //       ),
-                       
+
                 //       ],
                 //     );
                 //   }),
@@ -220,7 +224,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                             style: wayaTheme.textTheme.titleMedium),
                         const Gap(6),
                         Text(
-                          "This means a certain amount will \n be charged for delivery of this product",
+                          "This means a certain amount will \n be charged for delivery of this product.",
                           style: wayaTheme.textTheme.hintStyle,
                         )
                       ],
@@ -228,6 +232,32 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                   ],
                 ),
                 const Gap(20),
+                 if (viewModel.applyDiscount)
+                Text(
+                  "You can either add a discount percentage or select from the predefined discount types",
+                  style: wayaTheme.textTheme.hintStyle,
+                ),
+                const Gap(20),
+                if (viewModel.applyDiscount)
+                  FormField<String>(validator: (value) {
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaSelectField(
+                            uniqueKey: 'discount-type',
+                            label: "Discount Type",
+                            hintText: 'Select a Discount Type',
+                            value: viewModel.discountType,
+                            items: viewModel.allDiscountTypes,
+                            onSelected: (value) => ref
+                                .read(addProductProvider.notifier)
+                                .update(value, "discountType")),
+                      ],
+                    );
+                  }),
+                const Gap(10),
                 if (viewModel.applyDiscount)
                   FormField<String>(validator: (value) {
                     return null;
@@ -239,17 +269,18 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             LengthLimitingTextInputFormatter(3),
-                            FilteringTextInputFormatter.allow(RegExp(r'^(100|[1-9][0-9]?)$')),
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^(100|[1-9][0-9]?)$')),
                           ],
                           keyboardType: TextInputType.number,
-                            label: "Discount Percentage",
-                            hintText: 'Enter percentage between 1-100',
-                            controller: viewModel.discountPercentage ,
+                          label: "Discount Percentage",
+                          hintText: 'Enter percentage between 1-100',
+                          controller: viewModel.discountPercentage,
                         ),
-                       
                       ],
                     );
                   }),
+
                 const Gap(20),
                 WayaButton(
                     text: 'Add Product Images',
