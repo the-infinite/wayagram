@@ -31,7 +31,7 @@ class _ExploreState extends ConsumerState<Explore> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(shopVmProvider.notifier).allCategories();
+     
       ref.read(shopVmProvider.notifier).getAllProducts();
     });
     super.initState();
@@ -158,11 +158,11 @@ class _ExploreState extends ConsumerState<Explore> {
               ),
             ),
             const Gap(25),
-            productState.when(
-                data: (products) => _buildProductGrid(products.sublist(0, 2)),
-                error: (e, stack) =>
-                    _buildProductLoadingState(context: context),
-                loading: () => _buildProductLoadingState(context: context)),
+            // productState.when(
+            //     data: (products) => _buildProductGrid(products.sublist(0, 2)),
+            //     error: (e, stack) =>
+            //         _buildProductLoadingState(context: context),
+            //     loading: () => _buildProductLoadingState(context: context)),
 
             const Gap(25),
             GroupedWidgetHeader(

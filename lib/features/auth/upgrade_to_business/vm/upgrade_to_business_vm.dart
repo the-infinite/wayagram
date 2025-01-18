@@ -6,6 +6,7 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
+import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to_business_state.dart';
@@ -30,7 +31,7 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
     // state = state.copyWith(state: user?.state);
     // state = state.copyWith(country: user?.country);
     // state = state.copyWith(lga: user?.lga);
-    state = state.copyWith(roleId: user?.roleId);
+
     // state = state.copyWith(accountTypeId: user?.accountTypeId);
   }
 
@@ -85,12 +86,19 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
   Future<void> onSubmit() async {
     try {
       state = state.copyWith(isLoading: true);
+      final accountData = await ref
+          .read(selectAccountTypesProvider.notifier)
+          .fetchAccountType();
+      final accountId = accountData?.firstWhere((v) => v.type != 'PERSONAL').id;
+
+      state = state.copyWith(accountTypeId: accountId);
       final userid = await _secureDataSource.getUserId();
       final response = await _authRepository.upgradeToBusiness(
           payload: state.upgradeToBusinessModel, id: userid!);
       if (response.success) {
         // get the business data
-        WayaNav.toNamed(AddBusinessAccountView.route);
+        print(response.data);
+        //  WayaNav.toNamed(AddBusinessAccountView.route);
         //  ref.watch(successfulSetupVmProvider).copyWith(business: )
       }
     } catch (e) {

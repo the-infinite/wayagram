@@ -30,8 +30,8 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/discount/all');
   }
 
-Future<WayaRequestResponse> getProducts({required String categoryId}) {
-    return get('$serviceUrl/client/products/category/$categoryId');
+Future<WayaRequestResponse> getProducts() {
+    return get('$serviceUrl/products');
   }
 
   

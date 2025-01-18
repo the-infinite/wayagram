@@ -7,6 +7,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
+import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/vm/upgrade_to_business_vm.dart';
 
 class UpgradeToBusiness extends ConsumerStatefulWidget {
@@ -26,6 +27,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(upgradeToBusinessVmProvider.notifier).fetchBusinessTypes();
       ref.read(upgradeToBusinessVmProvider.notifier).fetchLocation();
+      
     });
     super.initState();
   }
@@ -329,7 +331,8 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                                   hintText: 'Select City',
                                   items: viewModel.cities,
                                   onSelected: (value) => ref
-                                      .read(upgradeToBusinessVmProvider.notifier)
+                                      .read(
+                                          upgradeToBusinessVmProvider.notifier)
                                       .selectCity(value)),
                               if (formState.hasError && viewModel.city.isEmpty)
                                 Padding(

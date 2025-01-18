@@ -124,8 +124,9 @@ class ShopVm extends StateNotifier<ShopState> {
 
   Future<void> getAllProducts() async {
     try {
+      await allCategories();
       final response =
-          await _repository.getProducts(categoryId: state.selectedCategoryId!);
+          await _repository.getProducts();
 
       if (response.success) {
         print(response.data);
