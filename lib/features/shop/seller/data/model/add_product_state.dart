@@ -33,6 +33,8 @@ class AddProductState {
   final String pickUpOption;
   final String discountType;
   final List<Select> categories;
+  final List<Select> allDiscountTypes;
+  final Select? selectedDiscountType;
   List<DocType> uploadedDocuments;
   File? productImage;
   final TextEditingController discountPercentage;
@@ -50,6 +52,7 @@ class AddProductState {
       this.productColor = '',
       this.productCondition = '',
       this.productType = '',
+      this.selectedDiscountType,
       TextEditingController? productDepth,
       TextEditingController? productHeight,
       TextEditingController? productWidth,
@@ -63,8 +66,9 @@ class AddProductState {
       this.images = const [],
       this.productImage,
       this.categories = const [],
+      this.allDiscountTypes = const [],
       TextEditingController? discountPercentage,
-      this.isLoading  = false,
+      this.isLoading = false,
       this.isWayagramDeal = false})
       : productName = productName ?? TextEditingController(),
         productDescription = productDescription ?? TextEditingController(),
@@ -103,6 +107,8 @@ class AddProductState {
       File? productImage,
       bool? isWayagramDeal,
       List<Select>? categories,
+      List<Select>? allDiscountTypes,
+      Select? selectedDiscountType,
       bool? isLoading,
       String? shopId}) {
     return AddProductState(
@@ -132,6 +138,8 @@ class AddProductState {
         discountPercentage: discountPercentage ?? this.discountPercentage,
         selectedCategory: selectedCategory ?? this.selectedCategory,
         isLoading: isLoading ?? this.isLoading,
+        allDiscountTypes: allDiscountTypes ?? this.allDiscountTypes,
+        selectedDiscountType: selectedDiscountType ?? this.selectedDiscountType,
         images: images ?? this.images);
   }
 
@@ -145,7 +153,7 @@ class AddProductState {
         price: pricePerUnit.text,
         options: pickUpOption,
         wayagramDeal: isWayagramDeal,
-        discountTypeId: 'a575da9a-aa72-4222-bcf8-9345994b35b3',
+        discountTypeId: selectedDiscountType?.value,
         height: productHeight.text,
         width: productWidth.text,
         depth: productDepth.text,

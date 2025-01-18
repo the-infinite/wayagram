@@ -14,10 +14,10 @@ class CartVm extends StateNotifier<List<Cart>> {
   }
 
   Future<void> loadCart() async {
-    final List<Cart> cartArray =
-        localDataSource.getCart().isEmpty ? [] : localDataSource.getCart();
+   // final List<Cart> cartArray =
+       // localDataSource.getCart().isEmpty ? [] : localDataSource.getCart();
 
-    state = cartArray;
+    state = [];
   }
 
   addToCart(Product product, int count) {

@@ -18,7 +18,7 @@ class AddProductModel {
   final bool? deliveryCharge;
   final List<MultipartFile> images;
   final bool wayagramDeal;
-  final String discountTypeId;
+  final String? discountTypeId;
 
   AddProductModel({
     required this.name,
@@ -85,6 +85,7 @@ class AddProductModel {
     if (height != null) json['height'] = height;
     if (width != null) json['width'] = width;
     if (depth != null) json['depth'] = depth;
+    if (depth != null) json['discountTypeId'] = discountTypeId;
     if (discountPercentage != null) json['discountPercentage'] = discountPercentage;
     if (pickupAddress != null) json['pickupAddress'] = pickupAddress;
     if (deliveryCharge != null) json['deliveryCharge'] = deliveryCharge;

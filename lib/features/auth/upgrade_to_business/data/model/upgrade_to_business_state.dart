@@ -18,8 +18,9 @@ class UpgradeToBusinessState {
   final List<Select> states;
   final List<Select> cities;
   final String? roleId;
-  final String? accountTypeId;
+final String? accountTypeId;
   final bool isLoading;
+  final String businessTypeName;
 
   UpgradeToBusinessState({
     TextEditingController? contactEmail,
@@ -32,6 +33,7 @@ class UpgradeToBusinessState {
     this.lga = '',
     this.businessTypeId = '',
     this.accountTypeId = '',
+    this.businessTypeName = '',
     this.roleId = '',
     this.isLoading = false,
     this.businessTypes = const [],
@@ -44,25 +46,26 @@ class UpgradeToBusinessState {
         name = name ?? TextEditingController(),
         contactPhone = contactPhone ?? TextEditingController();
 
-  UpgradeToBusinessState copyWith({
-    TextEditingController? name,
-    TextEditingController? contactPhone,
-    TextEditingController? contactEmail,
-    String? businessTypeId,
-    TextEditingController? address,
-    String? city,
-    String? state,
-    String? country,
-    String? lga,
-    String? accountTypeId,
-    String? roleId,
-    List<Select>? countries,
-    List<Select>? states,
-    List<Select>? lgas,
-    List<Select>? businessTypes,
-    List<Select>? cities,
-    bool? isLoading
-  }) {
+  UpgradeToBusinessState copyWith(
+      {TextEditingController? name,
+      TextEditingController? contactPhone,
+      TextEditingController? contactEmail,
+      String? businessTypeId,
+      String? businessTypeName,
+      TextEditingController? address,
+      String? city,
+      String? state,
+      String? country,
+      String? lga,
+     String? accountTypeId,
+      String? roleId,
+      List<Select>? countries,
+      List<Select>? states,
+      List<Select>? lgas,
+      List<Select>? businessTypes,
+   
+      List<Select>? cities,
+      bool? isLoading}) {
     return UpgradeToBusinessState(
         name: name ?? this.name,
         contactEmail: contactEmail ?? this.contactEmail,
@@ -78,23 +81,25 @@ class UpgradeToBusinessState {
         states: states ?? this.states,
         lgas: lgas ?? this.lgas,
         cities: cities ?? this.cities,
-        accountTypeId: accountTypeId ?? this.accountTypeId,
+      accountTypeId: accountTypeId ?? this.accountTypeId,
         isLoading: isLoading ?? this.isLoading,
+        businessTypeName: businessTypeName ?? this.businessTypeName,
         roleId: roleId ?? this.roleId);
   }
 
   UpgradeToBusinessModel get upgradeToBusinessModel {
     return UpgradeToBusinessModel(
-        business: Business(
-            contactEmail: contactEmail.text,
-            contactPhone: contactPhone.text,
-            lga: lga,
-            country: country,
-            city: city,
-            address: address.text,
-            name: name.text,
-            businessTypeId: businessTypeId),
-        roleId: roleId,
-        accountTypeId: accountTypeId);
+      business: Business(
+          contactEmail: contactEmail.text,
+          contactPhone: contactPhone.text,
+          lga: lga,
+          country: country,
+          city: city,
+          address: address.text,
+          state: state,
+          name: name.text,
+          businessTypeId: businessTypeId),
+      accountTypeId: accountTypeId,
+    );
   }
 }

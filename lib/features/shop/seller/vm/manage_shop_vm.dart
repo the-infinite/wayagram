@@ -38,21 +38,20 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       state = state.copyWith(isLoading: true);
       final response = await _shopRepository.getShopBySellerId(businessId!);
 
-      if (response.data['statusCode'] == 400 &&
-          response.data['data'] == 'Shop not found') {
-        await ref
-            .read(createShopVmProvider.notifier)
-            .createSellerShop(hasNoShop: true);
-        return;
-      }
       if (response.success) {
         ShopResponseModel responseModel =
             ShopResponseModel.fromJson(response.data);
 
         state = state.copyWith(hasShop: responseModel.data.isNotEmpty);
         // state = state.copyWith(shop: responseModel.data);
-
-        state = state.copyWith(shop: responseModel.data);
+        if (responseModel.data.isEmpty) {
+          await ref
+              .read(createShopVmProvider.notifier)
+              .createSellerShop(hasNoShop: true);
+          return;
+        } else {
+          state = state.copyWith(shop: responseModel.data);
+        }
       }
     } catch (e) {
       _logger.e("wefewfewfe $e");

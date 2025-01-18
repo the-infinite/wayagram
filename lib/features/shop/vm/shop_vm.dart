@@ -1,5 +1,10 @@
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/shop/data/model/shop_state.dart';
+import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
+import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
+import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 
 import '../services/product_service.dart';
 
@@ -84,4 +89,54 @@ final productsProvider =
     StateNotifierProvider<ProductsNotifier, AsyncValue<List<Product>>>((ref) {
   final productService = ref.watch(productServiceProvider);
   return ProductsNotifier(productService);
+});
+
+class ShopVm extends StateNotifier<ShopState> {
+  final ShopRepository _repository;
+  final Ref ref;
+  ShopVm(this._repository, this.ref) : super(ShopState());
+
+  Future<List<Select>?> allCategories() async {
+    try {
+      final response = await _repository.getAllCategories();
+
+      List<Select> selectCategories = [];
+      if (response.success) {
+        CategoryResponseModel responseModel =
+            CategoryResponseModel.fromJson(response.data);
+
+        final List<CategoryData?> categories = responseModel.data;
+        selectCategories = categories.map((val) {
+          return Select(label: val!.name, value: val.id);
+        }).toList();
+
+        state = state.copyWith(categories: selectCategories);
+        if (selectCategories.isNotEmpty) {
+          state = state.copyWith(selectedCategoryId: selectCategories[0].value);
+        }
+      }
+      return selectCategories;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<void> getAllProducts() async {
+    try {
+      await allCategories();
+      final response =
+          await _repository.getProducts();
+
+      if (response.success) {
+        print(response.data);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+}
+
+final shopVmProvider = StateNotifierProvider<ShopVm, ShopState>((ref) {
+  return ShopVm(ShopRepository(), ref);
 });

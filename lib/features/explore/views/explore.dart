@@ -19,11 +19,26 @@ import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
 
-class Explore extends ConsumerWidget {
+class Explore extends ConsumerStatefulWidget {
   const Explore({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _ExploreState();
+}
+
+class _ExploreState extends ConsumerState<Explore> {
+  
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+     
+      ref.read(shopVmProvider.notifier).getAllProducts();
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(exploreVmProvider.notifier);
     final productState = ref.watch(productsProvider);
@@ -117,38 +132,37 @@ class Explore extends ConsumerWidget {
             const Gap(10),
             CategoriesFilterWidget<Product>(allItems: []),
             const Gap(10),
-                 WayaButton(
-                    callback: () {
-                  //    WayaNav.toNamed(AddProduct.route);
-                    },
-                    color: wayaTheme.colorScheme.primar50,
-                    centerWidget: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          WayaAssests.icons.buttonIcon.path,
-                          colorFilter: ColorFilter.mode(
-                              wayaTheme.colorScheme.customPrimary,
-                              BlendMode.srcIn),
-                        ),
-                        const Gap(6),
-                        Text(
-                          "Add New Product",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customPrimary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
+            WayaButton(
+              callback: () {
+                //    WayaNav.toNamed(AddProduct.route);
+              },
+              color: wayaTheme.colorScheme.primar50,
+              centerWidget: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    WayaAssests.icons.buttonIcon.path,
+                    colorFilter: ColorFilter.mode(
+                        wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
                   ),
+                  const Gap(6),
+                  Text(
+                    "Add New Product",
+                    style: TextStyle().wayaCopyWith(
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
+                  )
+                ],
+              ),
+            ),
             const Gap(25),
-            productState.when(
-                data: (products) => _buildProductGrid(products.sublist(0, 2)),
-                error: (e, stack) =>
-                    _buildProductLoadingState(context: context),
-                loading: () => _buildProductLoadingState(context: context)),
+            // productState.when(
+            //     data: (products) => _buildProductGrid(products.sublist(0, 2)),
+            //     error: (e, stack) =>
+            //         _buildProductLoadingState(context: context),
+            //     loading: () => _buildProductLoadingState(context: context)),
 
             const Gap(25),
             GroupedWidgetHeader(
@@ -179,8 +193,7 @@ class Explore extends ConsumerWidget {
               ),
             ),
           ),
-        )
-        );
+        ));
   }
 
   Widget _buildProductGrid(List<Product> products) {
