@@ -16,7 +16,6 @@ import 'package:wayagram/features/shop/seller/data/model/category_response_model
 import 'package:wayagram/features/shop/seller/data/model/discount_type_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 final addProductProvider = StateNotifierProvider<AddProductVm, AddProductState>(
     (ref) => AddProductVm(ShopRepository(), ref));
@@ -94,28 +93,35 @@ class AddProductVm extends StateNotifier<AddProductState> {
   }
 
   Future<void> getAllCategories() async {
-    final categories = await ref.read(shopVmProvider.notifier).allCategories();
-    
-    if (categories != null) {
-      state = state.copyWith(categories: categories);
-    }
+    // final categories = await ref.read(shopVmProvider.notifier).allCategories("1");
+
+    // if (categories != null) {
+    //   state = state.copyWith(categories: categories);
+    // }
   }
 
-  Future<void> getAllDiscounts() async {
+  Future<PaginatedResult?> getAllDiscounts(int page) async {
     try {
-      final response = await _shopRepository.getAllDiscounts();
-
+      final response = await _shopRepository.getAllDiscounts(page);
+      List<Select> allDiscounts = [];
       if (response.success) {
-        DiscountTypeResponseModel responseModel =
-            DiscountTypeResponseModel.fromJson(response.data);
-        final filtered = responseModel.data.where((v) => v.active).toList();
-        final List<Select> allDiscounts = filtered.map((val) {
+        DiscountsResponse responseModel =
+            DiscountsResponse.fromJson(response.data);
+        final filtered =
+            responseModel.discounts.where((v) => v.active).toList();
+        allDiscounts = filtered.map((val) {
           return Select(label: "${val.type} ${val.percentage}%", value: val.id);
         }).toList();
         state = state.copyWith(allDiscountTypes: allDiscounts);
+        state = state.copyWith(
+            totalNoOfDiscountPages: responseModel.pagination.totalPages);
       }
+
+      return PaginatedResult(
+          items: allDiscounts, totalPages: state.totalNoOfDiscountPages);
     } catch (e) {
       print(e);
+      return null;
     }
   }
 

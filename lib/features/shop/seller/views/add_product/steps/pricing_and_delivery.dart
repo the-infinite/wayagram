@@ -21,13 +21,7 @@ class PricingAndDelivery extends ConsumerStatefulWidget {
 class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(addProductProvider.notifier).getAllDiscounts();
-    });
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -245,12 +239,12 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WayaSelectField(
+                        WayaPaginatedSelectField(
                             uniqueKey: 'discount-type',
                             label: "Discount Type",
                             hintText: 'Select a Discount Type',
-                            value: viewModel.discountType,
-                            items: viewModel.allDiscountTypes,
+                            displayText: (item) => item.label,
+                            fetchData: ref.watch(addProductProvider.notifier).getAllDiscounts,
                             onSelected: (value) => ref
                                 .read(addProductProvider.notifier)
                                 .update(value, "discountType")),

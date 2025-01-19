@@ -6,14 +6,14 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
-import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
@@ -27,11 +27,10 @@ class Explore extends ConsumerStatefulWidget {
 }
 
 class _ExploreState extends ConsumerState<Explore> {
-  
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-     
+      ref.read(shopVmProvider.notifier).allCategories(1);
       ref.read(shopVmProvider.notifier).getAllProducts();
     });
     super.initState();
@@ -41,7 +40,8 @@ class _ExploreState extends ConsumerState<Explore> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(exploreVmProvider.notifier);
-    final productState = ref.watch(productsProvider);
+    final state = ref.watch(shopVmProvider);
+    final notifier = ref.read(shopVmProvider.notifier);
 
     return WayaScaffold(
         isLoading: false,
@@ -126,44 +126,46 @@ class _ExploreState extends ConsumerState<Explore> {
                 }),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {},
+                onTap: () {
+                  WayaNav.toNamed(BottomView.route, arguments: 1);
+                },
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
             const Gap(10),
-            CategoriesFilterWidget<Product>(allItems: []),
-            const Gap(10),
-            WayaButton(
-              callback: () {
-                //    WayaNav.toNamed(AddProduct.route);
-              },
-              color: wayaTheme.colorScheme.primar50,
-              centerWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    WayaAssests.icons.buttonIcon.path,
-                    colorFilter: ColorFilter.mode(
-                        wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
-                  ),
-                  const Gap(6),
-                  Text(
-                    "Add New Product",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
-                  )
-                ],
-              ),
+            CategoriesFilterWidget(
+              setCategory: (value) =>
+                  ref.read(shopVmProvider.notifier).setCategory(value),
             ),
+            const Gap(10),
+            // WayaButton(
+            //   callback: () {
+            //     //    WayaNav.toNamed(AddProduct.route);
+            //   },
+            //   color: wayaTheme.colorScheme.primar50,
+            //   centerWidget: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     crossAxisAlignment: CrossAxisAlignment.center,
+            //     children: [
+            //       SvgPicture.asset(
+            //         WayaAssests.icons.buttonIcon.path,
+            //         colorFilter: ColorFilter.mode(
+            //             wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
+            //       ),
+            //       const Gap(6),
+            //       Text(
+            //         "Add New Product",
+            //         style: TextStyle().wayaCopyWith(
+            //             color: wayaTheme.colorScheme.customPrimary,
+            //             fontSize: 14,
+            //             fontWeight: FontWeight.w500),
+            //       )
+            //     ],
+            //   ),
+            // ),
             const Gap(25),
-            // productState.when(
-            //     data: (products) => _buildProductGrid(products.sublist(0, 2)),
-            //     error: (e, stack) =>
-            //         _buildProductLoadingState(context: context),
-            //     loading: () => _buildProductLoadingState(context: context)),
-
+            state.isLoading
+                ? _buildProductLoadingState(context: context)
+                : _buildProductGrid(notifier.filteredProducts),
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {},

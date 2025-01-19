@@ -52,7 +52,7 @@ class AddProductModel {
       price: json['price'] as String,
       options: json['options'] as String,
       wayagramDeal: json['wayagramDeal'] as bool,
-      discountTypeId: json['discountTypeId'] as String,
+      discountTypeId: json['discountTypeId'] as String?,
       images: (json['images'] as List<MultipartFile>),
       color: json['color'] as String?,
       materialType: json['materialType'] as String?,
@@ -76,7 +76,6 @@ class AddProductModel {
       'price': price,
       'options': options,
       'wayagramDeal': wayagramDeal,
-      'discountTypeId': discountTypeId,
       'images': images,
     };
 
@@ -85,7 +84,7 @@ class AddProductModel {
     if (height != null) json['height'] = height;
     if (width != null) json['width'] = width;
     if (depth != null) json['depth'] = depth;
-    if (depth != null) json['discountTypeId'] = discountTypeId;
+    if (discountTypeId != null) json['discountTypeId'] = discountTypeId;
     if (discountPercentage != null) json['discountPercentage'] = discountPercentage;
     if (pickupAddress != null) json['pickupAddress'] = pickupAddress;
     if (deliveryCharge != null) json['deliveryCharge'] = deliveryCharge;
