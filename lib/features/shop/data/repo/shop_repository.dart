@@ -17,8 +17,8 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/shops/$id');
   }
 
-  Future<WayaRequestResponse> getAllCategories() {
-    return get('$serviceUrl/category/all');
+  Future<WayaRequestResponse> getAllCategories(int page) {
+    return get('$serviceUrl/category/all?page=$page');
   }
 
   Future<WayaRequestResponse> createProduct({required AddProductModel payload, required String id}) {
@@ -26,8 +26,8 @@ class ShopRepository extends BaseRepository {
         formdata: true);
   }
 
-  Future<WayaRequestResponse> getAllDiscounts() {
-    return get('$serviceUrl/discount/all');
+  Future<WayaRequestResponse> getAllDiscounts(int page) {
+    return get('$serviceUrl/discount/all?page=$page');
   }
 
 Future<WayaRequestResponse> getProducts() {

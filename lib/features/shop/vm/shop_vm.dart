@@ -1,139 +1,118 @@
 import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
-import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
-
-import '../services/product_service.dart';
-
-final List<Product> products = [
-  Product(
-      id: "1",
-      category: 'TECHNOLOGY',
-      name: 'Jikuke Flash Drive 28GB',
-      images: [
-        'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374175/product1_owvv1d.png',
-        'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
-      ],
-      quantity: 3,
-      price: 20000,
-      discountPrice: 19000,
-      seller: "Maleek"),
-  Product(
-      id: "2",
-      category: 'TECHNOLOGY',
-      name: 'Jikuke Flash Drive 28GB',
-      images: [
-        'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374172/product2_na4de1.png',
-        'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374117/Frame_1984078250_khms9k.png',
-      ],
-      quantity: 3,
-      price: 20000,
-      discountPrice: 19000,
-      seller: "Emeka"),
-  Product(
-      id: "3",
-      category: 'TECHNOLOGY',
-      name: 'Jikuke Flash Drive 28GB',
-      images: [
-        'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374117/Frame_1984078250_khms9k.png',
-        'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374172/product2_na4de1.png',
-      ],
-      price: 20000,
-      discountPrice: 19000,
-      quantity: 3,
-      seller: "Maleek"),
-  Product(
-      id: "4",
-      category: 'TECHNOLOGY',
-      name: 'Jikuke Flash Drive 28GB',
-      images: [
-        'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
-        'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374117/Frame_1984078250_khms9k.png',
-      ],
-      price: 20000,
-      discountPrice: 19000,
-      quantity: 3,
-      seller: "Emeka"),
-];
-
-//provider for service
-final productServiceProvider = Provider((ref) => ProductService());
-
-class ProductsNotifier extends StateNotifier<AsyncValue<List<Product>>> {
-  final ProductService _productService;
-
-  ProductsNotifier(this._productService) : super(const AsyncValue.loading()) {
-    loadProducts();
-  }
-
-  Future<void> loadProducts() async {
-    try {
-      state = const AsyncValue.loading();
-      final products = await _productService.fetchProducts();
-      state = AsyncValue.data(products);
-    } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
-    }
-  }
-
-  Future<void> refresh() async {
-    await loadProducts();
-  }
-}
-
-// provider notifier
-final productsProvider =
-    StateNotifierProvider<ProductsNotifier, AsyncValue<List<Product>>>((ref) {
-  final productService = ref.watch(productServiceProvider);
-  return ProductsNotifier(productService);
-});
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 
 class ShopVm extends StateNotifier<ShopState> {
   final ShopRepository _repository;
   final Ref ref;
   ShopVm(this._repository, this.ref) : super(ShopState());
 
-  Future<List<Select>?> allCategories() async {
+  Future<PaginatedResult?> allCategories(int page) async {
     try {
-      final response = await _repository.getAllCategories();
+      final response = await _repository.getAllCategories(page);
 
       List<Select> selectCategories = [];
+
       if (response.success) {
         CategoryResponseModel responseModel =
             CategoryResponseModel.fromJson(response.data);
 
-        final List<CategoryData?> categories = responseModel.data;
+        final List<CategoryData?> categories = responseModel.data.categories;
         selectCategories = categories.map((val) {
           return Select(label: val!.name, value: val.id);
         }).toList();
 
+        state = state.copyWith(
+            totalNoOfCategoryPages: responseModel.data.pagination.totalPages);
+
         state = state.copyWith(categories: selectCategories);
-        if (selectCategories.isNotEmpty) {
-          state = state.copyWith(selectedCategoryId: selectCategories[0].value);
-        }
+        // if (selectCategories.isNotEmpty) {
+        //   //state = state.copyWith(selectedCategoryId: selectCategories[0].value);
+        // }
       }
-      return selectCategories;
+      return PaginatedResult(
+          items: selectCategories, totalPages: state.totalNoOfCategoryPages);
     } catch (e) {
       print(e);
       return null;
     }
   }
 
+  void setCategory(List<String>? categoryIds) {
+    state = state.copyWith(selectedCategoryId: categoryIds);
+  }
+
+  void setSearchQuery(String query) {
+    state = state.copyWith(searchQuery: query);
+  }
+
   Future<void> getAllProducts() async {
+    state = state.copyWith(isLoading: true);
     try {
-      await allCategories();
-      final response =
-          await _repository.getProducts();
+      final response = await _repository.getProducts();
 
       if (response.success) {
-        print(response.data);
+        ProductResponse productResponse =
+            ProductResponse.fromJson(response.data);
+        List<Product>? products = productResponse.data.data.map((product) {
+          return product.copyWith(
+              category: state.categories?.firstWhere(
+            (cat) => cat.value == product.categoryId,
+          ));
+        }).toList();
+        state = state.copyWith(products: products);
       }
     } catch (e) {
       print(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
+  }
+
+  List<Product> get filteredProducts {
+    if (state.products.isEmpty) return [];
+    return state.products.where((product) {
+      // category filter
+      if (state.selectedCategoryId != null &&
+          state.selectedCategoryId!.isNotEmpty &&
+          !state.selectedCategoryId!.contains(product.categoryId)) {
+        return false;
+      }
+
+      // search filter
+      if (state.searchQuery.isNotEmpty) {
+        final query = state.searchQuery.toLowerCase();
+        return product.name.toLowerCase().contains(query) ||
+            product.description.toLowerCase().contains(query);
+      }
+
+      return true;
+    }).toList();
+  }
+
+  List<Product> get filteredWayagramDealProducts {
+     if (state.products.isEmpty) return [];
+    return state.products.where((product) {
+     
+      // category filter
+      if (state.selectedCategoryId != null &&
+          state.selectedCategoryId!.isNotEmpty &&
+          !state.selectedCategoryId!.contains(product.categoryId)) {
+        return false;
+      }
+
+      // search filter
+      if (state.searchQuery.isNotEmpty) {
+        final query = state.searchQuery.toLowerCase();
+        return product.name.toLowerCase().contains(query) ||
+            product.description.toLowerCase().contains(query);
+      }
+
+      return product.wayagramDeal;
+    }).toList();
   }
 }
 

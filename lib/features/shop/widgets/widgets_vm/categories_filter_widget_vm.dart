@@ -1,24 +1,38 @@
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/model/model.dart';
 
+class CategoryFilterState {
+  final List<String> selected;
 
-final selectedCategoryProvider = StateProvider<List<int>>((ref) => []);
+  CategoryFilterState({this.selected = const []});
 
-class CategoriesFilterWidgetVm extends StateNotifier<void> {
+  CategoryFilterState copyWith({List<String>? selected}) {
+    return CategoryFilterState(selected: selected ?? this.selected);
+  }
+}
+
+class CategoriesFilterWidgetVm extends StateNotifier<CategoryFilterState> {
   final Ref ref;
-  CategoriesFilterWidgetVm(this.ref) : super(null);
+  CategoriesFilterWidgetVm(this.ref) : super(CategoryFilterState());
 
-
-  void updateSelectedCategory(int catId) {
-    final selected = ref.read(selectedCategoryProvider);
-    if (selected.any((i) => i == catId)) {
-      ref.read(selectedCategoryProvider.notifier).state =
-          selected.where((c) => c != catId).toList();
+  List<String> updateSelectedCategory(Select cat) {
+    if (state.selected.any((i) => i == cat.value)) {
+      List<String> selectedList = List.from(state.selected);
+     final filtered = selectedList.where((c) => c != cat.value).toList();
+      
+      state = state.copyWith(selected: filtered);
     } else {
-      ref.read(selectedCategoryProvider.notifier).state = [...selected, catId];
+      List<String> selectedList = List.from(state.selected);
+      selectedList.add(cat.value);
+
+      state = state.copyWith(selected: selectedList);
     }
+    print(cat.value);
+
+    return state.selected;
   }
 }
 
 final categoriesFilterWidgetVmProvider =
-    StateNotifierProvider<CategoriesFilterWidgetVm, void>((ref) => CategoriesFilterWidgetVm(ref));
+    StateNotifierProvider.family<CategoriesFilterWidgetVm, CategoryFilterState, String>(
+        (ref, uniqueKey) => CategoriesFilterWidgetVm(ref));

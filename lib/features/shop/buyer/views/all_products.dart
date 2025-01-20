@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
@@ -13,7 +13,9 @@ class AllProducts extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final productState = ref.watch(productsProvider);
+    final notifier = ref.watch(shopVmProvider.notifier);
+    final state = ref.watch(shopVmProvider);
+
     return Column(
       children: [
         FilterWidget<Product>(allItems: []),
@@ -23,24 +25,23 @@ class AllProducts extends ConsumerWidget {
             subTitle: 'Explore Categories & Best Offers',
             title: 'Wayagram Deals'),
         const Gap(10),
-        CategoriesFilterWidget<Product>(allItems: []),
+        CategoriesFilterWidget(
+          setCategory: (value) => {},
+          uniqueKey: 'all-product',
+        ),
         const Gap(25),
-        productState.when(
-            data: (products) => _buildProductGrid(products),
-            error: (e, stack) =>
-                _wayagramDealProductLoadingState(context: context),
-            loading: () => _wayagramDealProductLoadingState(context: context)),
+        state.isLoading
+            ? _wayagramDealProductLoadingState(context: context)
+            : SizedBox.shrink(),
         const Gap(25),
         GroupedWidgetHeader(
             onTap: () {},
             subTitle: 'Explore Categories & Best Offers',
             title: 'Recommended Products'),
         const Gap(25),
-        productState.when(
-            data: (products) => _buildProductGrid(products),
-            error: (e, stack) =>
-                _recommendedProductLoadingState(context: context),
-            loading: () => _recommendedProductLoadingState(context: context))
+        state.isLoading
+            ? _recommendedProductLoadingState(context: context)
+              : SizedBox.shrink(),
       ],
     );
   }

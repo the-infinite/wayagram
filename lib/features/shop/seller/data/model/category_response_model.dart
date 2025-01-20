@@ -1,11 +1,10 @@
-
-
-// Model for the entire API response
+import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
 class CategoryResponseModel {
   final String message;
   final bool status;
   final int statusCode;
-  final List<CategoryData> data;
+  final ResponseData data;
 
   CategoryResponseModel({
     required this.message,
@@ -14,30 +13,51 @@ class CategoryResponseModel {
     required this.data,
   });
 
- 
   factory CategoryResponseModel.fromJson(Map<String, dynamic> json) {
     return CategoryResponseModel(
-      message: json['message'],
-      status: json['status'],
-      statusCode: json['statusCode'],
-      data: (json['data'] as List<dynamic>)
-          .map((item) => CategoryData.fromJson(item))
-          .toList(),
+      message: json['message'] ?? '',
+      status: json['status'] ?? false,
+      statusCode: json['statusCode'] ?? 0,
+      data: ResponseData.fromJson(json['data']),
     );
   }
 
- 
   Map<String, dynamic> toJson() {
     return {
       'message': message,
       'status': status,
       'statusCode': statusCode,
-      'data': data.map((item) => item.toJson()).toList(),
+      'data': data.toJson(),
     };
   }
 }
 
-// Model for individual category data
+class ResponseData {
+  final List<CategoryData> categories;
+  final Pagination pagination;
+
+  ResponseData({
+    required this.categories,
+    required this.pagination,
+  });
+
+  factory ResponseData.fromJson(Map<String, dynamic> json) {
+    return ResponseData(
+      categories: (json['data'] as List)
+          .map((categoryJson) => CategoryData.fromJson(categoryJson))
+          .toList(),
+      pagination: Pagination.fromJson(json['pagination']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'data': categories.map((category) => category.toJson()).toList(),
+      'pagination': pagination.toJson(),
+    };
+  }
+}
+
 class CategoryData {
   final String id;
   final String name;
@@ -61,22 +81,20 @@ class CategoryData {
     required this.updatedAt,
   });
 
-  // Factory constructor to create a Category instance from JSON
   factory CategoryData.fromJson(Map<String, dynamic> json) {
     return CategoryData(
-      id: json['id'],
-      name: json['name'],
-      image: json['image'],
-      description: json['description'],
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      image: json['image'] ?? '',
+      description: json['description'] ?? '',
       parentCategoryId: json['parentCategoryId'],
-      isDeleted: json['isDeleted'],
-      version: json['_v'],
+      isDeleted: json['isDeleted'] ?? false,
+      version: (json['_v']),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
 
-  // Convert a Category instance to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -92,3 +110,11 @@ class CategoryData {
   }
 }
 
+
+
+class PaginatedResult {
+  final List<Select> items;
+  final int totalPages;
+
+  PaginatedResult({required this.items, required this.totalPages});
+}

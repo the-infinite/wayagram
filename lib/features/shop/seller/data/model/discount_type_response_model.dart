@@ -1,38 +1,34 @@
-class DiscountTypeResponseModel {
+import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
+
+class DiscountsResponse {
   final String message;
   final bool status;
   final int statusCode;
-  final List<DiscountData> data;
+  final List<Discount> discounts;
+  final Pagination pagination;
 
-  DiscountTypeResponseModel({
+  DiscountsResponse({
     required this.message,
     required this.status,
     required this.statusCode,
-    required this.data,
+    required this.discounts,
+    required this.pagination,
   });
 
-  // Factory method to manually serialize from JSON
-  factory DiscountTypeResponseModel.fromJson(Map<String, dynamic> json) {
-    return DiscountTypeResponseModel(
-      message: json['message'],
-      status: json['status'],
-      statusCode: json['statusCode'],
-      data: (json['data'] as List<dynamic>).map((e) => DiscountData.fromJson(e)).toList(),
+  factory DiscountsResponse.fromJson(Map<String, dynamic> json) {
+    return DiscountsResponse(
+      message: json['message'] as String,
+      status: json['status'] as bool,
+      statusCode: json['statusCode'] as int,
+      discounts: (json['data']['data'] as List<dynamic>)
+          .map((item) => Discount.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      pagination: Pagination.fromJson(json['data']['pagination']),
     );
-  }
-
-  // Method to serialize back to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'message': message,
-      'status': status,
-      'statusCode': statusCode,
-      'data': data.map((e) => e.toJson()).toList(),
-    };
   }
 }
 
-class DiscountData {
+class Discount {
   final String id;
   final String type;
   final int percentage;
@@ -43,7 +39,7 @@ class DiscountData {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  DiscountData({
+  Discount({
     required this.id,
     required this.type,
     required this.percentage,
@@ -55,33 +51,19 @@ class DiscountData {
     required this.updatedAt,
   });
 
-  // Factory method to manually serialize from JSON
-  factory DiscountData.fromJson(Map<String, dynamic> json) {
-    return DiscountData(
-      id: json['id'],
-      type: json['type'],
-      percentage: json['percentage'],
-      active: json['active'],
-      startDate: DateTime.parse(json['startDate']),
-      endDate: DateTime.parse(json['endDate']),
-      isDeleted: json['isDeleted'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+  factory Discount.fromJson(Map<String, dynamic> json) {
+    return Discount(
+      id: json['id'] as String,
+      type: json['type'] as String,
+      percentage: json['percentage'] as int,
+      active: json['active'] as bool,
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
+      isDeleted: json['isDeleted'] as bool,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
   }
-
-  // Method to serialize back to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'type': type,
-      'percentage': percentage,
-      'active': active,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
-      'isDeleted': isDeleted,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-    };
-  }
 }
+
+

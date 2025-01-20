@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class BasicProductInfo extends ConsumerStatefulWidget {
   final Function gotoNextTab;
@@ -156,13 +159,14 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaPaginatedSelectField(
                           height: 0.3,
                           uniqueKey: 'product-category',
-                          value:  viewModel.productCategory,
+                          displayText: (item) => item.label,
+                          fetchData: ref.watch(shopVmProvider.notifier).allCategories,
                           label: "Product Category",
                           hintText: 'Select Product Category',
-                          items: viewModel.categories,
+                          
                           onSelected: (value) => ref
                               .read(addProductProvider.notifier)
                               .update(value, "productCategory")),

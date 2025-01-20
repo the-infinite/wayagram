@@ -39,6 +39,7 @@ class AddProductState {
   File? productImage;
   final TextEditingController discountPercentage;
   final bool isLoading;
+  int totalNoOfDiscountPages;
 
   AddProductState(
       {TextEditingController? productName,
@@ -64,6 +65,7 @@ class AddProductState {
       this.uploadedDocuments = const [],
       this.shopId = '',
       this.images = const [],
+      this.totalNoOfDiscountPages = 1,
       this.productImage,
       this.categories = const [],
       this.allDiscountTypes = const [],
@@ -108,6 +110,7 @@ class AddProductState {
       bool? isWayagramDeal,
       List<Select>? categories,
       List<Select>? allDiscountTypes,
+      int? totalNoOfDiscountPages,
       Select? selectedDiscountType,
       bool? isLoading,
       String? shopId}) {
@@ -140,6 +143,7 @@ class AddProductState {
         isLoading: isLoading ?? this.isLoading,
         allDiscountTypes: allDiscountTypes ?? this.allDiscountTypes,
         selectedDiscountType: selectedDiscountType ?? this.selectedDiscountType,
+        totalNoOfDiscountPages : totalNoOfDiscountPages ?? this.totalNoOfDiscountPages,
         images: images ?? this.images);
   }
 

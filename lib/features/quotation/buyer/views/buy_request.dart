@@ -30,7 +30,7 @@ class BuyRequests extends ConsumerWidget {
             subTitle: 'Explore Categories & Best Offers',
             title: 'Wayagram Deals'),
         const Gap(10),
-        CategoriesFilterWidget<Product>(allItems: []),
+        CategoriesFilterWidget(setCategory: (value) => {},),
         const Gap(25),
         ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png'),),
         const Gap(25),

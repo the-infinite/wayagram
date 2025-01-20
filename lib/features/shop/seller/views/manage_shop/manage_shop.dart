@@ -48,7 +48,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(viewModel.singleShop!.name.capitalizeFirst ?? '',
+            Text(viewModel.singleShop!.name.capitalizeFirst!,
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(3),
             Text(
