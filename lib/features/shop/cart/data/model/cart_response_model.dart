@@ -72,6 +72,22 @@ class CartData {
       'createdAt': createdAt.toIso8601String(),
     };
   }
+
+  CartData copyWith(
+      {String? id,
+      String? userId,
+      List<CartItem>? items,
+      String? total,
+      DateTime? updatedAt,
+      DateTime? createdAt}) {
+    return CartData(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        items: items ?? this.items,
+        total: total ?? this.total,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdAt: createdAt ?? this.createdAt);
+  }
 }
 
 class CartItem {
@@ -97,6 +113,11 @@ class CartItem {
       'shopId': shopId,
       'products': products.map((product) => product.toJson()).toList(),
     };
+  }
+
+  CartItem copyWith({String? shopId, List<CartProduct>? products}) {
+    return CartItem(
+        shopId: shopId ?? this.shopId, products: products ?? this.products);
   }
 }
 
@@ -125,5 +146,12 @@ class CartProduct {
       'quantity': quantity,
       'productId': productId,
     };
+  }
+
+  CartProduct copyWith({int? price, int? quantity, String? productId}) {
+    return CartProduct(
+        price: price ?? this.price,
+        quantity: quantity ?? this.quantity,
+        productId: productId ?? this.productId);
   }
 }

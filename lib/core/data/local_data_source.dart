@@ -3,7 +3,7 @@ import 'package:wayagram/core/service/storage_service/fast_storage/waya_fast_sto
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/select_account_data.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
-import 'package:wayagram/features/shop/cart/data/model.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 
 class WayaLocalDataSource {
   final wayaFastStorageService = WayaFastStorageService();
@@ -22,14 +22,6 @@ class WayaLocalDataSource {
 
   SelectAccountData getUserType() {
     return wayaFastStorageService.read(key: 'userType');
-  }
-
-  saveToCart(List<Cart> cart) {
-    wayaFastStorageService.write<List<Cart>>(key: 'cart', value: cart);
-  }
-
-  List<Cart> getCart() {
-    return wayaFastStorageService.read(key: 'cart');
   }
 
   saveUser(UserAccountData user) {

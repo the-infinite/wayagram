@@ -7,16 +7,15 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 
 class WayaCartIcon extends ConsumerWidget {
-
   const WayaCartIcon({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
-     final cartItemCount = ref.watch(cartProvider.select((cart) => 
-      cart.fold(0, (sum, item) => sum + item.count)
-    ));
+
+    final cartItemCount =
+        ref.read(cartVmProvider.notifier).getTotalProductQuantity();
     return GestureDetector(
       onTap: () {
         WayaNav.toNamed('/cart');

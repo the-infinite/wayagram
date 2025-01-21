@@ -1,12 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
-
-// final cartProvider =
-//     StateNotifierProvider<CartVm, List<Cart>>((ref) => CartVm());
+import 'package:uuid/uuid.dart';
 
 class CartState {
   final bool isLoading;
@@ -23,12 +20,10 @@ class CartState {
 //
 class CartVm extends StateNotifier<CartState> {
   final Ref ref;
-  final WayaLocalDataSource _localDataSource;
   final WayaSecureDataSource _secureDataSource;
   final CartRepository _cartRepository;
 
-  CartVm(this.ref, this._localDataSource, this._cartRepository,
-      this._secureDataSource)
+  CartVm(this.ref, this._cartRepository, this._secureDataSource)
       : super(CartState()) {
     loadCart();
   }
@@ -39,7 +34,7 @@ class CartVm extends StateNotifier<CartState> {
       final response = await _cartRepository.getUserCart(userId!);
 
       if (response.success) {
-        CartResponse cartResponse = CartResponse.fromJson(response.data);
+        final cartResponse = CartResponse.fromJson(response.data);
         state = state.copyWith(cart: cartResponse.data);
       }
     } catch (e) {
@@ -47,51 +42,220 @@ class CartVm extends StateNotifier<CartState> {
     }
   }
 
-  addToCart(Product product, int count) {
-    final existingIndex = state.indexWhere((i) => i.id == product.id);
+  void addToCart(Product product, int count) async {
+    final existingCart = state.cart;
 
-    if (existingIndex >= 0) {
-      state = state.asMap().entries.map((entry) {
-        final index = entry.key;
-        final currentItem = entry.value;
+    if (existingCart == null) {
+      final newCart = CartData(
+        id: Uuid().v4(),
+        userId: Uuid().v4(),
+        total: (product.price * count).toString(),
+        updatedAt: DateTime.now(),
+        createdAt: DateTime.now(),
+        items: [
+          CartItem(
+            shopId: product.shopId,
+            products: [
+              CartProduct(
+                price: double.parse(product.price).toInt(),
+                quantity: count,
+                productId: product.id,
+              )
+            ],
+          ),
+        ],
+      );
+      state = state.copyWith(cart: newCart);
 
-        if (index == existingIndex) {
-          // copyWith to create updated item
-          return currentItem.copyWith(
-              currentItem.count + 1, currentItem.quantity - 1);
+// post cart
+      await postCartItem(product);
+      return;
+    }
+
+    final updatedItems = [...existingCart.items];
+    bool productAdded = false;
+
+    for (int i = 0; i < updatedItems.length; i++) {
+      if (updatedItems[i].shopId == product.shopId) {
+        final updatedProducts = [...updatedItems[i].products];
+
+        for (int j = 0; j < updatedProducts.length; j++) {
+          if (updatedProducts[j].productId == product.id) {
+            updatedProducts[j] = updatedProducts[j].copyWith(
+              quantity: updatedProducts[j].quantity + count,
+            );
+            productAdded = true;
+            break;
+          }
         }
-        return currentItem;
-      }).toList();
-    } else {
-      // add product to cart
-      final Cart cartItem = Cart.fromProduct(product, count);
 
-      state = [...state, cartItem];
-    }
-    _localDataSource.saveToCart(state);
-  }
+        if (!productAdded) {
+          updatedProducts.add(
+            CartProduct(
+              price: double.parse(product.price).toInt(),
+              quantity: count,
+              productId: product.id,
+            ),
+          );
+          productAdded = true;
+        }
 
-  removeFromCart(String id) {
-    final isIdPresent = state.any((cart) => cart.id == id);
-
-    if (isIdPresent) {
-      final Cart cartItem = state.firstWhere((c) => c.id == id);
-      if (cartItem.count > 0) {
-        state.map((cart) {
-          return cart.copyWith(cart.count - 1, cart.quantity + 1);
-        }).toList();
-      } else {
-        state.where((cart) => cart.id != id).toList();
+        updatedItems[i] = updatedItems[i].copyWith(products: updatedProducts);
+        break;
       }
+    }
 
-      _localDataSource.saveToCart(state);
+    if (!productAdded) {
+      updatedItems.add(
+        CartItem(
+          shopId: product.shopId,
+          products: [
+            CartProduct(
+              price: double.parse(product.price).toInt(),
+              quantity: count,
+              productId: product.id,
+            ),
+          ],
+        ),
+      );
+    }
+
+    final total = updatedItems.fold<double>(
+      0,
+      (sum, item) =>
+          sum +
+          item.products.fold(
+            0,
+            (prodSum, prod) => prodSum + (prod.price * prod.quantity),
+          ),
+    );
+
+    state = state.copyWith(
+      cart: existingCart.copyWith(
+        items: updatedItems,
+        total: total.toString(),
+        updatedAt: DateTime.now(),
+      ),
+    );
+// update cart
+    await updateCartItem(product);
+  }
+
+  void removeFromCart(String productId, Product product) async {
+    final existingCart = state.cart;
+    if (existingCart == null) return;
+
+    final updatedItems = existingCart.items
+        .map((item) {
+          final updatedProducts = item.products
+              .map((product) {
+                if (product.productId == productId) {
+                  final newQuantity = product.quantity - 1;
+                  return newQuantity > 0
+                      ? product.copyWith(quantity: newQuantity)
+                      : null;
+                }
+                return product;
+              })
+              .whereType<CartProduct>()
+              .toList();
+
+          return item.copyWith(products: updatedProducts);
+        })
+        .where((item) => item.products.isNotEmpty)
+        .toList();
+
+    final total = updatedItems.fold<double>(
+      0,
+      (sum, item) =>
+          sum +
+          item.products.fold(
+            0,
+            (prodSum, prod) => prodSum + (prod.price * prod.quantity),
+          ),
+    );
+
+    state = state.copyWith(
+      cart: existingCart.copyWith(
+        items: updatedItems,
+        total: total.toString(),
+        updatedAt: DateTime.now(),
+      ),
+    );
+
+    await decreaseCartItem(product);
+  }
+
+  Future<void> postCartItem(Product product) async {
+    try {
+      final userId = await _secureDataSource.getUserId();
+      int intPrice = double.parse(product.price).toInt();
+      final response = await _cartRepository.addItemToCart(
+          productId: product.id,
+          quantity: 1,
+          userId: userId!,
+          shopId: product.shopId,
+          price: intPrice);
+      if (response.success) {
+        print(response.data);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
-  Future<void> postItemToCart() async {}
+  Future<void> updateCartItem(Product product) async {
+    try {
+      final userId = await _secureDataSource.getUserId();
+
+      final response = await _cartRepository.updateQuantity(
+        productId: product.id,
+        userId: userId!,
+        shopId: product.shopId,
+      );
+      if (response.success) {
+        print(response.data);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> decreaseCartItem(Product product) async {
+    try {
+      final userId = await _secureDataSource.getUserId();
+
+      final response = await _cartRepository.decreaseQuantity(
+        productId: product.id,
+        userId: userId!,
+        shopId: product.shopId,
+      );
+      if (response.success) {
+        print(response.data);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  int getTotalProductQuantity() {
+  final existingCart = state.cart;
+  if (existingCart == null) return 0;
+
+
+  final totalQuantity = existingCart.items.fold<int>(
+    0,
+    (sum, item) => sum + item.products.fold<int>(
+      0,
+      (productSum, product) => productSum + product.quantity,
+    ),
+  );
+
+  return totalQuantity;
+}
+
 }
 
 final cartVmProvider = StateNotifierProvider<CartVm, CartState>((ref) {
-  return CartVm(
-      ref, WayaLocalDataSource(), CartRepository(), WayaSecureDataSource());
+  return CartVm(ref, CartRepository(), WayaSecureDataSource());
 });
