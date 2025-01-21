@@ -74,7 +74,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                               color: wayaTheme.colorScheme.customBlack),
                         ),
                         Text(
-                          "Delivery Date: ${widget.cartItem.deliveryDate}",
+                          "Delivery Date: ${widget.cartItem.deliveryDate ?? ''}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.greyColor400,
                               fontSize: 14),
@@ -89,7 +89,12 @@ class _CartCardState extends ConsumerState<CartCard> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        // viewModel.deliveryRequest(context,widget.restructuredCart.cart);
+                        ref.read(cartCardVmProvider.notifier).deliveryRequest(
+                            context,
+                            widget.cartItem.products,
+                            widget.cartItem.shopId,
+                            widget.cartItem.shopName,
+                            widget.cartItem.shopLogo);
                       },
                       child: SvgPicture.asset('assets/icons/chat.svg'),
                     ),
@@ -189,7 +194,7 @@ class CartProductCard extends ConsumerWidget {
               Row(
                 children: [
                   WayaImage(
-                    imageUrl: cartProduct.productImage,
+                    imageUrl: cartProduct.productImage ?? '',
                     height: 70,
                     width: 50,
                     radius: BorderRadius.circular(8),

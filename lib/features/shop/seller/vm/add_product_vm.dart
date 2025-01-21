@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
@@ -24,7 +26,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
   final ShopRepository _shopRepository;
   final Ref ref;
   AddProductVm(this._shopRepository, this.ref) : super(AddProductState()) {
-    state = state.copyWith(isWayagramDeal: false);
+    state = state.copyWith(isWayagramDeal: null);
     state =
         state.copyWith(shopId: ref.watch(manageShopVmProvider).singleShop!.id);
   }
@@ -127,6 +129,10 @@ class AddProductVm extends StateNotifier<AddProductState> {
 
   Future<void> onSubmit(BuildContext context) async {
     try {
+      if (state.images.isEmpty) {
+        WayaSnackBar.showToast("A prduct must have an image");
+        return;
+      }
       state = state.copyWith(isLoading: true);
 
       List<MultipartFile> addedimages = [];

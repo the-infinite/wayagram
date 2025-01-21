@@ -24,19 +24,19 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     {"title": "Pending Orders", "metrics": "100", "color": Color(0xffFEF6E7)},
   ];
   Future<void> getSellerShops() async {
-    final isBusiness = ref.watch(successfulSetupVmProvider).business;
-    if (isBusiness == null) {
+    final isBusiness = ref.read(successfulSetupVmProvider).business!.id;
+    if (isBusiness == null || isBusiness.isEmpty) {
+      print("gergre $isBusiness");
       // account is most likely a personal account
       state = state.copyWith(isPersonalNotUpgradedToBusiness: true);
       return;
     }
-    final businessId = ref.watch(successfulSetupVmProvider).business!.id;
 
     state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _shopRepository.getShopBySellerId(businessId!);
+      final response = await _shopRepository.getShopBySellerId(isBusiness);
 
       if (response.success) {
         ShopResponseModel responseModel =

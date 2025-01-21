@@ -124,22 +124,6 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       WayaTextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: viewModel.stockQuantity,
-                        hintText: 'Enter Product Quantity',
-                        label: 'Product Quantity',
-                      ),
-                    ],
-                  );
-                }),
-                const Gap(10),
-                FormField<String>(validator: (value) {
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaTextFormField(
                         keyboardType: TextInputType.text,
                         controller: viewModel.materialType,
                         hintText: 'Enter Material Type',

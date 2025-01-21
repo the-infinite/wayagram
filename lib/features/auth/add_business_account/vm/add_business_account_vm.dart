@@ -170,7 +170,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.businessKyc(formdata);
-      if (response.data['statusCode'] == 200 && context.mounted) {
+      if (response.data['statusCode'] == 200) {
         final userId = await _secureDataSource.getUserId();
         final bizResponse =
             await _profileRepo.getBusinessDataRepo(userId: userId!);
