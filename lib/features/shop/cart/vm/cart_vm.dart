@@ -1,23 +1,50 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
-import 'package:wayagram/features/shop/cart/data/model.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 
-final cartProvider =
-    StateNotifierProvider<CartVm, List<Cart>>((ref) => CartVm());
+// final cartProvider =
+//     StateNotifierProvider<CartVm, List<Cart>>((ref) => CartVm());
 
-class CartVm extends StateNotifier<List<Cart>> {
-  final WayaLocalDataSource localDataSource = WayaLocalDataSource();
+class CartState {
+  final bool isLoading;
+  final CartData? cart;
 
-  CartVm() : super([]) {
+  CartState({this.cart, this.isLoading = false});
+
+  CartState copyWith({CartData? cart, bool? isLoading}) {
+    return CartState(
+        cart: cart ?? this.cart, isLoading: isLoading ?? this.isLoading);
+  }
+}
+
+//
+class CartVm extends StateNotifier<CartState> {
+  final Ref ref;
+  final WayaLocalDataSource _localDataSource;
+  final WayaSecureDataSource _secureDataSource;
+  final CartRepository _cartRepository;
+
+  CartVm(this.ref, this._localDataSource, this._cartRepository,
+      this._secureDataSource)
+      : super(CartState()) {
     loadCart();
   }
 
   Future<void> loadCart() async {
-   // final List<Cart> cartArray =
-       // localDataSource.getCart().isEmpty ? [] : localDataSource.getCart();
+    try {
+      final userId = await _secureDataSource.getUserId();
+      final response = await _cartRepository.getUserCart(userId!);
 
-    state = [];
+      if (response.success) {
+        CartResponse cartResponse = CartResponse.fromJson(response.data);
+        state = state.copyWith(cart: cartResponse.data);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   addToCart(Product product, int count) {
@@ -41,7 +68,7 @@ class CartVm extends StateNotifier<List<Cart>> {
 
       state = [...state, cartItem];
     }
-    localDataSource.saveToCart(state);
+    _localDataSource.saveToCart(state);
   }
 
   removeFromCart(String id) {
@@ -57,12 +84,14 @@ class CartVm extends StateNotifier<List<Cart>> {
         state.where((cart) => cart.id != id).toList();
       }
 
-      localDataSource.saveToCart(state);
+      _localDataSource.saveToCart(state);
     }
   }
+
+  Future<void> postItemToCart() async {}
 }
 
-final restructuredCartProvider = Provider<List<RestructuredCart>>((ref) {
-  final cartItems = ref.watch(cartProvider);
-  return restructureCartBySeller(cartItems);
+final cartVmProvider = StateNotifierProvider<CartVm, CartState>((ref) {
+  return CartVm(
+      ref, WayaLocalDataSource(), CartRepository(), WayaSecureDataSource());
 });

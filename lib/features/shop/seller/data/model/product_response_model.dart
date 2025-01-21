@@ -1,6 +1,5 @@
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
-import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 
 class ProductResponse {
   final String message;

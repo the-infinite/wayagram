@@ -19,7 +19,7 @@ class WayaCartIcon extends ConsumerWidget {
     ));
     return GestureDetector(
       onTap: () {
-        WayaNav.toNamed("/cart");
+        WayaNav.toNamed('/cart');
       },
       child: Row(
         children: [

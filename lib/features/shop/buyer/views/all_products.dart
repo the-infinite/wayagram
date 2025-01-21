@@ -16,34 +16,42 @@ class AllProducts extends ConsumerWidget {
     final notifier = ref.watch(shopVmProvider.notifier);
     final state = ref.watch(shopVmProvider);
 
-    return Column(
-      children: [
-        FilterWidget<Product>(allItems: []),
-        const Gap(25),
-        GroupedWidgetHeader(
-            onTap: () {},
-            subTitle: 'Explore Categories & Best Offers',
-            title: 'Wayagram Deals'),
-        const Gap(10),
-        CategoriesFilterWidget(
-          setCategory: (value) => {},
-          uniqueKey: 'all-product',
-        ),
-        const Gap(25),
-        state.isLoading
-            ? _wayagramDealProductLoadingState(context: context)
-            : SizedBox.shrink(),
-        const Gap(25),
-        GroupedWidgetHeader(
-            onTap: () {},
-            subTitle: 'Explore Categories & Best Offers',
-            title: 'Recommended Products'),
-        const Gap(25),
-        state.isLoading
-            ? _recommendedProductLoadingState(context: context)
-              : SizedBox.shrink(),
-      ],
-    );
+    return RefreshIndicator(
+        onRefresh: () => ref.read(shopVmProvider.notifier).getAllProducts(),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FilterWidget<Product>(allItems: []),
+              const Gap(25),
+              GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Explore Categories & Best Offers',
+                title: 'Wayagram Deals',
+              ),
+              const Gap(10),
+              CategoriesFilterWidget(
+                setCategory: (value) => {},
+                uniqueKey: 'all-product',
+              ),
+              const Gap(25),
+              state.isLoading
+                  ? _wayagramDealProductLoadingState(context: context)
+                  : const SizedBox.shrink(),
+              const Gap(25),
+              GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Explore Categories & Best Offers',
+                title: 'Recommended Products',
+              ),
+              const Gap(25),
+              state.isLoading
+                  ? _recommendedProductLoadingState(context: context)
+                  : _buildProductGrid(notifier.filteredProducts),
+            ],
+          ),
+        ));
   }
 
   Widget _buildProductGrid(List<Product> products) {
