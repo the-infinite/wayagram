@@ -87,9 +87,6 @@ class ContestCard extends StatelessWidget {
                     ],
                   ),
                   ),
-                /*WayaButton(callback: () {  },
-                  text: "Follow",
-                )*/
                 ],
               ),
               const Gap(20),
