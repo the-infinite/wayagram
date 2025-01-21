@@ -38,4 +38,37 @@ class CartRepository extends BaseRepository {
     return patch("$serviceUrl/cart/update-quantity",
         {"productId": productId, "userId": userId, "shopId": shopId});
   }
+
+  Future<WayaRequestResponse> updateDeliveryAddress(
+      {required String deliveryAddress,
+      required String userId,
+      required String shopId}) async {
+    return patch("$serviceUrl/cart/request-deliveryFee", {
+      "userId": userId,
+      "shopId": shopId,
+      "deliveryAddress": deliveryAddress
+    });
+  }
+
+   Future<WayaRequestResponse> updateDeliveryFee(
+      {required String deliveryAddress,
+      required String deliveryFee,
+      required String deliveryDate,
+      required String userId,
+      required String shopId}) async {
+    return patch("$serviceUrl/cart/shop/$shopId/user/$userId/update-fee-and-date", {
+      "deliveryDate": deliveryDate,
+   
+      "deliveryFee": deliveryFee
+    });
+  }
+
+  Future<WayaRequestResponse> getPendingDelivery({
+required String id
+  })
+  async {
+    return get("$serviceUrl/cart/delivery-address/$id");
+  }
+
+  //
 }

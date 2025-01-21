@@ -179,7 +179,8 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
               BusinessAccountData.fromJson(bizResponse.data);
           ref.read(successfulSetupVmProvider).copyWith(business: bizData);
         }
-        WayaUtils.showNotice(
+       if (context.mounted) {
+         WayaUtils.showNotice(
             context: context,
             title: 'KYC Documents Submitted \n Successfully',
             message:
@@ -187,6 +188,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
             onPress: () => WayaNav.toNamed("/explore"),
             icon: Image.asset('assets/images/auth/doc-success.png'),
             buttonText: 'Go To HomePage');
+       }
       }
     } catch (e) {
       _logger.e(e);
