@@ -6,7 +6,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
+
 
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
@@ -85,7 +85,7 @@ class ProductCard extends ConsumerWidget {
           const Gap(3),
           Text(product.name, style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
-              visible: !isExplore,
+              visible: !isExplore && product.rating != null,
               child: Column(
                 children: [
                   const Gap(3),
@@ -100,7 +100,7 @@ class ProductCard extends ConsumerWidget {
                       ),
                       const Gap(3),
                       Text(
-                        "4.6",
+                        product.rating ?? '0',
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.greyColor400,
                             fontSize: 11),
