@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 
 import '../../../../core/utils/waya_navigation.dart';
+import '../../data/controller/contest_controller.dart';
 
 class CreateUltimate extends ConsumerStatefulWidget {
   final VoidCallback goToNextTab;
@@ -17,6 +20,9 @@ class CreateUltimate extends ConsumerStatefulWidget {
 }
 
 class _CreateUltimateState extends ConsumerState<CreateUltimate> {
+  final _contestController = Get.put(ContestController());
+  List<String> category = [""];
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -34,7 +40,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
         WayaTextFormField(
           helperText:
               "This name will be displayed as the official contest title. You can update it if needed",
-          controller: TextEditingController(),
+          controller: _contestController.contestTitleTextController,
           hintText: "Enter Contest Title",
           label: "Contest Title",
         ),
@@ -44,7 +50,9 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           label: "Contest Category",
           hintText: 'Select Contest Category',
           items: [],
-          onSelected: (value) {},
+          onSelected: (value) {
+
+          },
           uniqueKey: 'contest-category',
         ),
         const Gap(15),
@@ -58,7 +66,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
         ),
         const Gap(15),
         WayaTextFormField(
-          controller: TextEditingController(),
+          controller: _contestController.contestCategoryTextController,
           hintText: "Enter Contest Description",
           label: "Contest Description",
           line: 6,
@@ -66,13 +74,13 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
         const Gap(15),
         WayaTextFormField(
           keyboardType: TextInputType.number,
-          controller: TextEditingController(),
+          controller: _contestController.contestVoteCountQualifyTextController,
           hintText: "Enter Vote Counts to Qualify",
           label: "Vote Counts to Qualify",
         ),
         const Gap(15),
         WayaTextFormField(
-          controller: TextEditingController(),
+          controller: _contestController.contestWinnerAwardTextController ,
           hintText: "Enter Winner's Award",
           label: "Winner's Award",
         ),
