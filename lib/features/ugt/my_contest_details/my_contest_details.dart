@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
+import '../widgets/contest_applied_card.dart';
 import '../widgets/contest_card.dart';
 import '../widgets/ugt_empty_state.dart';
 
@@ -29,7 +30,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
       runSpacing: 1,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: List.generate(_tabs.length, (index) {
@@ -51,7 +52,8 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                     style: TextStyle(
                       color: _selectedIndex == index ? wayaTheme.colorScheme.customPrimary : Colors.black,
                       fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.bold,
-                      fontSize: 14
+                      fontSize: 12
+
                     ),
                   ),
                 ),
@@ -109,9 +111,20 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                     }),
 
               /// Applied Contests
-
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
+                    const Gap(10),
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: 3,
+                      itemBuilder: (context, index) {
+                        return ContestAppliedCard();
+                      },
+                    ),
 
                   ],
                 ),

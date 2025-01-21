@@ -26,12 +26,6 @@ class SingleNegotiationBidWidget extends ConsumerWidget {
     final viewModel = ref.watch(rejectBidVmProvider);
     return GestureDetector(
         onTap: () {
-          // if (isSeller) {
-          //   WayaNav.toNamed('/seller-bid-details', arguments: "id");
-          //   //viewModel.sellerBidAction(context);
-          // } else {
-          //   WayaNav.toNamed('/seller-bid-details', arguments: "id");
-          // }
         },
         child: Column(
           children: [

@@ -13,6 +13,7 @@ import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/views/create_poll.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_summary.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
+import 'package:wayagram/features/polls_and_voting/views/share_voting_link.dart';
 import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart';
 import 'package:wayagram/features/quotation/buyer/views/buyer_checkout.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
@@ -117,7 +118,8 @@ class WayaAppRoutes {
     PollAndVoting.route: ()=> PollAndVoting(),
     AddChoices.route: ()=> AddChoices(),
     PollSummary.route: () => PollSummary(),
-    PollDashboard.route: () => PollDashboard()
+    PollDashboard.route: () => PollDashboard(),
+    ShareVotingLink.route: ()=> ShareVotingLink(),
 
     
   };
