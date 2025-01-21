@@ -27,7 +27,8 @@ class ForYouContest extends ConsumerWidget {
         const Gap(10),
         WayaButton(
           callback: () {
-            WayaNav.toNamed('/create-contest');
+            WayaNav.toNamed('/create-profile-contest1');
+           // WayaNav.toNamed('/create-contest');
           },
           color: wayaTheme.colorScheme.primar50,
           text: "Host a Contest",
