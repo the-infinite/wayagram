@@ -59,6 +59,16 @@ class $AssetsIconsGen {
   SvgGenImage get buttonIcon =>
       const SvgGenImage('assets/icons/button-icon.svg');
 
+  /// File path: assets/icons/c-call-incoming.svg
+  SvgGenImage get cCallIncoming =>
+      const SvgGenImage('assets/icons/c-call-incoming.svg');
+
+  /// File path: assets/icons/c-pause.svg
+  SvgGenImage get cPause => const SvgGenImage('assets/icons/c-pause.svg');
+
+  /// File path: assets/icons/c-play.svg
+  SvgGenImage get cPlay => const SvgGenImage('assets/icons/c-play.svg');
+
   /// File path: assets/icons/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
 
@@ -267,6 +277,9 @@ class $AssetsIconsGen {
         bid,
         business,
         buttonIcon,
+        cCallIncoming,
+        cPause,
+        cPlay,
         chat,
         checkIcon,
         coinInHand,
@@ -621,6 +634,9 @@ class $AssetsImagesBidGen {
   /// File path: assets/images/bid/down.png
   AssetGenImage get down => const AssetGenImage('assets/images/bid/down.png');
 
+  /// File path: assets/images/bid/edit.png
+  AssetGenImage get edit => const AssetGenImage('assets/images/bid/edit.png');
+
   /// File path: assets/images/bid/map.png
   AssetGenImage get map => const AssetGenImage('assets/images/bid/map.png');
 
@@ -640,6 +656,7 @@ class $AssetsImagesBidGen {
         coinInHand,
         deal,
         down,
+        edit,
         map,
         star,
         store
