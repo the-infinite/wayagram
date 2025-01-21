@@ -1,25 +1,25 @@
 class UpgradeToBusinessModel {
-  final String? roleId;
-  final String? accountTypeId;
+//  final String? roleId;
+final String? accountTypeId;
   final Business business;
 
   UpgradeToBusinessModel({
-    this.roleId,
-    this.accountTypeId,
+  //  this.roleId,
+     this.accountTypeId,
     required this.business,
   });
 
   factory UpgradeToBusinessModel.fromJson(Map<String, dynamic> json) {
     return UpgradeToBusinessModel(
-      roleId: json['roleId'],
-      accountTypeId: json['accountTypeId'],
+     // roleId: json['roleId'],
+       accountTypeId: json['accountTypeId'],
       business: Business.fromJson(json['business']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'roleId': roleId,
+      //'roleId': roleId,
       'accountTypeId': accountTypeId,
       'business': business.toJson(),
     };

@@ -333,6 +333,64 @@ class EditOfferModal extends StatefulWidget {
 }
 
 class _EditOfferModalState extends State<EditOfferModal> {
+  String amount = "0";
+
+  final double maxAmount = 50000000;
+  String? errorMessage;
+
+  void _updateAmount(String value) {
+    setState(() {
+      if (amount == "0.00") {
+        amount = value;
+      } else {
+        // Prevent leading zeros
+        if (amount == "0") {
+          amount = value;
+        } else {
+          if (amount.length > 8) return;
+          amount += value;
+        }
+      }
+
+      // Clear error when user starts typing again
+      errorMessage = null;
+    });
+  }
+
+  void _deleteAmount() {
+    setState(() {
+      if (amount.length > 1) {
+        amount = amount.substring(0, amount.length - 1);
+        if (amount.isEmpty) {
+          amount = "0.00";
+        }
+      } else {
+        amount = "0.00";
+      }
+      errorMessage = null;
+    });
+  }
+
+  void _handleSubmit() async {
+    // Convert amount string to double for comparison
+    double numericAmount = double.tryParse(amount) ?? 0;
+
+    // Validate amount
+    if (amount == "0.00" || amount == "0" || amount.startsWith("00")) {
+      setState(() {
+        errorMessage = "Please enter a valid amount";
+      });
+      return;
+    }else{
+      Navigator.of(context).pop();
+      // WayaUtils.showModalSheet(
+      //   context,
+      //   child: ConfirmVoteOptionModal(amount: amount,),
+      // );
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -340,21 +398,70 @@ class _EditOfferModalState extends State<EditOfferModal> {
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset('assets/images/bid/accept.png', height: 100.h, ),
-            SizedBox(height: 20.h),
+
             Text(
-                "Edit Offer",
-                style: wayaTheme.textTheme.bodyMedium),
+                "Edit your Offer",
+                style: wayaTheme.textTheme.titleLarge),
             SizedBox(height: 3.h),
             Text(
-              "Update your base price for this request",
+              'Update your base price for this request',
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.greyColor500 ),
+            ),
+            const Gap(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+             _offerCard(WayaColors.greyColor200, '-100'),
+                const Gap(5),
+              Text(
+                amount,
+                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 48,
+                    fontWeight: FontWeight.w600,
+                    color: amount == '0' ?Theme.of(context).colorScheme.greyColor400 : Theme.of(context).colorScheme.black),
+                textAlign: TextAlign.center,
+              ),
+                const Gap(5),
+             _offerCard(WayaColors.primary, '+100'),
+            ],),
 
-              style: wayaTheme.textTheme.hintStyle, textAlign: TextAlign.center,),
 
             SizedBox(height: 17.h),
-            Column(
+            const Gap(20),
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 3,
+              childAspectRatio: 2,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              padding: const EdgeInsets.only(bottom: 16),
+              children: [
+                for (var i = 1; i <= 9; i++)
+                  NumPadButton(
+                    text: '$i',
+                    onTap: () => _updateAmount('$i'),
+                  ),
+                NumPadButton(
+                  icon: Icons.backspace_outlined,
+                  onTap: _deleteAmount,
+                ),
+                NumPadButton(
+                  text: '0',
+                  onTap: () => _updateAmount('0'),
+                ),
+                NumPadButton(
+                  icon: Icons.arrow_forward,
+                  iconColor: wayaTheme.primaryColor,
+                  onTap: _handleSubmit,
+                ),
+              ],
+            ),
+           /* Column(
               children: [
                 Container(
                   padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
@@ -472,9 +579,78 @@ class _EditOfferModalState extends State<EditOfferModal> {
                 Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
                 callback: () {
                   //widget.gotoPreviousTab();
-                })
+                })*/
 
           ],
+        ),
+      ),
+    );
+  }
+  Widget _offerCard(color, txt){
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: color
+      ),
+      height: 70.h,
+      width: 90.w,
+      child:  Center(
+        child: Text(
+          '+100',
+          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Theme.of(context).colorScheme.white),
+        ),
+      ),
+    );
+  }
+}
+
+class NumPadButton extends StatelessWidget {
+  final String? text;
+  final IconData? icon;
+  final VoidCallback onTap;
+  final Color? backgroundColor;
+  final Color? iconColor;
+
+  const NumPadButton({
+    super.key,
+    this.text,
+    this.icon,
+    required this.onTap,
+    this.backgroundColor,
+    this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: backgroundColor ?? Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(32),
+        side: BorderSide(
+          color: backgroundColor != null
+              ? Colors.transparent
+              : Colors.grey.shade300,
+        ),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(32),
+        child: Center(
+          child: icon != null
+              ? Icon(
+            icon,
+            color: iconColor ?? Colors.grey.shade600,
+          )
+              : Text(
+            text!,
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.grey.shade800,
+            ),
+          ),
         ),
       ),
     );

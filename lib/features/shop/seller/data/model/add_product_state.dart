@@ -16,6 +16,7 @@ class AddProductState {
   final TextEditingController productWidth;
   final TextEditingController productHeight;
   final TextEditingController productDepth;
+  final TextEditingController stockQuantity;
   final List<MultipartFile> images;
   final String shopId;
   final bool isWayagramDeal;
@@ -33,10 +34,13 @@ class AddProductState {
   final String pickUpOption;
   final String discountType;
   final List<Select> categories;
+  final List<Select> allDiscountTypes;
+  final Select? selectedDiscountType;
   List<DocType> uploadedDocuments;
   File? productImage;
   final TextEditingController discountPercentage;
   final bool isLoading;
+  int totalNoOfDiscountPages;
 
   AddProductState(
       {TextEditingController? productName,
@@ -45,11 +49,13 @@ class AddProductState {
       TextEditingController? pricePerUnit,
       TextEditingController? pickUpAddress,
       TextEditingController? deliveryPrice,
+      TextEditingController? stockQuantity,
       this.productCategory = '',
       this.selectedCategory,
       this.productColor = '',
       this.productCondition = '',
       this.productType = '',
+      this.selectedDiscountType,
       TextEditingController? productDepth,
       TextEditingController? productHeight,
       TextEditingController? productWidth,
@@ -61,10 +67,12 @@ class AddProductState {
       this.uploadedDocuments = const [],
       this.shopId = '',
       this.images = const [],
+      this.totalNoOfDiscountPages = 1,
       this.productImage,
       this.categories = const [],
+      this.allDiscountTypes = const [],
       TextEditingController? discountPercentage,
-      this.isLoading  = false,
+      this.isLoading = false,
       this.isWayagramDeal = false})
       : productName = productName ?? TextEditingController(),
         productDescription = productDescription ?? TextEditingController(),
@@ -75,6 +83,7 @@ class AddProductState {
         productDepth = productDepth ?? TextEditingController(),
         productHeight = productHeight ?? TextEditingController(),
         discountPercentage = discountPercentage ?? TextEditingController(),
+        stockQuantity = stockQuantity ?? TextEditingController(),
         productWidth = productWidth ?? TextEditingController();
 
   AddProductState copyWith(
@@ -87,6 +96,7 @@ class AddProductState {
       TextEditingController? productWidth,
       TextEditingController? productHeight,
       TextEditingController? productDepth,
+      TextEditingController? stockQuantity,
       String? productCategory,
       Select? selectedCategory,
       String? productColor,
@@ -103,6 +113,9 @@ class AddProductState {
       File? productImage,
       bool? isWayagramDeal,
       List<Select>? categories,
+      List<Select>? allDiscountTypes,
+      int? totalNoOfDiscountPages,
+      Select? selectedDiscountType,
       bool? isLoading,
       String? shopId}) {
     return AddProductState(
@@ -119,6 +132,7 @@ class AddProductState {
         productDepth: productDepth ?? this.productDepth,
         productHeight: productHeight ?? this.productHeight,
         productWidth: productWidth ?? this.productWidth,
+        stockQuantity: stockQuantity ?? this.stockQuantity,
         pickUpOption: pickUpOption ?? this.pickUpOption,
         discountType: discountType ?? this.discountType,
         includeMeasurement: includeMeasurement ?? this.includeMeasurement,
@@ -132,6 +146,10 @@ class AddProductState {
         discountPercentage: discountPercentage ?? this.discountPercentage,
         selectedCategory: selectedCategory ?? this.selectedCategory,
         isLoading: isLoading ?? this.isLoading,
+        allDiscountTypes: allDiscountTypes ?? this.allDiscountTypes,
+        selectedDiscountType: selectedDiscountType ?? this.selectedDiscountType,
+        totalNoOfDiscountPages:
+            totalNoOfDiscountPages ?? this.totalNoOfDiscountPages,
         images: images ?? this.images);
   }
 
@@ -145,7 +163,7 @@ class AddProductState {
         price: pricePerUnit.text,
         options: pickUpOption,
         wayagramDeal: isWayagramDeal,
-        discountTypeId: 'a575da9a-aa72-4222-bcf8-9345994b35b3',
+        discountTypeId: selectedDiscountType?.value,
         height: productHeight.text,
         width: productWidth.text,
         depth: productDepth.text,
@@ -153,6 +171,7 @@ class AddProductState {
         deliveryCharge: includeDeliveryFee,
         materialType: materialType.text,
         discountPercentage: discountPercentage.text,
+        stockQuantity: int.parse(stockQuantity.text),
         images: images);
   }
 }
