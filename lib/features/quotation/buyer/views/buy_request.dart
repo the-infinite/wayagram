@@ -118,7 +118,7 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
             subTitle: 'Explore Categories & Best Offers',
             title: 'Wayagram Deals'),
         const Gap(10),
-        CategoriesFilterWidget<Product>(allItems: []),
+       // CategoriesFilterWidget<Product>(allItems: []),
         const Gap(25),
         Container(
           decoration: BoxDecoration(

@@ -8,6 +8,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/auth/add_business_account/data/model/upgrading_response_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to_business_state.dart';
 
@@ -96,10 +97,14 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
       final response = await _authRepository.upgradeToBusiness(
           payload: state.upgradeToBusinessModel, id: userid!);
       if (response.success) {
+        UpgradingResponseModel responseModel =
+            UpgradingResponseModel.fromJson(response.data);
+
+        final businessId = responseModel.business.id;
+        await _secureDataSource.saveBusinessId(businessId);
+        WayaNav.toNamed(AddBusinessAccountView.route);
         // get the business data
         print(response.data);
-        //  WayaNav.toNamed(AddBusinessAccountView.route);
-        //  ref.watch(successfulSetupVmProvider).copyWith(business: )
       }
     } catch (e) {
       _logger.e(e);
