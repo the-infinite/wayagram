@@ -60,6 +60,10 @@ class _ExploreState extends ConsumerState<Explore> {
                       onTap: () {
                         WayaNav.toNamed('/notifications');
                       },
+                      child: WayaAssets.icons.notifications.svg(
+                        height: 24,
+                        width: 24,
+                      ),
                     ),
                     const Gap(15),
                     WayaDp(
