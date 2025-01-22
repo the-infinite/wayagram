@@ -19,9 +19,13 @@ class MyRequests extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     //final viewModel = ref.watch(bidVmProvider.notifier);
     final viewModel = ref.watch(createRequestProvider);
     final productState = ref.watch(productsProvider);
+
+    final viewModel = ref.watch(bidVmProvider.notifier);
+
     return Column(
       children: [
         FilterWidget<Product>(allItems: [], hintText: 'Search Requests'),
@@ -31,7 +35,7 @@ class MyRequests extends ConsumerWidget {
             subTitle: 'Explore Categories & Best Offers',
             title: 'Wayagram Deals'),
         const Gap(10),
-        CategoriesFilterWidget<Product>(allItems: [], ),
+        CategoriesFilterWidget(setCategory: (value) => {}, ),
         const Gap(25),
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
@@ -63,36 +67,36 @@ class MyRequests extends ConsumerWidget {
     );
   }
 
-  Widget _buildProductGrid(List<Product> products) {
-    return Column(
-      children: [
-        for (int i = 0; i < products.length; i += 2)
-          Row(
-            children: [
-              Expanded(
-                child: ProductCard(
-                  product: products[i],
-                  isExplore: false,
-                  isWayaGramDeal: true,
-                  canbeAddedTocart: true,
-                ),
-              ),
-              if (i + 1 < products.length) ...[
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ProductCard(
-                    product: products[i + 1],
-                    isExplore: false,
-                    isWayaGramDeal: true,
-                    canbeAddedTocart: true,
-                  ),
-                ),
-              ],
-            ],
-          ),
-      ],
-    );
-  }
+  // Widget _buildProductGrid(List<Product> products) {
+  //   return Column(
+  //     children: [
+  //       for (int i = 0; i < products.length; i += 2)
+  //         Row(
+  //           children: [
+  //             Expanded(
+  //               child: ProductCard(
+  //                 product: products[i],
+  //                 isExplore: false,
+  //                 isWayaGramDeal: true,
+  //                 canbeAddedTocart: true,
+  //               ),
+  //             ),
+  //             if (i + 1 < products.length) ...[
+  //               const SizedBox(width: 12),
+  //               Expanded(
+  //                 child: ProductCard(
+  //                   product: products[i + 1],
+  //                   isExplore: false,
+  //                   isWayaGramDeal: true,
+  //                   canbeAddedTocart: true,
+  //                 ),
+  //               ),
+  //             ],
+  //           ],
+  //         ),
+  //     ],
+  //   );
+  // }
 
   Widget _wayagramDealProductLoadingState({required BuildContext context}) {
     return Column(

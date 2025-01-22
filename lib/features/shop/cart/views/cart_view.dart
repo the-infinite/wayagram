@@ -15,7 +15,7 @@ class CartView extends ConsumerStatefulWidget {
 class _CartViewState extends ConsumerState<CartView> {
   @override
   Widget build(BuildContext context) {
-    final restructuredCart = ref.watch(restructuredCartProvider);
+    final restructuredCart = ref.watch(cartVmProvider);
     // TODO: implement build
     return WayaScaffold(
         isLoading: false,
@@ -24,9 +24,9 @@ class _CartViewState extends ConsumerState<CartView> {
         body: ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: restructuredCart.length,
+            itemCount: restructuredCart.cart == null ? 0 : restructuredCart.cart!.items.length,
             itemBuilder: (context, index) {
-              return CartCard(restructuredCart: restructuredCart[index]);
+              return CartCard(cartItem: restructuredCart.cart!.items[index]);
             }));
   }
 }

@@ -21,7 +21,7 @@ class ListedProducts extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
-    final productState = ref.watch(productsProvider);
+   
     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -65,29 +65,29 @@ class ListedProducts extends ConsumerWidget {
                 subTitle: "Extensive view of all the products you have created",
                 title: "Your Listed Wayagram Deals"),
             const Gap(10),
-            CategoriesFilterWidget<Product>(allItems: []),
+            CategoriesFilterWidget(setCategory: (value) => {}),
             const Gap(25),
-            productState.when(
-                data: (products) => GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 0,
-                        childAspectRatio: 0.52,
-                        crossAxisSpacing: 12),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(
-                        product: products[index],
-                        isExplore: false,
-                        isWayaGramDeal: false,
-                        canbeAddedTocart: false,
-                        sellerProduct: true,
-                      );
-                    }),
-                error: (e, stack) => _productLoadingState(context: context),
-                loading: () => _productLoadingState(context: context))
+            // productState.when(
+            //     data: (products) => GridView.builder(
+            //         physics: const NeverScrollableScrollPhysics(),
+            //         shrinkWrap: true,
+            //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //             crossAxisCount: 2,
+            //             mainAxisSpacing: 0,
+            //             childAspectRatio: 0.52,
+            //             crossAxisSpacing: 12),
+            //         itemCount: products.length,
+            //         itemBuilder: (context, index) {
+            //           return ProductCard(
+            //             product: products[index],
+            //             isExplore: false,
+            //             isWayaGramDeal: false,
+            //             canbeAddedTocart: false,
+            //             sellerProduct: true,
+            //           );
+            //         }),
+            //     error: (e, stack) => _productLoadingState(context: context),
+            //     loading: () => _productLoadingState(context: context))
           ],
         )
 

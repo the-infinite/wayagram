@@ -26,7 +26,7 @@ import '../../widgets/request_card.dart';
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(bidVmProvider.notifier);
-    final productState = ref.watch(productsProvider);
+   
     return Column(
       children: [
         FilterWidget<Product>(allItems: [], hintText: 'Search Requests'),
@@ -36,7 +36,7 @@ import '../../widgets/request_card.dart';
             subTitle: 'Explore Categories & Best Offers',
             title: 'Wayagram Deals'),
         const Gap(10),
-        CategoriesFilterWidget<Product>(allItems: []),
+        CategoriesFilterWidget(setCategory: (value) => {},),
         const Gap(25),
         ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png'),),
         const Gap(25),
@@ -121,7 +121,7 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
             subTitle: 'Explore Categories & Best Offers',
             title: 'Wayagram Deals'),
         const Gap(10),
-        CategoriesFilterWidget<Product>(allItems: []),
+       // CategoriesFilterWidget<Product>(allItems: []),
         const Gap(25),
         Container(
           decoration: BoxDecoration(

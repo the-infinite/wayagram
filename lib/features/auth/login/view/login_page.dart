@@ -37,7 +37,7 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Gap(Get.height * 0.03),
-              WayaAssests.images.wayalogoUnlabelled.image(scale: 2),
+              WayaAssets.images.wayalogoUnlabelled.image(scale: 2),
               Gap(20),
               Text(
                 "Login to your Account",

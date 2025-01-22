@@ -48,7 +48,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(viewModel.singleShop!.name.capitalizeFirst ?? '',
+            Text(viewModel.singleShop!.name.capitalizeFirst!,
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(3),
             Text(
@@ -70,7 +70,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(WayaAssests.icons.buttonIcon.path,
+                      SvgPicture.asset(WayaAssets.icons.buttonIcon.path,
                           colorFilter: ColorFilter.mode(
                               wayaTheme.colorScheme.customPrimary,
                               BlendMode.srcIn)),
@@ -153,7 +153,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 children: [
                   QuickActionWidget(
                     title: "Orders",
-                    icon: SvgPicture.asset(WayaAssests.icons.orderVan.path),
+                    icon: SvgPicture.asset(WayaAssets.icons.orderVan.path),
                     color: Color(0xffE7F6EC),
                     onTap: () {
                       WayaNav.toNamed('/seller-orders');
@@ -163,7 +163,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                   ),
                   QuickActionWidget(
                     title: "Wayagram Deals",
-                    icon: SvgPicture.asset(WayaAssests.icons.dealIcon.path),
+                    icon: SvgPicture.asset(WayaAssets.icons.dealIcon.path),
                     color: Color(0xffFFF0EB),
                     onTap: () {
                       WayaNav.toNamed('/waya-deal-ad');
@@ -172,7 +172,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                   QuickActionWidget(
                     title: "Disputes",
                     icon: SvgPicture.asset(
-                      WayaAssests.icons.buttonIcon.path,
+                      WayaAssets.icons.buttonIcon.path,
                       width: 28,
                       height: 28,
                       colorFilter:

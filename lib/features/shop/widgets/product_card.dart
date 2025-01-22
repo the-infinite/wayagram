@@ -6,10 +6,10 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
+
 
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 
 class ProductCard extends ConsumerWidget {
   final Product product;
@@ -28,6 +28,7 @@ class ProductCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final String image = product.images[0];
 
     return GestureDetector(
       onTap: () {
@@ -44,17 +45,15 @@ class ProductCard extends ConsumerWidget {
                       color: wayaTheme.colorScheme.scaffoldColor,
                       borderRadius: BorderRadius.circular(8)),
                 )
-              : 
-              
-              WayaImage(
-                  imageUrl: product.images[0],
+              : WayaImage(
+                  imageUrl: image,
                   height: 180,
                   fit: BoxFit.contain,
-                 radius: BorderRadius.circular(8),
-                 color: wayaTheme.colorScheme.transparent,
+                  radius: BorderRadius.circular(8),
+                  color: wayaTheme.colorScheme.transparent,
                 ),
           Visibility(
-              visible: isWayaGramDeal,
+              visible: product.wayagramDeal,
               child: Column(
                 children: [
                   const Gap(3),
@@ -79,13 +78,14 @@ class ProductCard extends ConsumerWidget {
               child: Column(
                 children: [
                   const Gap(3),
-                  Text(product.category, style: wayaTheme.textTheme.hintStyle),
+                  Text(product.category!.label,
+                      style: wayaTheme.textTheme.hintStyle),
                 ],
               )),
           const Gap(3),
           Text(product.name, style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
-              visible: !isExplore,
+              visible: !isExplore && product.rating != null,
               child: Column(
                 children: [
                   const Gap(3),
@@ -100,7 +100,7 @@ class ProductCard extends ConsumerWidget {
                       ),
                       const Gap(3),
                       Text(
-                        "4.6",
+                        product.rating ?? '0',
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.greyColor400,
                             fontSize: 11),
@@ -110,12 +110,12 @@ class ProductCard extends ConsumerWidget {
                 ],
               )),
           Visibility(
-              visible: !isExplore,
+              visible: true,
               child: Column(
                 children: [
                   const Gap(3),
                   Text(
-                    WayaHelpers.formatPrice(product.discountPrice),
+                    "₦${product.price}",
                     style: TextStyle().wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
@@ -125,7 +125,11 @@ class ProductCard extends ConsumerWidget {
                 ],
               )),
           const Gap(3),
-          Text(WayaHelpers.formatPrice(product.price),
+          Text(
+              product.discountPercentage > 0
+                  ? WayaHelpers.calculatedDiscountPrice(
+                      product.price, product.discountPercentage)
+                  : "₦${product.price}",
               style: TextStyle().wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
@@ -139,7 +143,7 @@ class ProductCard extends ConsumerWidget {
                   const Gap(3),
                   WayaButton(
                     callback: () {
-                      ref.read(cartProvider.notifier).addToCart(product, 1);
+                      // ref.read(cartProvider.notifier).addToCart(product, 1);
                     },
                     height: 38,
                     radius: 6,
@@ -306,7 +310,7 @@ class ProductCardSekeleton extends StatelessWidget {
                 )
               ],
             )),
-             Visibility(
+        Visibility(
             visible: sellerProduct,
             child: Column(
               children: [

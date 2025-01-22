@@ -11,7 +11,7 @@ import 'package:wayagram/features/shop/data/model/model.dart';
 
 
 class OrderedProductCard extends StatelessWidget {
-
+  
   const OrderedProductCard({super.key});
 
   @override

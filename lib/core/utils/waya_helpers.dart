@@ -73,4 +73,12 @@ class WayaHelpers {
       contentType: MediaType.parse(mimeType),
     );
   }
+
+  static String calculatedDiscountPrice(String price, int pct) {
+    int intPrice = double.parse(price).toInt();
+
+    double discount = intPrice - (intPrice * (pct / 100));
+
+    return formatPrice(discount.toInt());
+  }
 }

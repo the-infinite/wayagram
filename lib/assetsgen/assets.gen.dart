@@ -59,6 +59,83 @@ class $AssetsIconsGen {
   SvgGenImage get buttonIcon =>
       const SvgGenImage('assets/icons/button-icon.svg');
 
+  /// File path: assets/icons/c-bin.svg
+  SvgGenImage get cBin => const SvgGenImage('assets/icons/c-bin.svg');
+
+  /// File path: assets/icons/c-button-attach.svg
+  SvgGenImage get cButtonAttach =>
+      const SvgGenImage('assets/icons/c-button-attach.svg');
+
+  /// File path: assets/icons/c-button-voicenote.svg
+  SvgGenImage get cButtonVoicenote =>
+      const SvgGenImage('assets/icons/c-button-voicenote.svg');
+
+  /// File path: assets/icons/c-call-incoming.svg
+  SvgGenImage get cCallIncoming =>
+      const SvgGenImage('assets/icons/c-call-incoming.svg');
+
+  /// File path: assets/icons/c-call-video.svg
+  SvgGenImage get cCallVideo =>
+      const SvgGenImage('assets/icons/c-call-video.svg');
+
+  /// File path: assets/icons/c-call-voice.svg
+  SvgGenImage get cCallVoice =>
+      const SvgGenImage('assets/icons/c-call-voice.svg');
+
+  /// File path: assets/icons/c-copy.svg
+  SvgGenImage get cCopy => const SvgGenImage('assets/icons/c-copy.svg');
+
+  /// File path: assets/icons/c-corner-up-left.svg
+  SvgGenImage get cCornerUpLeft =>
+      const SvgGenImage('assets/icons/c-corner-up-left.svg');
+
+  /// File path: assets/icons/c-corner-up-right.svg
+  SvgGenImage get cCornerUpRight =>
+      const SvgGenImage('assets/icons/c-corner-up-right.svg');
+
+  /// File path: assets/icons/c-group-create.svg
+  SvgGenImage get cGroupCreate =>
+      const SvgGenImage('assets/icons/c-group-create.svg');
+
+  /// File path: assets/icons/c-multiply-circle.svg
+  SvgGenImage get cMultiplyCircle =>
+      const SvgGenImage('assets/icons/c-multiply-circle.svg');
+
+  /// File path: assets/icons/c-pause.svg
+  SvgGenImage get cPause => const SvgGenImage('assets/icons/c-pause.svg');
+
+  /// File path: assets/icons/c-pencil.svg
+  SvgGenImage get cPencil => const SvgGenImage('assets/icons/c-pencil.svg');
+
+  /// File path: assets/icons/c-play.svg
+  SvgGenImage get cPlay => const SvgGenImage('assets/icons/c-play.svg');
+
+  /// File path: assets/icons/c-plus.svg
+  SvgGenImage get cPlus => const SvgGenImage('assets/icons/c-plus.svg');
+
+  /// File path: assets/icons/c-profile-block.svg
+  SvgGenImage get cProfileBlock =>
+      const SvgGenImage('assets/icons/c-profile-block.svg');
+
+  /// File path: assets/icons/c-profile-mute.svg
+  SvgGenImage get cProfileMute =>
+      const SvgGenImage('assets/icons/c-profile-mute.svg');
+
+  /// File path: assets/icons/c-profile-report.svg
+  SvgGenImage get cProfileReport =>
+      const SvgGenImage('assets/icons/c-profile-report.svg');
+
+  /// File path: assets/icons/c-profile-unmute.svg
+  SvgGenImage get cProfileUnmute =>
+      const SvgGenImage('assets/icons/c-profile-unmute.svg');
+
+  /// File path: assets/icons/c-profile-user.svg
+  SvgGenImage get cProfileUser =>
+      const SvgGenImage('assets/icons/c-profile-user.svg');
+
+  /// File path: assets/icons/c-send.svg
+  SvgGenImage get cSend => const SvgGenImage('assets/icons/c-send.svg');
+
   /// File path: assets/icons/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
 
@@ -267,6 +344,27 @@ class $AssetsIconsGen {
         bid,
         business,
         buttonIcon,
+        cBin,
+        cButtonAttach,
+        cButtonVoicenote,
+        cCallIncoming,
+        cCallVideo,
+        cCallVoice,
+        cCopy,
+        cCornerUpLeft,
+        cCornerUpRight,
+        cGroupCreate,
+        cMultiplyCircle,
+        cPause,
+        cPencil,
+        cPlay,
+        cPlus,
+        cProfileBlock,
+        cProfileMute,
+        cProfileReport,
+        cProfileUnmute,
+        cProfileUser,
+        cSend,
         chat,
         checkIcon,
         coinInHand,
@@ -330,6 +428,10 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/Icon-left.png
+  AssetGenImage get iconLeft =>
+      const AssetGenImage('assets/images/Icon-left.png');
+
   /// Directory path: assets/images/auth
   $AssetsImagesAuthGen get auth => const $AssetsImagesAuthGen();
 
@@ -338,6 +440,9 @@ class $AssetsImagesGen {
 
   /// Directory path: assets/images/bid
   $AssetsImagesBidGen get bid => const $AssetsImagesBidGen();
+
+  /// File path: assets/images/cp-shop.png
+  AssetGenImage get cpShop => const AssetGenImage('assets/images/cp-shop.png');
 
   /// File path: assets/images/d-code-invalid.png
   AssetGenImage get dCodeInvalid =>
@@ -358,6 +463,10 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/explore
   $AssetsImagesExploreGen get explore => const $AssetsImagesExploreGen();
 
+  /// File path: assets/images/frameuni.png
+  AssetGenImage get frameuni =>
+      const AssetGenImage('assets/images/frameuni.png');
+
   /// File path: assets/images/icon-right.png
   AssetGenImage get iconRight =>
       const AssetGenImage('assets/images/icon-right.png');
@@ -369,6 +478,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/placeholder.png
   AssetGenImage get placeholder =>
       const AssetGenImage('assets/images/placeholder.png');
+
+  /// Directory path: assets/images/polls
+  $AssetsImagesPollsGen get polls => const $AssetsImagesPollsGen();
 
   /// Directory path: assets/images/shop
   $AssetsImagesShopGen get shop => const $AssetsImagesShopGen();
@@ -384,8 +496,20 @@ class $AssetsImagesGen {
   /// File path: assets/images/u-start.png
   AssetGenImage get uStart => const AssetGenImage('assets/images/u-start.png');
 
+  /// File path: assets/images/uni.png
+  AssetGenImage get uni => const AssetGenImage('assets/images/uni.png');
+
+  /// File path: assets/images/upload.png
+  AssetGenImage get upload => const AssetGenImage('assets/images/upload.png');
+
+  /// File path: assets/images/vector.png
+  AssetGenImage get vector => const AssetGenImage('assets/images/vector.png');
+
   /// Directory path: assets/images/wallet
   $AssetsImagesWalletGen get wallet => const $AssetsImagesWalletGen();
+
+  /// File path: assets/images/waya.png
+  AssetGenImage get waya => const AssetGenImage('assets/images/waya.png');
 
   /// File path: assets/images/waya_deal_ad.png
   AssetGenImage get wayaDealAd =>
@@ -401,16 +525,23 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
+        iconLeft,
         avatars,
+        cpShop,
         dCodeInvalid,
         dCodeValid,
         deleteImg,
         destructive,
+        frameuni,
         iconRight,
         placeholder,
         successugt,
         uEmptystate,
         uStart,
+        uni,
+        upload,
+        vector,
+        waya,
         wayaDealAd,
         wayalogo,
         wayalogoUnlabelled
@@ -588,6 +719,9 @@ class $AssetsImagesBidGen {
   /// File path: assets/images/bid/down.png
   AssetGenImage get down => const AssetGenImage('assets/images/bid/down.png');
 
+  /// File path: assets/images/bid/edit.png
+  AssetGenImage get edit => const AssetGenImage('assets/images/bid/edit.png');
+
   /// File path: assets/images/bid/map.png
   AssetGenImage get map => const AssetGenImage('assets/images/bid/map.png');
 
@@ -607,6 +741,7 @@ class $AssetsImagesBidGen {
         coinInHand,
         deal,
         down,
+        edit,
         map,
         star,
         store
@@ -699,6 +834,90 @@ class $AssetsImagesOnboardingGen {
   List<AssetGenImage> get values => [flag, oFirst, oSecond, oThird];
 }
 
+class $AssetsImagesPollsGen {
+  const $AssetsImagesPollsGen();
+
+  /// File path: assets/images/polls/add_image.png
+  AssetGenImage get addImage =>
+      const AssetGenImage('assets/images/polls/add_image.png');
+
+  /// File path: assets/images/polls/azikwe.png
+  AssetGenImage get azikwe =>
+      const AssetGenImage('assets/images/polls/azikwe.png');
+
+  /// File path: assets/images/polls/buhari.png
+  AssetGenImage get buhari =>
+      const AssetGenImage('assets/images/polls/buhari.png');
+
+  /// File path: assets/images/polls/cancel.png
+  AssetGenImage get cancel =>
+      const AssetGenImage('assets/images/polls/cancel.png');
+
+  /// File path: assets/images/polls/check.png
+  AssetGenImage get check =>
+      const AssetGenImage('assets/images/polls/check.png');
+
+  /// File path: assets/images/polls/clock.png
+  AssetGenImage get clock =>
+      const AssetGenImage('assets/images/polls/clock.png');
+
+  /// File path: assets/images/polls/lagos.png
+  AssetGenImage get lagos =>
+      const AssetGenImage('assets/images/polls/lagos.png');
+
+  /// File path: assets/images/polls/menu.png
+  AssetGenImage get menu => const AssetGenImage('assets/images/polls/menu.png');
+
+  /// File path: assets/images/polls/minus.png
+  AssetGenImage get minus =>
+      const AssetGenImage('assets/images/polls/minus.png');
+
+  /// File path: assets/images/polls/plus.png
+  AssetGenImage get plus => const AssetGenImage('assets/images/polls/plus.png');
+
+  /// File path: assets/images/polls/rema.png
+  AssetGenImage get rema => const AssetGenImage('assets/images/polls/rema.png');
+
+  /// File path: assets/images/polls/rufai.png
+  AssetGenImage get rufai =>
+      const AssetGenImage('assets/images/polls/rufai.png');
+
+  /// File path: assets/images/polls/tinubu.png
+  AssetGenImage get tinubu =>
+      const AssetGenImage('assets/images/polls/tinubu.png');
+
+  /// File path: assets/images/polls/uncheck.png
+  AssetGenImage get uncheck =>
+      const AssetGenImage('assets/images/polls/uncheck.png');
+
+  /// File path: assets/images/polls/victony.png
+  AssetGenImage get victony =>
+      const AssetGenImage('assets/images/polls/victony.png');
+
+  /// File path: assets/images/polls/vote.png
+  AssetGenImage get vote => const AssetGenImage('assets/images/polls/vote.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+        addImage,
+        azikwe,
+        buhari,
+        cancel,
+        check,
+        clock,
+        lagos,
+        menu,
+        minus,
+        plus,
+        rema,
+        rufai,
+        tinubu,
+        uncheck,
+        victony,
+        vote
+      ];
+}
+
 class $AssetsImagesShopGen {
   const $AssetsImagesShopGen();
 
@@ -742,8 +961,8 @@ class $AssetsImagesWalletGen {
   List<AssetGenImage> get values => [searchDocu, walletBg];
 }
 
-class WayaAssests {
-  WayaAssests._();
+class WayaAssets {
+  WayaAssets._();
 
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();

@@ -13,7 +13,6 @@ import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
@@ -32,11 +31,11 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
 
   @override
   Widget build(BuildContext context) {
-    final productState = ref.watch(productsProvider);
+    
     final manageShop = ref.watch(manageShopVmProvider);
     final wayaTheme = Theme.of(context);
 
-    if (manageShop.isLoading!) {
+    if (manageShop.isLoading) {
       return SizedBox(
         height: context.height * 0.5,
         child: Center(
@@ -66,7 +65,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          WayaAssests.icons.buttonIcon.path,
+                          WayaAssets.icons.buttonIcon.path,
                           colorFilter: ColorFilter.mode(
                               wayaTheme.colorScheme.customPrimary,
                               BlendMode.srcIn),
@@ -91,13 +90,13 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                           "Extensive view of all the products you have created",
                       title: "My Products"),
                   const Gap(10),
-                  CategoriesFilterWidget<Product>(allItems: []),
+                  CategoriesFilterWidget(setCategory: (value) => {},),
                   const Gap(25),
-                  productState.when(
-                      data: (products) => _buildProductGrid(products),
-                      error: (e, stack) =>
-                          _productLoadingState(context: context),
-                      loading: () => _productLoadingState(context: context))
+                  // productState.when(
+                  //     data: (products) => _buildProductGrid(products),
+                  //     error: (e, stack) =>
+                  //         _productLoadingState(context: context),
+                  //     loading: () => _productLoadingState(context: context))
                 ],
               )
             ],
@@ -105,38 +104,38 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
         : SellerShopEmptyState();
   }
 
-  Widget _buildProductGrid(List<Product> products) {
-    return Column(
-      children: [
-        for (int i = 0; i < products.length; i += 2)
-          Row(
-            children: [
-              Expanded(
-                child: ProductCard(
-                  product: products[i],
-                  isExplore: false,
-                  isWayaGramDeal: false,
-                  canbeAddedTocart: false,
-                  sellerProduct: true,
-                ),
-              ),
-              if (i + 1 < products.length) ...[
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ProductCard(
-                    product: products[i + 1],
-                    isExplore: false,
-                    isWayaGramDeal: false,
-                    canbeAddedTocart: false,
-                    sellerProduct: true,
-                  ),
-                ),
-              ],
-            ],
-          ),
-      ],
-    );
-  }
+  // Widget _buildProductGrid(List<Product> products) {
+  //   return Column(
+  //     children: [
+  //       for (int i = 0; i < products.length; i += 2)
+  //         Row(
+  //           children: [
+  //             Expanded(
+  //               child: ProductCard(
+  //                 product: products[i],
+  //                 isExplore: false,
+  //                 isWayaGramDeal: false,
+  //                 canbeAddedTocart: false,
+  //                 sellerProduct: true,
+  //               ),
+  //             ),
+  //             if (i + 1 < products.length) ...[
+  //               const SizedBox(width: 12),
+  //               Expanded(
+  //                 child: ProductCard(
+  //                   product: products[i + 1],
+  //                   isExplore: false,
+  //                   isWayaGramDeal: false,
+  //                   canbeAddedTocart: false,
+  //                   sellerProduct: true,
+  //                 ),
+  //               ),
+  //             ],
+  //           ],
+  //         ),
+  //     ],
+  //   );
+  // }
 
   Widget _productLoadingState({required BuildContext context}) {
     return Column(
