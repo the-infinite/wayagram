@@ -29,6 +29,7 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get secondaryColor => WayaColors.secondaryColor;
   Color get secondaryColor2 => WayaColors.secondaryColor2;
 
+  Color get pendingColor => WayaColors.pendingColor;
   // Tertiary and Transparent
   Color get tertiary => WayaColors.tertiary;
   Color get transparent => WayaColors.transparent;

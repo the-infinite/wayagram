@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
+import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 
 class SingleShopCard extends ConsumerStatefulWidget {
-  const SingleShopCard({
-    super.key,
-  });
+  final ShopData shop;
+  const SingleShopCard({super.key, required this.shop});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SingleShopCardState();
@@ -35,14 +36,19 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset('assets/icons/s-shop.svg'),
+                  WayaImage(
+                    imageUrl: widget.shop.logo,
+                    height: 40,
+                    width: 40,
+                    radius: BorderRadius.circular(40),
+                  ),
                   const Gap(4),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Maleek's Shop",
+                        widget.shop.name,
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontSize: 14),
@@ -51,12 +57,16 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                       Container(
                         padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
                         decoration: BoxDecoration(
-                            color: wayaTheme.colorScheme.success50,
+                            color: widget.shop.deactivated
+                                ? wayaTheme.colorScheme.error200
+                                : wayaTheme.colorScheme.success50,
                             borderRadius: BorderRadius.circular(6)),
                         child: Text(
-                          "Active",
+                          widget.shop.deactivated ? "Inactive" : "Active",
                           style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.success,
+                              color: widget.shop.deactivated
+                                  ? wayaTheme.colorScheme.error
+                                  : wayaTheme.colorScheme.success,
                               fontWeight: FontWeight.w500,
                               fontSize: 11),
                         ),
@@ -66,12 +76,9 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                 ],
               ),
               PopupMenuButton(
-                  onSelected: (value) {
-                   
-                  },
+                  onSelected: (value) {},
                   iconColor: wayaTheme.colorScheme.greyColor400,
                   position: PopupMenuPosition.under,
-                  
                   itemBuilder: (context) {
                     return [
                       PopupMenuItem<int>(
@@ -79,7 +86,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {
-                              WayaNav.toNamed(ManageShop.route);
+                              WayaNav.toNamed(ManageShop.route, arguments: widget.shop);
                             },
                             asset: WayaAssests.icons.bShop.path,
                             text: "Shop Dashboard"),
@@ -111,7 +118,6 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
     return InkWell(
       onTap: onTap,
       splashFactory: NoSplash.splashFactory,
-      
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,

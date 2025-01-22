@@ -4,6 +4,7 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/personal_state_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/response_model.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
@@ -46,24 +47,129 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   }
 
   void selectGender(String value) {
-    state = state.copyWith(gender: value);
+    state = state.copyWith(gender: value.toLowerCase());
   }
 
   void selectBizType(Select value) {
-    state = state.copyWith(businessTypeId: value.value);
+    state = state.copyWith(businessTypeId: value.label);
     _localDataSource.saveSelectedBusinessType(value);
   }
 
-  void selectState(Select value) {
-    state = state.copyWith(state: value.value);
+  Future<void> selectState(Select value) async {
+    String _state = state.state;
+    state = state.copyWith(state: value.label);
+
+    if (_state.isNotEmpty && value.label != _state) {
+            state.copyWith(cities: []);
+      state = state.copyWith(city: '');
+        state.copyWith(lgas: []);
+      state = state.copyWith(lga: '');
+    }
+    await fetchCities(value.value, 'NG');
   }
 
-  void selectCountry(Select value) {
-    state = state.copyWith(country: value.value);
+  Future<void> selectCountry(Select value) async {
+    String _country = state.country;
+    state = state.copyWith(country: value.label);
+
+    if (_country.isNotEmpty && value.label != _country) {
+      state.copyWith(states: []);
+      state = state.copyWith(state: '');
+        state.copyWith(cities: []);
+      state = state.copyWith(city: '');
+        state.copyWith(lgas: []);
+      state = state.copyWith(lga: '');
+    }
+    await fetchStates();
   }
 
   void selectLGA(Select value) {
     state = state.copyWith(lga: value.value);
+  }
+
+  Future<void> selectCity(Select value) async {
+    String _city = state.city;
+    state = state.copyWith(city: value.label);
+    await fetchLGA(value.value, 'NG');
+    if (_city.isNotEmpty && value.label != _city) {
+      state = state.copyWith(lgas: []);
+      state = state.copyWith(lga: '');
+    }
+  }
+
+  Future<void> fetchCities(String stateCode, String countryCode) async {
+    try {
+      final response = await _authRepository.getAllCities(
+          stateCode: stateCode, countryCode: countryCode);
+
+      if (response.success) {
+        CitiesResponseModel responseModel =
+            CitiesResponseModel.fromJson(response.data);
+
+        final List<Select> allCities = responseModel.data.map((val) {
+          return Select(label: val.name, value: val.stateCode);
+        }).toList();
+        state = state.copyWith(cities: allCities);
+      }
+    } catch (e) {
+      _logger.e(e);
+    }
+  }
+
+  Future<void> fetchStates() async {
+    try {
+      final response = await _authRepository.getAllStates();
+
+      if (response.success) {
+        StatesResponseModel responseModel =
+            StatesResponseModel.fromJson(response.data);
+
+        final List<Select> allStates = responseModel.data.map((val) {
+          return Select(label: val.name, value: val.isoCode);
+        }).toList();
+        state = state.copyWith(states: allStates);
+      }
+    } catch (e) {
+      _logger.e(e);
+    }
+  }
+
+  Future<void> fetchLGA(String stateCode, String countryCode) async {
+    try {
+      final response = await _authRepository.getAllLGA(
+          stateCode: stateCode, countryCode: countryCode);
+
+      if (response.success) {
+        LGAResponseModel responseModel =
+            LGAResponseModel.fromJson(response.data);
+
+        final List<Select> lgas = responseModel.data.lgas.map((val) {
+          return Select(label: val, value: val);
+        }).toList();
+        state = state.copyWith(lgas: lgas);
+      }
+    } catch (e) {
+      _logger.e(e);
+    }
+  }
+
+  Future<void> fetchLocation() async {
+    try {
+      final reponse = await _authRepository.getAllCountries();
+
+      if (reponse.success) {
+        CountryResponseModel responseModel =
+            CountryResponseModel.fromJson(reponse.data);
+        final List<Select> countries = [
+          Select(
+              label: responseModel.data.name, value: responseModel.data.isoCode)
+        ];
+
+        state = state.copyWith(countries: countries);
+      }
+    } catch (e) {
+      _logger.e(e);
+    }
   }
 
   Future<void> fetchBusinessTypes() async {
@@ -107,6 +213,8 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     }
   }
 
+  // Future<Waya>
+
   Future<void> onSubmit(Function gotoNextTab) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -120,22 +228,26 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         phoneNumber:
             "234${state.phoneNumber.text.length > 10 ? state.phoneNumber.text.substring(1) : state.phoneNumber.text}",
         address: state.address.text,
-        city: state.city.text,
+        city: state.city,
         state: state.state,
         country: state.country,
         dateOfBirth: state.dateIsoFormat,
         tcAgreement: state.isAgreeToTerm,
         policyAgreement: state.isAgreeToTerm,
         confirmPassword: state.confirmPassword.text,
-        gender: state.gender,
+        gender: state.gender.toUpperCase(),
         lga: state.lga,
         accountTypeId: _localDataSource.getUserType().id,
         business: isPersonal
             ? null
             : {
                 "name": state.businessName.text,
+                "state": state.state,
+                "city": state.city,
+                "country": state.country,
+                "lga": state.lga,
                 "address": state.businessAddress.text,
-                "businessTypeId": state.businessTypeId,
+                "businessTypeId":_localDataSource.getSelectedBusinessType().value,
               },
       ));
 

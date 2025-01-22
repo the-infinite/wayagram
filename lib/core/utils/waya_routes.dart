@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
@@ -112,12 +113,14 @@ class WayaAppRoutes {
     CreateRequest.route: () => CreateRequest(),
     AllSellerBids.route: () => AllSellerBids(),
     ManageShop.route:() => ManageShop(),
+    UpgradeToBusiness.route:() => UpgradeToBusiness()
     CreatePoll.route: ()=> CreatePoll(),
     PollAndVoting.route: ()=> PollAndVoting(),
     AddChoices.route: ()=> AddChoices(),
     PollSummary.route: () => PollSummary(),
     PollDashboard.route: () => PollDashboard(),
     ShareVotingLink.route: ()=> ShareVotingLink(),
+
     
   };
 

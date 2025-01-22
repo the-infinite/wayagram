@@ -8,9 +8,12 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
+import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:mime/mime.dart';
+import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
 class DocType {
   final File file;
@@ -64,9 +67,12 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
   final WayaLocalDataSource localDataSource;
   final AuthRepository _authRepository;
   final WayaSecureDataSource _secureDataSource;
+  final ProfileRepo _profileRepo;
+  final Ref ref;
   final _logger = getLogger("AddBusinessAccountVm");
 
-  AddBusinessAccountVm(this._authRepository, this.localDataSource, this._secureDataSource)
+  AddBusinessAccountVm(this._authRepository, this.localDataSource,
+      this._secureDataSource, this._profileRepo, this.ref)
       : super(AddBusinessAccountState(
           selected: localDataSource.getSelectedBusinessType().label,
           businessName: TextEditingController(),
@@ -165,6 +171,14 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.businessKyc(formdata);
       if (response.data['statusCode'] == 200 && context.mounted) {
+        final userId = await _secureDataSource.getUserId();
+        final bizResponse =
+            await _profileRepo.getBusinessDataRepo(userId: userId!);
+        if (bizResponse.success) {
+          BusinessAccountData bizData =
+              BusinessAccountData.fromJson(bizResponse.data);
+          ref.read(successfulSetupVmProvider).copyWith(business: bizData);
+        }
         WayaUtils.showNotice(
             context: context,
             title: 'KYC Documents Submitted \n Successfully',
@@ -184,7 +198,6 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
 
 final addBusinessAccountProvider = StateNotifierProvider.autoDispose<
     AddBusinessAccountVm, AddBusinessAccountState>((ref) {
- 
-  return AddBusinessAccountVm(
-      AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource());
+  return AddBusinessAccountVm(AuthRepository(), WayaLocalDataSource(),
+      WayaSecureDataSource(), ProfileRepo(), ref);
 });

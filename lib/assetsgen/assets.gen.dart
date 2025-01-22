@@ -370,9 +370,6 @@ class $AssetsImagesGen {
   AssetGenImage get placeholder =>
       const AssetGenImage('assets/images/placeholder.png');
 
-  /// Directory path: assets/images/polls
-  $AssetsImagesPollsGen get polls => const $AssetsImagesPollsGen();
-
   /// Directory path: assets/images/shop
   $AssetsImagesShopGen get shop => const $AssetsImagesShopGen();
 
@@ -591,9 +588,6 @@ class $AssetsImagesBidGen {
   /// File path: assets/images/bid/down.png
   AssetGenImage get down => const AssetGenImage('assets/images/bid/down.png');
 
-  /// File path: assets/images/bid/edit.png
-  AssetGenImage get edit => const AssetGenImage('assets/images/bid/edit.png');
-
   /// File path: assets/images/bid/map.png
   AssetGenImage get map => const AssetGenImage('assets/images/bid/map.png');
 
@@ -613,7 +607,6 @@ class $AssetsImagesBidGen {
         coinInHand,
         deal,
         down,
-        edit,
         map,
         star,
         store
@@ -704,90 +697,6 @@ class $AssetsImagesOnboardingGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [flag, oFirst, oSecond, oThird];
-}
-
-class $AssetsImagesPollsGen {
-  const $AssetsImagesPollsGen();
-
-  /// File path: assets/images/polls/add_image.png
-  AssetGenImage get addImage =>
-      const AssetGenImage('assets/images/polls/add_image.png');
-
-  /// File path: assets/images/polls/azikwe.png
-  AssetGenImage get azikwe =>
-      const AssetGenImage('assets/images/polls/azikwe.png');
-
-  /// File path: assets/images/polls/buhari.png
-  AssetGenImage get buhari =>
-      const AssetGenImage('assets/images/polls/buhari.png');
-
-  /// File path: assets/images/polls/cancel.png
-  AssetGenImage get cancel =>
-      const AssetGenImage('assets/images/polls/cancel.png');
-
-  /// File path: assets/images/polls/check.png
-  AssetGenImage get check =>
-      const AssetGenImage('assets/images/polls/check.png');
-
-  /// File path: assets/images/polls/clock.png
-  AssetGenImage get clock =>
-      const AssetGenImage('assets/images/polls/clock.png');
-
-  /// File path: assets/images/polls/lagos.png
-  AssetGenImage get lagos =>
-      const AssetGenImage('assets/images/polls/lagos.png');
-
-  /// File path: assets/images/polls/menu.png
-  AssetGenImage get menu => const AssetGenImage('assets/images/polls/menu.png');
-
-  /// File path: assets/images/polls/minus.png
-  AssetGenImage get minus =>
-      const AssetGenImage('assets/images/polls/minus.png');
-
-  /// File path: assets/images/polls/plus.png
-  AssetGenImage get plus => const AssetGenImage('assets/images/polls/plus.png');
-
-  /// File path: assets/images/polls/rema.png
-  AssetGenImage get rema => const AssetGenImage('assets/images/polls/rema.png');
-
-  /// File path: assets/images/polls/rufai.png
-  AssetGenImage get rufai =>
-      const AssetGenImage('assets/images/polls/rufai.png');
-
-  /// File path: assets/images/polls/tinubu.png
-  AssetGenImage get tinubu =>
-      const AssetGenImage('assets/images/polls/tinubu.png');
-
-  /// File path: assets/images/polls/uncheck.png
-  AssetGenImage get uncheck =>
-      const AssetGenImage('assets/images/polls/uncheck.png');
-
-  /// File path: assets/images/polls/victony.png
-  AssetGenImage get victony =>
-      const AssetGenImage('assets/images/polls/victony.png');
-
-  /// File path: assets/images/polls/vote.png
-  AssetGenImage get vote => const AssetGenImage('assets/images/polls/vote.png');
-
-  /// List of all assets
-  List<AssetGenImage> get values => [
-        addImage,
-        azikwe,
-        buhari,
-        cancel,
-        check,
-        clock,
-        lagos,
-        menu,
-        minus,
-        plus,
-        rema,
-        rufai,
-        tinubu,
-        uncheck,
-        victony,
-        vote
-      ];
 }
 
 class $AssetsImagesShopGen {
