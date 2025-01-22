@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
+import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
@@ -89,9 +90,9 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
 
   @override
   void initState() {
-
-    super.initState();
-
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createRequestProvider.notifier).getBuyerRequest();
+    });
     timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
       if (currentPage < 2) {
         currentPage++;
@@ -104,11 +105,13 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
         curve: Curves.easeIn,
       );
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(bidVmProvider.notifier);
+    final viewModel = ref.watch(createRequestProvider);
+    //final viewModel = ref.watch(bidVmProvider.notifier);
     return Column(
       children: [
         FilterWidget<Product>(allItems: [], hintText: 'Search Requests'),
@@ -128,9 +131,9 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
           child: PageView(
             controller: pageController,
             children: [
-              ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png'),),
-              ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png'),),
-              ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png'),),
+              ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png',fit: BoxFit.fitWidth,),),
+              ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png', fit: BoxFit.fitWidth),),
+              ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png', fit: BoxFit.fitWidth),),
             ],
           ),
         ),
@@ -152,9 +155,11 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: viewModel.quotations.length,
+            //itemCount: viewModel.quotations.length,
+            itemCount: viewModel.buyerRequest.length,
             itemBuilder: (context, index) {
-              return RequestCard(quotation: viewModel.quotations[index],
+
+              return viewModel.buyerRequest.isEmpty ? Center(child: Text('No request')): RequestCard(product: viewModel.buyerRequest[index],
                 onTap: () {
                   WayaNav.toNamed('/seeSeller-bids');
                 },);
@@ -165,15 +170,27 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
             subTitle: 'Explore Categories & Best Offers',
             title: 'Recommended Bids'),
         const Gap(25),
-        ListView.builder(
+       /* ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
+            itemCount: viewModel.quotations.length,
             itemCount: viewModel.quotations.length,
             itemBuilder: (context, index) {
               return RequestCard(quotation: viewModel.quotations[index],
                   onTap: () {
                     WayaNav.toNamed('/seeSeller-bids');
                   });
+            }),*/
+        ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            //itemCount: viewModel.quotations.length,
+            itemCount: viewModel.buyerRequest.length,
+            itemBuilder: (context, index) {
+              return RequestCard(product: viewModel.buyerRequest[index],
+                onTap: () {
+                  WayaNav.toNamed('/seeSeller-bids');
+                },);
             }),
       ],
     );

@@ -1,7 +1,7 @@
 
 import 'package:json_annotation/json_annotation.dart';
 
-//part 'quotation_model.g.dart';
+part 'quotation_model.g.dart';
 
 @JsonSerializable()
 class CreateBuyerRequest {
@@ -27,33 +27,35 @@ class CreateBuyerRequest {
   final String maxBidAmount;
   final String bidStartingAmount;
 
-  CreateBuyerRequest(
-      this.buyerId,
-      this.productName,
-      this.brand,
-      this.category,
-      this.condition,
-      this.description,
-      this.quantity,
-      this.bidStart,
-      this.bidEnd,
-      this.deliveryDetails,
-      this.minDistance,
-      this.maxDistance,
-      this.stateOfPurchase,
-      this.lga,
-      this.vendorsCanSeeBidFromAnyDistance,
-      this.deliveryType,
-      this.deliveryAddress,
-      this.deliveryState,
-      this.deliveryLga,
-      this.maxBidAmount,
-      this.bidStartingAmount);
+  CreateBuyerRequest({
+      required this.buyerId,
+      required this.productName,
+      required this.brand,
+      required this.category,
+      required this.condition,
+      required this.description,
+      required this.quantity,
+      required this.bidStart,
+      required this.bidEnd,
+      required this.deliveryDetails,
+      required this.minDistance,
+      required this.maxDistance,
+      required this.stateOfPurchase,
+      required this.lga,
+      required this.vendorsCanSeeBidFromAnyDistance,
+      required this.deliveryType,
+      required this.deliveryAddress,
+      required this.deliveryState,
+      required this.deliveryLga,
+      required this.maxBidAmount,
+      required this.bidStartingAmount});
 
- /* factory CreateBuyerRequest.fromJson(Map<String, dynamic> json) =>
+  factory CreateBuyerRequest.fromJson(Map<String, dynamic> json) =>
       _$CreateBuyerRequestFromJson(json);
 
   Map<String, dynamic> toJson() {
     return _$CreateBuyerRequestToJson(this);
-  }*/
+  }
+
 }
+

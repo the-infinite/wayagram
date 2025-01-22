@@ -1,10 +1,13 @@
 
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -23,6 +26,22 @@ class AddChoices extends ConsumerStatefulWidget {
 class _AddChoicesState extends ConsumerState<AddChoices>  {
 
   final _formKey = GlobalKey<FormState>();
+
+  File? _selectedImage;
+  File? _selectedImage2;
+
+  // Function to pick an image
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+        _selectedImage2 = File(image.path);
+      });
+    }
+  }
 
 
   @override
@@ -131,22 +150,35 @@ class _AddChoicesState extends ConsumerState<AddChoices>  {
                         );
                       }),
                       const Gap(10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
+                      InkWell(
+                        splashFactory: NoSplash.splashFactory,
+                        splashColor: Colors.transparent,
+                        onTap: _pickImage,
+                        child: _selectedImage == null? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
 
-                          Image.asset('assets/images/polls/add_image.png', height: 20.h,),
-                          const Gap(10),
-                          Text(
-                            'Add Image/Video',
-                            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Theme.of(context).colorScheme.customBlack200 ),
+                            Image.asset('assets/images/polls/add_image.png', height: 20.h,),
+                            const Gap(10),
+                            Text(
+                              'Add Image/Video',
+                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(context).colorScheme.customBlack200 ),
+                            ),
+                            const Gap(8),
+
+                          ],)  : ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(
+                            _selectedImage!,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
                           ),
-                          const Gap(8),
-
-                        ],),
+                                                  ),
+                      ),
 
                       const Gap(10),
                     ],),
@@ -233,22 +265,35 @@ class _AddChoicesState extends ConsumerState<AddChoices>  {
                         }),
 
                         const Gap(10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
+                        InkWell(
+                          splashFactory: NoSplash.splashFactory,
+                          splashColor: Colors.transparent,
+                          onTap: _pickImage,
+                          child: _selectedImage2 == null? Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
 
-                            Image.asset('assets/images/polls/add_image.png', height: 20.h,),
-                            const Gap(10),
-                            Text(
-                              'Add Image/Video',
-                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Theme.of(context).colorScheme.customBlack200),
+                              Image.asset('assets/images/polls/add_image.png', height: 20.h,),
+                              const Gap(10),
+                              Text(
+                                'Add Image/Video',
+                                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Theme.of(context).colorScheme.customBlack200 ),
+                              ),
+                              const Gap(8),
+
+                            ],)  : ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.file(
+                              _selectedImage2!,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
                             ),
-                            const Gap(8),
-
-                          ],),
+                          ),
+                        ),
 
                         const Gap(10),
 

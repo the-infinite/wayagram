@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
+import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 
@@ -24,10 +29,42 @@ class PreviewRequest extends ConsumerStatefulWidget {
 }
 
 class _PreviewRequestState extends ConsumerState<PreviewRequest> {
+  CreateRequestState? viewModel;
+  WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
+
+  disposeControllers(){
+    viewModel?.productName?.dispose();
+    viewModel?.brandName?.dispose();
+    viewModel?.productDescription?.dispose();
+    viewModel?.quantity?.dispose();
+    viewModel?.minDistance?.dispose();
+    viewModel?.maxDistance?.dispose();
+    viewModel?.bidStartingAmount?.dispose();
+    viewModel?.maxBidAmount?.dispose();
+    viewModel?.deliveryAddress?.dispose();
+    // viewModel?.startTime?.dispose();
+    // viewModel?.endTime?.dispose();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      viewModel = ref.read(createRequestProvider);
+      print(viewModel?.brandName.text);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final provider = ref.watch(createRequestProvider.notifier);
+    viewModel = ref.watch(createRequestProvider);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,19 +83,19 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
         const Gap(30),
         AboutProduct(
             title: 'Product Name',
-            content: 'Samsung S24 Ultra'),
+            content: '${viewModel?.productName.text}'),
         const Gap(15),
-        AboutProduct(title: 'Brand Name', content: 'Samsung'),
+        AboutProduct(title: 'Brand Name', content: '${viewModel?.brandName.text.capitalizeFirst}'),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(title: 'Product Category', content: 'Technology'),
+              child: AboutProduct(title: 'Product Category', content: '${viewModel?.productCategory}'),
             ),
             Expanded(
               child: AboutProduct(
-                  title: 'Product Condition', content: 'Fairly Used'),
+                  title: 'Product Condition', content: '${viewModel?.productCondition}'),
             )
           ],
         ),
@@ -66,20 +103,20 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
         AboutProduct(
             title: 'Product Description',
             content:
-            'Samsung S22 Ultra 5G Fairly Used in good condition. Graphite'),
+            '${viewModel?.productDescription.text.capitalizeFirst}'),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(title: 'Quantity', content: '1'),
+              child: AboutProduct(title: 'Quantity', content: '${viewModel?.quantity.text}'),
             ),
             Expanded(
               flex: 2,
-              child: AboutProduct(title: 'State of Purchase', content: 'Lagos State'),
+              child: AboutProduct(title: 'State of Purchase', content: '${viewModel?.stateOfPurchase}'),
             ),
             Expanded(
-              child: AboutProduct(title: 'LGA', content: 'Alimosho'),
+              child: AboutProduct(title: 'LGA', content: '${viewModel?.lga}'),
             )
           ],
         ),
@@ -88,10 +125,10 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(title: 'Min Distance', content: '10Km'),
+              child: AboutProduct(title: 'Min Distance', content: '${viewModel?.minDistance.text}Km'),
             ),
             Expanded(
-              child: AboutProduct(title: 'Product Condition', content: 'Good'),
+              child: AboutProduct(title: 'Product Condition', content: '${viewModel?.productCondition}'),
             ),
 
           ],
@@ -108,10 +145,10 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(title: 'Bid Starting Amount', content: '300,000 NGN'),
+              child: AboutProduct(title: 'Bid Starting Amount', content: '${viewModel?.bidStartingAmount.text} NGN'),
             ),
             Expanded(
-              child: AboutProduct(title: 'Maximum Bid Amount', content: '450,000 NGN'),
+              child: AboutProduct(title: 'Maximum Bid Amount', content: '${viewModel?.maxBidAmount.text} NGN'),
             ),
 
           ],
@@ -124,7 +161,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
             Expanded(
               child: AboutProduct(
                   title: 'Delivery Address',
-                  content: '62, Lekki Expressway, Lagos, Nigeria'),
+                  content: '${viewModel?.deliveryAddress.text.capitalizeFirst}'),
             )
           ],
         ),
@@ -133,10 +170,10 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(title: 'State', content: 'Lagos State'),
+              child: AboutProduct(title: 'State', content: '${viewModel?.deliveryState.capitalizeFirst}'),
             ),
             Expanded(
-              child: AboutProduct(title: 'LGA', content: 'Alimosho'),
+              child: AboutProduct(title: 'LGA', content: '${viewModel?.deliveryLga.capitalizeFirst}'),
             )
           ],
         ),
@@ -152,20 +189,88 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(title: 'Start Time', content: '00:00'),
+              child: AboutProduct(title: 'Start Time', content: '${viewModel?.startDate}'),
             ),
             Expanded(
               child: AboutProduct(
-                  title: 'End Time', content: '02:00'),
+                  title: 'End Time', content: '${viewModel?.endDate}'),
             )
           ],
         ),
         const Gap(30),
         WayaButton(
+          callback: !viewModel!.isLoading
+              ? ()  async{
+
+            final buyerId = _wayaLocalDataSource.getUserId();
+            CreateBuyerRequest createBuyerRequest = CreateBuyerRequest(
+                buyerId: buyerId,
+                productName: viewModel!.productName.text,
+                brand: viewModel!.brandName.text,
+                category: viewModel!.productCategory,
+                condition: viewModel!.productCondition.toLowerCase(),
+                description: viewModel!.productDescription.text,
+                quantity: viewModel!.quantity.text,
+                bidStart: viewModel!.startDate,
+                bidEnd: viewModel!.endDate,
+                deliveryDetails: '----',
+                minDistance: viewModel!.minDistance.text,
+                maxDistance: viewModel!.maxDistance.text,
+                stateOfPurchase: viewModel!.stateOfPurchase,
+                lga: viewModel!.lga,
+                vendorsCanSeeBidFromAnyDistance: '${viewModel!.vendorSeeBuyRequest}',
+                deliveryType: 'delivery',
+                deliveryAddress: viewModel!.deliveryAddress.text,
+                deliveryState: viewModel!.deliveryState,
+                deliveryLga: viewModel!.deliveryLga,
+                maxBidAmount: viewModel!.maxBidAmount.text,
+                bidStartingAmount: viewModel!.bidStartingAmount.text.replaceAll(',', ''));
+            await ref.read(createRequestProvider.notifier).createBuyerRequest(
+                createBuyerRequest
+            );
+
+            disposeControllers();
+            WayaNav.toNamed('/seeBuyer-bids');
+          }
+              : null,
+          centerWidget: LoadingState(
+              loading: viewModel!.isLoading, text: 'Find offers'),
+        ),
+       /* WayaButton(
             text: 'Find offers',
-            callback: () {
+            callback: () async{
+
+              final buyerId = _wayaLocalDataSource.getUserId();
+              CreateBuyerRequest createBuyerRequest = CreateBuyerRequest(
+                  buyerId: buyerId,
+                  productName: viewModel!.productName.text,
+                  brand: viewModel!.brandName.text,
+                  category: viewModel!.productCategory,
+                  condition: viewModel!.productCondition.toLowerCase(),
+                  description: viewModel!.productDescription.text,
+                  quantity: viewModel!.quantity.text,
+                  bidStart: viewModel!.startDate,
+                  bidEnd: viewModel!.endDate,
+                  deliveryDetails: '----',
+                  minDistance: viewModel!.minDistance.text,
+                  maxDistance: viewModel!.maxDistance.text,
+                  stateOfPurchase: viewModel!.stateOfPurchase,
+                  lga: viewModel!.lga,
+                  vendorsCanSeeBidFromAnyDistance: '${viewModel!.vendorSeeBuyRequest}',
+                  deliveryType: 'delivery',
+                  deliveryAddress: viewModel!.deliveryAddress.text,
+                  deliveryState: viewModel!.deliveryState,
+                  deliveryLga: viewModel!.deliveryLga,
+                  maxBidAmount: viewModel!.maxBidAmount.text,
+                  bidStartingAmount: viewModel!.bidStartingAmount.text.replaceAll(',', ''));
+              await ref.read(createRequestProvider.notifier).createBuyerRequest(
+                createBuyerRequest
+              );
+
+              disposeControllers();
               WayaNav.toNamed('/seeBuyer-bids');
-            }),
+            }
+            ),*/
         const Gap(8),
         WayaButton(
             text: 'Go Back',

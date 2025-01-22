@@ -1,15 +1,21 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 
+import '../model/quotation_model.dart';
+
 class QuotationRepository extends BaseRepository {
   static const serviceUrl = "wayagram-shop/api/v2";
 
-  // Future<WayaRequestResponse> createBuyerRequest(CreateBuyerRequest payload) {
-  //   return post("$serviceUrl/buyer/request", payload.toJson());
-  // }
+  Future<WayaRequestResponse> createBuyerRequest(CreateBuyerRequest payload) {
+    return post("$serviceUrl/buyer/request", payload.toJson());
+  }
 
-  Future<WayaRequestResponse> getBuyerRequest(String startDate, String endDate) {
-    return get("$serviceUrl/buyer/requests?isUser=true&page=1&limit=1&category=food&status=active&startDate=$startDate&endDate=$endDate");
+  Future<WayaRequestResponse> getBuyerRequest() {
+    return get("$serviceUrl/buyer/requests?isUser=true&page=1&limit=10&status=active");
+  }
+
+  Future<WayaRequestResponse> retrieveBuyRequest({required String shopId}) {
+    return get("$serviceUrl/buyer/request/retrieve/$shopId");
   }
 
   Future<WayaRequestResponse> updateRequestAmount({required String id, String? amount,}) {
@@ -35,19 +41,25 @@ class QuotationRepository extends BaseRepository {
     return patch('$serviceUrl/buyer/request/extend-bid-end', payload);
   }
 
-  // Future<WayaRequestResponse> placeBid(CreateBuyerRequest payload) {
-  //   return post("$serviceUrl/vendor/bid", payload.toJson());
-  // }
+  Future<WayaRequestResponse> placeBid({required String requestId, required String vendorId, required String amount, required String shopId }) {
+    final payload ={
+          "requestId": requestId, //request id
+          "vendorId": vendorId, // user id of the vendor placing the bid
+          "bidAmount": amount, // amount
+          "shopId": shopId // shop id of the vendor
+    };
+    return post('$serviceUrl/vendor/bid', payload);
+  }
 
   Future<WayaRequestResponse> getAllAvailableQuotation() {
-    return get("$serviceUrl/vendor/quotations?limit=10&page=1&category=food&startDate=&endDate=&status=&shopId=");
+    return get("$serviceUrl/vendor/quotations?limit=10&page=1");
   }
 
-  Future<WayaRequestResponse> getVendorQuotation(String startDate, String endDate, String shopId) {
-    return get("$serviceUrl/vendor/my-quotations?shopId=$shopId&limit=&page=&category=&startDate=&endDate=&status=");
+  Future<WayaRequestResponse> getVendorQuotation(String shopId, String category, String status) {
+    return get("$serviceUrl/vendor/my-quotations?shopId=$shopId&limit=10&page=1&status=$status");
   }
 
-  Future<WayaRequestResponse> getBidDashboard(String shopId) {
+  Future<WayaRequestResponse> getBidDashboard({required String shopId}) {
     return get("$serviceUrl/vendor/overview?shopId=$shopId");
   }
 
@@ -79,11 +91,11 @@ class QuotationRepository extends BaseRepository {
     return patch('$serviceUrl/vendor/bid-response', payload);
   }
 
-  Future<WayaRequestResponse> retrieveOrder(String requestId) {
+  Future<WayaRequestResponse> retrieveOrder({required String requestId}) {
     return get("$serviceUrl/order/order/$requestId");
   }
 
-  Future<WayaRequestResponse> trackDelivery(String requestId) {
+  Future<WayaRequestResponse> trackDelivery({required String requestId}) {
     return get("$serviceUrl/order/track-delivery/$requestId");
   }
 
