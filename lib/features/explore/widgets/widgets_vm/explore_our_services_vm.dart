@@ -18,33 +18,33 @@ class ExploreOurServicesVm  {
   ExploreOurServicesVm( this.context) {
     services = [
       Services(
-          icon: WayaAssests.icons.eShop.path,
+          icon: WayaAssets.icons.eShop.path,
           name: 'Shop',
           onTap: () {
             Navigator.pushNamed(context, BottomView.route, arguments: 1);
           }),
       Services(
-          icon: WayaAssests.icons.eQuotation.path,
+          icon: WayaAssets.icons.eQuotation.path,
           name: 'Get Quotation',
           onTap: () {
             Navigator.pushNamed(context, BottomView.route, arguments: 3);
           }),
       Services(
-          icon: WayaAssests.icons.eChat.path,
+          icon: WayaAssets.icons.eChat.path,
           name: 'Chat & Socials',
           onTap: () {}),
       Services(
-          icon: WayaAssests.icons.eDonation.path,
+          icon: WayaAssets.icons.eDonation.path,
           name: 'Donations',
           onTap: () {}),
       Services(
-          icon: WayaAssests.icons.ePoll.path,
+          icon: WayaAssets.icons.ePoll.path,
           name: 'Polls & Votes',
           onTap: () {
             WayaNav.toNamed('/poll-and-voting');
           }),
       Services(
-          icon: WayaAssests.icons.eEvent.path, name: 'Events', onTap: () {}),
+          icon: WayaAssets.icons.eEvent.path, name: 'Events', onTap: () {}),
     ];
   }
 

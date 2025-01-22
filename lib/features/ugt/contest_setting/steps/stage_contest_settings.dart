@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
-
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/utils/waya_navigation.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
+import '../../data/controller/contest_controller.dart';
 
 class StageContestSettings extends ConsumerStatefulWidget {
   final VoidCallback goToNextTab;
@@ -21,11 +23,15 @@ class StageContestSettings extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _StageContestSettingsState();
 }
 
-
-
 class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
+  final _contestController = Get.put(ContestController());
+  List<dynamic> stages = [];
 
-  List<String> stages = ['Qualification Stage', 'Contest 1', 'Contest 2', 'Contest 3', 'Contest 4'];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _addStage() {
     setState(() {
@@ -35,12 +41,14 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
 
   void _removeStage(int index) {
     setState(() {
+      _contestController.removeStage(index);
       stages.removeAt(index);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
     final viewModel = ref.watch(personalFirstStepProvider);
     final wayaTheme = Theme.of(context);
     return Column(
@@ -94,11 +102,22 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(stages[index], style: TextStyle(fontSize: 16, color: Colors.grey[700])),
+                              Text(
+                                  (index >= 0 &&
+                                      index <
+                                          _contestController
+                                              .contestStages.length)
+                                      ? _contestController
+                                              .contestStages [index]
+                                          ["stageName"]
+                                      : stages[index],
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.grey[700])),
                               IconButton(
                                 icon: Image.asset('assets/images/icon-right.png',width: 20, height: 20, ),
                                 //Icon(Icons.edit, color: Colors.grey),
                                 onPressed: ( ) => {
+
                                 WayaNav.toNamed("/edit-stage-preference"),
                                 },
                               ),
@@ -146,7 +165,8 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              Navigator.pop(context);
+              print("stages  ${_contestController.contestStages.toString()}");
+             // Navigator.pop(context);
             })
       ],
     );

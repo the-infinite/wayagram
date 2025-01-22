@@ -35,6 +35,7 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
+import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
@@ -45,9 +46,11 @@ import 'package:wayagram/features/ugt/create_contest/create_contest.dart';
 import 'package:wayagram/features/ugt/ugt_get_started.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
-
 import '../../features/quotation/buyer/views/create_request/create_request.dart';
 import '../../features/quotation/seller/views/bids/see_seller_bids.dart';
+import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
+
+import '../../features/ugt/my_contest_details/upcoming_contest_details.dart';
 
 
 
@@ -119,7 +122,11 @@ class WayaAppRoutes {
     AddChoices.route: ()=> AddChoices(),
     PollSummary.route: () => PollSummary(),
     PollDashboard.route: () => PollDashboard(),
+    UpcomingContestDetails.route: ()=> UpcomingContestDetails(),
+    CreateProfile.route: ()=> CreateProfile(),
+    RegisterContest.route: ()=> RegisterContest(),
     ShareVotingLink.route: ()=> ShareVotingLink(),
+
 
     
   };

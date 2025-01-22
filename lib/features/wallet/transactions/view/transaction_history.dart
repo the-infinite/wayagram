@@ -155,7 +155,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
                   color: wayaTheme.colorScheme.primar50,
                   shape: BoxShape.circle,
                 ),
-                child: WayaAssests.icons.wallet.wallet.svg(fit: BoxFit.none),
+                child: WayaAssets.icons.wallet.wallet.svg(fit: BoxFit.none),
               ),
               title: Row(
                 children: [
@@ -216,7 +216,7 @@ class EmptyTransaction extends StatelessWidget {
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
-        WayaAssests.images.wallet.searchDocu.image(scale: 1.5),
+        WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
         Text('No transaction yet', style: wayaTheme.textTheme.headlineMedium),
         SizedBox(
           width: 310,

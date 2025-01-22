@@ -13,12 +13,12 @@ class BottomViewVm extends ChangeNotifier {
   final Ref ref;
   BottomViewVm(this.ref);
   final List<BottomBarItem> barItems = [
-    BottomBarItem(icon: WayaAssests.icons.bExplore.path, label: 'Explore'),
-    BottomBarItem(icon: WayaAssests.icons.bShop.path, label: 'Shop'),
-    BottomBarItem(icon: WayaAssests.icons.bDonation.path, label: 'Donations'),
-    BottomBarItem(icon: WayaAssests.icons.bBid.path, label: 'Bid'),
-    BottomBarItem(icon: WayaAssests.icons.bChat.path, label: 'Chat'),
-    BottomBarItem(icon: WayaAssests.icons.bMenu.path, label: 'Menu'),
+    BottomBarItem(icon: WayaAssets.icons.bExplore.path, label: 'Explore'),
+    BottomBarItem(icon: WayaAssets.icons.bShop.path, label: 'Shop'),
+    BottomBarItem(icon: WayaAssets.icons.bDonation.path, label: 'Donations'),
+    BottomBarItem(icon: WayaAssets.icons.bBid.path, label: 'Bid'),
+    BottomBarItem(icon: WayaAssets.icons.bChat.path, label: 'Chat'),
+    BottomBarItem(icon: WayaAssets.icons.bMenu.path, label: 'Menu'),
   ];
 
 
