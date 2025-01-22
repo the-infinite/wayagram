@@ -7,7 +7,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
-
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 
@@ -17,18 +16,21 @@ class ProductCard extends ConsumerWidget {
   final bool canbeAddedTocart;
   final bool isExplore;
   final bool sellerProduct;
-  const ProductCard(
-      {super.key,
-      required this.product,
-      this.canbeAddedTocart = false,
-      this.isExplore = true,
-      this.sellerProduct = false,
-      this.isWayaGramDeal = false});
+  const ProductCard({
+    super.key,
+    required this.product,
+    this.canbeAddedTocart = false,
+    this.isExplore = true,
+    this.sellerProduct = false,
+    this.isWayaGramDeal = false,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final String image = product.images[0];
+
+    // FIXME: #185 Actually handle this gracefully
+    final String image = product.images.firstOrNull ?? '';
 
     return GestureDetector(
       onTap: () {
@@ -41,9 +43,8 @@ class ProductCard extends ConsumerWidget {
           product.images.isEmpty
               ? Container(
                   height: 180,
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.scaffoldColor,
-                      borderRadius: BorderRadius.circular(8)),
+                  decoration:
+                      BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: BorderRadius.circular(8)),
                 )
               : WayaImage(
                   imageUrl: image,
@@ -61,14 +62,11 @@ class ProductCard extends ConsumerWidget {
                     width: 110,
                     padding: EdgeInsets.fromLTRB(3, 3, 3, 3),
                     decoration: BoxDecoration(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        borderRadius: BorderRadius.circular(6)),
+                        color: wayaTheme.colorScheme.customPrimary, borderRadius: BorderRadius.circular(6)),
                     child: Center(
                       child: Text("WAYAGRAM DEAL",
-                          style: TextStyle().wayaCopyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 10)),
+                          style:
+                              TextStyle().wayaCopyWith(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 10)),
                     ),
                   )
                 ],
@@ -78,8 +76,7 @@ class ProductCard extends ConsumerWidget {
               child: Column(
                 children: [
                   const Gap(3),
-                  Text(product.category!.label,
-                      style: wayaTheme.textTheme.hintStyle),
+                  Text(product.category!.label, style: wayaTheme.textTheme.hintStyle),
                 ],
               )),
           const Gap(3),
@@ -101,9 +98,7 @@ class ProductCard extends ConsumerWidget {
                       const Gap(3),
                       Text(
                         product.rating ?? '0',
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor400,
-                            fontSize: 11),
+                        style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 11),
                       )
                     ],
                   )
@@ -127,13 +122,10 @@ class ProductCard extends ConsumerWidget {
           const Gap(3),
           Text(
               product.discountPercentage > 0
-                  ? WayaHelpers.calculatedDiscountPrice(
-                      product.price, product.discountPercentage)
+                  ? WayaHelpers.calculatedDiscountPrice(product.price, product.discountPercentage)
                   : "₦${product.price}",
               style: TextStyle().wayaCopyWith(
-                  color: isExplore
-                      ? wayaTheme.colorScheme.customPrimary
-                      : wayaTheme.colorScheme.customBlack,
+                  color: isExplore ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.customBlack,
                   fontSize: 14,
                   fontWeight: FontWeight.w500)),
           Visibility(
@@ -150,9 +142,7 @@ class ProductCard extends ConsumerWidget {
                     color: wayaTheme.colorScheme.greyColor300,
                     centerWidget: Text(
                       'Add To Cart',
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
                     ),
                     textColor: wayaTheme.colorScheme.customBlack,
                   )
@@ -172,9 +162,7 @@ class ProductCard extends ConsumerWidget {
                     color: wayaTheme.colorScheme.greyColor300,
                     centerWidget: Text(
                       'Manage Product',
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
                     ),
                     textColor: wayaTheme.colorScheme.customBlack,
                   )
@@ -207,9 +195,7 @@ class ProductCardSekeleton extends StatelessWidget {
       children: [
         Container(
           height: 180,
-          decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.greyColor100,
-              borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
         ),
         Visibility(
             visible: isWayaGramDeal,
@@ -220,9 +206,8 @@ class ProductCardSekeleton extends StatelessWidget {
                   width: 120,
                   height: 24,
                   padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.greyColor100,
-                      borderRadius: BorderRadius.circular(6)),
+                  decoration:
+                      BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(6)),
                 )
               ],
             )),
@@ -235,9 +220,8 @@ class ProductCardSekeleton extends StatelessWidget {
                   width: 80,
                   height: 24,
                   padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.greyColor100,
-                      borderRadius: BorderRadius.circular(6)),
+                  decoration:
+                      BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(6)),
                 )
               ],
             )),
@@ -246,9 +230,7 @@ class ProductCardSekeleton extends StatelessWidget {
           width: 140,
           height: 24,
           padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
-          decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.greyColor100,
-              borderRadius: BorderRadius.circular(6)),
+          decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(6)),
         ),
         Visibility(
             visible: !isExplore,
@@ -264,8 +246,7 @@ class ProductCardSekeleton extends StatelessWidget {
                       height: 24,
                       padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
                       decoration: BoxDecoration(
-                          color: wayaTheme.colorScheme.greyColor100,
-                          borderRadius: BorderRadius.circular(6)),
+                          color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(6)),
                     )
                   ],
                 )
@@ -280,9 +261,8 @@ class ProductCardSekeleton extends StatelessWidget {
                   width: 60,
                   height: 24,
                   padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.greyColor100,
-                      borderRadius: BorderRadius.circular(6)),
+                  decoration:
+                      BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(6)),
                 )
               ],
             )),
@@ -291,9 +271,7 @@ class ProductCardSekeleton extends StatelessWidget {
           width: 60,
           height: 24,
           padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
-          decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.greyColor100,
-              borderRadius: BorderRadius.circular(6)),
+          decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(6)),
         ),
         Visibility(
             visible: canbeAddedTocart,
@@ -304,9 +282,8 @@ class ProductCardSekeleton extends StatelessWidget {
                   width: 120,
                   height: 24,
                   padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.greyColor100,
-                      borderRadius: BorderRadius.circular(6)),
+                  decoration:
+                      BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(6)),
                 )
               ],
             )),
@@ -319,9 +296,8 @@ class ProductCardSekeleton extends StatelessWidget {
                   width: 120,
                   height: 24,
                   padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.greyColor100,
-                      borderRadius: BorderRadius.circular(6)),
+                  decoration:
+                      BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(6)),
                 )
               ],
             ))

@@ -46,42 +46,46 @@ class _ExploreState extends ConsumerState<Explore> {
         isLoading: false,
         backgroundColor: wayaTheme.colorScheme.scaffoldColor,
         appBar: AppBar(
-            toolbarHeight: 70,
-            backgroundColor: wayaTheme.colorScheme.white,
-            title: ExploreHeader(),
-            actions: [
-              Container(
-                padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        WayaNav.toNamed('/notifications');
-                      },
-                      child: WayaAssets.icons.notifications.svg(
-                        height: 24,
-                        width: 24,
-                      ),
+          toolbarHeight: 70,
+          backgroundColor: wayaTheme.colorScheme.white,
+          title: ExploreHeader(),
+          actions: [
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //? The notification button.
+                  InkWell(
+                    onTap: () {
+                      WayaNav.toNamed('/notifications');
+                    },
+                    child: WayaAssets.icons.notifications.svg(
+                      height: 24,
+                      width: 24,
                     ),
-                    const Gap(15),
-                    WayaDp(
-                      onTap: () {
-                        WayaNav.toNamed('/general-settings');
-                      },
-                      radius: 18,
-                    ),
-                  ],
-                ),
-              )
-            ],
-            leading: Container(
-              padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              child: Image.asset(
-                'assets/images/wayalogo_unlabelled.png',
+                  ),
+
+                  // Some space.
+                  const Gap(15),
+
+                  //? The user's profile picture.
+                  WayaDp(
+                    onTap: () {
+                      WayaNav.toNamed('/general-settings');
+                    },
+                    radius: 18,
+                  ),
+                ],
               ),
-            )),
+            )
+          ],
+          leading: Container(
+            padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+            child: WayaAssets.images.wayalogoUnlabelled.image(),
+          ),
+        ),
         isScrollable: true,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,

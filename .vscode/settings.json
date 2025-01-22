@@ -1,5 +1,8 @@
 {
   "java.configuration.updateBuildConfiguration": "interactive",
   "dart.flutterSdkPath": ".fvm/versions/stable",
-  "githubIssues.issueBranchTitle": "issue-${issueNumber}"
+  "githubIssues.issueBranchTitle": "issue-${issueNumber}",
+  "cSpell.words": [
+    "wayalogo"
+  ]
 }
