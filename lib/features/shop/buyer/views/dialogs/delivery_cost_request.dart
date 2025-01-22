@@ -6,20 +6,32 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/shop/cart/data/model.dart';
-
+import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
-class DeliveryCostRequest extends StatelessWidget {
-  final List<Cart> orders;
+class DeliveryCostRequest extends ConsumerWidget {
+  final List<CartProduct> orders;
+  final String shopId;
+  final String shopName;
+  final String shopLogo;
   final VoidCallback onPress;
 
   const DeliveryCostRequest(
-      {super.key, required this.onPress, required this.orders});
+      {super.key,
+      required this.onPress,
+      required this.orders,
+      required this.shopId,
+      required this.shopLogo,
+      required this.shopName});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final TextEditingController _controller = TextEditingController();
     final wayaTheme = Theme.of(context);
+    final state = ref.watch(cartVmProvider);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -27,120 +39,122 @@ class DeliveryCostRequest extends StatelessWidget {
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
-        width: context.width ,
-        height: context.height * 0.8,
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-        decoration: BoxDecoration(
-          color: wayaTheme.colorScheme.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: SingleChildScrollView(
-          child: 
-          Column(
-         // mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            
-            Text(
-              "Delivery Cost Request",
-              textAlign: TextAlign.start,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Gap(12),
-            Text(
-              "Add delivery address this order so the seller can review and send the delivery cost for it.",
-              textAlign: TextAlign.start,
-              style: WayaTextStyles.descriptionStyle,
-            ),
-            const Gap(24),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.greyColor100,
-                  borderRadius: BorderRadius.circular(8)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                 WayaDp(
-                  radius: 24,
-                 ),
-                  const Gap(6),
-                  Text(
-                    "Maleek Ventures",
-                    style: wayaTheme.textTheme.labelMedium,
-                  )
-                ],
-              ),
-            ),
-            const Gap(24),
-           
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 2,
-                  itemBuilder: (context, index) {
-                    return OrderedProductCard();
-                  }),
-            
-            const Gap(24),
-            Row(
+          width: context.width,
+          height: context.height * 0.8,
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+          decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              // mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Divider(
-                    color: wayaTheme.colorScheme.greyColor200,
-                    thickness: 1,
-                  ),
-                ),
-                Gap(10),
                 Text(
-                  "Enter Delivery Details",
-                  style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                    color: wayaTheme.colorScheme.greyColor600,
+                  "Delivery Cost Request",
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Gap(10),
-                Expanded(
-                  child: Divider(
-                    color: wayaTheme.colorScheme.greyColor200,
-                    thickness: 1,
+                const Gap(12),
+                Text(
+                  "Add delivery address this order so the seller can review and send the delivery cost for it.",
+                  textAlign: TextAlign.start,
+                  style: WayaTextStyles.descriptionStyle,
+                ),
+                const Gap(24),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.greyColor100,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      WayaDp(
+                        radius: 24,
+                        image: shopLogo,
+                      ),
+                      const Gap(6),
+                      Text(
+                        shopName,
+                        style: wayaTheme.textTheme.labelMedium,
+                      )
+                    ],
                   ),
                 ),
+                const Gap(24),
+                ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 2,
+                    itemBuilder: (context, index) {
+                      return OrderedProductCard();
+                    }),
+                const Gap(24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        color: wayaTheme.colorScheme.greyColor200,
+                        thickness: 1,
+                      ),
+                    ),
+                    Gap(10),
+                    Text(
+                      "Enter Delivery Details",
+                      style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                        color: wayaTheme.colorScheme.greyColor600,
+                      ),
+                    ),
+                    Gap(10),
+                    Expanded(
+                      child: Divider(
+                        color: wayaTheme.colorScheme.greyColor200,
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                const Gap(24),
+                WayaTextFormField(
+                  controller: _controller,
+                  hintText: "Enter delivery address for this order",
+                  line: 5,
+                  label: "Delivery Address",
+                ),
+                const Gap(24),
+                WayaButton(
+                    callback: !state.isRequestingDelivery ? () {
+                      if (_controller.text.isEmpty) {
+                        return WayaSnackBar.showToast(
+                            "Enter a delivery address");
+                      }
+
+                      ref.read(cartVmProvider.notifier).deliveryRequest(
+                          shopId: shopId, address: _controller.text);
+                      Navigator.pop(context);
+                    }: null,
+                    text: "Request Delivery Cost"),
+                const Gap(10),
+                WayaButton(
+                    callback: () {
+                      Navigator.of(context).pop();
+                    },
+                    textColor: wayaTheme.colorScheme.greyColor500,
+                    color: wayaTheme.colorScheme.transparent,
+                    border: Border.all(
+                        color: wayaTheme.colorScheme.greyColor500, width: 1),
+                    text: 'Cancel')
               ],
             ),
-            const Gap(24),
-            WayaTextFormField(
-              controller: TextEditingController(),
-              hintText: "Enter delivery address for this order",
-              line: 5,
-              label: "Delivery Address",
-            ),
-            const Gap(24),
-            WayaButton(
-                callback: () {
-                  // Navigator.of(context).pop();
-                  onPress();
-                },
-                text: "Request Delivery Cost"),
-            const Gap(10),
-            WayaButton(
-                callback: () {
-                  Navigator.of(context).pop();
-                },
-                textColor: wayaTheme.colorScheme.greyColor500,
-                color: wayaTheme.colorScheme.transparent,
-                border: Border.all(
-                    color: wayaTheme.colorScheme.greyColor500, width: 1),
-                text: 'Cancel')
-          ],
-        ),
-        )
-      ),
+          )),
     );
   }
 }

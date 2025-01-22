@@ -13,7 +13,7 @@ import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
-import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
+import 'package:wayagram/features/shop/seller/data/model/discount_type_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 
@@ -92,27 +92,40 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }).toList();
   }
 
-  Future<void> allCategories() async {
+  Future<void> getAllCategories() async {
+    // final categories = await ref.read(shopVmProvider.notifier).allCategories("1");
+
+    // if (categories != null) {
+    //   state = state.copyWith(categories: categories);
+    // }
+  }
+
+  Future<PaginatedResult?> getAllDiscounts(int page) async {
     try {
-      final response = await _shopRepository.getAllCategories();
-
+      final response = await _shopRepository.getAllDiscounts(page);
+      List<Select> allDiscounts = [];
       if (response.success) {
-        CategoryResponseModel responseModel =
-            CategoryResponseModel.fromJson(response.data);
-
-        final List<CategoryData?> categories = responseModel.data;
-        final List<Select> selectCategories = categories.map((val) {
-          return Select(label: val!.name, value: val.id);
+        DiscountsResponse responseModel =
+            DiscountsResponse.fromJson(response.data);
+        final filtered =
+            responseModel.discounts.where((v) => v.active).toList();
+        allDiscounts = filtered.map((val) {
+          return Select(label: "${val.type} ${val.percentage}%", value: val.id);
         }).toList();
-
-        state = state.copyWith(categories: selectCategories);
+        state = state.copyWith(allDiscountTypes: allDiscounts);
+        state = state.copyWith(
+            totalNoOfDiscountPages: responseModel.pagination.totalPages);
       }
+
+      return PaginatedResult(
+          items: allDiscounts, totalPages: state.totalNoOfDiscountPages);
     } catch (e) {
       print(e);
+      return null;
     }
   }
 
-  Future<void> onSubmit(BuildContext context, {Function? onSuccess}) async {
+  Future<void> onSubmit(BuildContext context) async {
     try {
       state = state.copyWith(isLoading: true);
 
@@ -124,9 +137,9 @@ class AddProductVm extends StateNotifier<AddProductState> {
       }
       state = state.copyWith(images: addedimages);
 
-      final response = await _shopRepository.createProduct(state.addProductModel);
+      final response = await _shopRepository.createProduct(
+          payload: state.addProductModel, id: state.shopId);
       if (response.success && context.mounted) {
-        onSuccess?.call();
         WayaUtils.showNotice(
             context: context,
             title: "Product Added Successfully! 🎉",
@@ -158,7 +171,8 @@ class AddProductVm extends StateNotifier<AddProductState> {
       case "pickUpOption":
         state = state.copyWith(pickUpOption: value.value);
       case "discountType":
-        state = state.copyWith(discountType: value.value);
+        state = state.copyWith(discountType: value.label);
+        state = state.copyWith(selectedDiscountType: value);
       default:
         state = state.copyWith(productColor: value.value);
     }

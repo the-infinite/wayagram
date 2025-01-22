@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -13,6 +15,7 @@ import '../../../../core/components/waya_text_form_field.dart';
 import '../../../../core/utils/waya_navigation.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../../shop/widgets/upload_image.dart';
+import '../../data/controller/contest_controller.dart';
 import 'create_ultimate.dart';
 
 class EditStagePreference extends ConsumerStatefulWidget {
@@ -25,6 +28,8 @@ class EditStagePreference extends ConsumerStatefulWidget {
 bool isSwitched = false;
 
 class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
+  final _contestController = Get.put(ContestController());
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
@@ -268,7 +273,10 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
           const Gap(40),
           WayaButton(
             callback: () {
+
+              _contestController.addStage();
               Navigator.pop(context);
+
             },
             text: "Save Stage Changes",
           ),

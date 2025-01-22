@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/Add_new_requirement_modal.dart';
+import 'package:wayagram/features/ugt/data/controller/contest_controller.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
@@ -28,19 +31,23 @@ bool isSwitched = false;
 
 
 class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirement> {
-  List<String> stages = ['Document 1', 'Document  2', 'Document 3', 'Document 4'];
+  List<dynamic> stages = [];
+  final _contestController = Get.put(ContestController());
 
   void _addStage() {
     setState(() {
-      stages.add('Contest ${stages.length}');
+      stages.add('Document ${stages.length}');
     });
   }
 
   void _removeStage(int index) {
     setState(() {
+      _contestController.removeContestSignUpRequirement(index);
       stages.removeAt(index);
     });
   }
+
+
 
 
   @override
@@ -216,7 +223,14 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(stages[index], style: TextStyle(fontSize: 16, color: Colors.grey[700])),
+                              Text((index >= 0 &&
+                          index <
+                              _contestController
+                              .contestSignUpRequirement.length)
+                              ? _contestController
+                              .contestSignUpRequirement [index]
+                              ["requirementType"]
+                              : stages[index], style: TextStyle(fontSize: 16, color: Colors.grey[700])),
                               IconButton(
                                 icon: Image.asset('assets/images/icon-right.png',width: 20, height: 20, ),
                                 //Icon(Icons.edit, color: Colors.grey),

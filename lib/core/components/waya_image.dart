@@ -7,11 +7,13 @@ import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 class WayaDp extends ConsumerWidget {
   final double? radius;
   final Function()? onTap;
+  final String? image;
   final bool isEdit;
   const WayaDp({
     this.radius = 75,
     this.onTap,
     this.isEdit = false,
+    this.image = '',
     super.key,
   });
 
@@ -19,7 +21,7 @@ class WayaDp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final avatar = ref
+    final avatar = image  ?? ref
         .watch(profileVmProvider)
         .userAccountModel
         ?.data
@@ -29,8 +31,7 @@ class WayaDp extends ConsumerWidget {
     return GestureDetector(
       onTap: isEdit
           ? () {
-             
-             updateProfileImage(ref);
+              updateProfileImage(ref);
             }
           : onTap,
       child: Stack(
@@ -49,8 +50,7 @@ class WayaDp extends ConsumerWidget {
                   : null),
           isEdit
               ? Positioned.fill(
-                  child: 
-                    CircleAvatar(
+                  child: CircleAvatar(
                     radius: radius,
                     backgroundColor:
                         Colors.black.withOpacity(0.1), // Transparent overlay
@@ -59,8 +59,7 @@ class WayaDp extends ConsumerWidget {
                       color: Colors.white,
                     ),
                   ),
-                  )
-                
+                )
               : SizedBox.shrink(),
         ],
       ),

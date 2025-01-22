@@ -19,21 +19,21 @@ class AccountState {
 }
 
 class SelectAccountVm extends StateNotifier<AccountState> {
-  SelectAccountVm() : super(AccountState());
+  final WayaLocalDataSource _localDataSource;
+  SelectAccountVm(this._localDataSource) : super(AccountState());
 
-  final WayaLocalDataSource localDataSource = WayaLocalDataSource();
   String get selectedType => state.selectedType;
 
   void setSelectedType(SelectAccountData account) {
     state = state.copyWith(selectedType: account.type);
 
-    localDataSource.saveUserType(account);
+    _localDataSource.saveUserType(account);
   }
 }
 
 final selectAccountProvider =
     StateNotifierProvider<SelectAccountVm, AccountState>((ref) {
-  return SelectAccountVm();
+  return SelectAccountVm(WayaLocalDataSource());
 });
 
 class SelectAccountTypes
@@ -45,13 +45,13 @@ class SelectAccountTypes
     fetchAccountType();
   }
 
-  Future<void> fetchAccountType() async {
+  Future<List<SelectAccountData>?> fetchAccountType() async {
     try {
       state = const AsyncValue.loading();
       final response = await _authRepository.getAccountType();
       _logger.d(response.data);
       final accountTypes = response.data['data'] as List;
-     
+
       final accountData = selectAccountData
           .map((item) => SelectAccountData(
                 avatar: item.avatar,
@@ -63,9 +63,12 @@ class SelectAccountTypes
               ))
           .toList();
       state = AsyncValue.data(accountData);
+      return accountData;
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
+
       _logger.e(e);
+      return null;
     }
   }
 
