@@ -94,14 +94,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }).toList();
   }
 
-  Future<void> getAllCategories() async {
-    // final categories = await ref.read(shopVmProvider.notifier).allCategories("1");
-
-    // if (categories != null) {
-    //   state = state.copyWith(categories: categories);
-    // }
-  }
-
   Future<PaginatedResult?> getAllDiscounts(int page) async {
     try {
       final response = await _shopRepository.getAllDiscounts(page);
@@ -199,18 +191,21 @@ class AddProductVm extends StateNotifier<AddProductState> {
           buttonText: 'View Application Status',
           secondButtonText: 'Go to Dashboard',
           onCancel: () => WayaNav.toNamed('/wayagram-deal'));
-    } else {
-      // print("$addProductData");
-      WayaUtils.showNotice(
-          context: context,
-          title: "Product Added Successfully! 🎉",
-          message:
-              "Your product is now live in your shop and ready \n for customers to discover.",
-          onPress: () => WayaNav.toNamed('/add-product'),
-          icon: Image.asset('assets/images/shop/add-product-success.png'),
-          buttonText: 'Add Another Product',
-          secondButtonText: 'Go to Dashboard',
-          onCancel: () => WayaNav.toNamed(BottomView.route, arguments: 1));
     }
+  }
+
+  Future<void> deleteProduct(
+      {required String shopId, required String productId}) async {
+    try {
+      final response =
+          _shopRepository.deleteProductRequest(shopId: shopId, productId: productId);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> editProduct() async {
+    
+    
   }
 }

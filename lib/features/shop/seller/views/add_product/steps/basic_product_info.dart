@@ -18,13 +18,6 @@ class BasicProductInfo extends ConsumerStatefulWidget {
 class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(addProductProvider.notifier).getAllCategories();
-    });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -54,7 +54,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
         }
       }
     } catch (e) {
-      _logger.e("wefewfewfe $e");
+      _logger.e(" $e");
     } finally {
       state = state.copyWith(isLoading: false);
     }

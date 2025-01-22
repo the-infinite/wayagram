@@ -7,6 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
@@ -35,6 +36,9 @@ class _CartCardState extends ConsumerState<CartCard> {
 
     final int totalPrice = widget.cartItem.products
         .fold(0, (sum, item) => sum + (item.quantity * item.price));
+
+    final bool isDeliveryCharge =
+        widget.cartItem.products.any((prod) => prod.deliveryCharge);
 
     return Column(
       children: [
@@ -152,9 +156,19 @@ class _CartCardState extends ConsumerState<CartCard> {
                 width: context.width * 0.40,
                 child: WayaButton(
                     callback: () {
-                      WayaNav.toNamed('/checkout');
+                      if (isDeliveryCharge) {
+                        return ref
+                            .read(cartCardVmProvider.notifier)
+                            .deliveryRequest(
+                                context,
+                                widget.cartItem.products,
+                                widget.cartItem.shopId,
+                                widget.cartItem.shopName,
+                                widget.cartItem.shopLogo);
+                      }
+                      WayaNav.toNamed(Checkout.route);
                     },
-                    text: "Checkout"),
+                    text: isDeliveryCharge ? "Request Delivery" : "Checkout"),
               )
             ],
           ),

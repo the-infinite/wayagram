@@ -36,7 +36,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
     final manageShop = ref.watch(manageShopVmProvider);
     final wayaTheme = Theme.of(context);
 
-    if (manageShop.isLoading!) {
+    if (manageShop.isLoading) {
       return SizedBox(
         height: context.height * 0.5,
         child: Center(

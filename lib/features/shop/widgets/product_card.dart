@@ -4,6 +4,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
@@ -33,7 +34,7 @@ class ProductCard extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        WayaNav.toNamed('/product-detail', arguments: product);
+        WayaNav.toNamed(ProductDetail.route, arguments: product);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
