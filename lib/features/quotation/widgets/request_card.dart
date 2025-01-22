@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
@@ -7,12 +8,14 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
 import 'package:wayagram/features/quotation/vm/quotation_vm.dart';
 
 class RequestCard extends StatelessWidget {
-  final Quotation quotation;
+  //final Quotation quotation;
   final VoidCallback onTap;
-  const RequestCard({super.key, required this.quotation, required this.onTap});
+  final BuyerRequests product;
+  const RequestCard({super.key, required this.product, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -61,17 +64,17 @@ class RequestCard extends StatelessWidget {
                     ),
                   ),
                   const Gap(10),
-                  Text(quotation.category, style: wayaTheme.textTheme.hintStyle)
+                  Text('${product.category?.capitalizeFirst}', style: wayaTheme.textTheme.hintStyle)
                 ],
               ),
               const Gap(20),
               Text(
-                quotation.name,
+                '${product.productName?.capitalizeFirst}',
                 style: wayaTheme.textTheme.titleLarge,
               ),
               const Gap(20),
               Text(
-                quotation.description,
+                '${product.description?.capitalizeFirst}',
                 style: wayaTheme.textTheme.descriptionStyle,
               ),
               const Gap(20),
@@ -81,7 +84,8 @@ class RequestCard extends StatelessWidget {
                         text: 'Time Remaining | ',
                         style: wayaTheme.textTheme.hintStyle),
                     TextSpan(
-                        text: quotation.timeLeft,
+                        //text: product.bidEnd,
+                        text: '${DateTime.parse('${product.bidEnd}')}',
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customPrimary,
                             fontSize: 14,
@@ -94,7 +98,7 @@ class RequestCard extends StatelessWidget {
                         text: 'Starting Price : ',
                         style: wayaTheme.textTheme.hintStyle),
                     TextSpan(
-                        text: '₦ 1,500,000.00',
+                        text: '₦ ${product.bidStartingAmount}',
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.black,
                             fontSize: 14,

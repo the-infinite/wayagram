@@ -11,6 +11,8 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
@@ -26,8 +28,19 @@ class PollSummary extends ConsumerStatefulWidget {
 }
 
 class _PollSummaryState extends ConsumerState<PollSummary>  {
+  CreatePollVotingState? viewModel;
 
-  int _selectedIndex = 0;
+  disposeControllers(){
+    viewModel?.pollTitle?.dispose();
+    viewModel?.pollDescription?.dispose();
+    viewModel?.pollCompanyDescription?.dispose();
+    viewModel?.votePrice?.dispose();
+    viewModel?.voteNumber?.dispose();
+    viewModel?.firstChoice?.dispose();
+    viewModel?.firstChoiceDescription?.dispose();
+    viewModel?.secondChoice?.dispose();
+    viewModel?.secondChoiceDescription?.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +50,33 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         title: "Polls Summary",
         isLoading: false,
         isScrollable: true,
-        appBarTrailing: createPoll(context),
+        appBarTrailing: Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: WayaButton(
+            callback: !viewModel.isLoading
+                ? () {
+              ref.read(createPollVotingProvider.notifier)
+                  .createPoll(
+                  context,
+                  viewModel.firstChoice.text,
+                  viewModel.startDate,
+                  viewModel.endDate,
+                  viewModel.voteNumber.text,
+                  viewModel.pollDescription.text,
+                  viewModel.firstChoiceDescription.text,
+              );
+              disposeControllers();
+               WayaUtils.showModalSheet(context, child: VoteSuccessModal(),
+      );
+            } : null,
+            centerWidget: LoadingState(
+              loading: viewModel.isLoading,
+              text: 'Create',
+            ),
+            height: 30,
+          ),
+        ),
+        //createPoll(context),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

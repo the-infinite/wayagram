@@ -8,8 +8,8 @@ class PollType {
 
 
 List<PollType> pollTypes = [
-  PollType(id: 1, pollType: 'Scheduled'),
-  PollType(id: 2, pollType: 'Non Scheduled'),
+  PollType(id: 1, pollType: 'Paid'),
+  PollType(id: 2, pollType: 'Free'),
 
 ];
 

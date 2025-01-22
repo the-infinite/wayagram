@@ -5,7 +5,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 
 import '../../../model/create_request_state_model.dart';
 
@@ -82,9 +83,9 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-                  if (viewModel.brandName.text.isEmpty) {
-                    return 'Brand Name is required';
-                  }
+                  // if (viewModel.brandName.text.isEmpty) {
+                  //   return 'Brand Name is required';
+                  // }
 
                   return null;
                 }, builder: (formState) {
@@ -119,7 +120,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
 
                 FormField<String>(validator: (value) {
                   if (viewModel.productCategory.isEmpty) {
-                    return 'Category is required';
+                    return 'Product Category is required';
                   }
                   return null;
                 }, builder: (formState) {
@@ -155,7 +156,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
 
                 FormField<String>(validator: (value) {
                   if (viewModel.productCondition.isEmpty) {
-                    return 'Type is required';
+                    return 'Product Condition is required';
                   }
                   return null;
                 }, builder: (formState) {
@@ -168,10 +169,10 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                           hintText: 'Select Product Condition',
                           items: ref
                               .read(createRequestProvider.notifier)
-                              .restructuredCategory(),
+                              .restructuredCondition(),
                           onSelected: (value) => ref
                               .read(createRequestProvider.notifier)
-                              .update(value, "productType")),
+                              .update(value, "productCondition")),
                       if (formState.hasError &&
                           viewModel.productCondition.isEmpty)
                         Padding(
@@ -224,13 +225,16 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
+                  if (viewModel.quantity.text.isEmpty) {
+                    return 'Quantity is required';
+                  }
                   return null;
                 }, builder: (formState) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       WayaTextFormField(
-                        keyboardType: TextInputType.text,
+                        keyboardType: TextInputType.number,
                         controller: viewModel.quantity,
                         hintText: 'Specify the number of items needed',
                         borderColor: formState.hasError &&
@@ -258,7 +262,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                Row(children: [
                  Expanded(
                    child: FormField<String>(validator: (value) {
-                     if (viewModel.state.isEmpty) {
+                     if (viewModel.stateOfPurchase.isEmpty) {
                        return 'State is required';
                      }
                      return null;
@@ -276,9 +280,9 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                                  .restructuredState(),
                              onSelected: (value) => ref
                                  .read(createRequestProvider.notifier)
-                                 .update(value, "state")),
+                                 .update(value, "stateOfPurchase")),
                          if (formState.hasError &&
-                             viewModel.state.isEmpty)
+                             viewModel.stateOfPurchase.isEmpty)
                            Padding(
                              padding: const EdgeInsets.only(top: 5),
                              child: Text(
@@ -346,13 +350,16 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 Row(children: [
                   Expanded(
                     child: FormField<String>(validator: (value) {
+                      if (viewModel.minDistance.text.isEmpty) {
+                        return 'Min Distance is required';
+                      }
                       return null;
                     }, builder: (formState)  {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           WayaTextFormField(
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.number,
                             controller: viewModel.minDistance,
                             hintText: 'Min Distance',
                             borderColor: formState.hasError &&
@@ -380,13 +387,16 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                   const Gap(10),
                   Expanded(
                     child: FormField<String>(validator: (value) {
+                      if (viewModel.minDistance.text.isEmpty) {
+                        return 'Max Distance is required';
+                      }
                       return null;
                     }, builder: (formState)  {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           WayaTextFormField(
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.number,
                             controller: viewModel.maxDistance,
                             hintText: 'Max Distance',
                             borderColor: formState.hasError &&
@@ -418,9 +428,8 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Switch(
-                        value: viewModel.includeMeasurement,
-                        onChanged: (value){},
-                        //onChanged: (value) => ref.read(createRequestProvider.notifier).updateIncludeMeasurement(value)
+                        value: viewModel.vendorSeeBuyRequest,
+                        onChanged: (value) => ref.read(createRequestProvider.notifier).updateVendorSeeBuyRequest(value)
                     ),
                     const Gap(10),
                     Column(
@@ -440,20 +449,37 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 ),
                 const Gap(20),
                 WayaButton(
-                    text: 'Setup Pricing & Delivery',
-                    callback: () {
-                      //  ref.read(addProductProvider.notifier).submit();
+                  callback:  () async {
+                    if (_formKey.currentState!.validate()) {
+                      print(viewModel.minDistance.text);
                       widget.gotoNextTab();
-                    }),
+                      print('=>>>>> ${viewModel?.productCategory}');
+                    }
+                  },
+                    text: 'Setup Pricing & Delivery'
+                ),
+                /*WayaButton(
+                  callback: !viewModel.isLoading
+                      ? () async {
+                    if (_formKey.currentState!.validate()) {
+                      print(viewModel.minDistance.text);
+                      widget.gotoNextTab();
+                      print('=>>>>> ${viewModel?.productCategory}');
+                    }
+                  }
+                      : null,
+                  centerWidget: LoadingState(
+                      loading: viewModel.isLoading, text: 'Setup Pricing & Delivery'),
+                ),*/
+
                 const Gap(8),
                 WayaButton(
                     text: 'Go Back',
                     color: wayaTheme.colorScheme.transparent,
                     textColor: wayaTheme.colorScheme.customBlack,
-                    border:
-                    Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                    border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
                     callback: () {
-                      //  ref.read(addProductProvider.notifier).submit();
+                      print('See Buyer ${viewModel.vendorSeeBuyRequest}');
                       //widget.gotoPreviousTab();
                     })
               ],
