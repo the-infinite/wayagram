@@ -68,11 +68,12 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
   final AuthRepository _authRepository;
   final WayaSecureDataSource _secureDataSource;
   final ProfileRepo _profileRepo;
+   final SuccessfulSetupVm _setupVm;
   final Ref ref;
   final _logger = getLogger("AddBusinessAccountVm");
 
   AddBusinessAccountVm(this._authRepository, this.localDataSource,
-      this._secureDataSource, this._profileRepo, this.ref)
+      this._secureDataSource, this._profileRepo, this._setupVm, this.ref)
       : super(AddBusinessAccountState(
           selected: localDataSource.getSelectedBusinessType().label,
           businessName: TextEditingController(),
@@ -170,14 +171,14 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.businessKyc(formdata);
-      if (response.data['statusCode'] == 200 && context.mounted) {
+      if (response.data['statusCode'] == 200) {
         final userId = await _secureDataSource.getUserId();
         final bizResponse =
             await _profileRepo.getBusinessDataRepo(userId: userId!);
         if (bizResponse.success) {
           BusinessAccountData bizData =
               BusinessAccountData.fromJson(bizResponse.data);
-          ref.read(successfulSetupVmProvider).copyWith(business: bizData);
+          _setupVm.state.copyWith(business: bizData);
         }
        if (context.mounted) {
          WayaUtils.showNotice(
@@ -200,6 +201,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
 
 final addBusinessAccountProvider = StateNotifierProvider.autoDispose<
     AddBusinessAccountVm, AddBusinessAccountState>((ref) {
+    final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
   return AddBusinessAccountVm(AuthRepository(), WayaLocalDataSource(),
-      WayaSecureDataSource(), ProfileRepo(), ref);
+      WayaSecureDataSource(), ProfileRepo(),successfulSetupVm, ref);
 });

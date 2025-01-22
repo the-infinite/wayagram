@@ -10,7 +10,7 @@ class CartRepository extends BaseRepository {
       required String userId,
       required String shopId,
       required int price}) {
-    return post("$serviceUrl/client/cart/add-to-cart", {
+    return post("$serviceUrl/cart/add-to-cart", {
       "productId": productId,
       "quantity": quantity,
       "shopId": shopId,

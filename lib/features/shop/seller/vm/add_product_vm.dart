@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
@@ -24,7 +26,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
   final ShopRepository _shopRepository;
   final Ref ref;
   AddProductVm(this._shopRepository, this.ref) : super(AddProductState()) {
-    state = state.copyWith(isWayagramDeal: false);
+    state = state.copyWith(isWayagramDeal: null);
     state =
         state.copyWith(shopId: ref.watch(manageShopVmProvider).singleShop!.id);
   }
@@ -92,14 +94,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }).toList();
   }
 
-  Future<void> getAllCategories() async {
-    // final categories = await ref.read(shopVmProvider.notifier).allCategories("1");
-
-    // if (categories != null) {
-    //   state = state.copyWith(categories: categories);
-    // }
-  }
-
   Future<PaginatedResult?> getAllDiscounts(int page) async {
     try {
       final response = await _shopRepository.getAllDiscounts(page);
@@ -127,6 +121,10 @@ class AddProductVm extends StateNotifier<AddProductState> {
 
   Future<void> onSubmit(BuildContext context) async {
     try {
+      if (state.images.isEmpty) {
+        WayaSnackBar.showToast("A prduct must have an image");
+        return;
+      }
       state = state.copyWith(isLoading: true);
 
       List<MultipartFile> addedimages = [];
@@ -193,18 +191,21 @@ class AddProductVm extends StateNotifier<AddProductState> {
           buttonText: 'View Application Status',
           secondButtonText: 'Go to Dashboard',
           onCancel: () => WayaNav.toNamed('/wayagram-deal'));
-    } else {
-      // print("$addProductData");
-      WayaUtils.showNotice(
-          context: context,
-          title: "Product Added Successfully! 🎉",
-          message:
-              "Your product is now live in your shop and ready \n for customers to discover.",
-          onPress: () => WayaNav.toNamed('/add-product'),
-          icon: Image.asset('assets/images/shop/add-product-success.png'),
-          buttonText: 'Add Another Product',
-          secondButtonText: 'Go to Dashboard',
-          onCancel: () => WayaNav.toNamed(BottomView.route, arguments: 1));
     }
+  }
+
+  Future<void> deleteProduct(
+      {required String shopId, required String productId}) async {
+    try {
+      final response =
+          _shopRepository.deleteProductRequest(shopId: shopId, productId: productId);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> editProduct() async {
+    
+    
   }
 }

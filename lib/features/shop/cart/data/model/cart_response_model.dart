@@ -52,18 +52,18 @@ class CartData {
 
 class CartItem {
   final String shopId;
-  final String deliveryAddress;
-  final String deliveryFee;
-  final String deliveryDate;
+  final String? deliveryAddress;
+  final String? deliveryFee;
+  final String? deliveryDate;
   final String shopName;
   final String shopLogo;
   final List<CartProduct> products;
 
   CartItem({
     required this.shopId,
-    required this.deliveryAddress,
-    required this.deliveryFee,
-    required this.deliveryDate,
+     this.deliveryAddress = '',
+     this.deliveryFee = '',
+     this.deliveryDate = '',
     required this.shopName,
     required this.shopLogo,
     required this.products,
@@ -107,7 +107,7 @@ class CartProduct {
   final String productId;
   final String productName;
   final bool deliveryCharge;
-  final String productImage;
+  final String? productImage;
 
   CartProduct({
     required this.price,

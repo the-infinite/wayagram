@@ -42,7 +42,7 @@ class SellerOrderDetails extends ConsumerWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 2,
                 itemBuilder: (context, index) {
-                  return OrderedProductCard();
+                  return Container(); // OrderedProductCard()
                 }),
             const Gap(10),
             DottedBorderOrderInfoWidget(title: "Sub Total", description: "N 175,000"),

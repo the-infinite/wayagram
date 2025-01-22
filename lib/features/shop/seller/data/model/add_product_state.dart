@@ -16,7 +16,6 @@ class AddProductState {
   final TextEditingController productWidth;
   final TextEditingController productHeight;
   final TextEditingController productDepth;
-  final TextEditingController stockQuantity;
   final List<MultipartFile> images;
   final String shopId;
   final bool isWayagramDeal;
@@ -49,7 +48,6 @@ class AddProductState {
       TextEditingController? pricePerUnit,
       TextEditingController? pickUpAddress,
       TextEditingController? deliveryPrice,
-      TextEditingController? stockQuantity,
       this.productCategory = '',
       this.selectedCategory,
       this.productColor = '',
@@ -83,7 +81,6 @@ class AddProductState {
         productDepth = productDepth ?? TextEditingController(),
         productHeight = productHeight ?? TextEditingController(),
         discountPercentage = discountPercentage ?? TextEditingController(),
-        stockQuantity = stockQuantity ?? TextEditingController(),
         productWidth = productWidth ?? TextEditingController();
 
   AddProductState copyWith(
@@ -132,7 +129,6 @@ class AddProductState {
         productDepth: productDepth ?? this.productDepth,
         productHeight: productHeight ?? this.productHeight,
         productWidth: productWidth ?? this.productWidth,
-        stockQuantity: stockQuantity ?? this.stockQuantity,
         pickUpOption: pickUpOption ?? this.pickUpOption,
         discountType: discountType ?? this.discountType,
         includeMeasurement: includeMeasurement ?? this.includeMeasurement,
@@ -171,7 +167,7 @@ class AddProductState {
         deliveryCharge: includeDeliveryFee,
         materialType: materialType.text,
         discountPercentage: discountPercentage.text,
-        stockQuantity: int.parse(stockQuantity.text),
+
         images: images);
   }
 }
