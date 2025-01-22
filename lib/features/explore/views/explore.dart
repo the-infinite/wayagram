@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -56,9 +57,9 @@ class _ExploreState extends ConsumerState<Explore> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     InkWell(
-                      onTap: () {},
-                      child: Icon(Icons.notifications,
-                          size: 30, color: wayaTheme.colorScheme.greyColor500),
+                      onTap: () {
+                        WayaNav.toNamed('/notifications');
+                      },
                     ),
                     const Gap(15),
                     WayaDp(
@@ -87,9 +88,7 @@ class _ExploreState extends ConsumerState<Explore> {
             ExploreOurServices(),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Have a buy request, just create a quote',
-                title: 'Get Quotation'),
+                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
@@ -105,9 +104,7 @@ class _ExploreState extends ConsumerState<Explore> {
                   Text(
                     "Create a Quote",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16),
+                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                 ],
               ),
@@ -131,8 +128,7 @@ class _ExploreState extends ConsumerState<Explore> {
                 title: 'Shop'),
             const Gap(10),
             CategoriesFilterWidget(
-              setCategory: (value) =>
-                  ref.read(shopVmProvider.notifier).setCategory(value),
+              setCategory: (value) => ref.read(shopVmProvider.notifier).setCategory(value),
             ),
             const Gap(10),
             // WayaButton(
@@ -165,10 +161,7 @@ class _ExploreState extends ConsumerState<Explore> {
                 ? _buildProductLoadingState(context: context)
                 : _buildProductGrid(notifier.filteredProducts),
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Join Upcoming Activities',
-                title: 'University Got Talent'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),

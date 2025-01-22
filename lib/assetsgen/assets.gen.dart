@@ -259,6 +259,42 @@ class $AssetsIconsGen {
   SvgGenImage get moreAcctBal =>
       const SvgGenImage('assets/icons/more-acct-bal.svg');
 
+  /// File path: assets/icons/notif-group-request.svg
+  SvgGenImage get notifGroupRequest =>
+      const SvgGenImage('assets/icons/notif-group-request.svg');
+
+  /// File path: assets/icons/notif-new-comment.svg
+  SvgGenImage get notifNewComment =>
+      const SvgGenImage('assets/icons/notif-new-comment.svg');
+
+  /// File path: assets/icons/notif-new-donation.svg
+  SvgGenImage get notifNewDonation =>
+      const SvgGenImage('assets/icons/notif-new-donation.svg');
+
+  /// File path: assets/icons/notif-new-follower.svg
+  SvgGenImage get notifNewFollower =>
+      const SvgGenImage('assets/icons/notif-new-follower.svg');
+
+  /// File path: assets/icons/notif-new-message.svg
+  SvgGenImage get notifNewMessage =>
+      const SvgGenImage('assets/icons/notif-new-message.svg');
+
+  /// File path: assets/icons/notif-poll-results.svg
+  SvgGenImage get notifPollResults =>
+      const SvgGenImage('assets/icons/notif-poll-results.svg');
+
+  /// File path: assets/icons/notif-transaction.svg
+  SvgGenImage get notifTransaction =>
+      const SvgGenImage('assets/icons/notif-transaction.svg');
+
+  /// File path: assets/icons/notif-upcoming-event.svg
+  SvgGenImage get notifUpcomingEvent =>
+      const SvgGenImage('assets/icons/notif-upcoming-event.svg');
+
+  /// File path: assets/icons/notifications.svg
+  SvgGenImage get notifications =>
+      const SvgGenImage('assets/icons/notifications.svg');
+
   /// File path: assets/icons/order-van.svg
   SvgGenImage get orderVan => const SvgGenImage('assets/icons/order-van.svg');
 
@@ -402,6 +438,15 @@ class $AssetsIconsGen {
         menu,
         moneyIcon,
         moreAcctBal,
+        notifGroupRequest,
+        notifNewComment,
+        notifNewDonation,
+        notifNewFollower,
+        notifNewMessage,
+        notifPollResults,
+        notifTransaction,
+        notifUpcomingEvent,
+        notifications,
         orderVan,
         orders,
         personal,
