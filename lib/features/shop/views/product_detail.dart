@@ -80,7 +80,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     onTap: () {
                       HapticFeedback.lightImpact();
                     },
-                    child: SvgPicture.asset(WayaAssests.icons.heart.path,
+                    child: SvgPicture.asset(WayaAssets.icons.heart.path,
                         fit: BoxFit.none),
                   ),
                 ),
@@ -94,7 +94,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     onTap: () {
                       HapticFeedback.lightImpact();
                     },
-                    child: SvgPicture.asset(WayaAssests.icons.shareNetwork.path,
+                    child: SvgPicture.asset(WayaAssets.icons.shareNetwork.path,
                         fit: BoxFit.none),
                   ),
                 )
