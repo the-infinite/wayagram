@@ -45,7 +45,7 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
               .read(addProductProvider.notifier)
               .deleteProduct(shopId: product.shopId, productId: product.id);
         },
-        icon: Image.asset(WayaAssests.images.deleteImg.path),
+        icon: Image.asset(WayaAssets.images.deleteImg.path),
         buttonText: 'Delete Product',
         secondButtonText: 'Cancel');
   }
