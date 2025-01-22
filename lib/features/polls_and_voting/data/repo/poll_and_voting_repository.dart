@@ -33,6 +33,10 @@ class PollAndVotingRepository extends BaseRepository {
     return get("$serviceUrl/client/polls/?creatorId=$creatorId");
   }
 
+  Future<WayaRequestResponse> getDashboardPolls(String pollId) {
+    return get("$serviceUrl/client/polls/$pollId/votes");
+  }
+
   Future<WayaRequestResponse> getAllPollsById({required String id}) {
     return get("$serviceUrl/client/polls/$id");
   }
