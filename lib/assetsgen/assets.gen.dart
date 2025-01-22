@@ -93,6 +93,10 @@ class $AssetsIconsGen {
   SvgGenImage get cCornerUpRight =>
       const SvgGenImage('assets/icons/c-corner-up-right.svg');
 
+  /// File path: assets/icons/c-group-create.svg
+  SvgGenImage get cGroupCreate =>
+      const SvgGenImage('assets/icons/c-group-create.svg');
+
   /// File path: assets/icons/c-multiply-circle.svg
   SvgGenImage get cMultiplyCircle =>
       const SvgGenImage('assets/icons/c-multiply-circle.svg');
@@ -108,6 +112,26 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/c-plus.svg
   SvgGenImage get cPlus => const SvgGenImage('assets/icons/c-plus.svg');
+
+  /// File path: assets/icons/c-profile-block.svg
+  SvgGenImage get cProfileBlock =>
+      const SvgGenImage('assets/icons/c-profile-block.svg');
+
+  /// File path: assets/icons/c-profile-mute.svg
+  SvgGenImage get cProfileMute =>
+      const SvgGenImage('assets/icons/c-profile-mute.svg');
+
+  /// File path: assets/icons/c-profile-report.svg
+  SvgGenImage get cProfileReport =>
+      const SvgGenImage('assets/icons/c-profile-report.svg');
+
+  /// File path: assets/icons/c-profile-unmute.svg
+  SvgGenImage get cProfileUnmute =>
+      const SvgGenImage('assets/icons/c-profile-unmute.svg');
+
+  /// File path: assets/icons/c-profile-user.svg
+  SvgGenImage get cProfileUser =>
+      const SvgGenImage('assets/icons/c-profile-user.svg');
 
   /// File path: assets/icons/c-send.svg
   SvgGenImage get cSend => const SvgGenImage('assets/icons/c-send.svg');
@@ -329,11 +353,17 @@ class $AssetsIconsGen {
         cCopy,
         cCornerUpLeft,
         cCornerUpRight,
+        cGroupCreate,
         cMultiplyCircle,
         cPause,
         cPencil,
         cPlay,
         cPlus,
+        cProfileBlock,
+        cProfileMute,
+        cProfileReport,
+        cProfileUnmute,
+        cProfileUser,
         cSend,
         chat,
         checkIcon,
