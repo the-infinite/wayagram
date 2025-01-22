@@ -14,6 +14,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/cast_vote_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/response_data_model.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
@@ -31,12 +32,14 @@ class PollDashboard extends ConsumerStatefulWidget {
 class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
    late CreatePollVotingState getId;
+   //${ResponseData.pollDashboardModel.votes?[0].pollId}
 
   @override
   void initState() {
     super.initState();
+    print('VOTE ID ${ResponseData.pollDashboardModel.votes?[0].pollId}');
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPollVotingProvider.notifier).getDashboardPoll(getId.castVoteModel[0].pollId ?? '');
+      ref.read(createPollVotingProvider.notifier).getDashboardPoll('${ResponseData.pollDashboardModel.votes?[0].pollId}');
     });
   }
 
@@ -71,7 +74,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
 
             const Gap(5),
-            FittedBox(
+          /*  FittedBox(
               fit: BoxFit.fitWidth,
               child: Row(
                 children: [
@@ -81,7 +84,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                   const Gap(5),
                   pollCard('${viewModel.dashboard[0].moneyGenerated}',  'Revenue Generated'),
               ],),
-            ),
+            ),*/
             const Gap(20),
         Container(
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),

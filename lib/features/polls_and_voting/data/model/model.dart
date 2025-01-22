@@ -1,6 +1,6 @@
 
 class PollType {
-  final int id;
+  final String id;
   final String pollType;
 
   PollType({required this.id, required this.pollType});
@@ -8,8 +8,8 @@ class PollType {
 
 
 List<PollType> pollTypes = [
-  PollType(id: 1, pollType: 'Paid'),
-  PollType(id: 2, pollType: 'Free'),
+  PollType(id: 'Paid', pollType: 'Paid'),
+  PollType(id: 'Free', pollType: 'Free'),
 
 ];
 

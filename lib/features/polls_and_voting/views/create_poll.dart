@@ -195,6 +195,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           WayaSelectField(
                               height: 0.3,
                               label: "Poll Type",
+                              uniqueKey: 'poll_type',
                               hintText: 'Select Poll Type',
                               items: ref.read(createPollVotingProvider.notifier).restructuredPollType(),
                               onSelected: (value) => ref

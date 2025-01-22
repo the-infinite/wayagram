@@ -10,6 +10,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class AddChoices extends ConsumerStatefulWidget {
@@ -33,7 +34,23 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
         title: "Add Choices",
         isLoading: false,
         isScrollable: true,
-        appBarTrailing: createPoll(context),
+        appBarTrailing:
+       /* Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: WayaButton(
+            callback: !viewModel.isLoading
+                ? () async {
+              if (_formKey.currentState!.validate()) {
+                print('Add cHOICES ==>>>');
+                WayaNav.toNamed("/poll-summary");
+              }
+            } : null,
+            centerWidget: LoadingState(
+                loading: viewModel.isLoading, text: 'Create Poll'),
+            height: 30,
+          ),
+        ),*/
+        createPoll(context),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
