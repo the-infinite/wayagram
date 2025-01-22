@@ -39,7 +39,7 @@ class SellerDisputeDetail extends ConsumerWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 2,
                 itemBuilder: (context, index) {
-                  return OrderedProductCard();
+                  return Container(); //OrderedProductCard();
                 }),
             const Gap(15),
             WayaButton(

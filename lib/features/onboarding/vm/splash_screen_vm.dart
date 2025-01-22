@@ -20,12 +20,14 @@ class SplashScreenVm extends StateNotifier<void> {
       // check if user has a token
       String? authToken = await _secureDataSource.getToken();
 
-      if (authToken == null) return WayaNav.toNamed("/onboarding");
-
+      if (authToken == null || authToken.isEmpty) return WayaNav.toNamed("/onboarding");
+  print("token $authToken");
       // check if user has an ID
       final userId = await _secureDataSource.getUserId();
 
-      if (userId == null) return WayaNav.toNamed('/login-cover-page');
+      if (userId == null || userId.isEmpty) return WayaNav.toNamed('/login-cover-page');
+
+      print("userId $userId");
 
       final response = await _profileRepo.getUserDataRepo(userId: userId);
 

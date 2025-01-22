@@ -4,11 +4,13 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
 
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 
 class ProductCard extends ConsumerWidget {
@@ -28,11 +30,11 @@ class ProductCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final String image = product.images[0];
+    final String image = product.images.isEmpty ? "" : product.images[0];
 
     return GestureDetector(
       onTap: () {
-        WayaNav.toNamed('/product-detail', arguments: 'id');
+        WayaNav.toNamed(ProductDetail.route, arguments: product);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -143,7 +145,7 @@ class ProductCard extends ConsumerWidget {
                   const Gap(3),
                   WayaButton(
                     callback: () {
-                      // ref.read(cartProvider.notifier).addToCart(product, 1);
+                  ref.read(cartVmProvider.notifier).addToCart(product, 1);
                     },
                     height: 38,
                     radius: 6,

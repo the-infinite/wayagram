@@ -55,33 +55,24 @@ class AllProducts extends ConsumerWidget {
   }
 
   Widget _buildProductGrid(List<Product> products) {
-    return Column(
-      children: [
-        for (int i = 0; i < products.length; i += 2)
-          Row(
-            children: [
-              Expanded(
-                child: ProductCard(
-                  product: products[i],
-                  isExplore: false,
-                  isWayaGramDeal: true,
-                  canbeAddedTocart: true,
-                ),
-              ),
-              if (i + 1 < products.length) ...[
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ProductCard(
-                    product: products[i + 1],
-                    isExplore: false,
-                    isWayaGramDeal: true,
-                    canbeAddedTocart: true,
-                  ),
-                ),
-              ],
-            ],
-          ),
-      ],
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 12.0,
+        mainAxisSpacing: 12.0,
+        childAspectRatio: 3 / 5,
+      ),
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        return ProductCard(
+          product: products[index],
+          isExplore: false,
+          isWayaGramDeal: true,
+          canbeAddedTocart: true,
+        );
+      },
     );
   }
 

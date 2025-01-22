@@ -93,9 +93,9 @@ class DeliveryCostRequest extends ConsumerWidget {
                 ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 2,
+                    itemCount: orders.length,
                     itemBuilder: (context, index) {
-                      return OrderedProductCard();
+                      return OrderedProductCard(orders: orders[index]);
                     }),
                 const Gap(24),
                 Row(

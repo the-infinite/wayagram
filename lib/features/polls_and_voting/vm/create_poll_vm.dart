@@ -25,13 +25,34 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   final PollAndVotingRepository _pollAndVotingRepository;
   final WayaLocalDataSource _localDataSource;
   final WayaSecureDataSource _secureDataSource;
+  final ImagePicker _picker;
 
   final _logger = getLogger('CreatePollVm');
-  CreatePollVotingVm(this._pollAndVotingRepository, this._localDataSource, this._secureDataSource) : super(CreatePollVotingState());
-  final ImagePicker _picker = ImagePicker();
+  CreatePollVotingVm(this._picker, this._pollAndVotingRepository,
+      this._localDataSource, this._secureDataSource)
+      : super(CreatePollVotingState()) {
+    state = state.copyWith(choices: [
+      Choice(
+          image: null,
+          description: TextEditingController(text: ''),
+          text: TextEditingController(text: ''))
+    ]);
+  }
 
   void focusChanged(bool hasFocus) {
     state = state.copyWith(isFocused: hasFocus);
+  }
+
+  void addChoice() {
+    List<Choice> allChoices = [];
+    allChoices = List.from(state.choices);
+
+    allChoices.add(Choice(
+        image: null,
+        description: TextEditingController(text: ''),
+        text: TextEditingController(text: '')));
+
+    state = state.copyWith(choices: allChoices);
   }
 
   Future<void> showDatePickerDialog(BuildContext context) async {
@@ -45,7 +66,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
         final dateIsoFormat = response.toIso8601String();
-        state = state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
+        state =
+            state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
       print(error);
@@ -70,14 +92,39 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  void uploadImage() {
-    _picker.pickImage(source: ImageSource.gallery).then((value) {
+// i feel we should create a single uploadimage function here
+// state = state.copyWith(candidateImage: file);
+  Future<File?> uploadImage() async {
+    return await _picker.pickImage(source: ImageSource.gallery).then((value) {
       if (value != null) {
         File file = File(value.path);
-        state = state.copyWith(candidateImage: file);
+        return file;
+      } else {
+        return null;
       }
     });
   }
+
+// added fn to remove a choice
+  void removeChoiceAtindex(int i) {
+    List<Choice> allChoices = [];
+    allChoices = List.from(state.choices);
+
+    allChoices.remove(allChoices[i]);
+  }
+
+  void addChoiceImage(int i) async {
+    File? image = await uploadImage();
+    List<Choice> allChoices = [];
+    allChoices = List.from(state.choices);
+    if (image != null && i >= 0 && i < allChoices.length) {
+      allChoices[i] =
+          allChoices[i].copyWith(image: image); // Update the image at index i
+    }
+    state = state.copyWith(choices: allChoices);
+  }
+
+
 
   List<Select> restructuredPollType() {
     return pollTypes.asMap().entries.map((entries) {
@@ -85,7 +132,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
           value: entries.value.id.toString(), label: entries.value.pollType);
     }).toList();
   }
-
 
   void update(Select value, String name) {
     switch (name) {
@@ -96,7 +142,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       case "endDate":
         state = state.copyWith(endDate: value.value);
       default:
-        //state = state.copyWith(productColor: value.value);
+      //state = state.copyWith(productColor: value.value);
     }
   }
 
@@ -112,7 +158,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     super.dispose();
   }
 
-   formatAm(j) {
+  formatAm(j) {
     String am = '';
     if (j != '' && j != null) {
       if (j == '0') {
@@ -225,9 +271,14 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return am;
   }
 
-  Future<void> createPoll(BuildContext context, String question,
-      String startDate, String endDate, String maxVotes,
-      String choiceText, String description) async {
+  Future<void> createPoll(
+      BuildContext context,
+      String question,
+      String startDate,
+      String endDate,
+      String maxVotes,
+      String choiceText,
+      String description) async {
     Future<MultipartFile> formattedImage(File file) async {
       final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
 
@@ -240,18 +291,18 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     //final List<Map<String, dynamic>> choices = [];
 
-    final List<Map<String, dynamic>> choices = [
-      {"text": "Option 1", "image": "image1.png", "description": "Description 1"},
-      {"text": "Option 2", "image": "image2.png", "description": "Description 2"},
-      {"text": "Option 3", "image": "image3.png", "description": "Description 3"},
-    ];
+    // final List<Map<String, dynamic>> choices = [
+    //   {"text": "Option 1", "image": "image1.png", "description": "Description 1"},
+    //   {"text": "Option 2", "image": "image2.png", "description": "Description 2"},
+    //   {"text": "Option 3", "image": "image3.png", "description": "Description 3"},
+    // ];
 
-    final Map<String, String> choiceMap = {};
+    final Map<String, dynamic> choiceMap = {};
 
-    for (var i = 0; i < choices.length; i++) {
-      choiceMap["choice[$i].text"] = choices[i]['text'];
-      choiceMap["choice[$i].image"] = choices[i]['image'];
-      choiceMap["choice[$i].description"] = choices[i]['description'];
+    for (var i = 0; i < state.choices.length; i++) {
+      choiceMap["choices[$i].text"] = state.choices[i].text.text;
+      choiceMap["choices[$i].image"] = state.choices[i].image; // convert this to multipartfile
+      choiceMap["choices[$i].description"] = state.choices[i].description.text;
     }
 
     /*   int vt = 2;
@@ -266,30 +317,25 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         '}';
     final formdata = jsonDecode(b);*/
     //final formdata = b;
-    final formdata =
-        {
-          'question': question,
-          'startDate': startDate,
-          'endDate': endDate,
-          'maxVotesPerUser': maxVotes,
-          'ispaid': true,
-          'choices[0].text': choiceText,
-          // 'choices[0].image': await formattedImage(state.uploadedDocuments
-          //     .firstWhere((element) => element.type == 'image0')
-          //     .file),
-          'choices[0].description': description,
-
+    final formdata = {
+      'question': question,
+      'startDate': startDate,
+      'endDate': endDate,
+      'maxVotesPerUser': maxVotes,
+      'ispaid': true,
+      ...choiceMap
     };
 
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.createPoll(formdata);
-      if (response.data['statusCode'] == 200 || response.data['statusCode'] == 200 && context.mounted) {
+      if (response.data['statusCode'] == 200 ||
+          response.data['statusCode'] == 200 && context.mounted) {
         WayaUtils.showNotice(
             context: context,
             title: 'Payment information',
             message:
-            'Your documents are under review. We’ll notify you once the \n verification process is complete',
+                'Your documents are under review. We’ll notify you once the \n verification process is complete',
             onPress: () => WayaNav.toNamed("/explore"),
             icon: Image.asset('assets/images/auth/doc-success.png'),
             buttonText: 'Go To HomePage');
@@ -301,12 +347,14 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<void> castYourVote(String amountPaid, String qty, String choiceId) async {
+  Future<void> castYourVote(
+      String amountPaid, String qty, String choiceId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pollAndVotingRepository.castVote(amountPaid, qty, choiceId);
+      final response =
+          await _pollAndVotingRepository.castVote(amountPaid, qty, choiceId);
       state = state.copyWith(isLoading: false);
-      if (response.success ) {
+      if (response.success) {
         _logger.i(response.data['data']);
       }
     } catch (e) {
@@ -364,7 +412,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
           context: context,
           title: "Your Application has been submitted Successfully! 🎉",
           message:
-          "Your product has been submitted. We'll notify you \n once it's reviewed.",
+              "Your product has been submitted. We'll notify you \n once it's reviewed.",
           onPress: () => WayaNav.toNamed('/wayagram-deal'),
           icon: Image.asset('assets/images/shop/add-product-success.png'),
           buttonText: 'View Application Status',
@@ -376,7 +424,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         context: context,
         title: "Product Added Successfully! 🎉",
         message:
-        "Your product is now live in your shop and ready \n for customers to discover.",
+            "Your product is now live in your shop and ready \n for customers to discover.",
         onPress: () => WayaNav.toNamed('/add-product'),
         icon: Image.asset('assets/images/shop/add-product-success.png'),
         buttonText: 'Add Another Product',
@@ -395,25 +443,11 @@ final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
 
-
-final createPollVotingProvider = StateNotifierProvider<CreatePollVotingVm, CreatePollVotingState>((ref){
+final createPollVotingProvider =
+    StateNotifierProvider<CreatePollVotingVm, CreatePollVotingState>((ref) {
   final pollAndVotingRepository = ref.watch(pollAndVotingProvider);
   final localDataSource = ref.watch(localDataSourceProvider);
 
-  return CreatePollVotingVm(pollAndVotingRepository, localDataSource, WayaSecureDataSource());
+  return CreatePollVotingVm(ImagePicker(), pollAndVotingRepository,
+      localDataSource, WayaSecureDataSource());
 });
-
-class Choice{
-  final File? image;
-  final String description;
-  final String text;
-
-  Choice({required this.image, required this.description, required this.text});
-
-  Choice copyWith({File? image, String? description, String? text}){
-    return  Choice(
-        image: image ?? this.image,
-        description: description ?? this.description,
-        text: text ?? this.text);
-  }
-}

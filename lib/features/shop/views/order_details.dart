@@ -37,13 +37,14 @@ class OrderDetails extends ConsumerWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 2,
                 itemBuilder: (context, index) {
-                  return OrderedProductCard();
+                  return Container(); //OrderedProductCard();
                 }),
             const Gap(25),
             Container(
               padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
               decoration: BoxDecoration(
-                  border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
+                  border: Border.all(
+                      color: wayaTheme.colorScheme.greyColor300, width: 1),
                   borderRadius: BorderRadius.circular(8)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -55,7 +56,8 @@ class OrderDetails extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Pickup Address", style: wayaTheme.textTheme.bodyMedium),
+                      Text("Pickup Address",
+                          style: wayaTheme.textTheme.bodyMedium),
                       const Gap(5),
                       SizedBox(
                         width: context.width * 0.8,
