@@ -342,6 +342,19 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
+  Future<void> getDashboardPoll(String pollId) async {
+    state = state.copyWith(isLoading: true);
+    final response = await _pollAndVotingRepository.getMyPolls(pollId);
+    state = state.copyWith(isLoading: false);
+    if (response.success) {
+      GetMyPoll responseModel = GetMyPoll.fromJson(response.data);
+
+      state = state.copyWith(getMyPollModel: responseModel.data);
+    } else {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   void submit(BuildContext context, bool isWayagramDeal) async {
     //final addProductData = ref.watch(addProductProvider.notifier);
 

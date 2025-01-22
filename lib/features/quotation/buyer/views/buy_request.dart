@@ -170,17 +170,6 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
             subTitle: 'Explore Categories & Best Offers',
             title: 'Recommended Bids'),
         const Gap(25),
-       /* ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: viewModel.quotations.length,
-            itemCount: viewModel.quotations.length,
-            itemBuilder: (context, index) {
-              return RequestCard(quotation: viewModel.quotations[index],
-                  onTap: () {
-                    WayaNav.toNamed('/seeSeller-bids');
-                  });
-            }),*/
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,

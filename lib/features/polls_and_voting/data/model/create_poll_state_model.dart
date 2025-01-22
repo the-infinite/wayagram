@@ -4,9 +4,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/cast_vote_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
 import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
+
+import 'poll_dashboard_model.dart';
 
 class CreatePollVotingState {
   final TextEditingController pollTitle;
@@ -29,6 +32,9 @@ class CreatePollVotingState {
   final bool isLoading;
   List<GetPollData> getPollModel;
   List<PollData> getMyPollModel;
+  List<Votes> pollDashboardModel;
+  List<CastVoteData> castVoteModel;
+  List<PollDashboardModel> dashboard;
 
   CreatePollVotingState({
     TextEditingController? pollTitle,
@@ -49,6 +55,9 @@ class CreatePollVotingState {
     this.candidateImage,
     this.getPollModel = const [],
     this.getMyPollModel = const [],
+    this.pollDashboardModel = const [],
+    this.castVoteModel = const [],
+    this.dashboard = const [],
     this.uploadedDocuments = const [],
   })  : pollTitle = pollTitle ?? TextEditingController(),
         pollDescription = pollDescription ?? TextEditingController(),
@@ -80,6 +89,9 @@ class CreatePollVotingState {
     bool? isLoading,
     List<GetPollData>? getPollModel,
     List<PollData>? getMyPollModel,
+    List<Votes>? pollDashboardModel,
+    List<CastVoteData>? castVoteModel,
+    List<PollDashboardModel>? dashboard,
   }) {
     return CreatePollVotingState(
       pollTitle: pollTitle ?? this.pollTitle,
@@ -100,6 +112,9 @@ class CreatePollVotingState {
       isLoading: isLoading ?? this.isLoading,
       getPollModel: getPollModel ?? this.getPollModel,
       getMyPollModel : getMyPollModel ?? this.getMyPollModel,
+      pollDashboardModel: pollDashboardModel ?? this.pollDashboardModel,
+      castVoteModel: castVoteModel ?? this.castVoteModel,
+      dashboard: dashboard ?? this.dashboard,
       uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
     );
   }
