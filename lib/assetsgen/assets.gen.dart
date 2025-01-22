@@ -59,15 +59,58 @@ class $AssetsIconsGen {
   SvgGenImage get buttonIcon =>
       const SvgGenImage('assets/icons/button-icon.svg');
 
+  /// File path: assets/icons/c-bin.svg
+  SvgGenImage get cBin => const SvgGenImage('assets/icons/c-bin.svg');
+
+  /// File path: assets/icons/c-button-attach.svg
+  SvgGenImage get cButtonAttach =>
+      const SvgGenImage('assets/icons/c-button-attach.svg');
+
+  /// File path: assets/icons/c-button-voicenote.svg
+  SvgGenImage get cButtonVoicenote =>
+      const SvgGenImage('assets/icons/c-button-voicenote.svg');
+
   /// File path: assets/icons/c-call-incoming.svg
   SvgGenImage get cCallIncoming =>
       const SvgGenImage('assets/icons/c-call-incoming.svg');
 
+  /// File path: assets/icons/c-call-video.svg
+  SvgGenImage get cCallVideo =>
+      const SvgGenImage('assets/icons/c-call-video.svg');
+
+  /// File path: assets/icons/c-call-voice.svg
+  SvgGenImage get cCallVoice =>
+      const SvgGenImage('assets/icons/c-call-voice.svg');
+
+  /// File path: assets/icons/c-copy.svg
+  SvgGenImage get cCopy => const SvgGenImage('assets/icons/c-copy.svg');
+
+  /// File path: assets/icons/c-corner-up-left.svg
+  SvgGenImage get cCornerUpLeft =>
+      const SvgGenImage('assets/icons/c-corner-up-left.svg');
+
+  /// File path: assets/icons/c-corner-up-right.svg
+  SvgGenImage get cCornerUpRight =>
+      const SvgGenImage('assets/icons/c-corner-up-right.svg');
+
+  /// File path: assets/icons/c-multiply-circle.svg
+  SvgGenImage get cMultiplyCircle =>
+      const SvgGenImage('assets/icons/c-multiply-circle.svg');
+
   /// File path: assets/icons/c-pause.svg
   SvgGenImage get cPause => const SvgGenImage('assets/icons/c-pause.svg');
 
+  /// File path: assets/icons/c-pencil.svg
+  SvgGenImage get cPencil => const SvgGenImage('assets/icons/c-pencil.svg');
+
   /// File path: assets/icons/c-play.svg
   SvgGenImage get cPlay => const SvgGenImage('assets/icons/c-play.svg');
+
+  /// File path: assets/icons/c-plus.svg
+  SvgGenImage get cPlus => const SvgGenImage('assets/icons/c-plus.svg');
+
+  /// File path: assets/icons/c-send.svg
+  SvgGenImage get cSend => const SvgGenImage('assets/icons/c-send.svg');
 
   /// File path: assets/icons/chat.svg
   SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
@@ -277,9 +320,21 @@ class $AssetsIconsGen {
         bid,
         business,
         buttonIcon,
+        cBin,
+        cButtonAttach,
+        cButtonVoicenote,
         cCallIncoming,
+        cCallVideo,
+        cCallVoice,
+        cCopy,
+        cCornerUpLeft,
+        cCornerUpRight,
+        cMultiplyCircle,
         cPause,
+        cPencil,
         cPlay,
+        cPlus,
+        cSend,
         chat,
         checkIcon,
         coinInHand,
@@ -876,8 +931,8 @@ class $AssetsImagesWalletGen {
   List<AssetGenImage> get values => [searchDocu, walletBg];
 }
 
-class WayaAssests {
-  WayaAssests._();
+class WayaAssets {
+  WayaAssets._();
 
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();

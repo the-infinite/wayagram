@@ -22,7 +22,7 @@ class LoginCoverPage extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Gap(Get.height * 0.2),
-            WayaAssests.images.wayalogoUnlabelled.image(scale: 2),
+            WayaAssets.images.wayalogoUnlabelled.image(scale: 2),
             Gap(10),
             Text(
               "Connect.Trade.Share\nAll in One Place",

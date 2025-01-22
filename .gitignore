@@ -52,3 +52,4 @@ app.*.map.json
 
 # Ignore genrated Dart files so everybody's worktree is cleaner
 **.g.dart
+**.gen.dart

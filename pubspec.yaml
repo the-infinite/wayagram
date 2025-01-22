@@ -99,7 +99,7 @@ flutter_gen:
   assets:
     enabled: true
     outputs:
-      class_name: WayaAssests
+      class_name: WayaAssets
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

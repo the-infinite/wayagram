@@ -88,7 +88,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                             onTap: () {
                               WayaNav.toNamed(ManageShop.route, arguments: widget.shop);
                             },
-                            asset: WayaAssests.icons.bShop.path,
+                            asset: WayaAssets.icons.bShop.path,
                             text: "Shop Dashboard"),
                       ),
                       PopupMenuItem<int>(
@@ -96,7 +96,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {},
-                            asset: WayaAssests.icons.bBid.path,
+                            asset: WayaAssets.icons.bBid.path,
                             text: "Quotation Dashboard"),
                       )
                     ];

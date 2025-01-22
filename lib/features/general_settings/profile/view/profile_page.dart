@@ -44,9 +44,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage>
       appBarTrailing: Row(
         spacing: 12,
         children: [
-          WayaAssests.icons.genSet.search.svg(fit: BoxFit.none),
-          WayaAssests.icons.genSet.share.svg(fit: BoxFit.none),
-          WayaAssests.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+          WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
           Gap(8)
         ],
       ),

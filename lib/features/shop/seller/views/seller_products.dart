@@ -13,7 +13,6 @@ import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
@@ -36,7 +35,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
     final manageShop = ref.watch(manageShopVmProvider);
     final wayaTheme = Theme.of(context);
 
-    if (manageShop.isLoading!) {
+    if (manageShop.isLoading) {
       return SizedBox(
         height: context.height * 0.5,
         child: Center(
@@ -66,7 +65,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SvgPicture.asset(
-                          WayaAssests.icons.buttonIcon.path,
+                          WayaAssets.icons.buttonIcon.path,
                           colorFilter: ColorFilter.mode(
                               wayaTheme.colorScheme.customPrimary,
                               BlendMode.srcIn),
