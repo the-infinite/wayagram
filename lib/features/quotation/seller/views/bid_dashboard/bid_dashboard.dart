@@ -12,8 +12,6 @@ import 'package:wayagram/features/quotation/vm/bid_dashboard_vm.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
 import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
 
-
-
 class BidDashboard extends ConsumerWidget {
   const BidDashboard({super.key});
 
@@ -34,42 +32,37 @@ class BidDashboard extends ConsumerWidget {
         ),
         const Gap(15),
         GridView.builder(
-            itemCount: 3,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount:
-                ref.read(bidDashboardVmProvider.notifier).salesMetrics.length,
-                mainAxisSpacing: 0,
-                childAspectRatio: 1.2,
-                crossAxisSpacing: 8),
-            itemBuilder: (context, index) {
-              return InventoryWidget(
-                  metrics: ref
-                      .read(bidDashboardVmProvider.notifier)
-                      .salesMetrics[index]["metrics"],
-                  color: ref
-                      .read(bidDashboardVmProvider.notifier)
-                      .salesMetrics[index]['color'],
-                  title: ref
-                      .read(bidDashboardVmProvider.notifier)
-                      .salesMetrics[index]['title']);
-            }),
+          itemCount: 3,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: ref.read(bidDashboardVmProvider.notifier).salesMetrics.length,
+              mainAxisSpacing: 0,
+              childAspectRatio: 1.2,
+              crossAxisSpacing: 8),
+          itemBuilder: (context, index) {
+            return InventoryWidget(
+              metrics: ref.read(bidDashboardVmProvider.notifier).salesMetrics[index]["metrics"],
+              color: ref.read(bidDashboardVmProvider.notifier).salesMetrics[index]['color'],
+              title: ref.read(bidDashboardVmProvider.notifier).salesMetrics[index]['title'],
+            );
+          },
+        ),
         const Gap(15),
         Text("Quick Action",
             style: TextStyle().wayaCopyWith(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: wayaTheme.colorScheme.customBlack)),
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: wayaTheme.colorScheme.customBlack,
+            ),),
         const Gap(15),
-
         Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.scaffoldColor,
             borderRadius: BorderRadius.circular(10),
           ),
-          child:FittedBox(
+          child: FittedBox(
             fit: BoxFit.fitWidth,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -113,8 +106,7 @@ class BidDashboard extends ConsumerWidget {
                     'assets/icons/settlement.svg',
                     width: 28,
                     height: 28,
-                    colorFilter:
-                    ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
+                    colorFilter: ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
                   ),
                   color: Color(0xffFBEAE9),
                   onTap: () {
@@ -127,10 +119,8 @@ class BidDashboard extends ConsumerWidget {
         ),
         const Gap(15),
         Text("Recent Bids",
-            style: TextStyle().wayaCopyWith(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: wayaTheme.colorScheme.customBlack)),
+            style: TextStyle()
+                .wayaCopyWith(fontSize: 15, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.customBlack)),
         const Gap(15),
         ListView.builder(
             itemCount: 10,
