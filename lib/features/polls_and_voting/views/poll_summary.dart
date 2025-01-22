@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -31,21 +32,26 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
   CreatePollVotingState? viewModel;
 
   disposeControllers(){
-    viewModel?.pollTitle?.dispose();
-    viewModel?.pollDescription?.dispose();
-    viewModel?.pollCompanyDescription?.dispose();
-    viewModel?.votePrice?.dispose();
-    viewModel?.voteNumber?.dispose();
-    viewModel?.firstChoice?.dispose();
-    viewModel?.firstChoiceDescription?.dispose();
-    viewModel?.secondChoice?.dispose();
-    viewModel?.secondChoiceDescription?.dispose();
+    viewModel?.pollTitle.dispose();
+    viewModel?.pollDescription.dispose();
+    viewModel?.pollCompanyDescription.dispose();
+    viewModel?.votePrice.dispose();
+    viewModel?.voteNumber.dispose();
+    viewModel?.firstChoice.dispose();
+    viewModel?.firstChoiceDescription.dispose();
+    viewModel?.secondChoice.dispose();
+    viewModel?.secondChoiceDescription.dispose();
 }
+
+  WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
+    //num daysLeft = DateTime.parse(viewModel.endDate).difference(DateTime.parse(viewModel.startDate)).inDays%7;
+
+    //num daysLeft = DateTime.parse(ref.read(createPollVotingProvider.notifier).formatDate(viewModel.startDate))
     return WayaScaffold(
         title: "Polls Summary",
         isLoading: false,
@@ -99,10 +105,11 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                summary('Start Date', '21st of July\n2024', 'Total Stages', '6 Stages'),
-                summary('End Date', '30th of July\n2024', 'Times to Vote', '6'),
-                summary('Poll Type', 'Free\n', 'Prize per vote', '₦100'),
-                summary('Duration', '5 Weeks\n', 'Host', 'UNIBEN'),
+                //21st of July\n2024
+                summary('Start Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.startDate)}\n', 'Host', ''),
+                summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
+                summary('Poll Type', '${viewModel.pollType}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'),
+                summary('Duration', ' Weeks\n' , '', ''),
               ],
             ),
             const Gap(40),
@@ -115,15 +122,14 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   color: Theme.of(context).colorScheme.greyColor900 ),
             ),
             const Gap(10),
-            presImage('assets/images/polls/azikwe.png', 'Dr Nnamdi Azikwe', context, ),
-            const Gap(15),
-            presImage('assets/images/polls/tinubu.png', 'Bola Ahmed Tinubu', context, ),
-            const Gap(15),
-            presImage('assets/images/polls/buhari.png', 'Mohammed Buhari', context, ),
-            const Gap(5),
-
-
-
+            SizedBox(
+              height: 400,
+              child: ListView.builder(
+                  itemCount: viewModel.choices.length,
+                  itemBuilder: (context, index){
+                    return presImage('${viewModel.choices[index].image?.path}', viewModel.choices[index].text.text, context, );
+                  }),
+            )
           ],
         ) );
   }
@@ -168,14 +174,16 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
 
   presImage(img, name, ctx,){
     return Container(
-      padding: EdgeInsets.only(left: 20.w),
+      margin: EdgeInsets.only(bottom: 10,),
+      padding: EdgeInsets.only(left: 20.w,  bottom: 20,),
       height: 60.h,
       decoration: BoxDecoration(
         border: Border.all(color: WayaColors.primary600, ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(children: [
-        Image.asset(img, height: 66.h, width: 50.w,),
+        WayaImage(imageUrl: img, height: 66.h),
+        //Image.asset(img, height: 66.h, width: 50.w,),
         const Gap(40),
         Text(
           name,

@@ -14,10 +14,10 @@ class ContestRepo extends BaseRepository {
     return post('$serviceUrl/client/auth/register', payload.toJson());
   }
 
-  Future<WayaRequestResponse> createContest(CreateContestModel payLoad){
-
-    return post('$serviceUrl/contests/create',payLoad.toJson());
-  }
+  // Future<WayaRequestResponse> createContest(CreateContestModel payLoad){
+  //
+  //   return post('$serviceUrl/contests/create',payLoad.toJson());
+  // }
 
 
 

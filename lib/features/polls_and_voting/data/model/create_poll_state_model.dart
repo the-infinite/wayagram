@@ -28,6 +28,7 @@ class CreatePollVotingState {
   final String dateIsoFormat;
   final bool isFocused;
   final bool isLoading;
+  bool? isPersonalNotUpgradedToBusiness;
   List<GetPollData> getPollModel;
   List<PollData> getMyPollModel;
   List<Votes> pollDashboardModel;
@@ -58,6 +59,7 @@ class CreatePollVotingState {
     this.castVoteModel = const [],
     this.dashboard = const [],
     this.uploadedDocuments = const [],
+    this.isPersonalNotUpgradedToBusiness = false,
   })  : pollTitle = pollTitle ?? TextEditingController(),
         pollDescription = pollDescription ?? TextEditingController(),
         pollCompanyDescription =
@@ -97,6 +99,7 @@ class CreatePollVotingState {
     List<Choice>? choices
   }) {
     return CreatePollVotingState(
+      isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ?? this.isPersonalNotUpgradedToBusiness,
       pollTitle: pollTitle ?? this.pollTitle,
       pollDescription: pollDescription ?? this.pollDescription,
       pollCompanyDescription:

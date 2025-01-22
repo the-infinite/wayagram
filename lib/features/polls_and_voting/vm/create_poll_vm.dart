@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
@@ -18,7 +19,9 @@ import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_
 import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/model.dart';
+
 import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
+
 
 class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   //final Ref ref;
@@ -142,7 +145,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       case "endDate":
         state = state.copyWith(endDate: value.value);
       default:
-      //state = state.copyWith(productColor: value.value);
+      state = state.copyWith(dateIsoFormat: value.value);
     }
   }
 
@@ -156,6 +159,126 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     state.voteNumber.dispose();
     state.votePrice.dispose();
     super.dispose();
+  }
+
+   formatDate(String inputDate) {
+    // Parse the input date string
+    DateTime parsedDate = DateTime.parse(inputDate);
+
+    // Get the day, month, and year
+    int day = parsedDate.day;
+    String month = DateFormat('MMMM').format(parsedDate);
+    int year = parsedDate.year;
+
+    // Determine the suffix for the day
+    String suffix;
+    if (day >= 11 && day <= 13) {
+      suffix = 'th'; // Special case for 11th, 12th, 13th
+    } else {
+      switch (day % 10) {
+        case 1:
+          suffix = 'st';
+          break;
+        case 2:
+          suffix = 'nd';
+          break;
+        case 3:
+          suffix = 'rd';
+          break;
+        default:
+          suffix = 'th';
+      }
+    }
+
+    // Return the formatted date string
+    return '$day$suffix of $month, $year';
+  }
+
+  static getMonthName(String mon) {
+    var def = '';
+    if (mon == '01' || mon == '1') {
+      def = 'January,';
+    } else if (mon == '02' || mon == '2') {
+      def = 'February,';
+    } else if (mon == '03' || mon == '3') {
+      def = 'March,';
+    } else if (mon == '04' || mon == '4') {
+      def = 'April,';
+    } else if (mon == '05' || mon == '5') {
+      def = 'May,';
+    } else if (mon == '06' || mon == '6') {
+      def = 'June,';
+    } else if (mon == '07' || mon == '7') {
+      def = 'July,';
+    } else if (mon == '08' || mon == '8') {
+      def = 'August,';
+    } else if (mon == '09' || mon == '9') {
+      def = 'September,';
+    } else if (mon == '10') {
+      def = 'October,';
+    } else if (mon == '11') {
+      def = 'November,';
+    } else if (mon == '12') {
+      def = 'December,';
+    }
+    return def;
+  }
+
+  static getDayAbbreviation(String day) {
+    var def = '';
+    if (day == '01' || day == '1') {
+      def = '1st';
+    } else if (day == '02' || day == '2') {
+      def = '2nd';
+    } else if (day == '03' || day == '3') {
+      def = '3rd';
+    } else if (day == '04' || day == '4') {
+      def = '4th';
+    } else if (day == '05' || day == '5') {
+      def = '5th';
+    } else if (day == '06' || day == '6') {
+      def = '6th';
+    } else if (day == '07' || day == '7') {
+      def = '7th';
+    } else if (day == '08' || day == '8') {
+      def = '8th';
+    } else if (day == '09' || day == '9') {
+      def = '9th';
+    } else if (day == '10') {
+      def = '10th';
+    } else if (day == '21') {
+      def = '21st';
+    } else if (day == '22') {
+      def = '22nd';
+    } else if (day == '23') {
+      def = '23rd';
+    } else if (day == '31') {
+      def = '31st';
+    } else {
+      def = '${day}th';
+    }
+    return def;
+  }
+
+  formatDt1(j) {
+    String dt = '';
+    if(j != null){
+      if(j.toString().contains('T')){
+        String x = j.toString().split('T')[0];
+        if(x.contains('-')){
+          String a = x.split('-')[0];
+          String b = x.split('-')[1];
+          String c = x.split('-')[2];
+
+          dt = '${getDayAbbreviation(c)} ${getMonthName(b)} $a';
+        } else {
+          dt = x;
+        }
+      } else {
+        dt = j;
+      }
+    }
+    return dt;
   }
 
   formatAm(j) {
@@ -270,6 +393,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     return am;
   }
+
+
 
   Future<void> createPoll(
       BuildContext context,
@@ -451,3 +576,4 @@ final createPollVotingProvider =
   return CreatePollVotingVm(ImagePicker(), pollAndVotingRepository,
       localDataSource, WayaSecureDataSource());
 });
+
