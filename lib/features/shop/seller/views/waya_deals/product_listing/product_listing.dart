@@ -41,7 +41,7 @@ class _ProductListingState extends ConsumerState<ProductListing> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-    return WayaScaffoldWithProgressbar(
+    return WayaScaffoldWithProgressBar(
         isLoading: false,
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),

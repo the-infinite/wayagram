@@ -5,14 +5,14 @@ class SimpleLogPrinter extends LogPrinter {
   final String className;
   final bool printCallingFunctionName;
   final bool printCallStack;
-  final List<String> exludeLogsFromClasses;
+  final List<String> excludeLogsFromClasses;
   final String? showOnlyClass;
 
   SimpleLogPrinter(
     this.className, {
     this.printCallingFunctionName = true,
     this.printCallStack = false,
-    this.exludeLogsFromClasses = const [],
+    this.excludeLogsFromClasses = const [],
     this.showOnlyClass,
   });
 
@@ -28,7 +28,7 @@ class SimpleLogPrinter extends LogPrinter {
     var output =
         '$emoji $className$methodNameSection - ${event.message}${printCallStack ? '\nSTACKTRACE:\n$stackLog' : ''}';
 
-    if (exludeLogsFromClasses
+    if (excludeLogsFromClasses
             .any((excludeClass) => className == excludeClass) ||
         (showOnlyClass != null && className != showOnlyClass)) return [];
 
@@ -146,7 +146,7 @@ Logger getLogger(
   String className, {
   bool printCallingFunctionName = true,
   bool printCallstack = false,
-  List<String> exludeLogsFromClasses = const [],
+  List<String> excludeLogsFromClasses = const [],
   String? showOnlyClass,
 }) {
   return Logger(
@@ -155,7 +155,7 @@ Logger getLogger(
       printCallingFunctionName: printCallingFunctionName,
       printCallStack: printCallstack,
       showOnlyClass: showOnlyClass,
-      exludeLogsFromClasses: exludeLogsFromClasses,
+      excludeLogsFromClasses: excludeLogsFromClasses,
     ),
     output: MultipleLoggerOutput([
       if (!kReleaseMode) ConsoleOutput(),

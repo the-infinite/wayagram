@@ -231,8 +231,7 @@ class Product {
       depth: depth ?? this.depth,
       condition: condition ?? this.condition,
       wayagramDeal: wayagramDeal ?? this.wayagramDeal,
-      wayagramDealRejectedReason:
-          wayagramDealRejectedReason ?? this.wayagramDealRejectedReason,
+      wayagramDealRejectedReason: wayagramDealRejectedReason ?? this.wayagramDealRejectedReason,
       approve: approve ?? this.approve,
       deliveryCharge: deliveryCharge ?? this.deliveryCharge,
       options: options ?? this.options,

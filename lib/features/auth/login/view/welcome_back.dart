@@ -39,7 +39,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       removeAppBar: false,
-      automicallyImplyLeading: false,
+      automaticallyImplyLeading: false,
       isScrollable: true,
       isLoading: viewModel.isLoading,
       body: Center(

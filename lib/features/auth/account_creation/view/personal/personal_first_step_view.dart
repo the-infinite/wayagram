@@ -817,13 +817,13 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                     style: WayaTextStyles.bodySmall),
                                 TextSpan(
                                     text: "Terms and conditions ",
-                                    style: WayaTextStyles.smallactiveLinkStyle),
+                                    style: WayaTextStyles.smallActiveLinkStyle),
                                 TextSpan(
                                     text: "and ",
                                     style: WayaTextStyles.bodySmall),
                                 TextSpan(
                                     text: "Privacy policy",
-                                    style: WayaTextStyles.smallactiveLinkStyle)
+                                    style: WayaTextStyles.smallActiveLinkStyle)
                               ])))
                     ],
                   ),

@@ -29,8 +29,7 @@ class WayaBackButton extends StatelessWidget {
                   WayaNav.goBack();
                   HapticFeedback.lightImpact();
                 },
-            child: SvgPicture.asset('assets/icons/arrow-back.svg',
-                fit: BoxFit.none),
+            child: SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
           ),
         )
       ],
@@ -39,22 +38,23 @@ class WayaBackButton extends StatelessWidget {
 }
 
 class WayaButton extends StatelessWidget {
-  const WayaButton(
-      {super.key,
-      this.text = '',
-      this.color,
-      this.radius,
-      this.border,
-      this.textStyle,
-      this.trailingIcon,
-      this.isLoading = false,
-      this.leadingIcon,
-      required this.callback,
-      this.textColor,
-      this.centerWidget,
-      this.horizontalPadding = 6,
-      this.height = 48,
-      this.isDisabled});
+  const WayaButton({
+    super.key,
+    this.text = '',
+    this.color,
+    this.radius,
+    this.border,
+    this.textStyle,
+    this.trailingIcon,
+    this.isLoading = false,
+    this.leadingIcon,
+    required this.callback,
+    this.textColor,
+    this.centerWidget,
+    this.horizontalPadding = 6,
+    this.height = 48,
+    this.isDisabled,
+  });
   final String text;
   final Color? color;
   final Widget? leadingIcon;
@@ -107,9 +107,7 @@ class WayaButton extends StatelessWidget {
                     ),
                   Text(text,
                       style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                          fontWeight: FontWeight.w600,
-                          color: textColor ??
-                              wayaTheme.colorScheme.scaffoldColor2)),
+                          fontWeight: FontWeight.w600, color: textColor ?? wayaTheme.colorScheme.scaffoldColor2)),
                   Gap(10),
                   trailingIcon ?? SizedBox.shrink()
                 ],
@@ -127,8 +125,7 @@ class WayaButton extends StatelessWidget {
                         style: textStyle ??
                             wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                                 fontWeight: FontWeight.w600,
-                                color: textColor ??
-                                    wayaTheme.colorScheme.scaffoldColor2))),
+                                color: textColor ?? wayaTheme.colorScheme.scaffoldColor2))),
       ),
     );
   }
@@ -140,12 +137,7 @@ class WayaTabButton extends StatelessWidget {
   final VoidCallback onTap;
   final double? width;
 
-  const WayaTabButton(
-      {super.key,
-      required this.isSelected,
-      required this.text,
-      required this.onTap,
-      this.width});
+  const WayaTabButton({super.key, required this.isSelected, required this.text, required this.onTap, this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -162,9 +154,7 @@ class WayaTabButton extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: isSelected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.greyColor300,
+                color: isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor300,
                 width: isSelected ? 2 : 0.9,
               ),
             ),
@@ -174,9 +164,7 @@ class WayaTabButton extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: fontSize,
-              color: isSelected
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.greyColor500,
+              color: isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor500,
             ),
           ),
         ),

@@ -45,7 +45,7 @@ class _AddProductState extends ConsumerState<AddProduct>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return WayaScaffoldWithProgressbar(
+    return WayaScaffoldWithProgressBar(
         isLoading: ref.watch(addProductProvider).isLoading,
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),

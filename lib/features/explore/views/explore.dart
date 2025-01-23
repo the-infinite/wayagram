@@ -11,6 +11,7 @@ import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
+import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
@@ -59,7 +60,7 @@ class _ExploreState extends ConsumerState<Explore> {
                   //? The notification button.
                   InkWell(
                     onTap: () {
-                      WayaNav.toNamed('/notifications');
+                      WayaNav.toNamed(WayaNotifications.route);
                     },
                     child: WayaAssets.icons.notifications.svg(
                       height: 24,

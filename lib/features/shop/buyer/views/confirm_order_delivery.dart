@@ -61,7 +61,7 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                       child: RichText(
                           text: const TextSpan(children: [
                         TextSpan(text: "Having issue? ", style: WayaTextStyles.bodySmall),
-                        TextSpan(text: "Contact Support", style: WayaTextStyles.smallactiveLinkStyle),
+                        TextSpan(text: "Contact Support", style: WayaTextStyles.smallActiveLinkStyle),
                       ]))),
                 ),
               ],

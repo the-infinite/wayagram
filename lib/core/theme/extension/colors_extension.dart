@@ -6,7 +6,7 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get primary200 => WayaColors.primary200;
   Color get primary300 => WayaColors.primary300;
   Color get primary500 => WayaColors.primary500;
-  Color get primar50 => WayaColors.primar50;
+  Color get primar50 => WayaColors.primary50;
   Color get customPrimary => WayaColors.customPrimary;
   Color get primary75 => WayaColors.primary75;
   Color get primaryBrown50 => WayaColors.primaryBrown50;

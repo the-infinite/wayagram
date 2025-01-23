@@ -22,19 +22,15 @@ class ShopRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> createProduct({required AddProductModel payload, required String id}) {
-    return post("$serviceUrl/products/create/$id", payload.toJson(),
-        formdata: true);
+    return post("$serviceUrl/products/create/$id", payload.toJson(), formdata: true);
   }
 
   Future<WayaRequestResponse> getAllDiscounts(int page) {
     return get('$serviceUrl/discount/all?page=$page');
   }
 
-Future<WayaRequestResponse> getProducts() {
+  Future<WayaRequestResponse> getProducts() {
     return get('$serviceUrl/products');
   }
-
-  
-
 }
 //

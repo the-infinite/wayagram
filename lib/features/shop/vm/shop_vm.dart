@@ -17,16 +17,14 @@ class ShopVm extends StateNotifier<ShopState> {
       List<Select> selectCategories = [];
 
       if (response.success) {
-        CategoryResponseModel responseModel =
-            CategoryResponseModel.fromJson(response.data);
+        CategoryResponseModel responseModel = CategoryResponseModel.fromJson(response.data);
 
         final List<CategoryData?> categories = responseModel.data.categories;
         selectCategories = categories.map((val) {
           return Select(label: val!.name, value: val.id);
         }).toList();
 
-        state = state.copyWith(
-            totalNoOfCategoryPages: responseModel.data.pagination.totalPages);
+        state = state.copyWith(totalNoOfCategoryPages: responseModel.data.pagination.totalPages);
 
         state = state.copyWith(categories: selectCategories);
         // if (selectCategories.isNotEmpty) {
@@ -34,7 +32,9 @@ class ShopVm extends StateNotifier<ShopState> {
         // }
       }
       return PaginatedResult(
-          items: selectCategories, totalPages: state.totalNoOfCategoryPages);
+        items: selectCategories,
+        totalPages: state.totalNoOfCategoryPages,
+      );
     } catch (e) {
       print(e);
       return null;
@@ -55,8 +55,7 @@ class ShopVm extends StateNotifier<ShopState> {
       final response = await _repository.getProducts();
 
       if (response.success) {
-        ProductResponse productResponse =
-            ProductResponse.fromJson(response.data);
+        ProductResponse productResponse = ProductResponse.fromJson(response.data);
         List<Product>? products = productResponse.data.data.map((product) {
           return product.copyWith(
               category: state.categories?.firstWhere(
@@ -85,8 +84,7 @@ class ShopVm extends StateNotifier<ShopState> {
       // search filter
       if (state.searchQuery.isNotEmpty) {
         final query = state.searchQuery.toLowerCase();
-        return product.name.toLowerCase().contains(query) ||
-            product.description.toLowerCase().contains(query);
+        return product.name.toLowerCase().contains(query) || product.description.toLowerCase().contains(query);
       }
 
       return true;
@@ -94,9 +92,8 @@ class ShopVm extends StateNotifier<ShopState> {
   }
 
   List<Product> get filteredWayagramDealProducts {
-     if (state.products.isEmpty) return [];
+    if (state.products.isEmpty) return [];
     return state.products.where((product) {
-     
       // category filter
       if (state.selectedCategoryId != null &&
           state.selectedCategoryId!.isNotEmpty &&
@@ -107,8 +104,7 @@ class ShopVm extends StateNotifier<ShopState> {
       // search filter
       if (state.searchQuery.isNotEmpty) {
         final query = state.searchQuery.toLowerCase();
-        return product.name.toLowerCase().contains(query) ||
-            product.description.toLowerCase().contains(query);
+        return product.name.toLowerCase().contains(query) || product.description.toLowerCase().contains(query);
       }
 
       return product.wayagramDeal;
