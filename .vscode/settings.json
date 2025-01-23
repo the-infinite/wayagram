@@ -4,5 +4,6 @@
   "githubIssues.issueBranchTitle": "issue-${issueNumber}",
   "cSpell.words": [
     "wayalogo"
-  ]
+  ],
+  "githubIssues.workingIssueFormatScm": ""
 }

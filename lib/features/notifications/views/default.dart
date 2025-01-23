@@ -6,7 +6,6 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/notifications/views/all_notifications.dart';
 import 'package:wayagram/features/notifications/views/requests.dart';
 import 'package:wayagram/features/notifications/vm/default.dart';
-import 'package:wayagram/features/notifications/vm/filter_notifications.dart';
 import 'package:wayagram/features/notifications/widgets/filter_items.dart';
 
 class WayaNotifications extends ConsumerStatefulWidget {
@@ -52,6 +51,7 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
     //final wayaTheme = Theme.of(context);
     final size = MediaQuery.of(context).size;
     final state = ref.watch(notificationProvider);
+    final notifier = ref.watch(notificationProvider.notifier);
 
     // Build the current screen.
     return WayaScaffold(
@@ -77,15 +77,19 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
         ],
       ),
       title: 'Notifications',
-      appBarTrailing: InkWell(
-        onTap: _markAllAsRead,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "Mark All As Read",
-            style: WayaTextStyles.bodyMedium.copyWith(
-              color: WayaColors.primary,
-              fontSize: 13,
+      appBarTrailing: Padding(
+        padding: const EdgeInsets.only(right: 10),
+        child: InkWell(
+          onTap: _markAllAsRead,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "Mark All As Read",
+              style: WayaTextStyles.bodyMedium.copyWith(
+                color: WayaColors.primary,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
             ),
           ),
         ),
@@ -102,6 +106,9 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
                 color: WayaColors.primary50,
                 borderRadius: BorderRadius.circular(12),
               ),
+              onTap: (index) {
+                notifier.setIsRequestsOnly(index == 1);
+              },
               indicatorSize: TabBarIndicatorSize.tab,
               dividerColor: WayaColors.transparent,
               controller: _pageController,
@@ -118,7 +125,7 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
             NotificationFilterWidget(
               all: state.notifications,
               hintText: "Search ${state.requestsOnly ? 'requests' : 'notifications'}",
-              provider: notificationsFilterProvider,
+              value: state.filters,
             ),
 
             // More space.
@@ -130,10 +137,10 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
                 controller: _pageController,
                 children: [
                   //? First, the screen for all notifications.
-                  const AllNotifications(),
+                  AllNotifications(data: state.currentNotifications),
 
                   //? Second, the screen for request-type notifications.
-                  const RequestNotifications(),
+                  RequestNotifications(data: state.currentNotifications),
                 ],
               ),
             ),

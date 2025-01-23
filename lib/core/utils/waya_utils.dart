@@ -146,6 +146,4 @@ class WayaUtils {
       return pickedImage;
     }
   }
-
-  
 }

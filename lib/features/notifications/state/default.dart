@@ -1,4 +1,5 @@
 import 'package:wayagram/features/notifications/models/default.dart';
+import 'package:wayagram/features/notifications/state/filter_notification.dart';
 
 class NotificationState {
   final bool isLoading;
@@ -7,6 +8,7 @@ class NotificationState {
   final List<NotificationModel> notifications;
   final int page;
   final int totalSize;
+  final FilterNotificationState filters;
 
   //  Construct.
   NotificationState({
@@ -16,6 +18,7 @@ class NotificationState {
     required this.notifications,
     required this.page,
     required this.totalSize,
+    required this.filters,
   });
 
   // Copy with.
@@ -26,6 +29,7 @@ class NotificationState {
     List<NotificationModel>? notifications,
     int? page,
     int? totalSize,
+    FilterNotificationState? filters,
   }) {
     return NotificationState(
       requestsOnly: requestsOnly ?? this.requestsOnly,
@@ -34,12 +38,60 @@ class NotificationState {
       notifications: notifications ?? this.notifications,
       page: page ?? this.page,
       totalSize: totalSize ?? this.totalSize,
+      filters: filters ?? this.filters,
     );
   }
 
   /// Controller utility used to retrieve the currently browsed list of all
-  /// notifications after considering the 
+  /// notifications after considering the
   List<NotificationModel> get currentNotifications {
-    return notifications;
+    //? The first pass is filtering by notification type.
+    var aggregate = requestsOnly
+        ? notifications.where(
+            (notif) => [
+              NotificationMessageType.groupInvite,
+              NotificationMessageType.friendRequest,
+              NotificationMessageType.followRequest,
+            ].contains(notif.messageType),
+          )
+        : notifications;
+
+    //? The second pass is to take away wallet notifications.
+    if (!filters.showDonationNotifications) {
+      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.donation);
+    }
+
+    //? Third, filter out event notifications.
+    if (!filters.showEventsNotifications) {
+      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.event);
+    }
+
+    //? Fourth, filter out marketplace notifications.
+    if (!filters.showMarketplaceNotifications) {
+      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.transaction);
+    }
+
+    //? Fifth, filter out polling notifications.
+    if (!filters.showPollingAndVotingNotifications) {
+      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.poll);
+    }
+
+    //? Sixth, filter out event notifications.
+    if (!filters.showQuotationNotifications) {
+      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.transaction);
+    }
+
+    //? Seventh, filter out University Got Talent notifications.
+    if (!filters.showUgtNotifications) {
+      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.event);
+    }
+
+    //? Eighth, filter out wallet notifications.
+    if (!filters.showWalletNotifications) {
+      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.transaction);
+    }
+
+    // This is fine.
+    return aggregate.toList();
   }
 }

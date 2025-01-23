@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/features/notifications/vm/default.dart';
+import 'package:wayagram/features/notifications/widgets/notification_widget.dart';
 
 class AllNotifications extends ConsumerWidget {
-  const AllNotifications({super.key});
+  final List<NotificationModel> data;
+
+  // Construct.
+  const AllNotifications({
+    super.key,
+    required this.data,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,10 +26,10 @@ class AllNotifications extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: List.generate(
-            2000,
-            (index) => Text(
-              "Text #$index",
-              style: WayaTextStyles.bodyMedium,
+            data.length,
+            (index) => NotificationCardWidget(
+              index: index,
+              data: data[index],
             ),
           ),
         ),
