@@ -10,16 +10,15 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 
-
 @Deprecated("No more in use")
 class SellerProducts extends ConsumerStatefulWidget {
+  static const route = '/seller-product';
   const SellerProducts({super.key});
 
   @override
@@ -27,11 +26,8 @@ class SellerProducts extends ConsumerStatefulWidget {
 }
 
 class _SellerProductsState extends ConsumerState<SellerProducts> {
-  
-
   @override
   Widget build(BuildContext context) {
-    
     final manageShop = ref.watch(manageShopVmProvider);
     final wayaTheme = Theme.of(context);
 
@@ -82,7 +78,9 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                     ),
                   ),
                   const Gap(25),
-                  FilterWidget<Product>(allItems: []),
+                  FilterWidget(
+                    search: TextEditingController(),
+                  ),
                   const Gap(25),
                   GroupedWidgetHeader(
                       onTap: () {},
@@ -90,7 +88,9 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                           "Extensive view of all the products you have created",
                       title: "My Products"),
                   const Gap(10),
-                  CategoriesFilterWidget(setCategory: (value) => {},),
+                  CategoriesFilterWidget(
+                    setCategory: (value) => {},
+                  ),
                   const Gap(25),
                   // productState.when(
                   //     data: (products) => _buildProductGrid(products),

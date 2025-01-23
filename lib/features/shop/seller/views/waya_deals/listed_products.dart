@@ -9,8 +9,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
@@ -21,7 +19,7 @@ class ListedProducts extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
-   
+
     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -31,7 +29,6 @@ class ListedProducts extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           
             WayaButton(
               callback: () {
                 WayaNav.toNamed('/waya_product_listing');
@@ -58,7 +55,9 @@ class ListedProducts extends ConsumerWidget {
               ),
             ),
             const Gap(25),
-            FilterWidget<Product>(allItems: []),
+            FilterWidget(
+              search: TextEditingController(),
+            ),
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {},

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 
 class ManageShopState {
@@ -7,6 +8,8 @@ class ManageShopState {
   final List<ShopData> shop;
   final ShopData? singleShop;
   final bool isPersonalNotUpgradedToBusiness;
+  final List<SalesMetric> salesMetric;
+  final int numberOfProducts;
 
   const ManageShopState(
       {this.isLoading = false,
@@ -14,6 +17,8 @@ class ManageShopState {
       this.hasShop = false,
       this.shop = const [],
       this.isPersonalNotUpgradedToBusiness = false,
+      this.salesMetric = const [],
+      this.numberOfProducts = 0,
       this.singleShop});
 
   factory ManageShopState.initial() => ManageShopState();
@@ -23,17 +28,20 @@ class ManageShopState {
       dynamic data,
       bool? hasShop,
       List<ShopData>? shop,
+      List<SalesMetric>? salesMetric,
       ShopData? singleShop,
-      bool? isPersonalNotUpgradedToBusiness
-      }) {
+      int? numberOfProducts,
+      bool? isPersonalNotUpgradedToBusiness}) {
     return ManageShopState(
         isLoading: isLoading ?? this.isLoading,
         data: data ?? this.data,
         hasShop: hasShop ?? this.hasShop,
         singleShop: singleShop ?? this.singleShop,
         shop: shop ?? this.shop,
-        isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ?? this.isPersonalNotUpgradedToBusiness
-        );
+        numberOfProducts: numberOfProducts ?? this.numberOfProducts,
+        salesMetric: salesMetric ?? this.salesMetric,
+        isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ??
+            this.isPersonalNotUpgradedToBusiness);
   }
 
   factory ManageShopState.fromJson(Map<String, dynamic> json) {
@@ -42,16 +50,36 @@ class ManageShopState {
         data: json["data"],
         hasShop: json["hasShop"],
         singleShop: json['singleShop'],
-        isPersonalNotUpgradedToBusiness: json['isPersonalNotUpgradedToBusiness'],
+        isPersonalNotUpgradedToBusiness:
+            json['isPersonalNotUpgradedToBusiness'],
+        salesMetric: json['salesMetric'],
+        numberOfProducts: json['numberOfProducts'],
         shop: json['shop']);
   }
 
   Map<String, dynamic> toJson() => {
         "isLoading": isLoading,
         "data": data,
+        'salesMetric': salesMetric,
         "hasShop": hasShop,
+        'numberOfProducts': numberOfProducts,
         "shop": shop,
         "singleShop": singleShop,
-        "isPersonalNotUpgradedToBusiness":isPersonalNotUpgradedToBusiness
+        "isPersonalNotUpgradedToBusiness": isPersonalNotUpgradedToBusiness
       };
+}
+
+class SalesMetric {
+  final String title;
+  final String metrics;
+  final Color? color;
+
+  SalesMetric({this.title = '', this.metrics = '', this.color});
+
+  SalesMetric copyWith({String? title, String? metrics, Color? color}) {
+    return SalesMetric(
+        title: title ?? this.title,
+        metrics: metrics ?? this.metrics,
+        color: color ?? this.color);
+  }
 }

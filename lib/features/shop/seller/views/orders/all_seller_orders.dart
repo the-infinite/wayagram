@@ -35,7 +35,9 @@ class AllSellerOrders extends ConsumerWidget {
               style: wayaTheme.textTheme.hintStyle,
             ),
             const Gap(20),
-            FilterWidget<Product>(allItems: []),
+            FilterWidget(
+              search: TextEditingController(),
+            ),
             const Gap(15),
             GridView.builder(
                 itemCount: 3,

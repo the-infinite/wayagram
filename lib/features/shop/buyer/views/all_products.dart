@@ -23,7 +23,7 @@ class AllProducts extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FilterWidget<Product>(allItems: []),
+              FilterWidget(search: TextEditingController(),),
               const Gap(25),
               GroupedWidgetHeader(
                 onTap: () {},

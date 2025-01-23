@@ -25,7 +25,7 @@ class QuickActionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
         final screenWidth = context.width;
-    final fontSize = screenWidth * 0.030;
+    final fontSize = screenWidth * 0.025;
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(

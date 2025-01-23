@@ -17,178 +17,183 @@ import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details
 class SingleSeeBidWidget extends ConsumerWidget {
   final bool isSeller;
   Color color;
- SingleSeeBidWidget({super.key, this.isSeller = false, required this.color});
+  SingleSeeBidWidget({super.key, this.isSeller = false, required this.color});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     return GestureDetector(
-      onTap: () {
-        // if (isSeller) {
-        //   WayaNav.toNamed('/seller-bid-details', arguments: "id");
-        //   //viewModel.sellerBidAction(context);
-        // } else {
-        //   WayaNav.toNamed('/seller-bid-details', arguments: "id");
-        // }
-      },
-      child:
-      Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/images/bid/store.png',
-                      height: 48,
-                    ),
-                    const Gap(10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
-                                decoration: BoxDecoration(
-                                  color: wayaTheme.colorScheme.success,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Image.asset('assets/images/bid/down.png', height: 10),
-                                    const Gap(5),
-                                    Text(
-                                      "Open Bid",
-                                      style: TextStyle().wayaCopyWith(
-                                        color: wayaTheme.colorScheme.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Spacer(),
-                              Container(
-                                padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
-                                decoration: BoxDecoration(
-                                  color: wayaTheme.colorScheme.primar50,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Image.asset('assets/images/bid/clock.png', height: 16),
-                                    Text(
-                                      "12m:00s",
-                                      style: TextStyle().wayaCopyWith(
-                                        color: wayaTheme.colorScheme.primary600,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Gap(8),
-                          Text(
-                            "Samsung S24 Ultra",
-                            style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14,
-                            ),
-                          ),
-                          const Gap(8),
-                          RichText(
-                            text: TextSpan(
+        onTap: () {
+          // if (isSeller) {
+          //   WayaNav.toNamed('/seller-bid-details', arguments: "id");
+          //   //viewModel.sellerBidAction(context);
+          // } else {
+          //   WayaNav.toNamed('/seller-bid-details', arguments: "id");
+          // }
+        },
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'assets/images/bid/store.png',
+                        height: 48,
+                      ),
+                      const Gap(10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                TextSpan(
-                                  text: 'Rufai Maleek ',
-                                  style: TextStyle().wayaCopyWith(
-                                    color: wayaTheme.colorScheme.black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(4, 1, 4, 1),
+                                  decoration: BoxDecoration(
+                                    color: wayaTheme.colorScheme.success,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Image.asset('assets/images/bid/down.png',
+                                          height: 10),
+                                      const Gap(5),
+                                      Text(
+                                        "Open Bid",
+                                        style: TextStyle().wayaCopyWith(
+                                          color: wayaTheme.colorScheme.white,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                TextSpan(
-                                  text: 'Fairly Used ',
-                                  style: TextStyle().wayaCopyWith(
-                                    color: WayaColors.greyColor400,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w400,
+                                const Spacer(),
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(4, 1, 4, 1),
+                                  decoration: BoxDecoration(
+                                    color: wayaTheme.colorScheme.primar50,
+                                    borderRadius: BorderRadius.circular(6),
                                   ),
-                                ),
-                                // TextSpan(
-                                //   text: 'Fairly Used ',
-                                //   style: wayaTheme.textTheme.hintStyle,
-                                // ),
-                                TextSpan(
-                                  text: '2Km Away',
-                                  style: TextStyle().wayaCopyWith(
-                                    color: WayaColors.greyColor400,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w400,
+                                  child: Row(
+                                    children: [
+                                      Image.asset('assets/images/bid/clock.png',
+                                          height: 16),
+                                      Text(
+                                        "12m:00s",
+                                        style: TextStyle().wayaCopyWith(
+                                          color:
+                                              wayaTheme.colorScheme.primary600,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          const Gap(10),
-
-                        ],
+                            const Gap(8),
+                            Text(
+                              "Samsung S24 Ultra",
+                              style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.customBlack,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const Gap(8),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Rufai Maleek ',
+                                    style: TextStyle().wayaCopyWith(
+                                      color: wayaTheme.colorScheme.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'Fairly Used ',
+                                    style: TextStyle().wayaCopyWith(
+                                      color: WayaColors.greyColor400,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  // TextSpan(
+                                  //   text: 'Fairly Used ',
+                                  //   style: wayaTheme.textTheme.hintStyle,
+                                  // ),
+                                  TextSpan(
+                                    text: '2Km Away',
+                                    style: TextStyle().wayaCopyWith(
+                                      color: WayaColors.greyColor400,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Gap(10),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const Divider(thickness: 1, color: WayaColors.greyColor100,),
-                const Gap(10),
-                Row(
-                  children: [
-                    Text(
-                      "₦ 19,000.00",
-                      style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customBlack,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
+                    ],
+                  ),
+                  const Divider(
+                    thickness: 1,
+                    color: WayaColors.greyColor100,
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Text(
+                        "₦ 19,000.00",
+                        style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.customBlack,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    //const Gap(2),
-                    SizedBox(
-                      width: context.width * 0.35,
-                     // width: context.width * 0.45,
-                      child: WayaButton(
-                        callback: () {},
-
-                        text: 'Place Bid',
-                        height: 38,
+                      const Spacer(),
+                      //const Gap(2),
+                      SizedBox(
+                        width: context.width * 0.35,
+                        // width: context.width * 0.45,
+                        child: WayaButton(
+                          callback: () {},
+                          text: 'Place Bid',
+                          height: 38,
+                        ),
                       ),
-                    ),
-                    // WayaButton(
-                    //   callback: () {},
-                    //   text: 'Place Bid',
-                    //   height: 36,
-                    // ),
-                  ],
-                ),
-              ],
+                      // WayaButton(
+                      //   callback: () {},
+                      //   text: 'Place Bid',
+                      //   height: 36,
+                      // ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Gap(10),
-        ],
-      )
-      /*  Column(
+            const Gap(10),
+          ],
+        )
+        /*  Column(
           children: [
             Container(
               padding: EdgeInsets.fromLTRB(8, 6, 8, 6),
@@ -322,7 +327,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
             const Gap(10)
           ],
         )*/
-    );
+        );
   }
 }
 
@@ -331,11 +336,13 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
   SingleBidWidgetViewModel(this.ref);
 
   Future<void> addDeliveryDetail(BuildContext context) async {
-    await showDialog(
+    /**
+   await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AddDeliveryDetails();
         });
+   */
   }
 
   Future<void> sellerBidAction(BuildContext context) async {
@@ -345,7 +352,7 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
         secondButtonText: 'See your Order Details',
         title: 'Populate Delivery Details',
         message:
-        "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
         onPress: () async {
           await addDeliveryDetail(context);
         },
@@ -357,5 +364,5 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
 }
 
 final singleSettlementWidgetViewModelProvider =
-ChangeNotifierProvider<SingleBidWidgetViewModel>(
+    ChangeNotifierProvider<SingleBidWidgetViewModel>(
         (ref) => SingleBidWidgetViewModel(ref));
