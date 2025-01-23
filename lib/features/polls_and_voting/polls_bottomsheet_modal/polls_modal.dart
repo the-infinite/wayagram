@@ -481,16 +481,17 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
   }
 }
 
-class VoteSuccessModal extends StatefulWidget {
+class VoteSuccessModal extends ConsumerStatefulWidget {
   const VoteSuccessModal({super.key});
 
   @override
-  State<VoteSuccessModal> createState() => _VoteSuccessModalState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _VoteSuccessModalState();
 }
 
-class _VoteSuccessModalState extends State<VoteSuccessModal> {
+class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
   @override
   Widget build(BuildContext context) {
+    final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
@@ -510,7 +511,7 @@ class _VoteSuccessModalState extends State<VoteSuccessModal> {
             ),
             SizedBox(height: 3.h),
             Text(
-              "I just voted for Fasas! Join me in supporting them. #VoteNow",
+              "I just voted for ${viewModel.firstChoice}! Join me in supporting them. #VoteNow",
               style: wayaTheme.textTheme.hintStyle,
               textAlign: TextAlign.center,
             ),
