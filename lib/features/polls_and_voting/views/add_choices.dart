@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -56,11 +57,11 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-            Text("Who is the current president of nigeria?",
+            Text("${viewModel.pollTitle.text.capitalizeFirst}",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
-              'I think we are all left with this question sometimes whenever we sleep sometimes.',
+              '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,

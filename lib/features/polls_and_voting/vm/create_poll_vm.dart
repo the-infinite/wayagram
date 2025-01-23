@@ -24,14 +24,14 @@ import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_rep
 
 
 class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
-  //final Ref ref;
+  final Ref ref;
   final PollAndVotingRepository _pollAndVotingRepository;
   final WayaLocalDataSource _localDataSource;
   final WayaSecureDataSource _secureDataSource;
   final ImagePicker _picker;
 
   final _logger = getLogger('CreatePollVm');
-  CreatePollVotingVm(this._picker, this._pollAndVotingRepository,
+  CreatePollVotingVm(this.ref, this._picker, this._pollAndVotingRepository,
       this._localDataSource, this._secureDataSource)
       : super(CreatePollVotingState()) {
     state = state.copyWith(choices: [
@@ -126,8 +126,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
     state = state.copyWith(choices: allChoices);
   }
-
-
 
   List<Select> restructuredPollType() {
     return pollTypes.asMap().entries.map((entries) {
@@ -416,11 +414,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     //final List<Map<String, dynamic>> choices = [];
 
-    // final List<Map<String, dynamic>> choices = [
-    //   {"text": "Option 1", "image": "image1.png", "description": "Description 1"},
-    //   {"text": "Option 2", "image": "image2.png", "description": "Description 2"},
-    //   {"text": "Option 3", "image": "image3.png", "description": "Description 3"},
-    // ];
 
     final Map<String, dynamic> choiceMap = {};
 
@@ -430,18 +423,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       choiceMap["choices[$i].description"] = state.choices[i].description.text;
     }
 
-    /*   int vt = 2;
-    bool pd = true;
-
-    String b =  '{question: ''question,'
-        'startDate: 2025-01-25T00:00:00.000Z, '
-        'endDate: 2025-01-30T00:00:00.000Z,'
-        'maxVotesPerUser: $vt,'
-        ' ispaid: $pd,choices[0].text: choiceText,'
-        'choices[0].description:description'
-        '}';
-    final formdata = jsonDecode(b);*/
-    //final formdata = b;
     final formdata = {
       'question': question,
       'startDate': startDate,
@@ -515,17 +496,20 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<void> getDashboardPoll(String pollId) async {
-    state = state.copyWith(isLoading: true);
-    final response = await _pollAndVotingRepository.getMyPolls(pollId);
-    state = state.copyWith(isLoading: false);
-    if (response.success) {
-      GetMyPoll responseModel = GetMyPoll.fromJson(response.data);
+  Future<void> getDashboardPoll() async {
+    print('VOTE IDEntity ${ref.read(createPollVotingProvider).castVoteModel[0].pollId}');
+    final id = ref.read(createPollVotingProvider).castVoteModel[0].pollId;
 
-      state = state.copyWith(getMyPollModel: responseModel.data);
-    } else {
-      state = state.copyWith(isLoading: false);
-    }
+    state = state.copyWith(isLoading: true);
+    final response = await _pollAndVotingRepository.getDashboardPolls(id!);
+    state = state.copyWith(isLoading: false);
+    // if (response.statusCode == 200) {
+    //   PollDashboardModel responseModel = PollDashboardModel.fromJson(response.data);
+    //
+    //   state = state.copyWith(pollDashboardModel: responseModel.votes);
+    // } else {
+    //   state = state.copyWith(isLoading: false);
+    // }
   }
 
   void submit(BuildContext context, bool isWayagramDeal) async {
@@ -573,7 +557,7 @@ final createPollVotingProvider =
   final pollAndVotingRepository = ref.watch(pollAndVotingProvider);
   final localDataSource = ref.watch(localDataSourceProvider);
 
-  return CreatePollVotingVm(ImagePicker(), pollAndVotingRepository,
+  return CreatePollVotingVm(ref, ImagePicker(), pollAndVotingRepository,
       localDataSource, WayaSecureDataSource());
 });
 

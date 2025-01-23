@@ -354,97 +354,95 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPollVotingProvider);
-    return WayaScaffold(
-      isLoading: viewModel.isLoading,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+    return  Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-              Text(
-                'Vote Option',
-                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(context).colorScheme.black),
-                textAlign: TextAlign.center,
+            Text(
+              'Vote Option',
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.black),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 3.h),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Are you sure you want to cast ',
+                    style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.greyColor500,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  TextSpan(
+                    //text: '${widget.amount} Votes ',
+                    text: '${ref.read(createPollVotingProvider.notifier).formatAm(widget.amountPaid)} Votes ',
+                    style: TextStyle().wayaCopyWith(
+                      color: WayaColors.primary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'this would cost  ',
+                    style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.greyColor500,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${ref.read(createPollVotingProvider.notifier).formatAm('${int.parse(widget.amountPaid)*100}')}',
+                    //text: '${int.parse(widget.amount)*100}',
+                    style: TextStyle().wayaCopyWith(
+                      color: WayaColors.primary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 3.h),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'Are you sure you want to cast ',
-                      style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.greyColor500,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    TextSpan(
-                      //text: '${widget.amount} Votes ',
-                      text: '${ref.read(createPollVotingProvider.notifier).formatAm(widget.amountPaid)} Votes ',
-                      style: TextStyle().wayaCopyWith(
-                        color: WayaColors.primary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    TextSpan(
-                      text: 'this would cost  ',
-                      style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.greyColor500,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    TextSpan(
-                      text: '${ref.read(createPollVotingProvider.notifier).formatAm('${int.parse(widget.amountPaid)*100}')}',
-                      //text: '${int.parse(widget.amount)*100}',
-                      style: TextStyle().wayaCopyWith(
-                        color: WayaColors.primary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Gap(200),
-              WayaButton(
-                callback: !viewModel!.isLoading
-                    ? ()  async{
-                  final userId = _wayaLocalDataSource.getUserId();
-                  Navigator.of(context).pop();
-                  ref.read(createPollVotingProvider.notifier).castYourVote(
+            ),
+            const Gap(200),
+            WayaButton(
+              callback: !viewModel!.isLoading
+                  ? ()  async{
+                final userId = _wayaLocalDataSource.getUserId();
+                Navigator.of(context).pop();
+                ref.read(createPollVotingProvider.notifier).castYourVote(
 
-                      '${int.parse(widget.amountPaid)*100}',
-                      widget.amountPaid,
-                      userId);
-                  print('AMOUNT TOT ===>>> ${int.parse(widget.amountPaid)*100}');
-                  Navigator.of(context).pop();
+                    '${int.parse(widget.amountPaid)*100}',
+                    widget.amountPaid,
+                    userId);
+                print('AMOUNT TOT ===>>> ${int.parse(widget.amountPaid)*100}');
+                Navigator.of(context).pop();
 
-                  WayaUtils.showModalSheet(
-                    context,
-                    child: VoteSuccessModal(),
-                  );
+                WayaUtils.showModalSheet(
+                  context,
+                  child: VoteSuccessModal(),
+                );
 
-                  //WayaNav.toNamed('/share-voting');
-                  // WayaUtils.showModalSheet(
-                  //   context,
-                  //   child: VotePinEntryBottomSheet(
-                  //     quantity: widget.amount,
-                  //     amountPaid: '${int.parse(widget.amount)*100}',
-                  //   ),
-                  // );
-                }
-                    : null,
-                centerWidget: LoadingState(
-                    loading: viewModel!.isLoading, text: 'Yes, Vote'),
-              ),
-             /* WayaButton(
+                //WayaNav.toNamed('/share-voting');
+                // WayaUtils.showModalSheet(
+                //   context,
+                //   child: VotePinEntryBottomSheet(
+                //     quantity: widget.amount,
+                //     amountPaid: '${int.parse(widget.amount)*100}',
+                //   ),
+                // );
+              }
+                  : null,
+              centerWidget: LoadingState(
+                  loading: viewModel!.isLoading, text: 'Yes, Vote'),
+            ),
+            /* WayaButton(
                 callback: () async {
                   final userId = _wayaLocalDataSource.getUserId();
                   Navigator.of(context).pop();
@@ -465,35 +463,35 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                 },
                 text: "Yes, Vote",
               ),*/
-      SizedBox(height: 17.h),
-      WayaButton(
-      border: Border.all(color: WayaColors.greyColor300),
-      color: Colors.white,
-      callback: () async {
-        Navigator.of(context).pop();
-      },
-      text: "Go Back",
-      textColor: WayaColors.black,
-      ),
+            SizedBox(height: 17.h),
+            WayaButton(
+              border: Border.all(color: WayaColors.greyColor300),
+              color: Colors.white,
+              callback: () async {
+                Navigator.of(context).pop();
+              },
+              text: "Go Back",
+              textColor: WayaColors.black,
+            ),
 
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
 }
 
-class VoteSuccessModal extends StatefulWidget {
+class VoteSuccessModal extends ConsumerStatefulWidget {
   const VoteSuccessModal({super.key});
 
   @override
-  State<VoteSuccessModal> createState() => _VoteSuccessModalState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _VoteSuccessModalState();
 }
 
-class _VoteSuccessModalState extends State<VoteSuccessModal> {
+class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
   @override
   Widget build(BuildContext context) {
+    final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
@@ -513,7 +511,7 @@ class _VoteSuccessModalState extends State<VoteSuccessModal> {
             ),
             SizedBox(height: 3.h),
             Text(
-              "I just voted for Fasas! Join me in supporting them. #VoteNow",
+              "I just voted for ${viewModel.firstChoice}! Join me in supporting them. #VoteNow",
               style: wayaTheme.textTheme.hintStyle,
               textAlign: TextAlign.center,
             ),

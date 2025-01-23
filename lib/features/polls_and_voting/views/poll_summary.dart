@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -13,6 +14,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
@@ -45,10 +47,13 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
 
   WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
 
+  String userType = "PERSONAL";
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
+    print('END DATE ${viewModel.endDate}');
     //num daysLeft = DateTime.parse(viewModel.endDate).difference(DateTime.parse(viewModel.startDate)).inDays%7;
 
     //num daysLeft = DateTime.parse(ref.read(createPollVotingProvider.notifier).formatDate(viewModel.startDate))
@@ -61,8 +66,38 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () {
-              ref.read(createPollVotingProvider.notifier)
-                  .createPoll(
+
+              if (viewModel.pollType == 'Paid' && userType == "PERSONAL") {
+
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  WayaUtils.showNotice(
+                      context: context,
+                      title: "You don't Have a Business Account",
+                      message: 'Please upgrade to a business account to create a paid poll',
+                      onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
+                      buttonText: 'Upgrade to Business',
+                      secondButtonText: 'Cancel',
+                      icon: Image.asset('assets/images/cp-shop.png'));
+
+                 /* showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: InkWell(
+                          onTap: (){
+
+                          },
+                          child: Container(
+                            child: Text("Click to upgrade to Business account"),
+                          ),
+                        ),
+                      );
+                    },
+                  );*/
+                });
+              } else {
+
+                ref.read(createPollVotingProvider.notifier).createPoll(
                   context,
                   viewModel.firstChoice.text,
                   viewModel.startDate,
@@ -70,17 +105,23 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   viewModel.voteNumber.text,
                   viewModel.pollDescription.text,
                   viewModel.firstChoiceDescription.text,
-              );
-              disposeControllers();
-               WayaUtils.showModalSheet(context, child: VoteSuccessModal(),
-      );
-            } : null,
+                );
+                disposeControllers();
+                WayaUtils.showModalSheet(
+                  context,
+                  child: VoteSuccessModal(),
+                );
+              }
+
+
+            }
+                : null,
             centerWidget: LoadingState(
               loading: viewModel.isLoading,
               text: 'Create',
             ),
             height: 30,
-          ),
+          )
         ),
         //createPoll(context),
         body: Column(
@@ -88,11 +129,11 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-            Text("Who is the current president of nigeria?",
+            Text("${viewModel.pollTitle.text.capitalizeFirst}",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
-              'I think we are all left with this question sometimes whenever we sleep sometimes.',
+              '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
