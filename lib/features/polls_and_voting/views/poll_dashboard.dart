@@ -8,18 +8,10 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/cast_vote_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/response_data_model.dart';
-import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
-
-import 'polls_for_you.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
   static const route = '/poll-dashboard';
@@ -32,14 +24,12 @@ class PollDashboard extends ConsumerStatefulWidget {
 class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
    late CreatePollVotingState getId;
-   //${ResponseData.pollDashboardModel.votes?[0].pollId}
 
   @override
   void initState() {
     super.initState();
-    print('VOTE ID ${ResponseData.pollDashboardModel.votes?[0].pollId}');
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPollVotingProvider.notifier).getDashboardPoll('${ResponseData.pollDashboardModel.votes?[0].pollId}');
+      ref.read(createPollVotingProvider.notifier).getDashboardPoll();
     });
   }
 

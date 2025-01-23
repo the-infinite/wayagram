@@ -49,6 +49,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
+    print('END DATE ${viewModel.endDate}');
     //num daysLeft = DateTime.parse(viewModel.endDate).difference(DateTime.parse(viewModel.startDate)).inDays%7;
 
     //num daysLeft = DateTime.parse(ref.read(createPollVotingProvider.notifier).formatDate(viewModel.startDate))
