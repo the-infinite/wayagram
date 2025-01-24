@@ -33,7 +33,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         title: "Add Choices",
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         isScrollable: true,
         appBarTrailing:
        /* Padding(
@@ -41,8 +41,9 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
+              print('Add cHOICES ==>>>');
               if (_formKey.currentState!.validate()) {
-                print('Add cHOICES ==>>>');
+
                 WayaNav.toNamed("/poll-summary");
               }
             } : null,
@@ -76,6 +77,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                     itemCount: viewModel.choices.length,
                     itemBuilder: (context, index) {
                       return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                         padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
@@ -86,6 +88,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                   Theme.of(context).colorScheme.greyColor300),
                         ),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             FormField<String>(validator: (value) {
                               if (viewModel.firstChoice.text.isEmpty) {

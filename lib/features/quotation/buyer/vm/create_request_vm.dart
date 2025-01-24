@@ -168,6 +168,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
   Future<void> getBuyerRequest() async {
     state = state.copyWith(isLoading: true);
     final response = await _quotationRepository!.getBuyerRequest();
+    state = state.copyWith(isLoading: false);
     if (response.success) {
       BuyerRequestModel responseModel = BuyerRequestModel.fromJson(response.data);
 

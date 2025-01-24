@@ -17,10 +17,13 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
+//import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard_model.dart' as dashboard;
 
 import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
+
+import '../data/model/get_all_poll_model.dart';
 
 
 class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
@@ -46,6 +49,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     state = state.copyWith(isFocused: hasFocus);
   }
 
+  void selectPollType(String value) {
+    state = state.copyWith(pollType: value.toLowerCase());
+  }
+
   void addChoice() {
     List<Choice> allChoices = [];
     allChoices = List.from(state.choices);
@@ -57,6 +64,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     state = state.copyWith(choices: allChoices);
   }
+
 
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
@@ -147,8 +155,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  @override
-  void dispose() {
+  disposeControllers() {
     state.firstChoice.dispose();
     state.firstChoiceDescription.dispose();
     state.pollTitle.dispose();
@@ -401,7 +408,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       String endDate,
       String maxVotes,
       String choiceText,
-      String description) async {
+      String description,
+      String feePerVote) async {
     Future<MultipartFile> formattedImage(File file) async {
       final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
 
@@ -427,6 +435,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       'question': question,
       'startDate': startDate,
       'endDate': endDate,
+      'feePerVote': feePerVote,
       'maxVotesPerUser': maxVotes,
       'ispaid': true,
       ...choiceMap
@@ -483,7 +492,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<void> getAllPolls() async {
+ /* Future<void> getAllPolls() async {
     state = state.copyWith(isLoading: true);
     final response = await _pollAndVotingRepository.getAllPolls();
     state = state.copyWith(isLoading: false);
@@ -494,22 +503,31 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } else {
       state = state.copyWith(isLoading: false);
     }
+  }*/
+
+  Future<void> getAllPolls() async {
+    state = state.copyWith(isLoading: true);
+    final response = await _pollAndVotingRepository.getAllPolls();
+    state = state.copyWith(isLoading: false);
+    if (response.success) {
+      GetAllPollModel responseModel = GetAllPollModel.fromJson(response.data);
+
+      state = state.copyWith(getAllPollModel: responseModel.data);
+    } else {
+      state = state.copyWith(isLoading: false);
+    }
   }
 
-  Future<void> getDashboardPoll() async {
-    print('VOTE IDEntity ${ref.read(createPollVotingProvider).castVoteModel[0].pollId}');
-    final id = ref.read(createPollVotingProvider).castVoteModel[0].pollId;
-
+  Future<void> getDashboardPoll(String pollId) async {
     state = state.copyWith(isLoading: true);
-    final response = await _pollAndVotingRepository.getDashboardPolls(id!);
+    final response = await _pollAndVotingRepository.getDashboardPolls(pollId);
     state = state.copyWith(isLoading: false);
-    // if (response.statusCode == 200) {
-    //   PollDashboardModel responseModel = PollDashboardModel.fromJson(response.data);
-    //
-    //   state = state.copyWith(pollDashboardModel: responseModel.votes);
-    // } else {
-    //   state = state.copyWith(isLoading: false);
-    // }
+    if (response.statusCode == 200) {
+      dashboard.PollDashboardModel responseModel = dashboard.PollDashboardModel.fromJson(response.data);
+      state = state.copyWith(pollDashboardModel: responseModel.votes);
+    } else {
+      state = state.copyWith(isLoading: false);
+    }
   }
 
   void submit(BuildContext context, bool isWayagramDeal) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -8,17 +9,18 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
 import 'package:wayagram/features/quotation/vm/quotation_vm.dart';
 
-class RequestCard extends StatelessWidget {
+class RequestCard extends ConsumerWidget {
   //final Quotation quotation;
   final VoidCallback onTap;
   final BuyerRequests product;
   const RequestCard({super.key, required this.product, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,ref) {
     final wayaTheme = Theme.of(context);
 
     return Column(
@@ -85,7 +87,8 @@ class RequestCard extends StatelessWidget {
                         style: wayaTheme.textTheme.hintStyle),
                     TextSpan(
                         //text: product.bidEnd,
-                        text: '${DateTime.parse('${product.bidEnd}')}',
+                        //text: '${DateTime.parse('${product.bidEnd}')}',
+                      text: '${ref.read(createPollVotingProvider.notifier).formatDt1(product.bidEnd)}',
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customPrimary,
                             fontSize: 14,

@@ -14,8 +14,9 @@ import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
+  final String pollId;
   static const route = '/poll-dashboard';
-  const PollDashboard({super.key,});
+  const PollDashboard({super.key, required this.pollId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollDashboardState();
@@ -29,7 +30,8 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPollVotingProvider.notifier).getDashboardPoll();
+      print("DARLINGTON POLLID ====>>> ${widget.pollId.toString()}");
+      ref.read(createPollVotingProvider.notifier).getDashboardPoll(widget.pollId.toString());
     });
   }
 
@@ -64,7 +66,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
 
             const Gap(5),
-          /*  FittedBox(
+           /* FittedBox(
               fit: BoxFit.fitWidth,
               child: Row(
                 children: [

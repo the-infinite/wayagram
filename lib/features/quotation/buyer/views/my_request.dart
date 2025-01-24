@@ -13,16 +13,27 @@ import '../../vm/bid_vm.dart';
 
 import '../../widgets/request_card.dart';
 
-class MyRequests extends ConsumerWidget {
+
+class MyRequests extends ConsumerStatefulWidget {
   const MyRequests({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _MyRequestsState();
+}
 
-    //final viewModel = ref.watch(bidVmProvider.notifier);
+class _MyRequestsState extends ConsumerState<MyRequests> {
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createRequestProvider.notifier).getBuyerRequest();
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final viewModel = ref.watch(createRequestProvider);
-
-
     return Column(
       children: [
         FilterWidget<Product>(allItems: [], hintText: 'Search Requests'),
@@ -56,98 +67,13 @@ class MyRequests extends ConsumerWidget {
             itemCount: viewModel.buyerRequest.length,
             itemBuilder: (context, index) {
               return RequestCard(product: viewModel.buyerRequest[index],
-              onTap: () {
-                WayaNav.toNamed('/seeSeller-bids');
-              },);
+                onTap: () {
+                  WayaNav.toNamed('/seeSeller-bids');
+                },);
             }),
       ],
     );
   }
-
-  // Widget _buildProductGrid(List<Product> products) {
-  //   return Column(
-  //     children: [
-  //       for (int i = 0; i < products.length; i += 2)
-  //         Row(
-  //           children: [
-  //             Expanded(
-  //               child: ProductCard(
-  //                 product: products[i],
-  //                 isExplore: false,
-  //                 isWayaGramDeal: true,
-  //                 canbeAddedTocart: true,
-  //               ),
-  //             ),
-  //             if (i + 1 < products.length) ...[
-  //               const SizedBox(width: 12),
-  //               Expanded(
-  //                 child: ProductCard(
-  //                   product: products[i + 1],
-  //                   isExplore: false,
-  //                   isWayaGramDeal: true,
-  //                   canbeAddedTocart: true,
-  //                 ),
-  //               ),
-  //             ],
-  //           ],
-  //         ),
-  //     ],
-  //   );
-  // }
-
-  Widget _wayagramDealProductLoadingState({required BuildContext context}) {
-    return Column(
-      children: [
-        for (int i = 0; i < 6; i += 2)
-          Row(
-            children: [
-              Expanded(
-                child: ProductCardSekeleton(
-                  isExplore: false,
-                  isWayaGramDeal: true,
-                  canbeAddedTocart: true,
-                ),
-              ),
-              if (i + 1 < 6) ...[
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ProductCardSekeleton(
-                    isExplore: false,
-                    isWayaGramDeal: true,
-                    canbeAddedTocart: true,
-                  ),
-                ),
-              ],
-            ],
-          ),
-      ],
-    );
-  }
-
-  Widget _recommendedProductLoadingState({required BuildContext context}) {
-    return Column(
-      children: [
-        for (int i = 0; i < 4; i += 2)
-          Row(
-            children: [
-              Expanded(
-                child: ProductCardSekeleton(
-                  isExplore: false,
-                  canbeAddedTocart: true,
-                ),
-              ),
-              if (i + 1 < 4) ...[
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ProductCardSekeleton(
-                    isExplore: false,
-                    canbeAddedTocart: true,
-                  ),
-                ),
-              ],
-            ],
-          ),
-      ],
-    );
-  }
 }
+
+
