@@ -16,11 +16,12 @@ import 'package:mime/mime.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
 class DocType {
-  final File file;
+  final File? file;
   final String name;
   final String type;
+  final String url;
 
-  DocType({required this.file, required this.type, required this.name});
+  DocType({required this.file, required this.type, required this.name, this.url = ''});
 }
 
 class AddBusinessAccountState {
@@ -68,7 +69,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
   final AuthRepository _authRepository;
   final WayaSecureDataSource _secureDataSource;
   final ProfileRepo _profileRepo;
-   final SuccessfulSetupVm _setupVm;
+  final SuccessfulSetupVm _setupVm;
   final Ref ref;
   final _logger = getLogger("AddBusinessAccountVm");
 
@@ -142,29 +143,29 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
         ? {
             'nin': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'nin')
-                .file),
+                .file!),
             'cacDocument': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'cac')
-                .file),
+                .file!),
             'utilityBill': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'bill')
-                .file),
+                .file!),
             'passport': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'passport')
-                .file),
+                .file!),
             'businessId': businessId,
             'cacNumber': state.cac.text
           }
         : {
             'nin': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'nin')
-                .file),
+                .file!),
             'utilityBill': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'bill')
-                .file),
+                .file!),
             'passport': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'passport')
-                .file),
+                .file!),
             'businessId': businessId,
           };
 
@@ -180,16 +181,16 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
               BusinessAccountData.fromJson(bizResponse.data);
           _setupVm.state.copyWith(business: bizData);
         }
-       if (context.mounted) {
-         WayaUtils.showNotice(
-            context: context,
-            title: 'KYC Documents Submitted \n Successfully',
-            message:
-                'Your documents are under review. We’ll notify you once the \n verification process is complete',
-            onPress: () => WayaNav.toNamed("/explore"),
-            icon: Image.asset('assets/images/auth/doc-success.png'),
-            buttonText: 'Go To HomePage');
-       }
+        if (context.mounted) {
+          WayaUtils.showNotice(
+              context: context,
+              title: 'KYC Documents Submitted \n Successfully',
+              message:
+                  'Your documents are under review. We’ll notify you once the \n verification process is complete',
+              onPress: () => WayaNav.toNamed("/explore"),
+              icon: Image.asset('assets/images/auth/doc-success.png'),
+              buttonText: 'Go To HomePage');
+        }
       }
     } catch (e) {
       _logger.e(e);
@@ -201,7 +202,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
 
 final addBusinessAccountProvider = StateNotifierProvider.autoDispose<
     AddBusinessAccountVm, AddBusinessAccountState>((ref) {
-    final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
+  final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
   return AddBusinessAccountVm(AuthRepository(), WayaLocalDataSource(),
-      WayaSecureDataSource(), ProfileRepo(),successfulSetupVm, ref);
+      WayaSecureDataSource(), ProfileRepo(), successfulSetupVm, ref);
 });

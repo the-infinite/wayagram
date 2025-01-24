@@ -22,7 +22,7 @@ class SellerDispute extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(20),
-            FilterWidget(allItems: [], hintText: 'Search Dispute'),
+            FilterWidget(search: TextEditingController(), hintText: 'Search Dispute'),
             const Gap(20),
             ListView.builder(
                 shrinkWrap: true,

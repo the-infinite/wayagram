@@ -7,6 +7,7 @@ import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
+import 'package:wayagram/features/shop/widgets/products_grid.dart';
 
 class AllProducts extends ConsumerWidget {
   const AllProducts({super.key});
@@ -23,7 +24,9 @@ class AllProducts extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FilterWidget<Product>(allItems: []),
+              FilterWidget(
+                search: TextEditingController(),
+              ),
               const Gap(25),
               GroupedWidgetHeader(
                 onTap: () {},
@@ -38,7 +41,7 @@ class AllProducts extends ConsumerWidget {
               const Gap(25),
               state.isLoading
                   ? _wayagramDealProductLoadingState(context: context)
-                  : const SizedBox.shrink(),
+                 : ProductsGrid(products: notifier.filteredWayagramDealProducts),
               const Gap(25),
               GroupedWidgetHeader(
                 onTap: () {},
@@ -48,33 +51,33 @@ class AllProducts extends ConsumerWidget {
               const Gap(25),
               state.isLoading
                   ? _recommendedProductLoadingState(context: context)
-                  : _buildProductGrid(notifier.filteredProducts),
+                  : ProductsGrid(products: notifier.filteredProducts),
             ],
           ),
         ));
   }
 
-  Widget _buildProductGrid(List<Product> products) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12.0,
-        mainAxisSpacing: 12.0,
-        childAspectRatio: 3 / 5,
-      ),
-      itemCount: products.length,
-      itemBuilder: (context, index) {
-        return ProductCard(
-          product: products[index],
-          isExplore: false,
-          isWayaGramDeal: true,
-          canbeAddedTocart: true,
-        );
-      },
-    );
-  }
+  // Widget _buildProductGrid(List<Product> products) {
+  //   return GridView.builder(
+  //     shrinkWrap: true,
+  //     physics: const NeverScrollableScrollPhysics(),
+  //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //       crossAxisCount: 2,
+  //       crossAxisSpacing: 12.0,
+  //       mainAxisSpacing: 12.0,
+  //       childAspectRatio: 3 / 5,
+  //     ),
+  //     itemCount: products.length,
+  //     itemBuilder: (context, index) {
+  //       return ProductCard(
+  //         product: products[index],
+  //         isExplore: false,
+  //         isWayaGramDeal: true,
+  //         canbeAddedTocart: true,
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _wayagramDealProductLoadingState({required BuildContext context}) {
     return Column(

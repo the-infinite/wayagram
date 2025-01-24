@@ -40,7 +40,7 @@ class SellerSettlement extends ConsumerWidget {
               style: wayaTheme.textTheme.hintStyle,
             ),
             const Gap(20),
-            FilterWidget<Product>(allItems: [], hintText: 'Search Settlements',),
+            FilterWidget( search: TextEditingController(), hintText: 'Search Settlements',),
 
             const Gap(10),
             ListView.builder(

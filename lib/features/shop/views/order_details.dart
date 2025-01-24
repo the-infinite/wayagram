@@ -9,7 +9,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/widgets/copy_code.dart';
 import 'package:wayagram/features/shop/widgets/order_tracking.dart';
-import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class OrderDetails extends ConsumerWidget {
   static const route = '/order-detail';

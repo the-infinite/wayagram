@@ -114,7 +114,7 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
     //final viewModel = ref.watch(bidVmProvider.notifier);
     return Column(
       children: [
-        FilterWidget<Product>(allItems: [], hintText: 'Search Requests'),
+        FilterWidget(search: TextEditingController(), hintText: 'Search Requests'),
         const Gap(25),
         GroupedWidgetHeader(
             onTap: () {},

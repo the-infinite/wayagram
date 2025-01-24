@@ -6,6 +6,8 @@ import 'package:wayagram/features/shop/seller/views/add_product/steps/add_produc
 import 'package:wayagram/features/shop/seller/views/add_product/steps/preview_product.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/steps/add_product_for_listing.dart';
 
+
+@Deprecated("No more in use. Use Add product")
 class ProductListing extends ConsumerStatefulWidget {
   static const route = '/waya_product_listing';
   const ProductListing({super.key});
@@ -47,15 +49,15 @@ class _ProductListingState extends ConsumerState<ProductListing> with SingleTick
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
           AddProductForListing(gotoNextTab: _goToNextTab),
-          AddProductImages(
-            gotoNextTab: _goToNextTab,
-            gotoPreviousTab: _goToPreviousTab,
-          ),
-          PreviewProduct(
-            goBack: _goBack,
-            gotoPreviousTab: _goToPreviousTab,
-            isWayagramDeal: true,
-          )
+          // AddProductImages(
+          //   gotoNextTab: _goToNextTab,
+          //   gotoPreviousTab: _goToPreviousTab,
+          // ),
+          // PreviewProduct(
+          //   goBack: _goBack,
+          //   gotoPreviousTab: _goToPreviousTab,
+          //   isWayagramDeal: true,
+          // )
         ],
         tabController: _tabController);
   }

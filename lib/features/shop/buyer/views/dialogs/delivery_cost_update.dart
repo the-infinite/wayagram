@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/widgets/order_info_widget.dart';
-import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class DeliveryCostUpdate extends StatelessWidget {
   final List<Product> orders;

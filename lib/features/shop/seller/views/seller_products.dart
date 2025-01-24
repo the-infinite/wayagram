@@ -3,23 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
+import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
-import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
+import 'package:wayagram/features/shop/seller/vm/seller_products_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
+import 'package:wayagram/features/shop/widgets/products_grid.dart';
 
-
-@Deprecated("No more in use")
 class SellerProducts extends ConsumerStatefulWidget {
+  static const route = '/seller-product';
   const SellerProducts({super.key});
 
   @override
@@ -27,115 +28,120 @@ class SellerProducts extends ConsumerStatefulWidget {
 }
 
 class _SellerProductsState extends ConsumerState<SellerProducts> {
-  
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final String shopId =
+          ModalRoute.of(context)!.settings.arguments as String;
+      ref
+          .read(sellerProductsVmProvider.notifier)
+          .sellerProducts(shopId: shopId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    
-    final manageShop = ref.watch(manageShopVmProvider);
     final wayaTheme = Theme.of(context);
-
-    if (manageShop.isLoading) {
-      return SizedBox(
-        height: context.height * 0.5,
-        child: Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-              wayaTheme.colorScheme.customPrimary,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return manageShop.hasShop
-        ? Column(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+    final state = ref.watch(sellerProductsVmProvider);
+    return WayaScaffold(
+        isLoading: state.isLoading,
+        isScrollable: true,
+        title: 'My Products',
+        onRefresh: () async {
+          final String shopId =
+              ModalRoute.of(context)!.settings.arguments as String;
+          ref
+              .read(sellerProductsVmProvider.notifier)
+              .sellerProducts(shopId: shopId);
+        },
+        body: state.products.isEmpty
+            ? SellerProductEmptyState()
+            : Column(
                 children: [
-                  WayaButton(
-                    callback: () {
-                      WayaNav.toNamed(AddProduct.route);
-                    },
-                    color: wayaTheme.colorScheme.primar50,
-                    centerWidget: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          WayaAssets.icons.buttonIcon.path,
-                          colorFilter: ColorFilter.mode(
-                              wayaTheme.colorScheme.customPrimary,
-                              BlendMode.srcIn),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaButton(
+                        callback: () {
+                          WayaNav.toNamed(AddProduct.route,
+                              arguments:
+                                  AddProductArg(uniqueKey: 'add-product'));
+                        },
+                        color: wayaTheme.colorScheme.primar50,
+                        centerWidget: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              WayaAssets.icons.buttonIcon.path,
+                              colorFilter: ColorFilter.mode(
+                                  wayaTheme.colorScheme.customPrimary,
+                                  BlendMode.srcIn),
+                            ),
+                            const Gap(6),
+                            Text(
+                              "Add New Product",
+                              style: TextStyle().wayaCopyWith(
+                                  color: wayaTheme.colorScheme.customPrimary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            )
+                          ],
                         ),
-                        const Gap(6),
-                        Text(
-                          "Add New Product",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customPrimary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                  ),
-                  const Gap(25),
-                  FilterWidget<Product>(allItems: []),
-                  const Gap(25),
-                  GroupedWidgetHeader(
-                      onTap: () {},
-                      subTitle:
-                          "Extensive view of all the products you have created",
-                      title: "My Products"),
-                  const Gap(10),
-                  CategoriesFilterWidget(setCategory: (value) => {},),
-                  const Gap(25),
-                  // productState.when(
-                  //     data: (products) => _buildProductGrid(products),
-                  //     error: (e, stack) =>
-                  //         _productLoadingState(context: context),
-                  //     loading: () => _productLoadingState(context: context))
+                      ),
+                      const Gap(25),
+                      FilterWidget(
+                        search: state.search,
+                      ),
+                      const Gap(25),
+                      GroupedWidgetHeader(
+                          isVisible: false,
+                          onTap: () {},
+                          subTitle:
+                              "Extensive view of all the products you have created",
+                          title: "My Products"),
+                      const Gap(10),
+                      CategoriesFilterWidget(
+                        setCategory: (value) => {
+                          ref
+                              .read(sellerProductsVmProvider.notifier)
+                              .setCategory(value)
+                        },
+                      ),
+                      const Gap(25),
+                      _buildProductGrid(ref
+                          .watch(sellerProductsVmProvider.notifier)
+                          .filteredProducts)
+                    ],
+                  )
                 ],
-              )
-            ],
-          )
-        : SellerShopEmptyState();
+              ));
   }
 
-  // Widget _buildProductGrid(List<Product> products) {
-  //   return Column(
-  //     children: [
-  //       for (int i = 0; i < products.length; i += 2)
-  //         Row(
-  //           children: [
-  //             Expanded(
-  //               child: ProductCard(
-  //                 product: products[i],
-  //                 isExplore: false,
-  //                 isWayaGramDeal: false,
-  //                 canbeAddedTocart: false,
-  //                 sellerProduct: true,
-  //               ),
-  //             ),
-  //             if (i + 1 < products.length) ...[
-  //               const SizedBox(width: 12),
-  //               Expanded(
-  //                 child: ProductCard(
-  //                   product: products[i + 1],
-  //                   isExplore: false,
-  //                   isWayaGramDeal: false,
-  //                   canbeAddedTocart: false,
-  //                   sellerProduct: true,
-  //                 ),
-  //               ),
-  //             ],
-  //           ],
-  //         ),
-  //     ],
-  //   );
-  // }
+  Widget _buildProductGrid(List<SellerProduct> products) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 12.0,
+        mainAxisSpacing: 12.0,
+        childAspectRatio: 3 / 5,
+      ),
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        return SellerProductCard(
+          product: products[index],
+          isExplore: false,
+          isWayaGramDeal: false,
+          canbeAddedTocart: false,
+          sellerProduct: true,
+        );
+      },
+    );
+  }
 
   Widget _productLoadingState({required BuildContext context}) {
     return Column(
@@ -195,7 +201,10 @@ class SellerProductEmptyState extends StatelessWidget {
         ),
         const Gap(25),
         WayaButton(
-          callback: () {},
+          callback: () {
+            WayaNav.toNamed(AddProduct.route,
+                arguments: AddProductArg(uniqueKey: 'add-product'));
+          },
           centerWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

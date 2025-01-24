@@ -21,49 +21,52 @@ class WayaDp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final avatar = image  ?? ref
+   final avatar = image?.isNotEmpty == true
+    ? image
+    : ref
         .watch(profileVmProvider)
         .userAccountModel
         ?.data
         ?.userdata
         ?.user
         ?.profilePicture;
-    return GestureDetector(
-      onTap: isEdit
-          ? () {
-              updateProfileImage(ref);
-            }
-          : onTap,
-      child: Stack(
-        children: [
-          CircleAvatar(
-              radius: radius,
-              backgroundColor: wayaTheme.colorScheme.greyColor200,
-              backgroundImage: avatar != null && avatar is String
-                  ? NetworkImage(avatar)
-                  : null,
-              child: avatar == null
-                  ? Icon(
-                      Icons.person,
-                      color: wayaTheme.colorScheme.greyColor600,
-                    )
-                  : null),
-          isEdit
-              ? Positioned.fill(
-                  child: CircleAvatar(
-                    radius: radius,
-                    backgroundColor:
-                        Colors.black.withOpacity(0.1), // Transparent overlay
-                    child: Icon(
-                      Icons.camera_alt_outlined,
-                      color: Colors.white,
-                    ),
-                  ),
-                )
-              : SizedBox.shrink(),
-        ],
+
+return GestureDetector(
+  onTap: isEdit
+      ? () {
+          updateProfileImage(ref);
+        }
+      : onTap,
+  child: Stack(
+    children: [
+      CircleAvatar(
+        radius: radius,
+        backgroundColor: wayaTheme.colorScheme.greyColor200,
+        backgroundImage: avatar?.isNotEmpty == true
+            ? NetworkImage(avatar!)
+            : null,
+        child: avatar?.isNotEmpty != true
+            ? Icon(
+                Icons.person,
+                color: wayaTheme.colorScheme.greyColor600,
+              )
+            : null,
       ),
-    );
+      if (isEdit)
+        Positioned.fill(
+          child: CircleAvatar(
+            radius: radius,
+            backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
+            child: Icon(
+              Icons.camera_alt_outlined,
+              color: Colors.white,
+            ),
+          ),
+        ),
+    ],
+  ),
+);
+
   }
 
   void updateProfileImage(WidgetRef ref) {

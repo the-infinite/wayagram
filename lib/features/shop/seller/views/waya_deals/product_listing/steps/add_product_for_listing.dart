@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 
+@Deprecated("No more in use. Use Add product")
 class AddProductForListing extends ConsumerStatefulWidget {
   final Function gotoNextTab;
   const AddProductForListing({super.key, required this.gotoNextTab});
@@ -20,7 +21,7 @@ class _AddProductForListingState extends ConsumerState<AddProductForListing> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(addProductProvider);
+    final viewModel = ref.watch(addProductProvider(''));
     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -110,106 +111,106 @@ class _AddProductForListingState extends ConsumerState<AddProductForListing> {
                   );
                 }),
                 const Gap(10),
-                FormField<String>(validator: (value) {
-                  if (viewModel.productCategory.isEmpty) {
-                    return 'Category is required';
-                  }
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaSelectField(
-                          height: 0.3,
-                          label: "Product Category",
-                          hintText: 'Select Product Category',
-                          items: ref
-                              .read(addProductProvider.notifier)
-                              .restructuredCategory(),
-                          onSelected: (value) => ref
-                              .read(addProductProvider.notifier)
-                              .update(value, "productCategory")),
-                      if (formState.hasError &&
-                          viewModel.productCategory.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
+                // FormField<String>(validator: (value) {
+                //   if (viewModel.productCategory.isEmpty) {
+                //     return 'Category is required';
+                //   }
+                //   return null;
+                // }, builder: (formState) {
+                //   return Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       WayaSelectField(
+                //           height: 0.3,
+                //           label: "Product Category",
+                //           hintText: 'Select Product Category',
+                //           items: ref
+                //               .read(addProductProvider.notifier)
+                //               .restructuredCategory(),
+                //           onSelected: (value) => ref
+                //               .read(addProductProvider.notifier)
+                //               .update(value, "productCategory")),
+                //       if (formState.hasError &&
+                //           viewModel.productCategory.isEmpty)
+                //         Padding(
+                //           padding: const EdgeInsets.only(top: 5),
+                //           child: Text(
+                //             formState.errorText!,
+                //             style: TextStyle(
+                //                 color: wayaTheme.colorScheme.error,
+                //                 fontSize: 12),
+                //           ),
+                //         ),
+                //     ],
+                //   );
+                // }),
                 const Gap(10),
-                FormField<String>(validator: (value) {
-                  if (viewModel.productType.isEmpty) {
-                    return 'Type is required';
-                  }
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaSelectField(
-                          height: 0.3,
-                          label: "Product Type",
-                          hintText: 'Select Product Type',
-                          items: ref
-                              .read(addProductProvider.notifier)
-                              .restructuredCategory(),
-                          onSelected: (value) => ref
-                              .read(addProductProvider.notifier)
-                              .update(value, "productType")),
-                      if (formState.hasError && viewModel.productType.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
+                // FormField<String>(validator: (value) {
+                //   if (viewModel.productType.isEmpty) {
+                //     return 'Type is required';
+                //   }
+                //   return null;
+                // }, builder: (formState) {
+                //   return Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       WayaSelectField(
+                //           height: 0.3,
+                //           label: "Product Type",
+                //           hintText: 'Select Product Type',
+                //           items: ref
+                //               .read(addProductProvider.notifier)
+                //               .restructuredCategory(),
+                //           onSelected: (value) => ref
+                //               .read(addProductProvider.notifier)
+                //               .update(value, "productType")),
+                //       if (formState.hasError && viewModel.productType.isEmpty)
+                //         Padding(
+                //           padding: const EdgeInsets.only(top: 5),
+                //           child: Text(
+                //             formState.errorText!,
+                //             style: TextStyle(
+                //                 color: wayaTheme.colorScheme.error,
+                //                 fontSize: 12),
+                //           ),
+                //         ),
+                //     ],
+                //   );
+                // }),
                 const Gap(10),
-                FormField<String>(validator: (value) {
-                  if (viewModel.productCondition.isEmpty) {
-                    return 'Product Condition is required';
-                  }
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaSelectField(
-                          height: 0.3,
-                          label: "Product Category",
-                          hintText: 'Select Product Category',
-                          items: ref
-                              .read(addProductProvider.notifier)
-                              .restructuredCategory(),
-                          onSelected: (value) => ref
-                              .read(addProductProvider.notifier)
-                              .update(value, "productCondition")),
-                      if (formState.hasError &&
-                          viewModel.productCondition.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
+                // FormField<String>(validator: (value) {
+                //   if (viewModel.productCondition.isEmpty) {
+                //     return 'Product Condition is required';
+                //   }
+                //   return null;
+                // }, builder: (formState) {
+                //   return Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       WayaSelectField(
+                //           height: 0.3,
+                //           label: "Product Category",
+                //           hintText: 'Select Product Category',
+                //           items: ref
+                //               .read(addProductProvider.notifier)
+                //               .restructuredCategory(),
+                //           onSelected: (value) => ref
+                //               .read(addProductProvider.notifier)
+                //               .update(value, "productCondition")),
+                //       if (formState.hasError &&
+                //           viewModel.productCondition.isEmpty)
+                //         Padding(
+                //           padding: const EdgeInsets.only(top: 5),
+                //           child: Text(
+                //             formState.errorText!,
+                //             style: TextStyle(
+                //                 color: wayaTheme.colorScheme.error,
+                //                 fontSize: 12),
+                //           ),
+                //         ),
+                //     ],
+                //   );
+                // }),
                 const Gap(30),
                 Text(
                   "Pricing & Delivery",
@@ -255,38 +256,38 @@ class _AddProductForListingState extends ConsumerState<AddProductForListing> {
                   );
                 }),
                 const Gap(10),
-                FormField<String>(validator: (value) {
-                  if (viewModel.pickUpOption.isEmpty) {
-                    return 'Delivery/Pickup is required';
-                  }
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaSelectField(
-                          height: 0.3,
-                          label: "Delivery/Pickup Option",
-                          hintText: 'Select Delivery or Pickup Option',
-                          items: ref
-                              .read(addProductProvider.notifier)
-                              .restructuredCategory(),
-                          onSelected: (value) => ref
-                              .read(addProductProvider.notifier)
-                              .update(value, "pickUpOption")),
-                      if (formState.hasError && viewModel.pickUpOption.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
+                // FormField<String>(validator: (value) {
+                //   if (viewModel.pickUpOption.isEmpty) {
+                //     return 'Delivery/Pickup is required';
+                //   }
+                //   return null;
+                // }, builder: (formState) {
+                //   return Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       WayaSelectField(
+                //           height: 0.3,
+                //           label: "Delivery/Pickup Option",
+                //           hintText: 'Select Delivery or Pickup Option',
+                //           items: ref
+                //               .read(addProductProvider.notifier)
+                //               .restructuredCategory(),
+                //           onSelected: (value) => ref
+                //               .read(addProductProvider.notifier)
+                //               .update(value, "pickUpOption")),
+                //       if (formState.hasError && viewModel.pickUpOption.isEmpty)
+                //         Padding(
+                //           padding: const EdgeInsets.only(top: 5),
+                //           child: Text(
+                //             formState.errorText!,
+                //             style: TextStyle(
+                //                 color: wayaTheme.colorScheme.error,
+                //                 fontSize: 12),
+                //           ),
+                //         ),
+                //     ],
+                //   );
+                // }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
                   if (viewModel.pickUpAddress.text.isEmpty) {

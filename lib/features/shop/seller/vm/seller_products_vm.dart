@@ -1,0 +1,62 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_products_state.dart';
+
+class SellerProductsVm extends StateNotifier<SellerProductState> {
+  final Ref ref;
+  final ShopRepository _shopRepository;
+
+  SellerProductsVm(this._shopRepository, this.ref)
+      : super(SellerProductState());
+
+  Future<void> sellerProducts({required String shopId}) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final response = await _shopRepository.getSellerProducts(
+          shopId: shopId, page: state.page);
+
+      if (response.success) {
+        SellerProductResponseModel responseModel =
+            SellerProductResponseModel.fromJson(response.data);
+        state = state.copyWith(products: responseModel.data.products);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  void setCategory(List<String>? categoryIds) {
+    state = state.copyWith(selectedCategoryId: categoryIds);
+  }
+
+  List<SellerProduct> get filteredProducts {
+  if (state.products.isEmpty) return [];
+
+  return state.products.where((product) {
+    // category filter
+    if (state.selectedCategoryId.isNotEmpty &&
+        !state.selectedCategoryId.contains(product.categoryId)) {
+      return false;
+    }
+
+    // search filter
+    if (state.search.text.isNotEmpty) {
+      final query = state.search.text.toLowerCase();
+      if (!product.name.toLowerCase().contains(query) &&
+          !product.description.toLowerCase().contains(query)) {
+        return false;
+      }
+    }
+
+    return true;
+  }).toList();
+}
+}
+
+final sellerProductsVmProvider =
+    StateNotifierProvider<SellerProductsVm, SellerProductState>((ref) {
+  return SellerProductsVm(ShopRepository(), ref);
+});

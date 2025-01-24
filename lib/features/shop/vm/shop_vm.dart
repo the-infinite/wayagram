@@ -49,24 +49,26 @@ class ShopVm extends StateNotifier<ShopState> {
     state = state.copyWith(searchQuery: query);
   }
 
-  Future<void> getAllProducts() async {
+  Future<List<Product>?> getAllProducts() async {
     state = state.copyWith(isLoading: true);
     try {
       final response = await _repository.getProducts();
-
+      List<Product> allProducts = [];
       if (response.success) {
         ProductResponse productResponse =
             ProductResponse.fromJson(response.data);
-        List<Product>? products = productResponse.data.data.map((product) {
+        allProducts = productResponse.data.data.map((product) {
           return product.copyWith(
               category: state.categories?.firstWhere(
             (cat) => cat.value == product.categoryId,
           ));
         }).toList();
-        state = state.copyWith(products: products);
+        state = state.copyWith(products: allProducts);
       }
+      return allProducts;
     } catch (e) {
       print(e);
+      return null;
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -89,14 +91,13 @@ class ShopVm extends StateNotifier<ShopState> {
             product.description.toLowerCase().contains(query);
       }
 
-      return true;
+      return !product.wayagramDeal;
     }).toList();
   }
 
   List<Product> get filteredWayagramDealProducts {
-     if (state.products.isEmpty) return [];
+    if (state.products.isEmpty) return [];
     return state.products.where((product) {
-     
       // category filter
       if (state.selectedCategoryId != null &&
           state.selectedCategoryId!.isNotEmpty &&
