@@ -98,15 +98,18 @@ class SingleDeliveryRequestViewModel extends ChangeNotifier {
   SingleDeliveryRequestViewModel(this.ref);
 
   Future<void> addDeliveryDetail(BuildContext context, DeliveryRequestData data) async {
-    await showDialog(
+   if (context.mounted) {
+     await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AddDeliveryDetails(data: data);
         });
+   }
   }
 
   Future<void> sellerOrderAction(BuildContext context, DeliveryRequestData data) async {
-    WayaUtils.showNotice(
+   if (context.mounted) {
+     WayaUtils.showNotice(
         context: context,
         buttonText: 'Add Delivery Details',
         
@@ -118,6 +121,7 @@ class SingleDeliveryRequestViewModel extends ChangeNotifier {
         },
        
         icon: Image.asset('assets/images/shop/delivery-van.png'));
+   }
   }
 }
 

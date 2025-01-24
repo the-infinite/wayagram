@@ -18,11 +18,12 @@ class BasicProductInfo extends ConsumerStatefulWidget {
 class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
   final _formKey = GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(addProductProvider);
     final wayaTheme = Theme.of(context);
+
+    print(viewModel.includeMeasurement);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +176,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     ],
                   );
                 }),
-                const Gap(10),
+//                const Gap(10),
 
                 //     FormField<String>(validator: (value) {
                 //   if (viewModel.productType.isEmpty) {
@@ -210,7 +211,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                 //     ],
                 //   );
                 // }),
-                // const Gap(10),
+                const Gap(10),
                 FormField<String>(validator: (value) {
                   if (viewModel.productCondition.isEmpty) {
                     return 'Product Condition is required';

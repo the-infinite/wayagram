@@ -7,7 +7,11 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/checkout_vm.dart';
+import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class Checkout extends ConsumerWidget {
   static const route = '/checkout';
@@ -17,6 +21,18 @@ class Checkout extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(checkoutVmProvider);
+    final CartItem? cartIem =
+        ModalRoute.of(context)?.settings.arguments as CartItem?;
+
+    final subTotal = cartIem == null
+        ? 0
+        : cartIem.products.fold(
+            0,
+            (prodSum, prod) => prodSum + (prod.price * prod.quantity),
+          );
+    final int deliveryCharge =
+        cartIem!.deliveryFee == null ? 0 : int.parse(cartIem.deliveryFee!);
+
     return WayaScaffold(
       title: "Checkout",
       isLoading: false,
@@ -26,49 +42,54 @@ class Checkout extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Gap(10),
-          Container(
-            padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
-            decoration: BoxDecoration(
-                border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
-                borderRadius: BorderRadius.circular(8)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SvgPicture.asset('assets/icons/map.svg'),
-                const Gap(5),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Pickup Address", style: wayaTheme.textTheme.bodyMedium),
-                    const Gap(5),
-                    SizedBox(
-                      width: context.width * 0.8,
-                      child: Text(
-                        "62, Lekki - Epe Express way, off Ita opo building, Lagos State",
-                        style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.greyColor500,
-                          fontSize: 13,
+          Visibility(
+            visible: cartIem.deliveryAddress != null,
+            child: Container(
+              padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: wayaTheme.colorScheme.greyColor300, width: 1),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SvgPicture.asset('assets/icons/map.svg'),
+                  const Gap(5),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Pickup Address",
+                          style: wayaTheme.textTheme.bodyMedium),
+                      const Gap(5),
+                      SizedBox(
+                        width: context.width * 0.8,
+                        child: Text(
+                          cartIem.deliveryAddress ?? "",
+                          style: TextStyle().wayaCopyWith(
+                            color: wayaTheme.colorScheme.greyColor500,
+                            fontSize: 13,
+                          ),
                         ),
-                      ),
-                    )
-                  ],
-                )
-              ],
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
           const Gap(25),
           Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
           const Gap(10),
-          // ListView.builder(
-          //     shrinkWrap: true,
-          //     physics: const NeverScrollableScrollPhysics(),
-          //     itemCount: 2,
-          //     itemBuilder: (context, index) {
-          //       return OrderedProductCard(order: orders[index]);
-          //     }),
-          //const Gap(25),
+             ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: cartIem.products.length,
+                    itemBuilder: (context, index) {
+                      return OrderedProductCard(orders: cartIem.products[index]);
+                    }),
+          const Gap(25),
           Text("Cost Breakdown", style: wayaTheme.textTheme.bodyMedium),
           const Gap(10),
           DottedBorder(
@@ -87,12 +108,16 @@ class Checkout extends ConsumerWidget {
                   children: [
                     Text(
                       "Sub Total",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13),
+                      style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.greyColor400,
+                          fontSize: 13),
                     ),
                     const Gap(6),
                     Text(
-                      "N 175,000",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                      WayaHelpers.formatPrice(subTotal),
+                      style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.customBlack,
+                          fontSize: 14),
                     )
                   ],
                 ),
@@ -117,12 +142,16 @@ class Checkout extends ConsumerWidget {
                   children: [
                     Text(
                       "Delivery Charges",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13),
+                      style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.greyColor400,
+                          fontSize: 13),
                     ),
                     const Gap(6),
                     Text(
-                      "N 5,000",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                      WayaHelpers.formatPrice(deliveryCharge),
+                      style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.customBlack,
+                          fontSize: 14),
                     )
                   ],
                 ),
@@ -147,12 +176,16 @@ class Checkout extends ConsumerWidget {
                   children: [
                     Text(
                       "Total",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13),
+                      style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.greyColor400,
+                          fontSize: 13),
                     ),
                     const Gap(6),
                     Text(
-                      "N 180,000",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 18),
+                      WayaHelpers.formatPrice(subTotal + deliveryCharge),
+                      style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.customBlack,
+                          fontSize: 18),
                     )
                   ],
                 ),
@@ -164,8 +197,9 @@ class Checkout extends ConsumerWidget {
           const Gap(10),
           Container(
             padding: EdgeInsets.all(10),
-            decoration:
-                BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(
+                color: wayaTheme.colorScheme.scaffoldColor,
+                borderRadius: BorderRadius.circular(8)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -182,12 +216,16 @@ class Checkout extends ConsumerWidget {
                       children: [
                         Text(
                           "Wayagram Wallet",
-                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 16),
+                          style: TextStyle().wayaCopyWith(
+                              color: wayaTheme.colorScheme.customBlack,
+                              fontSize: 16),
                         ),
                         const Gap(6),
                         Text(
                           "This transaction will be deducted from \n your wallet  balance",
-                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 14),
+                          style: TextStyle().wayaCopyWith(
+                              color: wayaTheme.colorScheme.greyColor400,
+                              fontSize: 14),
                         )
                       ],
                     )
@@ -197,7 +235,10 @@ class Checkout extends ConsumerWidget {
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle, border: Border.all(width: 1, color: wayaTheme.colorScheme.customPrimary)),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          width: 1,
+                          color: wayaTheme.colorScheme.customPrimary)),
                   child: Center(
                       child: Container(
                     width: 10,
@@ -230,14 +271,18 @@ class Checkout extends ConsumerWidget {
                       child: Text(
                         "Total",
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor500, fontWeight: FontWeight.normal, fontSize: 14),
+                            color: wayaTheme.colorScheme.greyColor500,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 14),
                       ),
                     ),
                     Positioned(
                         top: 25,
                         child: Text(
-                          "N 180,000",
-                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 18),
+                           WayaHelpers.formatPrice(subTotal + deliveryCharge),
+                          style: TextStyle().wayaCopyWith(
+                              color: wayaTheme.colorScheme.customBlack,
+                              fontSize: 18),
                         ))
                   ],
                 )),
@@ -245,7 +290,7 @@ class Checkout extends ConsumerWidget {
               width: context.width * 0.45,
               child: WayaButton(
                 callback: () {
-                  viewModel.checkout(context);
+                  ref.read(checkoutVmProvider.notifier).checkout(context);
                 },
                 text: 'CheckOut',
               ),

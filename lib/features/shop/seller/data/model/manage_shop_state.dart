@@ -10,6 +10,7 @@ class ManageShopState {
   final bool isPersonalNotUpgradedToBusiness;
   final List<SalesMetric> salesMetric;
   final int numberOfProducts;
+  final int numberOfRequests;
 
   const ManageShopState(
       {this.isLoading = false,
@@ -19,6 +20,7 @@ class ManageShopState {
       this.isPersonalNotUpgradedToBusiness = false,
       this.salesMetric = const [],
       this.numberOfProducts = 0,
+      this.numberOfRequests = 0,
       this.singleShop});
 
   factory ManageShopState.initial() => ManageShopState();
@@ -30,6 +32,7 @@ class ManageShopState {
       List<ShopData>? shop,
       List<SalesMetric>? salesMetric,
       ShopData? singleShop,
+      int? numberOfRequests,
       int? numberOfProducts,
       bool? isPersonalNotUpgradedToBusiness}) {
     return ManageShopState(
@@ -39,6 +42,7 @@ class ManageShopState {
         singleShop: singleShop ?? this.singleShop,
         shop: shop ?? this.shop,
         numberOfProducts: numberOfProducts ?? this.numberOfProducts,
+        numberOfRequests:numberOfRequests ?? this.numberOfRequests,
         salesMetric: salesMetric ?? this.salesMetric,
         isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ??
             this.isPersonalNotUpgradedToBusiness);
@@ -53,6 +57,7 @@ class ManageShopState {
         isPersonalNotUpgradedToBusiness:
             json['isPersonalNotUpgradedToBusiness'],
         salesMetric: json['salesMetric'],
+        numberOfRequests: json['numberOfRequests'],
         numberOfProducts: json['numberOfProducts'],
         shop: json['shop']);
   }
@@ -63,6 +68,7 @@ class ManageShopState {
         'salesMetric': salesMetric,
         "hasShop": hasShop,
         'numberOfProducts': numberOfProducts,
+        'numberOfRequests':numberOfRequests,
         "shop": shop,
         "singleShop": singleShop,
         "isPersonalNotUpgradedToBusiness": isPersonalNotUpgradedToBusiness

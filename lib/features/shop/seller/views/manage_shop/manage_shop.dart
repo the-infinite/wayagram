@@ -57,18 +57,40 @@ class _ManageShopState extends ConsumerState<ManageShop> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(viewModel.singleShop!.name.capitalizeFirst!,
+           Row(
+
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                   Text(viewModel.singleShop!.name.capitalizeFirst!,
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(3),
             Text(
               'Manage your shop activity',
               style: wayaTheme.textTheme.hintStyle,
             ),
+                ],
+              ),
+               WayaButton(
+                  callback: () {},
+                  text: 'Shop Settings',
+                  textStyle: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500),
+                  height: 35,
+                  radius: 6,
+                )
+            ],
+           ),
             const Gap(30),
-            if (viewModel.numberOfProducts > 0)
+            // if (viewModel.numberOfProducts > 0)
             WayaButton(
               callback: () {
-                WayaNav.toNamed(SellerProducts.route);
+                WayaNav.toNamed(SellerProducts.route, arguments: viewModel.singleShop!.id);
               },
               color: wayaTheme.colorScheme.primar50,
               centerWidget: Row(
@@ -91,52 +113,8 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 ],
               ),
             ),
-            const Gap(10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                WayaButton(
-                  callback: () {
-                    WayaNav.toNamed(AddProduct.route);
-                  },
-                  border: Border.all(
-                      width: 1, color: wayaTheme.colorScheme.customPrimary),
-                  centerWidget: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(WayaAssets.icons.buttonIcon.path,
-                          colorFilter: ColorFilter.mode(
-                              wayaTheme.colorScheme.customPrimary,
-                              BlendMode.srcIn)),
-                      const Gap(5),
-                      Text(
-                        "Add Product",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  height: 35,
-                  color: wayaTheme.colorScheme.transparent,
-                  radius: 6,
-                ),
-                const Gap(10),
-                WayaButton(
-                  callback: () {},
-                  text: 'Shop Settings',
-                  textStyle: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500),
-                  height: 35,
-                  radius: 6,
-                )
-              ],
-            ),
+          
+           
             const Gap(15),
             GridView.builder(
                 itemCount: 3,
@@ -214,7 +192,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                     onTap: () {
                       WayaNav.toNamed(DeliveryRequest.route);
                     },
-                    metric: 4,
+                    metric: viewModel.numberOfRequests,
                     isStacked: true,
                   ),
                 ],

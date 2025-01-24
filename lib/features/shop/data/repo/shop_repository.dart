@@ -46,5 +46,9 @@ class ShopRepository extends BaseRepository {
       {required AddProductModel payload}) {
     return post("$serviceUrl/products/create", payload.toJson());
   }
+
+Future<WayaRequestResponse> getSellerProducts({required String shopId, required int page}) {
+    return get('$serviceUrl/products?shopId=$shopId&page=$page');
+  }
 }
 //

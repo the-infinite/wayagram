@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/widgets/order_info_widget.dart';
 import 'package:wayagram/features/shop/seller/data/model/delivery_request_response_model.dart';
 
@@ -246,7 +247,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                                               userId: widget.data.userId,
                                               shopId: shopId);
 
-                                      WayaNav.goBack();
+                                      WayaNav.removeUntilNamed(ManageShop.route);
                                     }
                                   }
                                 : null,

@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
@@ -27,8 +26,11 @@ class AddProductVm extends StateNotifier<AddProductState> {
   final Ref ref;
   AddProductVm(this._shopRepository, this.ref) : super(AddProductState()) {
     state = state.copyWith(isWayagramDeal: null);
-    state =
-        state.copyWith(shopId: ref.watch(manageShopVmProvider).singleShop!.id);
+    final shop = ref.watch(manageShopVmProvider).singleShop;
+    if (shop != null) {
+   state = state.copyWith(shopId: shop.id);
+    }
+
   }
   final ImagePicker _picker = ImagePicker();
 
@@ -121,7 +123,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
 
   Future<void> onSubmit(BuildContext context) async {
     try {
-      if (state.images.isEmpty) {
+      if (state.uploadedDocuments.isEmpty) {
         WayaSnackBar.showToast("A prduct must have an image");
         return;
       }
@@ -197,15 +199,12 @@ class AddProductVm extends StateNotifier<AddProductState> {
   Future<void> deleteProduct(
       {required String shopId, required String productId}) async {
     try {
-      final response =
-          _shopRepository.deleteProductRequest(shopId: shopId, productId: productId);
+      final response = _shopRepository.deleteProductRequest(
+          shopId: shopId, productId: productId);
     } catch (e) {
       print(e);
     }
   }
 
-  Future<void> editProduct() async {
-    
-    
-  }
+  Future<void> editProduct() async {}
 }

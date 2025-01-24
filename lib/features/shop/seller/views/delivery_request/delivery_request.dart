@@ -19,13 +19,13 @@ class DeliveryRequest extends ConsumerStatefulWidget {
 }
 
 class _DeliveryRequestState extends ConsumerState<DeliveryRequest> {
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(deliveryRequestVmProvider.notifier).getRequests();
-    });
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     ref.read(deliveryRequestVmProvider.notifier).getRequests();
+  //   });
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +35,9 @@ class _DeliveryRequestState extends ConsumerState<DeliveryRequest> {
     return WayaScaffold(
         isLoading: viewModel.isLoading,
         isScrollable: true,
+        onRefresh: () async {
+           ref.read(deliveryRequestVmProvider.notifier).getRequests();
+        },
         title: 'Requests',
         appBarTrailing: WayaCartIcon(),
         body: Column(

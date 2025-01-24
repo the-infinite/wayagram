@@ -44,37 +44,43 @@ class _SellerShopState extends ConsumerState<SellerShop> {
       return buildSellerShopSkeleton(context: context);
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Manage Shop", style: wayaTheme.textTheme.titleLarge),
-        const Gap(3),
-        Text(
-          'Manage your shop activities here',
-          style: wayaTheme.textTheme.hintStyle,
-        ),
-        const Gap(30),
-        Text("My Shops", style: wayaTheme.textTheme.titleSmall),
-        const Gap(10),
-        ListView.builder(
-            itemCount: manageShop.shop.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return SingleShopCard(shop: manageShop.shop[index]);
-            }),
-        const Gap(20),
-        // Text("Shared Shop", style: wayaTheme.textTheme.titleSmall),
-        // const Gap(10),
-        // ListView.builder(
-        //     itemCount: 4,
-        //     shrinkWrap: true,
-        //     physics: const NeverScrollableScrollPhysics(),
-        //     itemBuilder: (context, index) {
-        //       return SingleShopCard();
-        //     })
-      ],
-    );
+    return RefreshIndicator(
+      onRefresh: () async {
+         ref.read(manageShopVmProvider.notifier).getSellerShops();
+      },
+        child: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Manage Shop", style: wayaTheme.textTheme.titleLarge),
+          const Gap(3),
+          Text(
+            'Manage your shop activities here',
+            style: wayaTheme.textTheme.hintStyle,
+          ),
+          const Gap(30),
+          Text("My Shops", style: wayaTheme.textTheme.titleSmall),
+          const Gap(10),
+          ListView.builder(
+              itemCount: manageShop.shop.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return SingleShopCard(shop: manageShop.shop[index]);
+              }),
+          const Gap(20),
+          // Text("Shared Shop", style: wayaTheme.textTheme.titleSmall),
+          // const Gap(10),
+          // ListView.builder(
+          //     itemCount: 4,
+          //     shrinkWrap: true,
+          //     physics: const NeverScrollableScrollPhysics(),
+          //     itemBuilder: (context, index) {
+          //       return SingleShopCard();
+          //     })
+        ],
+      ),
+    ));
   }
 }
 

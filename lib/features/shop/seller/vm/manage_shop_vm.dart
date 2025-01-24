@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
@@ -74,25 +75,33 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
   }
 
   void fetchData() async {
-    ref.read(shopVmProvider.notifier).getAllProducts();
-    ref.read(deliveryRequestVmProvider.notifier).getRequests();
-    updateMetrics();
+    final List<Product>? products =
+        await ref.read(shopVmProvider.notifier).getAllProducts();
+    // await ref.read(deliveryRequestVmProvider.notifier).getRequests();
+
+    updateMetrics(products: products);
   }
 
-  void updateMetrics() {
-    final productState = ref.read(shopVmProvider).products.length;
-    state = state.copyWith(numberOfProducts: productState);
+  void updateMetrics({required List<Product>? products}) {
+    if (products != null && products.isNotEmpty) {
+      state = state.copyWith(numberOfProducts: products.length);
 
-    List<SalesMetric> sales = [];
-    sales = List.from(state.salesMetric);
+      List<SalesMetric> sales = List.from(state.salesMetric);
 
-    sales.map((value) {
-      if (value.title == "Total Products") {
-        value.copyWith(metrics: "$productState");
-      }
-      return value;
-    }).toList();
-    state = state.copyWith(salesMetric: sales);
+      sales = sales.map((value) {
+        if (value.title == "Total Products") {
+          return value.copyWith(metrics: "${products.length}");
+        }
+        return value;
+      }).toList();
+
+      state = state.copyWith(salesMetric: sales);
+    }
+
+    // final requestState =
+    //     ref.watch(deliveryRequestVmProvider).deliveryRequests.length;
+
+    // state = state.copyWith(numberOfRequests: requestState);
   }
 }
 
