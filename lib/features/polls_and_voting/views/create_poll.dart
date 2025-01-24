@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -11,7 +12,10 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
+
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+
+import '../data/poll_type_data.dart';
 
 class CreatePoll extends ConsumerStatefulWidget {
   static const route = '/create-poll';
@@ -26,8 +30,6 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
   final _formKey = GlobalKey<FormState>();
 
   bool sel = false;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +185,43 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                     }),
                     const Gap(10),
 
+                    ///
                     FormField<String>(validator: (value) {
+                      if (viewModel.pollType.isEmpty) {
+                        return 'Gender is required';
+                      }
+
+                      return null;
+                    }, builder: (formState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WayaSelectField(
+                              height: 0.3,
+                              label: "Poll Type",
+                              value: viewModel.pollType.capitalizeFirst,
+                              uniqueKey: 'poll-type',
+                              hintText: 'Select Poll Type',
+                              items: pollTypes,
+                              onSelected: (value) => ref
+                                  .read(createPollVotingProvider.notifier)
+                                  .selectPollType(value.value)),
+                          if (formState.hasError && viewModel.pollType.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                formState.errorText!,
+                                style: TextStyle(
+                                    color: wayaTheme.colorScheme.error,
+                                    fontSize: 12),
+                              ),
+                            ),
+                        ],
+                      );
+                    }),
+                    ///
+
+                    /*FormField<String>(validator: (value) {
                       if (viewModel.pollType.isEmpty) {
                         return 'Poll Type is required';
                       }
@@ -214,7 +252,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                             ),
                         ],
                       );
-                    }),
+                    }),*/
 
                     const Gap(20),
 
@@ -370,7 +408,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                            viewModel.endDate.isEmpty ? 'DD/MM/YYYY' : viewModel.startDate,
+                                            viewModel.endDate.isEmpty ? 'DD/MM/YYYY' : viewModel.endDate,
                                             style: Theme.of(context).textTheme.bodyMedium
                                                 ?.wayaCopyWith(
                                               fontSize: 14,

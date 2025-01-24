@@ -1,11 +1,14 @@
 
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -20,6 +23,7 @@ import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
+import '../../auth/account_creation/vm/successful_setup_vm.dart';
 import 'polls_for_you.dart';
 
 class PollSummary extends ConsumerStatefulWidget {
@@ -33,6 +37,7 @@ class PollSummary extends ConsumerStatefulWidget {
 class _PollSummaryState extends ConsumerState<PollSummary>  {
   CreatePollVotingState? viewModel;
 
+
   disposeControllers(){
     viewModel?.pollTitle.dispose();
     viewModel?.pollDescription.dispose();
@@ -45,59 +50,44 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     viewModel?.secondChoiceDescription.dispose();
 }
 
-  WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
-
   String userType = "PERSONAL";
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
+    final setUp = ref.watch(successfulSetupVmProvider);
     print('END DATE ${viewModel.endDate}');
-    //num daysLeft = DateTime.parse(viewModel.endDate).difference(DateTime.parse(viewModel.startDate)).inDays%7;
-
-    //num daysLeft = DateTime.parse(ref.read(createPollVotingProvider.notifier).formatDate(viewModel.startDate))
+    String startDate = viewModel.startDate;
+    String endDate = viewModel.endDate;
+    DateFormat format = DateFormat("yyyy-M-d");
+    DateTime parsedDate = format.parse(startDate);
+    DateTime parsedDate2 = format.parse(endDate);
+    num daysLeft = parsedDate2.difference(parsedDate).inDays;
     return WayaScaffold(
         title: "Polls Summary",
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         isScrollable: true,
         appBarTrailing: Padding(
           padding: const EdgeInsets.only(right: 20),
           child: WayaButton(
             callback: !viewModel.isLoading
-                ? () {
+                ? () async {
 
-              if (viewModel.pollType == 'Paid' && userType == "PERSONAL") {
+              if (viewModel.pollType == 'paid' && userType == "PERSONAL") {
 
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   WayaUtils.showNotice(
                       context: context,
-                      title: "You don't Have a Business Account",
+                      title: "You don't have a Business Account",
                       message: 'Please upgrade to a business account to create a paid poll',
                       onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
                       buttonText: 'Upgrade to Business',
                       secondButtonText: 'Cancel',
                       icon: Image.asset('assets/images/cp-shop.png'));
-
-                 /* showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: InkWell(
-                          onTap: (){
-
-                          },
-                          child: Container(
-                            child: Text("Click to upgrade to Business account"),
-                          ),
-                        ),
-                      );
-                    },
-                  );*/
                 });
               } else {
-
-                ref.read(createPollVotingProvider.notifier).createPoll(
+               await ref.read(createPollVotingProvider.notifier).createPoll(
                   context,
                   viewModel.firstChoice.text,
                   viewModel.startDate,
@@ -105,11 +95,13 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   viewModel.voteNumber.text,
                   viewModel.pollDescription.text,
                   viewModel.firstChoiceDescription.text,
+                  viewModel.votePrice.text
                 );
                 disposeControllers();
+                Navigator.pop(context);
                 WayaUtils.showModalSheet(
                   context,
-                  child: VoteSuccessModal(),
+                  child: PollsModal(),
                 );
               }
 
@@ -147,10 +139,10 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //21st of July\n2024
-                summary('Start Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.startDate)}\n', 'Host', ''),
+                summary('Start Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.startDate)}\n', 'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
                 summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
-                summary('Poll Type', '${viewModel.pollType}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'),
-                summary('Duration', ' Weeks\n' , '', ''),
+                summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'),
+                summary('Duration', '$daysLeft Weeks\n' , '', ''),
               ],
             ),
             const Gap(40),
@@ -168,7 +160,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               child: ListView.builder(
                   itemCount: viewModel.choices.length,
                   itemBuilder: (context, index){
-                    return presImage('${viewModel.choices[index].image?.path}', viewModel.choices[index].text.text, context, );
+                    print('IMAGE PRINTING ==>> ${viewModel.choices[index].image?.absolute}');
+                    return presImage('${viewModel.choices[index].image?.absolute.path}', viewModel.choices[index].text.text.capitalizeFirst, context, );
                   }),
             )
           ],
@@ -216,15 +209,16 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
   presImage(img, name, ctx,){
     return Container(
       margin: EdgeInsets.only(bottom: 10,),
-      padding: EdgeInsets.only(left: 20.w,  bottom: 20,),
+      padding: EdgeInsets.only(left: 20.w,  bottom: 0,),
       height: 60.h,
       decoration: BoxDecoration(
         border: Border.all(color: WayaColors.primary600, ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(children: [
-        WayaImage(imageUrl: img, height: 66.h),
-        //Image.asset(img, height: 66.h, width: 50.w,),
+        ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.file(File(img), height: 66.h, width: 50.w,)),
         const Gap(40),
         Text(
           name,

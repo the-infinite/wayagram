@@ -42,9 +42,9 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: viewModel.getPollModel.length,
+            itemCount: viewModel.getAllPollModel.length,
             itemBuilder: (context, index) {
-              final poll = viewModel.getPollModel[index];
+              final poll = viewModel.getAllPollModel[index];
               int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
 
               int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
@@ -56,10 +56,13 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   children: [
 
                     Row(children: [
-                      //Image.asset('assets/images/polls/rufai.png', height: 32.h,),
-                      WayaDp(radius: 10,),
+                      CircleAvatar(
+                        backgroundImage: NetworkImage('${poll.userData?.profilePicture}'),
+                        radius: 10,
+                        backgroundColor: wayaTheme.colorScheme.greyColor200,
+                      ),
                       const Gap(3),
-                      Text('', style: wayaTheme.textTheme.titleLarge),
+                      Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
                       const Gap(3),
                       Text(
                         ' • ${hoursLeft}h ago',

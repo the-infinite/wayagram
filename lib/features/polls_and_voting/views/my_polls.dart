@@ -12,6 +12,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 /*class MyPolls extends ConsumerWidget {
@@ -208,9 +209,13 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                 child:  Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     Row(children: [
-                      WayaDp(radius: 10,),
-                      //WayaImage(imageUrl:'${poll.userData?.profilePicture}', height: 32.h),
+                      CircleAvatar(
+                        backgroundImage: NetworkImage('${poll.userData?.profilePicture}'),
+                        radius: 10,
+                        backgroundColor: wayaTheme.colorScheme.greyColor200,
+                      ),
                       const Gap(3),
                       Text('${poll.userData?.firstName} ${poll.userData?.lastName}', style: wayaTheme.textTheme.titleLarge),
                       const Gap(3),
@@ -244,7 +249,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
 
                     const Gap(10),
                     Text(
-                      '${poll.maxVotesPerUser} ${poll.maxVotesPerUser == 0 || poll.maxVotesPerUser == 1 ? 'Vote' : 'Votes'} •  $daysLeft remaining',
+                      '${poll.maxVotesPerUser} ${poll.maxVotesPerUser == 0 || poll.maxVotesPerUser == 1 ? 'Vote' : 'Votes'} •  $daysLeft hours remaining',
                       style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
@@ -263,7 +268,8 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                     const Gap(10),
                     WayaButton(
                       callback: (){
-                        WayaNav.toNamed('/poll-dashboard');
+                        WayaNav.to(PollDashboard(pollId: '${poll.choices?[index].pollId}',));
+                        //WayaNav.toNamed('/poll-dashboard');
                       },
                       text: 'Manage Poll',
                     ),

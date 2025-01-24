@@ -121,7 +121,7 @@ class WayaAppRoutes {
     PollAndVoting.route: ()=> PollAndVoting(),
     AddChoices.route: ()=> AddChoices(),
     PollSummary.route: () => PollSummary(),
-    PollDashboard.route: () => PollDashboard(),
+    PollDashboard.route: () => PollDashboard(pollId: '',),
     UpcomingContestDetails.route: ()=> UpcomingContestDetails(),
     CreateProfile.route: ()=> CreateProfile(),
     RegisterContest.route: ()=> RegisterContest(),

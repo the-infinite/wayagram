@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
@@ -64,7 +65,7 @@ class _PollsModalState extends State<PollsModal> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
-                WayaNav.toNamed("/poll-dashboard");
+                WayaNav.toNamed("/poll-and-voting");
               },
               text: "View Application Status",
             ),
@@ -73,7 +74,7 @@ class _PollsModalState extends State<PollsModal> {
               border: Border.all(color: WayaColors.primary600),
               color: Colors.white,
               callback: () async {
-                WayaNav.toNamed("/poll-dashboard");
+                //WayaNav.toNamed("/poll-dashboard");
               },
               text: "Copy Contest Invite Link",
               textColor: WayaColors.primary600,
@@ -415,8 +416,8 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
               callback: !viewModel!.isLoading
                   ? ()  async{
                 final userId = _wayaLocalDataSource.getUserId();
-                Navigator.of(context).pop();
-                ref.read(createPollVotingProvider.notifier).castYourVote(
+                //Navigator.of(context).pop();
+               await ref.read(createPollVotingProvider.notifier).castYourVote(
 
                     '${int.parse(widget.amountPaid)*100}',
                     widget.amountPaid,
@@ -482,7 +483,8 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
 }
 
 class VoteSuccessModal extends ConsumerStatefulWidget {
-  const VoteSuccessModal({super.key});
+
+  const VoteSuccessModal({super.key,});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _VoteSuccessModalState();
@@ -511,7 +513,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
             ),
             SizedBox(height: 3.h),
             Text(
-              "I just voted for ${viewModel.firstChoice}! Join me in supporting them. #VoteNow",
+              "I just voted for ${viewModel.firstChoice.text.capitalizeFirst}! Join me in supporting them. #VoteNow",
               style: wayaTheme.textTheme.hintStyle,
               textAlign: TextAlign.center,
             ),
