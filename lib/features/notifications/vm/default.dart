@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:wayagram/core/service/logger_service.dart';
@@ -21,6 +20,21 @@ class NotificationVm extends StateNotifier<NotificationState> {
     this._logger,
     super.state,
   );
+
+  // Used to retrieve the notification state.
+  NotificationState get currentState {
+    return state;
+  }
+
+  /// Helper function used to update the filters on this notification object.
+  void setFilters(FilterNotificationState value) {
+    state = state.copyWith(filters: value);
+  }
+
+  /// Helper function used to clear any filters on this notification view model.
+  void clearFilters() {
+    state = state.copyWith(filters: FilterNotificationState.initial);
+  }
 
   /// Helper function used to get all notifications.
   Future<List<NotificationModel>> getUserNotifications() async {
@@ -72,16 +86,7 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
         requestsOnly: false,
         isLoading: false,
         searchQuery: "",
-        filters: FilterNotificationState(
-          controller: TextEditingController(),
-          showWalletNotifications: true,
-          showMarketplaceNotifications: true,
-          showQuotationNotifications: true,
-          showDonationNotifications: true,
-          showEventsNotifications: true,
-          showUgtNotifications: true,
-          showPollingAndVotingNotifications: true,
-        ),
+        filters: FilterNotificationState.initial,
         notifications: [
           //? Dummy notifications.
           NotificationModel(

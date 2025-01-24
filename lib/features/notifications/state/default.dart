@@ -57,37 +57,37 @@ class NotificationState {
         : notifications;
 
     //? The second pass is to take away wallet notifications.
-    if (!filters.showDonationNotifications) {
+    if (filters.isApplied && !filters.showDonationNotifications) {
       aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.donation);
     }
 
     //? Third, filter out event notifications.
-    if (!filters.showEventsNotifications) {
+    if (filters.isApplied && !filters.showEventsNotifications) {
       aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.event);
     }
 
     //? Fourth, filter out marketplace notifications.
-    if (!filters.showMarketplaceNotifications) {
+    if (filters.isApplied && !filters.showMarketplaceNotifications) {
       aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.transaction);
     }
 
     //? Fifth, filter out polling notifications.
-    if (!filters.showPollingAndVotingNotifications) {
+    if (filters.isApplied && !filters.showPollingAndVotingNotifications) {
       aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.poll);
     }
 
     //? Sixth, filter out event notifications.
-    if (!filters.showQuotationNotifications) {
+    if (filters.isApplied && !filters.showQuotationNotifications) {
       aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.transaction);
     }
 
     //? Seventh, filter out University Got Talent notifications.
-    if (!filters.showUgtNotifications) {
+    if (filters.isApplied && !filters.showUgtNotifications) {
       aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.event);
     }
 
     //? Eighth, filter out wallet notifications.
-    if (!filters.showWalletNotifications) {
+    if (filters.isApplied && !filters.showWalletNotifications) {
       aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.transaction);
     }
 

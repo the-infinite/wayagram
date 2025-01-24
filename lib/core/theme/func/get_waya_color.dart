@@ -77,8 +77,8 @@ class WayaColorHelper {
           return WayaColors.scaffoldColor;
         case WayaColors.scaffoldColor2:
           return WayaColors.scaffoldColor2;
-        case WayaColors.cardBackgroudColor:
-          return WayaColors.cardBackgroudColor;
+        case WayaColors.cardBackgroundColor:
+          return WayaColors.cardBackgroundColor;
         case WayaColors.cardBorderColor200:
           return WayaColors.cardBorderColor200;
         case WayaColors.cardBorderColor300:
@@ -167,7 +167,7 @@ class WayaColorHelper {
           return WayaColors.success;
         case WayaColors.scaffoldColor2:
           return WayaColors.success;
-        case WayaColors.cardBackgroudColor:
+        case WayaColors.cardBackgroundColor:
           return WayaColors.success;
         case WayaColors.cardBorderColor200:
           return WayaColors.success;

@@ -287,6 +287,10 @@ class $AssetsIconsGen {
   SvgGenImage get moreAcctBal =>
       const SvgGenImage('assets/icons/more-acct-bal.svg');
 
+  /// File path: assets/icons/notif-filter-selected.svg
+  SvgGenImage get notifFilterSelected =>
+      const SvgGenImage('assets/icons/notif-filter-selected.svg');
+
   /// File path: assets/icons/notif-group-request.svg
   SvgGenImage get notifGroupRequest =>
       const SvgGenImage('assets/icons/notif-group-request.svg');
@@ -467,6 +471,7 @@ class $AssetsIconsGen {
         menu,
         moneyIcon,
         moreAcctBal,
+        notifFilterSelected,
         notifGroupRequest,
         notifNewComment,
         notifNewDonation,

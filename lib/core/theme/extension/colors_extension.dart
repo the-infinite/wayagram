@@ -60,8 +60,8 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get scaffoldColor2 => WayaColors.scaffoldColor2;
 
   // Card Background Colors
-  Color get cardBackgroudColor => WayaColors.cardBackgroudColor;
-  Color get cardBackgroudColor2 => WayaColors.cardBackgroudColor2;
+  Color get cardBackgroudColor => WayaColors.cardBackgroundColor;
+  Color get cardBackgroudColor2 => WayaColors.cardBackgroundColor2;
   Color get cardBorderColor200 => WayaColors.cardBorderColor200;
   Color get cardBorderColor300 => WayaColors.cardBorderColor300;
 }
