@@ -72,7 +72,7 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
               "Please confirm if you would like to delete this product. This will \n update the product availability on the shop.",
           onPress: () {
             ref
-                .read(addProductProvider.notifier)
+                .read(addProductProvider('add-product').notifier)
                 .deleteProduct(shopId: product.shopId, productId: product.id);
           },
           icon: Image.asset(WayaAssets.images.deleteImg.path),

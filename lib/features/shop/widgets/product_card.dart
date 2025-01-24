@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -7,11 +8,13 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 
 class ProductCard extends ConsumerWidget {
   final Product product;
@@ -205,13 +208,11 @@ class SellerProductCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final String image = product.images == null || product.images!.isEmpty
-        ? ""
-        : product.images![0];
-    print("image $image");
+    final String image = product.images.isEmpty ? "" : product.images[0];
+
     return GestureDetector(
       onTap: () {
-        WayaNav.toNamed(ProductDetail.route, arguments: product);
+        // WayaNav.toNamed(ProductDetail.route, arguments: product);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -225,7 +226,7 @@ class SellerProductCard extends ConsumerWidget {
             color: wayaTheme.colorScheme.transparent,
           ),
           Visibility(
-              visible: product.wayagramDeal!,
+              visible: product.wayagramDeal,
               child: Column(
                 children: [
                   const Gap(3),
@@ -250,12 +251,13 @@ class SellerProductCard extends ConsumerWidget {
               child: Column(
                 children: [
                   const Gap(3),
-                  Text(product.categoryName!,
+                  Text(product.categoryName,
                       style: wayaTheme.textTheme.hintStyle),
                 ],
               )),
           const Gap(3),
-          Text(product.name!, style: wayaTheme.textTheme.bodyXtraMedium),
+          Text(product.name.capitalizeFirst!,
+              style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
               visible: !isExplore && product.rating != null,
               child: Column(
@@ -297,11 +299,11 @@ class SellerProductCard extends ConsumerWidget {
                 ],
               )),
           const Gap(3),
-          Text("",
-              // product.discountPercentage! > 0
-              //     ? WayaHelpers.calculatedDiscountPrice(
-              //         product.price!, product.discountPercentage!)
-              //     : "₦${product.price}",
+          Text(
+              product.discountPercentage > 0
+                  ? WayaHelpers.calculatedDiscountPrice(product.price,
+                      product.discountPercentage.toInt()) // Convert to int
+                  : "₦${product.price}",
               style: TextStyle().wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
@@ -315,7 +317,9 @@ class SellerProductCard extends ConsumerWidget {
                   const Gap(3),
                   WayaButton(
                     callback: () {
-                      // ref.read(cartProvider.notifier).addToCart(product, 1);
+                      WayaNav.toNamed(AddProduct.route,
+                          arguments: UpdateProductArg(
+                              uniqueKey: 'update-product', product: product));
                     },
                     height: 38,
                     radius: 6,

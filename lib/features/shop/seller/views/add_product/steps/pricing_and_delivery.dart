@@ -10,8 +10,9 @@ import 'package:gap/gap.dart';
 class PricingAndDelivery extends ConsumerStatefulWidget {
   final Function gotoNextTab;
   final Function gotoPreviousTab;
+  final String uniqueKey;
   const PricingAndDelivery(
-      {super.key, required this.gotoPreviousTab, required this.gotoNextTab});
+      {super.key, required this.gotoPreviousTab, required this.gotoNextTab, required this.uniqueKey});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -21,12 +22,10 @@ class PricingAndDelivery extends ConsumerStatefulWidget {
 class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
   final _formKey = GlobalKey<FormState>();
 
-
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    final viewModel = ref.watch(addProductProvider);
+    final viewModel = ref.watch(addProductProvider(widget.uniqueKey));
     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -104,9 +103,9 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                           label: "Delivery/Pickup Option",
                           hintText: 'Select Delivery or Pickup Option',
                           value: viewModel.pickUpOption,
-                          items: ref.read(addProductProvider.notifier).options,
+                          items: ref.read(addProductProvider(widget.uniqueKey).notifier).options,
                           onSelected: (value) => ref
-                              .read(addProductProvider.notifier)
+                              .read(addProductProvider(widget.uniqueKey).notifier)
                               .update(value, "pickUpOption")),
                       if (formState.hasError && viewModel.pickUpOption.isEmpty)
                         Padding(
@@ -154,7 +153,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                     Switch(
                         value: viewModel.includeDeliveryFee,
                         onChanged: (value) => ref
-                            .read(addProductProvider.notifier)
+                            .read(addProductProvider(widget.uniqueKey).notifier)
                             .updateIncludeDeliveryFee(value)),
                     const Gap(10),
                     Column(
@@ -207,7 +206,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                     Switch(
                         value: viewModel.applyDiscount,
                         onChanged: (value) => ref
-                            .read(addProductProvider.notifier)
+                            .read(addProductProvider(widget.uniqueKey).notifier)
                             .updateApplyDiscount(value)),
                     const Gap(10),
                     Column(
@@ -226,11 +225,11 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                   ],
                 ),
                 const Gap(20),
-                 if (viewModel.applyDiscount)
-                Text(
-                  "You can either add a discount percentage or select from the predefined discount types",
-                  style: wayaTheme.textTheme.hintStyle,
-                ),
+                if (viewModel.applyDiscount)
+                  Text(
+                    "You can either add a discount percentage or select from the predefined discount types",
+                    style: wayaTheme.textTheme.hintStyle,
+                  ),
                 const Gap(20),
                 if (viewModel.applyDiscount)
                   FormField<String>(validator: (value) {
@@ -244,9 +243,11 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                             label: "Discount Type",
                             hintText: 'Select a Discount Type',
                             displayText: (item) => item.label,
-                            fetchData: ref.watch(addProductProvider.notifier).getAllDiscounts,
+                            fetchData: ref
+                                .watch(addProductProvider(widget.uniqueKey).notifier)
+                                .getAllDiscounts,
                             onSelected: (value) => ref
-                                .read(addProductProvider.notifier)
+                                .read(addProductProvider(widget.uniqueKey).notifier)
                                 .update(value, "discountType")),
                       ],
                     );

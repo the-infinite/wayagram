@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 
 class CreateShopState {
   final bool isLoading;
@@ -17,9 +18,9 @@ class CreateShopState {
   final String vendorId;
   final String lga;
   final String state;
-   final List<Select> lgas;
+  final List<Select> lgas;
   final List<Select> states;
-  
+
   CreateShopState(
       {this.isLoading = false,
       TextEditingController? phone,
@@ -31,7 +32,7 @@ class CreateShopState {
       this.logo,
       this.lga = '',
       this.state = '',
-           this.states = const [],
+      this.states = const [],
       this.lgas = const [],
       this.vendorId = ''})
       : phone = phone ?? TextEditingController(),
@@ -49,39 +50,52 @@ class CreateShopState {
       TextEditingController? name,
       String? lga,
       String? state,
-         List<Select>? states,
+      List<Select>? states,
       List<Select>? lgas,
       MultipartFile? logo,
       File? image,
       String? vendorId}) {
     return CreateShopState(
-        isLoading: isLoading ?? this.isLoading,
-        phone: phone ?? this.phone,
-        address: address ?? this.address,
-        email: email ?? this.email,
-        description: description ?? this.description,
-        name: name ?? this.name,
-        logo: logo ?? this.logo,
-        image: image ?? this.image,
-        vendorId: vendorId ?? this.vendorId,
-        lga: lga ??  this.lga,
-        state: state ?? this.state,
-        states: states ?? this.states,
-        lgas: lgas ?? this.lgas,
-        );
+      isLoading: isLoading ?? this.isLoading,
+      phone: phone ?? this.phone,
+      address: address ?? this.address,
+      email: email ?? this.email,
+      description: description ?? this.description,
+      name: name ?? this.name,
+      logo: logo ?? this.logo,
+      image: image ?? this.image,
+      vendorId: vendorId ?? this.vendorId,
+      lga: lga ?? this.lga,
+      state: state ?? this.state,
+      states: states ?? this.states,
+      lgas: lgas ?? this.lgas,
+    );
   }
 
   CreateShopModel get createShopModel {
     return CreateShopModel(
-        phone: "+234${phone.text}",
-        address: address.text,
-        email: email.text,
-        description: description.text,
-        name: name.text,
-        logo: logo!,
-        vendorId: vendorId,
-        state: state,
-        lga: lga,
-        );
+      phone: "+234${phone.text}",
+      address: address.text,
+      email: email.text,
+      description: description.text,
+      name: name.text,
+      logo: logo!,
+      vendorId: vendorId,
+      state: state,
+      lga: lga,
+    );
   }
+}
+
+class UpdateShopArg {
+  final String uniqueKey;
+  final ShopData singleShop;
+
+  UpdateShopArg({required this.uniqueKey, required this.singleShop});
+}
+
+class CreateShopArg {
+  final String uniqueKey;
+
+  CreateShopArg({required this.uniqueKey});
 }

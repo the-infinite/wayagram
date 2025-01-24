@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
+import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_products_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
@@ -64,7 +65,9 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                     children: [
                       WayaButton(
                         callback: () {
-                          WayaNav.toNamed(AddProduct.route);
+                          WayaNav.toNamed(AddProduct.route,
+                              arguments:
+                                  AddProductArg(uniqueKey: 'add-product'));
                         },
                         color: wayaTheme.colorScheme.primar50,
                         centerWidget: Row(
@@ -94,7 +97,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                       ),
                       const Gap(25),
                       GroupedWidgetHeader(
-                        isVisible: false,
+                          isVisible: false,
                           onTap: () {},
                           subTitle:
                               "Extensive view of all the products you have created",
@@ -199,7 +202,8 @@ class SellerProductEmptyState extends StatelessWidget {
         const Gap(25),
         WayaButton(
           callback: () {
-            WayaNav.toNamed(AddProduct.route);
+            WayaNav.toNamed(AddProduct.route,
+                arguments: AddProductArg(uniqueKey: 'add-product'));
           },
           centerWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,

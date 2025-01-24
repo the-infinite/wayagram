@@ -7,6 +7,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
+import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 
@@ -86,9 +88,11 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {
-                              WayaNav.toNamed(ManageShop.route, arguments: widget.shop);
+                              WayaNav.toNamed(ManageShop.route,
+                                  arguments: widget.shop);
                             },
-                            asset: WayaAssets.icons.bShop.path,
+                            asset:
+                                SvgPicture.asset(WayaAssets.icons.bShop.path),
                             text: "Shop Dashboard"),
                       ),
                       PopupMenuItem<int>(
@@ -96,8 +100,24 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {},
-                            asset: WayaAssets.icons.bBid.path,
+                            asset: SvgPicture.asset(WayaAssets.icons.bBid.path),
                             text: "Quotation Dashboard"),
+                      ),
+                      PopupMenuItem<int>(
+                        value: 2,
+                        child: _buildActionNav(
+                            context: context,
+                            onTap: () {
+                              WayaNav.toNamed(CreateShop.route,
+                                  arguments: UpdateShopArg(
+                                      uniqueKey: "update-shop",
+                                      singleShop: widget.shop));
+                            },
+                            asset: Icon(
+                              Icons.edit_note_sharp,
+                              size: 20,
+                            ),
+                            text: "Edit Shop"),
                       )
                     ];
                   })
@@ -112,7 +132,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
   InkWell _buildActionNav(
       {required BuildContext context,
       required VoidCallback onTap,
-      required String asset,
+      required Widget asset,
       required String text}) {
     final wayaTheme = Theme.of(context);
     return InkWell(
@@ -122,7 +142,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SvgPicture.asset(asset),
+          asset,
           const Gap(4),
           Text(
             text,

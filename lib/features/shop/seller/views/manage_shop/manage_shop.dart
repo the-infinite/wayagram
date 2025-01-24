@@ -57,24 +57,23 @@ class _ManageShopState extends ConsumerState<ManageShop> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           Row(
-
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                   Text(viewModel.singleShop!.name.capitalizeFirst!,
-                style: wayaTheme.textTheme.titleLarge),
-            const Gap(3),
-            Text(
-              'Manage your shop activity',
-              style: wayaTheme.textTheme.hintStyle,
-            ),
-                ],
-              ),
-               WayaButton(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(viewModel.singleShop!.name.capitalizeFirst!,
+                        style: wayaTheme.textTheme.titleLarge),
+                    const Gap(3),
+                    Text(
+                      'Manage your shop activity',
+                      style: wayaTheme.textTheme.hintStyle,
+                    ),
+                  ],
+                ),
+                WayaButton(
                   callback: () {},
                   text: 'Shop Settings',
                   textStyle: TextStyle().wayaCopyWith(
@@ -84,13 +83,13 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                   height: 35,
                   radius: 6,
                 )
-            ],
-           ),
+              ],
+            ),
             const Gap(30),
-            // if (viewModel.numberOfProducts > 0)
             WayaButton(
               callback: () {
-                WayaNav.toNamed(SellerProducts.route, arguments: viewModel.singleShop!.id);
+                WayaNav.toNamed(SellerProducts.route,
+                    arguments: viewModel.singleShop!.id);
               },
               color: wayaTheme.colorScheme.primar50,
               centerWidget: Row(
@@ -113,8 +112,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 ],
               ),
             ),
-          
-           
+
             const Gap(15),
             GridView.builder(
                 itemCount: 3,
@@ -150,7 +148,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                     mainAxisSpacing: 0,
-                    childAspectRatio: 3/4,
+                    childAspectRatio: 3 / 4,
                     crossAxisSpacing: 8),
                 children: [
                   QuickActionWidget(

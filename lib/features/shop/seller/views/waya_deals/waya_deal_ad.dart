@@ -7,6 +7,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
+import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 
 class WayaDealAd extends ConsumerWidget {
   static const route = '/waya-deal-ad';
@@ -32,8 +34,7 @@ class WayaDealAd extends ConsumerWidget {
             ),
             const Gap(30),
             Image.asset('assets/images/waya_deal_ad.png'),
-            
-             const Gap(10),
+            const Gap(10),
             Text(
               "How it Works?",
               style: TextStyle().wayaCopyWith(
@@ -74,7 +75,9 @@ class WayaDealAd extends ConsumerWidget {
             const Gap(30),
             WayaButton(
               callback: () {
-                WayaNav.toNamed('/waya_product_listing');
+                WayaNav.toNamed(AddProduct.route,
+                    arguments: AddWayagramArg(
+                        uniqueKey: 'add-waya-product', isWayagram: true));
               },
               text: 'Participate',
             )

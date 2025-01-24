@@ -16,6 +16,7 @@ import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.d
 import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
+import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 
 class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   final ShopRepository _shopRepository;
@@ -51,7 +52,7 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   Future<void> createSellerShop() async {
     try {
       if (state.logo == null) {
-        return  WayaSnackBar.showToast('Pls add a Logo');
+        return WayaSnackBar.showToast('Pls add a Logo');
       }
       state = state.copyWith(isLoading: true);
 
@@ -123,10 +124,21 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
       _logger.e('Error uploading file: $e');
     }
   }
+
+  void initializeEdit(ShopData singleShop) {
+    //initializeEdit
+    state = state.copyWith(
+      phone: TextEditingController(text: singleShop.phone),
+      email: TextEditingController(text: singleShop.email),
+      description: TextEditingController(text: singleShop.description),
+      name: TextEditingController(text: singleShop.name),
+      address: TextEditingController(text: singleShop.address)
+    );
+  }
 }
 
 final createAdditionalShopVmProvider =
-    StateNotifierProvider<CreateAdditionalShopVm, CreateShopState>((ref) {
+    StateNotifierProvider.family<CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
   final setUp = ref.watch(successfulSetupVmProvider);
   return CreateAdditionalShopVm(ShopRepository(), AuthRepository(),
       ImagePicker(), WayaSecureDataSource(), setUp, ref);

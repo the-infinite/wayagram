@@ -10,27 +10,27 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/discount_type_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
-final addProductProvider = StateNotifierProvider<AddProductVm, AddProductState>(
-    (ref) => AddProductVm(ShopRepository(), ref));
+final addProductProvider =
+    StateNotifierProvider.family<AddProductVm, AddProductState, String>(
+        (ref, uniqueKey) => AddProductVm(ShopRepository(), ref));
 
 class AddProductVm extends StateNotifier<AddProductState> {
   final ShopRepository _shopRepository;
   final Ref ref;
   AddProductVm(this._shopRepository, this.ref) : super(AddProductState()) {
-    state = state.copyWith(isWayagramDeal: null);
     final shop = ref.watch(manageShopVmProvider).singleShop;
     if (shop != null) {
-   state = state.copyWith(shopId: shop.id);
+      state = state.copyWith(shopId: shop.id);
     }
-
   }
   final ImagePicker _picker = ImagePicker();
 
@@ -89,13 +89,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
     Select(label: 'Used', value: 'Used'),
   ];
 
-  List<Select> restructuredCategory() {
-    return categories.asMap().entries.map((entries) {
-      return Select(
-          value: entries.value.id.toString(), label: entries.value.category);
-    }).toList();
-  }
-
   Future<PaginatedResult?> getAllDiscounts(int page) async {
     try {
       final response = await _shopRepository.getAllDiscounts(page);
@@ -131,8 +124,9 @@ class AddProductVm extends StateNotifier<AddProductState> {
 
       List<MultipartFile> addedimages = [];
 
-      for (DocType doc in state.uploadedDocuments) {
-        final imgPartFile = await WayaHelpers.formattedImage(doc.file);
+      for (DocType doc
+          in state.uploadedDocuments.where((d) => d.file != null)) {
+        final imgPartFile = await WayaHelpers.formattedImage(doc.file!);
         addedimages.add(imgPartFile);
       }
       state = state.copyWith(images: addedimages);
@@ -140,11 +134,27 @@ class AddProductVm extends StateNotifier<AddProductState> {
       final response = await _shopRepository.createProduct(
           payload: state.addProductModel, id: state.shopId);
       if (response.success && context.mounted) {
+        if (state.isWayagramDeal != null && state.isWayagramDeal == true) {
+          WayaUtils.showNotice(
+              context: context,
+              title: "Your Application has been submitted Successfully! 🎉",
+              message:
+                  "Your product has been submitted. We'll notify you \n once it's reviewed.",
+              onPress: () => WayaNav.toNamed('/wayagram-deal'),
+              icon: Image.asset('assets/images/shop/add-product-success.png'),
+              buttonText: 'View Application Status',
+              secondButtonText: 'Go to Dashboard',
+              onCancel: () => WayaNav.toNamed('/wayagram-deal'));
+          return;
+        }
         WayaUtils.showNotice(
             context: context,
-            title: "Product Added Successfully! 🎉",
-            message:
-                "Your product is now live in your shop and ready \n for customers to discover.",
+            title: state.isEditMode
+                ? "Product Updated Successfully! 🎉"
+                : "Product Added Successfully! 🎉",
+            message: state.isEditMode
+                ? "Your product has been updated and changes are now live."
+                : "Your product is now live in your shop and ready for customers to discover.",
             onPress: () => WayaNav.toNamed(ManageShop.route),
             icon: Image.asset('assets/images/shop/add-product-success.png'),
             buttonText: 'Add Another Product',
@@ -178,24 +188,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }
   }
 
-  void submit(BuildContext context, bool isWayagramDeal) async {
-    //final addProductData = ref.watch(addProductProvider.notifier);
-
-    if (isWayagramDeal) {
-      // print("$addProductData");
-      WayaUtils.showNotice(
-          context: context,
-          title: "Your Application has been submitted Successfully! 🎉",
-          message:
-              "Your product has been submitted. We'll notify you \n once it's reviewed.",
-          onPress: () => WayaNav.toNamed('/wayagram-deal'),
-          icon: Image.asset('assets/images/shop/add-product-success.png'),
-          buttonText: 'View Application Status',
-          secondButtonText: 'Go to Dashboard',
-          onCancel: () => WayaNav.toNamed('/wayagram-deal'));
-    }
-  }
-
   Future<void> deleteProduct(
       {required String shopId, required String productId}) async {
     try {
@@ -206,5 +198,61 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }
   }
 
-  Future<void> editProduct() async {}
+  void initializeWayagramDeal() {
+    state = state.copyWith(isWayagramDeal: true);
+  }
+
+  Future<void> initializeForEdit(SellerProduct product) async {
+    try {
+      state = state.copyWith(isLoadingEditingMode: true);
+      final PaginatedResult? catPage =
+          await ref.watch(shopVmProvider.notifier).allCategories(1);
+      if (catPage != null) {
+        Select? prevCat =
+            catPage.items.firstWhere((cat) => cat.value == product.categoryId);
+        state = state.copyWith(selectedCategory: prevCat);
+      }
+      state = state.copyWith(
+        isEditMode: true,
+        productName: TextEditingController(text: product.name),
+        productDescription: TextEditingController(text: product.description),
+        materialType: TextEditingController(text: product.materialType),
+        pricePerUnit: TextEditingController(text: product.price),
+        pickUpAddress: TextEditingController(text: product.pickupAddress),
+        productCategory: product.categoryId,
+        shopId: product.shopId,
+        productCondition: product.condition,
+        pickUpOption: product.options,
+        includeDeliveryFee: product.deliveryCharge,
+        isWayagramDeal: product.wayagramDeal,
+        includeMeasurement:
+            product.height != 0 || product.width != 0 || product.depth != 0,
+        productHeight: TextEditingController(text: product.height.toString()),
+        productWidth: TextEditingController(text: product.height.toString()),
+        productDepth: TextEditingController(text: product.height.toString()),
+        discountPercentage:
+            TextEditingController(text: product.discountPercentage.toString()),
+        discountType: product.discountTypeId,
+        applyDiscount:
+            product.discountTypeId != null || product.discountPercentage > 0,
+      );
+
+      if (product.images.isNotEmpty) {
+        // Convert existing images to DocType
+        List<DocType> existingImages = product.images.map((url) {
+          return DocType(
+            file: null,
+            type: 'image',
+            name: url.split('/').last,
+            url: url,
+          );
+        }).toList();
+
+        state = state.copyWith(uploadedDocuments: existingImages);
+      }
+    } catch (e) {
+      print(e);
+      state = state.copyWith(isLoadingEditingMode: false);
+    }
+  }
 }

@@ -8,7 +8,8 @@ import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class BasicProductInfo extends ConsumerStatefulWidget {
   final Function gotoNextTab;
-  const BasicProductInfo({super.key, required this.gotoNextTab});
+  final String uniqueKey;
+  const BasicProductInfo({super.key, required this.gotoNextTab, required this.uniqueKey});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -20,7 +21,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(addProductProvider);
+    final viewModel = ref.watch(addProductProvider(widget.uniqueKey));
     final wayaTheme = Theme.of(context);
 
     print(viewModel.includeMeasurement);
@@ -160,7 +161,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                           label: "Product Category",
                           hintText: 'Select Product Category',
                           onSelected: (value) => ref
-                              .read(addProductProvider.notifier)
+                              .read(addProductProvider(widget.uniqueKey).notifier)
                               .update(value, "productCategory")),
                       if (formState.hasError &&
                           viewModel.productCategory.isEmpty)
@@ -228,9 +229,9 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                           value: viewModel.productCondition,
                           hintText: 'Select Product Condition',
                           items:
-                              ref.read(addProductProvider.notifier).conditions,
+                              ref.read(addProductProvider(widget.uniqueKey).notifier).conditions,
                           onSelected: (value) => ref
-                              .read(addProductProvider.notifier)
+                              .read(addProductProvider(widget.uniqueKey).notifier)
                               .update(value, "productCondition")),
                       if (formState.hasError &&
                           viewModel.productCondition.isEmpty)
@@ -254,7 +255,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     Switch(
                         value: viewModel.includeMeasurement,
                         onChanged: (value) => ref
-                            .read(addProductProvider.notifier)
+                            .read(addProductProvider(widget.uniqueKey).notifier)
                             .updateIncludeMeasurement(value)),
                     const Gap(10),
                     Column(
