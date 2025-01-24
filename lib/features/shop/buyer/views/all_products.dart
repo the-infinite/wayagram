@@ -41,7 +41,7 @@ class AllProducts extends ConsumerWidget {
               const Gap(25),
               state.isLoading
                   ? _wayagramDealProductLoadingState(context: context)
-                  : const SizedBox.shrink(),
+                 : ProductsGrid(products: notifier.filteredWayagramDealProducts),
               const Gap(25),
               GroupedWidgetHeader(
                 onTap: () {},

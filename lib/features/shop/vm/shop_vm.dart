@@ -91,7 +91,7 @@ class ShopVm extends StateNotifier<ShopState> {
             product.description.toLowerCase().contains(query);
       }
 
-      return true;
+      return !product.wayagramDeal;
     }).toList();
   }
 

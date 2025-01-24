@@ -47,8 +47,17 @@ class ShopRepository extends BaseRepository {
     return post("$serviceUrl/products/create", payload.toJson());
   }
 
-Future<WayaRequestResponse> getSellerProducts({required String shopId, required int page}) {
+  Future<WayaRequestResponse> getSellerProducts(
+      {required String shopId, required int page}) {
     return get('$serviceUrl/products?shopId=$shopId&page=$page');
   }
+
+  Future<WayaRequestResponse> editShop(
+      CreateShopModel payload, String vendorId) {
+    return patch("$serviceUrl/shops/edit/$vendorId", payload.toJson(),
+        formdata: true);
+  }
+
+  //
 }
 //

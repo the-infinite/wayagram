@@ -115,7 +115,8 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                             },
                             asset: Icon(
                               Icons.edit_note_sharp,
-                              size: 20,
+                              size: 22,
+                              color: wayaTheme.colorScheme.customBlack,
                             ),
                             text: "Edit Shop"),
                       )

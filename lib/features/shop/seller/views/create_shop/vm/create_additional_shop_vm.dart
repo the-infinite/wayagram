@@ -56,7 +56,10 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
       }
       state = state.copyWith(isLoading: true);
 
-      final response = await _shopRepository.createShop(state.createShopModel);
+      final response = state.isEditingMode
+          ? await _shopRepository.editShop(
+              state.createShopModel, state.vendorId)
+          : await _shopRepository.createShop(state.createShopModel);
       print('ffefef');
       _logger.i(response.data);
       if (response.success) {
@@ -128,17 +131,17 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   void initializeEdit(ShopData singleShop) {
     //initializeEdit
     state = state.copyWith(
-      phone: TextEditingController(text: singleShop.phone),
-      email: TextEditingController(text: singleShop.email),
-      description: TextEditingController(text: singleShop.description),
-      name: TextEditingController(text: singleShop.name),
-      address: TextEditingController(text: singleShop.address)
-    );
+        isEditingMode: true,
+        phone: TextEditingController(text: singleShop.phone),
+        email: TextEditingController(text: singleShop.email),
+        description: TextEditingController(text: singleShop.description),
+        name: TextEditingController(text: singleShop.name),
+        address: TextEditingController(text: singleShop.address));
   }
 }
 
-final createAdditionalShopVmProvider =
-    StateNotifierProvider.family<CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
+final createAdditionalShopVmProvider = StateNotifierProvider.family<
+    CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
   final setUp = ref.watch(successfulSetupVmProvider);
   return CreateAdditionalShopVm(ShopRepository(), AuthRepository(),
       ImagePicker(), WayaSecureDataSource(), setUp, ref);

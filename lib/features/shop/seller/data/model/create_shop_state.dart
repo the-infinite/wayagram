@@ -20,6 +20,7 @@ class CreateShopState {
   final String state;
   final List<Select> lgas;
   final List<Select> states;
+  final bool isEditingMode;
 
   CreateShopState(
       {this.isLoading = false,
@@ -34,6 +35,7 @@ class CreateShopState {
       this.state = '',
       this.states = const [],
       this.lgas = const [],
+      this.isEditingMode = false,
       this.vendorId = ''})
       : phone = phone ?? TextEditingController(),
         address = address ?? TextEditingController(),
@@ -52,6 +54,7 @@ class CreateShopState {
       String? state,
       List<Select>? states,
       List<Select>? lgas,
+      bool? isEditingMode,
       MultipartFile? logo,
       File? image,
       String? vendorId}) {
@@ -68,6 +71,7 @@ class CreateShopState {
       lga: lga ?? this.lga,
       state: state ?? this.state,
       states: states ?? this.states,
+      isEditingMode: isEditingMode ?? this.isEditingMode,
       lgas: lgas ?? this.lgas,
     );
   }
