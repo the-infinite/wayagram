@@ -23,11 +23,10 @@ class FilterToggleButton extends StatelessWidget {
           controller.value = !controller.value;
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
+          padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
             children: [
               //? First, the title.
               Text(

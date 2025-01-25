@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/general_settings/notifications/view/default.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
@@ -21,7 +22,6 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileVmProvider.notifier).getUserData();
-     
     });
     super.initState();
   }
@@ -33,7 +33,6 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
       isScrollable: true,
       onRefresh: () async {
         ref.read(profileVmProvider.notifier).getUserData();
-      
       },
       isLoading: userState.isLoading,
       title: "General Settings",
@@ -79,7 +78,13 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(title: 'Chat & Call Preferences', iconPath: 'chat2'),
-              GeneralSettingsOptionModel(title: 'Notification Settings', iconPath: 'bell'),
+              GeneralSettingsOptionModel(
+                title: 'Notification Settings',
+                iconPath: 'bell',
+                onTap: () {
+                  WayaNav.toNamed(NotificationSettingsScreen.route);
+                },
+              ),
             ],
           ),
           GeneralSettingsOptionTile(
@@ -89,7 +94,10 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Account Sync Settings', iconPath: 'bell'),
+              GeneralSettingsOptionModel(
+                title: 'Account Sync Settings',
+                iconPath: 'bell',
+              ),
             ],
           ),
           GeneralSettingsOptionTile(

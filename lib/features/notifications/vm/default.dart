@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/features/notifications/models/notification_response.dart';
 import 'package:wayagram/features/notifications/repo/default.dart';
@@ -34,6 +35,20 @@ class NotificationVm extends StateNotifier<NotificationState> {
   /// Helper function used to clear any filters on this notification view model.
   void clearFilters() {
     state = state.copyWith(filters: FilterNotificationState.initial);
+  }
+
+  /// Helper function used to send the generated device token to the back-end.
+  Future<bool> sendDeviceToken() async {
+    final token = await PushNotifications.requestDeviceToken();
+
+    //? If no token was retrieved, this failed.
+    if (token == null) return false;
+
+    //? Next, try to make the request.
+    final response = await _repo.addDeviceToken(token);
+
+    // Return whether or not this was fine.
+    return response.success;
   }
 
   /// Helper function used to get all notifications.

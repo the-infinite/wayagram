@@ -13,30 +13,23 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> verifyOtp(VerifyOtp payload) {
-    return post(
-        '$serviceUrl/client/auth/register/verify-email', payload.toJson());
+    return post('$serviceUrl/client/auth/register/verify-email', payload.toJson());
   }
 
   Future<WayaRequestResponse> resendOtp(String email) {
-    return post('$serviceUrl/client/auth/resend-otp',
-        {"email": email, "purpose": 'USER_PASSWORD_RESET'});
+    return post('$serviceUrl/client/auth/resend-otp', {"email": email, "purpose": 'USER_PASSWORD_RESET'});
   }
 
   Future<WayaRequestResponse> verifyEmail(String email) {
-    return post(
-        '$serviceUrl/client/auth/password/reset-password', {"email": email});
+    return post('$serviceUrl/client/auth/password/reset-password', {"email": email});
   }
 
   Future<WayaRequestResponse> resetPassword(ForgotPassword payload) {
-    return post(
-        '$serviceUrl/client/auth/password/new-password', payload.toJson());
+    return post('$serviceUrl/client/auth/password/new-password', payload.toJson());
   }
 
   Future<WayaRequestResponse> login(
-      {required String password,
-      String? email,
-      String? businessId,
-      bool? isBusinessLogin}) {
+      {required String password, String? email, String? businessId, bool? isBusinessLogin}) {
     final payload = <String, dynamic>{};
     if (isBusinessLogin == true) {
       payload['businessId'] = businessId;
@@ -57,21 +50,16 @@ class AuthRepository extends BaseRepository {
     return get("$serviceUrl/client/location/states?countryCode=NG");
   }
 
-  Future<WayaRequestResponse> getAllLGA(
-      {required String stateCode, required String countryCode}) {
-    return get(
-        "$serviceUrl/client/location/lgas?stateCode=$stateCode&countryCode=$countryCode");
+  Future<WayaRequestResponse> getAllLGA({required String stateCode, required String countryCode}) {
+    return get("$serviceUrl/client/location/lgas?stateCode=$stateCode&countryCode=$countryCode");
   }
 
-  Future<WayaRequestResponse> getAllCities(
-      {required String stateCode, required String countryCode}) {
-    return get(
-        "$serviceUrl/client/location/cities?stateCode=$stateCode&countryCode=$countryCode");
+  Future<WayaRequestResponse> getAllCities({required String stateCode, required String countryCode}) {
+    return get("$serviceUrl/client/location/cities?stateCode=$stateCode&countryCode=$countryCode");
   }
 
   Future<WayaRequestResponse> businessKyc(dynamic data) {
-    return post('$serviceUrl/client/kyc/add-business-kyc', data,
-        formdata: true);
+    return post('$serviceUrl/client/kyc/add-business-kyc', data, formdata: true);
   }
 
   Future<WayaRequestResponse> getAccountType() async {
@@ -82,11 +70,9 @@ class AuthRepository extends BaseRepository {
     return get('$serviceUrl/client/businesses/types/all');
   }
 
-
-    Future<WayaRequestResponse> upgradeToBusiness({required UpgradeToBusinessModel payload, required String id}) {
-    return post(
-        '$serviceUrl/client/users/$id/upgrade-to-business', payload.toJson());
+  Future<WayaRequestResponse> upgradeToBusiness({required UpgradeToBusinessModel payload, required String id}) {
+    return post('$serviceUrl/client/users/$id/upgrade-to-business', payload.toJson());
   }
 
-///
+  ///
 }

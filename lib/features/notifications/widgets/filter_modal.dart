@@ -158,7 +158,7 @@ class FilterModal extends StatelessWidget {
       return Material(
         child: Container(
           width: size.width * 0.75,
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: BoxDecoration(
             color: WayaColors.transparent,
             border: Border.all(width: 1, color: WayaColors.greyColor300),
@@ -169,17 +169,23 @@ class FilterModal extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               //? First, text that is and corresponds to the titles of this section.
-              Text(
-                "Filter",
-                style: WayaTextStyles.titleMedium.copyWith(
-                  fontWeight: FontWeight.w700,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  "Filter",
+                  style: WayaTextStyles.titleMedium.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-              Text(
-                "Choose a filter",
-                style: WayaTextStyles.labelMedium.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: WayaColors.greyColor600,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  "Choose a filter",
+                  style: WayaTextStyles.labelMedium.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: WayaColors.greyColor600,
+                  ),
                 ),
               ),
 
@@ -217,19 +223,28 @@ class FilterModal extends StatelessWidget {
               const Gap(10),
 
               //? First, text that is and corresponds to the titles of this section.
-              Text(
-                "Voting and UGT",
-                style: WayaTextStyles.titleMedium.copyWith(
-                  fontWeight: FontWeight.w700,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  "Voting and UGT",
+                  style: WayaTextStyles.titleMedium.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-              Text(
-                "Choose a filter",
-                style: WayaTextStyles.labelMedium.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: WayaColors.greyColor600,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  "Choose a filter",
+                  style: WayaTextStyles.labelMedium.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: WayaColors.greyColor600,
+                  ),
                 ),
               ),
+
+              // Some space.
+              const Gap(5),
 
               //? For the notifications with a high degree of specificity
               FilterToggleButton(
@@ -247,41 +262,44 @@ class FilterModal extends StatelessWidget {
               const Gap(20),
 
               //* Now for the buttons that would be used to accept or reject
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // Accept invite button.
-                  Expanded(
-                    child: WayaButton(
-                      text: "Apply",
-                      textColor: WayaColors.white,
-                      callback: controller.apply,
-                      color: WayaColors.primary500,
-                      height: null,
-                      verticalPadding: 8,
-                      horizontalPadding: 12,
-                    ),
-                  ),
-
-                  // Some space.
-                  const Gap(10),
-
-                  // Accept invite button.
-                  Expanded(
-                    child: WayaButton(
-                      text: "Clear",
-                      textColor: WayaColors.customBlack,
-                      callback: controller.clear,
-                      color: WayaColors.transparent,
-                      height: null,
-                      verticalPadding: 8,
-                      horizontalPadding: 12,
-                      border: Border.all(
-                        color: WayaColors.greyColor500,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // Accept invite button.
+                    Expanded(
+                      child: WayaButton(
+                        text: "Apply",
+                        textColor: WayaColors.white,
+                        callback: controller.apply,
+                        color: WayaColors.primary500,
+                        height: null,
+                        verticalPadding: 8,
+                        horizontalPadding: 12,
                       ),
                     ),
-                  ),
-                ],
+
+                    // Some space.
+                    const Gap(10),
+
+                    // Accept invite button.
+                    Expanded(
+                      child: WayaButton(
+                        text: "Clear",
+                        textColor: WayaColors.customBlack,
+                        callback: controller.clear,
+                        color: WayaColors.transparent,
+                        height: null,
+                        verticalPadding: 8,
+                        horizontalPadding: 12,
+                        border: Border.all(
+                          color: WayaColors.greyColor500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

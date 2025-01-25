@@ -9,4 +9,11 @@ class NotificationRepository extends BaseRepository {
     final data = WayaLocalDataSource();
     return get("$serviceUrl/users/${data.getUserId()}/notifications?page=$page&offset=$page&limit=$limit");
   }
+
+  Future<WayaRequestResponse> addDeviceToken(String deviceToken) {
+    final data = WayaLocalDataSource();
+    return post("$serviceUrl/users/${data.getUserId()}/tokens", {
+      "tokens": [deviceToken]
+    });
+  }
 }

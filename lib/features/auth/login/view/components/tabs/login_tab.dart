@@ -184,7 +184,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                           if (_formKey.currentState!.validate()) {
                             ref
                                 .read(loginVmProvider.notifier)
-                                .onSubmit(isBusinessLogin: false);
+                                .onSubmit(ref, isBusinessLogin: false);
                           }
                         }
                       : null,
@@ -381,7 +381,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                           if (_formKey.currentState!.validate()) {
                             ref
                                 .read(loginVmProvider.notifier)
-                                .onSubmit(isBusinessLogin: true);
+                                .onSubmit(ref, isBusinessLogin: true);
                           }
                         }
                       : null,
