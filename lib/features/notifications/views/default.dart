@@ -58,12 +58,10 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
       isLoading: state.isLoading,
       isScrollable: false,
       progressIndicator: Material(
-        child: Container(
+        color: WayaColors.cardBackgroundColor,
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: WayaColors.cardBackgroundColor,
-            borderRadius: BorderRadius.circular(14),
-          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

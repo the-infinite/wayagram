@@ -33,7 +33,10 @@ class _FilterWidgetState extends ConsumerState<NotificationFilterWidget> {
   /// the filters that can be applied on each product.
   void _showFilters() {
     //? If this is not undefined, leave.
-    if (_entry != null) return;
+    if (_entry != null) {
+      controller.close();
+      return;
+    }
 
     // If this is defined, remove it.
     final renderBox = context.findRenderObject() as RenderBox?;
@@ -80,46 +83,53 @@ class _FilterWidgetState extends ConsumerState<NotificationFilterWidget> {
     final size = MediaQuery.sizeOf(context);
 
     // Now, for the
-    return SizedBox(
-      height: 50,
-      width: size.width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          //? First, the search text widget.
-          Expanded(
-            child: WayaTextFormField(
-              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 2),
-              prefixIcon: Icon(
-                Icons.search,
-                color: WayaColors.greyColor400,
-              ),
-              controller: widget.value.controller,
-              hintText: widget.hintText,
-            ),
-          ),
-
-          // Some space.
-          const Gap(10),
-
-          // Now, for a button.
-          SizedBox(
-            height: double.infinity,
-            child: WayaButton(
-              callback: _showFilters,
-              centerWidget: Center(
-                child: WayaAssets.icons.actionFilter.svg(
-                  height: 20,
-                  width: 20,
+    return PopScope(
+      onPopInvokedWithResult: (popping, result) {
+        //? If this is popping, leave here.
+        if (popping) controller.close();
+      },
+      child: SizedBox(
+        height: 50,
+        width: size.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //? First, the search text widget.
+            Expanded(
+              child: WayaTextFormField(
+                padding: EdgeInsets.symmetric(horizontal: 1),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: WayaColors.greyColor400,
                 ),
+                controller: widget.value.controller,
+                hintText: widget.hintText,
               ),
-              color: WayaColors.transparent,
-              horizontalPadding: 10,
-              border: Border.all(width: 1, color: WayaColors.greyColor300),
             ),
-          )
-        ],
+
+            // Some space.
+            const Gap(10),
+
+            // Now, for a button.
+            SizedBox(
+              height: double.infinity,
+              width: 50,
+              child: WayaButton(
+                callback: _showFilters,
+                centerWidget: Center(
+                  child: WayaAssets.icons.actionFilter.svg(
+                    height: 20,
+                    width: 20,
+                  ),
+                ),
+                color: WayaColors.transparent,
+                horizontalPadding: 10,
+                border: Border.all(width: 1, color: WayaColors.greyColor300),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

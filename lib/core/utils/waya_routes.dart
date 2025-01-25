@@ -5,6 +5,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
+import 'package:wayagram/features/general_settings/notifications/view/default.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
@@ -125,6 +126,7 @@ class WayaAppRoutes {
     RegisterContest.route: () => RegisterContest(),
     ShareVotingLink.route: () => ShareVotingLink(),
     WayaNotifications.route: () => WayaNotifications(),
+    NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

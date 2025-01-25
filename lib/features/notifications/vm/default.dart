@@ -37,7 +37,7 @@ class NotificationVm extends StateNotifier<NotificationState> {
   }
 
   /// Helper function used to get all notifications.
-  Future<List<NotificationModel>> getUserNotifications() async {
+  Future<List<NotificationModel>> getUserNotifications([int page = 0]) async {
     final result = <NotificationModel>[];
 
     //? First, notify this guy that we are loading.
@@ -50,7 +50,7 @@ class NotificationVm extends StateNotifier<NotificationState> {
       //? If this went well...
       if (response.success) {
         final data = NotificationResponseModel.fromJson(response.data['data']);
-        result.addAll(data.data);
+        result.addAll(data.notifications);
       }
 
       //? Since it failed, we should probably do failure cleanups in the future.
@@ -91,9 +91,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           //? Dummy notifications.
           NotificationModel(
             id: "notif-1",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.transaction,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "Payment Received",
               body: "You have received ₦5,000 from XYZ Ltd.",
@@ -106,9 +108,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-2",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.follower,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Follower Alert",
               body: "John Doe started following you.",
@@ -121,9 +125,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine too.
           NotificationModel(
             id: "notif-3",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.event,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "Upcoming Event: Webinar on UX Design",
               body: "Starts in 30 minutes",
@@ -136,9 +142,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-4",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.poll,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "The Results Are In!",
               body: "Your poll 'Favourite Design' has ended",
@@ -151,9 +159,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-5",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.chat,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Message from Jane",
               body: '"Hey are you available for a call?"',
@@ -166,9 +176,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-5",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.chat,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Message from Jane",
               body: '"Hey are you available for a call?"',
@@ -181,9 +193,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-6",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.comment,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Comment",
               body: 'Fasas Commented "Hey, are you available for a call?"',
@@ -196,9 +210,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-7",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.donation,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Donation Received",
               body: 'You just received a new donation on "Help Sanni Walk Again"',
@@ -211,9 +227,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-8",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.transaction,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "Debit Transaction",
               body: 'You spent ₦480 voting in a poll',
@@ -226,9 +244,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine
           NotificationModel(
             id: "notif-9",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.transaction,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "Payment Received",
               body: "You have received ₦50,000 from Trevor Baker",
@@ -241,9 +261,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-10",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.follower,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Follower Alert",
               body: "Jane Fischer started following you.",
@@ -256,9 +278,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine too.
           NotificationModel(
             id: "notif-11",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.event,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "Upcoming Event: Waya Bank Launch",
               body: "Coming up in 11 days, be there!",
@@ -271,9 +295,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-12",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.poll,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "The Results Are In!",
               body: "Not bad. Your vote was the second most popular one in the poll.",
@@ -286,9 +312,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-13",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.chat,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Message from Jacob",
               body: '"Pick a time and place."',
@@ -301,9 +329,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-14",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.chat,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Message from Jane",
               body: '"What\'s your take?"',
@@ -316,9 +346,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-15",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.comment,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Comment",
               body: 'Archie commented "Nice shoes. Where did you get them?"',
@@ -331,9 +363,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-16",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.transaction,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "Debit Transaction",
               body: 'You withdrew ₦8,000 from the bank',
@@ -346,9 +380,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-17",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.donation,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Donation Received",
               body: 'You just received a new donation on "Help Sanni Walk Again"',
@@ -361,9 +397,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-18",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.groupInvite,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "Group Team Invite",
               body: 'Collaborate as a team member on the "Empire Music" group',
@@ -376,9 +414,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-19",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.friendRequest,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Friend Request",
               body: 'John Doe is asking to be your friend',
@@ -391,9 +431,11 @@ final notificationProvider = StateNotifierProvider<NotificationVm, NotificationS
           // This is fine.
           NotificationModel(
             id: "notif-20",
-            type: 'push',
+            status: NotificationStatus.delivered,
             messageType: NotificationMessageType.followRequest,
-            target: NotificationTarget(token: ""),
+            channel: NotificationChannel.push,
+            priority: NotificationPriority.normal,
+            correlationId: "corr-12345",
             message: NotificationMessage(
               subject: "New Follow Request",
               body: 'Samantha Higgins wants to follow you',

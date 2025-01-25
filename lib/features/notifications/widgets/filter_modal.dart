@@ -57,8 +57,10 @@ class FilterOverlayController {
 
   /// Then to close this overlay controller.
   void close() {
-    entry.remove();
-    entry.dispose();
+    if (_entry != null) {
+      entry.remove();
+      entry.dispose();
+    }
     _entry = null;
     _callback?.call();
   }
@@ -123,6 +125,15 @@ class FilterOverlayController {
     final notifier = _ref.watch(notificationProvider.notifier);
     notifier.clearFilters();
     close();
+
+    // Now, disable these values again.
+    setDonation(false);
+    setEvent(false);
+    setMarketplace(false);
+    setPoll(false);
+    setQuotation(false);
+    setUgt(false);
+    setWallet(false);
   }
 }
 
@@ -203,7 +214,7 @@ class FilterModal extends StatelessWidget {
               ),
 
               // Some space.
-              const Gap(5),
+              const Gap(10),
 
               //? First, text that is and corresponds to the titles of this section.
               Text(
@@ -242,7 +253,7 @@ class FilterModal extends StatelessWidget {
                   // Accept invite button.
                   Expanded(
                     child: WayaButton(
-                      text: "Apply filters",
+                      text: "Apply",
                       textColor: WayaColors.white,
                       callback: controller.apply,
                       color: WayaColors.primary500,
@@ -258,7 +269,7 @@ class FilterModal extends StatelessWidget {
                   // Accept invite button.
                   Expanded(
                     child: WayaButton(
-                      text: "Clear filters",
+                      text: "Clear",
                       textColor: WayaColors.customBlack,
                       callback: controller.clear,
                       color: WayaColors.transparent,

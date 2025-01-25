@@ -2,6 +2,27 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'default.g.dart';
 
+enum NotificationPriority {
+  none,
+  low,
+  normal,
+  high,
+}
+
+enum NotificationStatus {
+  pending,
+  processing,
+  delivered,
+  failed,
+}
+
+enum NotificationChannel {
+  email,
+  push,
+  sms,
+  webhook,
+}
+
 enum NotificationMessageType {
   // For notifications...
   transaction,
@@ -55,9 +76,11 @@ class NotificationMessage {
 @JsonSerializable()
 class NotificationModel {
   final String id;
-  final String type;
+  final NotificationChannel channel;
+  final NotificationStatus status;
+  final NotificationPriority priority;
+  final String correlationId;
   final NotificationMessageType messageType;
-  final NotificationTarget target;
   final NotificationMessage message;
   final bool read;
   final DateTime createdAt;
@@ -66,16 +89,34 @@ class NotificationModel {
   // This is fine.
   NotificationModel({
     required this.id,
-    required this.type,
+    required this.status,
+    required this.priority,
     required this.messageType,
-    required this.target,
+    required this.correlationId,
+    required this.channel,
     required this.message,
+    required this.read,
     required this.createdAt,
     required this.updatedAt,
-    required this.read,
   });
 
-  factory NotificationModel.fromJson(Map<String, dynamic> data) => _$NotificationModelFromJson(data);
+  factory NotificationModel.fromJson(Map<String, dynamic> data) {
+    // First, do the basic conversion.
+    var json = {...data};
+
+    //? If this has any data here....
+    if (data["message"]?["data"] != null) {
+      final messageData = data["message"]!["data"] as Map<String, dynamic>;
+
+      // Retrieve each key.
+      for (final key in messageData.keys) {
+        json["message"]["body"] = json["message"]["body"].toString().replaceAll("{{$key}}", messageData[key]);
+      }
+    }
+
+    // Next, return this as is.
+    return _$NotificationModelFromJson(json);
+  }
 
   Map<String, dynamic> toJson() => _$NotificationModelToJson(this);
 

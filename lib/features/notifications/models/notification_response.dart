@@ -1,18 +1,21 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
-import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
 
 part 'notification_response.g.dart';
 
 @JsonSerializable()
 class NotificationResponseModel {
-  final List<NotificationModel> data;
-  final Pagination pagination;
+  final List<NotificationModel> notifications;
+  final int total;
+  final int limit;
+  final int offset;
 
   // Constructor.
   NotificationResponseModel({
-    required this.data,
-    required this.pagination,
+    required this.notifications,
+    required this.total,
+    required this.limit,
+    required this.offset,
   });
 
   // This is fine then.

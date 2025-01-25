@@ -23,7 +23,7 @@ class FilterToggleButton extends StatelessWidget {
           controller.value = !controller.value;
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5),
+          padding: const EdgeInsets.symmetric(vertical: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -43,7 +43,7 @@ class FilterToggleButton extends StatelessWidget {
                 valueListenable: controller,
                 builder: (context, isActive, _) {
                   //? Since there is nothing to show...
-                  if (!isFiltering || !isActive) return const SizedBox();
+                  if (!isActive) return const SizedBox();
 
                   //? Since there is something to show...
                   return WayaAssets.icons.notifFilterSelected.svg(

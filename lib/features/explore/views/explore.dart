@@ -58,13 +58,19 @@ class _ExploreState extends ConsumerState<Explore> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   //? The notification button.
-                  InkWell(
-                    onTap: () {
-                      WayaNav.toNamed(WayaNotifications.route);
-                    },
-                    child: WayaAssets.icons.notifications.svg(
-                      height: 24,
-                      width: 24,
+                  Material(
+                    shape: CircleBorder(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3),
+                      child: InkWell(
+                        onTap: () {
+                          WayaNav.toNamed(WayaNotifications.route);
+                        },
+                        child: WayaAssets.icons.notifications.svg(
+                          height: 24,
+                          width: 24,
+                        ),
+                      ),
                     ),
                   ),
 
