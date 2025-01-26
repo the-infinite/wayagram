@@ -11,6 +11,7 @@ import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
@@ -30,6 +31,7 @@ class _ExploreState extends ConsumerState<Explore> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(shopVmProvider.notifier).allCategories(1);
       ref.read(shopVmProvider.notifier).getAllProducts();
+      ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();
   }

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_products_state.dart';
@@ -6,23 +7,28 @@ import 'package:wayagram/features/shop/seller/data/model/seller_products_state.d
 class SellerProductsVm extends StateNotifier<SellerProductState> {
   final Ref ref;
   final ShopRepository _shopRepository;
+  final WayaSecureDataSource _secureDataSource;
 
-  SellerProductsVm(this._shopRepository, this.ref)
+  SellerProductsVm(this._shopRepository, this._secureDataSource, this.ref)
       : super(SellerProductState());
 
-  Future<void> sellerProducts({required String shopId}) async {
+  Future<List<SellerProduct>?> sellerProducts({required String shopId}) async {
     state = state.copyWith(isLoading: true);
     try {
+      final userId = await _secureDataSource.getUserId();
       final response = await _shopRepository.getSellerProducts(
           shopId: shopId, page: state.page);
-
+      List<SellerProduct> sellerProducts = [];
       if (response.success) {
         SellerProductResponseModel responseModel =
             SellerProductResponseModel.fromJson(response.data);
-        state = state.copyWith(products: responseModel.data.products);
+        sellerProducts = responseModel.data.products;
+        state = state.copyWith(products: sellerProducts);
       }
+      return sellerProducts;
     } catch (e) {
       print(e);
+      return null;
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -33,30 +39,30 @@ class SellerProductsVm extends StateNotifier<SellerProductState> {
   }
 
   List<SellerProduct> get filteredProducts {
-  if (state.products.isEmpty) return [];
+    if (state.products.isEmpty) return [];
 
-  return state.products.where((product) {
-    // category filter
-    if (state.selectedCategoryId.isNotEmpty &&
-        !state.selectedCategoryId.contains(product.categoryId)) {
-      return false;
-    }
-
-    // search filter
-    if (state.search.text.isNotEmpty) {
-      final query = state.search.text.toLowerCase();
-      if (!product.name.toLowerCase().contains(query) &&
-          !product.description.toLowerCase().contains(query)) {
+    return state.products.where((product) {
+      // category filter
+      if (state.selectedCategoryId.isNotEmpty &&
+          !state.selectedCategoryId.contains(product.categoryId)) {
         return false;
       }
-    }
 
-    return true;
-  }).toList();
-}
+      // search filter
+      if (state.search.text.isNotEmpty) {
+        final query = state.search.text.toLowerCase();
+        if (!product.name.toLowerCase().contains(query) &&
+            !product.description.toLowerCase().contains(query)) {
+          return false;
+        }
+      }
+
+      return !product.wayagramDeal;
+    }).toList();
+  }
 }
 
 final sellerProductsVmProvider =
     StateNotifierProvider<SellerProductsVm, SellerProductState>((ref) {
-  return SellerProductsVm(ShopRepository(), ref);
+  return SellerProductsVm(ShopRepository(), WayaSecureDataSource(), ref);
 });

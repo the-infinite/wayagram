@@ -1,5 +1,6 @@
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
+
 class CategoryResponseModel {
   final String message;
   final bool status;
@@ -110,11 +111,10 @@ class CategoryData {
   }
 }
 
-
-
-class PaginatedResult {
+class SelectTypePaginatedResult {
   final List<Select> items;
   final int totalPages;
 
-  PaginatedResult({required this.items, required this.totalPages});
+  SelectTypePaginatedResult(
+      {required this.items, required this.totalPages});
 }

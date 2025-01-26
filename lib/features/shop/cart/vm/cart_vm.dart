@@ -46,53 +46,66 @@ class CartVm extends StateNotifier<CartState> {
 
   Future<void> loadCart() async {
     try {
+      state = state.copyWith(isLoading: true);
       final userId = await _secureDataSource.getUserId();
       final response = await _cartRepository.getUserCart(userId!);
 
       if (response.success) {
         final cartResponse = CartResponse.fromJson(response.data);
         state = state.copyWith(cart: cartResponse.data);
+        getTotalProductQuantity();
       }
     } catch (e) {
       print(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 
-  void addToCart(Product product, int count) async {
+  void addToCart(
+      {required int count,
+      required String shopId,
+      required int price,
+      required String productName,
+      required String productImage,
+      required String productId}) async {
     final existingCart = state.cart;
-    print("in product");
+    // int intPrice = double.parse(product.price).toInt();
+    // int price = product.discountPercentage > 0
+    //     ? (intPrice - (intPrice * product.discountPercentage / 100)).toInt()
+    //     : intPrice;
 
     if (existingCart == null) {
-      // Create a new cart if none exists
       final newCart = CartData(
+        id: Uuid().v4(),
         userId: Uuid().v4(),
-        total: (product.price * count).toString(),
         items: [
           CartItem(
-            shopId: product.shopId,
+            shopId: shopId,
             deliveryAddress: "",
-            deliveryFee: "",
+            deliveryFee: 0,
             deliveryDate: "",
             shopName: "",
             shopLogo: "",
+            totalFee: price * count,
             products: [
               CartProduct(
-                price: double.parse(product.price).toInt(),
+                price: price,
                 quantity: count,
-                productId: product.id,
-                productName: product.name,
+                productId: productId,
+                productName: productName,
                 deliveryCharge: false,
-                productImage: product.images.isEmpty ? "" : product.images[0],
+                productImage: productImage,
+                deliveryOptions: ""
               ),
             ],
           ),
         ],
       );
       state = state.copyWith(cart: newCart);
-      print("in first");
       // Post cart item
       getTotalProductQuantity();
-      await postCartItem(product);
+      await postCartItem(id: productId, shopId: shopId, price: price);
       return;
     }
 
@@ -101,15 +114,17 @@ class CartVm extends StateNotifier<CartState> {
     bool productAdded = false;
 
     for (int i = 0; i < updatedItems.length; i++) {
-      if (updatedItems[i].shopId == product.shopId) {
+      if (updatedItems[i].shopId == shopId) {
         final updatedProducts = [...updatedItems[i].products];
 
         for (int j = 0; j < updatedProducts.length; j++) {
-          if (updatedProducts[j].productId == product.id) {
+          if (updatedProducts[j].productId == productId) {
             updatedProducts[j] = updatedProducts[j].copyWith(
               quantity: updatedProducts[j].quantity + count,
             );
             productAdded = true;
+            print("updating");
+            await updateCartItem(id: productId, shopId: shopId);
             break;
           }
         }
@@ -117,18 +132,28 @@ class CartVm extends StateNotifier<CartState> {
         if (!productAdded) {
           updatedProducts.add(
             CartProduct(
-              price: double.parse(product.price).toInt(),
+              price: price,
               quantity: count,
-              productId: product.id,
-              productName: product.name,
+              productId: productId,
+              productName: productName,
               deliveryCharge: false,
-              productImage: product.images.isEmpty ? "" : product.images[0],
+              productImage: productImage,
+              deliveryOptions: ''
             ),
           );
           productAdded = true;
+           print("add item for a shop ");
+                 await postCartItem(id: productId, shopId: shopId, price: price);
         }
 
         updatedItems[i] = updatedItems[i].copyWith(products: updatedProducts);
+
+        final totalFee = updatedItems[i].products.fold<int>(
+              0,
+              (sum, product) => sum + (product.price * product.quantity),
+            );
+        updatedItems[i] = updatedItems[i].copyWith(totalFee: totalFee);
+
         break;
       }
     }
@@ -136,48 +161,52 @@ class CartVm extends StateNotifier<CartState> {
     if (!productAdded) {
       updatedItems.add(
         CartItem(
-          shopId: product.shopId,
+          shopId: shopId,
           deliveryAddress: "",
-          deliveryFee: "",
+          deliveryFee: 0,
           deliveryDate: "",
           shopName: "",
           shopLogo: "",
+          totalFee: price * count,
           products: [
             CartProduct(
-              price: double.parse(product.price).toInt(),
+              price: price,
               quantity: count,
-              productId: product.id,
-              productName: product.name,
+              productId: productId,
+              productName: productName,
               deliveryCharge: false,
-              productImage: product.images.isEmpty ? "" : product.images[0],
+              productImage: productImage,
+              deliveryOptions: ''
             ),
           ],
         ),
       );
+
+      await postCartItem(id: productId, shopId: shopId, price: price);
     }
 
-    final total = updatedItems.fold<double>(
-      0,
-      (sum, item) =>
-          sum +
-          item.products.fold(
-            0,
-            (prodSum, prod) => prodSum + (prod.price * prod.quantity),
-          ),
-    );
+    // final total = updatedItems.fold<double>(
+    //   0,
+    //   (sum, item) =>
+    //       sum +
+    //       item.products.fold(
+    //         0,
+    //         (prodSum, prod) => prodSum + (prod.price * prod.quantity),
+    //       ),
+    // );
 
     state = state.copyWith(
       cart: existingCart.copyWith(
         items: updatedItems,
-        total: total.toString(),
       ),
     );
     getTotalProductQuantity();
     // Update cart
-    await updateCartItem(product);
+    //
   }
 
-  void removeFromCart(String productId, Product product) async {
+  void removeFromCart(
+      {required String productId, required String shopId}) async {
     final existingCart = state.cart;
     if (existingCart == null) return;
 
@@ -196,44 +225,48 @@ class CartVm extends StateNotifier<CartState> {
               .whereType<CartProduct>()
               .toList();
 
-          return item.copyWith(products: updatedProducts);
+          final totalFee = updatedProducts.fold<int>(
+            0,
+            (sum, product) => sum + (product.price * product.quantity),
+          );
+
+          return item.copyWith(products: updatedProducts, totalFee: totalFee);
         })
         .where((item) => item.products.isNotEmpty)
         .toList();
 
-    // Calculate total
-    final total = updatedItems.fold<double>(
-      0,
-      (sum, item) =>
-          sum +
-          item.products.fold(
-            0,
-            (prodSum, prod) => prodSum + (prod.price * prod.quantity),
-          ),
-    );
+    // // Calculate total
+    // final total = updatedItems.fold<double>(
+    //   0,
+    //   (sum, item) =>
+    //       sum +
+    //       item.products.fold(
+    //         0,
+    //         (prodSum, prod) => prodSum + (prod.price * prod.quantity),
+    //       ),
+    // );
 
     state = state.copyWith(
       cart: existingCart.copyWith(
         items: updatedItems,
-        total: total.toString(),
       ),
     );
     getTotalProductQuantity();
     // Decrease cart item
-    await decreaseCartItem(product);
+    await decreaseCartItem(shopId: shopId, id: productId);
   }
 
-  Future<void> postCartItem(Product product) async {
+  Future<void> postCartItem(
+      {required String id, required String shopId, required int price}) async {
     try {
       final userId = await _secureDataSource.getUserId();
-      int intPrice = double.parse(product.price).toInt();
-      print(product.shopId);
+
       final response = await _cartRepository.addItemToCart(
-          productId: product.id,
+          productId: id,
           quantity: 1,
           userId: userId!,
-          shopId: product.shopId,
-          price: intPrice);
+          shopId: shopId,
+          price: price);
 
       if (response.success) {
         print(response.data);
@@ -243,14 +276,15 @@ class CartVm extends StateNotifier<CartState> {
     }
   }
 
-  Future<void> updateCartItem(Product product) async {
+  Future<void> updateCartItem(
+      {required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
 
       final response = await _cartRepository.updateQuantity(
-        productId: product.id,
+        productId: id,
         userId: userId!,
-        shopId: product.shopId,
+        shopId: shopId,
       );
       if (response.success) {
         print(response.data);
@@ -260,14 +294,15 @@ class CartVm extends StateNotifier<CartState> {
     }
   }
 
-  Future<void> decreaseCartItem(Product product) async {
+  Future<void> decreaseCartItem(
+      {required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
 
       final response = await _cartRepository.decreaseQuantity(
-        productId: product.id,
+        productId: id,
         userId: userId!,
-        shopId: product.shopId,
+        shopId: shopId,
       );
       if (response.success) {
         print(response.data);

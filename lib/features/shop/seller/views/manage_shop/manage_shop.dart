@@ -19,7 +19,8 @@ import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
-import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
+import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
+import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 class ManageShop extends ConsumerStatefulWidget {
   static const route = '/manage-shop';
@@ -48,7 +49,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         title: viewModel.singleShop!.name.capitalizeFirst ?? '',
-        isLoading: false,
+        isLoading: viewModel.isLoadingOrder,
         isScrollable: true,
         onRefresh: () async {
           ref.read(manageShopVmProvider.notifier).fetchData();
@@ -112,7 +113,6 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 ],
               ),
             ),
-
             const Gap(15),
             GridView.builder(
                 itemCount: 3,
@@ -203,15 +203,23 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                     fontWeight: FontWeight.w600,
                     color: wayaTheme.colorScheme.customBlack)),
             const Gap(15),
-            ListView.builder(
-                itemCount: 10,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return SingleOrderWidget(
-                    isSeller: true,
-                  );
-                })
+            viewModel.orders.isEmpty
+                ? Center(
+                    child: EmptyState(
+                        assetImage: WayaAssets.images.wallet.searchDocu
+                            .image(scale: 1.5),
+                        message: 'No Recent Order'),
+                  )
+                : ListView.builder(
+                    itemCount: viewModel.orders.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return SingleOrderWidget(
+                        isSeller: true,
+                        order: viewModel.orders[index],
+                      );
+                    })
           ],
         ));
   }

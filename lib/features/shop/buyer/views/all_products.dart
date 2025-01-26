@@ -20,7 +20,7 @@ class AllProducts extends ConsumerWidget {
     return RefreshIndicator(
         onRefresh: () => ref.read(shopVmProvider.notifier).getAllProducts(),
         child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
+        
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -52,6 +52,7 @@ class AllProducts extends ConsumerWidget {
               state.isLoading
                   ? _recommendedProductLoadingState(context: context)
                   : ProductsGrid(products: notifier.filteredProducts),
+                  
             ],
           ),
         ));

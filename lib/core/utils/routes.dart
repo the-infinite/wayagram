@@ -17,6 +17,6 @@ export 'package:wayagram/features/shop/buyer/views/confirm_order_delivery.dart';
 export 'package:wayagram/features/shop/cart/views/cart_view.dart';
 export 'package:wayagram/features/shop/cart/views/checkout.dart';
 export 'package:wayagram/features/shop/filter/views/filter_view.dart';
-export 'package:wayagram/features/shop/views/order_details.dart';
+export 'package:wayagram/features/shop/order/views/order_details.dart';
 export 'package:wayagram/features/shop/views/product_detail.dart';
 //export 'package:wayagram/features/quotation/buyer/views/create_request.dart';

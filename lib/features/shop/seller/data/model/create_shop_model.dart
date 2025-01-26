@@ -1,6 +1,6 @@
-import 'dart:convert';
+
 import 'package:dio/dio.dart';
-import 'dart:io';
+
 
 class CreateShopModel {
   final String name;
@@ -8,7 +8,7 @@ class CreateShopModel {
   final String address;
   final String phone;
   final String email;
-  final MultipartFile logo;
+  final MultipartFile? logo;
   final String vendorId;
   final String lga;
   final String state;
@@ -22,8 +22,7 @@ class CreateShopModel {
       required this.logo,
       required this.vendorId,
       required this.lga,
-      required this.state
-      });
+      required this.state});
 
   factory CreateShopModel.fromJson(Map<String, dynamic> json) {
     return CreateShopModel(
@@ -35,21 +34,23 @@ class CreateShopModel {
         vendorId: json['vendorId'],
         logo: json['logo'],
         lga: json['lga'],
-        state: json['state']
-        );
+        state: json['state']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    final Map<String, dynamic> json = {
       'name': name,
       'description': description,
       'address': address,
       'phone': phone,
       'email': email,
-      'logo': logo,
       'vendorId': vendorId,
-      'lga':lga,
+      'lga': lga,
       'state': state
     };
+
+    if (logo != null) json['logo'] = logo;
+
+    return json;
   }
 }

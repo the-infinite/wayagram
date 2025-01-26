@@ -55,7 +55,7 @@ class ProductCard extends ConsumerWidget {
                   height: 180,
                   fit: BoxFit.contain,
                   radius: BorderRadius.circular(8),
-                  color: wayaTheme.colorScheme.transparent,
+                  //color: wayaTheme.colorScheme.transparent,
                 ),
           Visibility(
               visible: product.wayagramDeal,
@@ -147,8 +147,21 @@ class ProductCard extends ConsumerWidget {
                 children: [
                   const Gap(3),
                   WayaButton(
-                    callback: () {
-                      ref.read(cartVmProvider.notifier).addToCart(product, 1);
+                    callback: () async {
+                      int intPrice = double.parse(product.price).toInt();
+                      int price = product.discountPercentage > 0
+                          ? (intPrice -
+                                  (intPrice * product.discountPercentage / 100))
+                              .toInt()
+                          : intPrice;
+                      ref.read(cartVmProvider.notifier).addToCart(
+                          count: 1,
+                          productId: product.id,
+                          productImage: image,
+                          productName: product.name,
+                          price: price,
+                          shopId: product.shopId);
+                          
                     },
                     height: 38,
                     radius: 6,

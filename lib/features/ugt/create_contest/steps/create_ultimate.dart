@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/shared/radio_select.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 
 import '../../../../core/utils/waya_navigation.dart';
@@ -50,9 +51,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           label: "Contest Category",
           hintText: 'Select Contest Category',
           items: [],
-          onSelected: (value) {
-
-          },
+          onSelected: (value) {},
           uniqueKey: 'contest-category',
         ),
         const Gap(15),
@@ -80,7 +79,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
         ),
         const Gap(15),
         WayaTextFormField(
-          controller: _contestController.contestWinnerAwardTextController ,
+          controller: _contestController.contestWinnerAwardTextController,
           hintText: "Enter Winner's Award",
           label: "Winner's Award",
         ),
@@ -104,7 +103,9 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                         )
                       ],
                     )),
-                value: "Private"),
+                value: "Private",
+                onChanged: (value) => {},
+                ),
             RadioSelect(
                 title: Container(
                   padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
@@ -121,10 +122,12 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     ],
                   ),
                 ),
-                value: "Public"),
+                value: "Public",
+                onChanged: (value) => {},
+                ),
           ],
         ),
-           const Gap(15),
+        const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +168,9 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                         )
                       ],
                     )),
-                value: "Free"),
+                value: "Free",
+                onChanged: (value) => {},
+                ),
             RadioSelect(
                 title: Container(
                   padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
@@ -182,10 +187,11 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     ],
                   ),
                 ),
-                value: "Paid"),
+                value: "Paid",
+                onChanged: (value) => {},
+                ),
           ],
         ),
-     
         const Gap(15),
         WayaTextFormField(
           keyboardType: TextInputType.number,
@@ -203,9 +209,8 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
         const Gap(20),
         UploadImage(onUpload: () {}),
         const Gap(60),
-
         WayaButton(
-          callback: () async{
+          callback: () async {
             widget.goToNextTab();
           },
           text: "Submit",
@@ -225,34 +230,3 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
   }
 }
 
-class RadioSelect extends StatelessWidget {
-  final Widget title;
-  final String value;
-  const RadioSelect({super.key, required this.title, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-          titleAlignment: ListTileTitleAlignment.top,
-          contentPadding: EdgeInsets.all(0),
-          title: title,
-          leading: Transform.scale(
-            scale: 1.4,
-            child: Radio<String>(
-              value: value,
-              groupValue: value,
-              onChanged: (value) {},
-            ),
-          ),
-          minLeadingWidth: 0,
-          minVerticalPadding: 0,
-        ),
-        const Gap(4),
-      ],
-    );
-  }
-}

@@ -5,15 +5,15 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
+import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
+import 'package:wayagram/features/shop/order/data/model/order_state.dart';
 
 class SingleOrderWidget extends ConsumerWidget {
-  // final Order order;
-  //required this.order
+  final Order order;
+
   final bool isSeller;
-  const SingleOrderWidget({super.key, this.isSeller = false});
+  const SingleOrderWidget(
+      {super.key, this.isSeller = false, required this.order});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +24,8 @@ class SingleOrderWidget extends ConsumerWidget {
         if (isSeller) {
           viewModel.sellerOrderAction(context);
         } else {
-          WayaNav.toNamed('/order-detail', arguments: "id");
+          WayaNav.toNamed(OrderDetails.route,
+              arguments: OrderDetailArg(type: 'buyer', order: order));
         }
       },
       child: Column(
@@ -47,25 +48,14 @@ class SingleOrderWidget extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Order #43435353",
+                          "Order #${order.id.substring(0, 6)}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontSize: 14),
                         ),
                         const Gap(8),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
-                          decoration: BoxDecoration(
-                              color: wayaTheme.colorScheme.success50,
-                              borderRadius: BorderRadius.circular(6)),
-                          child: Text(
-                            "completed",
-                            style: TextStyle().wayaCopyWith(
-                                color: wayaTheme.colorScheme.success,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 11),
-                          ),
-                        )
+                        _buildOrderStatus(
+                            context: context, status: order.deliveryStatus)
                       ],
                     )
                   ],
@@ -75,13 +65,14 @@ class SingleOrderWidget extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "-N 2,500",
+                      "-${WayaHelpers.formatPrice(double.parse(order.total).toInt())}",
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.error700, fontSize: 13),
                     ),
                     const Gap(8),
                     Text(
-                      "Aug 11, 2024",
+                      WayaHelpers.formatDateString(
+                          order.updatedAt.toIso8601String()),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor400,
                           fontSize: 13),
@@ -93,6 +84,47 @@ class SingleOrderWidget extends ConsumerWidget {
           ),
           const Gap(10)
         ],
+      ),
+    );
+  }
+
+  Widget _buildOrderStatus(
+      {required BuildContext context, required String status}) {
+    final wayaTheme = Theme.of(context);
+
+    // Map delivery status to color schemes
+    final Map<String, Color> statusColors = {
+      'pending': wayaTheme.colorScheme.pending50,
+      'shipped': wayaTheme.colorScheme.info50,
+      'delivered': wayaTheme.colorScheme.success50,
+      'cancelled': wayaTheme.colorScheme.error200,
+    };
+
+    final Map<String, Color> textColors = {
+      'pending': wayaTheme.colorScheme.pending,
+      'shipped': wayaTheme.colorScheme.info,
+      'delivered': wayaTheme.colorScheme.success,
+      'cancelled': wayaTheme.colorScheme.error,
+    };
+
+    // Fallback to default colors if status is unknown
+    final backgroundColor =
+        statusColors[status] ?? wayaTheme.colorScheme.greyColor300;
+    final textColor = textColors[status] ?? wayaTheme.colorScheme.customBlack;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        status,
+        style: TextStyle().wayaCopyWith(
+          color: textColor,
+          fontWeight: FontWeight.w500,
+          fontSize: 11,
+        ),
       ),
     );
   }

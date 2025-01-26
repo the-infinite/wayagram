@@ -25,7 +25,7 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
   CreateShopVm(this._shopRepository, this._picker, this._secureDataSource,
       this._setUpState, this.ref)
       : super(CreateShopState()) {
-    state = state.copyWith(vendorId: _setUpState.business?.id);
+    
     state = state.copyWith(
         email: TextEditingController(text: _setUpState.user?.user?.email));
     state = state.copyWith(state: _setUpState.business?.state);
@@ -47,6 +47,8 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
         final shopLogo = await getDefaultLogo();
         state = state.copyWith(logo: shopLogo);
       }
+      final userId = await _secureDataSource.getUserId();
+      state = state.copyWith(vendorId: userId);
       final response =
           await _shopRepository.createShop(state.createShopModel);
 

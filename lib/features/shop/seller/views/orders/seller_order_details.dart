@@ -8,8 +8,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_order_detail_vm.dart';
 import 'package:wayagram/features/shop/widgets/dotted_border_order_info_widget.dart';
-import 'package:wayagram/features/shop/widgets/order_info_widget.dart';
-import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
+import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
 
 class SellerOrderDetails extends ConsumerWidget {
   static const route = '/seller-order-details';

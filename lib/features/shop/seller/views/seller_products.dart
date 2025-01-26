@@ -67,7 +67,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                         callback: () {
                           WayaNav.toNamed(AddProduct.route,
                               arguments:
-                                  AddProductArg(uniqueKey: 'add-product'));
+                                  AddProductArg(uniqueKey: 'new-product'));
                         },
                         color: wayaTheme.colorScheme.primar50,
                         centerWidget: Row(

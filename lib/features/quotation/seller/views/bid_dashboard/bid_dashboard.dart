@@ -10,9 +10,7 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
 import 'package:wayagram/features/quotation/vm/bid_dashboard_vm.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
-import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
-
-
+import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
 
 class BidDashboard extends ConsumerWidget {
   const BidDashboard({super.key});
@@ -38,8 +36,10 @@ class BidDashboard extends ConsumerWidget {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount:
-                ref.read(bidDashboardVmProvider.notifier).salesMetrics.length,
+                crossAxisCount: ref
+                    .read(bidDashboardVmProvider.notifier)
+                    .salesMetrics
+                    .length,
                 mainAxisSpacing: 0,
                 childAspectRatio: 1.2,
                 crossAxisSpacing: 8),
@@ -62,14 +62,13 @@ class BidDashboard extends ConsumerWidget {
                 fontWeight: FontWeight.w600,
                 color: wayaTheme.colorScheme.customBlack)),
         const Gap(15),
-
         Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.scaffoldColor,
             borderRadius: BorderRadius.circular(10),
           ),
-          child:FittedBox(
+          child: FittedBox(
             fit: BoxFit.fitWidth,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -114,7 +113,7 @@ class BidDashboard extends ConsumerWidget {
                     width: 28,
                     height: 28,
                     colorFilter:
-                    ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
+                        ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
                   ),
                   color: Color(0xffFBEAE9),
                   onTap: () {
@@ -137,9 +136,10 @@ class BidDashboard extends ConsumerWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              return SingleOrderWidget(
-                isSeller: true,
-              );
+              return Container();
+              // return SingleOrderWidget(
+              //   isSeller: true,
+              // );
             })
       ],
     );

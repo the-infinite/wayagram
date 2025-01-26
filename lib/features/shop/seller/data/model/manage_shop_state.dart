@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 
 class ManageShopState {
@@ -11,16 +12,22 @@ class ManageShopState {
   final List<SalesMetric> salesMetric;
   final int numberOfProducts;
   final int numberOfRequests;
+  final int numberOfPendingOrders;
+  final bool isLoadingOrder;
+  final List<Order> orders;
 
   const ManageShopState(
       {this.isLoading = false,
       this.data,
       this.hasShop = false,
       this.shop = const [],
+      this.orders = const [],
+      this.numberOfPendingOrders = 0,
       this.isPersonalNotUpgradedToBusiness = false,
       this.salesMetric = const [],
       this.numberOfProducts = 0,
       this.numberOfRequests = 0,
+      this.isLoadingOrder = false,
       this.singleShop});
 
   factory ManageShopState.initial() => ManageShopState();
@@ -33,7 +40,10 @@ class ManageShopState {
       List<SalesMetric>? salesMetric,
       ShopData? singleShop,
       int? numberOfRequests,
+      int? numberOfPendingOrders,
+      List<Order>? orders,
       int? numberOfProducts,
+      bool? isLoadingOrder,
       bool? isPersonalNotUpgradedToBusiness}) {
     return ManageShopState(
         isLoading: isLoading ?? this.isLoading,
@@ -42,8 +52,12 @@ class ManageShopState {
         singleShop: singleShop ?? this.singleShop,
         shop: shop ?? this.shop,
         numberOfProducts: numberOfProducts ?? this.numberOfProducts,
-        numberOfRequests:numberOfRequests ?? this.numberOfRequests,
+        numberOfRequests: numberOfRequests ?? this.numberOfRequests,
         salesMetric: salesMetric ?? this.salesMetric,
+        numberOfPendingOrders:
+            numberOfPendingOrders ?? this.numberOfPendingOrders,
+        isLoadingOrder: isLoadingOrder ?? this.isLoadingOrder,
+        orders: orders ?? this.orders,
         isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ??
             this.isPersonalNotUpgradedToBusiness);
   }
@@ -52,7 +66,10 @@ class ManageShopState {
     return ManageShopState(
         isLoading: json["isLoading"],
         data: json["data"],
+        isLoadingOrder: json['isLoadingOrder'],
         hasShop: json["hasShop"],
+        numberOfPendingOrders: json['numberOfPendingOrders'],
+        orders: json['orders'],
         singleShop: json['singleShop'],
         isPersonalNotUpgradedToBusiness:
             json['isPersonalNotUpgradedToBusiness'],
@@ -66,9 +83,12 @@ class ManageShopState {
         "isLoading": isLoading,
         "data": data,
         'salesMetric': salesMetric,
-        "hasShop": hasShop,
+        'isLoadingOrder': isLoadingOrder,
+            "hasShop": hasShop,
         'numberOfProducts': numberOfProducts,
-        'numberOfRequests':numberOfRequests,
+        'numberOfRequests': numberOfRequests,
+        'numberOfPendingOrders': numberOfPendingOrders,
+        'orders': orders,
         "shop": shop,
         "singleShop": singleShop,
         "isPersonalNotUpgradedToBusiness": isPersonalNotUpgradedToBusiness

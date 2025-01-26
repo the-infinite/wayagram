@@ -69,6 +69,8 @@ class _CreateShopState extends ConsumerState<CreateShop> {
               children: [
                 UploadLogo(
                     imagePath: viewModel.image,
+                    url: viewModel.url,
+                    isEditingMode: viewModel.isEditingMode,
                     onUpload: () {
                       ref
                           .read(createAdditionalShopVmProvider(uniqueKey)
@@ -371,6 +373,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                 const Gap(30),
                 WayaButton(
                     callback: () {
+                      
                       if (_formKey.currentState!.validate()) {
                         ref
                             .read(createAdditionalShopVmProvider(uniqueKey)
@@ -378,7 +381,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                             .createSellerShop();
                       }
                     },
-                    text: 'Create Shop'),
+                    text: viewModel.isEditingMode ? 'Edit Shop' : 'Create Shop'),
               ],
             )));
   }

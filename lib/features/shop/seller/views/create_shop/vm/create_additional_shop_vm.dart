@@ -1,8 +1,4 @@
 import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:mime/mime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,9 +25,7 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   final _logger = getLogger('CreateAdditionalShopVm');
   CreateAdditionalShopVm(this._shopRepository, this._authRepository,
       this._picker, this._secureDataSource, this._setUpState, this.ref)
-      : super(CreateShopState()) {
-    state = state.copyWith(vendorId: _setUpState.business?.id);
-  }
+      : super(CreateShopState());
 
   Future<void> selectState(Select value) async {
     String _state = state.state;
@@ -51,16 +45,19 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
   Future<void> createSellerShop() async {
     try {
-      if (state.logo == null) {
+      if ((state.logo == null && !state.isEditingMode) ||
+          state.isEditingMode && state.url == null) {
         return WayaSnackBar.showToast('Pls add a Logo');
       }
+      final userId = await _secureDataSource.getUserId();
+      state = state.copyWith(vendorId: userId);
       state = state.copyWith(isLoading: true);
 
       final response = state.isEditingMode
           ? await _shopRepository.editShop(
               state.createShopModel, state.vendorId)
           : await _shopRepository.createShop(state.createShopModel);
-      print('ffefef');
+
       _logger.i(response.data);
       if (response.success) {
         WayaNav.goBack();
@@ -120,6 +117,9 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
         );
         final formatted = await WayaHelpers.formattedImage(file);
         state = state.copyWith(logo: formatted);
+        if (state.isEditingMode) {
+          state = state.copyWith(url: null);
+        }
       } else {
         _logger.i('No image selected.');
       }
@@ -136,6 +136,7 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
         email: TextEditingController(text: singleShop.email),
         description: TextEditingController(text: singleShop.description),
         name: TextEditingController(text: singleShop.name),
+        url: singleShop.logo,
         address: TextEditingController(text: singleShop.address));
   }
 }

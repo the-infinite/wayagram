@@ -10,7 +10,7 @@ class ShopVm extends StateNotifier<ShopState> {
   final Ref ref;
   ShopVm(this._repository, this.ref) : super(ShopState());
 
-  Future<PaginatedResult?> allCategories(int page) async {
+  Future<SelectTypePaginatedResult?> allCategories(int page) async {
     try {
       final response = await _repository.getAllCategories(page);
 
@@ -33,7 +33,7 @@ class ShopVm extends StateNotifier<ShopState> {
         //   //state = state.copyWith(selectedCategoryId: selectCategories[0].value);
         // }
       }
-      return PaginatedResult(
+      return SelectTypePaginatedResult(
           items: selectCategories, totalPages: state.totalNoOfCategoryPages);
     } catch (e) {
       print(e);

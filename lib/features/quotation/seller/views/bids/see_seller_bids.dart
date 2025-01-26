@@ -17,7 +17,7 @@ import 'package:wayagram/features/shop/data/model/model.dart';
 
 import 'package:wayagram/features/shop/seller/vm/seller_orders_vm.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
-import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
+import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
 

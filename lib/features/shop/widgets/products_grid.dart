@@ -4,7 +4,8 @@ import 'package:wayagram/features/shop/widgets/product_card.dart';
 
 class ProductsGrid extends StatelessWidget {
   final List<Product> products;
-  const ProductsGrid({super.key, required this.products});
+  final double childAspectRatio;
+  const ProductsGrid({super.key, required this.products, this.childAspectRatio = 3/5});
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +14,11 @@ class ProductsGrid extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12.0,
         mainAxisSpacing: 12.0,
-        childAspectRatio: 3 / 6,
+        childAspectRatio: childAspectRatio,
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {

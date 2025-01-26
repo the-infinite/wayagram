@@ -8,7 +8,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/widgets/order_info_widget.dart';
+import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
 
 class DealApplicationStatus extends ConsumerStatefulWidget {
   const DealApplicationStatus({super.key});

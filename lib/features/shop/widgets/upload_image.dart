@@ -106,7 +106,14 @@ class UploadImage extends StatelessWidget {
 class UploadLogo extends StatelessWidget {
   final VoidCallback onUpload;
   final File? imagePath;
-  const UploadLogo({super.key, required this.onUpload, this.imagePath});
+  final String? url;
+  final bool? isEditingMode;
+  const UploadLogo(
+      {super.key,
+      required this.onUpload,
+      this.imagePath,
+      this.isEditingMode,
+      this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +136,14 @@ class UploadLogo extends StatelessWidget {
                         filterQuality: FilterQuality.high,
                         scale: 1,
                       )
-                    : SizedBox.shrink(),
+                    : url != null
+                        ? Image.network(
+                            url!,
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.high,
+                            scale: 1,
+                          )
+                        : SizedBox.shrink(),
               ),
               Positioned.fill(
                 child: Material(

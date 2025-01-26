@@ -7,7 +7,7 @@ import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_orders_vm.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
-import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
+import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
 class AllSellerOrders extends ConsumerWidget {
@@ -76,9 +76,10 @@ class AllSellerOrders extends ConsumerWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return SingleOrderWidget(
-                    isSeller: true,
-                  );
+                  return Container();
+                  // return SingleOrderWidget(
+                  //   isSeller: true,
+                  // );
                 })
           ],
         ));

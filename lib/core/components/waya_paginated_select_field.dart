@@ -13,7 +13,7 @@ class WayaPaginatedSelectField extends ConsumerStatefulWidget {
   final double? height;
   final BorderRadius? radius;
   final Function(Select value) onSelected;
-  final Future<PaginatedResult?> Function(int page) fetchData;
+  final Future<SelectTypePaginatedResult?> Function(int page) fetchData;
   final String Function(Select item) displayText;
   final String uniqueKey;
 
@@ -131,7 +131,7 @@ class _WayaPaginatedSelectFieldState
 
 class PaginatedBottomSheet extends ConsumerStatefulWidget {
   final String title;
-  final Future<PaginatedResult?> Function(int page) fetchData;
+  final Future<SelectTypePaginatedResult?> Function(int page) fetchData;
   final String Function(Select item) displayText;
   final Function(Select value) onSelected;
   final String uniqueKey;
@@ -258,7 +258,7 @@ class WayaPaginatedSelectFieldNotifier
       : super(WayaPaginatedSelectFieldState());
 
  Future<void> initialize(
-    Future<PaginatedResult?> Function(int page) fetchData) async {
+    Future<SelectTypePaginatedResult?> Function(int page) fetchData) async {
   state = state.copyWith(isLoading: true);
   try {
     final result = await fetchData(1);
@@ -279,7 +279,7 @@ class WayaPaginatedSelectFieldNotifier
 }
 
 Future<void> loadMoreItems(
-    Future<PaginatedResult?> Function(int page) fetchData) async {
+    Future<SelectTypePaginatedResult?> Function(int page) fetchData) async {
   if (state.currentPage >= state.totalPages) return;
 
   state = state.copyWith(isLoading: true);

@@ -109,6 +109,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     );
     params?.removeWhere((key, value) => value == null);
     final fullRoute = '$baseURL$route';
+    _logger.i('fullRoute: $fullRoute $body');
     if (formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
     }
@@ -134,6 +135,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     );
     params?.removeWhere((key, value) => value == null);
     final fullRoute = '$baseURL$route';
+    _logger.i('fullRoute: $fullRoute $body');
     if (formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
     }

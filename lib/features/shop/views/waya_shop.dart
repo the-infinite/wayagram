@@ -6,7 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
-import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
+import 'package:wayagram/features/shop/order/views/all_orders.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';

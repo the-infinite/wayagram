@@ -34,3 +34,10 @@ class ShopState {
         isLoading: isLoading ?? this.isLoading);
   }
 }
+
+class PaginatedResult<T> {
+  final List<T> items;
+  final bool hasNextPage;
+
+  PaginatedResult({required this.hasNextPage, required this.items});
+}
