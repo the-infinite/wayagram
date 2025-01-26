@@ -82,7 +82,7 @@ class _ApplicationStatusState extends State<ApplicationStatus> {
             WayaButton(
               callback: () async{
                 Navigator.pop(context);
-                //  WayaNav.toNamed("/contest-setting-content");
+                  WayaNav.toNamed("/create-profile-contest1");
               },
               text: "Create Contest Profile",
             ),

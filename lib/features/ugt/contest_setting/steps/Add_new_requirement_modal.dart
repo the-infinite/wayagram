@@ -1,22 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/components/waya_text_form_field.dart';
+import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
+import '../../vm/ugt_vm.dart';
 
-class AddNewRequirementModal extends StatefulWidget {
+class AddNewRequirementModal extends ConsumerStatefulWidget {
   const AddNewRequirementModal({super.key});
 
   @override
-  State<AddNewRequirementModal> createState() => _AddNewRequirementModalState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _AddNewRequirementModalState();
 }
 bool isSwitched = false;
-class _AddNewRequirementModalState extends State<AddNewRequirementModal> {
+class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal> {
+
+
+
   @override
   Widget build(BuildContext context) {
+    final viewModel = ref.watch(personalFirstStepProvider);
     final wayaTheme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
@@ -31,10 +38,14 @@ class _AddNewRequirementModalState extends State<AddNewRequirementModal> {
             const Gap(20),
             WayaSelectField(
               height: 0.3,
+              value: "TEXT",
               label: "Requirement Type ",
               hintText: 'Requirement type',
-              items: [],
-              onSelected: (value) {},
+              items: ref
+                  .read(contestNotifierProvider.notifier)
+                  .ugtRequirementType(),
+              onSelected: (value) => ref
+                  .read(contestNotifierProvider.notifier).selectState(value),
               uniqueKey: 'contest-category',
             ),
             const Gap(15),
@@ -67,7 +78,7 @@ class _AddNewRequirementModalState extends State<AddNewRequirementModal> {
                   "Mark as Required",
                   style: TextStyle(
                     fontSize: 12,
-                    color: isSwitched ? Colors.black : Colors.grey,
+                    color: isSwitched ? wayaTheme.colorScheme.primaryContainer :  wayaTheme.colorScheme.greyColor900,
                   ),
                 ),
               ],

@@ -14,6 +14,7 @@ import '../../../../core/utils/waya_utils.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../../wallet/view/components/modal_content.dart';
 import '../../ugt_buttomsheet_modal/ugt_modal.dart';
+import '../../vm/ugt_vm.dart';
 
 class ContestTimeline extends ConsumerStatefulWidget  {
   const ContestTimeline({super.key});
@@ -26,6 +27,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
+    final viewModel2 = ref.watch(contestNotifierProvider);
     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -59,7 +61,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                 const Gap(4),
                 WayaButton(
                   callback: () {
-                    ref.read(personalFirstStepProvider.notifier).showDatePickerDialog(context);
+                    ref.read(contestNotifierProvider.notifier).showDatePickerDialog(context);
                   },
                   horizontalPadding: 0,
                   color: wayaTheme.colorScheme.transparent,
@@ -74,7 +76,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                           MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                                viewModel.dateOfBirth.isEmpty
+                                viewModel2.startDate.isEmpty
                                     ? 'DD/MM/YYYY'
                                     : viewModel.dateOfBirth,
                                 style: Theme.of(context)
@@ -82,8 +84,8 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                                     .bodyMedium
                                     ?.wayaCopyWith(
                                   fontSize: 14,
-                                  color: viewModel
-                                      .dateOfBirth.isEmpty
+                                  color: viewModel2
+                                      .startDate.isEmpty
                                       ? wayaTheme.colorScheme
                                       .greyColor300
                                       : wayaTheme.colorScheme
@@ -104,7 +106,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                           : wayaTheme.colorScheme.greyColor300),
                 ),
                 if (formState.hasError &&
-                    viewModel.dateOfBirth.isEmpty)
+                    viewModel2.startDate.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
@@ -140,13 +142,13 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                 const Gap(4),
                 WayaButton(
                   callback: () {
-                    ref.read(personalFirstStepProvider.notifier).showDatePickerDialog(context);
+                    ref.read(contestNotifierProvider.notifier).showDatePickerDialogEndDate(context);
                   },
                   horizontalPadding: 0,
                   color: wayaTheme.colorScheme.transparent,
                   centerWidget: Focus(
                       onFocusChange: (hasFocus) {
-                        ref.read(personalFirstStepProvider.notifier).focusChanged(hasFocus);
+                        ref.read(contestNotifierProvider.notifier).focusChanged2(hasFocus);
                       },
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -155,7 +157,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                           MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                                viewModel.dateOfBirth.isEmpty
+                                viewModel2.endDate.isEmpty
                                     ? 'DD/MM/YYYY'
                                     : viewModel.dateOfBirth,
                                 style: Theme.of(context)
@@ -163,8 +165,8 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                                     .bodyMedium
                                     ?.wayaCopyWith(
                                   fontSize: 14,
-                                  color: viewModel
-                                      .dateOfBirth.isEmpty
+                                  color: viewModel2
+                                      .endDate.isEmpty
                                       ? wayaTheme.colorScheme
                                       .greyColor300
                                       : wayaTheme.colorScheme
@@ -185,7 +187,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                           : wayaTheme.colorScheme.greyColor300),
                 ),
                 if (formState.hasError &&
-                    viewModel.dateOfBirth.isEmpty)
+                    viewModel2.endDate.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
@@ -202,9 +204,12 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
         const Gap(15),
         WayaSelectField(
           height: 0.3,
+          value: "Yes",
           label: "Multiple Stages?",
           hintText: 'Select Yes or No',
-          items: [],
+          items: ref
+        .read(contestNotifierProvider.notifier)
+        .ugtMultipleStages(),
           onSelected: (value) {},
           uniqueKey: 'contest-state',
         ),
@@ -212,9 +217,12 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
         const Gap(15),
         WayaSelectField(
           height: 0.3,
+          value: "Stage 1",
           label: "Current Stage",
           hintText: 'Select Current Stage',
-          items: [],
+          items: ref
+              .read(contestNotifierProvider.notifier)
+              .ugtCurrentStage(),
           onSelected: (value) {},
           uniqueKey: 'contest-state',
         ),
