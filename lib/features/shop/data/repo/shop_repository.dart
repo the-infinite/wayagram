@@ -2,6 +2,7 @@ import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_model.dart';
+
 class ShopRepository extends BaseRepository {
   static const serviceUrl = "wayagram-shop/api/v2";
   Future<WayaRequestResponse> getShop() {
@@ -16,14 +17,24 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/shops/$id');
   }
 
-    Future<WayaRequestResponse> getAllCategories() {
-    return get('$serviceUrl/category/all');
+  Future<WayaRequestResponse> getAllCategories(int page) {
+    return get('$serviceUrl/category/all?page=$page');
   }
 
-Future<WayaRequestResponse> createProduct(AddProductModel payload) {
-    return post("$serviceUrl/products/create", payload.toJson(), formdata: true);
+  Future<WayaRequestResponse> createProduct({required AddProductModel payload, required String id}) {
+    return post("$serviceUrl/products/create/$id", payload.toJson(),
+        formdata: true);
   }
 
-  //
+  Future<WayaRequestResponse> getAllDiscounts(int page) {
+    return get('$serviceUrl/discount/all?page=$page');
+  }
+
+Future<WayaRequestResponse> getProducts() {
+    return get('$serviceUrl/products');
+  }
+
+  
+
 }
 //

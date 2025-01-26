@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class BasicProductInfo extends ConsumerStatefulWidget {
   final Function gotoNextTab;
@@ -20,7 +21,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(addProductProvider.notifier).allCategories();
+      ref.read(addProductProvider.notifier).getAllCategories();
     });
     super.initState();
   }
@@ -125,6 +126,22 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       WayaTextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: viewModel.stockQuantity,
+                        hintText: 'Enter Product Quantity',
+                        label: 'Product Quantity',
+                      ),
+                    ],
+                  );
+                }),
+                const Gap(10),
+                FormField<String>(validator: (value) {
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
                         keyboardType: TextInputType.text,
                         controller: viewModel.materialType,
                         hintText: 'Enter Material Type',
@@ -158,13 +175,14 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaPaginatedSelectField(
                           height: 0.3,
                           uniqueKey: 'product-category',
-                          value:  viewModel.productCategory,
+                          displayText: (item) => item.label,
+                          fetchData:
+                              ref.watch(shopVmProvider.notifier).allCategories,
                           label: "Product Category",
                           hintText: 'Select Product Category',
-                          items: viewModel.categories,
                           onSelected: (value) => ref
                               .read(addProductProvider.notifier)
                               .update(value, "productCategory")),

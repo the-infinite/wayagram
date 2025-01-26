@@ -32,7 +32,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
 
   @override
   Widget build(BuildContext context) {
-    final productState = ref.watch(productsProvider);
+    
     final manageShop = ref.watch(manageShopVmProvider);
     final wayaTheme = Theme.of(context);
 
@@ -91,13 +91,13 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                           "Extensive view of all the products you have created",
                       title: "My Products"),
                   const Gap(10),
-                  CategoriesFilterWidget<Product>(allItems: []),
+                  CategoriesFilterWidget(setCategory: (value) => {},),
                   const Gap(25),
-                  productState.when(
-                      data: (products) => _buildProductGrid(products),
-                      error: (e, stack) =>
-                          _productLoadingState(context: context),
-                      loading: () => _productLoadingState(context: context))
+                  // productState.when(
+                  //     data: (products) => _buildProductGrid(products),
+                  //     error: (e, stack) =>
+                  //         _productLoadingState(context: context),
+                  //     loading: () => _productLoadingState(context: context))
                 ],
               )
             ],
@@ -105,38 +105,38 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
         : SellerShopEmptyState();
   }
 
-  Widget _buildProductGrid(List<Product> products) {
-    return Column(
-      children: [
-        for (int i = 0; i < products.length; i += 2)
-          Row(
-            children: [
-              Expanded(
-                child: ProductCard(
-                  product: products[i],
-                  isExplore: false,
-                  isWayaGramDeal: false,
-                  canbeAddedTocart: false,
-                  sellerProduct: true,
-                ),
-              ),
-              if (i + 1 < products.length) ...[
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ProductCard(
-                    product: products[i + 1],
-                    isExplore: false,
-                    isWayaGramDeal: false,
-                    canbeAddedTocart: false,
-                    sellerProduct: true,
-                  ),
-                ),
-              ],
-            ],
-          ),
-      ],
-    );
-  }
+  // Widget _buildProductGrid(List<Product> products) {
+  //   return Column(
+  //     children: [
+  //       for (int i = 0; i < products.length; i += 2)
+  //         Row(
+  //           children: [
+  //             Expanded(
+  //               child: ProductCard(
+  //                 product: products[i],
+  //                 isExplore: false,
+  //                 isWayaGramDeal: false,
+  //                 canbeAddedTocart: false,
+  //                 sellerProduct: true,
+  //               ),
+  //             ),
+  //             if (i + 1 < products.length) ...[
+  //               const SizedBox(width: 12),
+  //               Expanded(
+  //                 child: ProductCard(
+  //                   product: products[i + 1],
+  //                   isExplore: false,
+  //                   isWayaGramDeal: false,
+  //                   canbeAddedTocart: false,
+  //                   sellerProduct: true,
+  //                 ),
+  //               ),
+  //             ],
+  //           ],
+  //         ),
+  //     ],
+  //   );
+  // }
 
   Widget _productLoadingState({required BuildContext context}) {
     return Column(

@@ -18,51 +18,52 @@ class AddProductModel {
   final bool? deliveryCharge;
   final List<MultipartFile> images;
   final bool wayagramDeal;
-  final String discountTypeId;
+  final String? discountTypeId;
+  final int? stockQuantity;
 
-  AddProductModel({
-    required this.name,
-    required this.description,
-    required this.shopId,
-    required this.categoryId,
-    required this.condition,
-    required this.price,
-    required this.options,
-    required this.wayagramDeal,
-    required this.discountTypeId,
-    required this.images,
-    this.color,
-    this.materialType,
-    this.height,
-    this.width,
-    this.depth,
-    this.discountPercentage,
-    this.pickupAddress,
-    this.deliveryCharge,
-  });
+  AddProductModel(
+      {required this.name,
+      required this.description,
+      required this.shopId,
+      required this.categoryId,
+      required this.condition,
+      required this.price,
+      required this.options,
+      required this.wayagramDeal,
+      required this.discountTypeId,
+      required this.images,
+      this.color,
+      this.materialType,
+      this.height,
+      this.width,
+      this.depth,
+      this.discountPercentage,
+      this.pickupAddress,
+      this.deliveryCharge,
+      this.stockQuantity = 0});
 
   // Factory method to parse JSON
   factory AddProductModel.fromJson(Map<String, dynamic> json) {
     return AddProductModel(
-      name: json['name'] as String,
-      description: json['description'] as String,
-      shopId: json['shopId'] as String,
-      categoryId: json['categoryId'] as String,
-      condition: json['condition'] as String,
-      price: json['price'] as String,
-      options: json['options'] as String,
-      wayagramDeal: json['wayagramDeal'] as bool,
-      discountTypeId: json['discountTypeId'] as String,
-      images: (json['images'] as List<MultipartFile>),
-      color: json['color'] as String?,
-      materialType: json['materialType'] as String?,
-      height: json['height'] as String?,
-      width: json['width'] as String?,
-      depth: json['depth'] as String?,
-      discountPercentage: json['discountPercentage'] as String?,
-      pickupAddress: json['pickupAddress'] as String?,
-      deliveryCharge: json['deliveryCharge'] as bool?,
-    );
+        name: json['name'] as String,
+        description: json['description'] as String,
+        shopId: json['shopId'] as String,
+        categoryId: json['categoryId'] as String,
+        condition: json['condition'] as String,
+        price: json['price'] as String,
+        options: json['options'] as String,
+        wayagramDeal: json['wayagramDeal'] as bool,
+        discountTypeId: json['discountTypeId'] as String?,
+        images: (json['images'] as List<MultipartFile>),
+        color: json['color'] as String?,
+        materialType: json['materialType'] as String?,
+        height: json['height'] as String?,
+        width: json['width'] as String?,
+        depth: json['depth'] as String?,
+        discountPercentage: json['discountPercentage'] as String?,
+        pickupAddress: json['pickupAddress'] as String?,
+        deliveryCharge: json['deliveryCharge'] as bool?,
+        stockQuantity: json['stockQuantity'] as int?);
   }
 
   // Convert to JSON
@@ -76,8 +77,8 @@ class AddProductModel {
       'price': price,
       'options': options,
       'wayagramDeal': wayagramDeal,
-      'discountTypeId': discountTypeId,
       'images': images,
+      'approve': true,
     };
 
     if (color != null) json['color'] = color;
@@ -85,9 +86,11 @@ class AddProductModel {
     if (height != null) json['height'] = height;
     if (width != null) json['width'] = width;
     if (depth != null) json['depth'] = depth;
+    if (discountTypeId != null) json['discountTypeId'] = discountTypeId;
     if (discountPercentage != null) json['discountPercentage'] = discountPercentage;
     if (pickupAddress != null) json['pickupAddress'] = pickupAddress;
     if (deliveryCharge != null) json['deliveryCharge'] = deliveryCharge;
+    if (stockQuantity != null) json['stockQuantity'] = stockQuantity;
 
     return json;
   }

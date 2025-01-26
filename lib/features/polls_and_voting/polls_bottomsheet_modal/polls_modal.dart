@@ -89,7 +89,6 @@ class VoteOptionModal extends ConsumerStatefulWidget {
 }
 
 class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
-  //int voteNumber = 0;
 
   String amount = "0";
 
@@ -625,10 +624,11 @@ class _VotePinEntryBottomSheetState extends State<VotePinEntryBottomSheet> {
       // TODO: Submit PIN
       log('PIN submitted: $_pin');
       Navigator.of(context).pop();
-      WayaUtils.showModalSheet(
+      WayaNav.toNamed('/share-voting');
+     /* WayaUtils.showModalSheet(
         context,
         child: VoteSuccessModal(),
-      );
+      );*/
       //Navigator.of(context).pop();
     }
   }
