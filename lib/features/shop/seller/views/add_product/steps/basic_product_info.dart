@@ -29,6 +29,8 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(addProductProvider);
     final wayaTheme = Theme.of(context);
+
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

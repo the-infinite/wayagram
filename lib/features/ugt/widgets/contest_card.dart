@@ -11,6 +11,8 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/features/ugt/widgets/about_ugt_widget.dart';
 import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 
+import '../../../core/utils/waya_navigation.dart';
+
 class ContestCard extends StatelessWidget {
   const ContestCard({super.key});
 
@@ -18,7 +20,7 @@ class ContestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    // TODO: implement build
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -137,7 +139,9 @@ class ContestCard extends StatelessWidget {
               ),
               const Gap(20),
               WayaButton(
-                callback: () {},
+                callback: () {
+                  WayaNav.toNamed("/register-contest1");
+                },
                 text: "View Details",
               ),
               const Gap(20),

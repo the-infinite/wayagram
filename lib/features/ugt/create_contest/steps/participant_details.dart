@@ -5,13 +5,13 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/components/waya_text_form_field.dart';
 import '../../../../core/utils/waya_navigation.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../../shop/widgets/upload_image.dart';
+import '../../vm/ugt_vm.dart';
 import 'create_ultimate.dart';
 
 class ParticipantDetails extends ConsumerStatefulWidget {
@@ -26,9 +26,18 @@ class ParticipantDetails extends ConsumerStatefulWidget {
 final _formKey = GlobalKey<FormState>();
 
 class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
+  var paymentType = [
+    {'paymentType': 'Free'},
+    {'paymentType': 'Paid'},
+
+
+  ];
+
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
+    final viewModel2 = ref.watch(contestNotifierProvider);
     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -42,7 +51,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
             style: wayaTheme.textTheme.hintStyle),
         const Gap(30),
         WayaTextFormField(
-          controller: TextEditingController(),
+          controller: viewModel2.howItWorks,
           hintText: "Enter Contest Description",
           label: "How It Works",
           line: 6,
@@ -50,15 +59,21 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
         const Gap(15),
         WayaSelectField(
           height: 0.3,
+          value: "Free",
           label: "Entry Type",
           hintText: 'Choose entry type',
-          items: [],
-          onSelected: (value) {},
+          items: ref
+        .read(contestNotifierProvider.notifier)
+        .ugtPaymentType(),
+          onSelected: (value) =>
+          setState(() {
+           // paymentType = value;
+          }),
           uniqueKey: 'contest-state',
         ),
         const Gap(15),
         WayaTextFormField(
-          controller: TextEditingController(),
+          controller: viewModel2.amount,
           hintText: "0 NGN",
           label: "Amount",
         ),
@@ -78,9 +93,12 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                   children: [
                   WayaSelectField(
                   height: 0.3,
+                  value: "Weeks",
                   label: "Duration Type",
                   hintText: 'Duration Type',
-                  items: [],
+                  items: ref
+                      .read(contestNotifierProvider.notifier)
+                      .ugtDurationType(),
                   onSelected: (value) {},
                   uniqueKey: 'contest-state',
                 ),
@@ -113,16 +131,16 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                   children: [
                     WayaTextFormField(
                       keyboardType: TextInputType.name,
-                      controller: viewModel.lastName,
+                      controller: viewModel2.numberOfDuration,
                       hintText: 'e.g., 3',
                       borderColor: formState.hasError &&
-                          viewModel.lastName.text.isEmpty
+                          viewModel2.numberOfDuration.text.isEmpty
                           ? wayaTheme.colorScheme.error
                           : null,
                       label: 'Number of Duration',
                     ),
                     if (formState.hasError &&
-                        viewModel.lastName.text.isEmpty)
+                        viewModel2.numberOfDuration.text.isEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
@@ -160,7 +178,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                 const Gap(4),
                 WayaButton(
                   callback: () {
-                    ref.read(personalFirstStepProvider.notifier).showDatePickerDialog(context);
+                    ref.read(contestNotifierProvider.notifier).showDatePickerDialog(context);
                   },
                   horizontalPadding: 0,
                   color: wayaTheme.colorScheme.transparent,
@@ -175,16 +193,16 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                           MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                                viewModel.dateOfBirth.isEmpty
+                                viewModel2.startDate.isEmpty
                                     ? 'DD/MM/YYYY'
-                                    : viewModel.dateOfBirth,
+                                    : viewModel2.startDate,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
                                     ?.wayaCopyWith(
                                   fontSize: 14,
-                                  color: viewModel
-                                      .dateOfBirth.isEmpty
+                                  color: viewModel2
+                                      .startDate.isEmpty
                                       ? wayaTheme.colorScheme
                                       .greyColor300
                                       : wayaTheme.colorScheme
@@ -205,7 +223,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                           : wayaTheme.colorScheme.greyColor300),
                 ),
                 if (formState.hasError &&
-                    viewModel.dateOfBirth.isEmpty)
+                    viewModel2.startDate.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
@@ -221,7 +239,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
         ),
         const Gap(15),
         WayaTextFormField(
-          controller: TextEditingController(),
+          controller: viewModel2.descriptionOfAwards,
           hintText: "Enter Contest Description",
           label: "Contest Description",
           line: 6,

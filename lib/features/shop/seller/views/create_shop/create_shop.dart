@@ -255,8 +255,8 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           hintText: 'Select State',
                           items: viewModel.states,
                           onSelected: (value) => ref
-                              .read(createAdditionalShopVmProvider.notifier)
-                              .selectState(value)),
+                              .read(createAdditionalShopVmProvider.notifier).selectState(value)),
+
                       if (formState.hasError && viewModel.state.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
