@@ -49,7 +49,7 @@ class ShopRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getSellerProducts(
       {required String shopId, required int page}) {
-    return get('$serviceUrl/products?shopId=$shopId&page=$page');
+    return get('$serviceUrl/products/get?shopId=$shopId&page=$page');
   }
 
   Future<WayaRequestResponse> editShop(

@@ -1,4 +1,6 @@
 import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
+import 'package:wayagram/features/shared/model/base_model.dart';
+
 
 class OrdersResponse {
   final String message;
@@ -52,7 +54,7 @@ class OrdersData {
       };
 }
 
-class Order {
+class Order extends BaseModel<Order> {
   final String id;
   final String userId;
   final List<OrderItem> items;
@@ -72,7 +74,7 @@ class Order {
   final String shopName;
   final String shopPhone;
   final String? deliveryToken;
-    final String? deliveryType;
+  final String? deliveryType;
 
   Order({
     required this.id,
@@ -145,6 +147,25 @@ class Order {
         'updatedAt': updatedAt.toIso8601String(),
         'shopName': shopName,
         'shopPhone': shopPhone,
+      };
+
+  @override
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'userId': userId,
+        'shopId': shopId,
+        'vendorId': vendorId,
+        'total': total,
+        'status': status,
+        'pickupAddress': pickupAddress,
+        'pickupStatus': pickupStatus,
+        'deliveryAddress': deliveryAddress,
+        'deliveryFee': deliveryFee,
+        'deliveryStatus': deliveryStatus,
+        'shopName': shopName,
+        'shopPhone': shopPhone,
+        'deliveryToken': deliveryToken,
+        'deliveryType': deliveryType,
       };
 }
 

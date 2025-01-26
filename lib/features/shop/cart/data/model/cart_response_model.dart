@@ -70,7 +70,7 @@ class CartData {
 class CartItem {
   final String shopId;
   final String? deliveryAddress;
-  final int? deliveryFee;
+  final String? deliveryFee;
   final String? deliveryDate;
   final String shopName;
   final String shopLogo;
@@ -91,7 +91,7 @@ class CartItem {
   CartItem copyWith({
     String? shopId,
     String? deliveryAddress,
-    int? deliveryFee,
+    String? deliveryFee,
     String? deliveryDate,
     String? shopName,
     String? shopLogo,

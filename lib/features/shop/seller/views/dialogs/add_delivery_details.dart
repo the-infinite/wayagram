@@ -247,7 +247,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                                               userId: widget.data.userId,
                                               shopId: shopId);
 
-                                      WayaNav.removeUntilNamed(ManageShop.route);
+                                      WayaNav.offNamed(ManageShop.route);
                                     }
                                   }
                                 : null,

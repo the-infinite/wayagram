@@ -21,13 +21,13 @@ class DeliveryRequest extends ConsumerStatefulWidget {
 }
 
 class _DeliveryRequestState extends ConsumerState<DeliveryRequest> {
-  // @override
-  // void initState() {
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     ref.read(deliveryRequestVmProvider.notifier).getRequests();
-  //   });
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(deliveryRequestVmProvider.notifier).getRequests();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,14 +58,14 @@ class _DeliveryRequestState extends ConsumerState<DeliveryRequest> {
               hintText: 'Search Delivery Request',
             ),
             const Gap(20),
-            viewModel.deliveryRequests.isEmpty
+           viewModel.deliveryRequests.isEmpty
                 ? Center(
                     child: EmptyState(
                         assetImage: WayaAssets.images.wallet.searchDocu
                             .image(scale: 1.5),
                         message: "No Delivery Request"),
                   )
-                : ListView.builder(
+                :  ListView.builder(
                     itemCount: viewModel.deliveryRequests.length,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),

@@ -22,24 +22,49 @@ class OrderStatus {
 
 class OrderTracking extends StatelessWidget {
   final String? status;
-  const OrderTracking({super.key, this.status});
+  final String? type;
+  final List<String> statuses;
+  const OrderTracking(
+      {super.key, this.status, required this.type, required this.statuses});
 
   @override
   Widget build(BuildContext context) {
     // Define the order statuses
-    final List<String> statuses = [
-      'pending',
-      'processing',
-      'in_transit',
-      'out_for_delivery',
-      'delivered',
+
+    final currentStatusIndex = status != null ? statuses.indexOf(status!) : -1;
+    List<OrderStatus> pickUp = [
+      OrderStatus(
+        description:
+            "Your order has been received and is awaiting confirmation",
+        title: "Pending",
+        date: '10 Oct.',
+        time: '9:00PM',
+        status: currentStatusIndex >= 0,
+      ),
+      OrderStatus(
+        description: "Your order is ready for pickup",
+        title: "Ready for pickup",
+        time: '9:00PM',
+        date: '10 Oct.',
+        status: currentStatusIndex >= 1,
+      ),
+      OrderStatus(
+        description: "Your order is scheduled for pickup",
+        title: "In Transit",
+        time: '9:00PM',
+        date: '10 Oct.',
+        status: currentStatusIndex >= 2,
+      ),
+      OrderStatus(
+        description: "Your order has been picked up",
+        title: "Completed",
+        date: '10 Oct.',
+        time: '9:00PM',
+        status: currentStatusIndex >= 3,
+      ),
     ];
 
-    // Determine the index of the current status
-    final currentStatusIndex = status != null ? statuses.indexOf(status!) : -1;
-
-    // Create the list of order statuses
-    List<OrderStatus> orderStatus = [
+    List<OrderStatus> delivery = [
       OrderStatus(
         description:
             "Your order has been received and is awaiting confirmation",
@@ -63,20 +88,14 @@ class OrderTracking extends StatelessWidget {
         status: currentStatusIndex >= 2,
       ),
       OrderStatus(
-        description: "Your order is out for delivery",
-        title: "Out for Delivery",
+        description: "Your order is delivered",
+        title: "Delivered",
         date: '10 Oct.',
         time: '9:00PM',
         status: currentStatusIndex >= 3,
       ),
-      OrderStatus(
-        description: "Your order has been delivered",
-        title: "Delivered",
-        date: '10 Oct.',
-        time: '9:00PM',
-        status: currentStatusIndex >= 4,
-      ),
     ];
+    List<OrderStatus> orderStatus = type == 'Pickup' ? pickUp : delivery;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

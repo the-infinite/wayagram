@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shared/paginated_data/paginated_data_view.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/order/vm/order_vm.dart';
 import 'package:wayagram/features/shop/widgets/card_loading_state.dart';
@@ -20,25 +20,27 @@ class AllOrders extends ConsumerStatefulWidget {
 }
 
 class _AllOrdersState extends ConsumerState<AllOrders> {
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-  //     ref.read(orderVmProvider.notifier).getOrders();
-  //   });
-  //   super.initState();
-  // }
+  late TextEditingController searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    searchController = TextEditingController();
+    searchController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    final state = ref.watch(orderVmProvider);
-
-    if (state.isLoading) {
-      return CardLoadingState(
-        count: 6,
-      );
-    }
+    //final state = ref.watch(orderVmProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -46,36 +48,48 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
       mainAxisSize: MainAxisSize.min,
       children: [
         GroupedWidgetHeader(
-            onTap: () {},
             isVisible: false,
             subTitle: 'View and manage your orders',
             title: 'Orders'),
         const Gap(25),
         FilterWidget(
           hintText: 'Search Orders',
-          search: TextEditingController(),
+          search: searchController,
         ),
         const Gap(25),
         PaginatedDataView<Order>(
             uniqueKey: 'orders',
-            emptyState: EmptyState(assetImage:  WayaAssets.images.wallet.searchDocu.image(scale: 1.5), message: "No Order Yet"),
-            loadingState: CardLoadingState(count: 6,),
+            emptyState: EmptyState(
+                assetImage:
+                    WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
+                message: "No Order Yet"),
+            loadingState: CardLoadingState(
+              count: 6,
+            ),
             fetchData: ref.read(orderVmProvider.notifier).getOrders,
             result: (data) {
+              final filteredOrder = WayaUtils.search<Order>(
+                  data,
+                  [
+                    'id',
+                    'pickupAddress',
+                    'deliveryAddress',
+                    'shopName',
+                    'deliveryToken',
+                    'deliveryType'
+                  ],
+                  searchController.text);
               return ListView.builder(
-                  itemCount: data.length,
+                  itemCount: filteredOrder.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                  
                     return SingleOrderWidget(
-                      order: data[index],
+                      order: filteredOrder[index],
                     );
                   });
             })
       ],
     );
   }
-
-
 }

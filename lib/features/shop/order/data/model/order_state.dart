@@ -20,3 +20,11 @@ class OrderDetailArg {
 
   OrderDetailArg({required this.type, required this.order});
 }
+
+ const deliveryStatus = ['pending', 'processing', 'onTransit', 'completed'];
+const pickupStatus = [
+  'pending',
+  'readyForPickUp',
+  'pickUpScheduled',
+  'completed'
+];

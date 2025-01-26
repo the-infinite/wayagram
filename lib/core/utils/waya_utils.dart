@@ -9,6 +9,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/features/shared/model/base_model.dart';
 
 import '../components/components.dart';
 
@@ -75,7 +76,8 @@ class WayaUtils {
         context: context,
         isScrollControlled: true,
         useRootNavigator: true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
         builder: (context) => child);
   }
 
@@ -87,17 +89,20 @@ class WayaUtils {
         useRootNavigator: true,
         /*isDismissible: true,
         enableDrag: false,*/
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
         builder: (context) => child);
   }
 
-  static showModalSheetQuotation(BuildContext context, {required Widget child}) {
+  static showModalSheetQuotation(BuildContext context,
+      {required Widget child}) {
     return showModalBottomSheet(
         constraints: BoxConstraints(maxHeight: Get.height * 0.8),
         context: context,
         isScrollControlled: true,
         useRootNavigator: true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
         builder: (context) => child);
   }
 
@@ -147,5 +152,24 @@ class WayaUtils {
     }
   }
 
-  
+  static List<T> search<T extends BaseModel<T>>(
+    List<T> data,
+    List<String> accessorKeys,
+    String searchTerm,
+  ) {
+    if (searchTerm.isEmpty) {
+      return data;
+    }
+
+    return data.where((item) {
+      final map = item.toMap();
+      return accessorKeys.any((key) {
+        final value = map[key];
+        if (value is String) {
+          return value.toLowerCase().contains(searchTerm.toLowerCase());
+        }
+        return false;
+      });
+    }).toList();
+  }
 }

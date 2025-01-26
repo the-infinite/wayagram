@@ -33,7 +33,7 @@ class Checkout extends ConsumerWidget {
             0,
             (prodSum, prod) => prodSum + (prod.price * prod.quantity),
           );
-    final int deliveryCharge = arg?.cartItem.deliveryFee ?? 0;
+    final int deliveryCharge = int.parse(arg?.cartItem.deliveryFee ?? '0');
 
     final isBothDeliveryOption =
         arg?.cartItem.products.any((prod) => prod.deliveryOptions == 'Both');

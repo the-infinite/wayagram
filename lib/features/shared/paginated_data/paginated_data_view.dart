@@ -7,7 +7,7 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 class PaginatedDataView<T> extends ConsumerStatefulWidget {
   final String uniqueKey;
   final Future<PaginatedResult<T>?> Function(int page) fetchData;
-  final ListView Function(List<T>) result;
+  final Widget Function(List<T>) result;
   final Widget? loadingState;
   final Widget? emptyState;
   final bool hasSearchFilter;
@@ -67,6 +67,8 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
     if (state.data.isEmpty) {
       return Center(child: widget.emptyState ?? Text("No Data"),);
     }
+
+
     return RefreshIndicator(
         onRefresh: () async {
           ref

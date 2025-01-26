@@ -63,9 +63,20 @@ class OrderDetails extends ConsumerWidget {
                 code: arg?.order.deliveryToken ?? '',
                 title: "Delivery Confirmation Token"),
             const Gap(25),
-            Text(arg?.order.deliveryType == 'Pickup' ? "Pickup Progress" : "Delivery Progress", style: wayaTheme.textTheme.bodyMedium),
+            Text(
+                arg?.order.deliveryType == 'Pickup'
+                    ? "Pickup Progress"
+                    : "Delivery Progress",
+                style: wayaTheme.textTheme.bodyMedium),
             const Gap(10),
-            OrderTracking(status:arg?.order.deliveryType == 'Pickup' ? arg?.order.pickupStatus: arg?.order.deliveryStatus ),
+            OrderTracking(
+                statuses: arg?.order.deliveryType == 'Pickup'
+                    ? pickupStatus
+                    : deliveryStatus,
+                type: arg?.order.deliveryType,
+                status: arg?.order.deliveryType == 'Pickup'
+                    ? arg?.order.pickupStatus
+                    : arg?.order.deliveryStatus),
             const Gap(25),
             WayaButton(
               callback: () {

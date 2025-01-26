@@ -83,7 +83,7 @@ class CartVm extends StateNotifier<CartState> {
           CartItem(
             shopId: shopId,
             deliveryAddress: "",
-            deliveryFee: 0,
+            deliveryFee: "",
             deliveryDate: "",
             shopName: "",
             shopLogo: "",
@@ -163,7 +163,7 @@ class CartVm extends StateNotifier<CartState> {
         CartItem(
           shopId: shopId,
           deliveryAddress: "",
-          deliveryFee: 0,
+          deliveryFee: "",
           deliveryDate: "",
           shopName: "",
           shopLogo: "",

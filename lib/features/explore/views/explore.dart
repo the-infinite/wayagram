@@ -140,7 +140,10 @@ class _ExploreState extends ConsumerState<Explore> {
             const Gap(25),
             state.isLoading
                 ? _buildProductLoadingState(context: context)
-                : _buildProductGrid(notifier.filteredProducts),
+                : _buildProductGrid(
+                    products: notifier.filteredProducts.length > 2
+                        ? notifier.filteredProducts.sublist(0, 2)
+                        : notifier.filteredProducts),
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {},
@@ -173,7 +176,7 @@ class _ExploreState extends ConsumerState<Explore> {
         ));
   }
 
-  Widget _buildProductGrid(List<Product> products) {
+  Widget _buildProductGrid({required List<Product> products}) {
     return Column(
       children: [
         for (int i = 0; i < products.length; i += 2)
