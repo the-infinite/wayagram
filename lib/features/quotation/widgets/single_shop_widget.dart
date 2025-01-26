@@ -12,7 +12,8 @@ class SingleShopWidget extends ConsumerWidget {
   //required this.order
   final VoidCallback onTap;
   final bool isSeller;
-  const SingleShopWidget({super.key, this.isSeller = false, required this.onTap});
+  const SingleShopWidget(
+      {super.key, this.isSeller = false, required this.onTap});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -74,7 +75,7 @@ class SingleShopWidget extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     InkWell(
-                        onTap: ()=> onTap,
+                        onTap: () => onTap,
                         child: SvgPicture.asset('assets/icons/menu.svg')),
                   ],
                 )
@@ -88,18 +89,18 @@ class SingleShopWidget extends ConsumerWidget {
   }
 }
 
-
-
 class SingleShopWidgetViewModel extends ChangeNotifier {
   final Ref ref;
   SingleShopWidgetViewModel(this.ref);
 
   Future<void> addDeliveryDetail(BuildContext context) async {
-    await showDialog(
+    /**
+   await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AddDeliveryDetails();
         });
+   */
   }
 
   Future<void> sellerOrderAction(BuildContext context) async {
@@ -109,7 +110,7 @@ class SingleShopWidgetViewModel extends ChangeNotifier {
         secondButtonText: 'See your Order Details',
         title: 'Populate Delivery Details',
         message:
-        "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
         onPress: () async {
           await addDeliveryDetail(context);
         },
@@ -119,7 +120,7 @@ class SingleShopWidgetViewModel extends ChangeNotifier {
         icon: Image.asset('assets/images/shop/delivery-van.png'));
   }
 
-  Future<void> popUpMenu(BuildContext context)  async{
+  Future<void> popUpMenu(BuildContext context) async {
     await showMenu(
       context: context,
       elevation: 4,
@@ -132,7 +133,6 @@ class SingleShopWidgetViewModel extends ChangeNotifier {
       ),
       position: const RelativeRect.fromLTRB(100, 0, 0, 100),
       items: [
-
         PopupMenuItem(
           //onTap: () => MainClass.open(context, const SavingsReport()),
           value: 1,
@@ -148,7 +148,6 @@ class SingleShopWidgetViewModel extends ChangeNotifier {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-
             ],
           ),
         ),
@@ -170,14 +169,11 @@ class SingleShopWidgetViewModel extends ChangeNotifier {
             ],
           ),
         ),
-
       ],
-    ).then((value){
-
-    });
+    ).then((value) {});
   }
 }
 
 final singleShopWidgetViewModelProvider =
-ChangeNotifierProvider<SingleShopWidgetViewModel>(
+    ChangeNotifierProvider<SingleShopWidgetViewModel>(
         (ref) => SingleShopWidgetViewModel(ref));

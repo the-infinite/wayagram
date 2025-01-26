@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:svg_flutter/svg.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -136,32 +134,7 @@ class _ExploreState extends ConsumerState<Explore> {
               setCategory: (value) =>
                   ref.read(shopVmProvider.notifier).setCategory(value),
             ),
-            const Gap(10),
-            // WayaButton(
-            //   callback: () {
-            //     //    WayaNav.toNamed(AddProduct.route);
-            //   },
-            //   color: wayaTheme.colorScheme.primar50,
-            //   centerWidget: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     crossAxisAlignment: CrossAxisAlignment.center,
-            //     children: [
-            //       SvgPicture.asset(
-            //         WayaAssests.icons.buttonIcon.path,
-            //         colorFilter: ColorFilter.mode(
-            //             wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
-            //       ),
-            //       const Gap(6),
-            //       Text(
-            //         "Add New Product",
-            //         style: TextStyle().wayaCopyWith(
-            //             color: wayaTheme.colorScheme.customPrimary,
-            //             fontSize: 14,
-            //             fontWeight: FontWeight.w500),
-            //       )
-            //     ],
-            //   ),
-            // ),
+
             const Gap(25),
             state.isLoading
                 ? _buildProductLoadingState(context: context)

@@ -16,11 +16,12 @@ import 'package:mime/mime.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
 class DocType {
-  final File file;
+  final File? file;
   final String name;
   final String type;
+  final String url;
 
-  DocType({required this.file, required this.type, required this.name});
+  DocType({required this.file, required this.type, required this.name, this.url = ''});
 }
 
 class AddBusinessAccountState {
@@ -68,11 +69,12 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
   final AuthRepository _authRepository;
   final WayaSecureDataSource _secureDataSource;
   final ProfileRepo _profileRepo;
+  final SuccessfulSetupVm _setupVm;
   final Ref ref;
   final _logger = getLogger("AddBusinessAccountVm");
 
   AddBusinessAccountVm(this._authRepository, this.localDataSource,
-      this._secureDataSource, this._profileRepo, this.ref)
+      this._secureDataSource, this._profileRepo, this._setupVm, this.ref)
       : super(AddBusinessAccountState(
           selected: localDataSource.getSelectedBusinessType().label,
           businessName: TextEditingController(),
@@ -141,52 +143,54 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
         ? {
             'nin': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'nin')
-                .file),
+                .file!),
             'cacDocument': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'cac')
-                .file),
+                .file!),
             'utilityBill': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'bill')
-                .file),
+                .file!),
             'passport': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'passport')
-                .file),
+                .file!),
             'businessId': businessId,
             'cacNumber': state.cac.text
           }
         : {
             'nin': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'nin')
-                .file),
+                .file!),
             'utilityBill': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'bill')
-                .file),
+                .file!),
             'passport': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'passport')
-                .file),
+                .file!),
             'businessId': businessId,
           };
 
     try {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.businessKyc(formdata);
-      if (response.data['statusCode'] == 200 && context.mounted) {
+      if (response.data['statusCode'] == 200) {
         final userId = await _secureDataSource.getUserId();
         final bizResponse =
             await _profileRepo.getBusinessDataRepo(userId: userId!);
         if (bizResponse.success) {
           BusinessAccountData bizData =
               BusinessAccountData.fromJson(bizResponse.data);
-          ref.read(successfulSetupVmProvider).copyWith(business: bizData);
+          _setupVm.state.copyWith(business: bizData);
         }
-        WayaUtils.showNotice(
-            context: context,
-            title: 'KYC Documents Submitted \n Successfully',
-            message:
-                'Your documents are under review. We’ll notify you once the \n verification process is complete',
-            onPress: () => WayaNav.toNamed("/explore"),
-            icon: Image.asset('assets/images/auth/doc-success.png'),
-            buttonText: 'Go To HomePage');
+        if (context.mounted) {
+          WayaUtils.showNotice(
+              context: context,
+              title: 'KYC Documents Submitted \n Successfully',
+              message:
+                  'Your documents are under review. We’ll notify you once the \n verification process is complete',
+              onPress: () => WayaNav.toNamed("/explore"),
+              icon: Image.asset('assets/images/auth/doc-success.png'),
+              buttonText: 'Go To HomePage');
+        }
       }
     } catch (e) {
       _logger.e(e);
@@ -198,6 +202,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
 
 final addBusinessAccountProvider = StateNotifierProvider.autoDispose<
     AddBusinessAccountVm, AddBusinessAccountState>((ref) {
+  final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
   return AddBusinessAccountVm(AuthRepository(), WayaLocalDataSource(),
-      WayaSecureDataSource(), ProfileRepo(), ref);
+      WayaSecureDataSource(), ProfileRepo(), successfulSetupVm, ref);
 });

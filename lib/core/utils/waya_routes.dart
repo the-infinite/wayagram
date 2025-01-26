@@ -20,8 +20,10 @@ import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.da
 import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
+import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_request.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
@@ -29,6 +31,7 @@ import 'package:wayagram/features/shop/seller/views/seller_dispute/views/add_evi
 import 'package:wayagram/features/shop/seller/views/seller_dispute/views/dispute_chat/dispute_chat.dart';
 import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute_detail.dart';
+import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
@@ -121,11 +124,13 @@ class WayaAppRoutes {
     PollAndVoting.route: ()=> PollAndVoting(),
     AddChoices.route: ()=> AddChoices(),
     PollSummary.route: () => PollSummary(),
-    PollDashboard.route: () => PollDashboard(),
+    PollDashboard.route: () => PollDashboard(pollId: '',),
     UpcomingContestDetails.route: ()=> UpcomingContestDetails(),
     CreateProfile.route: ()=> CreateProfile(),
     RegisterContest.route: ()=> RegisterContest(),
     ShareVotingLink.route: ()=> ShareVotingLink(),
+    DeliveryRequest.route:() => DeliveryRequest(),
+    SellerProducts.route:() => SellerProducts()
 
 
     

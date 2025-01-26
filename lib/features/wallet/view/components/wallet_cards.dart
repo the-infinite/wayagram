@@ -84,7 +84,7 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
       decoration: BoxDecoration(
           image: DecorationImage(
             opacity: 0.2,
-            image: AssetImage(WayaAssests.images.wallet.walletBg.path),
+            image: AssetImage(WayaAssets.images.wallet.walletBg.path),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
               wayaTheme.colorScheme.customPrimary,

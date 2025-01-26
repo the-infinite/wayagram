@@ -10,10 +10,11 @@ import 'package:wayagram/features/shop/widgets/widgets_vm/product_image_widget_v
 class ProductImageWidget extends ConsumerWidget {
   final List<String> images;
   const ProductImageWidget({super.key, required this.images});
-
+ 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
+    
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(productImageWidgetVmProvider.notifier);
     final currPage = ref.watch(productImageWidgetVmProvider).currentPage;

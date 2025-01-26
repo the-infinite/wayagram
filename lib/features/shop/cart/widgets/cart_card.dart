@@ -7,13 +7,13 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/cart/data/model.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/cart/widgets/cart_card_vm.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class CartCard extends ConsumerStatefulWidget {
@@ -35,7 +35,10 @@ class _CartCardState extends ConsumerState<CartCard> {
     final viewModel = ref.watch(cartCardVmProvider);
 
     final int totalPrice = widget.cartItem.products
-  .fold(0, (sum, item) => sum + (item.quantity * item.price));
+        .fold(0, (sum, item) => sum + (item.quantity * item.price));
+
+    final bool isDeliveryCharge = widget.cartItem.products.any(
+        (prod) => prod.deliveryCharge && widget.cartItem.deliveryFee == null);
 
     return Column(
       children: [
@@ -61,6 +64,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                   children: [
                     WayaDp(
                       radius: 20,
+                      image: widget.cartItem.shopLogo,
                     ),
                     const Gap(6),
                     Column(
@@ -68,13 +72,13 @@ class _CartCardState extends ConsumerState<CartCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.cartItem.shopId,
+                          widget.cartItem.shopName,
                           style: TextStyle().wayaCopyWith(
                               fontSize: 18,
                               color: wayaTheme.colorScheme.customBlack),
                         ),
                         Text(
-                          "Delivery Date: Jan 30th 2024",
+                          "Delivery Date: ${widget.cartItem.deliveryDate ?? ''}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.greyColor400,
                               fontSize: 14),
@@ -89,7 +93,12 @@ class _CartCardState extends ConsumerState<CartCard> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                       // viewModel.deliveryRequest(context,widget.restructuredCart.cart);
+                        ref.read(cartCardVmProvider.notifier).deliveryRequest(
+                            context,
+                            widget.cartItem.products,
+                            widget.cartItem.shopId,
+                            widget.cartItem.shopName,
+                            widget.cartItem.shopLogo);
                       },
                       child: SvgPicture.asset('assets/icons/chat.svg'),
                     ),
@@ -147,9 +156,19 @@ class _CartCardState extends ConsumerState<CartCard> {
                 width: context.width * 0.40,
                 child: WayaButton(
                     callback: () {
-                      WayaNav.toNamed('/checkout');
+                      if (isDeliveryCharge) {
+                        return ref
+                            .read(cartCardVmProvider.notifier)
+                            .deliveryRequest(
+                                context,
+                                widget.cartItem.products,
+                                widget.cartItem.shopId,
+                                widget.cartItem.shopName,
+                                widget.cartItem.shopLogo);
+                      }
+                      WayaNav.toNamed(Checkout.route, arguments: widget.cartItem);
                     },
-                    text: "Checkout"),
+                    text: isDeliveryCharge ? "Request Delivery" : "Checkout"),
               )
             ],
           ),
@@ -166,8 +185,13 @@ class CartProductCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Product? currProduct;
     // TODO: implement build
-
+    final allProducts = ref.watch(shopVmProvider).products;
+    if (allProducts.isNotEmpty) {
+      currProduct =
+          allProducts.firstWhere((prod) => prod.id == cartProduct.productId);
+    }
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
@@ -183,21 +207,13 @@ class CartProductCard extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  // cartProduct.images.isEmpty
-                  //     ? Container(
-                  //         height: 70,
-                  //         width: 50,
-                  //         decoration: BoxDecoration(
-                  //             color: wayaTheme.colorScheme.scaffoldColor,
-                  //             borderRadius: BorderRadius.circular(8)),
-                  //       )
-                  //     : WayaImage(
-                  //         imageUrl: cartProduct.images[0],
-                  //         height: 70,
-                  //         width: 50,
-                  //         radius: BorderRadius.circular(8),
-                  //         fit: BoxFit.contain,
-                  //       ),
+                  WayaImage(
+                    imageUrl: cartProduct.productImage ?? '',
+                    height: 70,
+                    width: 50,
+                    radius: BorderRadius.circular(8),
+                    fit: BoxFit.contain,
+                  ),
                   const Gap(5),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -206,7 +222,7 @@ class CartProductCard extends ConsumerWidget {
                       SizedBox(
                         width: context.width * 0.3,
                         child: Text(
-                          "cartProduct.name",
+                          cartProduct.productName,
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontWeight: FontWeight.w500,
@@ -236,22 +252,15 @@ class CartProductCard extends ConsumerWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      // final Product product = Product(
-                      //     category: cartProduct.category,
-                      //     name: cartProduct.name,
-                      //     images: cartProduct.images,
-                      //     discountPrice: cartProduct.discountPrice,
-                      //     seller: cartProduct.seller,
-                      //     id: cartProduct.id,
-                      //     quantity: cartProduct.quantity,
-                      //     price: cartProduct.price);
-                      // ref.read(cartProvider.notifier).addToCart(product, 1);
+                      ref
+                          .read(cartVmProvider.notifier)
+                          .addToCart(currProduct!, 1);
                     },
                     child: SvgPicture.asset('assets/icons/a-cart.svg'),
                   ),
                   const Gap(4),
                   Text(
-                    "fewfw",
+                    "${cartProduct.quantity}",
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.customPrimary,
                         fontWeight: FontWeight.w500,
@@ -260,9 +269,9 @@ class CartProductCard extends ConsumerWidget {
                   const Gap(6),
                   GestureDetector(
                     onTap: () {
-                      // ref
-                      //     .read(cartProvider.notifier)
-                      //     .removeFromCart(cartProduct.id);
+                      ref
+                          .read(cartVmProvider.notifier)
+                          .removeFromCart(cartProduct.productId, currProduct!);
                     },
                     child: SvgPicture.asset('assets/icons/r-cart.svg'),
                   ),

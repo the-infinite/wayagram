@@ -40,7 +40,7 @@ class AllSellerBids extends ConsumerWidget {
               style: wayaTheme.textTheme.hintStyle,
             ),
             const Gap(20),
-            FilterWidget<Product>(allItems: [], hintText: 'Search Bids',),
+            FilterWidget(search: TextEditingController(), hintText: 'Search Bids',),
             const Gap(15),
             GridView.builder(
                 itemCount: 3,

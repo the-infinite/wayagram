@@ -5,21 +5,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
-
-import 'polls_for_you.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
+  final String pollId;
   static const route = '/poll-dashboard';
-  const PollDashboard({super.key,});
+  const PollDashboard({super.key, required this.pollId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollDashboardState();
@@ -27,12 +24,23 @@ class PollDashboard extends ConsumerStatefulWidget {
 
 class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
+   late CreatePollVotingState getId;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      print("DARLINGTON POLLID ====>>> ${widget.pollId.toString()}");
+      ref.read(createPollVotingProvider.notifier).getDashboardPoll(widget.pollId.toString());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         isScrollable: true,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -58,17 +66,17 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
 
             const Gap(5),
-            FittedBox(
+           /* FittedBox(
               fit: BoxFit.fitWidth,
               child: Row(
                 children: [
-                  pollCard('240',  'Amount Voted'),
+                  pollCard('${viewModel.pollDashboardModel[0].amountPaid}',  'Amount Voted'),
                   const Gap(5),
-                  pollCard('120',  'Number of Voters'),
+                  pollCard('${viewModel.pollDashboardModel[0].quantity}',  'Number of Voters'),
                   const Gap(5),
-                  pollCard('240',  'Revenue Generated'),
+                  pollCard('${viewModel.dashboard[0].moneyGenerated}',  'Revenue Generated'),
               ],),
-            ),
+            ),*/
             const Gap(20),
         Container(
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
@@ -122,15 +130,27 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                   color: Theme.of(context).colorScheme.black ),
             ),
             const Gap(10),
-            statisticCard('240 vote', '1st', 'Dr Nnamdi Azikwe', Theme.of(context).colorScheme.success50),
-            const Gap(10),
-            statisticCard('240 vote', '2nd', 'Bola Ahmed Tinubu', Color(0xffFEF6E7) ),
-            const Gap(10),
-            statisticCard('90 vote', '  3rd', 'Mohammed Buhari', Theme.of(context).colorScheme.greyColor50 ),
-            const Gap(10),
-            statisticCard('90 vote', '  4th', 'Ekisagha Kemepade', Theme.of(context).colorScheme.greyColor50 ),
-            const Gap(10),
-            statisticCard('90 vote', '  5th', 'Ekisagha Kemepade', Theme.of(context).colorScheme.greyColor50 ),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: viewModel.pollDashboardModel.length,
+                itemBuilder: (context, index) {
+                  final poll = viewModel.pollDashboardModel[index];
+                  // int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
+                  //
+                  // int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
+
+                  return statisticCard('${poll.quantity} vote', '1st', '${poll.choice?.text?.capitalizeFirst}', Theme.of(context).colorScheme.success50);
+                }),
+            // statisticCard('240 vote', '1st', 'Dr Nnamdi Azikwe', Theme.of(context).colorScheme.success50),
+            // const Gap(10),
+            // statisticCard('240 vote', '2nd', 'Bola Ahmed Tinubu', Color(0xffFEF6E7) ),
+            // const Gap(10),
+            // statisticCard('90 vote', '  3rd', 'Mohammed Buhari', Theme.of(context).colorScheme.greyColor50 ),
+            // const Gap(10),
+            // statisticCard('90 vote', '  4th', 'Ekisagha Kemepade', Theme.of(context).colorScheme.greyColor50 ),
+            // const Gap(10),
+            // statisticCard('90 vote', '  5th', 'Ekisagha Kemepade', Theme.of(context).colorScheme.greyColor50 ),
             const Gap(10),
         ],),
         ),

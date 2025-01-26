@@ -57,17 +57,16 @@ class SingleBidWidget extends ConsumerWidget {
                         const Gap(8),
                         RichText(
                             text: TextSpan(children: [
-                              TextSpan(
-                                  text: 'Time Remaining | ',
-                                  style: wayaTheme.textTheme.hintStyle),
-
-                              TextSpan(
-                                  text: '11h: 20m: 30s',
-                                  style: TextStyle().wayaCopyWith(
-                                      color: wayaTheme.colorScheme.customPrimary,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400)),
-                            ])),
+                          TextSpan(
+                              text: 'Time Remaining | ',
+                              style: wayaTheme.textTheme.hintStyle),
+                          TextSpan(
+                              text: '11h: 20m: 30s',
+                              style: TextStyle().wayaCopyWith(
+                                  color: wayaTheme.colorScheme.customPrimary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400)),
+                        ])),
                       ],
                     )
                   ],
@@ -113,11 +112,13 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
   SingleBidWidgetViewModel(this.ref);
 
   Future<void> addDeliveryDetail(BuildContext context) async {
-    await showDialog(
+    /**
+   await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AddDeliveryDetails();
         });
+   */
   }
 
   Future<void> sellerBidAction(BuildContext context) async {
@@ -127,7 +128,7 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
         secondButtonText: 'See your Order Details',
         title: 'Populate Delivery Details',
         message:
-        "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
         onPress: () async {
           await addDeliveryDetail(context);
         },
@@ -139,5 +140,5 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
 }
 
 final singleBidWidgetViewModelProvider =
-ChangeNotifierProvider<SingleBidWidgetViewModel>(
+    ChangeNotifierProvider<SingleBidWidgetViewModel>(
         (ref) => SingleBidWidgetViewModel(ref));

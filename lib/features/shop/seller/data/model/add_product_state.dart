@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 
 class AddProductState {
   final TextEditingController productName;
@@ -16,10 +17,9 @@ class AddProductState {
   final TextEditingController productWidth;
   final TextEditingController productHeight;
   final TextEditingController productDepth;
-  final TextEditingController stockQuantity;
   final List<MultipartFile> images;
   final String shopId;
-  final bool isWayagramDeal;
+  final bool? isWayagramDeal;
   final bool includeMeasurement;
   final bool includeDeliveryFee;
   final bool applyDiscount;
@@ -41,6 +41,8 @@ class AddProductState {
   final TextEditingController discountPercentage;
   final bool isLoading;
   int totalNoOfDiscountPages;
+  final bool isEditMode;
+  final bool isLoadingEditingMode;
 
   AddProductState(
       {TextEditingController? productName,
@@ -49,7 +51,6 @@ class AddProductState {
       TextEditingController? pricePerUnit,
       TextEditingController? pickUpAddress,
       TextEditingController? deliveryPrice,
-      TextEditingController? stockQuantity,
       this.productCategory = '',
       this.selectedCategory,
       this.productColor = '',
@@ -73,7 +74,9 @@ class AddProductState {
       this.allDiscountTypes = const [],
       TextEditingController? discountPercentage,
       this.isLoading = false,
-      this.isWayagramDeal = false})
+      this.isEditMode = false,
+      this.isLoadingEditingMode = false,
+      this.isWayagramDeal})
       : productName = productName ?? TextEditingController(),
         productDescription = productDescription ?? TextEditingController(),
         materialType = materialType ?? TextEditingController(),
@@ -83,7 +86,6 @@ class AddProductState {
         productDepth = productDepth ?? TextEditingController(),
         productHeight = productHeight ?? TextEditingController(),
         discountPercentage = discountPercentage ?? TextEditingController(),
-        stockQuantity = stockQuantity ?? TextEditingController(),
         productWidth = productWidth ?? TextEditingController();
 
   AddProductState copyWith(
@@ -99,6 +101,7 @@ class AddProductState {
       TextEditingController? stockQuantity,
       String? productCategory,
       Select? selectedCategory,
+      bool? isEditMode,
       String? productColor,
       String? productCondition,
       String? productType,
@@ -117,6 +120,7 @@ class AddProductState {
       int? totalNoOfDiscountPages,
       Select? selectedDiscountType,
       bool? isLoading,
+      bool? isLoadingEditingMode,
       String? shopId}) {
     return AddProductState(
         productName: productName ?? this.productName,
@@ -132,7 +136,6 @@ class AddProductState {
         productDepth: productDepth ?? this.productDepth,
         productHeight: productHeight ?? this.productHeight,
         productWidth: productWidth ?? this.productWidth,
-        stockQuantity: stockQuantity ?? this.stockQuantity,
         pickUpOption: pickUpOption ?? this.pickUpOption,
         discountType: discountType ?? this.discountType,
         includeMeasurement: includeMeasurement ?? this.includeMeasurement,
@@ -150,6 +153,8 @@ class AddProductState {
         selectedDiscountType: selectedDiscountType ?? this.selectedDiscountType,
         totalNoOfDiscountPages:
             totalNoOfDiscountPages ?? this.totalNoOfDiscountPages,
+        isLoadingEditingMode: isLoadingEditingMode ?? this.isLoadingEditingMode,
+        isEditMode: isEditMode ?? this.isEditMode,
         images: images ?? this.images);
   }
 
@@ -171,7 +176,26 @@ class AddProductState {
         deliveryCharge: includeDeliveryFee,
         materialType: materialType.text,
         discountPercentage: discountPercentage.text,
-        stockQuantity: int.parse(stockQuantity.text),
         images: images);
   }
+}
+
+class UpdateProductArg {
+  final SellerProduct product;
+  final String uniqueKey;
+
+  UpdateProductArg({required this.uniqueKey, required this.product});
+}
+
+class AddProductArg {
+  final String uniqueKey;
+
+  AddProductArg({required this.uniqueKey});
+}
+
+class AddWayagramArg {
+  final bool isWayagram;
+  final String uniqueKey;
+
+  AddWayagramArg({required this.uniqueKey, required this.isWayagram});
 }

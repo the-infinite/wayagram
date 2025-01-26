@@ -16,10 +16,12 @@ class PreviewProduct extends ConsumerStatefulWidget {
   final Function(int index) goBack;
   final Function gotoPreviousTab;
   final bool isWayagramDeal;
+  final String uniqueKey;
   const PreviewProduct(
       {super.key,
       required this.goBack,
       required this.gotoPreviousTab,
+      required this.uniqueKey,
       this.isWayagramDeal = false});
 
   @override
@@ -30,8 +32,8 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final provider = ref.watch(addProductProvider.notifier);
-    final viewModel = ref.watch(addProductProvider);
+    final provider = ref.watch(addProductProvider(widget.uniqueKey).notifier);
+    final viewModel = ref.watch(addProductProvider(widget.uniqueKey));
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,6 +62,8 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
               return AddedImageWidget(
                   ref: ref,
                   id: index,
+                  uniqueKey: widget.uniqueKey,
+                  url: viewModel.uploadedDocuments[index].url,
                   imagePath: viewModel.uploadedDocuments[index].file);
             }),
         // Text(
@@ -224,7 +228,9 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
                 loading: viewModel.isLoading, text: 'Submit Product'),
             callback: !viewModel.isLoading
                 ? () {
-                    ref.read(addProductProvider.notifier).onSubmit(context);
+                    ref
+                        .read(addProductProvider(widget.uniqueKey).notifier)
+                        .onSubmit(context);
                     //   provider.submit(context, widget.isWayagramDeal);
                   }
                 : null),

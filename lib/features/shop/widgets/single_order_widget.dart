@@ -106,7 +106,7 @@ class SingleOrderWigdetViewModel extends ChangeNotifier {
     await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AddDeliveryDetails();
+          return Container();
         });
   }
 

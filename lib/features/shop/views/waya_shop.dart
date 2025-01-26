@@ -8,6 +8,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
+import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/views/seller_shop/seller_shop.dart';
@@ -68,13 +69,15 @@ class _WayaShopState extends ConsumerState<WayaShop>
         ),
         floatingActionButton: Visibility(
           visible: ref.read(successfulSetupVmProvider).user!.user!.role!.name !=
-              'PERSONAL' && _selectedIndex == 2,
+                  'PERSONAL' &&
+              _selectedIndex == 2,
           child: SizedBox(
             height: 50,
             width: 50,
             child: WayaButton(
               callback: () {
-                WayaNav.toNamed(CreateShop.route);
+                WayaNav.toNamed(CreateShop.route,
+                    arguments: CreateShopArg(uniqueKey: 'create-shop'));
               },
               height: 50,
               centerWidget: Center(

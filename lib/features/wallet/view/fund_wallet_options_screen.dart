@@ -63,7 +63,7 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
             if (viewModel.fundingOptions != null)
               ...viewModel.fundingOptions!.map(
                 (e) => PaymentMethodTile(
-                  iconPath: WayaAssests.icons.wallet.wallet,
+                  iconPath: WayaAssets.icons.wallet.wallet,
                   paymentMethod: e.name,
                   description: e.description,
                   onTap: () async {

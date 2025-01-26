@@ -7,8 +7,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
+import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_additional_shop_vm.dart';
-import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 
 class CreateShop extends ConsumerStatefulWidget {
@@ -21,24 +21,45 @@ class CreateShop extends ConsumerStatefulWidget {
 
 class _CreateShopState extends ConsumerState<CreateShop> {
   final _formKey = GlobalKey<FormState>();
+  String uniqueKey = '';
 
-   @override
+  @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-     
-      ref.read(createAdditionalShopVmProvider.notifier).fetchStates();
+      _initializeArgs();
+      ref
+          .read(createAdditionalShopVmProvider(uniqueKey).notifier)
+          .fetchStates();
     });
     super.initState();
   }
+
+  void _initializeArgs() {
+    final args = ModalRoute.of(context)?.settings.arguments;
+
+    if (args is UpdateShopArg) {
+      uniqueKey = args.uniqueKey;
+      ref
+          .read(createAdditionalShopVmProvider(args.uniqueKey).notifier)
+          .initializeEdit(args.singleShop);
+    } else if (args is CreateShopArg) {
+      uniqueKey = args.uniqueKey;
+    } else {
+      throw ArgumentError('Unsupported arguments: $args');
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createAdditionalShopVmProvider);
+    final viewModel = ref.watch(createAdditionalShopVmProvider(uniqueKey));
     return WayaScaffold(
         isLoading: viewModel.isLoading,
         isScrollable: true,
-        title: 'Create Shop',
+        title: uniqueKey.contains('update') ? 'Edit Shop' : 'Create Shop',
         onTapBackButton: () =>
             Navigator.pushNamed(context, BottomView.route, arguments: 1),
         body: Form(
@@ -49,7 +70,10 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                 UploadLogo(
                     imagePath: viewModel.image,
                     onUpload: () {
-                      ref.read(createAdditionalShopVmProvider.notifier).uploadFile();
+                      ref
+                          .read(createAdditionalShopVmProvider(uniqueKey)
+                              .notifier)
+                          .uploadFile();
                     }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
@@ -164,43 +188,43 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                     ],
                   );
                 }),
-                 const Gap(10),
-                  FormField<String>(validator: (value) {
-                    if (viewModel.email.text.isEmpty) {
-                      return 'Email is required';
-                    }
-                    final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                    if (!regexp.hasMatch(viewModel.email.text)) {
-                      return 'Invalid email address';
-                    }
-                    return null;
-                  }, builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaTextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          controller: viewModel.email,
-                          hintText: 'example@gmail.com',
-                          borderColor:
-                              formState.hasError && viewModel.email.text.isEmpty
-                                  ? wayaTheme.colorScheme.error
-                                  : null,
-                          label: 'Email Address',
-                        ),
-                        if (formState.hasError && viewModel.email.text.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
-                            ),
+                const Gap(10),
+                FormField<String>(validator: (value) {
+                  if (viewModel.email.text.isEmpty) {
+                    return 'Email is required';
+                  }
+                  final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                  if (!regexp.hasMatch(viewModel.email.text)) {
+                    return 'Invalid email address';
+                  }
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: viewModel.email,
+                        hintText: 'example@gmail.com',
+                        borderColor:
+                            formState.hasError && viewModel.email.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
+                        label: 'Email Address',
+                      ),
+                      if (formState.hasError && viewModel.email.text.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
-                      ],
-                    );
-                  }),
+                        ),
+                    ],
+                  );
+                }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
                   if (viewModel.description.text.isEmpty) {
@@ -255,7 +279,13 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           hintText: 'Select State',
                           items: viewModel.states,
                           onSelected: (value) => ref
+
                               .read(createAdditionalShopVmProvider.notifier).selectState(value)),
+
+
+                              .read(createAdditionalShopVmProvider(uniqueKey)
+                                  .notifier)
+                              .selectState(value)),
 
                       if (formState.hasError && viewModel.state.isEmpty)
                         Padding(
@@ -288,7 +318,8 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           value: viewModel.lga,
                           items: viewModel.lgas,
                           onSelected: (value) => ref
-                              .read(createAdditionalShopVmProvider.notifier)
+                              .read(createAdditionalShopVmProvider(uniqueKey)
+                                  .notifier)
                               .selectLGA(value)),
                       if (formState.hasError && viewModel.lga.isEmpty)
                         Padding(
@@ -347,7 +378,8 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                     callback: () {
                       if (_formKey.currentState!.validate()) {
                         ref
-                            .read(createAdditionalShopVmProvider.notifier)
+                            .read(createAdditionalShopVmProvider(uniqueKey)
+                                .notifier)
                             .createSellerShop();
                       }
                     },

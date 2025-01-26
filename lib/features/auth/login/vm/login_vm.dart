@@ -89,23 +89,24 @@ class LoginVm extends StateNotifier<LoginState> {
           businessId: state.businessIdController.text,
           password: state.passwordController.text);
 
-     // _logger.d(" result ${response.data['message']}");
+      // _logger.d(" result ${response.data['message']}");
       if (response.success) {
+       // clearStorage();
         final remmoteUserData = UserModel.fromJson(response.data);
         state = state.copyWith(userData: remmoteUserData);
-
-        _localDataSource
-            .saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
-        await _secureDataSource
-            .saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
-        await _secureDataSource
-            .saveToken(remmoteUserData.data?.token?.token as String);
-        await _secureDataSource.saveRefreshToken(
-            remmoteUserData.data?.token?.refreshToken as String);
 
         //
 
         if (remmoteUserData.data != null) {
+          _localDataSource
+              .saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
+          await _secureDataSource
+              .saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
+          await _secureDataSource
+              .saveToken(remmoteUserData.data?.token?.token as String);
+          await _secureDataSource.saveRefreshToken(
+              remmoteUserData.data?.token?.refreshToken as String);
+          print(remmoteUserData.data?.userdata?.user?.id);
           final response = await _profileRepo.getUserDataRepo(
               userId: remmoteUserData.data?.userdata?.user?.id as String);
 
@@ -135,6 +136,14 @@ class LoginVm extends StateNotifier<LoginState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  void clearStorage() async {
+    await _secureDataSource.saveToken("");
+    await _secureDataSource.saveRefreshToken("");
+    await _secureDataSource.saveBusinessId("");
+    _localDataSource.saveUserId("");
+    await _secureDataSource.saveUserId("");
   }
 }
 

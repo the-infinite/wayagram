@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+
 part 'create_contest.g.dart';
+
+
 
 @JsonSerializable()
 class CreateContestModel {
@@ -59,8 +62,8 @@ class CreateContestModel {
     required this.contestSettings,
   });
 
-  factory CreateContestModel.fromJson(Map<String, dynamic> json) => _$CreateContestModelFromJson(json);
-  Map<String, dynamic> toJson() => _$CreateContestModelToJson(this);
+   factory CreateContestModel.fromJson(Map<String, dynamic> json) => _$CreateContestModelFromJson(json);
+   Map<String, dynamic> toJson() => _$CreateContestModelToJson(this);
 }
 
 @JsonSerializable()
@@ -73,8 +76,8 @@ class ContestSettings {
     required this.formRequirements,
   });
 
-  factory ContestSettings.fromJson(Map<String, dynamic> json) => _$ContestSettingsFromJson(json);
-  Map<String, dynamic> toJson() => _$ContestSettingsToJson(this);
+   factory ContestSettings.fromJson(Map<String, dynamic> json) => _$ContestSettingsFromJson(json);
+   Map<String, dynamic> toJson() => _$ContestSettingsToJson(this);
 }
 
 @JsonSerializable()
@@ -99,8 +102,8 @@ class Stage {
     required this.approveBeforeLive,
   });
 
-  factory Stage.fromJson(Map<String, dynamic> json) => _$StageFromJson(json);
-  Map<String, dynamic> toJson() => _$StageToJson(this);
+   factory Stage.fromJson(Map<String, dynamic> json) => _$StageFromJson(json);
+   Map<String, dynamic> toJson() => _$StageToJson(this);
 }
 
 @JsonSerializable()
@@ -116,6 +119,7 @@ class FormRequirement {
     required this.textDescription,
     required this.required,
   });
+
 
   factory FormRequirement.fromJson(Map<String, dynamic> json) => _$FormRequirementFromJson(json);
   Map<String, dynamic> toJson() => _$FormRequirementToJson(this);
@@ -210,3 +214,10 @@ extension CreateContestModelCopyWith on CreateContestModel {
 
 
 }
+
+
+
+   factory FormRequirement.fromJson(Map<String, dynamic> json) => _$FormRequirementFromJson(json);
+   Map<String, dynamic> toJson() => _$FormRequirementToJson(this);
+}
+

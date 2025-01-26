@@ -4,9 +4,24 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
-class CheckoutVm extends ChangeNotifier {
+class CheckoutState {
+  final bool isLoading;
+
+  CheckoutState({
+    this.isLoading = false
+  });
+
+  CheckoutState copyWith({
+    bool? isLoading
+  }) {
+    return CheckoutState(isLoading: isLoading ?? this.isLoading);
+  }
+}
+
+class CheckoutVm extends StateNotifier<CheckoutState> {
   final Ref ref;
-  CheckoutVm(this.ref);
+  
+  CheckoutVm(this.ref): super(CheckoutState());
 
   void checkout(BuildContext context) {
     WayaUtils.showNotice(
@@ -36,4 +51,4 @@ class CheckoutVm extends ChangeNotifier {
   }
 }
 
-final checkoutVmProvider = ChangeNotifierProvider((ref) => CheckoutVm(ref));
+final checkoutVmProvider = StateNotifierProvider<CheckoutVm, CheckoutState>((ref) => CheckoutVm(ref));

@@ -7,10 +7,15 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/widgets/order_info_widget.dart';
+import 'package:wayagram/features/shop/seller/data/model/delivery_request_response_model.dart';
 
 class AddDeliveryDetails extends ConsumerStatefulWidget {
-  const AddDeliveryDetails({super.key});
+  final DeliveryRequestData data;
+  const AddDeliveryDetails({super.key, required this.data});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -23,6 +28,8 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(addDeliveryDetailsViewModelProvider);
+    String address = widget.data.items[0].deliveryAddress;
+    String shopId = widget.data.items[0].shopId;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -53,14 +60,13 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                 ),
                 const Gap(12),
                 Text(
-                  "Add the delivery price and date of delivery for this \n order so the customer can review and pay",
+                  "Add the delivery price and date of delivery for this order so the customer can review and pay",
                   textAlign: TextAlign.start,
                   style: WayaTextStyles.descriptionStyle,
                 ),
                 const Gap(24),
                 OrderInfoWidget(
-                    title: "Delivery Address",
-                    description: "64 Lekki Expressway, Lagos, Nigeria"),
+                    title: "Delivery Address", description: address),
                 const Gap(24),
                 Row(
                   children: [
@@ -135,7 +141,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                         FormField<String>(
                           validator: (value) {
                             if (viewModel.deliveryDate.isEmpty) {
-                              return 'Date of Birth is required';
+                              return 'Date is required';
                             }
                             return null;
                           },
@@ -144,7 +150,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Date of Birth",
+                                Text("Delivery Date",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium
@@ -156,13 +162,21 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                                 const Gap(4),
                                 WayaButton(
                                   callback: () {
-                                    viewModel.showDatePickerDialog(context);
+                                    ref
+                                        .read(
+                                            addDeliveryDetailsViewModelProvider
+                                                .notifier)
+                                        .showDatePickerDialog(context);
                                   },
                                   horizontalPadding: 0,
                                   color: wayaTheme.colorScheme.transparent,
                                   centerWidget: Focus(
                                       onFocusChange: (hasFocus) {
-                                        viewModel.focusChanged(hasFocus);
+                                        ref
+                                            .read(
+                                                addDeliveryDetailsViewModelProvider
+                                                    .notifier)
+                                            .focusChanged(hasFocus);
                                       },
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(
@@ -221,11 +235,22 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                         ),
                         const Gap(20),
                         WayaButton(
-                            callback: () {
-                            if (_formKey.currentState!.validate()) {
+                            callback: !viewModel.isLoading
+                                ? () {
+                                    if (_formKey.currentState!.validate()) {
+                                      ref
+                                          .read(
+                                              addDeliveryDetailsViewModelProvider
+                                                  .notifier)
+                                          .deliveryUpdate(
+                                              deliveryAddress: address,
+                                              userId: widget.data.userId,
+                                              shopId: shopId);
 
-                            }
-                            },
+                                      WayaNav.removeUntilNamed(ManageShop.route);
+                                    }
+                                  }
+                                : null,
                             text: "Add Delivery Details"),
                       ],
                     )),
@@ -246,53 +271,89 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
   }
 }
 
-class AddDeliveryDetailsViewModel extends ChangeNotifier {
+class AddDeliveryDetailState {
+  final bool isLoading;
+  final TextEditingController deliveryPrice;
+  final String deliveryDate;
+  final bool isFocused;
+  final String deliveryDateIso;
+
+  AddDeliveryDetailState({
+    this.isLoading = false,
+    TextEditingController? deliveryPrice,
+    this.deliveryDate = '',
+    this.deliveryDateIso = '',
+    this.isFocused = false,
+  }) : deliveryPrice = deliveryPrice ?? TextEditingController();
+
+  AddDeliveryDetailState copyWith(
+      {bool? isLoading,
+      TextEditingController? deliveryPrice,
+      String? deliveryDate,
+      bool? isFocused,
+      String? deliveryDateIso}) {
+    return AddDeliveryDetailState(
+        isLoading: isLoading ?? this.isLoading,
+        deliveryPrice: deliveryPrice ?? this.deliveryPrice,
+        deliveryDate: deliveryDate ?? this.deliveryDate,
+        isFocused: isFocused ?? this.isFocused,
+        deliveryDateIso: deliveryDateIso ?? this.deliveryDateIso);
+  }
+}
+
+class AddDeliveryDetailsViewModel
+    extends StateNotifier<AddDeliveryDetailState> {
   final Ref ref;
-  AddDeliveryDetailsViewModel(this.ref);
-  final TextEditingController deliveryPrice = TextEditingController();
-  String deliveryDate = '';
-  String _deliveryDateIso = '';
-    bool _isFocused = false;
-
-
-
-    bool get isFocused => _isFocused;
+  final CartRepository _cartRepository;
+  AddDeliveryDetailsViewModel(this._cartRepository, this.ref)
+      : super(AddDeliveryDetailState());
 
   void focusChanged(bool hasFocus) {
-    _isFocused = hasFocus;
-    notifyListeners();
+    state = state.copyWith(isFocused: hasFocus);
   }
-
-
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    deliveryPrice.dispose();
-    super.dispose();
-  }
-
 
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
+      final currentYear = DateTime.now().year;
+      final nextYear = currentYear + 1;
       final response = await showDatePicker(
           context: context,
           firstDate: DateTime(1950),
-          lastDate: DateTime.now(),
+          lastDate: DateTime(nextYear),
           initialDate: DateTime.now());
 
       if (response != null) {
-        deliveryDate = "${response.year}-${response.month}-${response.day}";
-        _deliveryDateIso = response.toIso8601String();
-        notifyListeners();
+        state = state.copyWith(
+            deliveryDate: "${response.year}-${response.month}-${response.day}");
+        state = state.copyWith(deliveryDateIso: response.toIso8601String());
       }
     } catch (error) {
       print(error);
     }
   }
 
+  Future<void> deliveryUpdate(
+      {required String deliveryAddress,
+      required String userId,
+      required String shopId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _cartRepository.updateDeliveryFee(
+          deliveryAddress: deliveryAddress,
+          deliveryFee: state.deliveryPrice.text,
+          deliveryDate: state.deliveryDateIso,
+          userId: userId,
+          shopId: shopId);
 
+      if (response.success) {}
+    } catch (e) {
+      print(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
 }
 
 final addDeliveryDetailsViewModelProvider =
-    ChangeNotifierProvider((ref) => AddDeliveryDetailsViewModel(ref));
+    StateNotifierProvider<AddDeliveryDetailsViewModel, AddDeliveryDetailState>(
+        (ref) => AddDeliveryDetailsViewModel(CartRepository(), ref));
