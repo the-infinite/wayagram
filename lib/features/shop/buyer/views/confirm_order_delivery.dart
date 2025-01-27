@@ -66,12 +66,14 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: RichText(
                           text: const TextSpan(children: [
+                        TextSpan(text: "Having issue? ", style: WayaTextStyles.bodySmall),
+                        TextSpan(text: "Contact Support", style: WayaTextStyles.smallActiveLinkStyle),
                         TextSpan(
                             text: "Having issue? ",
                             style: WayaTextStyles.bodySmall),
                         TextSpan(
                             text: "Contact Support",
-                            style: WayaTextStyles.smallactiveLinkStyle),
+                            style: WayaTextStyles.smallActiveLinkStyle,),
                       ]))),
                 ),
               ],

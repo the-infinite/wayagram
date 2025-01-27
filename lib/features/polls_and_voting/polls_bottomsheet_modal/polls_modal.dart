@@ -248,7 +248,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
             ),
             const Gap(20),
             WayaButton(
-              color: WayaColors.primar50,
+              color: WayaColors.primary50,
               callback: () async {
                 // WayaUtils.showModalSheet(
                 //   context,

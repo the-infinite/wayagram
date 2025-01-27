@@ -103,9 +103,9 @@ class OnboardingView extends ConsumerWidget {
                             textAlign: TextAlign.center,
                             text: const TextSpan(children: [
                               TextSpan(text: "By proceeding, you agree to our ", style: WayaTextStyles.bodySmall),
-                              TextSpan(text: "Terms and conditions ", style: WayaTextStyles.smallactiveLinkStyle),
+                              TextSpan(text: "Terms and conditions ", style: WayaTextStyles.smallActiveLinkStyle),
                               TextSpan(text: "and our ", style: WayaTextStyles.bodySmall),
-                              TextSpan(text: "Privacy policy", style: WayaTextStyles.smallactiveLinkStyle)
+                              TextSpan(text: "Privacy policy", style: WayaTextStyles.smallActiveLinkStyle)
                             ]))
                       ]),
                 ),

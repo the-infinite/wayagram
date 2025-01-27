@@ -12,11 +12,39 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart' as _svg;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
+class $AssetsFontsGen {
+  const $AssetsFontsGen();
+
+  /// File path: assets/fonts/SF-Pro-Display-Bold.otf
+  String get sFProDisplayBold => 'assets/fonts/SF-Pro-Display-Bold.otf';
+
+  /// File path: assets/fonts/SF-Pro-Display-Medium.otf
+  String get sFProDisplayMedium => 'assets/fonts/SF-Pro-Display-Medium.otf';
+
+  /// File path: assets/fonts/SF-Pro-Display-Regular.otf
+  String get sFProDisplayRegular => 'assets/fonts/SF-Pro-Display-Regular.otf';
+
+  /// File path: assets/fonts/SF-Pro-Display-Semibold.otf
+  String get sFProDisplaySemibold => 'assets/fonts/SF-Pro-Display-Semibold.otf';
+
+  /// List of all assets
+  List<String> get values => [
+        sFProDisplayBold,
+        sFProDisplayMedium,
+        sFProDisplayRegular,
+        sFProDisplaySemibold
+      ];
+}
+
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
   /// File path: assets/icons/a-cart.svg
   SvgGenImage get aCart => const SvgGenImage('assets/icons/a-cart.svg');
+
+  /// File path: assets/icons/action-filter.svg
+  SvgGenImage get actionFilter =>
+      const SvgGenImage('assets/icons/action-filter.svg');
 
   /// File path: assets/icons/apple.svg
   SvgGenImage get apple => const SvgGenImage('assets/icons/apple.svg');
@@ -259,6 +287,46 @@ class $AssetsIconsGen {
   SvgGenImage get moreAcctBal =>
       const SvgGenImage('assets/icons/more-acct-bal.svg');
 
+  /// File path: assets/icons/notif-filter-selected.svg
+  SvgGenImage get notifFilterSelected =>
+      const SvgGenImage('assets/icons/notif-filter-selected.svg');
+
+  /// File path: assets/icons/notif-group-request.svg
+  SvgGenImage get notifGroupRequest =>
+      const SvgGenImage('assets/icons/notif-group-request.svg');
+
+  /// File path: assets/icons/notif-new-comment.svg
+  SvgGenImage get notifNewComment =>
+      const SvgGenImage('assets/icons/notif-new-comment.svg');
+
+  /// File path: assets/icons/notif-new-donation.svg
+  SvgGenImage get notifNewDonation =>
+      const SvgGenImage('assets/icons/notif-new-donation.svg');
+
+  /// File path: assets/icons/notif-new-follower.svg
+  SvgGenImage get notifNewFollower =>
+      const SvgGenImage('assets/icons/notif-new-follower.svg');
+
+  /// File path: assets/icons/notif-new-message.svg
+  SvgGenImage get notifNewMessage =>
+      const SvgGenImage('assets/icons/notif-new-message.svg');
+
+  /// File path: assets/icons/notif-poll-results.svg
+  SvgGenImage get notifPollResults =>
+      const SvgGenImage('assets/icons/notif-poll-results.svg');
+
+  /// File path: assets/icons/notif-transaction.svg
+  SvgGenImage get notifTransaction =>
+      const SvgGenImage('assets/icons/notif-transaction.svg');
+
+  /// File path: assets/icons/notif-upcoming-event.svg
+  SvgGenImage get notifUpcomingEvent =>
+      const SvgGenImage('assets/icons/notif-upcoming-event.svg');
+
+  /// File path: assets/icons/notifications.svg
+  SvgGenImage get notifications =>
+      const SvgGenImage('assets/icons/notifications.svg');
+
   /// File path: assets/icons/order-van.svg
   SvgGenImage get orderVan => const SvgGenImage('assets/icons/order-van.svg');
 
@@ -335,6 +403,7 @@ class $AssetsIconsGen {
   /// List of all assets
   List<SvgGenImage> get values => [
         aCart,
+        actionFilter,
         apple,
         arrowBack,
         arrowKeyboardRight,
@@ -406,6 +475,16 @@ class $AssetsIconsGen {
         menu,
         moneyIcon,
         moreAcctBal,
+        notifFilterSelected,
+        notifGroupRequest,
+        notifNewComment,
+        notifNewDonation,
+        notifNewFollower,
+        notifNewMessage,
+        notifPollResults,
+        notifTransaction,
+        notifUpcomingEvent,
+        notifications,
         orderVan,
         orders,
         personal,
@@ -969,6 +1048,7 @@ class $AssetsImagesWalletGen {
 class WayaAssets {
   WayaAssets._();
 
+  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }

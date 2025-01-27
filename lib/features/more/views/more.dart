@@ -22,7 +22,7 @@ class MoreView extends ConsumerWidget {
     return WayaScaffold(
         isScrollable: true,
         title: "More",
-        automicallyImplyLeading: false,
+        automaticallyImplyLeading: false,
         
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,

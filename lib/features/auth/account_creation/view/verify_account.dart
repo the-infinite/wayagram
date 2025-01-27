@@ -77,7 +77,7 @@ class VerifyAccount extends ConsumerWidget {
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Text(
                         "Resend Otp",
-                        style: WayaTextStyles.smallactiveLinkStyle,
+                        style: WayaTextStyles.smallActiveLinkStyle,
                       )))
               : Container(
                   width: 200,
@@ -94,7 +94,7 @@ class VerifyAccount extends ConsumerWidget {
                     TextSpan(
                         text:
                             "Resend ${viewModelState.countdown ~/ 60}:${(viewModelState.countdown % 60).toString().padLeft(2, '0')}",
-                        style: WayaTextStyles.smallactiveLinkStyle),
+                        style: WayaTextStyles.smallActiveLinkStyle),
                   ]))),
         ),
         const Gap(50),

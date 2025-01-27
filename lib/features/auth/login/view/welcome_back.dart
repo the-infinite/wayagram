@@ -16,8 +16,7 @@ class WelcomeBackPage extends ConsumerStatefulWidget {
   static const route = '/welcome-back';
   const WelcomeBackPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _WelcomeBackPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _WelcomeBackPageState();
 }
 
 class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
@@ -39,7 +38,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       removeAppBar: false,
-      automicallyImplyLeading: false,
+      automaticallyImplyLeading: false,
       isScrollable: true,
       isLoading: viewModel.isLoading,
       body: Center(
@@ -56,8 +55,8 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
               width: 303.w,
               child: Text(
                 "Enter your login details to access your account",
-                style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                    fontSize: 15, color: wayaTheme.colorScheme.greyColor600),
+                style: wayaTheme.textTheme.bodyMedium
+                    ?.wayaCopyWith(fontSize: 15, color: wayaTheme.colorScheme.greyColor600),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -75,9 +74,8 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                 ref.read(profileVmProvider.notifier).logOutUser();
               },
               child: Text('Remove Account',
-                  style: wayaTheme.textTheme.hintStyleBold.wayaCopyWith(
-                      fontWeight: FontWeight.w500,
-                      color: wayaTheme.colorScheme.primary500)),
+                  style: wayaTheme.textTheme.hintStyleBold
+                      .wayaCopyWith(fontWeight: FontWeight.w500, color: wayaTheme.colorScheme.primary500)),
             ),
             Gap(20),
             Form(
@@ -87,23 +85,19 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     FormField<String>(validator: (value) {
-                      return WayaValidators.passwordValidator(
-                          viewModel.passwordController.text);
+                      return WayaValidators.passwordValidator(viewModel.passwordController.text);
                     }, builder: (formState) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Focus(
                             onFocusChange: (hasFocus) {
-                              ref
-                                  .read(loginVmProvider.notifier)
-                                  .setPasswordFocus(hasFocus);
+                              ref.read(loginVmProvider.notifier).setPasswordFocus(hasFocus);
                             },
                             child: WayaTextFormField(
                               keyboardType: TextInputType.visiblePassword,
                               controller: viewModel.passwordController,
-                              borderColor: formState.hasError &&
-                                      viewModel.passwordController.text.isEmpty
+                              borderColor: formState.hasError && viewModel.passwordController.text.isEmpty
                                   ? wayaTheme.colorScheme.error
                                   : null,
                               hintText: 'Enter Your Password',
@@ -111,9 +105,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                               obscureText: !viewModel.isPasswordVisible,
                               suffixIcon: IconButton(
                                 onPressed: () {
-                                  ref
-                                      .read(loginVmProvider.notifier)
-                                      .togglePasswordVisibility();
+                                  ref.read(loginVmProvider.notifier).togglePasswordVisibility();
                                 },
                                 autofocus: false,
                                 icon: Icon(viewModel.isPasswordVisible
@@ -123,15 +115,12 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                               ),
                             ),
                           ),
-                          if (formState.hasError &&
-                              !viewModel.isPasswordFocused)
+                          if (formState.hasError && !viewModel.isPasswordFocused)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
                                 formState.errorText!,
-                                style: TextStyle(
-                                    color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                               ),
                             ),
                         ],
@@ -144,10 +133,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                         onTap: () => WayaNav.toNamed('/forgot-password'),
                         child: Text('Forgot Password?',
                             style: wayaTheme.textTheme.bodySemiBold
-                                .wayaCopyWith(
-                                    fontSize: 14,
-                                    color:
-                                        wayaTheme.colorScheme.customPrimary)),
+                                .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
                       ),
                     ),
                     Gap(Get.height * 0.15),
@@ -155,9 +141,9 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                       text: 'Login',
                       callback: () {
                         if (_formKey.currentState!.validate()) {
-                          ref.read(loginVmProvider.notifier).onSubmit(
-                              email: setUp.user?.user?.email ?? '',
-                              isBusinessLogin: false);
+                          ref
+                              .read(loginVmProvider.notifier)
+                              .onSubmit(ref, email: setUp.user?.user?.email ?? '', isBusinessLogin: false);
                         }
                       },
                       color: wayaTheme.colorScheme.primary500,
@@ -174,8 +160,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                   label: WayaRichText(
                 title1: "Don't have an account? ",
                 title2: "Create new account",
-                style1: wayaTheme.textTheme.hintStyle
-                    .wayaCopyWith(color: wayaTheme.colorScheme.black),
+                style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
               )),
             ),
           ],
