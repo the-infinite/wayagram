@@ -54,7 +54,7 @@ class _AddProductState extends ConsumerState<AddProduct>
     final isLoading =
         ref.watch(addProductProvider(uniqueKey)).isLoadingEditingMode;
     print("cscscsc $uniqueKey");
-    return WayaScaffoldWithProgressbar(
+    return WayaScaffoldWithProgressBar(
       isLoading: isLoading,
       isScrollable: true,
       padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),

@@ -8,8 +8,8 @@ extension WayaTextThemeX on TextTheme {
   TextStyle get hintStyleSemiBold => WayaTextStyles.hintStyleSemiBold;
   TextStyle get bodyBold => WayaTextStyles.bodyBold;
   TextStyle get descriptionStyle => WayaTextStyles.descriptionStyle;
-  TextStyle get mediumdescriptionStyle => WayaTextStyles.mediumdescriptionStyle;
-  TextStyle get bodyXtraMedium => WayaTextStyles.bodyXtraMedium;
+  TextStyle get mediumdescriptionStyle => WayaTextStyles.mediumDescriptionStyle;
+  TextStyle get bodyXtraMedium => WayaTextStyles.bodyExtraMedium;
   TextStyle get titleLarge => WayaTextStyles.titleLarge;
   TextStyle get bodyMedium => WayaTextStyles.bodyMedium;
 }

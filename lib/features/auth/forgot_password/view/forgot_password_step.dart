@@ -31,7 +31,7 @@ class _ForgotPasswordStepState extends ConsumerState<ForgotPasswordStep> with Si
 
   @override
   Widget build(BuildContext context) {
-    return WayaScaffoldWithProgressbar(
+    return WayaScaffoldWithProgressBar(
         isLoading: false,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [

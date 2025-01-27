@@ -60,7 +60,7 @@ ElevatedButtonThemeData _elevatedButtonThemeData() {
 
 ChipThemeData _chipThemeData() {
   return ChipThemeData(
-    backgroundColor: WayaColors.primar50,
+    backgroundColor: WayaColors.primary50,
     labelStyle: const TextStyle(
       color: WayaColors.primary,
       fontWeight: FontWeight.bold,

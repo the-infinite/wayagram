@@ -6,7 +6,7 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get primary200 => WayaColors.primary200;
   Color get primary300 => WayaColors.primary300;
   Color get primary500 => WayaColors.primary500;
-  Color get primar50 => WayaColors.primar50;
+  Color get primar50 => WayaColors.primary50;
   Color get customPrimary => WayaColors.customPrimary;
   Color get primary75 => WayaColors.primary75;
   Color get primaryBrown50 => WayaColors.primaryBrown50;
@@ -68,8 +68,8 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get scaffoldColor2 => WayaColors.scaffoldColor2;
 
   // Card Background Colors
-  Color get cardBackgroudColor => WayaColors.cardBackgroudColor;
-  Color get cardBackgroudColor2 => WayaColors.cardBackgroudColor2;
+  Color get cardBackgroudColor => WayaColors.cardBackgroundColor;
+  Color get cardBackgroudColor2 => WayaColors.cardBackgroundColor2;
   Color get cardBorderColor200 => WayaColors.cardBorderColor200;
   Color get cardBorderColor300 => WayaColors.cardBorderColor300;
 }

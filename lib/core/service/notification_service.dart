@@ -1,113 +1,151 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PushNotifications {
   static final _firebaseMessaging = FirebaseMessaging.instance;
-  static final FlutterLocalNotificationsPlugin
-      _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  // request notification permission
-  static Future init() async {
-    await _firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: true,
-      badge: true,
-      carPlay: false,
-      criticalAlert: true,
-      provisional: false,
-      sound: true,
-    );
+  // Request the notification permission.
+  static Future<void> init() async {
+    //? First, try initializing firebase notifications.
+    try {
+      await _firebaseMessaging.requestPermission(
+        alert: true,
+        announcement: true,
+        badge: true,
+        carPlay: false,
+        criticalAlert: true,
+        provisional: false,
+        sound: true,
+      );
+    } catch (e) {
+      print("Failed to initialize firebase notifications because ${e.toString().toLowerCase()}");
+    }
+
+    //? Second, initialize local notifications.
+    try {
+      var androidInitialize = const AndroidInitializationSettings('@mipmap/launcher_icon');
+      var iOSInitialize = const DarwinInitializationSettings();
+      var initializationSettings = InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
+
+      //? If this is iOS...
+      if (Platform.isIOS) {
+        // Request for iOS notification permissions.
+        _flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()!
+            .requestPermissions(
+              sound: true,
+              alert: true,
+            ); //!.requestPermission();
+      }
+
+      //? We just assume this is Android.
+      else {
+        // Request for android notification permissions.
+        _flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+            ?.requestNotificationsPermission(); //!.requestPermission();
+      }
+
+      // Initialize the notification plugin.
+      await _flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: onNotificationTap,
+        onDidReceiveBackgroundNotificationResponse: onNotificationTap,
+      );
+    } catch (e) {
+      print("Failed to initialize local notifications because ${e.toString().toLowerCase()}");
+    }
+
+    //? Third, and finally, try to include our firebase notification listeners.
+    try {
+      FirebaseMessaging.onMessage.listen(onReceiveNotification);
+      FirebaseMessaging.onMessageOpenedApp.listen(onNotificationStartApp);
+      FirebaseMessaging.onBackgroundMessage(onReceiveBackgroundNotification);
+    } catch (e) {
+      print("Failed to bind notification listeners because ${e.toString().toLowerCase()}");
+    }
   }
 
-  // // get the fcm device token
-  // static Future getDeviceToken({int maxRetires = 3}) async {
-  //   try {
-  //     String? token;
-  //     // if (kIsWeb) {
-  //     //   // get the device fcm token
-  //     //   token = await _firebaseMessaging.getToken(
-  //     //       vapidKey:
-  //     //           "BPA9r_00LYvGIV9GPqkpCwfIl3Es4IfbGqE9CSrm6oeYJslJNmicXYHyWOZQMPlORgfhG8RNGe7hIxmbLXuJ92k");
-  //     //   print("for web device token: $token");
-  //     // } else {
-  //     // get the device fcm token
-  //     token = await _firebaseMessaging.getToken();
-  //     print(
-  //         "for android device token ==============================================: $token");
+  /// Simple utility function used to listen for notifications that are sent when
+  /// the app is open.
+  static Future<void> onReceiveNotification(RemoteMessage message) async {}
 
-  //     // saveTokentoFirestore(token: token!);
-  //     // return token;
-  //   } catch (e) {
-  //     print("failed to get device token ===========================");
-  //     if (maxRetires > 0) {
-  //       print("try after 10 sec  -------------=---------------------");
-  //       await Future.delayed(Duration(seconds: 10));
-  //       return getDeviceToken(maxRetires: maxRetires - 1);
-  //     } else {
-  //       return null;
-  //     }
-  //   }
-  // }
+  /// Simple utility function used to configure the app for the right startup
+  /// activity and proportions if the notification just so happens to be what
+  /// opened the app.
+  static Future<void> onNotificationStartApp(RemoteMessage message) async {}
 
-  static saveTokenToServer() async {
-    // final token = await _firebaseMessaging.getToken();
-    //  print("saved ========== $token");
-    // if (token == null) return;
-    // var storage = await SharedPreferenceLocalStorage.getInstance();
-    // var user = storage.getMap(StorageKeys.user);
-    // final crudService = CrudService();
+  /// Simple utility function used to listen for notifications that are send when
+  /// the app is currently in a minimized state.
+  static Future<void> onReceiveBackgroundNotification(RemoteMessage message) async {}
 
-    // if (user != null) {
-    //   await crudService.saveToken(token);
-    //    print("saved = ======");
-    // }
-    // // also save if token changes
-    // _firebaseMessaging.onTokenRefresh.listen((event) async {
-    //   if (user != null) {
-    //     await crudService.saveToken(token);
-    //     //  print("saved =wer");
-    //   }
-    // });
+  /// Simple utility used to get th eFirebase Cloud Messaging device token of
+  /// this device.
+  static Future<String?> _getDeviceToken({int maxRetires = 3}) async {
+    String? deviceToken;
+
+    // Try a couple of stuff.
+    try {
+      deviceToken = (await FirebaseMessaging.instance.getToken())!;
+    } catch (e) {
+      if (maxRetires > 0) {
+        print("try after 2 sec  -------------=---------------------");
+        await Future.delayed(Duration(seconds: 2));
+        return _getDeviceToken(maxRetires: maxRetires - 1);
+      }
+    }
+
+    // This is fine.
+    return deviceToken;
   }
 
-static Future localNotiInit() async {
-  // Initialise the plugin. `app_icon` needs to be added as a drawable resource to the Android head project.
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/launcher_icon');
+  /// A utility function used to not only retrieve the Firebase cloud messaging
+  /// device token of the calling device but also do any necessary platform
+  /// related configurations.
+  static Future<String?> requestDeviceToken() async {
+    String? deviceToken;
 
-  // final DarwinInitializationSettings initializationSettingsDarwin =
-  //     DarwinInitializationSettings(
-  //   onDidReceiveLocalNotification: (id, title, body, payload) {},
-  // );
+    // This is fine.
+    try {
+      if (Platform.isIOS) {
+        //? First, configure the notifications presentation method.
+        _firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
 
-  const LinuxInitializationSettings initializationSettingsLinux =
-      LinuxInitializationSettings(defaultActionName: 'Open notification');
+        //? Second, attempt to request/get notification permission configuration.
+        final settings = await _firebaseMessaging.requestPermission(
+          alert: true,
+          announcement: true,
+          badge: true,
+          carPlay: false,
+          criticalAlert: true,
+          provisional: false,
+          sound: true,
+        );
 
-  // final InitializationSettings initializationSettings = InitializationSettings(
-  //   android: initializationSettingsAndroid,
-  //   iOS: initializationSettingsDarwin,
-  //   linux: initializationSettingsLinux,
-  // );
+        //? We only ever want to send the device token when we confirm that
+        //? permissions are up to spec.
+        if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+          deviceToken = await _getDeviceToken();
+        }
+      } else {
+        deviceToken = await _getDeviceToken();
+      }
 
-  // Request notification permissions for Android 13 or above
-  final androidImplementation =
-      _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      //? Next, subscribe to topics.
+      FirebaseMessaging.instance.subscribeToTopic("all_all_all");
+    } catch (e) {
+      print(e);
+    }
 
-  if (androidImplementation != null) {
-    await androidImplementation.requestNotificationsPermission();
-  } else {
-    //print("AndroidFlutterLocalNotificationsPlugin is not available.");
+    //? Leave if no token was generated.
+    return deviceToken;
   }
-
-  // Initialize the plugin for handling notifications
-  // await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
-  //     onDidReceiveNotificationResponse: onNotificationTap,
-  //     onDidReceiveBackgroundNotificationResponse: onNotificationTap);
-}
-
 
   // on tap local notification in foreground
+  @pragma('vm:entry-point')
   static void onNotificationTap(NotificationResponse notificationResponse) {
     final payload = notificationResponse.payload;
 
@@ -124,15 +162,13 @@ static Future localNotiInit() async {
     required String body,
     required String payload,
   }) async {
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('your channel id', 'your channel name',
-            channelDescription: 'your channel description',
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker');
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
-    await _flutterLocalNotificationsPlugin
-        .show(0, title, body, notificationDetails, payload: payload);
+    const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+        'your channel id', 'your channel name',
+        channelDescription: 'your channel description',
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker');
+    const NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
+    await _flutterLocalNotificationsPlugin.show(0, title, body, notificationDetails, payload: payload);
   }
 }
