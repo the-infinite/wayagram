@@ -39,7 +39,7 @@ class _AccountCreationState extends ConsumerState<AccountCreation> with SingleTi
       _goToNextTab();
     }
 
-    return WayaScaffoldWithProgressbar(
+    return WayaScaffoldWithProgressBar(
         isLoading: true,
         isScrollable: _tabController.index == 1 ? true : false,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),

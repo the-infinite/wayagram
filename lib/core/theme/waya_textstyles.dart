@@ -1,47 +1,120 @@
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/utils/waya_constants.dart';
 
 import 'waya_colors.dart';
 
 class WayaTextStyles {
+  //! This class is not instantiatable.
+  WayaTextStyles._();
+
   //
-  static const labelSmall = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: WayaColors.black);
-  static const labelMedium = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: WayaColors.black);
+  static const labelSmall = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: WayaColors.black,
+    fontFamily: WayaConstants.fontFamily,
+  );
+  static const labelMedium = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: WayaColors.black,
+    fontFamily: WayaConstants.fontFamily,
+  );
   //
-  static const titleLarge = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: WayaColors.black);
-  static const titleMedium = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: WayaColors.black);
+  static const titleLarge = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: WayaColors.black,
+    fontFamily: WayaConstants.fontFamily,
+  );
+  static const titleMedium = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: WayaColors.black,
+    fontFamily: WayaConstants.fontFamily,
+  );
 //
-  static const headlineLarge = TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: WayaColors.black);
-  static const headlineMedium = TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: WayaColors.black);
+  static const headlineLarge = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.w700,
+    color: WayaColors.black,
+    fontFamily: WayaConstants.fontFamily,
+  );
+  static const headlineMedium = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.w700,
+    color: WayaColors.black,
+    fontFamily: WayaConstants.fontFamily,
+  );
   //
   static const bodyMedium = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w500,
     color: WayaColors.black,
+    fontFamily: WayaConstants.fontFamily,
   );
-  static const bodySemiBold = TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: WayaColors.black);
+  static const bodySemiBold = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: WayaColors.black,
+    fontFamily: WayaConstants.fontFamily,
+  );
   static const bodySmall = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w500,
     color: WayaColors.black,
+    fontFamily: WayaConstants.fontFamily,
   );
   static const bodyBold = TextStyle(
     fontSize: 12,
-    fontWeight: FontWeight.w600,);
-   static const bodyXtraMedium = TextStyle(
+    fontWeight: FontWeight.w600,
+    fontFamily: WayaConstants.fontFamily,
+  );
+  static const bodyExtraMedium = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: WayaColors.black,
+    fontFamily: WayaConstants.fontFamily,
   );
   //
-  static const hintStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: WayaColors.greyColor400);
-  static const hintStyleSemiBold = TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: WayaColors.greyColor400);
+  static const hintStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: WayaColors.greyColor400,
+    fontFamily: WayaConstants.fontFamily,
+  );
+  static const hintStyleSemiBold = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: WayaColors.greyColor400,
+    fontFamily: WayaConstants.fontFamily,
+  );
 
-  static const hintStyleBold = TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: WayaColors.greyColor400);
+  static const hintStyleBold = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: WayaColors.greyColor400,
+    fontFamily: WayaConstants.fontFamily,
+  );
 
   // description
-  static const descriptionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: WayaColors.greyColor500);
-    static const mediumdescriptionStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: WayaColors.greyColor500);
+  static const descriptionStyle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: WayaColors.greyColor500,
+    fontFamily: WayaConstants.fontFamily,
+  );
+  static const mediumDescriptionStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: WayaColors.greyColor500,
+    fontFamily: WayaConstants.fontFamily,
+  );
   //
-  static const smallactiveLinkStyle =
-      TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: WayaColors.customPrimary);
+  static const smallActiveLinkStyle = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: WayaColors.customPrimary,
+    fontFamily: WayaConstants.fontFamily,
+  );
 }

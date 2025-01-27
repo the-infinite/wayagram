@@ -48,7 +48,7 @@ class _CreateContestState extends ConsumerState<CreateContest>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return WayaScaffoldWithProgressbar(
+    return WayaScaffoldWithProgressBar(
         isLoading: false,
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),

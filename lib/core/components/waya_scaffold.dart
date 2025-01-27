@@ -12,7 +12,7 @@ class WayaScaffold extends ConsumerWidget {
   final Widget body;
   final Color? backgroundColor;
   final bool removeAppBar;
-  final bool automicallyImplyLeading;
+  final bool automaticallyImplyLeading;
   final Widget? appBarTrailing;
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
@@ -29,7 +29,7 @@ class WayaScaffold extends ConsumerWidget {
   const WayaScaffold(
       {super.key,
       this.resizeToAvoidBottomInset,
-      this.automicallyImplyLeading = true,
+      this.automaticallyImplyLeading = true,
       this.removeAppBar = false,
       this.onRefresh,
       required this.body,
@@ -50,11 +50,10 @@ class WayaScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final themeNotifier = ref.read(themeProvider.notifier);
-    final paddedBody =
-        padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
+    final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
     return BlurryModalProgressHUD(
       inAsyncCall: isLoading,
-      progressIndicator:progressIndicator ?? CircularProgressIndicator(), 
+      progressIndicator: progressIndicator ?? CircularProgressIndicator(),
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         onDoubleTap: () {
@@ -71,7 +70,7 @@ class WayaScaffold extends ConsumerWidget {
                     scrolledUnderElevation: 0,
                     backgroundColor: wayaTheme.colorScheme.white,
                     title: Text(title ?? ''),
-                    leading: automicallyImplyLeading
+                    leading: automaticallyImplyLeading
                         ? WayaBackButton(
                             onTap: onTapBackButton,
                           )
@@ -109,7 +108,7 @@ class WayaScaffold extends ConsumerWidget {
   }
 }
 
-class WayaScaffoldWithProgressbar extends StatefulWidget {
+class WayaScaffoldWithProgressBar extends StatefulWidget {
   final Color? backgroundColor;
   final EdgeInsetsGeometry? padding;
 
@@ -125,7 +124,7 @@ class WayaScaffoldWithProgressbar extends StatefulWidget {
 
   final bool? resizeToAvoidBottomInset;
   final PreferredSizeWidget? appBar;
-  const WayaScaffoldWithProgressbar(
+  const WayaScaffoldWithProgressBar(
       {super.key,
       this.resizeToAvoidBottomInset,
       required this.tabsView,
@@ -141,12 +140,10 @@ class WayaScaffoldWithProgressbar extends StatefulWidget {
       this.bottomNavigationBar});
 
   @override
-  State<WayaScaffoldWithProgressbar> createState() =>
-      _WayaScaffoldWithProgressbarState();
+  State<WayaScaffoldWithProgressBar> createState() => _WayaScaffoldWithProgressBarState();
 }
 
-class _WayaScaffoldWithProgressbarState
-    extends State<WayaScaffoldWithProgressbar> {
+class _WayaScaffoldWithProgressBarState extends State<WayaScaffoldWithProgressBar> {
   double _progress = 0.12;
   final double _progressBarHeight = 12;
 
@@ -155,8 +152,7 @@ class _WayaScaffoldWithProgressbarState
     super.initState();
     widget.tabController.addListener(() {
       setState(() {
-        _progress =
-            (widget.tabController.index + 0.5) / widget.tabController.length;
+        _progress = (widget.tabController.index + 0.5) / widget.tabController.length;
       });
     });
   }
@@ -227,7 +223,8 @@ class _WayaScaffoldWithProgressbarState
           : TabBarView(
               physics: NeverScrollableScrollPhysics(),
               controller: widget.tabController,
-              children: widget.tabsView),
+              children: widget.tabsView,
+            ),
     );
   }
 }

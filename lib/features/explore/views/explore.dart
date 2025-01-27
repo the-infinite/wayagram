@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -10,6 +11,7 @@ import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
+import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
@@ -47,38 +49,52 @@ class _ExploreState extends ConsumerState<Explore> {
         isLoading: false,
         backgroundColor: wayaTheme.colorScheme.scaffoldColor,
         appBar: AppBar(
-            toolbarHeight: 70,
-            backgroundColor: wayaTheme.colorScheme.white,
-            title: ExploreHeader(),
-            actions: [
-              Container(
-                padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Icon(Icons.notifications,
-                          size: 30, color: wayaTheme.colorScheme.greyColor500),
+          toolbarHeight: 70,
+          backgroundColor: wayaTheme.colorScheme.white,
+          title: ExploreHeader(),
+          actions: [
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //? The notification button.
+                  Material(
+                    shape: CircleBorder(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3),
+                      child: InkWell(
+                        onTap: () {
+                          WayaNav.toNamed(WayaNotifications.route);
+                        },
+                        child: WayaAssets.icons.notifications.svg(
+                          height: 24,
+                          width: 24,
+                        ),
+                      ),
                     ),
-                    const Gap(15),
-                    WayaDp(
-                      onTap: () {
-                        WayaNav.toNamed('/general-settings');
-                      },
-                      radius: 18,
-                    ),
-                  ],
-                ),
-              )
-            ],
-            leading: Container(
-              padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-              child: Image.asset(
-                'assets/images/wayalogo_unlabelled.png',
+                  ),
+
+                  // Some space.
+                  const Gap(15),
+
+                  //? The user's profile picture.
+                  WayaDp(
+                    onTap: () {
+                      WayaNav.toNamed('/general-settings');
+                    },
+                    radius: 18,
+                  ),
+                ],
               ),
-            )),
+            )
+          ],
+          leading: Container(
+            padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+            child: WayaAssets.images.wayalogoUnlabelled.image(),
+          ),
+        ),
         isScrollable: true,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -89,9 +105,7 @@ class _ExploreState extends ConsumerState<Explore> {
             ExploreOurServices(),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Have a buy request, just create a quote',
-                title: 'Get Quotation'),
+                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
@@ -107,9 +121,7 @@ class _ExploreState extends ConsumerState<Explore> {
                   Text(
                     "Create a Quote",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16),
+                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                 ],
               ),
@@ -133,8 +145,7 @@ class _ExploreState extends ConsumerState<Explore> {
                 title: 'Shop'),
             const Gap(10),
             CategoriesFilterWidget(
-              setCategory: (value) =>
-                  ref.read(shopVmProvider.notifier).setCategory(value),
+              setCategory: (value) => ref.read(shopVmProvider.notifier).setCategory(value),
             ),
 
             const Gap(25),
@@ -145,10 +156,7 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Join Upcoming Activities',
-                title: 'University Got Talent'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),

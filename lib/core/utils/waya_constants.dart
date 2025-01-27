@@ -1,4 +1,6 @@
 class WayaConstants {
-  static final String appName = 'Wayagram';
-  static final String baseUrl = 'https://services.staging.wayagram.ng/';
+  WayaConstants._();
+  static const String appName = 'Wayagram';
+  static const String baseUrl = 'https://services.staging.wayagram.ng/';
+  static const String fontFamily = 'SFProDisplay';
 }

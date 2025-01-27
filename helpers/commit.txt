@@ -1,4 +1,4 @@
-Milestone: https://github.com/WAYA-MULTI-LINK/WAYA-PAY-CHAT-2.0-WAYAGRAM-FLUTTER-APP/milestone/
+Milestone: https://github.com/WAYA-MULTI-LINK/WAYA-PAY-CHAT-2.0-WAYAGRAM-FLUTTER-APP/milestone/1
 Task: #
 
 Tasks Completed:
@@ -8,4 +8,7 @@ Unrelated Tasks Completed:
 N/A
 
 Observations:
+N/A
+
+Notes:
 N/A

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/shop/order/views/all_orders.dart';

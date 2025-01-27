@@ -3,7 +3,6 @@ import 'package:wayagram/core/service/storage_service/fast_storage/waya_fast_sto
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/select_account_data.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
-import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 
 class WayaLocalDataSource {
   final wayaFastStorageService = WayaFastStorageService();
@@ -64,6 +63,14 @@ class WayaLocalDataSource {
 
   saveSelectedBusinessType(Select biz) {
     return wayaFastStorageService.write<Select>(key: 'bizType', value: biz);
+  }
+
+  saveDeviceToken(String token) {
+    return wayaFastStorageService.write<String>(key: 'isFCMTokenFine', value: token.substring(0, 4));
+  }
+
+  bool getIsFcmTokenFine() {
+    return wayaFastStorageService.read(key: 'isFCMTokenFine') != null;
   }
 
   Select getSelectedBusinessType() {
