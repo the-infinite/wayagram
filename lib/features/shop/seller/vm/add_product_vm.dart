@@ -59,6 +59,9 @@ class AddProductVm extends StateNotifier<AddProductState> {
   //     }
   //   });
   // }
+  void reset() {
+    state = AddProductState();
+  }
 
   void uploadImages() {
     _picker.pickMultiImage().then((value) {
@@ -89,7 +92,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
     Select(label: 'Used', value: 'Used'),
   ];
 
-  Future<PaginatedResult?> getAllDiscounts(int page) async {
+  Future<SelectTypePaginatedResult?> getAllDiscounts(int page) async {
     try {
       final response = await _shopRepository.getAllDiscounts(page);
       List<Select> allDiscounts = [];
@@ -106,7 +109,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
             totalNoOfDiscountPages: responseModel.pagination.totalPages);
       }
 
-      return PaginatedResult(
+      return SelectTypePaginatedResult(
           items: allDiscounts, totalPages: state.totalNoOfDiscountPages);
     } catch (e) {
       print(e);
@@ -117,7 +120,12 @@ class AddProductVm extends StateNotifier<AddProductState> {
   Future<void> onSubmit(BuildContext context) async {
     try {
       if (state.uploadedDocuments.isEmpty) {
-        WayaSnackBar.showToast("A prduct must have an image");
+        WayaSnackBar.showToast("A product must have an image");
+        return;
+      }
+      if (state.pickUpOption != 'Delivery' &&
+          state.pickUpAddress.text.isEmpty) {
+        WayaSnackBar.showToast("Pls add a pickup address");
         return;
       }
       state = state.copyWith(isLoading: true);
@@ -161,6 +169,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
             secondButtonText: 'Go to Shop',
             onCancel: () => WayaNav.toNamed(BottomView.route, arguments: 1));
       }
+      reset();
     } catch (e) {
       print(e);
     } finally {
@@ -205,7 +214,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
   Future<void> initializeForEdit(SellerProduct product) async {
     try {
       state = state.copyWith(isLoadingEditingMode: true);
-      final PaginatedResult? catPage =
+      final SelectTypePaginatedResult? catPage =
           await ref.watch(shopVmProvider.notifier).allCategories(1);
       if (catPage != null) {
         Select? prevCat =

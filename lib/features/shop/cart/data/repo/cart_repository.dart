@@ -50,26 +50,29 @@ class CartRepository extends BaseRepository {
     });
   }
 
-   Future<WayaRequestResponse> updateDeliveryFee(
+  Future<WayaRequestResponse> updateDeliveryFee(
       {required String deliveryAddress,
-      required String deliveryFee,
+      required int deliveryFee,
       required String deliveryDate,
       required String userId,
       required String shopId}) async {
-    return patch("$serviceUrl/cart/shop/$shopId/user/$userId/update-fee-and-date", {
-      "deliveryDate": deliveryDate,
-   
-      "deliveryFee": deliveryFee
-    });
+    return patch(
+        "$serviceUrl/cart/shop/$shopId/user/$userId/update-fee-and-date",
+        {"deliveryDate": deliveryDate, "deliveryFee": deliveryFee});
   }
 
-  Future<WayaRequestResponse> getPendingDelivery({
-required String id
-  })
-  async {
+  Future<WayaRequestResponse> getPendingDelivery({required String id}) async {
     return get("$serviceUrl/cart/delivery-address/$id");
   }
 
-  ///orders/place-order
+  //
+  ///
+  Future<WayaRequestResponse> createOrder(
+      {required String cartId,
+      required String shopId,
+      required String userId}) {
+    return post("$serviceUrl/orders/place-order",
+        {'cartId': cartId, 'shopId': shopId, 'userId': userId});
+  }
   //
 }

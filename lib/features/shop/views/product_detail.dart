@@ -230,40 +230,39 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
             ),
             const Gap(25),
             Visibility(
-              visible: true,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                  Text(
-              "Product Reviews",
-              style: wayaTheme.textTheme.titleMedium,
-            ),
-            const Gap(20),
-            // ListView.builder(
-            //     shrinkWrap: true,
-            //     physics: const NeverScrollableScrollPhysics(),
-            //     itemCount: reviews.length,
-            //     itemBuilder: (context, index) {
-            //       return ProductReviewWidget(review: reviews[index]);
-            //     }),
-            const Gap(25),
-
-              ],
-            )),
+                visible: true,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Product Reviews",
+                      style: wayaTheme.textTheme.titleMedium,
+                    ),
+                    const Gap(20),
+                    // ListView.builder(
+                    //     shrinkWrap: true,
+                    //     physics: const NeverScrollableScrollPhysics(),
+                    //     itemCount: reviews.length,
+                    //     itemBuilder: (context, index) {
+                    //       return ProductReviewWidget(review: reviews[index]);
+                    //     }),
+                    const Gap(25),
+                  ],
+                )),
             Visibility(
-                visible: viewModel.similarProduct != null && viewModel.similarProduct!.isNotEmpty,
-              child: 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              Text(
-              "Similar Products",
-              style: wayaTheme.textTheme.titleMedium,
-            ),
-            const Gap(25),
-            ProductsGrid(products: viewModel.similarProduct ?? [])
-            ],)
-            )
+                visible: viewModel.similarProduct != null &&
+                    viewModel.similarProduct!.isNotEmpty,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Similar Products",
+                      style: wayaTheme.textTheme.titleMedium,
+                    ),
+                    const Gap(25),
+                    ProductsGrid(products: viewModel.similarProduct ?? [])
+                  ],
+                ))
           ],
         ),
         bottomNavigationBar: Container(
@@ -304,9 +303,24 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                       width: context.width * 0.45,
                       child: WayaButton(
                         callback: () {
-                          ref
-                              .read(cartVmProvider.notifier)
-                              .addToCart(viewModel.product!, 1);
+                          final product = viewModel.product!;
+                          final String image =
+                              product.images.isEmpty ? "" : product.images[0];
+                          int intPrice = double.parse(product.price).toInt();
+                          int price = product.discountPercentage > 0
+                              ? (intPrice -
+                                      (intPrice *
+                                          product.discountPercentage /
+                                          100))
+                                  .toInt()
+                              : intPrice;
+                          ref.read(cartVmProvider.notifier).addToCart(
+                              count: 1,
+                              productId: product.id,
+                              productImage: image,
+                              productName: product.name,
+                              price: price,
+                              shopId: product.shopId);
                         },
                         centerWidget: Center(
                           child: Row(

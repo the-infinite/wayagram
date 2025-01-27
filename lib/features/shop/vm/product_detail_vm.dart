@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
@@ -51,12 +52,12 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
   // add the api to get similar product when it is made available
   void getSimilarProduct({required String categoryId, required String productId}) async {
     state = state.copyWith(isLoading: true);
-    final List<Product>? products =
-        await ref.read(shopVmProvider.notifier).getAllProducts();
+    final PaginatedResult<Product>? products =
+        await ref.read(shopVmProvider.notifier).getAllProducts(1);
 
     if (products != null) {
       final similar =
-          products.where((prod) => prod.categoryId == categoryId && prod.id != productId).toList();
+          products.items.where((prod) => prod.categoryId == categoryId && prod.id != productId).toList();
 
       state = state.copyWith(similarProduct: similar);
     }

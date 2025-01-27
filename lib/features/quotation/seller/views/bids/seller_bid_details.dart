@@ -9,7 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_order_detail_vm.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 import 'package:wayagram/features/shop/widgets/dotted_border_order_info_widget.dart';
-import 'package:wayagram/features/shop/widgets/order_info_widget.dart';
+import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class SellerBidDetails extends ConsumerWidget {
@@ -134,7 +134,7 @@ class SellerBidDetails extends ConsumerWidget {
               textColor: wayaTheme.colorScheme.greyColor900,
               border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                viewModel.updateDeliveryStatus(context);
+              //  viewModel.updateDeliveryStatus(context);
               },
               text: "Change Delivery Status",
               leadingIcon: SvgPicture.asset(
@@ -149,7 +149,7 @@ class SellerBidDetails extends ConsumerWidget {
               textColor: wayaTheme.colorScheme.greyColor900,
               border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                viewModel.updateOrderStatus(context);
+               // viewModel.updateOrderStatus(context);
               },
               text: "Change Order Status",
               leadingIcon: SvgPicture.asset(

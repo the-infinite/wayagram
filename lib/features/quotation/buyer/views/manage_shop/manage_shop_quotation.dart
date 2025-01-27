@@ -11,7 +11,7 @@ import 'package:wayagram/features/quotation/widgets/single_shop_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
-import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
+import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
 
 class ManageShopQuotation extends ConsumerWidget {
   const ManageShopQuotation({super.key});

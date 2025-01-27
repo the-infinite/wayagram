@@ -1,0 +1,41 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/features/shop/data/model/shop_state.dart';
+import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
+import 'package:wayagram/features/shop/order/data/model/order_state.dart';
+import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
+
+class OrderVm extends StateNotifier<OrderState> {
+  final Ref ref;
+  final OrderRepository _orderRepository;
+  final WayaSecureDataSource _secureDataSource;
+
+  OrderVm(this._orderRepository, this._secureDataSource, this.ref)
+      : super(OrderState());
+
+  Future<PaginatedResult<Order>?> getOrders(int page) async {
+    try {
+      state = state.copyWith(isLoading: false);
+      final userId = await _secureDataSource.getUserId();
+      final response = await _orderRepository.getUserOrders(userId!, page);
+      List<Order> orders = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
+        orders = ordersResponse.data.data;
+        hasNextPage = ordersResponse.data.pagination.hasNextPage;
+      }
+
+      return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
+    } catch (e) {
+      print(e);
+      return null;
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+}
+
+final orderVmProvider = StateNotifierProvider<OrderVm, OrderState>((ref) {
+  return OrderVm(OrderRepository(), WayaSecureDataSource(), ref);
+});

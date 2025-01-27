@@ -9,7 +9,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/quotation/buyer/vm/buyer_checkout_vm.dart';
-import 'package:wayagram/features/shop/buyer/views/all_orders.dart';
+import 'package:wayagram/features/shop/order/views/all_orders.dart';
 import 'package:wayagram/features/shop/cart/vm/checkout_vm.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';

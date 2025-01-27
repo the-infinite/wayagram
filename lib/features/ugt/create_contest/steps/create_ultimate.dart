@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/shared/radio_select.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 import 'package:wayagram/features/ugt/vm/ugt_restructed/model/contest_ugt_model.dart';
 
@@ -131,7 +132,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RadioSelect(
+            UgtRadioSelect(
                 title: Container(
                     padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                     child: Column(
@@ -155,7 +156,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               });
 
             },),
-            RadioSelect(
+            UgtRadioSelect(
                 title: Container(
                   padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                   child: Column(
@@ -179,7 +180,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
             },),
           ],
         ),
-           const Gap(15),
+        const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,7 +211,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RadioSelect(
+            UgtRadioSelect(
                 title: Container(
                     padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                     child: Column(
@@ -231,7 +232,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
 
               });
             },),
-            RadioSelect(
+            UgtRadioSelect(
                 title: Container(
                   padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                   child: Column(
@@ -255,7 +256,6 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
             },),
           ],
         ),
-     
         const Gap(15),
         WayaTextFormField(
           keyboardType: TextInputType.number,
@@ -349,35 +349,8 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
 
         }),*/
         const Gap(60),
-
         WayaButton(
           callback: () async{
-            /*final newUser = ContestUgtModel(title: title,
-                profileId: profileId,
-                category: category,
-                state: state,
-                winnerPrize: winnerPrize,
-                description: description,
-                voteCountToQualify: voteCountToQualify,
-                amount: amount,
-                durationType: durationType,
-                numberOfDuration: numberOfDuration,
-                descriptionOfAwards: descriptionOfAwards,
-                amountPerVote: amountPerVote,
-                type: type,
-                overallResult: overallResult,
-                multipleStages: multipleStages,
-                publicity: publicity,
-                status: status,
-                howItWorks: howItWorks,
-                numberOfWeeks: numberOfWeeks,
-                currentStage: currentStage,
-                participationStartDate: participationStartDate,
-                startDate: startDate,
-                endDate: endDate,
-                entryType: entryType,contestSettings: ContestSettings(stages: contestStages, formRequirements: contestSignUpRequirement) )
-
-            userProvider.addUser(newUser);*/
             widget.goToNextTab();
           },
           text: "Submit",
@@ -436,13 +409,13 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
 
 
 
-class RadioSelect extends StatelessWidget {
+class UgtRadioSelect extends StatelessWidget {
   final Widget title;
   final String value;
   final String groupValue;
   final ValueChanged<String> onChanged;
 
-  const RadioSelect({
+  const UgtRadioSelect({
     super.key,
     required this.title,
     required this.value,

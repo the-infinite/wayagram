@@ -11,6 +11,7 @@ import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
@@ -29,7 +30,8 @@ class _ExploreState extends ConsumerState<Explore> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(shopVmProvider.notifier).allCategories(1);
-      ref.read(shopVmProvider.notifier).getAllProducts();
+      ref.read(shopVmProvider.notifier).getAllProducts(1);
+      ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();
   }
@@ -138,7 +140,10 @@ class _ExploreState extends ConsumerState<Explore> {
             const Gap(25),
             state.isLoading
                 ? _buildProductLoadingState(context: context)
-                : _buildProductGrid(notifier.filteredProducts),
+                : _buildProductGrid(
+                    products: notifier.filteredProducts.length > 2
+                        ? notifier.filteredProducts.sublist(0, 2)
+                        : notifier.filteredProducts),
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {},
@@ -171,7 +176,7 @@ class _ExploreState extends ConsumerState<Explore> {
         ));
   }
 
-  Widget _buildProductGrid(List<Product> products) {
+  Widget _buildProductGrid({required List<Product> products}) {
     return Column(
       children: [
         for (int i = 0; i < products.length; i += 2)

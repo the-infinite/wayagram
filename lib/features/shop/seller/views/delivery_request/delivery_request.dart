@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/shop/seller/views/delivery_request/widgets/single_delivery_request_widget.dart';
 import 'package:wayagram/features/shop/seller/vm/delivery_request_vm.dart';
+import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 import 'package:gap/gap.dart';
@@ -19,13 +21,13 @@ class DeliveryRequest extends ConsumerStatefulWidget {
 }
 
 class _DeliveryRequestState extends ConsumerState<DeliveryRequest> {
-  // @override
-  // void initState() {
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     ref.read(deliveryRequestVmProvider.notifier).getRequests();
-  //   });
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(deliveryRequestVmProvider.notifier).getRequests();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class _DeliveryRequestState extends ConsumerState<DeliveryRequest> {
         isLoading: viewModel.isLoading,
         isScrollable: true,
         onRefresh: () async {
-           ref.read(deliveryRequestVmProvider.notifier).getRequests();
+          ref.read(deliveryRequestVmProvider.notifier).getRequests();
         },
         title: 'Requests',
         appBarTrailing: WayaCartIcon(),
@@ -56,14 +58,21 @@ class _DeliveryRequestState extends ConsumerState<DeliveryRequest> {
               hintText: 'Search Delivery Request',
             ),
             const Gap(20),
-            ListView.builder(
-                itemCount: viewModel.deliveryRequests.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return SingleDeliveryRequestWidget(
-                      data: viewModel.deliveryRequests[index]);
-                })
+           viewModel.deliveryRequests.isEmpty
+                ? Center(
+                    child: EmptyState(
+                        assetImage: WayaAssets.images.wallet.searchDocu
+                            .image(scale: 1.5),
+                        message: "No Delivery Request"),
+                  )
+                :  ListView.builder(
+                    itemCount: viewModel.deliveryRequests.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return SingleDeliveryRequestWidget(
+                          data: viewModel.deliveryRequests[index]);
+                    })
           ],
         ));
   }

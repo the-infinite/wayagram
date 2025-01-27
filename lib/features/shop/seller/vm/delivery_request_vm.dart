@@ -11,21 +11,24 @@ class DeliveryRequestVm extends StateNotifier<DeliveryRequestState> {
   DeliveryRequestVm(this._cartRepository, this.ref)
       : super(DeliveryRequestState());
 
-  Future<void> getRequests() async {
+  Future<List<DeliveryRequestData>?> getRequests() async {
     try {
       final shopId = ref.watch(manageShopVmProvider).singleShop?.id;
       final response = await _cartRepository.getPendingDelivery(id: shopId!);
 // responseModel.data.expand((value) => value.items).toList()
+
+      List<DeliveryRequestData> requests = [];
       if (response.success) {
         DeliveryRequestResponseModel responseModel =
             DeliveryRequestResponseModel.fromJson(response.data);
-        state = state.copyWith(
-            deliveryRequest:
-               responseModel.data);
+        requests = responseModel.data;
+        state = state.copyWith(deliveryRequest: requests);
         print(response.data);
       }
+      return requests;
     } catch (e) {
       print(e);
+      return null;
     }
   }
 

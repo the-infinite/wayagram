@@ -121,12 +121,12 @@ List<ProductCondition> productConditions = [
 
 List<State> states = [
 
-  State(id: 1, state: 'All States'),
-  State(id: 2, state: 'Lagos'),
-  State(id: 3, state: 'Abuja'),
-  State(id: 4, state: 'Ebonyi'),
-  State(id: 5, state: 'Anambra'),
-  State(id: 6, state: 'Ondo'),
+  State(id: "1", state: 'All States'),
+  State(id: "2", state: 'Lagos'),
+  State(id: "3", state: 'Abuja'),
+  State(id: "4", state: 'Ebonyi'),
+  State(id: "5", state: 'Anambra'),
+  State(id: "6", state: 'Ondo'),
 ];
 
 List<UgtCategoryState> ugtCategoryStates = [

@@ -88,6 +88,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {
+                              Navigator.pop(context); 
                               WayaNav.toNamed(ManageShop.route,
                                   arguments: widget.shop);
                             },
@@ -108,6 +109,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {
+                              Navigator.pop(context); 
                               WayaNav.toNamed(CreateShop.route,
                                   arguments: UpdateShopArg(
                                       uniqueKey: "update-shop",

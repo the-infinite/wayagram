@@ -1,24 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/update_status.dart';
+import 'package:wayagram/features/shop/order/data/model/order_state.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 
 class SellerOrderDetailVm extends ChangeNotifier {
   final Ref ref;
-  SellerOrderDetailVm(this.ref);
+  final OrderRepository _orderRepository;
+  SellerOrderDetailVm(this._orderRepository, this.ref);
   String orderStatus = "";
-  String deliveryStatus = "";
+  String delivery = "";
 
-  void updateOrder(String status) {
+  Future<void> updateOrder(String status, String orderId) async {
     orderStatus = status;
     //toLowerCase().replaceAll(' ', '_');
     notifyListeners();
+    try {
+      final response = await _orderRepository.pickupStatusUpdate(
+          orderId: orderId, status: status);
+
+      if (response.success) {
+        WayaSnackBar.showToast("Pickup status updated");
+        WayaNav.toNamed(ManageShop.route);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
-  void updateDelivery(String status) {
-    deliveryStatus = status;
+  Future<void> updateDelivery(String status, String orderId) async {
+    delivery = status;
     notifyListeners();
+    try {
+      final response = await _orderRepository.deliveryStatusUpdate(
+          orderId: orderId, status: status);
+
+      if (response.success) {
+        WayaSnackBar.showToast("Delivery status updated");
+         WayaNav.toNamed(ManageShop.route);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> acceptOrder(BuildContext context) async {
@@ -28,7 +54,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
         secondButtonText: 'Cancel',
         title: 'Confirm your Action',
         message:
-            'Please confirm whether you’d like to accept. This will update \n the order status for the buyer.',
+            'Please confirm whether you’d like to accept. This will update the order status for the buyer.',
         onPress: () {},
         icon: Image.asset('assets/images/d-code-valid.png'));
   }
@@ -40,50 +66,45 @@ class SellerOrderDetailVm extends ChangeNotifier {
         secondButtonText: 'Cancel',
         title: 'Confirm your Action',
         message:
-            'Please confirm whether you’d like to reject. This will update the \n order status for the buyer.',
+            'Please confirm whether you’d like to reject. This will update the order status for the buyer.',
         onPress: () {},
         icon: Image.asset('assets/images/d-code-invalid.png'));
   }
 
-  Future<void> updateOrderStatus(BuildContext context) async {
+  Future<void> updateOrderStatus(
+      {required BuildContext context, required String orderId}) async {
     final response = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return UpdateStatus(
               currentStatus: orderStatus,
-              title: "Update Order Status",
+              title: "Update Pickup Status",
               subTtile:
-                  "Choose the new order status you want this order to display \n for both you and the buyer",
-              statuses: ["Pending", "In Progress", "Delivered", "Cancelled"] ,
+                  "Choose the new pickup status you want this order to display for both you and the buyer",
+              statuses: pickupStatus,
               cta: "Choose new order status");
         });
-    updateOrder(response);
+    updateOrder(response, orderId);
   }
 
-  Future<void> updateDeliveryStatus(BuildContext context) async {
+  Future<void> updateDeliveryStatus(
+      {required BuildContext context, required String orderId}) async {
     final response = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return UpdateStatus(
-              currentStatus: orderStatus,
+              currentStatus: delivery,
               title: "Update Delivery Status",
               subTtile:
-                  "Choose the new delivery status you want this order to display \n for both you and the buyer",
-              statuses:[
-                "Pending",
-                "Processing",
-                "Ready for Dispatch",
-                "In Transit",
-                "Out for Delivery",
-                "Delivered"
-              ] ,
+                  "Choose the new delivery status you want this order to display for both you and the buyer",
+              statuses: deliveryStatus,
               cta: "Choose new delivery status");
         });
-    updateDelivery(response);
+    updateDelivery(response, orderId);
   }
 }
 
 final sellerOrderDetailVmProvider =
     ChangeNotifierProvider<SellerOrderDetailVm>((ref) {
-  return SellerOrderDetailVm(ref);
+  return SellerOrderDetailVm(OrderRepository(), ref);
 });

@@ -8,9 +8,11 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/shared/radio_select.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/checkout_vm.dart';
+import 'package:wayagram/features/shop/cart/widgets/cart_card_vm.dart';
+import 'package:wayagram/features/shop/order/widgets/order_address_widget.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class Checkout extends ConsumerWidget {
@@ -21,74 +23,120 @@ class Checkout extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(checkoutVmProvider);
-    final CartItem? cartIem =
-        ModalRoute.of(context)?.settings.arguments as CartItem?;
+    final selectedOption = ref.watch(radioSelectProvider);
+    final CheckoutArg? arg =
+        ModalRoute.of(context)?.settings.arguments as CheckoutArg?;
 
-    final subTotal = cartIem == null
+    final subTotal = arg?.cartItem == null
         ? 0
-        : cartIem.products.fold(
+        : arg?.cartItem.products.fold(
             0,
             (prodSum, prod) => prodSum + (prod.price * prod.quantity),
           );
-    final int deliveryCharge =
-        cartIem!.deliveryFee == null ? 0 : int.parse(cartIem.deliveryFee!);
+    final int deliveryCharge = arg?.cartItem.deliveryFee ?? 0;
+
+    final isBothDeliveryOption =
+        arg?.cartItem.products.any((prod) => prod.deliveryOptions == 'Both');
+
+    final pickUpindex = arg?.cartItem.products
+        .indexWhere((prod) => prod.deliveryOptions == 'Pickup');
 
     return WayaScaffold(
       title: "Checkout",
-      isLoading: false,
+      isLoading: viewModel.isLoading,
       isScrollable: true,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Gap(10),
-          Visibility(
-            visible: cartIem.deliveryAddress != null,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: wayaTheme.colorScheme.greyColor300, width: 1),
-                  borderRadius: BorderRadius.circular(8)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+          if (isBothDeliveryOption == true)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 Text("Delivery Option", style: wayaTheme.textTheme.bodyMedium),
+                 const Gap(6),
+                RadioSelect(
+                  title: Text("Delivery",
+                      style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
+                          fontSize: 14,
+                          color: wayaTheme.colorScheme.customBlack)),
+                  value: 'Delivery',
+                  groupedValue: selectedOption,
+                  onChanged: (value) =>
+                      ref.read(radioSelectProvider.notifier).state = value,
+                ),
+                //      const Gap(10),
+                RadioSelect(
+                  title: Text("Pick-up",
+                      style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
+                          fontSize: 14,
+                          color: wayaTheme.colorScheme.customBlack)),
+                  value: 'Pickup',
+                  groupedValue: selectedOption,
+                  onChanged: (value) =>
+                      ref.read(radioSelectProvider.notifier).state = value,
+                ),
+              ],
+            ),
+          const Gap(25),
+          if (isBothDeliveryOption == false ||
+              (isBothDeliveryOption == true &&
+                  selectedOption == 'Delivery' &&
+                  arg?.cartItem.deliveryAddress != null))
+            OrderAddressWidget(
+                address: arg?.cartItem.deliveryAddress,
+                type: "Delivery Address"),
+          if ((pickUpindex != -1 && isBothDeliveryOption == false) ||
+              (pickUpindex != -1 && selectedOption == 'Pickup'))
+            OrderAddressWidget(
+                address: arg?.cartItem.products[pickUpindex!].pickUpAddress,
+                type: "Pickup Address"),
+          if (selectedOption == 'Delivery' &&
+              arg?.cartItem.deliveryAddress == null)
+            WayaButton(
+              centerWidget: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset('assets/icons/map.svg'),
-                  const Gap(5),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Pickup Address",
-                          style: wayaTheme.textTheme.bodyMedium),
-                      const Gap(5),
-                      SizedBox(
-                        width: context.width * 0.8,
-                        child: Text(
-                          cartIem.deliveryAddress ?? "",
-                          style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor500,
-                            fontSize: 13,
-                          ),
-                        ),
-                      )
-                    ],
-                  )
+                  Icon(
+                    Icons.chat_bubble_outline,
+                    size: 28,
+                    color: wayaTheme.colorScheme.customPrimary,
+                  ),
+                  const Gap(8),
+                  Text(
+                    "Request Delivery Address",
+                    style: TextStyle().wayaCopyWith(
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16),
+                  ),
                 ],
               ),
+              callback: () {
+                if (arg != null) {
+                  ref.read(cartCardVmProvider.notifier).deliveryRequest(
+                      context,
+                      arg.cartItem.products,
+                      arg.cartItem.shopId,
+                      arg.cartItem.shopName,
+                      arg.cartItem.shopLogo);
+                }
+              },
+              color: wayaTheme.colorScheme.primar50,
             ),
-          ),
-          const Gap(25),
+          const Gap(10),
           Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
           const Gap(10),
-             ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: cartIem.products.length,
-                    itemBuilder: (context, index) {
-                      return OrderedProductCard(orders: cartIem.products[index]);
-                    }),
+          ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: arg?.cartItem.products.length,
+              itemBuilder: (context, index) {
+                return OrderedProductCard(
+                    orders: arg!.cartItem.products[index]);
+              }),
           const Gap(25),
           Text("Cost Breakdown", style: wayaTheme.textTheme.bodyMedium),
           const Gap(10),
@@ -114,7 +162,7 @@ class Checkout extends ConsumerWidget {
                     ),
                     const Gap(6),
                     Text(
-                      WayaHelpers.formatPrice(subTotal),
+                      WayaHelpers.formatPrice(subTotal ?? 0),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
                           fontSize: 14),
@@ -182,7 +230,7 @@ class Checkout extends ConsumerWidget {
                     ),
                     const Gap(6),
                     Text(
-                      WayaHelpers.formatPrice(subTotal + deliveryCharge),
+                      WayaHelpers.formatPrice(subTotal! + deliveryCharge),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
                           fontSize: 18),
@@ -279,7 +327,8 @@ class Checkout extends ConsumerWidget {
                     Positioned(
                         top: 25,
                         child: Text(
-                           WayaHelpers.formatPrice(subTotal + deliveryCharge),
+                          WayaHelpers.formatPrice(
+                              subTotal  + deliveryCharge),
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontSize: 18),
@@ -290,7 +339,26 @@ class Checkout extends ConsumerWidget {
               width: context.width * 0.45,
               child: WayaButton(
                 callback: () {
-                  ref.read(checkoutVmProvider.notifier).checkout(context);
+                  // arg?.cartId
+                  if (isBothDeliveryOption == true && selectedOption == null) {
+                    WayaSnackBar.showToast("Pls select a delivery option");
+                    return;
+                  }
+                  if (isBothDeliveryOption == true &&
+                      arg?.cartItem.deliveryAddress == null &&
+                      selectedOption == 'Delivery') {
+                    WayaSnackBar.showToast("Pls add a delivery address");
+                    return;
+                  }
+                  if (arg != null) {
+                    ref.read(checkoutVmProvider.notifier).checkout(
+                        context: context,
+                        cartId: arg.cartId,
+                        shopId: arg.cartItem.shopId,
+                        amount: subTotal  + deliveryCharge,
+                        pickUpAddress:pickUpindex != -1 ?
+                            arg.cartItem.products[pickUpindex!].pickUpAddress : null);
+                  }
                 },
                 text: 'CheckOut',
               ),

@@ -25,6 +25,14 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get success => WayaColors.success;
   Color get success700 => WayaColors.success700;
 
+  // pending color
+ Color get pending50 => WayaColors.pending50;
+  Color get pending => WayaColors.pending;
+
+    // info color
+ Color get info50 => WayaColors.info50;
+  Color get info => WayaColors.info;
+
   // Secondary Colors
   Color get secondaryColor => WayaColors.secondaryColor;
   Color get secondaryColor2 => WayaColors.secondaryColor2;

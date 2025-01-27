@@ -20,7 +20,6 @@ import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.da
 import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
-import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_request.dart';
@@ -36,6 +35,7 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/application_produ
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
+import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
@@ -130,7 +130,8 @@ class WayaAppRoutes {
     RegisterContest.route: ()=> RegisterContest(),
     ShareVotingLink.route: ()=> ShareVotingLink(),
     DeliveryRequest.route:() => DeliveryRequest(),
-    SellerProducts.route:() => SellerProducts()
+    SellerProducts.route:() => SellerProducts(),
+    ProductsViewPage.route: () =>ProductsViewPage()
 
 
     

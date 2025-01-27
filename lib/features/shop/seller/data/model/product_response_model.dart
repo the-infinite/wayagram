@@ -1,4 +1,5 @@
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/features/shared/model/base_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
 
 class ProductResponse {
@@ -55,7 +56,7 @@ class ProductData {
       };
 }
 
-class Product {
+class Product extends BaseModel<Product>{
   final String id;
   final String categoryId;
   final Select? category;
@@ -183,6 +184,22 @@ class Product {
         'category': category
       };
 
+    @override
+        Map<String, dynamic> toMap() => {
+        'id': id,
+        'categoryId': categoryId,
+        'name': name,
+        'description': description,
+        'price': price,
+        'materialType': materialType,
+        'condition': condition,
+        'deliveryCharge': deliveryCharge,
+        'options': options,
+        'pickupAddress': pickupAddress,
+        'discountPercentage': discountPercentage,
+  
+      };
+
   Product copyWith({
     String? id,
     String? categoryId,
@@ -247,4 +264,6 @@ class Product {
       discountedPrice: discountedPrice ?? this.discountedPrice,
     );
   }
+
+
 }

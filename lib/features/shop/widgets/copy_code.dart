@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -50,7 +51,9 @@ class _CopyCodeState extends ConsumerState<CopyCode> {
           GestureDetector(
             onTap: () async {
               FlutterClipboard.copy(widget.code)
-                  .then((value) => print('copied'));
+                  .then((value) => {
+                    WayaSnackBar.showToast("Code Copied")
+                  });
             },
             child: SvgPicture.asset("assets/icons/s-copy.svg"),
           )

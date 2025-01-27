@@ -7,6 +7,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/shop/seller/views/seller_shop/widgets/single_shop_card.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
+import 'package:wayagram/features/shop/widgets/card_loading_state.dart';
 
 class SellerShop extends ConsumerStatefulWidget {
   const SellerShop({super.key});
@@ -45,42 +46,42 @@ class _SellerShopState extends ConsumerState<SellerShop> {
     }
 
     return RefreshIndicator(
-      onRefresh: () async {
-         ref.read(manageShopVmProvider.notifier).getSellerShops();
-      },
+        onRefresh: () async {
+          ref.read(manageShopVmProvider.notifier).getSellerShops();
+        },
         child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Manage Shop", style: wayaTheme.textTheme.titleLarge),
-          const Gap(3),
-          Text(
-            'Manage your shop activities here',
-            style: wayaTheme.textTheme.hintStyle,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Manage Shop", style: wayaTheme.textTheme.titleLarge),
+              const Gap(3),
+              Text(
+                'Manage your shop activities here',
+                style: wayaTheme.textTheme.hintStyle,
+              ),
+              const Gap(30),
+              Text("My Shops", style: wayaTheme.textTheme.titleSmall),
+              const Gap(10),
+              ListView.builder(
+                  itemCount: manageShop.shop.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return SingleShopCard(shop: manageShop.shop[index]);
+                  }),
+              const Gap(20),
+              // Text("Shared Shop", style: wayaTheme.textTheme.titleSmall),
+              // const Gap(10),
+              // ListView.builder(
+              //     itemCount: 4,
+              //     shrinkWrap: true,
+              //     physics: const NeverScrollableScrollPhysics(),
+              //     itemBuilder: (context, index) {
+              //       return SingleShopCard();
+              //     })
+            ],
           ),
-          const Gap(30),
-          Text("My Shops", style: wayaTheme.textTheme.titleSmall),
-          const Gap(10),
-          ListView.builder(
-              itemCount: manageShop.shop.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return SingleShopCard(shop: manageShop.shop[index]);
-              }),
-          const Gap(20),
-          // Text("Shared Shop", style: wayaTheme.textTheme.titleSmall),
-          // const Gap(10),
-          // ListView.builder(
-          //     itemCount: 4,
-          //     shrinkWrap: true,
-          //     physics: const NeverScrollableScrollPhysics(),
-          //     itemBuilder: (context, index) {
-          //       return SingleShopCard();
-          //     })
-        ],
-      ),
-    ));
+        ));
   }
 }
 
@@ -113,7 +114,7 @@ Widget buildSellerShopSkeleton({required BuildContext context}) {
             borderRadius: BorderRadius.circular(8)),
       ),
       const Gap(3),
-      buildShopCardLoadingState(context: context),
+      CardLoadingState(),
       const Gap(20),
       Container(
         height: 20,
@@ -123,66 +124,7 @@ Widget buildSellerShopSkeleton({required BuildContext context}) {
             borderRadius: BorderRadius.circular(8)),
       ),
       const Gap(3),
-      buildShopCardLoadingState(context: context),
+      CardLoadingState(),
     ],
   );
-}
-
-Widget buildShopCardLoadingState({required BuildContext context}) {
-  final wayaTheme = Theme.of(context);
-  return ListView.builder(
-      shrinkWrap: true,
-      itemCount: 2,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 90,
-              padding: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.scaffoldColor,
-                  border: Border.all(color: wayaTheme.colorScheme.greyColor100),
-                  borderRadius: BorderRadius.all(Radius.circular(12))),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: wayaTheme.colorScheme.greyColor100,
-                    ),
-                  ),
-                  const Gap(10),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            color: wayaTheme.colorScheme.greyColor100,
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      const Gap(3),
-                      Container(
-                        width: 200,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            color: wayaTheme.colorScheme.greyColor100,
-                            borderRadius: BorderRadius.circular(8)),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            const Gap(10)
-          ],
-        );
-      });
 }
