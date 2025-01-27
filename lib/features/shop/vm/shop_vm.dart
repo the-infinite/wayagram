@@ -49,11 +49,12 @@ class ShopVm extends StateNotifier<ShopState> {
     state = state.copyWith(searchQuery: query);
   }
 
-  Future<List<Product>?> getAllProducts() async {
+  Future<PaginatedResult<Product>?> getAllProducts(int page) async {
     state = state.copyWith(isLoading: true);
     try {
-      final response = await _repository.getProducts();
+      final response = await _repository.getProducts(page);
       List<Product> allProducts = [];
+      bool hasNextPage = false;
       if (response.success) {
         ProductResponse productResponse =
             ProductResponse.fromJson(response.data);
@@ -63,9 +64,10 @@ class ShopVm extends StateNotifier<ShopState> {
             (cat) => cat.value == product.categoryId,
           ));
         }).toList();
+        hasNextPage = productResponse.data.pagination.hasNextPage;
         state = state.copyWith(products: allProducts);
       }
-      return allProducts;
+      return PaginatedResult(hasNextPage: hasNextPage, items: allProducts);
     } catch (e) {
       print(e);
       return null;

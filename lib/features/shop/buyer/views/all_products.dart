@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
+import 'package:wayagram/features/shop/data/model/product_detail_type.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
@@ -18,18 +21,20 @@ class AllProducts extends ConsumerWidget {
     final state = ref.watch(shopVmProvider);
 
     return RefreshIndicator(
-        onRefresh: () => ref.read(shopVmProvider.notifier).getAllProducts(),
+        onRefresh: () => ref.read(shopVmProvider.notifier).getAllProducts(1),
         child: SingleChildScrollView(
-        
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FilterWidget(
                 search: TextEditingController(),
               ),
-              const Gap(25),
+              const Gap(5),
               GroupedWidgetHeader(
-                onTap: () {},
+                onTap: () {
+                  WayaNav.toNamed(ProductsViewPage.route,
+                      arguments: ProductDetailType.wayagramdeal);
+                },
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Wayagram Deals',
               ),
@@ -41,10 +46,14 @@ class AllProducts extends ConsumerWidget {
               const Gap(25),
               state.isLoading
                   ? _wayagramDealProductLoadingState(context: context)
-                 : ProductsGrid(products: notifier.filteredWayagramDealProducts),
+                  : ProductsGrid(
+                      products: notifier.filteredWayagramDealProducts),
               const Gap(25),
               GroupedWidgetHeader(
-                onTap: () {},
+                onTap: () {
+                  WayaNav.toNamed(ProductsViewPage.route,
+                      arguments: ProductDetailType.recommended);
+                },
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Recommended Products',
               ),
@@ -52,33 +61,10 @@ class AllProducts extends ConsumerWidget {
               state.isLoading
                   ? _recommendedProductLoadingState(context: context)
                   : ProductsGrid(products: notifier.filteredProducts),
-                  
             ],
           ),
         ));
   }
-
-  // Widget _buildProductGrid(List<Product> products) {
-  //   return GridView.builder(
-  //     shrinkWrap: true,
-  //     physics: const NeverScrollableScrollPhysics(),
-  //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //       crossAxisCount: 2,
-  //       crossAxisSpacing: 12.0,
-  //       mainAxisSpacing: 12.0,
-  //       childAspectRatio: 3 / 5,
-  //     ),
-  //     itemCount: products.length,
-  //     itemBuilder: (context, index) {
-  //       return ProductCard(
-  //         product: products[index],
-  //         isExplore: false,
-  //         isWayaGramDeal: true,
-  //         canbeAddedTocart: true,
-  //       );
-  //     },
-  //   );
-  // }
 
   Widget _wayagramDealProductLoadingState({required BuildContext context}) {
     return Column(

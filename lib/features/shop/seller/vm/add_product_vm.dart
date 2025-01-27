@@ -59,6 +59,9 @@ class AddProductVm extends StateNotifier<AddProductState> {
   //     }
   //   });
   // }
+  void reset() {
+    state = AddProductState();
+  }
 
   void uploadImages() {
     _picker.pickMultiImage().then((value) {
@@ -166,6 +169,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
             secondButtonText: 'Go to Shop',
             onCancel: () => WayaNav.toNamed(BottomView.route, arguments: 1));
       }
+      reset();
     } catch (e) {
       print(e);
     } finally {

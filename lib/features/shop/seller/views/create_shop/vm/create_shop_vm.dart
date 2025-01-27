@@ -25,7 +25,6 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
   CreateShopVm(this._shopRepository, this._picker, this._secureDataSource,
       this._setUpState, this.ref)
       : super(CreateShopState()) {
-    
     state = state.copyWith(
         email: TextEditingController(text: _setUpState.user?.user?.email));
     state = state.copyWith(state: _setUpState.business?.state);
@@ -40,6 +39,10 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
     state.copyWith(description: TextEditingController(text: 'Description'));
   }
 
+  void reset() {
+    state = CreateShopState();
+  }
+
   Future<void> createSellerShop({bool? hasNoShop}) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -49,15 +52,16 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
       }
       final userId = await _secureDataSource.getUserId();
       state = state.copyWith(vendorId: userId);
-      final response =
-          await _shopRepository.createShop(state.createShopModel);
+      final response = await _shopRepository.createShop(state.createShopModel);
 
       _logger.i(response.data);
-       await ref.read(manageShopVmProvider.notifier).refreshShops();
+      await ref.read(manageShopVmProvider.notifier).refreshShops();
+      
     } catch (e) {
       _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
+      
     }
   }
 

@@ -9,7 +9,6 @@ import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/i
 import 'package:wayagram/features/quotation/vm/seller_bids_vm.dart';
 import 'package:wayagram/features/quotation/widgets/single_bid_widget.dart';
 import 'package:wayagram/features/quotation/widgets/single_settlement_widget.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
 
 import 'package:wayagram/features/shop/seller/vm/seller_orders_vm.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';

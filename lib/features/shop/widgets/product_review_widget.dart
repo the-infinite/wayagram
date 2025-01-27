@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/features/shop/data/model/model.dart';
+
 import 'package:gap/gap.dart';
 
 class ProductReviewWidget extends StatelessWidget {
-  final Review review;
-  const ProductReviewWidget({super.key, required this.review});
+ // final Review review;
+  const ProductReviewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,25 +31,25 @@ class ProductReviewWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     image: DecorationImage(
-                        image: AssetImage(review.customerImage),
+                        image: AssetImage('review.customerImage'),
                         fit: BoxFit.cover),
                   ),
                 ),
                 const Gap(8),
                 Text(
-                  review.customerName,
+                  'review.customerName',
                   style: wayaTheme.textTheme.bodyMedium,
                 ),
               ],
             ),
             RatingStars(
-              rating: review.rating,
+              rating: 3,
             )
           ],
         ),
         const Gap(6),
         Text(
-          review.comments,
+          'review.comments',
           style: wayaTheme.textTheme.hintStyle,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,

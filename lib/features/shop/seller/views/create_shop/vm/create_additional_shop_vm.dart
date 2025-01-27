@@ -13,6 +13,7 @@ import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart'
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
+import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 
 class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   final ShopRepository _shopRepository;
@@ -43,6 +44,10 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
     state = state.copyWith(lga: value.value);
   }
 
+  void reset() {
+    state = CreateShopState();
+  }
+
   Future<void> createSellerShop() async {
     try {
       if ((state.logo == null && !state.isEditingMode) ||
@@ -60,6 +65,8 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
       _logger.i(response.data);
       if (response.success) {
+        reset();
+        ref.read(manageShopVmProvider.notifier).getSellerShops();
         WayaNav.goBack();
       }
     } catch (e) {

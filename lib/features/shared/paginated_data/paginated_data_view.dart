@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,6 +45,8 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
   }
 
   void _scrollListener() {
+    // log("pixel ${_scrollController.position.pixels}");
+    // log("scroll ${_scrollController.position.maxScrollExtent}");
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent) {
       ref
@@ -65,16 +69,26 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
     }
 
     if (state.data.isEmpty) {
-      return Center(child: widget.emptyState ?? Text("No Data"),);
+      return Center(
+        child: widget.emptyState ?? Text("No Data"),
+      );
     }
 
-
-    return RefreshIndicator(
-        onRefresh: () async {
-          ref
-              .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
-              .initialize(widget.fetchData);
-        },
-        child: widget.result(state.data as List<T>));
+    return Column(
+      children: [
+        RefreshIndicator(
+            onRefresh: () async {
+              ref
+                  .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
+                  .initialize(widget.fetchData);
+            },
+            child: widget.result(state.data as List<T>)),
+        if (state.isLoading)
+          widget.loadingState ??
+              Center(
+                child: CircularProgressIndicator(),
+              )
+      ],
+    );
   }
 }

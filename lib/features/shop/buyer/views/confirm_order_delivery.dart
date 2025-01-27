@@ -14,7 +14,8 @@ class ConfirmOrderDelivery extends ConsumerStatefulWidget {
   const ConfirmOrderDelivery({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ConfirmOrderDeliveryState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ConfirmOrderDeliveryState();
 }
 
 class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
@@ -23,6 +24,9 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
     final pin = ref.watch(orderPinProvider);
     final viewModel = ref.read(confirmOrderDeliveryVmProvider.notifier);
     final wayaTheme = Theme.of(context);
+
+    final String? arg = ModalRoute.of(context)?.settings.arguments as String?;
+
     return WayaScaffold(
         title: 'Confirm Order Delivery',
         body: Column(
@@ -38,9 +42,10 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                 const Gap(30),
                 Text("Enter 10 Digits Code", style: WayaTextStyles.titleLarge),
                 const Gap(5),
-                Text("Enter 10 digits code to complete the handover", style: WayaTextStyles.hintStyle),
+                Text("Enter 10 digits code to complete the handover",
+                    style: WayaTextStyles.hintStyle),
                 const Gap(30),
-                CopyCode(code: "323-3223-23323", title: "Delivery Confirmation Token"),
+                CopyCode(code: arg!, title: "Delivery Confirmation Token"),
                 const Gap(2),
                 PinInputField(
                   pin: pin,
@@ -57,11 +62,16 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                          color: wayaTheme.colorScheme.primary75, borderRadius: BorderRadius.all(Radius.circular(8))),
+                          color: wayaTheme.colorScheme.primary75,
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: RichText(
                           text: const TextSpan(children: [
-                        TextSpan(text: "Having issue? ", style: WayaTextStyles.bodySmall),
-                        TextSpan(text: "Contact Support", style: WayaTextStyles.smallactiveLinkStyle),
+                        TextSpan(
+                            text: "Having issue? ",
+                            style: WayaTextStyles.bodySmall),
+                        TextSpan(
+                            text: "Contact Support",
+                            style: WayaTextStyles.smallactiveLinkStyle),
                       ]))),
                 ),
               ],

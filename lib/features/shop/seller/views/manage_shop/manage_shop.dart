@@ -13,6 +13,7 @@ import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dar
 import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_request.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
+import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
@@ -151,12 +152,13 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 children: [
                   QuickActionWidget(
                     title: "Orders",
-                    icon: SvgPicture.asset(WayaAssets.icons.orderVan.path),
+                    icon: SvgPicture.asset(WayaAssets.icons.orders.path),
                     color: Color(0xffE7F6EC),
                     onTap: () {
-                      WayaNav.toNamed('/seller-orders');
+                      WayaNav.toNamed(AllSellerOrders.route,
+                          arguments: viewModel.singleShop!.id);
                     },
-                    metric: 4,
+                    metric: viewModel.numberOfOrders,
                     isStacked: true,
                   ),
                   QuickActionWidget(

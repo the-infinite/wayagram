@@ -13,6 +13,7 @@ class ManageShopState {
   final int numberOfProducts;
   final int numberOfRequests;
   final int numberOfPendingOrders;
+  final int numberOfOrders;
   final bool isLoadingOrder;
   final List<Order> orders;
 
@@ -22,6 +23,7 @@ class ManageShopState {
       this.hasShop = false,
       this.shop = const [],
       this.orders = const [],
+      this.numberOfOrders = 0,
       this.numberOfPendingOrders = 0,
       this.isPersonalNotUpgradedToBusiness = false,
       this.salesMetric = const [],
@@ -44,6 +46,7 @@ class ManageShopState {
       List<Order>? orders,
       int? numberOfProducts,
       bool? isLoadingOrder,
+      int? numberOfOrders,
       bool? isPersonalNotUpgradedToBusiness}) {
     return ManageShopState(
         isLoading: isLoading ?? this.isLoading,
@@ -58,6 +61,7 @@ class ManageShopState {
             numberOfPendingOrders ?? this.numberOfPendingOrders,
         isLoadingOrder: isLoadingOrder ?? this.isLoadingOrder,
         orders: orders ?? this.orders,
+        numberOfOrders :numberOfOrders?? this.numberOfOrders,
         isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ??
             this.isPersonalNotUpgradedToBusiness);
   }
@@ -76,6 +80,7 @@ class ManageShopState {
         salesMetric: json['salesMetric'],
         numberOfRequests: json['numberOfRequests'],
         numberOfProducts: json['numberOfProducts'],
+        numberOfOrders: json['numberOfOrders'],
         shop: json['shop']);
   }
 
@@ -84,11 +89,12 @@ class ManageShopState {
         "data": data,
         'salesMetric': salesMetric,
         'isLoadingOrder': isLoadingOrder,
-            "hasShop": hasShop,
+        "hasShop": hasShop,
         'numberOfProducts': numberOfProducts,
         'numberOfRequests': numberOfRequests,
         'numberOfPendingOrders': numberOfPendingOrders,
         'orders': orders,
+        'numberOfOrders':numberOfOrders,
         "shop": shop,
         "singleShop": singleShop,
         "isPersonalNotUpgradedToBusiness": isPersonalNotUpgradedToBusiness

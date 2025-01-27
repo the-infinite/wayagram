@@ -31,8 +31,8 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/discount/all?page=$page');
   }
 
-  Future<WayaRequestResponse> getProducts() {
-    return get('$serviceUrl/products/get');
+  Future<WayaRequestResponse> getProducts(int page) {
+    return get('$serviceUrl/products/get?page=$page');
   }
 
   ///products/:productId/shop/:shopId

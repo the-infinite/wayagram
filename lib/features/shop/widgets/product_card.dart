@@ -43,20 +43,14 @@ class ProductCard extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          product.images.isEmpty
-              ? Container(
-                  height: 180,
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.scaffoldColor,
-                      borderRadius: BorderRadius.circular(8)),
-                )
-              : WayaImage(
-                  imageUrl: image,
-                  height: 180,
-                  fit: BoxFit.contain,
-                  radius: BorderRadius.circular(8),
-                  //color: wayaTheme.colorScheme.transparent,
-                ),
+          WayaImage(
+            imageUrl: image,
+            height: 180,
+            width: double.infinity,
+            fit: BoxFit.contain,
+            radius: BorderRadius.circular(8),
+            color: wayaTheme.colorScheme.transparent,
+          ),
           Visibility(
               visible: product.wayagramDeal,
               child: Column(
@@ -161,7 +155,6 @@ class ProductCard extends ConsumerWidget {
                           productName: product.name,
                           price: price,
                           shopId: product.shopId);
-                          
                     },
                     height: 38,
                     radius: 6,
@@ -234,6 +227,7 @@ class SellerProductCard extends ConsumerWidget {
           WayaImage(
             imageUrl: image,
             height: 180,
+            width: double.infinity,
             fit: BoxFit.contain,
             radius: BorderRadius.circular(8),
             color: wayaTheme.colorScheme.transparent,
@@ -315,7 +309,7 @@ class SellerProductCard extends ConsumerWidget {
           Text(
               product.discountPercentage > 0
                   ? WayaHelpers.calculatedDiscountPrice(product.price,
-                      product.discountPercentage.toInt()) // Convert to int
+                      product.discountPercentage.toInt()) 
                   : "₦${product.price}",
               style: TextStyle().wayaCopyWith(
                   color: isExplore

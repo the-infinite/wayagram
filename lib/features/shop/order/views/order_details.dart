@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/order/data/model/order_state.dart';
@@ -78,12 +79,16 @@ class OrderDetails extends ConsumerWidget {
                     ? arg?.order.pickupStatus
                     : arg?.order.deliveryStatus),
             const Gap(25),
-            WayaButton(
-              callback: () {
-                WayaNav.toNamed('/confirm-order-delivery');
-              },
-              text: "Confirm Order Delivery",
-            )
+            Visibility(
+                visible: arg?.order.deliveryStatus == 'completed' ||
+                    arg?.order.pickupStatus == 'completed',
+                child: WayaButton(
+                  callback: () {
+                    WayaNav.toNamed(ConfirmOrderDelivery.route,
+                        arguments: arg?.order.deliveryToken);
+                  },
+                  text: "Confirm Order Delivery",
+                ))
           ],
         ));
   }

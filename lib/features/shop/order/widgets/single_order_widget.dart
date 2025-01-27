@@ -19,7 +19,7 @@ class SingleOrderWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-   // final viewModel = ref.watch(singleOrderWigdetViewModelProvider);
+    // final viewModel = ref.watch(singleOrderWigdetViewModelProvider);
     return GestureDetector(
       onTap: () {
         if (isSeller) {
@@ -56,7 +56,9 @@ class SingleOrderWidget extends ConsumerWidget {
                         ),
                         const Gap(8),
                         _buildOrderStatus(
-                            context: context, status: order.deliveryStatus)
+                            context: context,
+                            status: order.deliveryStatus,
+                            deliveryType: order.deliveryType!)
                       ],
                     )
                   ],
@@ -66,9 +68,9 @@ class SingleOrderWidget extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "-${WayaHelpers.formatPrice(double.parse(order.total).toInt())}",
+                      "${isSeller ? '+' : '-'}${WayaHelpers.formatPrice(double.parse(order.total).toInt())}",
                       style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.error700, fontSize: 13),
+                          color:isSeller ? wayaTheme.colorScheme.success: wayaTheme.colorScheme.error700, fontSize: 13),
                     ),
                     const Gap(8),
                     Text(
@@ -90,25 +92,29 @@ class SingleOrderWidget extends ConsumerWidget {
   }
 
   Widget _buildOrderStatus(
-      {required BuildContext context, required String status}) {
+      {required BuildContext context,
+      required String status,
+      required String deliveryType}) {
     final wayaTheme = Theme.of(context);
 
-    // Map delivery status to color schemes
-    final Map<String, Color> statusColors = {
+    Map<String, Color> statusColors = {
       'pending': wayaTheme.colorScheme.pending50,
-      'shipped': wayaTheme.colorScheme.info50,
-      'delivered': wayaTheme.colorScheme.success50,
-      'cancelled': wayaTheme.colorScheme.error200,
+      deliveryType == 'Delivery' ? 'processing' : 'readyForPickup':
+          wayaTheme.colorScheme.info50,
+      'completed': wayaTheme.colorScheme.success50,
+      deliveryType == 'Delivery' ? 'onTransit' : 'pickUpScheduled':
+          wayaTheme.colorScheme.info50,
     };
 
-    final Map<String, Color> textColors = {
+    Map<String, Color> textColors = {
       'pending': wayaTheme.colorScheme.pending,
-      'shipped': wayaTheme.colorScheme.info,
-      'delivered': wayaTheme.colorScheme.success,
-      'cancelled': wayaTheme.colorScheme.error,
+      deliveryType == 'Delivery' ? 'processing' : 'readyForPickup':
+          wayaTheme.colorScheme.info,
+      'completed': wayaTheme.colorScheme.success,
+      deliveryType == 'Delivery' ? 'onTransit' : 'pickUpScheduled':
+          wayaTheme.colorScheme.info,
     };
 
-    // Fallback to default colors if status is unknown
     final backgroundColor =
         statusColors[status] ?? wayaTheme.colorScheme.greyColor300;
     final textColor = textColors[status] ?? wayaTheme.colorScheme.customBlack;
@@ -120,7 +126,7 @@ class SingleOrderWidget extends ConsumerWidget {
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
-        status,
+        WayaHelpers.removecamelCase(status),
         style: TextStyle().wayaCopyWith(
           color: textColor,
           fontWeight: FontWeight.w500,
@@ -130,37 +136,3 @@ class SingleOrderWidget extends ConsumerWidget {
     );
   }
 }
-
-class SingleOrderWigdetViewModel extends ChangeNotifier {
-  final Ref ref;
-  SingleOrderWigdetViewModel(this.ref);
-
-  Future<void> addDeliveryDetail(BuildContext context) async {
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Container();
-        });
-  }
-
-  Future<void> sellerOrderAction(BuildContext context) async {
-    WayaUtils.showNotice(
-        context: context,
-        buttonText: 'Add Delivery Details',
-        secondButtonText: 'See your Order Details',
-        title: 'Populate Delivery Details',
-        message:
-            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
-        onPress: () async {
-          await addDeliveryDetail(context);
-        },
-        onCancel: () {
-          WayaNav.toNamed('/seller-order-details', arguments: "id");
-        },
-        icon: Image.asset('assets/images/shop/delivery-van.png'));
-  }
-}
-
-final singleOrderWigdetViewModelProvider =
-    ChangeNotifierProvider<SingleOrderWigdetViewModel>(
-        (ref) => SingleOrderWigdetViewModel(ref));

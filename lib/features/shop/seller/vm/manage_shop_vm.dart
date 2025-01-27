@@ -124,11 +124,21 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
         OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
         state = state.copyWith(orders: ordersResponse.data.data);
         if (ordersResponse.data.data.isNotEmpty) {
-          state = state.copyWith(
-              numberOfPendingOrders: ordersResponse.data.data
-                  .where((value) => value.status == 'processing')
-                  .toList()
-                  .length);
+          state =
+              state.copyWith(numberOfOrders: ordersResponse.data.data.length);
+          final numberOfPendingOrders = ordersResponse.data.data
+              .where((value) => value.status == 'pending')
+              .toList()
+              .length;
+          List<SalesMetric> sales = List.from(state.salesMetric);
+          sales = sales.map((value) {
+            if (value.title == "Pending Orders") {
+              return value.copyWith(metrics: "$numberOfPendingOrders");
+            }
+            return value;
+          }).toList();
+
+          state = state.copyWith(salesMetric: sales);
         }
       }
     } catch (e) {
