@@ -48,6 +48,7 @@ class SingleNegotiationBidWidget extends ConsumerWidget {
                         height: 48,
                       ),
                       const Gap(10),
+
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

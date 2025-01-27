@@ -33,6 +33,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -48,7 +50,28 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
 
               int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
+          print('URL ===> ${poll.url}');
+              void checkEndDate(String endDateFromBackend) {
+                try {
+                  // Parse the endDate string from the backend
+                  DateTime endDate = DateTime.parse('${poll.endDate}');
+                  DateTime currentDate = DateTime.now();
 
+                  // Compare the dates
+                  if (currentDate.isBefore(endDate)) {
+                    // EndDate is still current
+                    print("The end date is still valid.");
+                  } else if (currentDate.isAtSameMomentAs(endDate)) {
+                    // EndDate is exactly the current time
+                    print("The end date is now.");
+                  } else {
+                    // EndDate has passed
+                    print("The end date has passed.");
+                  }
+                } catch (e) {
+                  print("Error parsing date: $e");
+                }
+              }
               return Container(
                 margin: EdgeInsets.only(bottom: 40.h),
                 child: Column(
@@ -56,8 +79,9 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   children: [
 
                     Row(children: [
+
                       CircleAvatar(
-                        backgroundImage: NetworkImage('${poll.userData?.profilePicture}'),
+                        backgroundImage: NetworkImage(poll.userData?.profilePicture ?? ''),
                         radius: 10,
                         backgroundColor: wayaTheme.colorScheme.greyColor200,
                       ),
@@ -104,7 +128,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                         if(poll.choices != null)
                         ...poll.choices!.map((e)=>
                             presImage('${e.imageUrl}',
-                            '${e.text}', context, true))
+                            '${e.text}', context, true, poll.feePerVote,
+                                e.id, e.pollId,e.text, poll.url))
                       ],
                     )
 
@@ -115,7 +140,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
       ],
     );
   }
-  presImage(img, name, ctx, chk){
+  presImage(img, name, ctx, chk, voteFee, choiceId, pollId,candidateName, votingLink){
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -124,26 +149,80 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
         onTap: (){
           WayaUtils.showModalSheet(
             ctx,
-            child: VoteOptionModal(),
+            child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,
+              pollId: pollId,candidateName: candidateName,
+            votingLink:votingLink,),
           );
         },
         child: Container(
-          padding: EdgeInsets.only(left: 20.w, bottom: 10),
+          padding: EdgeInsets.only(left: 20.w,),
           height: 60.h,
           decoration: BoxDecoration(
             border: Border.all(color: WayaColors.primary600, ),
             borderRadius: BorderRadius.circular(12),
           ),
           child: chk ? Row(children: [
-            //Image.network(img, height: 44.h),
-            WayaImage(imageUrl: img, height: 44.h),
-            const Gap(40),
-            Text(
-              name,
-              style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(ctx).colorScheme.primary600 ),
+            //Expanded(child: Image.network(img, height: 44.h)),
+            //WayaImage(imageUrl: img, height: 44.h),
+            Expanded(child:  Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Image.network(
+                  img,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: Colors.white,
+                      height:44.h,
+                      width: MediaQuery.of(ctx).size.height /9,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: CircularProgressIndicator(
+                            color: WayaColors.primary.withOpacity(0.5),
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!.toInt()
+                                : null,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, exception, stackTrace) {
+                    return Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: WayaColors.primary,
+                          border: Border.all(
+                            color: Colors.white,
+                          )),
+                      //MediaQuery.of(ctx).size.height /12,
+                      height: 44.h,
+                      width: MediaQuery.of(ctx).size.height /12,
+                      child:  Center(
+                        child:
+                        //Image.asset('assets/images/home/profile_icon.png', height: 60.h, width: 70.w,)
+                        Text('Image\nError', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 8)),
+                      ),
+                    );
+                  },
+                  fit: BoxFit.cover,
+                  height: 44.h,
+                  width: MediaQuery.of(ctx).size.height /8,
+                ),
+
+              ],
+            ),),
+            const Gap(30),
+            Expanded(
+              flex: 3,
+              child: Text(
+                name,
+                style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(ctx).colorScheme.primary600 ),
+              ),
             ),
 
           ],) : Row(

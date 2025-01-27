@@ -15,9 +15,9 @@ class PollDashboardModel {
         votes?.add(Votes.fromJson(v));
       });
     }
-    voteCount = json['voteCount'];
-    moneyGenerated = json['moneyGenerated'];
-    numberOfPeopleVoted = json['numberOfPeopleVoted'];
+    voteCount = json['voteCount']??0;
+    moneyGenerated = json['moneyGenerated']?? 0;
+    numberOfPeopleVoted = json['numberOfPeopleVoted']??0;
   }
   List<Votes>? votes;
   int? voteCount;

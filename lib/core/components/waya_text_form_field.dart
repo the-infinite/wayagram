@@ -8,7 +8,7 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
 
 class WayaTextFormField extends StatefulWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final TextInputType keyboardType;
   final String hintText;
   final int? line;
@@ -42,7 +42,7 @@ class WayaTextFormField extends StatefulWidget {
 
   const WayaTextFormField({
     super.key,
-    required this.controller,
+    this.controller,
     this.onChanged,
     this.suffixIconColor,
     this.keyboardType = TextInputType.text,

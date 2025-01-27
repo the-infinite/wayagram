@@ -38,22 +38,29 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
   CreatePollVotingState? viewModel;
 
 
+
   disposeControllers(){
-    viewModel?.pollTitle.dispose();
-    viewModel?.pollDescription.dispose();
-    viewModel?.pollCompanyDescription.dispose();
-    viewModel?.votePrice.dispose();
-    viewModel?.voteNumber.dispose();
-    viewModel?.firstChoice.dispose();
-    viewModel?.firstChoiceDescription.dispose();
-    viewModel?.secondChoice.dispose();
-    viewModel?.secondChoiceDescription.dispose();
+    // print('POLLTILT  ==> ${viewModel?.pollTitle.text}');
+    // viewModel?.pollTitle.dispose();
+    // viewModel?.pollDescription.dispose();
+    // viewModel?.pollCompanyDescription.dispose();
+    // viewModel?.votePrice.dispose();
+    // viewModel?.voteNumber.dispose();
+    // viewModel?.firstChoice.dispose();
+    // viewModel?.firstChoiceDescription.dispose();
+    // viewModel?.secondChoice.dispose();
+    // viewModel?.secondChoiceDescription.dispose();
+    // print('POLLTILT 2 ==> ${viewModel?.pollTitle.text}');
 }
+
 
   String userType = "PERSONAL";
 
+  Map<String, dynamic> formData = {};
+
   @override
   Widget build(BuildContext context) {
+
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
@@ -89,7 +96,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               } else {
                await ref.read(createPollVotingProvider.notifier).createPoll(
                   context,
-                  viewModel.firstChoice.text,
+                  viewModel.pollTitle.text,
                   viewModel.startDate,
                   viewModel.endDate,
                   viewModel.voteNumber.text,
@@ -98,11 +105,11 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   viewModel.votePrice.text
                 );
                 disposeControllers();
-                Navigator.pop(context);
-                WayaUtils.showModalSheet(
-                  context,
-                  child: PollsModal(),
-                );
+                // Navigator.pop(context);
+                // WayaUtils.showModalSheet(
+                //   context,
+                //   child: PollsModal(),
+                // );
               }
 
 
@@ -121,10 +128,13 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-            Text("${viewModel.pollTitle.text.capitalizeFirst}",
+            Text(
+                //'${formData['pollTitle']}',
+                "${viewModel.pollTitle.text.capitalizeFirst}",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
+                //'${formData['pollDescription']}'
               '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
@@ -141,7 +151,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                 //21st of July\n2024
                 summary('Start Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.startDate)}\n', 'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
                 summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
-                summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'),
+                summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'
+                ),
                 summary('Duration', '$daysLeft Weeks\n' , '', ''),
               ],
             ),

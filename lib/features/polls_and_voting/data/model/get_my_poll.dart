@@ -62,7 +62,8 @@ class PollData {
       this.creatorId, 
       this.isPaid, 
       this.isSettled, 
-      this.question, 
+      this.question,
+      this.url,
       this.startDate, 
       this.endDate, 
       this.maxVotesPerUser, 
@@ -79,6 +80,7 @@ class PollData {
     isPaid = json['isPaid'];
     isSettled = json['isSettled'];
     question = json['question'];
+    url = json['url'];
     startDate = json['startDate'];
     endDate = json['endDate'];
     maxVotesPerUser = json['maxVotesPerUser'];
@@ -101,6 +103,7 @@ class PollData {
   bool? isPaid;
   bool? isSettled;
   String? question;
+  String? url;
   String? startDate;
   String? endDate;
   int? maxVotesPerUser;
@@ -118,6 +121,7 @@ class PollData {
     map['isPaid'] = isPaid;
     map['isSettled'] = isSettled;
     map['question'] = question;
+    map['url'] = url;
     map['startDate'] = startDate;
     map['endDate'] = endDate;
     map['maxVotesPerUser'] = maxVotesPerUser;

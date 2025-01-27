@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -17,6 +18,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/shared/components/loading_dialog.dart';
 import 'package:wayagram/features/shared/components/pin_entry_bottom_sheet.dart';
@@ -65,7 +67,8 @@ class _PollsModalState extends State<PollsModal> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
-                WayaNav.toNamed("/poll-and-voting");
+                WayaNav.removeUntil(PollAndVoting());
+               // WayaNav.toNamed("/poll-and-voting");
               },
               text: "View Application Status",
             ),
@@ -87,7 +90,14 @@ class _PollsModalState extends State<PollsModal> {
 }
 
 class VoteOptionModal extends ConsumerStatefulWidget {
-  const VoteOptionModal({super.key});
+  final String voteFee;
+  final String choiceId;
+  final String pollId;
+  final String candidateName;
+  final String votingLink;
+
+  const VoteOptionModal({super.key, required this.voteFee, required this.choiceId,
+    required this.pollId, required this.candidateName, required this.votingLink});
 
   @override
   ConsumerState<VoteOptionModal> createState() => _VoteOptionModalState();
@@ -102,7 +112,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
 
   void _updateAmount(String value) {
     setState(() {
-      if (amount == "0.00") {
+      if (amount == "0") {
         amount = value;
       } else {
         // Prevent leading zeros
@@ -124,10 +134,10 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
       if (amount.length > 1) {
         amount = amount.substring(0, amount.length - 1);
         if (amount.isEmpty) {
-          amount = "0.00";
+          amount = "0";
         }
       } else {
-        amount = "0.00";
+        amount = "0";
       }
       errorMessage = null;
     });
@@ -147,64 +157,13 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
       Navigator.of(context).pop();
       WayaUtils.showModalSheet(
         context,
-        child: ConfirmVoteOptionModal(amountPaid: amount,),
+        child: ConfirmVoteOptionModal(amountPaid: amount, voteFee: widget.voteFee,
+          choiceId: widget.choiceId, pollId: widget.pollId,
+            candidateName: widget.candidateName, votingLink: widget.votingLink,),
       );
     }
 
-    /*
-    if (numericAmount > maxAmount) {
-      setState(() {
-        errorMessage = "Amount cannot exceed 50,000,000 NGN";
-      });
-      return;
-    }
-    final args =
-    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    final fundOptionCode = args!["code"];
-    final name = args["name"];
-    log('Submitted amount: $amount NGN');
-    switch (name) {
-      case "PAYSTACK":
-      case "WAYAQUICK":
-        WayaLoadingDialog.show(context);
-        final data = await ref
-            .read(walletFundingOptionsVmProvider.notifier)
-            .walletFunding(
-            amount: double.parse(amount), fundOptionCode: fundOptionCode);
-        if (mounted) {
-          WayaLoadingDialog.hide(context);
-          if (data != null) {
-            WayaNav.toNamed(WayaWebview.route, arguments: {
-              "url": data["authorizationUrl"],
-              "title": "Waya Webview",
-              "transactionId": data["transactionId"],
-              "fundingOption": name
-            });
-          }
-        }
-
-        break;
-      case "WAYABANK":
-        WayaLoadingDialog.show(context);
-        final data = await ref
-            .read(walletFundingOptionsVmProvider.notifier)
-            .walletFunding(
-            amount: double.parse(amount), fundOptionCode: fundOptionCode);
-        if (mounted) {
-          WayaLoadingDialog.hide(context);
-          if (data != null) {
-            WayaNav.toNamed(BankTransferScreen.route,
-                arguments: {...data, "amount": amount});
-          }
-        }
-        break;
-      default:
-        log("Not Implemented Yet");
-        break;
-    }*/
   }
-
-  final formatterNumber = NumberFormat("#,##0.00");
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +196,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                     ),
                   ),
                   TextSpan(
-                    text: 'Each vote costs ₦100',
+                    text: 'Each vote costs ₦${widget.voteFee}',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
                       fontSize: 12,
@@ -291,13 +250,13 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
             WayaButton(
               color: WayaColors.primar50,
               callback: () async {
-                WayaUtils.showModalSheet(
-                  context,
-                  child: PinEntryBottomSheet(),
-                );
+                // WayaUtils.showModalSheet(
+                //   context,
+                //   child: PinEntryBottomSheet(),
+                // );
               },
               //text: "Total: ₦${num.parse(amount)*100}",
-              text: "Total: ₦${ref.read(createPollVotingProvider.notifier).formatAm(amount)}",
+              text: "Total: ₦${ref.read(createPollVotingProvider.notifier).formatAm(calculateAmount())}",
               textColor: WayaColors.primary,
             ),
             const Gap(20),
@@ -335,13 +294,26 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
       ),
     );
   }
+
+  calculateAmount() {
+    num x = 0;
+    x = num.parse(widget.voteFee)*num.parse(amount);
+    print(x);
+    return x;
+  }
 }
 
 class ConfirmVoteOptionModal extends ConsumerStatefulWidget {
   //final String quantity;
   final String amountPaid;
+  final String voteFee;
+  final String choiceId;
+  final String pollId;
+  final String candidateName;
+  final String votingLink;
   //String amount;
-    ConfirmVoteOptionModal({super.key,  required this.amountPaid});
+    ConfirmVoteOptionModal({super.key,  required this.amountPaid, required this.voteFee,
+      required this.choiceId, required this.pollId, required this.candidateName,required this.votingLink});
 
   @override
   ConsumerState<ConfirmVoteOptionModal> createState() => _ConfirmVoteOptionModalState();
@@ -383,7 +355,6 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                     ),
                   ),
                   TextSpan(
-                    //text: '${widget.amount} Votes ',
                     text: '${ref.read(createPollVotingProvider.notifier).formatAm(widget.amountPaid)} Votes ',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
@@ -400,8 +371,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                     ),
                   ),
                   TextSpan(
-                    text: '${ref.read(createPollVotingProvider.notifier).formatAm('${int.parse(widget.amountPaid)*100}')}',
-                    //text: '${int.parse(widget.amount)*100}',
+                    text: '₦${ref.read(createPollVotingProvider.notifier).formatAm('${num.parse(widget.amountPaid)*num.parse(widget.voteFee)}')}',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
                       fontSize: 12,
@@ -415,55 +385,19 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
             WayaButton(
               callback: !viewModel!.isLoading
                   ? ()  async{
-                final userId = _wayaLocalDataSource.getUserId();
-                //Navigator.of(context).pop();
                await ref.read(createPollVotingProvider.notifier).castYourVote(
-
-                    '${int.parse(widget.amountPaid)*100}',
+                   '${num.parse(widget.amountPaid)*num.parse(widget.voteFee)}',
                     widget.amountPaid,
-                    userId);
-                print('AMOUNT TOT ===>>> ${int.parse(widget.amountPaid)*100}');
-                Navigator.of(context).pop();
+                    //'118ff236-2410-4b84-8976-1e96f26a2d47','89b12d4a-9f16-49c8-8592-8ff7402246f3',
+                    widget.choiceId, widget.pollId,
+                   context,widget.candidateName.toLowerCase().capitalizeFirst, widget.votingLink);
+                //
 
-                WayaUtils.showModalSheet(
-                  context,
-                  child: VoteSuccessModal(),
-                );
-
-                //WayaNav.toNamed('/share-voting');
-                // WayaUtils.showModalSheet(
-                //   context,
-                //   child: VotePinEntryBottomSheet(
-                //     quantity: widget.amount,
-                //     amountPaid: '${int.parse(widget.amount)*100}',
-                //   ),
-                // );
               }
                   : null,
               centerWidget: LoadingState(
                   loading: viewModel!.isLoading, text: 'Yes, Vote'),
             ),
-            /* WayaButton(
-                callback: () async {
-                  final userId = _wayaLocalDataSource.getUserId();
-                  Navigator.of(context).pop();
-                  ref.read(createPollVotingProvider.notifier).castYourVote(
-                      widget.amountPaid,
-                      '${int.parse(widget.amountPaid)*100}',
-                      userId);
-                  print('AMOUNT TOT ===>>> ${int.parse(widget.amountPaid)*100}');
-                  Navigator.of(context).pop();
-                  WayaNav.toNamed('/share-voting');
-                  // WayaUtils.showModalSheet(
-                  //   context,
-                  //   child: VotePinEntryBottomSheet(
-                  //     quantity: widget.amount,
-                  //     amountPaid: '${int.parse(widget.amount)*100}',
-                  //   ),
-                  // );
-                },
-                text: "Yes, Vote",
-              ),*/
             SizedBox(height: 17.h),
             WayaButton(
               border: Border.all(color: WayaColors.greyColor300),
@@ -483,8 +417,9 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
 }
 
 class VoteSuccessModal extends ConsumerStatefulWidget {
-
-  const VoteSuccessModal({super.key,});
+ final String candidateName;
+ final String votingLink;
+  const VoteSuccessModal({super.key, required this.candidateName, required this.votingLink});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _VoteSuccessModalState();
@@ -513,7 +448,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
             ),
             SizedBox(height: 3.h),
             Text(
-              "I just voted for ${viewModel.firstChoice.text.capitalizeFirst}! Join me in supporting them. #VoteNow",
+              "I just voted for ${widget.candidateName.toLowerCase().capitalizeFirst}! Join me in supporting them. #VoteNow",
               style: wayaTheme.textTheme.hintStyle,
               textAlign: TextAlign.center,
             ),
@@ -530,6 +465,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
+                Share.share(widget.votingLink);
                 //WayaNav.toNamed("/poll-dashboard");
               },
               text: "Share Voting Invitation",
@@ -541,7 +477,6 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
     );
   }
 }
-
 
 class VoteInsufficientModal extends StatefulWidget {
   const VoteInsufficientModal({super.key});
@@ -651,6 +586,85 @@ class NumPadButton extends StatelessWidget {
   }
 }
 
+class PaymentDialog extends StatefulWidget {
+  const PaymentDialog({super.key}) ;
+
+  @override
+  _PaymentDialogState createState() => _PaymentDialogState();
+}
+
+class _PaymentDialogState extends State<PaymentDialog> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 15.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        child: Container(
+          height: 230,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Payment Information',
+                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black ),
+                ),
+
+                const Gap(15),
+
+                Text(
+                  'Waya will take a commission from the payment and the rest of the money will be paid into your account at the end of post duration or its expiry date.',
+                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black ),
+                ),
+      const Gap(10),
+
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          InkWell(
+            onTap: (){
+              Navigator.pop(context);
+              WayaUtils.showModalSheet(
+                context,
+                child: PollsModal(),
+              );
+            },
+            child: Text(
+              'Ok, I Agree',
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
+                  color: WayaColors.primary,
+            ),),
+          ),
+        ],
+      )
+              ],
+            ),
+          ),
+        ));
+  }
+}
+
+/*
 class VotePinEntryBottomSheet extends ConsumerStatefulWidget {
   final String quantity;
   final String amountPaid;
@@ -688,10 +702,12 @@ class _VotePinEntryBottomSheetState extends ConsumerState<VotePinEntryBottomShee
       Navigator.of(context).pop();
 
       WayaNav.toNamed('/share-voting');
-     /* WayaUtils.showModalSheet(
+     */
+/* WayaUtils.showModalSheet(
         context,
         child: VoteSuccessModal(),
-      );*/
+      );*//*
+
       //Navigator.of(context).pop();
 
     }
@@ -784,10 +800,12 @@ class _VotePinEntryBottomSheetState extends ConsumerState<VotePinEntryBottomShee
                             widget.amountPaid, widget.quantity, userId);
                         Navigator.of(context).pop();
                         WayaNav.toNamed('/share-voting');
-                        /* WayaUtils.showModalSheet(
+                        */
+/* WayaUtils.showModalSheet(
         context,
         child: VoteSuccessModal(),
-      );*/
+      );*//*
+
                         //Navigator.of(context).pop();
 
                       }
@@ -825,3 +843,4 @@ class _VotePinEntryBottomSheetState extends ConsumerState<VotePinEntryBottomShee
     );
   }
 }
+*/
