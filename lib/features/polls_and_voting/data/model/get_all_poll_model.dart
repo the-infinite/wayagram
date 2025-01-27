@@ -71,7 +71,8 @@ class GetAllPollData {
       this.isPaid, 
       this.isSettled, 
       this.question, 
-      this.startDate, 
+      this.url,
+      this.startDate,
       this.endDate, 
       this.maxVotesPerUser, 
       this.pollType, 
@@ -87,6 +88,7 @@ class GetAllPollData {
     isPaid = json['isPaid'];
     isSettled = json['isSettled'];
     question = json['question'];
+    url = json['url'];
     startDate = json['startDate'];
     endDate = json['endDate'];
     maxVotesPerUser = json['maxVotesPerUser'];
@@ -109,6 +111,7 @@ class GetAllPollData {
   bool? isPaid;
   bool? isSettled;
   String? question;
+  String? url;
   String? startDate;
   String? endDate;
   num? maxVotesPerUser;
@@ -137,6 +140,7 @@ class GetAllPollData {
   isPaid: isPaid ?? this.isPaid,
   isSettled: isSettled ?? this.isSettled,
   question: question ?? this.question,
+  url: url ??  url,
   startDate: startDate ?? this.startDate,
   endDate: endDate ?? this.endDate,
   maxVotesPerUser: maxVotesPerUser ?? this.maxVotesPerUser,
@@ -154,6 +158,7 @@ class GetAllPollData {
     map['isPaid'] = isPaid;
     map['isSettled'] = isSettled;
     map['question'] = question;
+    map['url'] = url;
     map['startDate'] = startDate;
     map['endDate'] = endDate;
     map['maxVotesPerUser'] = maxVotesPerUser;

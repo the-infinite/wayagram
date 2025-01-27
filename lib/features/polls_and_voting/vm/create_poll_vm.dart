@@ -22,8 +22,10 @@ import 'package:wayagram/features/polls_and_voting/data/model/model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard_model.dart' as dashboard;
 
 import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 
 import '../data/model/get_all_poll_model.dart';
+import '../data/model/poll_dashboard_two_model.dart';
 
 
 class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
@@ -155,7 +157,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  disposeControllers() {
+  @override
+  dispose() {
     state.firstChoice.dispose();
     state.firstChoiceDescription.dispose();
     state.pollTitle.dispose();
@@ -427,7 +430,9 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     for (var i = 0; i < state.choices.length; i++) {
       choiceMap["choices[$i].text"] = state.choices[i].text.text;
-      choiceMap["choices[$i].image"] = state.choices[i].image; // convert this to multipartfile
+      choiceMap["choices[$i].image"] = await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*'));
+      //await MultipartFile.fromFile(state.choices[i].image!.path);
+      //choiceMap["choices[$i].image"] = state.choices[i].image; // convert this to multipartfile
       choiceMap["choices[$i].description"] = state.choices[i].description.text;
     }
 
@@ -441,36 +446,60 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       ...choiceMap
     };
 
+    print('CHOICE  MAP ==>>  ${choiceMap}');
+
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.createPoll(formdata);
-      if (response.data['statusCode'] == 200 ||
-          response.data['statusCode'] == 200 && context.mounted) {
-        WayaUtils.showNotice(
+      if (
+      //response.data['statusCode'] == 200 ||
+          response.success && context.mounted) {
+
+        showDialog(
+            useRootNavigator: false,
             context: context,
-            title: 'Payment information',
-            message:
-                'Your documents are under review. We’ll notify you once the \n verification process is complete',
-            onPress: () => WayaNav.toNamed("/explore"),
-            icon: Image.asset('assets/images/auth/doc-success.png'),
-            buttonText: 'Go To HomePage');
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return PaymentDialog();
+            });
+        // WayaUtils.showModalSheet(
+        //   context,
+        //   child: PaymentDialog(),
+        // );
       }
     } catch (e) {
       _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
+      //CreatePollVotingState.initial;
     }
   }
 
   Future<void> castYourVote(
-      String amountPaid, String qty, String choiceId) async {
+      String amountPaid, String qty, String choiceId, String  pollId,ctx, candidateName, votingLink) async {
     try {
       state = state.copyWith(isLoading: true);
       final response =
-          await _pollAndVotingRepository.castVote(amountPaid, qty, choiceId);
+          await _pollAndVotingRepository.castVote(amountPaid, qty, choiceId, pollId);
       state = state.copyWith(isLoading: false);
-      if (response.success) {
+      Navigator.of(ctx).pop();
+      if (response.success && ctx.mounted) {
+        WayaUtils.showModalSheet(
+          ctx,
+          child: VoteSuccessModal(candidateName: candidateName,votingLink: votingLink,),
+        );
+
         _logger.i(response.data['data']);
+      }else if( response.data['error'] == 'Insufficient wallet balance'){
+
+     // }else {
+       // _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        WayaUtils.showModalSheet(
+          ctx,
+          child: VoteInsufficientModal()
+        );
+
+        print('CHECKINGGGGG');
       }
     } catch (e) {
       _logger.e(e);
@@ -518,13 +547,31 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
+  Future<void> getPollsById(String pollId) async {
+    state = state.copyWith(isLoading: true);
+    final response = await _pollAndVotingRepository.getAllPollsById(pollId);
+    state = state.copyWith(isLoading: false);
+    if (response.statusCode == 200) {
+      GetAllPollModel responseModel = GetAllPollModel.fromJson(response.data);
+      _logger.i('GENERATED ${responseModel.data}');
+
+      state = state.copyWith(getAllPollModel: responseModel.data);
+    } else {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   Future<void> getDashboardPoll(String pollId) async {
     state = state.copyWith(isLoading: true);
     final response = await _pollAndVotingRepository.getDashboardPolls(pollId);
     state = state.copyWith(isLoading: false);
     if (response.statusCode == 200) {
       dashboard.PollDashboardModel responseModel = dashboard.PollDashboardModel.fromJson(response.data);
-      state = state.copyWith(pollDashboardModel: responseModel.votes);
+      // PollDashboardTwoData responseModel = PollDashboardTwoData.fromJson(response.data);
+      print('MY MONEYGENERATED  ==>>>  ${responseModel.moneyGenerated}');
+      state = state.copyWith(voteCount: responseModel.voteCount.toString(),
+           moneyGenerated: responseModel.moneyGenerated.toString(),
+           numberOfPeopleVoted: responseModel.numberOfPeopleVoted.toString());
     } else {
       state = state.copyWith(isLoading: false);
     }
@@ -571,7 +618,7 @@ final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
 });
 
 final createPollVotingProvider =
-    StateNotifierProvider<CreatePollVotingVm, CreatePollVotingState>((ref) {
+    StateNotifierProvider.autoDispose<CreatePollVotingVm, CreatePollVotingState>((ref) {
   final pollAndVotingRepository = ref.watch(pollAndVotingProvider);
   final localDataSource = ref.watch(localDataSourceProvider);
 

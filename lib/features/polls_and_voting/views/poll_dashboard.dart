@@ -14,9 +14,9 @@ import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
-  final String pollId;
+
   static const route = '/poll-dashboard';
-  const PollDashboard({super.key, required this.pollId});
+  const PollDashboard({super.key,});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollDashboardState();
@@ -26,18 +26,22 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
    late CreatePollVotingState getId;
 
+
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      print("DARLINGTON POLLID ====>>> ${widget.pollId.toString()}");
-      ref.read(createPollVotingProvider.notifier).getDashboardPoll(widget.pollId.toString());
+      final pollId  = ModalRoute.of(context)?.settings.arguments as String?;
+      print("DARLINGTON POLLID ====>>> ${pollId.toString()}");
+      ref.read(createPollVotingProvider.notifier).getDashboardPoll(pollId!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
+    print('FJBGJB ${viewModel.pollDashboardTwoModel.length}');
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: viewModel.isLoading,
@@ -66,17 +70,17 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
 
             const Gap(5),
-           /* FittedBox(
+            FittedBox(
               fit: BoxFit.fitWidth,
               child: Row(
                 children: [
-                  pollCard('${viewModel.pollDashboardModel[0].amountPaid}',  'Amount Voted'),
+                  pollCard(viewModel.voteCount,  'Amount Voted'),
                   const Gap(5),
-                  pollCard('${viewModel.pollDashboardModel[0].quantity}',  'Number of Voters'),
+                   pollCard(viewModel.numberOfPeopleVoted,  'Number of Voters'),
                   const Gap(5),
-                  pollCard('${viewModel.dashboard[0].moneyGenerated}',  'Revenue Generated'),
+                  pollCard('₦${viewModel.moneyGenerated}',  'Revenue Generated'),
               ],),
-            ),*/
+            ),
             const Gap(20),
         Container(
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
@@ -113,7 +117,6 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
         ),
         const Gap(20),
         Container(
-
           padding: const EdgeInsets.fromLTRB(10, 15, 10, 6),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
@@ -133,14 +136,17 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: viewModel.pollDashboardModel.length,
+                itemCount: viewModel.dashboard.length,
                 itemBuilder: (context, index) {
-                  final poll = viewModel.pollDashboardModel[index];
+                  final poll = viewModel.dashboard[index];
                   // int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
                   //
                   // int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
 
-                  return statisticCard('${poll.quantity} vote', '1st', '${poll.choice?.text?.capitalizeFirst}', Theme.of(context).colorScheme.success50);
+                  //int daysLeft = DateTime.parse('${poll.}').difference(DateTime.parse('${poll.startDate}')).inDays;
+
+                  return
+                    statisticCard(' vote', '1st', '${poll.moneyGenerated}', Theme.of(context).colorScheme.success50);
                 }),
             // statisticCard('240 vote', '1st', 'Dr Nnamdi Azikwe', Theme.of(context).colorScheme.success50),
             // const Gap(10),

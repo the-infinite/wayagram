@@ -15,6 +15,7 @@ import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_v
 
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
+import '../data/model/create_poll_state_model.dart';
 import '../data/poll_type_data.dart';
 
 class CreatePoll extends ConsumerStatefulWidget {
@@ -28,8 +29,42 @@ class CreatePoll extends ConsumerStatefulWidget {
 class _CreatePollState extends ConsumerState<CreatePoll> {
 
   final _formKey = GlobalKey<FormState>();
+ Map<String, dynamic> formData = {};
 
   bool sel = false;
+
+  CreatePollVotingState? viewModel;
+
+/*disposeControllers() {
+    // print('POll titk ${ viewModel?.pollTitle.text}');
+    // viewModel?.pollTitle.dispose();
+    // viewModel?.pollDescription.dispose();
+    // viewModel?.pollCompanyDescription.dispose();
+    // viewModel?.votePrice.dispose();
+    // viewModel?.voteNumber.dispose();
+    // viewModel?.firstChoice.dispose();
+    // viewModel?.firstChoiceDescription.dispose();
+    // viewModel?.secondChoice.dispose();
+    // viewModel?.secondChoiceDescription.dispose();
+    super.dispose();
+  }*/
+
+/*  @override
+  void dispose() {
+    //disposeControllers();
+    super.dispose();
+    print('POll titk ${ viewModel?.pollTitle.text}');
+    viewModel?.pollTitle.dispose();
+    viewModel?.pollDescription.dispose();
+    viewModel?.pollCompanyDescription.dispose();
+    viewModel?.votePrice.dispose();
+    viewModel?.voteNumber.dispose();
+    viewModel?.firstChoice.dispose();
+    viewModel?.firstChoiceDescription.dispose();
+    viewModel?.secondChoice.dispose();
+    viewModel?.secondChoiceDescription.dispose();
+    //viewModel?.pollTitle.clear();
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +80,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
             callback: !viewModel.isLoading
                 ? () async {
               if (_formKey.currentState!.validate()) {
+             //Navigator.pop(context);
                 WayaNav.toNamed("/add-choices");
               }
             } : null,
@@ -88,16 +124,24 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                         children: [
                           WayaTextFormField(
                             keyboardType: TextInputType.text,
+                            // onChanged: (value){
+                            //   viewModel.pollTitle.text = value;
+                            //  //formData['pollTitle'] = value;
+                            //
+                            // },
                             controller: viewModel.pollTitle,
                             hintText: 'Enter Poll Title',
                             borderColor: formState.hasError &&
                                 viewModel.pollTitle.text.isEmpty
+                                //formData['pollTitle'].isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
                             label: 'Poll Title',
                           ),
                           if (formState.hasError &&
-                              viewModel.pollTitle.text.isEmpty)
+                              viewModel.pollTitle.text.isEmpty
+                              //formData['pollTitle'].isEmpty
+                          )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
@@ -125,15 +169,22 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                             line: 6,
                             keyboardType: TextInputType.text,
                             controller: viewModel.pollDescription,
+                            // onChanged: (value){
+                            //   //formData['pollDescription'] = value;
+                            //
+                            // },
                             hintText: 'Why should people care? Give a short, engaging reason',
                             borderColor: formState.hasError &&
+                                //formData['pollDescription'].isEmpty
                                 viewModel.pollDescription.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
                             label: 'Description',
                           ),
                           if (formState.hasError &&
-                              viewModel.pollDescription.text.isEmpty)
+                              viewModel.pollDescription.text.isEmpty
+                          //formData['pollDescription']
+                          )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
@@ -149,6 +200,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
 
                     const Gap(10),
                     FormField<String>(validator: (value) {
+                      //if (formData['pollCompanyDescription'].isEmpty) {
                       if (viewModel.pollCompanyDescription.text.isEmpty) {
                         return 'Description is required';
                       }
@@ -161,16 +213,23 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           WayaTextFormField(
                             line: 5,
                             keyboardType: TextInputType.text,
+                            // onChanged: (value){
+                            //   //formData['pollCompanyDescription'] = value;
+                            //
+                            // },
                             controller: viewModel.pollCompanyDescription,
                             hintText: 'Describe the company this poll is taking place',
                             borderColor: formState.hasError &&
+                                //formData['pollCompanyDescription'].isEmpty
                                 viewModel.pollCompanyDescription.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
                             label: 'Description of the company',
                           ),
                           if (formState.hasError &&
-                              viewModel.pollCompanyDescription.text.isEmpty)
+                              viewModel.pollCompanyDescription.text.isEmpty
+                              //formData['pollCompanyDescription'].isEmpty
+                          )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
@@ -188,7 +247,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                     ///
                     FormField<String>(validator: (value) {
                       if (viewModel.pollType.isEmpty) {
-                        return 'Gender is required';
+                        return 'Poll  Type is required';
                       }
 
                       return null;
@@ -454,15 +513,20 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           WayaTextFormField(
                             keyboardType: TextInputType.number,
                             controller: viewModel.votePrice,
+                            // onChanged: (value){
+                            //  // formData['votePrice'] = value;
+                            // },
                             hintText: '0 NGN',
                             borderColor: formState.hasError &&
+                                //formData['votePrice'].isEmpty
                                 viewModel.votePrice.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
                             label: 'Price Per Vote (Optional)',
                           ),
-                          if (formState.hasError &&
-                              viewModel.votePrice.text.isEmpty)
+                          if (formState.hasError && viewModel.votePrice.text.isEmpty
+                              //formData['votePrice'].isEmpty
+                          )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
@@ -478,7 +542,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
 
                     const Gap(10),
                     FormField<String>(validator: (value) {
-                      if (viewModel.startDate.isEmpty) {
+                      if (viewModel.voteNumber.text.isEmpty) {
                         return 'Number of times to vote is required';
                       }
                       return null;
@@ -488,16 +552,22 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                         children: [
                           WayaTextFormField(
                             keyboardType: TextInputType.number,
+                            onChanged: (value){
+                              //formData['voteNumber'] = value;
+                            },
                             controller: viewModel.voteNumber,
                             hintText: '0',
                             borderColor: formState.hasError &&
+                                //formData['voteNumber'].isEmpty
                                 viewModel.voteNumber.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
                             label: 'Number of times to vote',
                           ),
                           if (formState.hasError &&
-                              viewModel.voteNumber.text.isEmpty)
+                              viewModel.voteNumber.text.isEmpty
+                              //formData['voteNumber'].isEmpty
+                          )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(

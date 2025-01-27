@@ -10,7 +10,7 @@ class PollAndVotingRepository extends BaseRepository {
     return post('$serviceUrl/client/polls', data, formdata: true);
   }
 
-  Future<WayaRequestResponse> castVote(dynamic amountPaid, String qty, String choiceId) {
+  Future<WayaRequestResponse> castVote(dynamic amountPaid, String qty, String choiceId, String pollId) {
     final payload = {
       "choiceSelections": [
         {
@@ -22,7 +22,7 @@ class PollAndVotingRepository extends BaseRepository {
       "amountPaid": amountPaid
     };
 
-    return post("$serviceUrl/client/polls/$choiceId/vote", payload);
+    return post("$serviceUrl/client/polls/$pollId/votes", payload);
   }
 
   Future<WayaRequestResponse> getAllPolls() {
@@ -37,7 +37,7 @@ class PollAndVotingRepository extends BaseRepository {
     return get("$serviceUrl/client/polls/$pollId/votes");
   }
 
-  Future<WayaRequestResponse> getAllPollsById({required String id}) {
+  Future<WayaRequestResponse> getAllPollsById( String id) {
     return get("$serviceUrl/client/polls/$id");
   }
 

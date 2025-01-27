@@ -7,6 +7,7 @@ import 'package:wayagram/features/polls_and_voting/data/model/cast_vote_model.da
 import 'package:wayagram/features/polls_and_voting/data/model/get_all_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard_two_model.dart';
 
 import 'poll_dashboard_model.dart';
 
@@ -20,10 +21,22 @@ class CreatePollVotingState {
   final TextEditingController secondChoice;
   final TextEditingController firstChoiceDescription;
   final TextEditingController secondChoiceDescription;
+  /*final String pollTitle;
+  final String pollDescription;
+  final String pollCompanyDescription;
+  final String votePrice;
+  final String voteNumber;
+  final String firstChoice;
+  final String secondChoice;
+  final String firstChoiceDescription;
+  final String secondChoiceDescription;*/
   final List<DocType> uploadedDocuments;
   final List<Choice> choices;
   final List<Select> pollTypes;
 
+  final String moneyGenerated;
+  final String voteCount;
+  final String numberOfPeopleVoted;
   final String startDate;
   final String endDate;
   final String pollType;
@@ -39,6 +52,7 @@ class CreatePollVotingState {
   List<Votes> pollDashboardModel;
   List<CastVoteData> castVoteModel;
   List<PollDashboardModel> dashboard;
+  List<PollDashboardTwoData> pollDashboardTwoModel;
 
   CreatePollVotingState({
     TextEditingController? pollTitle,
@@ -50,6 +64,9 @@ class CreatePollVotingState {
     TextEditingController? secondChoice,
     TextEditingController? firstChoiceDescription,
     TextEditingController? secondChoiceDescription,
+    this.voteCount = '',
+    this.moneyGenerated ='',
+    this.numberOfPeopleVoted  = '',
     this.pollType = '',
     this.startDate = '',
     this.endDate = '',
@@ -58,11 +75,12 @@ class CreatePollVotingState {
     this.isFocused = false,
     this.isLoading = false,
     this.candidateImage,
-    this.choices =const [],
+    this.choices = const [],
     this.getPollModel = const [],
     this.getAllPollModel = const [],
     this.getMyPollModel = const [],
     this.pollDashboardModel = const [],
+    this.pollDashboardTwoModel = const [],
     this.castVoteModel = const [],
     this.dashboard = const [],
     this.pollTypes = const [],
@@ -70,16 +88,13 @@ class CreatePollVotingState {
     this.isPersonalNotUpgradedToBusiness = false,
   })  : pollTitle = pollTitle ?? TextEditingController(),
         pollDescription = pollDescription ?? TextEditingController(),
-        pollCompanyDescription =
-            pollCompanyDescription ?? TextEditingController(),
+        pollCompanyDescription = pollCompanyDescription ?? TextEditingController(),
         votePrice = votePrice ?? TextEditingController(),
         voteNumber = voteNumber ?? TextEditingController(),
         firstChoice = firstChoice ?? TextEditingController(),
         secondChoice = secondChoice ?? TextEditingController(),
-        firstChoiceDescription =
-            firstChoiceDescription ?? TextEditingController(),
-        secondChoiceDescription =
-            secondChoiceDescription ?? TextEditingController();
+        firstChoiceDescription = firstChoiceDescription ?? TextEditingController(),
+        secondChoiceDescription = secondChoiceDescription ?? TextEditingController();
 
   CreatePollVotingState copyWith({
     TextEditingController? pollTitle,
@@ -91,7 +106,19 @@ class CreatePollVotingState {
     TextEditingController? secondChoice,
     TextEditingController? firstChoiceDescription,
     TextEditingController? secondChoiceDescription,
+    /* String? pollTitle;
+   String? pollDescription;
+   String? pollCompanyDescription;
+   String? votePrice;
+   String? voteNumber;
+   String? firstChoice;
+   String? secondChoice;
+   String? firstChoiceDescription;
+   String? secondChoiceDescription;*/
     List<DocType>? uploadedDocuments,
+    String? moneyGenerated,
+    String? voteCount,
+    String? numberOfPeopleVoted,
     String? startDate,
     String? dateIsoFormat,
     String? endDate,
@@ -104,6 +131,7 @@ class CreatePollVotingState {
     List<GetAllPollData>? getAllPollModel,
     List<PollData>? getMyPollModel,
     List<Votes>? pollDashboardModel,
+    List<PollDashboardTwoData>? pollDashboardTwoModel,
     List<CastVoteData>? castVoteModel,
     List<PollDashboardModel>? dashboard,
     List<Choice>? choices,
@@ -131,12 +159,17 @@ class CreatePollVotingState {
       getAllPollModel: getAllPollModel ?? this.getAllPollModel,
       getMyPollModel : getMyPollModel ?? this.getMyPollModel,
       pollDashboardModel: pollDashboardModel ?? this.pollDashboardModel,
-      castVoteModel: castVoteModel ?? this.castVoteModel,
+        pollDashboardTwoModel : pollDashboardTwoModel ?? this.pollDashboardTwoModel,
+        castVoteModel: castVoteModel ?? this.castVoteModel,
       dashboard: dashboard ?? this.dashboard,
       uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
       choices: choices ?? this.choices,
       pollTypes: pollTypes ?? this.pollTypes,
-      pollTypeId: pollTypeId ?? this.pollTypeId
+      pollTypeId: pollTypeId ?? this.pollTypeId,
+        voteCount: voteCount  ?? this.voteCount,
+      numberOfPeopleVoted: numberOfPeopleVoted  ?? this.numberOfPeopleVoted,
+      moneyGenerated: moneyGenerated ?? this.moneyGenerated,
+
     );
   }
 }

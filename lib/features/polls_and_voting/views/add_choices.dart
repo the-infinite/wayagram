@@ -27,6 +27,8 @@ class AddChoices extends ConsumerStatefulWidget {
 class _AddChoicesState extends ConsumerState<AddChoices> {
   final _formKey = GlobalKey<FormState>();
 
+  Map<String, dynamic> formData = {};
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
@@ -58,10 +60,13 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-            Text("${viewModel.pollTitle.text.capitalizeFirst}",
+            Text(
+                //'${formData['pollTitle']}',
+                "${viewModel.pollTitle.text.capitalizeFirst}",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
+              //'${formData['pollDescription']}',
               '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
@@ -92,6 +97,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                           children: [
                             FormField<String>(validator: (value) {
                               if (viewModel.firstChoice.text.isEmpty) {
+                              //if (formData['firstChoice'].isEmpty) {
                                 return 'Choice ${index + 1} is required';
                               }
 
@@ -103,6 +109,9 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                   WayaTextFormField(
                                     keyboardType: TextInputType.text,
                                     controller: viewModel.choices[index].text,
+                                    // onChanged: (value){
+                                    //   formData['firstChoice'][index]  =  value;
+                                    // },
                                     hintText: 'Choice ${index + 1}',
                                     borderColor: formState.hasError &&
                                             viewModel.choices[index].text.text
@@ -145,8 +154,8 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                     hintText:
                                         'Why should people care? Give a short,\nengaging reason',
                                     borderColor: formState.hasError &&
-                                            viewModel.firstChoiceDescription
-                                                .text.isEmpty
+                                        formData['firstChoiceDescription'].isEmpty
+                                           // viewModel.firstChoiceDescription.text.isEmpty
                                         ? wayaTheme.colorScheme.error
                                         : null,
                                   ),
@@ -184,28 +193,38 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                         const Gap(10),
                                         Text(
                                           'Add Image/Video',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .wayaCopyWith(
-                                                  fontSize: 14,
+                                          style: Theme.of(context).textTheme.bodyMedium!
+                                              .wayaCopyWith(fontSize: 14,
                                                   fontWeight: FontWeight.w400,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .customBlack200),
+                                                  color: Theme.of(context).colorScheme.customBlack200),
                                         ),
                                         const Gap(8),
                                       ],
                                     )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.file(
-                                        viewModel.choices[index].image!,
-                                        width: 100,
-                                        height: 100,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+                                  : Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.file(
+                                    viewModel.choices[index].image!,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Positioned(
+                                    left: 90,
+                                  top: -4,
+                                    child: InkWell(
+                                        onTap:(){
+                                        setState(() {
+                                          viewModel.choices[index].image == null;
+                                        });
+                                        },
+                                        child: Image.asset('assets/images/bid/close.png', height: 16.h,)),
+                                )
+                              ],),
                             ),
                             const Gap(10),
                           ],

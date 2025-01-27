@@ -71,6 +71,7 @@ class SingleNegotiationBidWidget extends ConsumerWidget {
                                         color: wayaTheme.colorScheme.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 11,
+
                                       ),
                                     ),
                                   ],

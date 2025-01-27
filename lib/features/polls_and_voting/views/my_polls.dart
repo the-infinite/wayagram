@@ -15,159 +15,6 @@ import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls
 import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-/*class MyPolls extends ConsumerWidget {
-  const MyPolls({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-
-    final wayaTheme = Theme.of(context);
-    return Column(
-      children: [
-
-
-        ListView.builder(
-
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return  Container(
-                margin: EdgeInsets.only(bottom: 20.h),
-                height: 400.h,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(children: [
-                      Image.asset('assets/images/polls/rufai.png', height: 32.h,),
-                      const Gap(3),
-                      Text("Rufai Maleek", style: wayaTheme.textTheme.titleLarge),
-                      const Gap(3),
-                      Text(
-                        ' • 2h ago',
-                        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Theme.of(context).colorScheme.greyColor500 ),
-                      ),
-
-                      Spacer(),
-                      Image.asset('assets/images/polls/menu.png', height: 32.h,),
-
-
-                    ],),
-                    const Gap(10),
-                   index == 0 || index == 1 ? Text("Who is the current president of nigeria?", style: wayaTheme.textTheme.titleLarge):
-                    Text("Which Nigerian Artist has the most awards?", style: wayaTheme.textTheme.titleLarge),
-                    const Gap(3),
-                    index == 0 || index == 1 ?
-                    Text(
-                      'I think we are all left with this question sometimes whenever we sleep sometimes.',
-                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).colorScheme.greyColor500 ),
-                    ) : Container(),
-
-                    const Gap(10),
-                    Text(
-                      '980 Votes • 23 hours 46 minutes remaining',
-                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).colorScheme.greyColor500 ),
-                    ),
-                    const Gap(10),
-                    index == 0?
-                    Column(
-                      children: [
-                        presImage('assets/images/polls/azikwe.png', 'Dr Nnamdi Azikwe', context, true),
-                        const Gap(10),
-                        presImage('assets/images/polls/tinubu.png', 'Bola Ahmed Tinubu', context, true),
-                        const Gap(10),
-                        presImage('assets/images/polls/buhari.png', 'Mohammed Buhari', context, true),
-                      ],
-                    ): index == 1 ?  Column(
-                      children: [
-                        presImage('assets/images/polls/victony.png', 'Victony’s Stubborn', context, true),
-                        const Gap(10),
-                        presImage('assets/images/polls/rema.png', 'Rema ‘s Heis', context, true),
-                        const Gap(10),
-                        presImage('assets/images/polls/lagos.png', 'Made In Lagos', context, true),
-                      ],
-                    ):   Column(
-                      children: [
-                        presImage('assets/images/polls/azikwe.png', 'Wizkid', context, false),
-                        const Gap(10),
-                        presImage('assets/images/polls/tinubu.png', 'Davido', context, false),
-                        const Gap(10),
-                        presImage('assets/images/polls/buhari.png', 'Burna Boy', context, false),
-                      ],
-                    ),
-                    const Gap(10),
-                    WayaButton(
-                        callback: (){
-                          WayaNav.toNamed('/poll-dashboard');
-                        },
-                      text: 'Manage Poll',
-                    ),
-
-
-                  ],),
-              );
-            }),
-
-        const Gap(25),
-
-      ],
-    );
-  }
-  presImage(img, name, ctx, chk){
-    return InkWell(
-      splashColor: Colors.transparent,
-      splashFactory: NoSplash.splashFactory,
-      onTap: (){
-        WayaUtils.showModalSheet(
-          ctx,
-          child: VoteOptionModal(),
-        );
-      },
-      child: Container(
-        padding: EdgeInsets.only(left: 20.w),
-        height: 60.h,
-        decoration: BoxDecoration(
-          border: Border.all(color: WayaColors.primary600, ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: chk ? Row(children: [
-         Image.asset(img, height: 44.h,),
-          const Gap(40),
-          Text(
-            name,
-            style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(ctx).colorScheme.primary600 ),
-          ),
-
-        ],) : Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-
-          Text(
-            name,
-            style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(ctx).colorScheme.primary600 ),
-          ),
-
-        ],),
-      ),
-    );
-  }
-}*/
-
 class MyPolls extends ConsumerStatefulWidget {
   const MyPolls({super.key});
 
@@ -181,7 +28,6 @@ class _MyPollsState extends ConsumerState<MyPolls> {
 
   @override
   void initState() {
-    print('DAARLINGTON  DIALD ==>> ${_wayaLocalDataSource.getUserId()}');
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(createPollVotingProvider.notifier).getMyPolls(_wayaLocalDataSource.getUserId());
@@ -195,15 +41,14 @@ class _MyPollsState extends ConsumerState<MyPolls> {
     return Column(
       children: [
         ListView.builder(
-
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel.getMyPollModel.length,
             itemBuilder: (context, index) {
               final poll = viewModel.getMyPollModel[index];
               int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-
               int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
+              print('URL ===> ${poll.url}');
               return  Container(
                 margin: EdgeInsets.only(bottom: 20.h),
                 child:  Column(
@@ -233,12 +78,12 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                     ],),
                     const Gap(10),
 
-                    Text("${poll.question?.capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
+                    Text("${poll.question?.toLowerCase().capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
                     const Gap(3),
                     if(poll.choices != null)
                       ...poll.choices!.map((e)=>
                           Text(
-                            '${e.description?.capitalizeFirst}',
+                            '${e.description?.toLowerCase().capitalizeFirst}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
@@ -262,17 +107,23 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                         if(poll.choices != null)
                           ...poll.choices!.map((e)=>
                               presImage('${e.imageUrl}',
-                                  '${e.text}', context, true))
+                                  '${e.text?.toLowerCase().capitalizeFirst}', context, true,
+                                  '${poll.feePerVote}', e.id, e.pollId, e.text, poll.url))
                       ],
                     ),
                     const Gap(10),
+              //...poll.choices!.map((e)=>
                     WayaButton(
                       callback: (){
-                        WayaNav.to(PollDashboard(pollId: '${poll.choices?[index].pollId}',));
-                        //WayaNav.toNamed('/poll-dashboard');
+                         //WayaNav.to(PollDashboard(pollId: '${poll.choices?[index].pollId}',));
+                        WayaNav.toNamed('/poll-dashboard',
+                           // arguments: '${e.pollId}'
+                            arguments: '${poll.choices?[index].pollId}'
+                        );
                       },
                       text: 'Manage Poll',
                     ),
+              //)
                   ],),
               );
             }),
@@ -281,7 +132,66 @@ class _MyPollsState extends ConsumerState<MyPolls> {
       ],
     );
   }
-  presImage(img, name, ctx, chk){
+
+  userIm(ctx, net) {
+    
+    return
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Stack(
+        clipBehavior: Clip.none,
+        children: [
+          ClipOval(
+            child:
+
+            Image.network(
+              net,
+              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  color: Colors.white,
+                  height:MediaQuery.of(ctx).size.height /9,
+                  width: MediaQuery.of(ctx).size.height /9,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: CircularProgressIndicator(
+                        color: WayaColors.primary.withOpacity(0.5),
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!.toInt()
+                            : null,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              errorBuilder: (context, exception, stackTrace) {
+                return Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: WayaColors.primary,
+                      border: Border.all(
+                        color: Colors.white,
+                      )),
+                  height: MediaQuery.of(ctx).size.height /9,
+                  width: MediaQuery.of(ctx).size.height /9,
+                  child:  Center(
+                      child: Image.asset('assets/images/home/profile_icon.png', height: 60.h, width: 70.w,)
+                    //Text('Image\nError', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 8)),
+                  ),
+                );
+              },
+              fit: BoxFit.cover,
+              height: MediaQuery.of(ctx).size.height /8,
+              width: MediaQuery.of(ctx).size.height /8,
+            ),
+          ),
+
+        ],
+      ),
+    ]);
+  }
+
+  presImage(img, name, ctx, chk, voteFee, choiceId, pollId,candidateName, votingLink){
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -290,26 +200,79 @@ class _MyPollsState extends ConsumerState<MyPolls> {
         onTap: (){
           WayaUtils.showModalSheet(
             ctx,
-            child: VoteOptionModal(),
+            child: VoteOptionModal(voteFee: voteFee,choiceId: choiceId, pollId: pollId,candidateName: candidateName,
+            votingLink:votingLink ,),
           );
         },
         child: Container(
-          padding: EdgeInsets.only(left: 20.w, bottom: 10),
+          padding: EdgeInsets.only(left: 20.w, bottom: 0),
           height: 60.h,
           decoration: BoxDecoration(
             border: Border.all(color: WayaColors.primary600, ),
             borderRadius: BorderRadius.circular(12),
           ),
           child: chk ? Row(children: [
-            //Image.network(img, height: 44.h),
-            WayaImage(imageUrl: img, height: 44.h),
-            const Gap(40),
-            Text(
-              name,
-              style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(ctx).colorScheme.primary600 ),
+            //Expanded(child: Image.network(img, height: 44.h)),
+            //WayaImage(imageUrl: img, height: 44.h),
+            Expanded(child:  Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Image.network(
+                  img,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: Colors.white,
+                      height:44.h,
+                      width: MediaQuery.of(ctx).size.height /9,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: CircularProgressIndicator(
+                            color: WayaColors.primary.withOpacity(0.5),
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!.toInt()
+                                : null,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, exception, stackTrace) {
+                    return Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: WayaColors.primary,
+                          border: Border.all(
+                            color: Colors.white,
+                          )),
+                      //MediaQuery.of(ctx).size.height /12,
+                      height: 44.h,
+                      width: MediaQuery.of(ctx).size.height /12,
+                      child:  Center(
+                          child:
+                          //Image.asset('assets/images/home/profile_icon.png', height: 60.h, width: 70.w,)
+                        Text('Image\nError', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 8)),
+                      ),
+                    );
+                  },
+                  fit: BoxFit.cover,
+                  height: 44.h,
+                  width: MediaQuery.of(ctx).size.height /8,
+                ),
+
+              ],
+            ),),
+            const Gap(30),
+            Expanded(
+              flex: 3,
+              child: Text(
+                name,
+                style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(ctx).colorScheme.primary600 ),
+              ),
             ),
 
           ],) : Row(
