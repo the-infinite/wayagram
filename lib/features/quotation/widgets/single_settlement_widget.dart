@@ -11,7 +11,6 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
 
 class SingleSettlementWidget extends ConsumerWidget {
-
   final bool isSeller;
   const SingleSettlementWidget({super.key, this.isSeller = false});
 
@@ -106,11 +105,13 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
   SingleBidWidgetViewModel(this.ref);
 
   Future<void> addDeliveryDetail(BuildContext context) async {
-    await showDialog(
+    /**
+   await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AddDeliveryDetails();
         });
+   */
   }
 
   Future<void> sellerBidAction(BuildContext context) async {
@@ -120,7 +121,7 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
         secondButtonText: 'See your Order Details',
         title: 'Populate Delivery Details',
         message:
-        "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
         onPress: () async {
           await addDeliveryDetail(context);
         },
@@ -132,5 +133,5 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
 }
 
 final singleSettlementWidgetViewModelProvider =
-ChangeNotifierProvider<SingleBidWidgetViewModel>(
+    ChangeNotifierProvider<SingleBidWidgetViewModel>(
         (ref) => SingleBidWidgetViewModel(ref));

@@ -9,12 +9,14 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/product_detail_vm.dart';
 
 import 'package:wayagram/features/shop/widgets/product_description_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_image_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_review_widget.dart';
+import 'package:wayagram/features/shop/widgets/products_grid.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
 class ProductDetail extends ConsumerStatefulWidget {
@@ -50,7 +52,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
     return WayaScaffold(
         title: "Product Details",
         isScrollable: true,
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         appBarTrailing: WayaCartIcon(),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -64,7 +66,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                 SizedBox(
                   width: context.width * 0.7,
                   child: Text(
-                    viewModel.product!.name,
+                    viewModel.product!.name.capitalizeFirst!,
                     style: wayaTheme.textTheme.bodyMedium,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -141,7 +143,8 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
             ),
             const Gap(25),
             ProductImageWidget(
-                images: viewModel.product!.images.isEmpty
+                images: viewModel.product == null ||
+                        viewModel.product!.images.isEmpty
                     ? ['']
                     : viewModel.product!.images),
             const Gap(25),
@@ -226,7 +229,12 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
               ),
             ),
             const Gap(25),
-            Text(
+            Visibility(
+              visible: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                  Text(
               "Product Reviews",
               style: wayaTheme.textTheme.titleMedium,
             ),
@@ -239,20 +247,23 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
             //       return ProductReviewWidget(review: reviews[index]);
             //     }),
             const Gap(25),
-            Text(
+
+              ],
+            )),
+            Visibility(
+                visible: viewModel.similarProduct != null && viewModel.similarProduct!.isNotEmpty,
+              child: 
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              Text(
               "Similar Products",
               style: wayaTheme.textTheme.titleMedium,
             ),
             const Gap(25),
-            // GridView.builder(
-            //     physics: const NeverScrollableScrollPhysics(),
-            //     shrinkWrap: true,
-            //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //         crossAxisCount: 2, mainAxisSpacing: 0, childAspectRatio: 0.65, crossAxisSpacing: 12),
-            //     itemCount: products.length,
-            //     itemBuilder: (context, index) {
-            //       return ProductCard(product: products[index]);
-            //     }),
+            ProductsGrid(products: viewModel.similarProduct ?? [])
+            ],)
+            )
           ],
         ),
         bottomNavigationBar: Container(
@@ -292,7 +303,11 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
-                        callback: () {},
+                        callback: () {
+                          ref
+                              .read(cartVmProvider.notifier)
+                              .addToCart(viewModel.product!, 1);
+                        },
                         centerWidget: Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

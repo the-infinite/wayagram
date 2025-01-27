@@ -36,7 +36,7 @@ class _MyRequestsState extends ConsumerState<MyRequests> {
     final viewModel = ref.watch(createRequestProvider);
     return Column(
       children: [
-        FilterWidget<Product>(allItems: [], hintText: 'Search Requests'),
+        FilterWidget(search: TextEditingController(), hintText: 'Search Requests'),
         const Gap(25),
         GroupedWidgetHeader(
             onTap: () {},

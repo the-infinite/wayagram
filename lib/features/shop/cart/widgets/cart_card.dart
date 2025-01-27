@@ -37,8 +37,8 @@ class _CartCardState extends ConsumerState<CartCard> {
     final int totalPrice = widget.cartItem.products
         .fold(0, (sum, item) => sum + (item.quantity * item.price));
 
-    final bool isDeliveryCharge =
-        widget.cartItem.products.any((prod) => prod.deliveryCharge);
+    final bool isDeliveryCharge = widget.cartItem.products.any(
+        (prod) => prod.deliveryCharge && widget.cartItem.deliveryFee == null);
 
     return Column(
       children: [
@@ -166,7 +166,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                                 widget.cartItem.shopName,
                                 widget.cartItem.shopLogo);
                       }
-                      WayaNav.toNamed(Checkout.route);
+                      WayaNav.toNamed(Checkout.route, arguments: widget.cartItem);
                     },
                     text: isDeliveryCharge ? "Request Delivery" : "Checkout"),
               )

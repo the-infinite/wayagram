@@ -7,16 +7,18 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 
 class AddProductImages extends ConsumerStatefulWidget {
   final Function gotoNextTab;
+  final String uniqueKey;
   final Function gotoPreviousTab;
   const AddProductImages(
-      {super.key, required this.gotoNextTab, required this.gotoPreviousTab});
+      {super.key,
+      required this.gotoNextTab,
+      required this.gotoPreviousTab,
+      required this.uniqueKey});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -27,8 +29,8 @@ class _AddProductImagesState extends ConsumerState<AddProductImages> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    final viewModel = ref.watch(addProductProvider);
-    final provider = ref.read(addProductProvider.notifier);
+    final viewModel = ref.watch(addProductProvider(widget.uniqueKey));
+    final provider = ref.read(addProductProvider(widget.uniqueKey).notifier);
     final wayaTheme = Theme.of(context);
     return Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -57,7 +59,7 @@ class _AddProductImagesState extends ConsumerState<AddProductImages> {
           Align(
             alignment: Alignment.center,
             child: UploadProductImage(
-                onUpload: ref.read(addProductProvider.notifier).uploadImages),
+                onUpload: ref.read(addProductProvider(widget.uniqueKey).notifier).uploadImages),
           ),
 
           // UploadImage(onUpload: () => provider.uploadImage()),
@@ -74,6 +76,8 @@ class _AddProductImagesState extends ConsumerState<AddProductImages> {
                 return AddedImageWidget(
                     ref: ref,
                     id: index,
+                    uniqueKey: widget.uniqueKey,
+                    url: viewModel.uploadedDocuments[index].url,
                     imagePath: viewModel.uploadedDocuments[index].file);
               }),
           // AddDocumentWidget(
@@ -173,13 +177,17 @@ class _AddProductImagesState extends ConsumerState<AddProductImages> {
 class AddedImageWidget extends StatelessWidget {
   final WidgetRef ref;
   final int id;
-  final File imagePath;
+  final File? imagePath;
+  final String? url;
+  final String uniqueKey;
 
   const AddedImageWidget(
       {super.key,
       required this.ref,
+      required this.uniqueKey,
+      this.url,
       required this.id,
-      required this.imagePath});
+      this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -189,21 +197,30 @@ class AddedImageWidget extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: Image.file(
-            imagePath,
-            fit: BoxFit.cover,
-            height: 100,
-            width: double.infinity,
-            filterQuality: FilterQuality.high,
-            scale: 1,
-          ),
+          child: imagePath == null
+              ? Image.network(
+                  url!,
+                  fit: BoxFit.cover,
+                  height: 100,
+                  width: double.infinity,
+                  filterQuality: FilterQuality.high,
+                  scale: 1,
+                )
+              : Image.file(
+                  imagePath!,
+                  fit: BoxFit.cover,
+                  height: 100,
+                  width: double.infinity,
+                  filterQuality: FilterQuality.high,
+                  scale: 1,
+                ),
         ),
         Positioned(
             top: 3,
             right: 3,
             child: GestureDetector(
               onTap: () {
-                ref.read(addProductProvider.notifier).removeFile(id);
+                ref.read(addProductProvider(uniqueKey).notifier).removeFile(id);
               },
               child: Container(
                   width: 26,

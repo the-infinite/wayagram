@@ -10,7 +10,7 @@ abstract class BaseRepository {
 
   Future<WayaRequestResponse> get(String route,
       {Map<String, dynamic>? params}) {
-  
+     print(' route ${route}');
     return httpClient.getHttp(route, params: params);
   }
 

@@ -6,10 +6,9 @@ import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
 
-
-  final List<Product> orders = [
-   Product(
-    id: "1",
+final List<Product> orders = [
+  Product(
+      id: "1",
       category: 'TECHNOLOGY',
       name: 'Jikuke Flash Drive 28GB',
       images: [
@@ -18,45 +17,45 @@ import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
       ],
       price: 20000,
       discountPrice: 19000,
-       quantity: 5,
+      quantity: 5,
       seller: "Maleek"),
   Product(
-    id: "2",
+      id: "2",
       category: 'TECHNOLOGY',
       name: 'Jikuke Flash Drive 28GB',
       images: [
         'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374172/product2_na4de1.png',
         'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374117/Frame_1984078250_khms9k.png',
       ],
-       price: 20000,
+      price: 20000,
       discountPrice: 19000,
-       quantity: 3,
+      quantity: 3,
       seller: "Emeka"),
   Product(
-    id: "3",
+      id: "3",
       category: 'TECHNOLOGY',
       name: 'Jikuke Flash Drive 28GB',
       images: [
         'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374117/Frame_1984078250_khms9k.png',
         'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374172/product2_na4de1.png',
       ],
-   price: 20000,
+      price: 20000,
       discountPrice: 19000,
       quantity: 3,
       seller: "Maleek"),
   Product(
-    id: "4",
+      id: "4",
       category: 'TECHNOLOGY',
       name: 'Jikuke Flash Drive 28GB',
       images: [
         'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
         'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374117/Frame_1984078250_khms9k.png',
       ],
-       price: 20000,
+      price: 20000,
       discountPrice: 19000,
-       quantity: 3,
+      quantity: 3,
       seller: "Emeka"),
-  ];
+];
 
 class AllOrders extends ConsumerWidget {
   const AllOrders({super.key});
@@ -73,15 +72,17 @@ class AllOrders extends ConsumerWidget {
             subTitle: 'View and manage your orders',
             title: 'Orders'),
         const Gap(25),
-        FilterWidget<Order>(allItems: []),
+        FilterWidget(
+          search: TextEditingController(),
+        ),
         const Gap(25),
-       ListView.builder(
-                itemCount: 10,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return SingleOrderWidget();
-                })
+        ListView.builder(
+            itemCount: 10,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return SingleOrderWidget();
+            })
       ],
     );
   }

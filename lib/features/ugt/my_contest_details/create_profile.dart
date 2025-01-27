@@ -84,7 +84,7 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
                              ? SizedBox(height: 103, width: 82, child: ClipRRect(
                            borderRadius: BorderRadius.circular(135),
                            child: CachedNetworkImage(
-                             imageUrl: "",
+                             imageUrl: "https://images.squarespace-cdn.com/content/v1/60f1a490a90ed8713c41c36c/1629223610791-LCBJG5451DRKX4WOB4SP/37-design-powers-url-structure.jpeg",
                              fit: BoxFit.cover,
                            ),
                          ))
@@ -210,10 +210,11 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
           const Gap(40),
           WayaButton(
             callback: () {
-              WayaUtils.showModalSheetUgt(
+              Navigator.pop(context);
+              /*WayaUtils.showModalSheetUgt(
                 context,
                 child: ApplicationStatus(),
-              );
+              );*/
             },
             text: "Create Contest Profile",
           ),

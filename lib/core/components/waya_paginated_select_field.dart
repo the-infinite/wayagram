@@ -257,46 +257,50 @@ class WayaPaginatedSelectFieldNotifier
   WayaPaginatedSelectFieldNotifier(this.ref)
       : super(WayaPaginatedSelectFieldState());
 
-  Future<void> initialize(
-      Future<PaginatedResult?> Function(int page) fetchData) async {
-    state = state.copyWith(isLoading: true);
-    try {
-      final result = await fetchData(1);
-      if (result != null) {
-        state = state.copyWith(
-          items: result.items,
-          currentPage: 1,
-          totalPages: result.totalPages,
-          isLoading: false,
-        );
-      }
-    } catch (e) {
-      state = state.copyWith(isLoading: false);
-      rethrow;
+ Future<void> initialize(
+    Future<PaginatedResult?> Function(int page) fetchData) async {
+  state = state.copyWith(isLoading: true);
+  try {
+    final result = await fetchData(1);
+    if (result != null) {
+      state = state.copyWith(
+        items: result.items,
+        currentPage: 1,
+        totalPages: result.totalPages,
+        isLoading: false,
+      );
+    } else {
+      state = state.copyWith(isLoading: false); 
     }
+  } catch (e) {
+    state = state.copyWith(isLoading: false);
+    rethrow;
   }
+}
 
-  Future<void> loadMoreItems(
-      Future<PaginatedResult?> Function(int page) fetchData) async {
-    if (state.currentPage >= state.totalPages) return;
+Future<void> loadMoreItems(
+    Future<PaginatedResult?> Function(int page) fetchData) async {
+  if (state.currentPage >= state.totalPages) return;
 
-    state = state.copyWith(isLoading: true);
+  state = state.copyWith(isLoading: true);
 
-    try {
-      final result = await fetchData(state.currentPage + 1);
-      if (result!.items.isNotEmpty) {
-        state = state.copyWith(
-          items: [...state.items, ...result.items],
-          currentPage: state.currentPage + 1,
-          totalPages: result.totalPages,
-          isLoading: false,
-        );
-      }
-    } catch (e) {
-      state = state.copyWith(isLoading: false);
-      rethrow;
+  try {
+    final result = await fetchData(state.currentPage + 1);
+    if (result != null && result.items.isNotEmpty) {
+      state = state.copyWith(
+        items: [...state.items, ...result.items],
+        currentPage: state.currentPage + 1,
+        totalPages: result.totalPages,
+        isLoading: false,
+      );
+    } else {
+      state = state.copyWith(isLoading: false); 
     }
+  } catch (e) {
+    state = state.copyWith(isLoading: false);
+    rethrow;
   }
+}
 
   void setFocus(bool isFocused) {
     state = state.copyWith(isFocused: isFocused);

@@ -274,6 +274,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/r-cart.svg
   SvgGenImage get rCart => const SvgGenImage('assets/icons/r-cart.svg');
 
+  /// File path: assets/icons/request-icon.svg
+  SvgGenImage get requestIcon =>
+      const SvgGenImage('assets/icons/request-icon.svg');
+
   /// File path: assets/icons/s-copy.svg
   SvgGenImage get sCopy => const SvgGenImage('assets/icons/s-copy.svg');
 
@@ -407,6 +411,7 @@ class $AssetsIconsGen {
         personal,
         quickIcon,
         rCart,
+        requestIcon,
         sCopy,
         sDisputeIcon,
         sShop,

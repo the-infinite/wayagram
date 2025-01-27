@@ -5,16 +5,20 @@ import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
+import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_request.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
+import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute.dart';
+import 'package:wayagram/features/shop/seller/views/seller_products.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/single_order_widget.dart';
 
 class ManageShop extends ConsumerStatefulWidget {
@@ -33,62 +37,42 @@ class _ManageShopState extends ConsumerState<ManageShop> {
       final ShopData shop =
           ModalRoute.of(context)!.settings.arguments as ShopData;
       ref.read(manageShopVmProvider.notifier).getCurrentShop(shop);
+      ref.read(manageShopVmProvider.notifier).fetchData();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(manageShopVmProvider);
+
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         title: viewModel.singleShop!.name.capitalizeFirst ?? '',
         isLoading: false,
         isScrollable: true,
+        onRefresh: () async {
+          ref.read(manageShopVmProvider.notifier).fetchData();
+        },
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(viewModel.singleShop!.name.capitalizeFirst!,
-                style: wayaTheme.textTheme.titleLarge),
-            const Gap(3),
-            Text(
-              'Manage your shop activity',
-              style: wayaTheme.textTheme.hintStyle,
-            ),
-            const Gap(30),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                WayaButton(
-                  callback: () {
-                    WayaNav.toNamed(AddProduct.route);
-                  },
-                  border: Border.all(
-                      width: 1, color: wayaTheme.colorScheme.customPrimary),
-                  centerWidget: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(WayaAssets.icons.buttonIcon.path,
-                          colorFilter: ColorFilter.mode(
-                              wayaTheme.colorScheme.customPrimary,
-                              BlendMode.srcIn)),
-                      const Gap(5),
-                      Text(
-                        "Add Product",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customPrimary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  height: 35,
-                  color: wayaTheme.colorScheme.transparent,
-                  radius: 6,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(viewModel.singleShop!.name.capitalizeFirst!,
+                        style: wayaTheme.textTheme.titleLarge),
+                    const Gap(3),
+                    Text(
+                      'Manage your shop activity',
+                      style: wayaTheme.textTheme.hintStyle,
+                    ),
+                  ],
                 ),
-                const Gap(10),
                 WayaButton(
                   callback: () {},
                   text: 'Shop Settings',
@@ -101,30 +85,49 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 )
               ],
             ),
+            const Gap(30),
+            WayaButton(
+              callback: () {
+                WayaNav.toNamed(SellerProducts.route,
+                    arguments: viewModel.singleShop!.id);
+              },
+              color: wayaTheme.colorScheme.primar50,
+              centerWidget: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    WayaAssets.icons.buttonIcon.path,
+                    colorFilter: ColorFilter.mode(
+                        wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
+                  ),
+                  const Gap(6),
+                  Text(
+                    "View My Products",
+                    style: TextStyle().wayaCopyWith(
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
+                  )
+                ],
+              ),
+            ),
+
             const Gap(15),
             GridView.builder(
                 itemCount: 3,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: ref
-                        .read(manageShopVmProvider.notifier)
-                        .salesMetrics
-                        .length,
+                    crossAxisCount: viewModel.salesMetric.length,
                     mainAxisSpacing: 0,
                     childAspectRatio: 1.2,
                     crossAxisSpacing: 8),
                 itemBuilder: (context, index) {
                   return InventoryWidget(
-                      metrics: ref
-                          .read(manageShopVmProvider.notifier)
-                          .salesMetrics[index]["metrics"],
-                      color: ref
-                          .read(manageShopVmProvider.notifier)
-                          .salesMetrics[index]['color'],
-                      title: ref
-                          .read(manageShopVmProvider.notifier)
-                          .salesMetrics[index]['title']);
+                      metrics: viewModel.salesMetric[index].metrics,
+                      color: viewModel.salesMetric[index].color!,
+                      title: viewModel.salesMetric[index].title);
                 }),
             const Gap(15),
             Text("Quick Action",
@@ -143,12 +146,9 @@ class _ManageShopState extends ConsumerState<ManageShop> {
               child: GridView(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: ref
-                        .read(manageShopVmProvider.notifier)
-                        .salesMetrics
-                        .length,
+                    crossAxisCount: 4,
                     mainAxisSpacing: 0,
-                    childAspectRatio: 1,
+                    childAspectRatio: 3 / 4,
                     crossAxisSpacing: 8),
                 children: [
                   QuickActionWidget(
@@ -166,7 +166,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                     icon: SvgPicture.asset(WayaAssets.icons.dealIcon.path),
                     color: Color(0xffFFF0EB),
                     onTap: () {
-                      WayaNav.toNamed('/waya-deal-ad');
+                      WayaNav.toNamed(WayaDealAd.route);
                     },
                   ),
                   QuickActionWidget(
@@ -180,8 +180,18 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                     ),
                     color: Color(0xffFBEAE9),
                     onTap: () {
-                      WayaNav.toNamed('/seller-dispute');
+                      WayaNav.toNamed(SellerDispute.route);
                     },
+                  ),
+                  QuickActionWidget(
+                    title: "Requests",
+                    icon: SvgPicture.asset(WayaAssets.icons.requestIcon.path),
+                    color: Color(0xffFBEAE9),
+                    onTap: () {
+                      WayaNav.toNamed(DeliveryRequest.route);
+                    },
+                    metric: viewModel.numberOfRequests,
+                    isStacked: true,
                   ),
                 ],
               ),
