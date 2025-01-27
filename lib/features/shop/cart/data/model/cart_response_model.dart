@@ -70,7 +70,7 @@ class CartData {
 class CartItem {
   final String shopId;
   final String? deliveryAddress;
-  final String? deliveryFee;
+  final int? deliveryFee;
   final String? deliveryDate;
   final String shopName;
   final String shopLogo;
@@ -91,7 +91,7 @@ class CartItem {
   CartItem copyWith({
     String? shopId,
     String? deliveryAddress,
-    String? deliveryFee,
+    int? deliveryFee,
     String? deliveryDate,
     String? shopName,
     String? shopLogo,
@@ -112,13 +112,13 @@ class CartItem {
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
-      shopId: json['shopId'],
+      shopId: json['shopId'] ?? '',
       deliveryAddress: json['deliveryAddress'],
-      deliveryFee: json['deliveryFee'],
+      deliveryFee: _parseToInt(json['deliveryFee']), // Safe parsing
       deliveryDate: json['deliveryDate'],
-      shopName: json['shopName'],
-      shopLogo: json['shopLogo'],
-      totalFee: json['totalFee'],
+      shopName: json['shopName'] ?? '',
+      shopLogo: json['shopLogo'] ?? '',
+      totalFee: _parseToInt(json['totalFee']), // Safe parsing
       products: (json['products'] as List)
           .map((product) => CartProduct.fromJson(product))
           .toList(),
@@ -136,6 +136,15 @@ class CartItem {
       'totalFee': totalFee,
       'products': products.map((product) => product.toJson()).toList(),
     };
+  }
+
+  static int? _parseToInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is String) {
+      return int.tryParse(value);
+    }
+    return null;
   }
 }
 

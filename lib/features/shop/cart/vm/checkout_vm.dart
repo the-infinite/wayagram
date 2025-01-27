@@ -38,7 +38,6 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
       required int amount,
       String? pickUpAddress}) async {
     try {
- 
       final balanceData = ref.watch(walletVmProvider).data;
 
       final balance = balanceData == null ? "0" : balanceData.balance;

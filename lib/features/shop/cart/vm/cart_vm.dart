@@ -83,7 +83,7 @@ class CartVm extends StateNotifier<CartState> {
           CartItem(
             shopId: shopId,
             deliveryAddress: "",
-            deliveryFee: "",
+            deliveryFee: 0,
             deliveryDate: "",
             shopName: "",
             shopLogo: "",
@@ -163,7 +163,7 @@ class CartVm extends StateNotifier<CartState> {
         CartItem(
           shopId: shopId,
           deliveryAddress: "",
-          deliveryFee: "",
+          deliveryFee: 0,
           deliveryDate: "",
           shopName: "",
           shopLogo: "",
@@ -349,30 +349,30 @@ class CartVm extends StateNotifier<CartState> {
     }
   }
 
-  Future<void> addDeliveryFee(
-      {required String shopId,
-      required String address,
-      required String deliveryFee,
-      required String deliveryDate}) async {
-    state = state.copyWith(isAddingDeliveryFee: true);
-    try {
-      final userId = await _secureDataSource.getUserId();
+  // Future<void> addDeliveryFee(
+  //     {required String shopId,
+  //     required String address,
+  //     required String deliveryFee,
+  //     required String deliveryDate}) async {
+  //   state = state.copyWith(isAddingDeliveryFee: true);
+  //   try {
+  //     final userId = await _secureDataSource.getUserId();
 
-      final response = await _cartRepository.updateDeliveryFee(
-          deliveryAddress: address,
-          userId: userId!,
-          shopId: shopId,
-          deliveryDate: deliveryDate,
-          deliveryFee: deliveryFee);
-      if (response.success) {
-        print(response.data);
-      }
-    } catch (e) {
-      print(e);
-    } finally {
-      state = state.copyWith(isAddingDeliveryFee: false);
-    }
-  }
+  //     final response = await _cartRepository.updateDeliveryFee(
+  //         deliveryAddress: address,
+  //         userId: userId!,
+  //         shopId: shopId,
+  //         deliveryDate: deliveryDate,
+  //         deliveryFee: deliveryFee);
+  //     if (response.success) {
+  //       print(response.data);
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   } finally {
+  //     state = state.copyWith(isAddingDeliveryFee: false);
+  //   }
+  // }
 }
 
 final cartVmProvider = StateNotifierProvider<CartVm, CartState>((ref) {

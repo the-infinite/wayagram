@@ -340,7 +340,7 @@ class AddDeliveryDetailsViewModel
       state = state.copyWith(isLoading: true);
       final response = await _cartRepository.updateDeliveryFee(
           deliveryAddress: deliveryAddress,
-          deliveryFee: state.deliveryPrice.text,
+          deliveryFee: int.parse(state.deliveryPrice.text),
           deliveryDate: state.deliveryDateIso,
           userId: userId,
           shopId: shopId);

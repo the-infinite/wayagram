@@ -10,7 +10,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
-import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_request.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
@@ -18,7 +17,6 @@ import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 

@@ -28,4 +28,16 @@ class OrderRepository extends BaseRepository {
     return get("$serviceUrl/orders/get-orders?shopId=$shopId&page=$page");
   }
   //
+
+  Future<WayaRequestResponse> deliveryStatusUpdate(
+      {required String orderId, required String status}) async {
+    return put("$serviceUrl/orders/deliveryStatus/$orderId",
+        {"deliveryStatus": status});
+  }
+
+  Future<WayaRequestResponse> pickupStatusUpdate(
+      {required String orderId, required String status}) async {
+    return put(
+        "$serviceUrl/orders/pickupStatus/$orderId", {"pickupStatus": status});
+  }
 }

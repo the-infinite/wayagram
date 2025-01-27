@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class UpdateStatus extends StatefulWidget {
   final List<String> statuses;
@@ -119,7 +120,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                             : null,
                           contentPadding:
                             EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                          title: Text(widget.statuses[index], style:TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),),
+                          title: Text(WayaHelpers.removecamelCase(widget.statuses[index]), style:TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),),
                           onTap: () {
                             setState(() {
                             selectedStatus = widget.statuses[index];

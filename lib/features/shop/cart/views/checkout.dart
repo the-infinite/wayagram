@@ -33,7 +33,7 @@ class Checkout extends ConsumerWidget {
             0,
             (prodSum, prod) => prodSum + (prod.price * prod.quantity),
           );
-    final int deliveryCharge = int.parse(arg?.cartItem.deliveryFee ?? '0');
+    final int deliveryCharge = arg?.cartItem.deliveryFee ?? 0;
 
     final isBothDeliveryOption =
         arg?.cartItem.products.any((prod) => prod.deliveryOptions == 'Both');
@@ -230,7 +230,7 @@ class Checkout extends ConsumerWidget {
                     ),
                     const Gap(6),
                     Text(
-                      WayaHelpers.formatPrice(subTotal ?? 0 + deliveryCharge),
+                      WayaHelpers.formatPrice(subTotal! + deliveryCharge),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
                           fontSize: 18),
@@ -328,7 +328,7 @@ class Checkout extends ConsumerWidget {
                         top: 25,
                         child: Text(
                           WayaHelpers.formatPrice(
-                              subTotal ?? 0 + deliveryCharge),
+                              subTotal  + deliveryCharge),
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontSize: 18),
@@ -355,9 +355,9 @@ class Checkout extends ConsumerWidget {
                         context: context,
                         cartId: arg.cartId,
                         shopId: arg.cartItem.shopId,
-                        amount: subTotal ?? 0 + deliveryCharge,
-                        pickUpAddress:
-                            arg.cartItem.products[pickUpindex!].pickUpAddress);
+                        amount: subTotal  + deliveryCharge,
+                        pickUpAddress:pickUpindex != -1 ?
+                            arg.cartItem.products[pickUpindex!].pickUpAddress : null);
                   }
                 },
                 text: 'CheckOut',

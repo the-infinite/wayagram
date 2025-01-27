@@ -45,7 +45,8 @@ class WayaHelpers {
     }
   }
 
-  static String formatDateString(String isoDateString) {
+  static String formatDateString(String? isoDateString) {
+    if (isoDateString == null) return '';
     // Parse the ISO 8601 date string into a DateTime object
     DateTime date = DateTime.parse(isoDateString);
 
@@ -80,5 +81,13 @@ class WayaHelpers {
     double discount = intPrice - (intPrice * (pct / 100));
 
     return formatPrice(discount.toInt());
+  }
+
+  static String removecamelCase(String text) {
+    final regex = RegExp(r'(?<=[a-z])(?=[A-Z])');
+    final words = text.split(regex);
+    return words.map((word) {
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }).join(' ');
   }
 }

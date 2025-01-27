@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/cart/widgets/cart_card_vm.dart';
@@ -76,7 +77,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                               color: wayaTheme.colorScheme.customBlack),
                         ),
                         Text(
-                          "Delivery Date: ${widget.cartItem.deliveryDate ?? ''}",
+                          "Delivery Date: ${WayaHelpers.formatDateString(widget.cartItem.deliveryDate != null ?widget.cartItem.deliveryDate: null)}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.greyColor400,
                               fontSize: 14),

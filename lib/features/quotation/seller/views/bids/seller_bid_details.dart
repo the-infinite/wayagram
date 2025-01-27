@@ -134,7 +134,7 @@ class SellerBidDetails extends ConsumerWidget {
               textColor: wayaTheme.colorScheme.greyColor900,
               border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                viewModel.updateDeliveryStatus(context);
+              //  viewModel.updateDeliveryStatus(context);
               },
               text: "Change Delivery Status",
               leadingIcon: SvgPicture.asset(
@@ -149,7 +149,7 @@ class SellerBidDetails extends ConsumerWidget {
               textColor: wayaTheme.colorScheme.greyColor900,
               border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                viewModel.updateOrderStatus(context);
+               // viewModel.updateOrderStatus(context);
               },
               text: "Change Order Status",
               leadingIcon: SvgPicture.asset(

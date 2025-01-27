@@ -52,7 +52,7 @@ class CartRepository extends BaseRepository {
 
   Future<WayaRequestResponse> updateDeliveryFee(
       {required String deliveryAddress,
-      required String deliveryFee,
+      required int deliveryFee,
       required String deliveryDate,
       required String userId,
       required String shopId}) async {

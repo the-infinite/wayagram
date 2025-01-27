@@ -65,7 +65,7 @@ class Order extends BaseModel<Order> {
   final String? pickupAddress;
   final String pickupStatus;
   final String? deliveryAddress;
-  final String? deliveryFee;
+  final int? deliveryFee;
   final DateTime? deliveryDate;
   final String deliveryStatus;
   final String version;
