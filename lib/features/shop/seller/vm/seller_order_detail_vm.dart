@@ -5,6 +5,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/update_status.dart';
 import 'package:wayagram/features/shop/order/data/model/order_state.dart';
+import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 
 class SellerOrderDetailVm extends ChangeNotifier {
   final Ref ref;
@@ -23,6 +24,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
 
       if (response.success) {
         WayaSnackBar.showToast("Pickup status updated");
+        WayaNav.toNamed(ManageShop.route);
       }
     } catch (e) {
       print(e);
@@ -38,6 +40,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
 
       if (response.success) {
         WayaSnackBar.showToast("Delivery status updated");
+         WayaNav.toNamed(ManageShop.route);
       }
     } catch (e) {
       print(e);
