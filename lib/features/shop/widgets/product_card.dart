@@ -55,7 +55,7 @@ class ProductCard extends ConsumerWidget {
               visible: product.wayagramDeal,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   Container(
                     width: 110,
                     padding: EdgeInsets.fromLTRB(3, 3, 3, 3),
@@ -76,18 +76,18 @@ class ProductCard extends ConsumerWidget {
               visible: isExplore,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   Text(product.category!.label,
                       style: wayaTheme.textTheme.hintStyle),
                 ],
               )),
-          const Gap(3),
+          Gap(context.height * 0.003),
           Text(product.name, style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
               visible: !isExplore && product.rating != null,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,7 +97,7 @@ class ProductCard extends ConsumerWidget {
                         color: wayaTheme.colorScheme.customPrimary,
                         size: 18,
                       ),
-                      const Gap(3),
+                      Gap(context.height * 0.003),
                       Text(
                         product.rating ?? '0',
                         style: TextStyle().wayaCopyWith(
@@ -112,7 +112,7 @@ class ProductCard extends ConsumerWidget {
               visible: true,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   Text(
                     "₦${product.price}",
                     style: TextStyle().wayaCopyWith(
@@ -123,7 +123,7 @@ class ProductCard extends ConsumerWidget {
                   ),
                 ],
               )),
-          const Gap(3),
+         Gap(context.height * 0.003),
           Text(
               product.discountPercentage > 0
                   ? WayaHelpers.calculatedDiscountPrice(
@@ -139,7 +139,7 @@ class ProductCard extends ConsumerWidget {
               visible: canbeAddedTocart,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   WayaButton(
                     callback: () async {
                       int intPrice = double.parse(product.price).toInt();
@@ -173,7 +173,7 @@ class ProductCard extends ConsumerWidget {
               visible: sellerProduct,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   WayaButton(
                     callback: () {
                       // ref.read(cartProvider.notifier).addToCart(product, 1);
@@ -236,7 +236,7 @@ class SellerProductCard extends ConsumerWidget {
               visible: product.wayagramDeal,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   Container(
                     width: 110,
                     padding: EdgeInsets.fromLTRB(3, 3, 3, 3),
@@ -257,19 +257,19 @@ class SellerProductCard extends ConsumerWidget {
               visible: isExplore,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   Text(product.categoryName,
                       style: wayaTheme.textTheme.hintStyle),
                 ],
               )),
-          const Gap(3),
+          Gap(context.height * 0.003),
           Text(product.name.capitalizeFirst!,
               style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
               visible: !isExplore && product.rating != null,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -279,7 +279,7 @@ class SellerProductCard extends ConsumerWidget {
                         color: wayaTheme.colorScheme.customPrimary,
                         size: 18,
                       ),
-                      const Gap(3),
+                      Gap(context.height * 0.003),
                       Text(
                         product.rating ?? '0',
                         style: TextStyle().wayaCopyWith(
@@ -294,7 +294,7 @@ class SellerProductCard extends ConsumerWidget {
               visible: true,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   Text(
                     "₦${product.price}",
                     style: TextStyle().wayaCopyWith(
@@ -305,7 +305,7 @@ class SellerProductCard extends ConsumerWidget {
                   ),
                 ],
               )),
-          const Gap(3),
+          Gap(context.height * 0.003),
           Text(
               product.discountPercentage > 0
                   ? WayaHelpers.calculatedDiscountPrice(product.price,
@@ -321,7 +321,7 @@ class SellerProductCard extends ConsumerWidget {
               visible: sellerProduct,
               child: Column(
                 children: [
-                  const Gap(3),
+                  Gap(context.height * 0.003),
                   WayaButton(
                     callback: () {
                       WayaNav.toNamed(AddProduct.route,
@@ -376,7 +376,7 @@ class ProductCardSekeleton extends StatelessWidget {
             visible: isWayaGramDeal,
             child: Column(
               children: [
-                const Gap(3),
+                Gap(context.height * 0.003),
                 Container(
                   width: 120,
                   height: 24,
@@ -391,7 +391,7 @@ class ProductCardSekeleton extends StatelessWidget {
             visible: isExplore,
             child: Column(
               children: [
-                const Gap(3),
+                Gap(context.height * 0.003),
                 Container(
                   width: 80,
                   height: 24,
@@ -402,7 +402,7 @@ class ProductCardSekeleton extends StatelessWidget {
                 )
               ],
             )),
-        const Gap(3),
+        Gap(context.height * 0.003),
         Container(
           width: 140,
           height: 24,
@@ -415,7 +415,7 @@ class ProductCardSekeleton extends StatelessWidget {
             visible: !isExplore,
             child: Column(
               children: [
-                const Gap(3),
+                Gap(context.height * 0.003),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -436,7 +436,7 @@ class ProductCardSekeleton extends StatelessWidget {
             visible: !isExplore,
             child: Column(
               children: [
-                const Gap(3),
+                Gap(context.height * 0.003),
                 Container(
                   width: 60,
                   height: 24,
@@ -447,7 +447,7 @@ class ProductCardSekeleton extends StatelessWidget {
                 )
               ],
             )),
-        const Gap(3),
+        Gap(context.height * 0.003),
         Container(
           width: 60,
           height: 24,
@@ -460,7 +460,7 @@ class ProductCardSekeleton extends StatelessWidget {
             visible: canbeAddedTocart,
             child: Column(
               children: [
-                const Gap(3),
+                Gap(context.height * 0.003),
                 Container(
                   width: 120,
                   height: 24,
@@ -475,7 +475,7 @@ class ProductCardSekeleton extends StatelessWidget {
             visible: sellerProduct,
             child: Column(
               children: [
-                const Gap(3),
+                Gap(context.height * 0.003),
                 Container(
                   width: 120,
                   height: 24,

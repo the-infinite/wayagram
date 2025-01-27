@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 
@@ -17,7 +18,7 @@ class ProductsGrid extends StatelessWidget {
       gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12.0,
-        mainAxisSpacing: 12.0,
+        mainAxisSpacing: context.height * 0.03,
         childAspectRatio: childAspectRatio,
       ),
       itemCount: products.length,
