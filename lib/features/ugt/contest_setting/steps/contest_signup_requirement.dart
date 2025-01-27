@@ -21,7 +21,7 @@ import '../../../auth/account_creation/view/loading_state.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../create_contest/steps/create_ultimate.dart';
 import '../../create_contest/steps/edit_stage_preference.dart';
-
+import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
 class ContestSignupRequirement extends ConsumerStatefulWidget {
   final VoidCallback goToNextTab;
   const ContestSignupRequirement({super.key, required this.goToNextTab});
@@ -270,7 +270,7 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
                 );*/
               },
             ),
-            RadioSelect(
+            UgtRadioSelect(
                 title: Container(
                     padding: EdgeInsets.fromLTRB(0, 1, 0, 10),
                     child: Column(

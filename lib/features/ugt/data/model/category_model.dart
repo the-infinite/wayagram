@@ -1,9 +1,7 @@
 import 'dart:convert';
-
-
-
 import 'package:json_annotation/json_annotation.dart';
-//part 'category_model.g.dart';
+
+part 'category_model.g.dart';
 
 @JsonSerializable()
 class ContestResponse {
@@ -13,32 +11,19 @@ class ContestResponse {
   final int? statusCode;
 
   ContestResponse({
-     this.message,
-     this.data,
-     this.timestamp,
-     this.statusCode,
+    this.message,
+    this.data,
+    this.timestamp,
+    this.statusCode,
   });
 
+  factory ContestResponse.fromJson(Map<String, dynamic> json) =>
+      _$ContestResponseFromJson(json);
 
-  factory ContestResponse.fromJson(Map<String, dynamic> json) {
-    return ContestResponse(
-      message: json['message'],
-      data: (json['data'] as List)
-          .map((item) => ContestCategory.fromJson(item))
-          .toList(),
-      timestamp: json['timestamp'],
-      statusCode: json['statusCode'],
-    );
-  }
-
-
-  // factory ContestResponse.fromJson(Map<String, dynamic> json) => _$ContestResponseFromJson(json);
-  // Map<String, dynamic> toJson() => _$ContestResponseToJson(this);
-
-
+  Map<String, dynamic> toJson() => _$ContestResponseToJson(this);
 }
 
-// ContestCategory model
+@JsonSerializable()
 class ContestCategory {
   final String id;
   final String name;
@@ -52,23 +37,13 @@ class ContestCategory {
     required this.updatedAt,
   });
 
+  factory ContestCategory.fromJson(Map<String, dynamic> json) =>
+      _$ContestCategoryFromJson(json);
 
-  factory ContestCategory.fromJson(Map<String, dynamic> json) {
-    return ContestCategory(
-      id: json['id'],
-      name: json['name'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-    );
-  }
+  Map<String, dynamic> toJson() => _$ContestCategoryToJson(this);
 }
 
 // Utility function to parse JSON
 ContestResponse allCategoryDetailModelFromJson(String str) {
   return ContestResponse.fromJson(json.decode(str));
 }
-
-  // factory ContestCategory.fromJson(Map<String, dynamic> json) => _$ContestCategoryFromJson(json);
-  // Map<String, dynamic> toJson() => _$ContestCategoryToJson(this);
-}
-

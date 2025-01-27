@@ -132,7 +132,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RadioSelect(
+            UgtRadioSelect(
                 title: Container(
                     padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                     child: Column(
@@ -156,7 +156,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               });
 
             },),
-            RadioSelect(
+            UgtRadioSelect(
                 title: Container(
                   padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                   child: Column(
@@ -211,7 +211,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RadioSelect(
+            UgtRadioSelect(
                 title: Container(
                     padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                     child: Column(
@@ -232,7 +232,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
 
               });
             },),
-            RadioSelect(
+            UgtRadioSelect(
                 title: Container(
                   padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                   child: Column(
@@ -409,13 +409,13 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
 
 
 
-class RadioSelect extends StatelessWidget {
+class UgtRadioSelect extends StatelessWidget {
   final Widget title;
   final String value;
   final String groupValue;
   final ValueChanged<String> onChanged;
 
-  const RadioSelect({
+  const UgtRadioSelect({
     super.key,
     required this.title,
     required this.value,

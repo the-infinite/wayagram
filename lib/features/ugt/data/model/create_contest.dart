@@ -217,7 +217,6 @@ extension CreateContestModelCopyWith on CreateContestModel {
 
 
 
-   factory FormRequirement.fromJson(Map<String, dynamic> json) => _$FormRequirementFromJson(json);
-   Map<String, dynamic> toJson() => _$FormRequirementToJson(this);
-}
+
+
 
