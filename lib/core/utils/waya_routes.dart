@@ -130,7 +130,7 @@ class WayaAppRoutes {
     ShareVotingLink.route: () => ShareVotingLink(),
     DeliveryRequest.route:() => DeliveryRequest(),
     SellerProducts.route:() => SellerProducts(),
-    ProductsViewPage.route: () =>ProductsViewPage()
+    ProductsViewPage.route: () =>ProductsViewPage(),
     WayaNotifications.route: () => WayaNotifications(),
     NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
   };

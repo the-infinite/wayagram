@@ -793,6 +793,9 @@ class $AssetsImagesBidGen {
   /// File path: assets/images/bid/clock.png
   AssetGenImage get clock => const AssetGenImage('assets/images/bid/clock.png');
 
+  /// File path: assets/images/bid/close.png
+  AssetGenImage get close => const AssetGenImage('assets/images/bid/close.png');
+
   /// File path: assets/images/bid/coin_in_hand.png
   AssetGenImage get coinInHand =>
       const AssetGenImage('assets/images/bid/coin_in_hand.png');
@@ -822,6 +825,7 @@ class $AssetsImagesBidGen {
         cancel,
         check,
         clock,
+        close,
         coinInHand,
         deal,
         down,
