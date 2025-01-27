@@ -12,13 +12,15 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
 import 'package:wayagram/features/quotation/buyer/vm/reject_bid_vm.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
 
 class SingleNegotiationBidWidget extends ConsumerWidget {
   final bool isSeller;
-  const SingleNegotiationBidWidget({super.key, this.isSeller = false});
+  final BuyerRequests product;
+  const SingleNegotiationBidWidget({super.key, required this.product, this.isSeller = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

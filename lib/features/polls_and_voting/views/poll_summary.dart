@@ -1,20 +1,29 @@
 
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
+import '../../auth/account_creation/vm/successful_setup_vm.dart';
 import 'polls_for_you.dart';
 
 class PollSummary extends ConsumerStatefulWidget {
@@ -26,28 +35,97 @@ class PollSummary extends ConsumerStatefulWidget {
 }
 
 class _PollSummaryState extends ConsumerState<PollSummary>  {
+  CreatePollVotingState? viewModel;
 
-  int _selectedIndex = 0;
+
+  disposeControllers(){
+    viewModel?.pollTitle.dispose();
+    viewModel?.pollDescription.dispose();
+    viewModel?.pollCompanyDescription.dispose();
+    viewModel?.votePrice.dispose();
+    viewModel?.voteNumber.dispose();
+    viewModel?.firstChoice.dispose();
+    viewModel?.firstChoiceDescription.dispose();
+    viewModel?.secondChoice.dispose();
+    viewModel?.secondChoiceDescription.dispose();
+}
+
+  String userType = "PERSONAL";
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
+    final setUp = ref.watch(successfulSetupVmProvider);
+    print('END DATE ${viewModel.endDate}');
+    String startDate = viewModel.startDate;
+    String endDate = viewModel.endDate;
+    DateFormat format = DateFormat("yyyy-M-d");
+    DateTime parsedDate = format.parse(startDate);
+    DateTime parsedDate2 = format.parse(endDate);
+    num daysLeft = parsedDate2.difference(parsedDate).inDays;
     return WayaScaffold(
         title: "Polls Summary",
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         isScrollable: true,
-        appBarTrailing: createPoll(context),
+        appBarTrailing: Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: WayaButton(
+            callback: !viewModel.isLoading
+                ? () async {
+
+              if (viewModel.pollType == 'paid' && userType == "PERSONAL") {
+
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  WayaUtils.showNotice(
+                      context: context,
+                      title: "You don't have a Business Account",
+                      message: 'Please upgrade to a business account to create a paid poll',
+                      onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
+                      buttonText: 'Upgrade to Business',
+                      secondButtonText: 'Cancel',
+                      icon: Image.asset('assets/images/cp-shop.png'));
+                });
+              } else {
+               await ref.read(createPollVotingProvider.notifier).createPoll(
+                  context,
+                  viewModel.firstChoice.text,
+                  viewModel.startDate,
+                  viewModel.endDate,
+                  viewModel.voteNumber.text,
+                  viewModel.pollDescription.text,
+                  viewModel.firstChoiceDescription.text,
+                  viewModel.votePrice.text
+                );
+                disposeControllers();
+                Navigator.pop(context);
+                WayaUtils.showModalSheet(
+                  context,
+                  child: PollsModal(),
+                );
+              }
+
+
+            }
+                : null,
+            centerWidget: LoadingState(
+              loading: viewModel.isLoading,
+              text: 'Create',
+            ),
+            height: 30,
+          )
+        ),
+        //createPoll(context),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-            Text("Who is the current president of nigeria?",
+            Text("${viewModel.pollTitle.text.capitalizeFirst}",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
-              'I think we are all left with this question sometimes whenever we sleep sometimes.',
+              '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -60,10 +138,11 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                summary('Start Date', '21st of July\n2024', 'Total Stages', '6 Stages'),
-                summary('End Date', '30th of July\n2024', 'Times to Vote', '6'),
-                summary('Poll Type', 'Free\n', 'Prize per vote', '₦100'),
-                summary('Duration', '5 Weeks\n', 'Host', 'UNIBEN'),
+                //21st of July\n2024
+                summary('Start Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.startDate)}\n', 'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
+                summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
+                summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'),
+                summary('Duration', '$daysLeft Weeks\n' , '', ''),
               ],
             ),
             const Gap(40),
@@ -76,15 +155,15 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   color: Theme.of(context).colorScheme.greyColor900 ),
             ),
             const Gap(10),
-            presImage('assets/images/polls/azikwe.png', 'Dr Nnamdi Azikwe', context, ),
-            const Gap(15),
-            presImage('assets/images/polls/tinubu.png', 'Bola Ahmed Tinubu', context, ),
-            const Gap(15),
-            presImage('assets/images/polls/buhari.png', 'Mohammed Buhari', context, ),
-            const Gap(5),
-
-
-
+            SizedBox(
+              height: 400,
+              child: ListView.builder(
+                  itemCount: viewModel.choices.length,
+                  itemBuilder: (context, index){
+                    print('IMAGE PRINTING ==>> ${viewModel.choices[index].image?.absolute}');
+                    return presImage('${viewModel.choices[index].image?.absolute.path}', viewModel.choices[index].text.text.capitalizeFirst, context, );
+                  }),
+            )
           ],
         ) );
   }
@@ -129,14 +208,17 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
 
   presImage(img, name, ctx,){
     return Container(
-      padding: EdgeInsets.only(left: 20.w),
+      margin: EdgeInsets.only(bottom: 10,),
+      padding: EdgeInsets.only(left: 20.w,  bottom: 0,),
       height: 60.h,
       decoration: BoxDecoration(
         border: Border.all(color: WayaColors.primary600, ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(children: [
-        Image.asset(img, height: 66.h, width: 50.w,),
+        ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.file(File(img), height: 66.h, width: 50.w,)),
         const Gap(40),
         Text(
           name,

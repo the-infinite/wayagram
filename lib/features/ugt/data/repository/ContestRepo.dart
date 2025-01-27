@@ -1,56 +1,92 @@
 import 'dart:io';
 
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
-import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to_business_model.dart';
-
 import '../model/create_contest.dart';
 
-class ContestRepo extends BaseRepository {
-  static const serviceUrl = "wayagram-profile/api/v2";
+class ContestRepo extends  BaseRepository{
+ static const serviceUrl2 = "school-contest/api/v1";
 
-  Future<WayaRequestResponse> register(Register payload) {
-    return post('$serviceUrl/client/auth/register', payload.toJson());
+  Future<WayaRequestResponse> getCategory() {
+
+    return get('$serviceUrl2/category/getAll');
   }
 
-  Future<WayaRequestResponse> createContest(CreateContestModel payLoad){
-
-    return post('$serviceUrl/contests/create',payLoad.toJson());
-  }
-
-
+  // Future<WayaRequestResponse> createContest(CreateContestModel payLoad){
+  //
+  //   return post('$serviceUrl/contests/create',payLoad.toJson());
+  // }
 
 
 
+  Future<WayaRequestResponse> createContest(CreateContestModel payLoad) {
 
-  Future<WayaRequestResponse> login(
-      {required String password,
-        String? email,
-        String? businessId,
-        bool? isBusinessLogin}) {
-    final payload = <String, dynamic>{};
-    if (isBusinessLogin == true) {
-      payload['businessId'] = businessId;
-      payload['password'] = password;
-    } else {
-      payload['email'] = email;
-      payload['password'] = password;
-    }
-
-    return post('$serviceUrl/client/auth/login', payload);
+    return post('$serviceUrl2/contests/create', payLoad, formdata: true);
   }
 
 
-
-
-
-
-
-
-
-
-
+  /*Future<WayaRequestResponse> createContestController({
+    required final String contestStatus,
+    required final String profileId,
+    required final String title,
+    required final String category,
+    required final String state,
+    required final String winnerPrize,
+    required final String description,
+    required final String voteCountToQualify,
+    required final int amount,
+    required final String durationType,
+    required final String numberOfDuration,
+    required final String descriptionOfAwards,
+    required final int amountPerVote,
+    required final String type,
+    required final String overallResult,
+    required final String multipleStages,
+    required final String publicity,
+    required final String status,
+    required final String howItWorks,
+    required final int numberOfWeeks,
+    required final String currentStage,
+    required final String participationStartDate,
+    required final String startDate,
+    required final String endDate,
+    required final String entryType,
+    required List<Map<String, dynamic>> stages,
+    required List<Map<String, dynamic>> formRequirements,
+  }) async {
+    final response = await post('$serviceUrl/contests/create', {
+      "title": title,
+      "profileId": profileId,
+      "category": category,
+      "state": state,
+      "winnerPrize": winnerPrize,
+      "description": description,
+      "voteCountToQualify": voteCountToQualify,
+      "amount": amountPerVote,
+      "durationType": numberOfWeeks,
+      "numberOfDuration": numberOfDuration,
+      "descriptionOfAwards": description,
+      "amountPerVote": amountPerVote,
+      "type": type,
+      "overallResult": overallResult,
+      "multipleStages": multipleStages,
+      "publicity": publicity,
+      "status": status,
+      "howItWorks": howItWorks,
+      "numberOfWeeks": numberOfWeeks,
+      "currentStage": currentStage,
+      "participationStartDate": participationStartDate,
+      "startDate": startDate,
+      "endDate": endDate,
+      "entryType": entryType,
+      "contestSettings": {
+        "stages":stages,
+      },
+      "formRequirements":formRequirements,
+    });
+    print("newSingle ${response}");
+    return response;
+  }*/
 
 
 }

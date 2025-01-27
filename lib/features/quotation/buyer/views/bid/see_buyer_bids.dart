@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/features/quotation/widgets/single_negotiation_bid.dart';
 
@@ -23,10 +24,20 @@ class SeeBuyerBids extends ConsumerStatefulWidget {
 }
 
 class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createRequestProvider.notifier).getBuyerRequest();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(cancelBuyRequestVmProvider);
+    final provider = ref.watch(cancelBuyRequestVmProvider);
+    final viewModel = ref.watch(createRequestProvider);
     return WayaScaffold(
         isLoading: false,
         isScrollable: true,
@@ -34,16 +45,16 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
         backgroundColor: WayaColors.greyColor200,
         body: Column(
           children: [
-            Container(
+            SizedBox(
               height: 500.h,
               child: ListView.builder(
                   padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                  itemCount: 10,
+                  itemCount: viewModel.buyerRequest.length,
                   shrinkWrap: true,
-                  //physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return SingleNegotiationBidWidget(
                         isSeller: true,
+                      product: viewModel.buyerRequest[index],
                       );
                   }),
             ),
@@ -91,7 +102,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                         width: context.width * 0.45,
                         child: WayaButton(
                           callback: () {
-                            viewModel.cancelRequest(context);
+                            provider.cancelRequest(context);
                           },
                           text: 'Cancel Buy Request',
                           color: WayaColors.error500,
@@ -114,13 +125,14 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
             )
           ],
         ),
-/*      bottomNavigationBar: Container(
+      /*      bottomNavigationBar: Container(
         padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-           *//* SizedBox(
+           */
+      /* SizedBox(
                 width: context.width * 0.35,
                 height: 50,
                 child: Stack(
@@ -147,7 +159,8 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
 
                   ],
                 )),
-            SizedBox(width: 40.w,),*//*
+            SizedBox(width: 40.w,),*/
+      /*
             SizedBox(
               width: context.width * 0.45,
               child: WayaButton(

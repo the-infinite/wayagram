@@ -88,5 +88,5 @@ class AuthRepository extends BaseRepository {
         '$serviceUrl/client/users/$id/upgrade-to-business', payload.toJson());
   }
 
-///
+
 }

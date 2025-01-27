@@ -4,8 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/quotation/buyer/model/create_request_state_model.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 
 
 
@@ -31,6 +34,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
     // TODO: implement build
     final viewModel = ref.watch(createRequestProvider);
     final wayaTheme = Theme.of(context);
+    print(viewModel.maxDistance.text);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,8 +58,8 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FormField<String>(validator: (value) {
-                  if (viewModel.pricePerUnit.text.isEmpty) {
-                    return 'Price is required';
+                  if (viewModel.bidStartingAmount.text.isEmpty) {
+                    return 'Bid Starting Amount is required';
                   }
 
                   return null;
@@ -65,10 +69,10 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                     children: [
                       WayaTextFormField(
                           keyboardType: TextInputType.number,
-                          controller: viewModel.pricePerUnit,
+                          controller: viewModel.bidStartingAmount,
                           hintText: 'Enter the initial bid amount',
                           borderColor: formState.hasError &&
-                              viewModel.pricePerUnit.text.isEmpty
+                              viewModel.bidStartingAmount.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Bid Starting Amount',
@@ -76,7 +80,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
 
                       ),
                       if (formState.hasError &&
-                          viewModel.pricePerUnit.text.isEmpty)
+                          viewModel.bidStartingAmount.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -91,8 +95,8 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-                  if (viewModel.pricePerUnit.text.isEmpty) {
-                    return 'Price is required';
+                  if (viewModel.maxBidAmount.text.isEmpty) {
+                    return;
                   }
 
                   return null;
@@ -102,10 +106,10 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                     children: [
                       WayaTextFormField(
                           keyboardType: TextInputType.number,
-                          controller: viewModel.pricePerUnit,
+                          controller: viewModel.maxBidAmount,
                           hintText: 'Enter the maximum bid amount',
                           borderColor: formState.hasError &&
-                              viewModel.pricePerUnit.text.isEmpty
+                              viewModel.maxBidAmount.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Maximum Bid Amount (optional)',
@@ -113,7 +117,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
 
                       ),
                       if (formState.hasError &&
-                          viewModel.pricePerUnit.text.isEmpty)
+                          viewModel.maxBidAmount.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -143,8 +147,9 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                       setState(() {
                         delivery = true;
                         pickup = false;
+                       //
                       });
-
+                    delivery ?  viewModel.pickUpOption = 'delivery' : viewModel.pickUpOption = 'pickup';
                     },
                     child: delivery ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
                   ),
@@ -161,7 +166,6 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                        delivery = false;
                        pickup = true;
                       });
-
                     },
                     child: pickup ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
                   ),
@@ -176,10 +180,8 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Switch(
-                        value: viewModel.includeDeliveryFee,
-                        onChanged: (value) => ref
-                            .read(createRequestProvider.notifier)
-                            .updateIncludeDeliveryFee(value)),
+                        value: viewModel.skipAddress,
+                        onChanged: (value) => ref.read(createRequestProvider.notifier).updateSkipAddress(value)),
                     const Gap(10),
 
                     Column(
@@ -199,8 +201,8 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                 ),
                 const Gap(20),
                 FormField<String>(validator: (value) {
-                  if (viewModel.pickUpAddress.text.isEmpty) {
-                    return 'Pickup is required';
+                  if (viewModel.deliveryAddress.text.isEmpty) {
+                    return 'Delivery address is required';
                   }
 
                   return null;
@@ -210,10 +212,10 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.streetAddress,
-                        controller: viewModel.pickUpAddress,
+                        controller: viewModel.deliveryAddress,
                         hintText: 'Enter Delivery Address',
                         borderColor: formState.hasError &&
-                            viewModel.pickUpAddress.text.isEmpty
+                            viewModel.deliveryAddress.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Delivery Address',
@@ -224,7 +226,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                         ),
                       ),
                       if (formState.hasError &&
-                          viewModel.pickUpAddress.text.isEmpty)
+                          viewModel.deliveryAddress.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -241,7 +243,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                 Row(children: [
                   Expanded(
                     child: FormField<String>(validator: (value) {
-                      if (viewModel.state.isEmpty) {
+                      if (viewModel.deliveryState.isEmpty) {
                         return 'State is required';
                       }
                       return null;
@@ -259,9 +261,9 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                                   .restructuredState(),
                               onSelected: (value) => ref
                                   .read(createRequestProvider.notifier)
-                                  .update(value, "state")),
+                                  .update(value, "deliveryState")),
                           if (formState.hasError &&
-                              viewModel.state.isEmpty)
+                              viewModel.deliveryState.isEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
@@ -278,7 +280,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                   const Gap(10),
                   Expanded(
                     child: FormField<String>(validator: (value) {
-                      if (viewModel.lga.isEmpty) {
+                      if (viewModel.deliveryLga.isEmpty) {
                         return 'LGA is required';
                       }
                       return null;
@@ -296,9 +298,9 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                                   .restructuredLga(),
                               onSelected: (value) => ref
                                   .read(createRequestProvider.notifier)
-                                  .update(value, "lga")),
+                                  .update(value, "deliveryLga")),
                           if (formState.hasError &&
-                              viewModel.lga.isEmpty)
+                              viewModel.deliveryLga.isEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
@@ -322,7 +324,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                 const Gap(20),
                 FormField<String>(validator: (value) {
                   if (viewModel.biddingStartTime.isEmpty) {
-                    return 'Bid Timing is required';
+                    return 'Bidding Start Time is required';
                   }
                   return null;
                 }, builder: (formState) {
@@ -333,9 +335,10 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                           height: 0.3,
                           label: "Bidding Start Time",
                           hintText: 'Select Bidding Start Time',
+                          uniqueKey: 'bidding_start_time',
                           items: ref
                               .read(createRequestProvider.notifier)
-                              .restructuredCategory(),
+                              .restructuredBidTime(),
                           onSelected: (value) => ref
                               .read(createRequestProvider.notifier)
                               .update(value, "biddingStartTime")),
@@ -355,8 +358,180 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                 }),
                 const Gap(10),
                 Row(children: [
+                /*  Expanded(
+                    child: FormField<String>(
+                      validator: (value) {
+                        if (viewModel.startDate.isEmpty) {
+                          return 'Start Date is required';
+                        }
+                        return null;
+                      },
+                      builder: (formState) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Select Start Date",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.wayaCopyWith(
+                                  fontSize: 14,
+                                  color: wayaTheme.colorScheme.greyColor900,
+                                )),
+                            const Gap(4),
+                            WayaButton(
+                              callback: () {
+                                ref.read(createRequestProvider.notifier).showDatePickerDialog(context);
+                              },
+                              horizontalPadding: 0,
+                              color: wayaTheme.colorScheme.transparent,
+                              centerWidget: Focus(
+                                  onFocusChange: (hasFocus) {
+                                    ref.read(createRequestProvider.notifier).focusChanged(hasFocus);
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            viewModel.startDate.isEmpty
+                                                ? 'DD/MM/YYYY'
+                                                : viewModel.startDate,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.wayaCopyWith(
+                                              fontSize: 14,
+                                              color: viewModel
+                                                  .startDate.isEmpty
+                                                  ? wayaTheme.colorScheme
+                                                  .greyColor300
+                                                  : wayaTheme.colorScheme
+                                                  .customBlack,
+                                            )),
+                                        Icon(
+                                          Icons.arrow_drop_down,
+                                          color:
+                                          wayaTheme.colorScheme.greyColor300,
+                                        )
+                                      ],
+                                    ),
+                                  )),
+                              border: Border.all(
+                                  width: 1,
+                                  color:
+                                  //viewModel.isFocused ? wayaTheme.colorScheme.customPrimary :
+                                  wayaTheme.colorScheme.greyColor300),
+                            ),
+                            if (formState.hasError &&
+                                viewModel.startDate.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(
+                                      color: wayaTheme.colorScheme.error,
+                                      fontSize: 12),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  const Gap(10),
+                  Expanded(
+                    child: FormField<String>(
+                      validator: (value) {
+                        if (viewModel.endDate.isEmpty) {
+                          return 'End Date is required';
+                        }
+                        return null;
+                      },
+                      builder: (formState) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Select End Date",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.wayaCopyWith(
+                                  fontSize: 14,
+                                  color: wayaTheme.colorScheme.greyColor900,
+                                )),
+                            const Gap(4),
+                            WayaButton(
+                              callback: () {
+                                ref.read(createRequestProvider.notifier).showDatePickerDialogTwo(context);
+                              },
+                              horizontalPadding: 0,
+                              color: wayaTheme.colorScheme.transparent,
+                              centerWidget: Focus(
+                                  onFocusChange: (hasFocus) {
+                                    ref.read(createRequestProvider.notifier).focusChanged(hasFocus);
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            viewModel.endDate.isEmpty
+                                                ? 'DD/MM/YYYY'
+                                                : viewModel.endDate,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.wayaCopyWith(
+                                              fontSize: 14,
+                                              color: viewModel
+                                                  .endDate.isEmpty
+                                                  ? wayaTheme.colorScheme
+                                                  .greyColor300
+                                                  : wayaTheme.colorScheme
+                                                  .customBlack,
+                                            )),
+                                        Icon(
+                                          Icons.arrow_drop_down,
+                                          color:
+                                          wayaTheme.colorScheme.greyColor300,
+                                        )
+                                      ],
+                                    ),
+                                  )),
+                              border: Border.all(
+                                  width: 1,
+                                  color:
+                                  //viewModel.isFocused ? wayaTheme.colorScheme.customPrimary :
+                                  wayaTheme.colorScheme.greyColor300),
+                            ),
+                            if (formState.hasError &&
+                                viewModel.endDate.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(
+                                      color: wayaTheme.colorScheme.error,
+                                      fontSize: 12),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),*/
                   Expanded(
                     child: FormField<String>(validator: (value) {
+                      if (viewModel.startTime.text.isEmpty) {
+                        return 'Start Time is required';
+                      }
                       return null;
                     }, builder: (formState)  {
                       return Column(
@@ -371,6 +546,9 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                                   ? wayaTheme.colorScheme.error
                                   : null,
                               label: 'Start Time',
+                            onChanged: (value){
+                                viewModel!.startTime = viewModel.biddingStartTime as TextEditingController;
+                            },
                           ),
                           if (formState.hasError &&
                               viewModel.startTime.text.isEmpty)
@@ -390,6 +568,9 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                   const Gap(10),
                   Expanded(
                     child: FormField<String>(validator: (value) {
+                      if (viewModel.biddingStartTime.isEmpty) {
+                        return 'End Time is required';
+                      }
                       return null;
                     }, builder: (formState)  {
                       return Column(
@@ -426,11 +607,30 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
 
                 const Gap(20),
                 WayaButton(
-                    text: 'Confirm Buy Request Details',
-                    callback: () {
-                      //  ref.read(addProductProvider.notifier).submit();
+                    callback:  () async {
+                      if (_formKey.currentState!.validate()) {
+                        print(viewModel.minDistance.text);
+                        widget.gotoNextTab();
+                        print('=>>>>> ${viewModel?.productCategory}');
+                      }
+                    },
+                    text: 'Confirm Buy Request Details'
+                ),
+                /*WayaButton(
+                  callback: !viewModel.isLoading
+                      ? () async {
+                    print('OPTION ====>> ${viewModel.pickUpOption}');
+                    if (_formKey.currentState!.validate()) {
+
                       widget.gotoNextTab();
-                    }),
+                    }
+
+
+                  }
+                      : null,
+                  centerWidget: LoadingState(
+                      loading: viewModel.isLoading, text: 'Confirm Buy Request Details'),
+                ),*/
               ],
             )),
         const Gap(8),
@@ -441,7 +641,6 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              //  ref.read(addProductProvider.notifier).submit();
               widget.gotoPreviousTab();
             })
       ],

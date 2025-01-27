@@ -1,29 +1,31 @@
-
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-
 
 class AddChoices extends ConsumerStatefulWidget {
   static const route = '/add-choices';
-  const AddChoices({super.key,});
+  const AddChoices({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _AddChoicesState();
 }
 
-class _AddChoicesState extends ConsumerState<AddChoices>  {
-
+class _AddChoicesState extends ConsumerState<AddChoices> {
   final _formKey = GlobalKey<FormState>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -31,265 +33,220 @@ class _AddChoicesState extends ConsumerState<AddChoices>  {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         title: "Add Choices",
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         isScrollable: true,
-        appBarTrailing: createPoll(context),
+        appBarTrailing:
+       /* Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: WayaButton(
+            callback: !viewModel.isLoading
+                ? () async {
+              print('Add cHOICES ==>>>');
+              if (_formKey.currentState!.validate()) {
+
+                WayaNav.toNamed("/poll-summary");
+              }
+            } : null,
+            centerWidget: LoadingState(
+                loading: viewModel.isLoading, text: 'Create Poll'),
+            height: 30,
+          ),
+        ),*/
+        createPoll(context),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-            Text("Who is the current president of nigeria?",
+            Text("${viewModel.pollTitle.text.capitalizeFirst}",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
-              'I think we are all left with this question sometimes whenever we sleep sometimes.',
+              '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.greyColor500 ),
+                  color: Theme.of(context).colorScheme.greyColor500),
             ),
-
             const Gap(20),
             Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color:Theme.of(context).colorScheme.greyColor300),
-                    ),
-                    child: Column(children: [
-                      FormField<String>(validator: (value) {
-                        if (viewModel.firstChoice.text.isEmpty) {
-                          return 'Choice 1 is required';
-                        }
-
-                        return null;
-                      }, builder: (formState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            WayaTextFormField(
-                              keyboardType: TextInputType.text,
-                              controller: viewModel.firstChoice,
-                              hintText: 'Choice 1',
-                              borderColor: formState.hasError &&
-                                  viewModel.firstChoice.text.isEmpty
-                                  ? wayaTheme.colorScheme.error
-                                  : null,
-                            ),
-                            if (formState.hasError &&
-                                viewModel.firstChoice.text.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      }),
-                      const Gap(10),
-                      FormField<String>(validator: (value) {
-                        if (viewModel.firstChoiceDescription.text.isEmpty) {
-                          return '';
-                        }
-
-                        return null;
-                      }, builder: (formState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            WayaTextFormField(
-                              line: 6,
-                              keyboardType: TextInputType.text,
-                              controller: viewModel.firstChoiceDescription,
-                              hintText: 'Why should people care? Give a short,\nengaging reason',
-                              borderColor: formState.hasError &&
-                                  viewModel.firstChoiceDescription.text.isEmpty
-                                  ? wayaTheme.colorScheme.error
-                                  : null,
-                            ),
-                            if (formState.hasError &&
-                                viewModel.firstChoiceDescription.text.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      }),
-                      const Gap(10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                key: _formKey,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: viewModel.choices.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
-                          Image.asset('assets/images/polls/add_image.png', height: 20.h,),
-                          const Gap(10),
-                          Text(
-                            'Add Image/Video',
-                            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Theme.of(context).colorScheme.customBlack200 ),
-                          ),
-                          const Gap(8),
-
-                        ],),
-
-                      const Gap(10),
-                    ],),
-
-                  ),
-                  const Gap(15),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color:Theme.of(context).colorScheme.greyColor300),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FormField<String>(validator: (value) {
-                          if (viewModel.secondChoice.text.isEmpty) {
-                            return 'Choice 2 is required';
-                          }
-
-                          return null;
-                        }, builder: (formState) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              WayaTextFormField(
-                                keyboardType: TextInputType.text,
-                                controller: viewModel.secondChoice,
-                                hintText: 'Choice 2',
-                                borderColor: formState.hasError &&
-                                    viewModel.secondChoice.text.isEmpty
-                                    ? wayaTheme.colorScheme.error
-                                    : null,
-                              ),
-                              if (formState.hasError &&
-                                  viewModel.secondChoice.text.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
-                                  ),
-                                ),
-                            ],
-                          );
-                        }),
-                        const Gap(10),
-                        FormField<String>(validator: (value) {
-                          if (viewModel.secondChoiceDescription.text.isEmpty) {
-                            return '';
-                          }
-
-                          return null;
-                        }, builder: (formState) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              WayaTextFormField(
-                                line: 6,
-                                keyboardType: TextInputType.text,
-                                controller: viewModel.secondChoiceDescription,
-                                hintText: 'Why should people care? Give a short,\nengaging reason',
-                                borderColor: formState.hasError &&
-                                    viewModel.firstChoiceDescription.text.isEmpty
-                                    ? wayaTheme.colorScheme.error
-                                    : null,
-                              ),
-                              if (formState.hasError &&
-                                  viewModel.secondChoiceDescription.text.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
-                                  ),
-                                ),
-                            ],
-                          );
-                        }),
-
-                        const Gap(10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          Container(
+                        padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                              color:
+                                  Theme.of(context).colorScheme.greyColor300),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            FormField<String>(validator: (value) {
+                              if (viewModel.firstChoice.text.isEmpty) {
+                                return 'Choice ${index + 1} is required';
+                              }
 
-                            Image.asset('assets/images/polls/add_image.png', height: 20.h,),
+                              return null;
+                            }, builder: (formState) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  WayaTextFormField(
+                                    keyboardType: TextInputType.text,
+                                    controller: viewModel.choices[index].text,
+                                    hintText: 'Choice ${index + 1}',
+                                    borderColor: formState.hasError &&
+                                            viewModel.choices[index].text.text
+                                                .isEmpty
+                                        ? wayaTheme.colorScheme.error
+                                        : null,
+                                  ),
+                                  if (formState.hasError &&
+                                      viewModel
+                                          .choices[index].text.text.isEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Text(
+                                        formState.errorText!,
+                                        style: TextStyle(
+                                            color: wayaTheme.colorScheme.error,
+                                            fontSize: 12),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            }),
                             const Gap(10),
-                            Text(
-                              'Add Image/Video',
-                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Theme.of(context).colorScheme.customBlack200),
+                            FormField<String>(validator: (value) {
+                              if (viewModel
+                                  .choices[index].description.text.isEmpty) {
+                                return '';
+                              }
+
+                              return null;
+                            }, builder: (formState) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  WayaTextFormField(
+                                    line: 6,
+                                    keyboardType: TextInputType.text,
+                                    controller:
+                                        viewModel.choices[index].description,
+                                    hintText:
+                                        'Why should people care? Give a short,\nengaging reason',
+                                    borderColor: formState.hasError &&
+                                            viewModel.firstChoiceDescription
+                                                .text.isEmpty
+                                        ? wayaTheme.colorScheme.error
+                                        : null,
+                                  ),
+                                  if (formState.hasError &&
+                                      viewModel.choices[index].description.text
+                                          .isEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Text(
+                                        formState.errorText!,
+                                        style: TextStyle(
+                                            color: wayaTheme.colorScheme.error,
+                                            fontSize: 12),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            }),
+                            const Gap(10),
+                            InkWell(
+                              splashFactory: NoSplash.splashFactory,
+                              splashColor: Colors.transparent,
+                              onTap: () => ref
+                                  .read(createPollVotingProvider.notifier)
+                                  .addChoiceImage(index),
+                              child: viewModel.choices[index].image == null
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/polls/add_image.png',
+                                          height: 20.h,
+                                        ),
+                                        const Gap(10),
+                                        Text(
+                                          'Add Image/Video',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .customBlack200),
+                                        ),
+                                        const Gap(8),
+                                      ],
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.file(
+                                        viewModel.choices[index].image!,
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                             ),
-                            const Gap(8),
-
-                          ],),
-
-                        const Gap(10),
-
-
-                      ],
+                            const Gap(10),
+                          ],
+                          
+                        ),
+                       
+                      ),
+                      const Gap(20)
+                        ],
+                      );
+                    })
                     ),
-
-                  ),
-                ],
-              ),
-            ),
             const Gap(15),
-
-            Row(
+           GestureDetector(
+            onTap: () => ref.read(createPollVotingProvider.notifier).addChoice(),
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              Text(
-                'Add Another Choice',
-                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.black ),
-              ),
-              const Gap(8),
-              Icon(
-                Icons.add,
-                size: 20,
-                color: wayaTheme.colorScheme.customPrimary,
-              ),
-            ],)
-
-
-
-
-
-
+                Text(
+                  'Add Another Choice',
+                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.black),
+                ),
+                const Gap(8),
+                Icon(
+                  Icons.add,
+                  size: 20,
+                  color: wayaTheme.colorScheme.customPrimary,
+                ),
+              ],
+            ),
+           )
           ],
-        ) );
+        ));
   }
 
-  Widget createPoll(ctx,){
+  Widget createPoll(
+    ctx,
+  ) {
     final wayaTheme = Theme.of(ctx);
     return GestureDetector(
       onTap: () {
@@ -316,9 +273,6 @@ class _AddChoicesState extends ConsumerState<AddChoices>  {
                         fontWeight: FontWeight.w600,
                         fontSize: 14),
                   ),
-
-
-
                 ],
               ),
             ),
@@ -328,5 +282,4 @@ class _AddChoicesState extends ConsumerState<AddChoices>  {
       ),
     );
   }
-
 }

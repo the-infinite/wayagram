@@ -7,7 +7,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_scaffold.dart';
 import '../../../../core/components/waya_select_field.dart';
@@ -16,6 +15,7 @@ import '../../../../core/utils/waya_navigation.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../../shop/widgets/upload_image.dart';
 import '../../data/controller/contest_controller.dart';
+import '../../vm/ugt_vm.dart';
 import 'create_ultimate.dart';
 
 class EditStagePreference extends ConsumerStatefulWidget {
@@ -25,11 +25,11 @@ class EditStagePreference extends ConsumerStatefulWidget {
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EditStagePreferenceState();
 }
-bool isSwitched = false;
+
 
 class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
   final _contestController = Get.put(ContestController());
-
+  bool isSwitched = false;
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
@@ -51,9 +51,12 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
           const Gap(15),
           WayaSelectField(
             height: 0.3,
+            value: "Free",
             label: "Entry Type ",
             hintText: 'Choose entry type',
-            items: [],
+            items: ref
+                .read(contestNotifierProvider.notifier)
+                .ugtPaymentType(),
             onSelected: (value) {},
             uniqueKey: 'contest-category',
           ),
@@ -234,19 +237,22 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
           const Gap(15),
           WayaSelectField(
             height: 0.3,
+            value: "No",
             label: "Prize for the Winner?",
             hintText: 'Select Yes or No',
-            items: [],
+            items: ref
+                .read(contestNotifierProvider.notifier)
+                .ugtWinnerPrize(),
             onSelected: (value) {},
             uniqueKey: 'contest-state',
           ),
           const Gap(15),
-          WayaTextFormField(
+         /* WayaTextFormField(
             controller: TextEditingController(),
             hintText: "0 NGN",
             label: "Prize Amount",
           ),
-          const Gap(15),
+          const Gap(15),*/
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

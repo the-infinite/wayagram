@@ -11,11 +11,13 @@ import 'package:wayagram/features/shared/radio_select.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/Add_new_requirement_modal.dart';
 import 'package:wayagram/features/ugt/data/controller/contest_controller.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/components/waya_text_form_field.dart';
 import '../../../../core/utils/waya_navigation.dart';
 import '../../../../core/utils/waya_utils.dart';
+import '../../../auth/account_creation/view/loading_state.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../create_contest/steps/create_ultimate.dart';
 import '../../create_contest/steps/edit_stage_preference.dart';
@@ -48,6 +50,7 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
     });
   }
 
+  String selectedValue = '';
 
 
 
@@ -279,9 +282,12 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
 
                       ],
                     )),
-                value: "Mark",
-                onChanged: (value) => {}
-                ),
+                value: "Mark", groupValue: selectedValue, onChanged: (String? value) {
+              setState(() {
+                selectedValue = ((selectedValue == value) ? "" : value)!;
+                // Update selected value
+              });
+            },),
             TextButton(
               onPressed: _addStage,
               child: Text('+ Add Another Stage', style: TextStyle(color: Colors.red)),
@@ -292,14 +298,28 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
         const Gap(15),
 
         WayaButton(
+            centerWidget: LoadingState(
+                loading: viewModel.isLoading, text: 'Continue'),
+            callback: !viewModel.isLoading
+                ? () {
+              ref.read(contestNotifierProvider.notifier).onSubmit();
+              //   provider.submit(context, widget.isWayagramDeal);
+            }
+                : null),
+
+       /* WayaButton(
           callback: () {
+
+
+
+
             WayaUtils.showModalSheetUgt(
               context,
               child: SuccessfulModal(),
             );
           },
           text: "Continue",
-        ),
+        ),*/
         const Gap(8),
         WayaButton(
             text: 'Go Back',
