@@ -63,13 +63,13 @@ class NotificationVm extends StateNotifier<NotificationState> {
       final response = await _repo.getUserNotifications();
 
       //? If this went well...
-      if (response.success) {
-        final data = NotificationResponseModel.fromJson(response.data['data']);
-        result.addAll(data.notifications);
-      }
+      // if (response.success) {
+      //   final data = NotificationResponseModel.fromJson(response.data['data']);
+      //   result.addAll(data.notifications);
+      // }
 
       //? Since it failed, we should probably do failure cleanups in the future.
-      else {}
+      //else {}
 
       //? Notify our listeners that the game has been switched up.
       state = state.copyWith(isLoading: false, notifications: [...result]);

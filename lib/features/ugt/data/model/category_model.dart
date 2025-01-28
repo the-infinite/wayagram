@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'category_model.g.dart';
+//part 'category_model.g.dart';
 
 @JsonSerializable()
 class ContestResponse {
@@ -17,10 +17,10 @@ class ContestResponse {
     this.statusCode,
   });
 
-  factory ContestResponse.fromJson(Map<String, dynamic> json) =>
-      _$ContestResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ContestResponseToJson(this);
+  // factory ContestResponse.fromJson(Map<String, dynamic> json) =>
+  //     _$ContestResponseFromJson(json);
+  //
+  // Map<String, dynamic> toJson() => _$ContestResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -37,13 +37,13 @@ class ContestCategory {
     required this.updatedAt,
   });
 
-  factory ContestCategory.fromJson(Map<String, dynamic> json) =>
-      _$ContestCategoryFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ContestCategoryToJson(this);
+  // factory ContestCategory.fromJson(Map<String, dynamic> json) =>
+  //     _$ContestCategoryFromJson(json);
+  //
+  // Map<String, dynamic> toJson() => _$ContestCategoryToJson(this);
 }
 
 // Utility function to parse JSON
-ContestResponse allCategoryDetailModelFromJson(String str) {
-  return ContestResponse.fromJson(json.decode(str));
-}
+// ContestResponse allCategoryDetailModelFromJson(String str) {
+//   return ContestResponse.fromJson(json.decode(str));
+// }

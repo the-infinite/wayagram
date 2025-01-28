@@ -67,6 +67,11 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     state = state.copyWith(choices: allChoices);
   }
 
+  void reset() {
+    state = CreatePollVotingState();
+  }
+
+
 
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
