@@ -106,15 +106,6 @@ class CreatePollVotingState {
     TextEditingController? secondChoice,
     TextEditingController? firstChoiceDescription,
     TextEditingController? secondChoiceDescription,
-    /* String? pollTitle;
-   String? pollDescription;
-   String? pollCompanyDescription;
-   String? votePrice;
-   String? voteNumber;
-   String? firstChoice;
-   String? secondChoice;
-   String? firstChoiceDescription;
-   String? secondChoiceDescription;*/
     List<DocType>? uploadedDocuments,
     String? moneyGenerated,
     String? voteCount,

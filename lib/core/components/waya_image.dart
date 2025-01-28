@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
 class WayaDp extends ConsumerWidget {
@@ -108,6 +110,50 @@ class WayaImage2 extends ConsumerWidget {
         child: Icon(
           Icons.image,
           color: wayaTheme.colorScheme.greyColor600,
+        ),
+      ),
+    );
+  }
+}
+
+class WayaImage3 extends ConsumerWidget {
+  final String? imageUrl;
+  const WayaImage3({
+    super.key,
+    this.imageUrl,
+    required this.height,
+  });
+
+  final double height;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final wayaTheme = Theme.of(context);
+
+    final coverImage =
+        ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
+    return coverImage == null
+        ? errorWidget(wayaTheme)
+        : CachedNetworkImage(
+        errorWidget: (context, url, error) => errorWidget(wayaTheme),
+        fit: BoxFit.fill,
+        width: double.infinity,
+        height: height,
+        imageUrl: imageUrl ?? coverImage);
+  }
+
+  Container errorWidget(ThemeData wayaTheme) {
+    return Container(
+      height: height,
+      width: double.infinity,
+      color:  WayaColors.primaryBrown50,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 90),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Image.asset('assets/images/pages/camera.png', height: 36.h,),
+          ],
         ),
       ),
     );
