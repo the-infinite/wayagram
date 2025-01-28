@@ -61,6 +61,7 @@ class AllProducts extends ConsumerWidget {
               state.isLoading
                   ? _recommendedProductLoadingState(context: context)
                   : ProductsGrid(products: notifier.filteredProducts),
+            SizedBox(height: 100,)
             ],
           ),
         ));
