@@ -46,6 +46,10 @@ class $AssetsIconsGen {
   SvgGenImage get actionFilter =>
       const SvgGenImage('assets/icons/action-filter.svg');
 
+  /// File path: assets/icons/add-event-icon.svg
+  SvgGenImage get addEventIcon =>
+      const SvgGenImage('assets/icons/add-event-icon.svg');
+
   /// File path: assets/icons/apple.svg
   SvgGenImage get apple => const SvgGenImage('assets/icons/apple.svg');
 
@@ -404,6 +408,7 @@ class $AssetsIconsGen {
   List<SvgGenImage> get values => [
         aCart,
         actionFilter,
+        addEventIcon,
         apple,
         arrowBack,
         arrowKeyboardRight,
@@ -544,6 +549,10 @@ class $AssetsImagesGen {
   AssetGenImage get destructive =>
       const AssetGenImage('assets/images/destructive.png');
 
+  /// File path: assets/images/empty-event.png
+  AssetGenImage get emptyEvent =>
+      const AssetGenImage('assets/images/empty-event.png');
+
   /// Directory path: assets/images/explore
   $AssetsImagesExploreGen get explore => const $AssetsImagesExploreGen();
 
@@ -616,6 +625,7 @@ class $AssetsImagesGen {
         dCodeValid,
         deleteImg,
         destructive,
+        emptyEvent,
         frameuni,
         iconRight,
         placeholder,

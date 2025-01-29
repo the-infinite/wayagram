@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
+import 'package:wayagram/features/event/views/event_view.dart';
 
 class Services {
   final String icon;
@@ -11,11 +12,10 @@ class Services {
   Services({required this.icon, required this.name, required this.onTap});
 }
 
-class ExploreOurServicesVm  {
-
+class ExploreOurServicesVm {
   final BuildContext context;
   late List<Services> services;
-  ExploreOurServicesVm( this.context) {
+  ExploreOurServicesVm(this.context) {
     services = [
       Services(
           icon: WayaAssets.icons.eShop.path,
@@ -44,9 +44,11 @@ class ExploreOurServicesVm  {
             WayaNav.toNamed('/poll-and-voting');
           }),
       Services(
-          icon: WayaAssets.icons.eEvent.path, name: 'Events', onTap: () {}),
+          icon: WayaAssets.icons.eEvent.path,
+          name: 'Events',
+          onTap: () {
+            WayaNav.toNamed(EventView.route);
+          }),
     ];
   }
-
 }
-
