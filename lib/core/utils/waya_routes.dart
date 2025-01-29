@@ -9,7 +9,13 @@ import 'package:wayagram/features/general_settings/notifications/view/default.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/group/view/confirm_group_details.dart';
+import 'package:wayagram/features/group/view/create_group.dart';
+import 'package:wayagram/features/group/view/group_public.dart';
+import 'package:wayagram/features/group/view/members_screen.dart';
+import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
+import 'package:wayagram/features/pages/view/private_page.dart';
 import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/views/create_poll.dart';
@@ -55,6 +61,12 @@ import 'package:wayagram/features/ugt/ugt_get_started.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
+
+import '../../features/pages/view/confirm_page_details.dart';
+import '../../features/pages/view/create_page.dart';
+import '../../features/pages/view/pages.dart';
+import '../../features/pages/view/success_page.dart';
+import '../../features/pages/view/suggestion.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
@@ -133,6 +145,17 @@ class WayaAppRoutes {
     ProductsViewPage.route: () =>ProductsViewPage(),
     WayaNotifications.route: () => WayaNotifications(),
     NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
+    CreatePage.route: () => CreatePage(),
+    CreateGroup.route: () => CreateGroup(),
+    ConfirmPageDetails.route: () => ConfirmPageDetails(),
+    ConfirmGroupDetails.route: () => ConfirmGroupDetails(),
+    SuccessPage.route: () => SuccessPage(),
+    SuccessGroup.route: () => SuccessGroup(),
+    Pages.route: ()=> Pages(),
+    Suggestion.route: ()=> Suggestion(),
+    PrivatePage.route:()=> PrivatePage(),
+    GroupPublic.route: ()=> GroupPublic(),
+    MembersScreen.route:()=> MembersScreen(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

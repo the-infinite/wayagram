@@ -257,18 +257,17 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       if (response.success) {
         print('Na Gadus: ${response.data}');
 
-        ContestResponse responseModel =
-            allCategoryDetailModelFromJson(response.data);
+        //ContestResponse responseModel = allCategoryDetailModelFromJson(response.data);
 
-        print('Nyash Message: ${responseModel.message}');
-        final List<ContestCategory>? categories = responseModel.data;
+        // print('Nyash Message: ${responseModel.message}');
+        // final List<ContestCategory>? categories = responseModel.data;
 
-        print('categories ${categories![0].name}');
-        final List<Select> selectCategories = categories.map((val) {
-          return Select(label: val.name, value: val.id);
-        }).toList();
+        // print('categories ${categories![0].name}');
+        // final List<Select> selectCategories = categories.map((val) {
+        //   return Select(label: val.name, value: val.id);
+        // }).toList();
 
-        state = state.copyWith(categories: selectCategories);
+        //state = state.copyWith(categories: selectCategories);
       }
     } catch (e) {
       print('Error: $e');

@@ -99,6 +99,7 @@ flutter:
     - assets/images/shop/
     - assets/images/bid/
     - assets/images/polls/
+    - assets/images/pages/
     - assets/images/wallet/
 
     - assets/icons/

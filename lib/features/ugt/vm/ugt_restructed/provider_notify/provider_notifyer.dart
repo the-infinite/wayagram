@@ -7,9 +7,9 @@ final apiServiceProvider = Provider<ApiService>((ref) {
   return ApiService();
 });
 
-final userListProvider = FutureProvider<List<ContestCategory>>((ref) async {
-  return ref.watch(apiServiceProvider).fetchUser();
-});
+// final userListProvider = FutureProvider<List<ContestCategory>>((ref) async {
+//   return ref.watch(apiServiceProvider).fetchUser();
+// });
 
 /*final userProvider = StateNotifierProvider<UserNotifier, CreateUser?>((ref) {
   return UserNotifier(ref.read(apiServiceProvider));
