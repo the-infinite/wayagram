@@ -1096,11 +1096,12 @@ packages:
   rtmp_broadcaster:
     dependency: "direct main"
     description:
-      name: rtmp_broadcaster
-      sha256: fb748e0720cb69f948f24cd14d25418fb2e033316ea071a993f4de8f3d507e83
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.6"
+      path: "."
+      ref: HEAD
+      resolved-ref: "612f5fc2a7d958e0ccbfd13f4543c178acd4019f"
+      url: "https://github.com/OlJohnny/flutter_rtmp_broadcaster.git"
+    source: git
+    version: "2.3.2"
   rxdart:
     dependency: transitive
     description:
