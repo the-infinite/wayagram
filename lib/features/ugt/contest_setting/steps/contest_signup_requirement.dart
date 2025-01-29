@@ -7,7 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/shared/radio_select.dart';
+import 'package:wayagram/features/shared/components/radio_select.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/Add_new_requirement_modal.dart';
 import 'package:wayagram/features/ugt/data/controller/contest_controller.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
