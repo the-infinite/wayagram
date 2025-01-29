@@ -33,6 +33,7 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createGroupProvider);
     final wayaTheme = Theme.of(context);
+    final type  = ModalRoute.of(context)?.settings.arguments as String?;
     return WayaScaffold(
       removeAppBar: true,
       isLoading: viewModel.isLoading,
@@ -41,6 +42,7 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const Gap(50),
           Center(child: Image.asset('assets/images/pages/team.png', height: 160.h,)),
           const Gap(50),
           Text(
@@ -48,19 +50,19 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
               style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
-                  color: WayaColors.greyColor700,
+                  color: WayaColors.black,
                   fontFamily: WayaConstants.fontFamily
               )),
           const Gap(10),
           Text(
-              'Great news! Your Group has been successfully created and you can manage it anytime in the Groups section.',
-              style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: WayaColors.greyColor700,
-                  fontFamily: WayaConstants.fontFamily
-              )),
-          const Gap(50),
+            'Great news! Your Group has been successfully created and you can manage it anytime in the\nGroups section.',
+            style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w400,
+                color: WayaColors.greyColor500,
+                fontFamily: WayaConstants.fontFamily
+            ),textAlign: TextAlign.center,),
+          const Gap(150),
           WayaButton(
             callback: !viewModel.isLoading
                 ? () async {

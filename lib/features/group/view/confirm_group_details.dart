@@ -86,23 +86,28 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
   details(title, subTitle){
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-            title,
-            style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: WayaColors.greyColor700,
-                fontFamily: WayaConstants.fontFamily
-            )),
+        Expanded(
+          child: Text(
+              title,
+              style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: WayaColors.greyColor700,
+                  fontFamily: WayaConstants.fontFamily
+              )),
+        ),
         const Spacer(),
-        Text(
-            subTitle,
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w400,
-              color: Color(0xff6B7280),
-            )),
+        Expanded(
+          child: Text(
+              '$subTitle',
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff6B7280),
+              )),
+        ),
       ],
     );
   }

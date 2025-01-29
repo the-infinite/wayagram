@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -41,10 +42,11 @@ class _EventsState extends ConsumerState<Events> with SingleTickerProviderStateM
               itemBuilder: (_, index){
                 return Container(
                   margin: EdgeInsets.only(bottom: 15),
-                  padding: EdgeInsets.only(left: 10),
+                  padding: EdgeInsets.only(left: 10, right:10),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: Colors.white
+                      color: Colors.white,
+                    border:Border.all(color:Theme.of(context).colorScheme.greyColor200 )
                   ),
                   height: 76.h,
                   child: Column(
@@ -77,10 +79,19 @@ class _EventsState extends ConsumerState<Events> with SingleTickerProviderStateM
                             ],
                           ),
                           Spacer(),
-                          WayaButton(
-                            callback: (){},
-                            text: ' Register ',
-                          height: 30,)
+                          SizedBox(
+                            width: context.width * 0.20,
+                            child:WayaButton(
+                              callback: (){},
+                              text: 'Register',
+                              textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.white ),
+                              height: 32.h,
+                            ),
+                          ),
+
 
                         ],
                       ),

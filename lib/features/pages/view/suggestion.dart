@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -42,7 +43,7 @@ class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProvid
         isLoading: false,
         isScrollable: true,
         title: 'Suggested For You',
-
+        backgroundColor: Theme.of(context).colorScheme.greyColor50,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,12 +52,14 @@ class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProvid
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
+                padding: EdgeInsets.only(top: 15),
                 itemCount: 6,
                 itemBuilder: (_, index){
                   return Container(
                     margin: EdgeInsets.only(bottom: 15),
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
                     decoration: BoxDecoration(
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Theme.of(context).colorScheme.greyColor200),
 
@@ -67,32 +70,42 @@ class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProvid
                       children: [
                         ListTile(
                           contentPadding: EdgeInsets.only(left: 0, right: 0),
-                          leading: Image.asset('assets/images/pages/empire.png',height: 40.h,),
+                          leading: Image.asset(
+                            index==0?'assets/images/pages/empire.png':index==1?'assets/images/pages/ms.png':
+                            index==2?'assets/images/pages/united.png':'assets/images/pages/ls.png',
+                            height: 40.h,),
                           title:Row(children: [
                             Text(
                                 index==0?'Empire Music':index==1?'Marvel Studios':index==2?'Manchester United': 'Livescores',
-                                style: wayaTheme.textTheme.titleLarge),
+                                style: wayaTheme.textTheme.bodyMedium),
 
                             Spacer(),
-                            WayaButton(
-                              callback: (){},
-                              text: 'Follow',
-                              height: 38,
+                            SizedBox(
+                              width: context.width * 0.20,
+                              child:WayaButton(
+                                callback: (){},
+                                text: 'Follow',
+                                textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color: Theme.of(context).colorScheme.white ),
+                                height: 32.h,
+                              ),
                             )
+
 
                           ],),
                           subtitle:  Text(
                             '48.6k Followers',
-                            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14,
+                            style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+                                fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).colorScheme.greyColor500 ),
                           ),),
-                        Gap(10),
                         Text(
-                          'Be the first to know about upcoming marvel movies and get the latest news before anyone',
-                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 14,
+                          'Find your sound . Discuss writing, composing, recording, and much more',
+                          style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+                              fontSize: 12,
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.greyColor500 ),
                         ),
