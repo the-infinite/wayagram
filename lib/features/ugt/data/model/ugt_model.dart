@@ -1,9 +1,5 @@
-class Vote {
-  final String name;
-  final double noOfVotes;
 
-  Vote({required this.name, required this.noOfVotes});
-}
+import 'package:wayagram/features/explore/data/model/default.dart';
 
 class Ugt {
   final String logo;

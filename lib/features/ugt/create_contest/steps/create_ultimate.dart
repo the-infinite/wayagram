@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/features/shared/radio_select.dart';
+import 'package:wayagram/features/shared/components/radio_select.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 import 'package:wayagram/features/ugt/vm/ugt_restructed/model/contest_ugt_model.dart';
 

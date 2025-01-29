@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/quotation/vm/quotation_vm.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
 

@@ -90,4 +90,22 @@ class WayaHelpers {
       return word[0].toUpperCase() + word.substring(1).toLowerCase();
     }).join(' ');
   }
+
+ static String abbreviateNumber(int number) {
+  if (number >= 1000000000) {
+    return _formatNumber(number, 1000000000, "B"); 
+  } else if (number >= 1000000) {
+    return _formatNumber(number, 1000000, "M"); 
+  } else if (number >= 1000) {
+    return _formatNumber(number, 1000, "K"); 
+  } else {
+    return number.toString(); 
+  }
+}
+
+static String _formatNumber(int number, int divisor, String suffix) {
+  double result = number / divisor;
+  return result % 1 == 0 ? "${result.toInt()}$suffix" : "${result.toStringAsFixed(1)}$suffix";
+}
+
 }
