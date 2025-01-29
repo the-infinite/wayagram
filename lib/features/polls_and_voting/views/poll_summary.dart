@@ -39,21 +39,6 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
 
 
 
-  disposeControllers(){
-    // print('POLLTILT  ==> ${viewModel?.pollTitle.text}');
-    // viewModel?.pollTitle.dispose();
-    // viewModel?.pollDescription.dispose();
-    // viewModel?.pollCompanyDescription.dispose();
-    // viewModel?.votePrice.dispose();
-    // viewModel?.voteNumber.dispose();
-    // viewModel?.firstChoice.dispose();
-    // viewModel?.firstChoiceDescription.dispose();
-    // viewModel?.secondChoice.dispose();
-    // viewModel?.secondChoiceDescription.dispose();
-    // print('POLLTILT 2 ==> ${viewModel?.pollTitle.text}');
-}
-
-
   String userType = "PERSONAL";
 
   Map<String, dynamic> formData = {};
@@ -62,6 +47,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
   Widget build(BuildContext context) {
 
     final viewModel = ref.watch(createPollVotingProvider);
+    final viewModel2 = ref.watch(createPollVotingProvider.notifier);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
     print('END DATE ${viewModel.endDate}');
@@ -104,12 +90,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   viewModel.firstChoiceDescription.text,
                   viewModel.votePrice.text
                 );
-                disposeControllers();
-                // Navigator.pop(context);
-                // WayaUtils.showModalSheet(
-                //   context,
-                //   child: PollsModal(),
-                // );
+               viewModel2.reset();
               }
 
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -48,10 +49,10 @@ class _MembersScreenState extends ConsumerState<MembersScreen >
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Gap(10),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
+                padding: EdgeInsets.only(top: 15),
                 itemCount: 6,
                 itemBuilder: (_, index){
                   return Container(
@@ -69,31 +70,39 @@ class _MembersScreenState extends ConsumerState<MembersScreen >
                       children: [
                         ListTile(
                           contentPadding: EdgeInsets.only(left: 0, right: 0),
-                          leading: Image.asset('assets/images/pages/c1.png',height: 40.h,),
+                          leading: Image.asset(index.isEven?'assets/images/pages/c1.png':'assets/images/pages/temi.png',height: 40.h,),
                           title:Row(children: [
                             Text(
                                 index==0?'Chijioke Nwankwo':index==1?'Temitope Adebayo':index==2?'Oluwaseun Adeyemi': 'Ifeoma Okeke',
                                 style: wayaTheme.textTheme.bodyMedium),
 
                             Spacer(),
-                            WayaButton(
-                              callback: (){},
-                              text: ' Follow ',
-                              height: 30,
-                            )
+                            SizedBox(
+                              width: context.width * 0.20,
+                              child:WayaButton(
+                                callback: (){},
+                                text: 'Follow',
+                                textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color: Theme.of(context).colorScheme.white ),
+                                height: 32.h,
+                              ),
+                            ),
 
                           ],),
                           subtitle:  Text(
-                            '@maleek2024',
-                            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14,
+                            index.isEven?'@maleek2024':'@chukwudi2024',
+                            style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+                                fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).colorScheme.greyColor500 ),
                           ),),
-                        Gap(10),
+                        //Gap(10),
+
                         Text(
-                          '🌍 Adventurous soul | Espresso lover ☕ | Gadget aficionado 💻 | Documenting my journeys and life lessons! ✨',
-                          style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+                          index.isEven?'🌍 Adventurous soul | Espresso lover ☕ | Gadget aficionado 💻 | Documenting my journeys and life lessons! ✨':'✈️ Wanderlust-driven | Tea connoisseur 🍵 | Tech enthusiast 💻 | Exploring the world and sharing my stories! 🌟',
+                          style: Theme.of(context).textTheme.displaySmall!.wayaCopyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.greyColor500 ),

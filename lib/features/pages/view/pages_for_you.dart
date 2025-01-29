@@ -192,10 +192,9 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
         Gap(20),
         Row(
           children: [
-            actionType('346Likes', 'assets/images/pages/like.png'),
-            actionType('346Likes', 'assets/images/pages/comment.png'),
-            actionType('346Likes', 'assets/images/pages/share.png'),
-            Gap(20),
+            actionType('346 Likes', 'assets/images/pages/like.png'),
+            actionType('0 Comments', 'assets/images/pages/comment.png'),
+            actionType('5 Shares', 'assets/images/pages/share.png'),
             Image.asset('assets/images/pages/save.png', height: 32.h,),
           ],
         ),
