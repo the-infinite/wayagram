@@ -182,6 +182,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  coast_audio:
+    dependency: "direct main"
+    description:
+      name: coast_audio
+      sha256: edcaffde2f42c17a952f048d2762e801052c7e7cdaeae486ec2f095aec29f7f3
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   code_builder:
     dependency: transitive
     description:
@@ -1085,6 +1093,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.1"
+  rtmp_broadcaster:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "612f5fc2a7d958e0ccbfd13f4543c178acd4019f"
+      url: "https://github.com/OlJohnny/flutter_rtmp_broadcaster.git"
+    source: git
+    version: "2.3.2"
   rxdart:
     dependency: transitive
     description:

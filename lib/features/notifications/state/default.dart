@@ -1,6 +1,19 @@
 import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/features/notifications/state/filter_notification.dart';
+/*
 
+'chats',
+            'call',
+            'follow_request',
+            'likes',
+            'comments',
+            'shares',
+            'views',
+            'events',
+            'livestream',
+            'debit_alert',
+            'credit_alert'
+*/
 class NotificationState {
   final bool isLoading;
   final bool requestsOnly;

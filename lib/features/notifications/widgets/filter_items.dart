@@ -99,9 +99,11 @@ class _FilterWidgetState extends ConsumerState<NotificationFilterWidget> {
             Expanded(
               child: WayaTextFormField(
                 padding: EdgeInsets.symmetric(horizontal: 1),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: WayaColors.greyColor400,
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.symmetric(vertical:  13),
+                  child: WayaAssets.icons.actionSearch.svg(
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 controller: widget.value.controller,
                 hintText: widget.hintText,

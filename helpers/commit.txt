@@ -1,5 +1,4 @@
-Milestone: https://github.com/WAYA-MULTI-LINK/WAYA-PAY-CHAT-2.0-WAYAGRAM-FLUTTER-APP/milestone/1
-Task: #
+Sprint 3 (Chat and Social)
 
 Tasks Completed:
 N/A
