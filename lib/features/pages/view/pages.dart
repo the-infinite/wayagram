@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/pages/view/pages_for_you.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
@@ -45,8 +46,6 @@ class _PagesState extends ConsumerState<Pages>
             WayaDp(
               radius: 15.r,
             ),
-            // WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
-            // WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
             Gap(8)
           ],
         ),
@@ -76,14 +75,15 @@ class _PagesState extends ConsumerState<Pages>
             ),
             const Gap(20),
             _selectedIndex == 0 ? PagesForYou() : _selectedIndex == 1 ? FollowingPage() : ManagePages()
-            //AllOrders()
           ],
         ),
         floatingActionButton: SizedBox(
       height: 50,
       width: 50,
       child: WayaButton(
-        callback: () {},
+        callback: () {
+          WayaNav.toNamed('/createPost');
+        },
         height: 50,
         centerWidget: Center(
           child: Icon(

@@ -138,6 +138,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     });
   }
 
+
+
 // added fn to remove a choice
   void removeChoiceAtindex(int i) {
     List<Choice> allChoices = [];

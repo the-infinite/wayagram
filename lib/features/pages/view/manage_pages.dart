@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 
@@ -48,6 +49,7 @@ class _ManagePagesState extends ConsumerState<ManagePages> with SingleTickerProv
                   children: [
                     ListTile(
                       contentPadding: EdgeInsets.only(left: 0, right: 0),
+                      onTap: ()=> WayaNav.toNamed('/privatePage'),
                       leading: Image.asset(
                         index==0?'assets/images/pages/empire.png':
                         index==1? 'assets/images/pages/ms.png':index==2?'assets/images/pages/united.png':

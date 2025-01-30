@@ -24,6 +24,7 @@ class PageVm extends StateNotifier<PageState> {
 
     state = state.copyWith(pageName: TextEditingController(text:'' ));
     state = state.copyWith(pageDescription: TextEditingController(text:''));
+    state = state.copyWith(content: TextEditingController(text:''));
 
   }
 

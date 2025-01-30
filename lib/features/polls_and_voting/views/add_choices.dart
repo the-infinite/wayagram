@@ -29,6 +29,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
 
   Map<String, dynamic> formData = {};
 
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
@@ -61,12 +62,10 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
           children: [
             const Gap(10),
             Text(
-                //'${formData['pollTitle']}',
                 "${viewModel.pollTitle.text.capitalizeFirst}",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
-              //'${formData['pollDescription']}',
               '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
@@ -97,7 +96,6 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                           children: [
                             FormField<String>(validator: (value) {
                               if (viewModel.firstChoice.text.isEmpty) {
-                              //if (formData['firstChoice'].isEmpty) {
                                 return 'Choice ${index + 1} is required';
                               }
 
@@ -109,9 +107,6 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                   WayaTextFormField(
                                     keyboardType: TextInputType.text,
                                     controller: viewModel.choices[index].text,
-                                    // onChanged: (value){
-                                    //   formData['firstChoice'][index]  =  value;
-                                    // },
                                     hintText: 'Choice ${index + 1}',
                                     borderColor: formState.hasError &&
                                             viewModel.choices[index].text.text
@@ -154,8 +149,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                     hintText:
                                         'Why should people care? Give a short,\nengaging reason',
                                     borderColor: formState.hasError &&
-                                        formData['firstChoiceDescription'].isEmpty
-                                           // viewModel.firstChoiceDescription.text.isEmpty
+                                           viewModel.firstChoiceDescription.text.isEmpty
                                         ? wayaTheme.colorScheme.error
                                         : null,
                                   ),
@@ -217,11 +211,8 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                     left: 90,
                                   top: -4,
                                     child: InkWell(
-                                        onTap:(){
-                                        setState(() {
-                                          viewModel.choices[index].image == null;
-                                        });
-                                        },
+                                    onTap: () => ref.read(createPollVotingProvider.notifier)
+                          .removeChoiceAtindex(index),
                                         child: Image.asset('assets/images/bid/close.png', height: 16.h,)),
                                 )
                               ],),
