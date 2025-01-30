@@ -10,4 +10,4 @@ export 'waya_text_form_field.dart';
 export 'waya_select_field.dart';
 export 'waya_bottom_sheet_content.dart';
 export 'waya_paginated_select_field.dart';
-
+export 'waya_swiper.dart';

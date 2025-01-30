@@ -24,7 +24,13 @@ class ChatNotifier extends StateNotifier<ChatState> {
     return result;
   }
 
-  void setChat(String chat) {}
+  //? When you change the chat...
+  void setChat(String chat) {
+    state = state.copyWith(
+      chatId: chat,
+      messages: [],
+    );
+  }
 }
 
 final chatProvider = StateNotifierProvider<ChatNotifier, ChatState>((ref) {
