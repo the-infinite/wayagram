@@ -142,7 +142,7 @@ class Product extends BaseModel<Product>{
         options: json['options'],
         pickupAddress: json['pickupAddress'],
         rating: json['rating'],
-        discountPercentage: json['discountPercentage'],
+        discountPercentage: _parseToInt(json['discountPercentage']),
         shopId: json['shopId'],
         version: json['_v'],
         isDeleted: json['isDeleted'],
@@ -264,5 +264,13 @@ class Product extends BaseModel<Product>{
     );
   }
 
+ static int _parseToInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    if (value is String) {
+      return int.parse(value);
+    }
+    return 0;
+  }
 
 }

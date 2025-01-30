@@ -34,15 +34,18 @@ class SingleDeliveryRequestWidget extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    SvgPicture.asset(WayaAssets.icons.vanIcon.path, colorFilter: ColorFilter.mode(
-                        wayaTheme.colorScheme.primary200, BlendMode.srcIn),),
+                    SvgPicture.asset(
+                      WayaAssets.icons.vanIcon.path,
+                      colorFilter: ColorFilter.mode(
+                          wayaTheme.colorScheme.primary200, BlendMode.srcIn),
+                    ),
                     const Gap(4),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "#${data.userId.substring(0,6)}",
+                          "#${data.userId.substring(0, 6)}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontSize: 14),
@@ -97,31 +100,28 @@ class SingleDeliveryRequestViewModel extends ChangeNotifier {
   final Ref ref;
   SingleDeliveryRequestViewModel(this.ref);
 
-  Future<void> addDeliveryDetail(BuildContext context, DeliveryRequestData data) async {
-   if (context.mounted) {
-     await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AddDeliveryDetails(data: data);
-        });
-   }
+  Future<void> addDeliveryDetail(
+      BuildContext context, DeliveryRequestData data) async {
+    if (context.mounted) {
+      await WayaUtils.showModalSheet(context,
+          child: AddDeliveryDetails(data: data));
+    }
   }
 
-  Future<void> sellerOrderAction(BuildContext context, DeliveryRequestData data) async {
-   if (context.mounted) {
-     WayaUtils.showNotice(
-        context: context,
-        buttonText: 'Add Delivery Details',
-        
-        title: 'Populate Delivery Details',
-        message:
-            "Add the delivery price and date of delivery for this order so the customer can review and pay",
-        onPress: () async {
-          await addDeliveryDetail(context, data);
-        },
-       
-        icon: Image.asset('assets/images/shop/delivery-van.png'));
-   }
+  Future<void> sellerOrderAction(
+      BuildContext context, DeliveryRequestData data) async {
+    if (context.mounted) {
+      WayaUtils.showNotice(
+          context: context,
+          buttonText: 'Add Delivery Details',
+          title: 'Populate Delivery Details',
+          message:
+              "Add the delivery price and date of delivery for this order so the customer can review and pay",
+          onPress: () async {
+            await addDeliveryDetail(context, data);
+          },
+          icon: Image.asset('assets/images/shop/delivery-van.png'));
+    }
   }
 }
 

@@ -136,7 +136,7 @@ class WayaAppRoutes {
     WayaNotifications.route: () => WayaNotifications(),
     NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
     EventView.route: () => EventView(),
-    AddEvent.route: () => AddEvent()
+    AddEvent.route: () => AddEvent(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

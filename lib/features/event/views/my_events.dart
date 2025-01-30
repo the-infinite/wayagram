@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 class MyEvents extends ConsumerStatefulWidget {
@@ -23,7 +25,9 @@ class _MyEventState extends ConsumerState<MyEvents> {
         padding: EdgeInsets.all(30),
         child: EmptyState(
             hasButton: true,
-            onTap: (){},
+            onTap: () {
+              WayaNav.toNamed(AddEvent.route);
+            },
             buttontext: 'Create an Event',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
