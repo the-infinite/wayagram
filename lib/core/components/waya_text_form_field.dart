@@ -11,6 +11,7 @@ class WayaTextFormField extends StatefulWidget {
   final TextInputType keyboardType;
   final String hintText;
   final int? line;
+  final int? maxLines;
   final int? maxLength;
   final bool hasError;
   final String? helperText;
@@ -32,12 +33,13 @@ class WayaTextFormField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final void Function(String?)? onSaved;
   final Iterable<String>? autofillHints;
-  final TextStyle? hintStyle;
+  final TextStyle? hintStyle, style;
   final bool? obscureText;
   final VoidCallback? callback;
   final bool isPassword;
   final VoidCallback? onTap;
   final bool? isReadOnly;
+  final bool? isDense;
 
   const WayaTextFormField({
     super.key,
@@ -47,6 +49,9 @@ class WayaTextFormField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     required this.hintText,
     this.line = 1,
+    this.maxLines,
+    this.isDense,
+    this.style = WayaTextStyles.labelMedium,
     this.maxLength,
     this.hasError = false,
     this.onTap,
@@ -121,7 +126,7 @@ class _AppFieldState extends State<WayaTextFormField> {
       controller: widget.controller,
       keyboardType: widget.keyboardType,
       obscureText: widget.obscureText ?? isObscure,
-      maxLines: widget.line ?? 1,
+      maxLines: widget.maxLines ?? widget.line ?? 1,
       maxLength: widget.maxLength,
       minLines: widget.line ?? 1,
       // validator: widget.validator, // Commented out to handle validation manually
@@ -131,38 +136,31 @@ class _AppFieldState extends State<WayaTextFormField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       textInputAction: widget.textInputAction,
       onSaved: widget.onSaved,
+      style: widget.style,
       decoration: InputDecoration(
+        isDense: widget.isDense,
         errorBorder: OutlineInputBorder(
-          borderSide: widget.showBorder
-              ? BorderSide(color: wayaTheme.error200, width: 1.w)
-              : BorderSide.none,
+          borderSide: widget.showBorder ? BorderSide(color: wayaTheme.error200, width: 1.w) : BorderSide.none,
           borderRadius: BorderRadius.circular(8.r),
         ),
         border: OutlineInputBorder(
           borderSide: widget.showBorder
-              ? BorderSide(
-                  color: widget.borderColor ?? wayaTheme.greyColor300,
-                  width: 1.w)
+              ? BorderSide(color: widget.borderColor ?? wayaTheme.greyColor300, width: 1.w)
               : BorderSide.none,
           borderRadius: BorderRadius.circular(8.r),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: widget.showBorder
-              ? BorderSide(
-                  color: widget.borderColor ?? wayaTheme.greyColor300,
-                  width: 1.w)
+              ? BorderSide(color: widget.borderColor ?? wayaTheme.greyColor300, width: 1.w)
               : BorderSide.none,
           borderRadius: BorderRadius.circular(8.r),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: widget.showBorder
-              ? BorderSide(color: wayaTheme.primary, width: 1.w)
-              : BorderSide.none,
+          borderSide: widget.showBorder ? BorderSide(color: wayaTheme.primary, width: 1.w) : BorderSide.none,
           borderRadius: BorderRadius.circular(8.r),
         ),
         contentPadding: widget.padding ?? EdgeInsets.fromLTRB(12, 1, 12, 1),
-        fillColor:
-            widget.fillColor ?? Theme.of(context).colorScheme.transparent,
+        fillColor: widget.fillColor ?? Theme.of(context).colorScheme.transparent,
         filled: true,
         prefixIcon: widget.prefixIcon,
         prefixIconColor: widget.prefixIconColor,
@@ -171,9 +169,7 @@ class _AppFieldState extends State<WayaTextFormField> {
             ? IconButton(
                 onPressed: () => toggleObscure(),
                 icon: Icon(
-                  isObscure
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
+                  isObscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                   size: 20,
                   color: widget.suffixIconColor ?? wayaTheme.greyColor500,
                 ),
