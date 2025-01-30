@@ -51,6 +51,7 @@ dependencies:
   percent_indicator: ^4.2.4
   slide_countdown: ^2.0.2
   coast_audio: ^1.0.0
+  flutter_webrtc: ^0.12.7
   rtmp_broadcaster:
     git: https://github.com/OlJohnny/flutter_rtmp_broadcaster.git
 
