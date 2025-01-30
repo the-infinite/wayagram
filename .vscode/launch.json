@@ -25,13 +25,13 @@
 			"name": "Run Flutter Gen (macOS and Linux)",
 			"request": "launch",
 			"command": "${workspaceFolder}/helpers/build.sh",
-			"type": "node-terminal"
+			"type": "shell"
 		},
 		{
 			"name": "Run Flutter Gen (Windows)",
 			"request": "launch",
 			"command": "${workspaceFolder}/helpers/build.bat",
-			"type": "node-terminal"
+			"type": "shell"
 		}
 	]
 }

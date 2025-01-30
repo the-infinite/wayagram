@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
-import 'package:get/get.dart'; // Add this import for GetX
+// Add this import for GetX
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
+import 'package:wayagram/features/chat/view/default.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/more/views/more.dart';
 import 'package:wayagram/features/quotation/buyer/views/waya_buyer_quotation.dart';
-import 'package:wayagram/features/shop/buyer/views/waya_buyer.dart';
-import 'package:wayagram/features/shop/seller/views/waya_seller.dart';
 import 'package:wayagram/features/shop/views/waya_shop.dart';
 
 import '../quotation/seller/views/waya_seller_quotation.dart';
@@ -28,7 +27,7 @@ class BottomView extends ConsumerStatefulWidget {
 }
 
 class _BottomViewState extends ConsumerState<BottomView> {
-   int _selectedIndex = 0;
+  int _selectedIndex = 0;
   bool _isInitialized = false;
 
   @override
@@ -38,8 +37,6 @@ class _BottomViewState extends ConsumerState<BottomView> {
       ref.read(profileVmProvider.notifier).refetchUserData();
     });
   }
-
-
 
   @override
   void didChangeDependencies() {
@@ -64,16 +61,15 @@ class _BottomViewState extends ConsumerState<BottomView> {
             ),
             title: Text(
               'Confirm Exit?',
-              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.customBlack),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .wayaCopyWith(fontSize: 16, color: Theme.of(context).colorScheme.customBlack),
             ),
             content: Text(
               'Are you sure you want to exit?',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.greyColor700),
+                  fontSize: 14, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor700),
             ),
             actions: <Widget>[
               SizedBox(
@@ -113,18 +109,16 @@ class _BottomViewState extends ConsumerState<BottomView> {
       WayaShop(),
       Explore(),
       userType == 'PERSONAL' ? WayaBuyerQuotation() : WayaSellerQuotation(),
-      Explore(),
+      ConversationScreen(),
       MoreView(),
     ];
 
-    final List<BottomNavigationBarItem> bottomNavigationItem =
-        viewModel.barItems.asMap().entries.map((entry) {
+    final List<BottomNavigationBarItem> bottomNavigationItem = viewModel.barItems.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value;
 
-      final itemColor = (_selectedIndex == index)
-          ? wayaTheme.colorScheme.customPrimary
-          : wayaTheme.colorScheme.customBlack;
+      final itemColor =
+          (_selectedIndex == index) ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.customBlack;
       return BottomNavigationBarItem(
           icon: SvgPicture.asset(
             item.icon,
@@ -133,6 +127,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
           label: item.label);
     }).toList();
 
+    // This is fine.
     return PopScope(
       canPop: false,
       onPopInvoked: (popDisposition) async {
@@ -152,23 +147,26 @@ class _BottomViewState extends ConsumerState<BottomView> {
         bottomNavigationBar: Container(
           decoration: BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor),
           child: BottomNavigationBar(
-              elevation: 0,
-              currentIndex: _selectedIndex,
-              onTap: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-              type: BottomNavigationBarType.fixed,
-              selectedLabelStyle: TextStyle().wayaCopyWith(
-                  color: wayaTheme.colorScheme.customPrimary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600),
-              unselectedLabelStyle: TextStyle().wayaCopyWith(
-                  color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600),
-              items: bottomNavigationItem),
+            elevation: 0,
+            currentIndex: _selectedIndex,
+            onTap: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            type: BottomNavigationBarType.fixed,
+            selectedLabelStyle: TextStyle().wayaCopyWith(
+              color: wayaTheme.colorScheme.customPrimary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+            unselectedLabelStyle: TextStyle().wayaCopyWith(
+              color: wayaTheme.colorScheme.customBlack,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+            items: bottomNavigationItem,
+          ),
         ),
       ),
     );

@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
 import 'package:wayagram/core/service/api_service/dio_exceptions.dart';
-import 'package:wayagram/core/service/api_service/dio_interceptor.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
@@ -36,22 +35,19 @@ class DioHttpClient implements WayaHttpClientInterface {
       receiveTimeout: const Duration(seconds: 30),
     );
     final dio = Dio(options);
-  //  dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
+    //  dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
     return dio;
   }
 
   @override
   Future<WayaRequestResponse> getHttp(String route,
-      {Map<String, dynamic>? body,
-      Map<String, dynamic>? params,
-      bool formdata = false,
-      dynamic token}) async {
+      {Map<String, dynamic>? body, Map<String, dynamic>? params, bool formdata = false, dynamic token}) async {
     await _setHeader(
       formdata: formdata,
     );
     params?.removeWhere((key, value) => value == null);
     final fullRoute = '$baseURL$route';
-     _logger.i('fullRoute: $fullRoute');
+    _logger.i('fullRoute: $fullRoute');
     return _makeRequest(dio.get(
       fullRoute,
       data: body,
@@ -87,8 +83,7 @@ class DioHttpClient implements WayaHttpClientInterface {
         _showLoadingProgress(count, total);
       },
       onReceiveProgress: ((count, total) {
-        if (onRecieveProgress != null)
-          onRecieveProgress(count: count, total: total);
+        if (onRecieveProgress != null) onRecieveProgress(count: count, total: total);
         _showLoadingProgress(count, total);
       }),
       queryParameters: params,
@@ -180,13 +175,17 @@ class DioHttpClient implements WayaHttpClientInterface {
       print('got here');
       _logger.e('statusCode: ${e.response}');
       if (e.response != null) {
-        _logger.e('message: ${e.response?.data['message'] ?? 'Unknown error'}');
-        _logger.e('error: ${e.response?.data['errors']}');
+        var message = 'An unknown error occurred';
 
+        try {
+          message = e.response?.data['errors'] != null ? e.response?.data['errors'][0] : e.response?.data['message'];
+          _logger.e('errors: ${e.response?.data['errors']}');
+        } catch (_) {}
+        _logger.e('message: $message, ${e.response?.data}');
+
+        // This is fine
         _snackBarService.showCustomSnackbar(
-          message: e.response?.data['errors'] != null
-              ? e.response?.data['errors'][0]
-              : e.response?.data['message'] ?? 'An error occurred',
+          message: message,
           variant: SnackbarType.failure,
         );
       }
