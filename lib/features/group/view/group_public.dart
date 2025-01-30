@@ -110,7 +110,7 @@ class _GroupPublicState extends ConsumerState<GroupPublic>
           const Gap(10),
           Row(
             children: [
-              actionType('7k', 'Members'),
+              actionType('7k', 'Members', onPressed: ()=> WayaNav.toNamed('/membersScreen')),
               const Gap(10),
               actionType('600', 'Posts'),
             ],
@@ -160,22 +160,27 @@ class _GroupPublicState extends ConsumerState<GroupPublic>
         )
     );
   }
-  actionType(txt, txt2){
+  actionType(txt, txt2, {onPressed}){
     final wayaTheme = Theme.of(context);
-    return Row(
-      children: [
-        Text(
-            txt,
-            style: wayaTheme.textTheme.bodySmall),
-        const Gap(3),
-        Text(
-          txt2,
-          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: Theme.of(context).colorScheme.greyColor500 ),
-        ),
-      ],
+    return InkWell(
+      splashFactory: NoSplash.splashFactory,
+      splashColor: Colors.transparent,
+      onTap: onPressed,
+      child: Row(
+        children: [
+          Text(
+              txt,
+              style: wayaTheme.textTheme.bodySmall),
+          const Gap(3),
+          Text(
+            txt2,
+            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: Theme.of(context).colorScheme.greyColor500 ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -135,12 +136,14 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
 
   }
 
-  actionType(txt, img,){
+  actionType(txt, img,  {onPressed}){
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.asset(img, height: 32.h,),
+        InkWell(
+            onTap: onPressed,
+            child: Image.asset(img, height: 32.h,)),
         Gap(5),
         Padding(
           padding: const EdgeInsets.only(top: 8),
@@ -178,12 +181,17 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
             Image.asset('assets/images/polls/menu.png', height: 32.h,),
 
           ],),
-          subtitle:  Text(
-            '48.6k Followers',
-            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Theme.of(context).colorScheme.greyColor500 ),
+          subtitle:  InkWell(
+            splashFactory: NoSplash.splashFactory,
+            splashColor: Colors.transparent,
+            onTap: ()=> WayaNav.toNamed('/mutualPage') ,
+            child: Text(
+              '48.6k Followers',
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.greyColor500 ),
+            ),
           ),),
         WayaRichText(title1: 'Hello everyone, I’m trying to be diligent and sharing with the tribe as! ',
             title2: '🚀 #TechLife #Productivity'),
@@ -194,7 +202,9 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
           children: [
             actionType('346 Likes', 'assets/images/pages/like.png'),
             actionType('0 Comments', 'assets/images/pages/comment.png'),
-            actionType('5 Shares', 'assets/images/pages/share.png'),
+            actionType('5 Shares', 'assets/images/pages/share.png', onPressed: (){
+              Share.share('Shares');
+            }),
             Image.asset('assets/images/pages/save.png', height: 32.h,),
           ],
         ),

@@ -28,8 +28,6 @@ class CreatePage extends ConsumerStatefulWidget {
 class _CreatePageState extends ConsumerState<CreatePage> {
   final _formKey = GlobalKey<FormState>();
 
-  Map<String, dynamic> formData = {};
-
   bool sel =  false;
   bool sel2 =  false;
 

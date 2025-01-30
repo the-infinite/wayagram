@@ -15,6 +15,8 @@ import 'package:wayagram/features/group/view/group_public.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
+import 'package:wayagram/features/pages/view/create_post.dart';
+import 'package:wayagram/features/pages/view/mutual_page.dart';
 import 'package:wayagram/features/pages/view/private_page.dart';
 import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
@@ -156,6 +158,8 @@ class WayaAppRoutes {
     PrivatePage.route:()=> PrivatePage(),
     GroupPublic.route: ()=> GroupPublic(),
     MembersScreen.route:()=> MembersScreen(),
+    CreatePost.route: ()=> CreatePost(),
+    MutualPage.route: ()=> MutualPage(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

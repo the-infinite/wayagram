@@ -87,7 +87,9 @@ class MoreVm {
           asset: WayaAssets.icons.mFollow.path,
           content: "Manage your following, followers in one place.",
           title: "Followers & Following",
-          onTap: () {}),
+          onTap: () {
+            WayaNav.toNamed('/mutualPage',arguments: 'more');
+          }),
       MoreOptionModel(
           asset: WayaAssets.icons.mSupport.path,
           content: "For assistance, please reach out to our support team.",
