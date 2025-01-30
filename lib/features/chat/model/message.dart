@@ -22,6 +22,7 @@ class MessageModel {
   final String conversationId;
   final User? sender;
   final String senderId;
+  final MessageModel? replyTo;
   final String? body;
   final List<String>? files;
   final String? voiceMessage;
@@ -29,6 +30,8 @@ class MessageModel {
   final MessageType type;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final DateTime? readAt;
+  final DateTime? deliveredAt;
 
   // This is fine.
   const MessageModel({
@@ -43,6 +46,9 @@ class MessageModel {
     required this.type,
     required this.createdAt,
     required this.updatedAt,
+    this.replyTo,
+    this.readAt,
+    this.deliveredAt,
   });
 
   String get contentDescription {
@@ -51,6 +57,10 @@ class MessageModel {
       MessageType.location => "Location",
       _ => body!,
     };
+  }
+
+  String get senderName {
+    return sender == null ? "WayaGram User" : "${sender!.firstName} ${sender!.lastName}";
   }
 
   // This is fine.

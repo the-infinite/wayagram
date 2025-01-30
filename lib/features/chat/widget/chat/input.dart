@@ -32,12 +32,14 @@ class ChatInputController {
   /// A utility function used to dispose all the controllers that this controller
   /// is bound to.
   void dispose() {
-    _isMedia.dispose();
-    _files.dispose();
-    _currentType.dispose();
-    _replyTo.dispose();
-    _textController.dispose();
-    _canSend.dispose();
+    try {
+      _isMedia.dispose();
+      _files.dispose();
+      _currentType.dispose();
+      _textController.dispose();
+      _canSend.dispose();
+      _replyTo.dispose();
+    } catch (_) {}
   }
 
   /// A helper function used to set the message that this input widget is
@@ -83,10 +85,10 @@ class ChatInputWidget extends StatelessWidget {
           //? Extra, the divider.
           Divider(color: WayaColors.greyColor200, height: 0),
 
-          //? First, some space before the reply-to widget.
+          //? First, some space before the reply-to
           const Gap(6),
 
-          //? Second, the reply to widget...
+          //? Second, the reply to ..
           ValueListenableBuilder(
             valueListenable: controller._replyTo,
             builder: (context, message, _) {
@@ -96,11 +98,12 @@ class ChatInputWidget extends StatelessWidget {
               //? Since it is defined...
               return ChatReplyToWidget(
                 message: message,
+                controller: controller,
               );
             },
           ),
 
-          //? Third, the space after the reply to widget.
+          //? Third, the space after the reply to
           const Gap(6),
 
           //? Finally, the row for actual chat controls.
@@ -130,7 +133,7 @@ class ChatInputWidget extends StatelessWidget {
                   // Some space.
                   const Gap(5),
 
-                  //? Second, the input text widget.
+                  //? Second, the input text
                   Expanded(
                     child: WayaTextFormField(
                       hintText: "Write a message here",
