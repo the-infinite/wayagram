@@ -82,7 +82,7 @@ class AddEventState {
         startDate: startDate ?? this.startDate,
         startTime: startTime ?? this.startTime,
         endDate: endDate ?? this.endDate,
-        eventImage:eventImage ?? this.eventImage,
+        eventImage: eventImage ?? this.eventImage,
         endTime: endTime ?? this.endTime,
         startDateString: startDateString ?? this.startDateString,
         endDateString: endDateString ?? this.endDateString);
@@ -130,3 +130,5 @@ class AddEventState {
 
   // add the creation model
 }
+
+const eventReport = ['Spam or misleading content','Inappropriate Content', 'Fraudulent Activity', 'Violates terms and conditions', 'Other'];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/event/widgets/about_event.dart';
 import 'package:gap/gap.dart';
@@ -20,8 +21,10 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Expanded(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+     
+        child: ListView(
+      //crossAxisAlignment: CrossAxisAlignment.start,
+     
       children: [
         const Gap(15),
         GridView(
@@ -29,7 +32,7 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 0,
-              childAspectRatio: 3 / 4,
+              childAspectRatio: 1.8,
               crossAxisSpacing: 8),
           children: [
             InventoryWidget(
@@ -120,7 +123,7 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
             ),
           ],
         ),
-        const Gap(30)
+       Gap(context.height * 0.5)
       ],
     ));
   }

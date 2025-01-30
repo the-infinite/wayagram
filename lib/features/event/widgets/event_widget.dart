@@ -7,6 +7,8 @@ import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/shared/components/engagement_range.dart';
 
 class EventWidget extends ConsumerWidget {
@@ -93,7 +95,9 @@ class EventWidget extends ConsumerWidget {
                         height: 6.h,
                       ),
                       WayaButton(
-                        callback: () {},
+                        callback: () {
+                          WayaNav.toNamed(EventDetail.route);
+                        },
                         color: wayaTheme.colorScheme.primar50,
                         textColor: wayaTheme.colorScheme.customPrimary,
                         text: "View Event",

@@ -127,7 +127,7 @@ class Product extends BaseModel<Product>{
         name: json['name'],
         description: json['description'],
         price: json['price'],
-        stockQuantity: json['stockQuantity'],
+        stockQuantity: _parseToInt(json['stockQuantity']),
         images: List<String>.from(json['images']),
         height: json['height'],
         width: json['width'],

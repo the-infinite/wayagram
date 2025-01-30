@@ -7,6 +7,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/widgets/event_widget.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
@@ -27,7 +29,9 @@ class _AllEventsState extends ConsumerState<AllEvents> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         WayaButton(
-          callback: () {},
+          callback: () {
+            WayaNav.toNamed(AddEvent.route);
+          },
           color: wayaTheme.colorScheme.primar50,
           centerWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +56,7 @@ class _AllEventsState extends ConsumerState<AllEvents> {
         const Gap(10),
         FilterWidget(
           search: TextEditingController(),
-          hintText: 'Search Shop',
+          hintText: 'Search Event',
         ),
         const Gap(10),
         GroupedWidgetHeader(
