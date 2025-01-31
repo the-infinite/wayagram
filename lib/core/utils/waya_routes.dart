@@ -11,11 +11,14 @@ import 'package:wayagram/features/general_settings/profile/view/edit_profile_pag
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
-import 'package:wayagram/features/group/view/group_public.dart';
+import 'package:wayagram/features/group/view/private_group.dart';
+import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
+import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/pages/view/create_post.dart';
+import 'package:wayagram/features/pages/view/edit_page_info.dart';
 import 'package:wayagram/features/pages/view/mutual_page.dart';
 import 'package:wayagram/features/pages/view/private_page.dart';
 import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';
@@ -156,10 +159,13 @@ class WayaAppRoutes {
     Pages.route: ()=> Pages(),
     Suggestion.route: ()=> Suggestion(),
     PrivatePage.route:()=> PrivatePage(),
-    GroupPublic.route: ()=> GroupPublic(),
+    PublicGroup.route: ()=> PublicGroup(),
     MembersScreen.route:()=> MembersScreen(),
     CreatePost.route: ()=> CreatePost(),
     MutualPage.route: ()=> MutualPage(),
+    EditPageInfo.route: ()=> EditPageInfo(),
+    AddTeamMember.route: ()=> AddTeamMember(),
+    PrivateGroup.route: ()=> PrivateGroup(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

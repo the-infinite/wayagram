@@ -15,15 +15,15 @@ import 'package:wayagram/features/pages/view/pages_for_you.dart';
 import 'package:wayagram/features/pages/view/team_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
-class GroupPublic extends ConsumerStatefulWidget {
-  static const route = '/groupPublic';
-  const GroupPublic({super.key});
+class PublicGroup extends ConsumerStatefulWidget {
+  static const route = '/publicGroup';
+  const PublicGroup({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _GroupPublicState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PublicGroupState();
 }
 
-class _GroupPublicState extends ConsumerState<GroupPublic>
+class _PublicGroupState extends ConsumerState<PublicGroup>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 

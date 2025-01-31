@@ -19,6 +19,7 @@ class WayaColors {
   //
   static const error200 = Color(0xffE26E6A);
   static const error = Color(0xffD42620);
+  static const error50 = Color(0xffFBEAE9);
   static const error500 = Color(0xffCB1A14);
   static const error700 = Color(0xff9E0A05);
 
