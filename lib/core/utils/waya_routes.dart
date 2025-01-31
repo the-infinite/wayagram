@@ -3,10 +3,10 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
-import 'package:wayagram/features/chat/view/chat.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
+import 'package:wayagram/features/chat/view/chat.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
@@ -151,8 +151,30 @@ class WayaAppRoutes {
     ProductsViewPage.route: () => ProductsViewPage(),
     WayaNotifications.route: () => WayaNotifications(),
     NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
+    EventView.route: () => EventView(),
+    AddEvent.route: () => AddEvent(),
+    EventDetail.route: () => EventDetail(),
+    CreatePage.route: () => CreatePage(),
+    CreateGroup.route: () => CreateGroup(),
+    ConfirmPageDetails.route: () => ConfirmPageDetails(),
+    ConfirmGroupDetails.route: () => ConfirmGroupDetails(),
+    SuccessPage.route: () => SuccessPage(),
+    SuccessGroup.route: () => SuccessGroup(),
+    Pages.route: ()=> Pages(),
+    Suggestion.route: ()=> Suggestion(),
+    PrivatePage.route:()=> PrivatePage(),
+    GroupPublic.route: ()=> GroupPublic(),
+    MembersScreen.route:()=> MembersScreen(),
+    CreatePost.route: ()=> CreatePost(),
+    MutualPage.route: ()=> MutualPage(),
+
   };
 
+  /// Helper that shows an example of the generator route pattern with GetX and
+  /// a little bit of hard coded magic.
+  static String getSingleChatRoute(String id) => "${SingleChatScreen.route}?id=$id";
+
+  /// This is fine.
   static List<GetPage> get getPages => routes.entries.map((entry) {
         return GetPage(
           name: entry.key,
