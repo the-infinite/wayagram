@@ -45,7 +45,20 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
           description: TextEditingController(text: ''),
           text: TextEditingController(text: ''))
     ]);
+
+    state = state.copyWith(pollTitle: TextEditingController(text:'' ));
+    state = state.copyWith(pollDescription: TextEditingController(text:''));
+    state = state.copyWith(pollCompanyDescription: TextEditingController(text:''));
+    state = state.copyWith(voteNumber: TextEditingController(text:''));
+    state = state.copyWith(votePrice: TextEditingController(text:''));
+    state = state.copyWith(firstChoice: TextEditingController(text:''));
+    state = state.copyWith(firstChoiceDescription: TextEditingController(text:''));
+    state = state.copyWith(secondChoice: TextEditingController(text:''));
+    state = state.copyWith(secondChoiceDescription: TextEditingController(text:''));
+
   }
+
+
 
   void focusChanged(bool hasFocus) {
     state = state.copyWith(isFocused: hasFocus);
@@ -66,6 +79,13 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     state = state.copyWith(choices: allChoices);
   }
+
+
+
+  void reset() {
+    state = CreatePollVotingState();
+  }
+
 
 
   Future<void> showDatePickerDialog(BuildContext context) async {
@@ -117,6 +137,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       }
     });
   }
+
+
 
 // added fn to remove a choice
   void removeChoiceAtindex(int i) {

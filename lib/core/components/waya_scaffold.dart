@@ -26,25 +26,26 @@ class WayaScaffold extends ConsumerWidget {
   final PreferredSizeWidget? appBar;
   final VoidCallback? onTapBackButton;
   final Widget? progressIndicator;
-  const WayaScaffold(
-      {super.key,
-      this.resizeToAvoidBottomInset,
-      this.automaticallyImplyLeading = true,
-      this.removeAppBar = false,
-      this.onRefresh,
-      required this.body,
-      this.isLoading = false,
-      this.padding,
-      this.floatingActionButton,
-      this.title,
-      this.appBarTrailing,
-      this.isScrollable = false,
-      this.color,
-      this.appBar,
-      this.backgroundColor,
-      this.bottomNavigationBar,
-      this.progressIndicator,
-      this.onTapBackButton});
+  const WayaScaffold({
+    super.key,
+    this.resizeToAvoidBottomInset,
+    this.automaticallyImplyLeading = true,
+    this.removeAppBar = false,
+    this.onRefresh,
+    required this.body,
+    this.isLoading = false,
+    this.padding,
+    this.floatingActionButton,
+    this.title,
+    this.appBarTrailing,
+    this.isScrollable = false,
+    this.color,
+    this.appBar,
+    this.backgroundColor,
+    this.bottomNavigationBar,
+    this.progressIndicator,
+    this.onTapBackButton,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

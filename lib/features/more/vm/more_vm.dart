@@ -23,13 +23,18 @@ class MoreVm {
           asset: WayaAssets.icons.mPages.path,
           content: "Create pages so you can manage different activities",
           title: "Pages",
-          onTap: () {}),
+          onTap: () {
+            WayaNav.toNamed('/createPage');
+
+          }),
       MoreOptionModel(
           asset: WayaAssets.icons.mGroup.path,
           content:
               "Create groups and manage who is following you and who you follow.",
           title: "Group",
-          onTap: () {}),
+          onTap: () {
+            WayaNav.toNamed('/createGroup');
+          }),
       MoreOptionModel(
           asset: WayaAssets.icons.mShop.path,
           content:
@@ -87,7 +92,9 @@ class MoreVm {
           asset: WayaAssets.icons.mFollow.path,
           content: "Manage your following, followers in one place.",
           title: "Followers & Following",
-          onTap: () {}),
+          onTap: () {
+            WayaNav.toNamed('/mutualPage',arguments: 'more');
+          }),
       MoreOptionModel(
           asset: WayaAssets.icons.mSupport.path,
           content: "For assistance, please reach out to our support team.",

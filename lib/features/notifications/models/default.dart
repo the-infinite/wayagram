@@ -1,5 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
+// @sekani50 @Darlington885 Don't comment out the lines of code that use Json Serializable
+// just run the flutter gen command.
+
 part 'default.g.dart';
 
 enum NotificationPriority {

@@ -30,8 +30,7 @@ class WayaNav<T> {
     );
   }
 
-    static void toNamed(String route,
-      {dynamic arguments, Function(dynamic)? onResult}) {
+  static void toNamed(String route, {dynamic arguments, Function(dynamic)? onResult}) {
     Get.toNamed(
       route,
       arguments: arguments,
@@ -55,4 +54,6 @@ class WayaNav<T> {
       arguments: arguments,
     );
   }
+
+  static Map<String, String?> get search => Get.parameters;
 }

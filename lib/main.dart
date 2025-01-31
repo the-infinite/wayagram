@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +14,9 @@ import 'package:wayagram/core/utils/waya_routes.dart';
 void main() async {
   //? First, initialize everything that should be initialized.
   await GetStorage.init();
+  try {
+    //Firebase.initializeApp();
+  } catch (_) {}
   await PushNotifications.init();
   WayaSnackBar.setUpSnackBarUI();
 
