@@ -19,6 +19,10 @@ class WayaDateHelper {
     return DateFormat("dd MMM, yyyy 'at' hh:mm a").format(timestamp.toLocal());
   }
 
+  static String getTimestamp(DateTime timestamp) {
+    return DateFormat("hh:mm a").format(timestamp.toLocal());
+  }
+
   static String getDailyTimestamp(DateTime timestamp) {
     return DateFormat("dd MMM, yyyy").format(timestamp.toLocal());
   }

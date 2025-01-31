@@ -7,10 +7,16 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
+import 'package:wayagram/features/explore/widgets/donation_widget.dart';
+import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
+import 'package:wayagram/features/explore/widgets/moments_widget.dart';
+import 'package:wayagram/features/explore/widgets/pages_card.dart';
+import 'package:wayagram/features/explore/widgets/polls_card.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
@@ -19,6 +25,7 @@ import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
+import 'package:wayagram/features/explore/widgets/chat_card.dart';
 
 class Explore extends ConsumerStatefulWidget {
   const Explore({super.key});
@@ -104,8 +111,30 @@ class _ExploreState extends ConsumerState<Explore> {
             const Gap(20),
             ExploreOurServices(),
             const Gap(25),
+            Text("Moments", style: wayaTheme.textTheme.titleLarge),
+            SizedBox(
+              height: 80,
+              child: ListView.builder(
+                itemCount: 8,
+                scrollDirection: Axis.horizontal,
+             
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: [
+                      const Gap(6),
+                      MomentsWidget(
+                        isCreate: index == 0,
+                      ),
+                      const Gap(6)
+                    ],
+                  );
+                }),
+            ),
+            const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
+                onTap: () {},
+                subTitle: 'Have a buy request, just create a quote',
+                title: 'Get Quotation'),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
@@ -121,7 +150,9 @@ class _ExploreState extends ConsumerState<Explore> {
                   Text(
                     "Create a Quote",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16),
                   ),
                 ],
               ),
@@ -145,7 +176,8 @@ class _ExploreState extends ConsumerState<Explore> {
                 title: 'Shop'),
             const Gap(10),
             CategoriesFilterWidget(
-              setCategory: (value) => ref.read(shopVmProvider.notifier).setCategory(value),
+              setCategory: (value) =>
+                  ref.read(shopVmProvider.notifier).setCategory(value),
             ),
 
             const Gap(25),
@@ -155,8 +187,168 @@ class _ExploreState extends ConsumerState<Explore> {
                     products: notifier.filteredProducts.length > 2
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
+
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Support a course that matters',
+                title: 'Donations'),
+
+            const Gap(25),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: 2,
+                itemBuilder: (context, index) {
+                  return DonationWidget();
+                }),
+            const Gap(25),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Based on your interests',
+                title: 'Discover'),
+
+            const Gap(25),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'View and manage pages',
+                title: 'Pages'),
+            const Gap(25),
+            Text(
+              "My Pages",
+              style: wayaTheme.textTheme.bodyMedium,
+            ),
+            const Gap(10),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: groupList.length,
+                itemBuilder: (context, index) {
+                  return PagesCard(group: groupList[index]);
+                }),
+            Text(
+              "Pages you follow",
+              style: wayaTheme.textTheme.bodyMedium,
+            ),
+            const Gap(10),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: groupList.length,
+                itemBuilder: (context, index) {
+                  return PagesCard(isFollowing: true, group: groupList[index]);
+                }),
+            Text(
+              "Recommended or you",
+              style: wayaTheme.textTheme.bodyMedium,
+            ),
+            const Gap(10),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: groupList.length,
+                itemBuilder: (context, index) {
+                  return PagesCard(isFollow: true, group: groupList[index]);
+                }),
+            const Gap(25),
+
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'View and manage groups',
+                title: 'Groups'),
+            const Gap(25),
+            Text(
+              "My Groups",
+              style: wayaTheme.textTheme.bodyMedium,
+            ),
+            const Gap(10),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: groupList.length,
+                itemBuilder: (context, index) {
+                  return PagesCard(group: groupList[index]);
+                }),
+            Text(
+              "Groups you joined",
+              style: wayaTheme.textTheme.bodyMedium,
+            ),
+            const Gap(10),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: groupList.length,
+                itemBuilder: (context, index) {
+                  return PagesCard(
+                    group: groupList[index],
+                    isGroupMember: true,
+                  );
+                }),
+            Text(
+              "Recommended groups",
+              style: wayaTheme.textTheme.bodyMedium,
+            ),
+            const Gap(10),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: groupList.length,
+                itemBuilder: (context, index) {
+                  return PagesCard(
+                    group: groupList[index],
+                    isRecommendedGroup: true,
+                  );
+                }),
+            const Gap(25),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Join upcoming activities',
+                title: 'Events'),
+            const Gap(25),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: eventList.length,
+                itemBuilder: (context, index) {
+                  return EventCard(event: eventList[index]);
+                }),
+            const Gap(25),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Join upcoming activities',
+                title: 'Polls & Voting'),
+
+            const Gap(25),
+            Text(
+              "My Polls",
+              style: wayaTheme.textTheme.bodyMedium,
+            ),
+            const Gap(10),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: pollList.length,
+                itemBuilder: (context, index) {
+                  return PollsCard(poll: pollList[index]);
+                }),
+            const Gap(25),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Connect with friends and communities',
+                title: 'Chats & Calls'),
+            const Gap(25),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: chatList.length,
+                itemBuilder: (context, index) {
+                  return ChatCard(chat: chatList[index]);
+                }),
+            const Gap(25),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Join Upcoming Activities',
+                title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),

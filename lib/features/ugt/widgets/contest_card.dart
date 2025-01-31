@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/ugt/widgets/about_ugt_widget.dart';
@@ -204,79 +205,6 @@ class ContestCard extends StatelessWidget {
           ),
         ),
         const Gap(30)
-      ],
-    );
-  }
-}
-
-class VoteItem extends StatelessWidget {
-  final Vote vote;
-  final int index;
-  const VoteItem({super.key, required this.vote, required this.index});
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    final wayaTheme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text(
-          vote.name,
-          style: TextStyle().wayaCopyWith(
-              color: wayaTheme.colorScheme.customBlack,
-              fontSize: 14,
-              fontWeight: FontWeight.w500),
-        ),
-        const Gap(8),
-        SizedBox(
-          width: double.infinity,
-          height: 10,
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: wayaTheme.colorScheme.greyColor200,
-                ),
-                height: 10,
-                width: double.infinity,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: wayaTheme.colorScheme.customPrimary,
-                ),
-                height: 10,
-                width: context.width * vote.noOfVotes,
-              ),
-            ],
-          ),
-        ),
-        const Gap(8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "${vote.noOfVotes * 100} Votes",
-              style: TextStyle().wayaCopyWith(
-                  color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500),
-            ),
-            Text(
-              WayaHelpers.toOrdinal(index + 1),
-              textAlign: TextAlign.end,
-              style: TextStyle().wayaCopyWith(
-                  color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-        const Gap(20),
       ],
     );
   }
