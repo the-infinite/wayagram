@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/explore/data/model/default.dart';
+//import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/ugt/widgets/status_widget.dart';
 
 import '../../../core/components/waya_buttons.dart';
