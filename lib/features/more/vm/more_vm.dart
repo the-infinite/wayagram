@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/more/data/model/more_option_model.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
@@ -12,7 +13,8 @@ class MoreVm {
     moreOptions = [
       MoreOptionModel(
           asset: WayaAssets.icons.mWallet.path,
-          content: "You can fund your wallet to perform transactions seamlessly",
+          content:
+              "You can fund your wallet to perform transactions seamlessly",
           title: "Wallet",
           onTap: () {
             WayaNav.toNamed(WalletPage.route);
@@ -35,7 +37,8 @@ class MoreVm {
           }),
       MoreOptionModel(
           asset: WayaAssets.icons.mShop.path,
-          content: "Buy and sell product from the convince of your home or store",
+          content:
+              "Buy and sell product from the convince of your home or store",
           title: "Shop",
           onTap: () {
             Navigator.pushNamed(context, BottomView.route, arguments: 1);
@@ -57,7 +60,9 @@ class MoreVm {
           asset: WayaAssets.icons.mEvents.path,
           content: "Start an event or discover various event around you",
           title: "Events",
-          onTap: () {}),
+          onTap: () {
+            WayaNav.toNamed(EventView.route);
+          }),
       MoreOptionModel(
           asset: WayaAssets.icons.mUgt.path,
           content: "A contest open for various school and other categories",

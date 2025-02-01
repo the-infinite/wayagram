@@ -41,6 +41,7 @@ class EmptyState extends StatelessWidget {
         if (hasButton)
           WayaButton(
             callback: onTap,
+            color: wayaTheme.colorScheme.customPrimary,
             centerWidget: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
