@@ -6,10 +6,12 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/widget/profile_picture.dart';
 
 class ConversationWidget extends StatelessWidget {
   final ChatModel chat;
+  final ChatNotifier notifier;
   final int index;
 
   // Construct.
@@ -17,10 +19,12 @@ class ConversationWidget extends StatelessWidget {
     super.key,
     required this.chat,
     required this.index,
+    required this.notifier,
   });
 
   /// Helper function used to navigate to the current chat screen.
   void _toChat() {
+    notifier.setChat(chat);
     WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
   }
 

@@ -10,7 +10,7 @@ import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/chat/widget/profile_picture.dart';
 
-class SingleChatScreen extends ConsumerStatefulWidget {
+class SingleChatScreen extends ConsumerWidget {
   static const route = "/conversation/chat";
   final String chatId;
 
@@ -20,46 +20,21 @@ class SingleChatScreen extends ConsumerStatefulWidget {
     required this.chatId,
   });
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SingleChatScreenState();
-}
-
-class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
-  final inputController = ChatInputController();
-  late final chat = ref.watch(conversationProvider).conversations.firstWhere((chat) => chat.id == widget.chatId);
-  late final state = ref.watch(chatProvider);
-  late final notifier = ref.watch(chatProvider.notifier);
-
   // We start a video call.
   void _startAudioCall() async {}
 
   // We start a video call.
   void _startVideoCall() async {}
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        //? Since we are in test mode, if this is empty...
-        state.messages.clear();
-
-        //? Then do this.
-        if (state.messages.isEmpty) {
-          state.messages.addAll(chat.unread);
-        }
-
-        //? This is for live mode.
-        notifier.getMessages(true);
-      },
-    );
-
-    // This is fine.
-    super.initState();
-  }
-
   // This is fine.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final chat = ref.watch(conversationProvider).conversations.firstWhere((chat) => chat.id == chatId);
+    final state = ref.watch(chatProvider);
+    final notifier = ref.watch(chatProvider.notifier);
+    final inputController = ChatInputController(chat);
+
+    // This is fine.
     return WayaScaffold(
       isLoading: state.isLoading,
       isScrollable: false,
@@ -197,6 +172,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
           //? Third, the chat input widget.
           ChatInputWidget(
             controller: inputController,
+            notifier: notifier,
           )
         ],
       ),

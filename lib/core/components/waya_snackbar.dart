@@ -4,6 +4,8 @@ import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 
 class WayaSnackBar {
+  WayaSnackBar._();
+
   static void showToast(String message) {
     Get.showSnackbar(
       GetSnackBar(
