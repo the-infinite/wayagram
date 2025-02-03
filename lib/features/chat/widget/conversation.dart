@@ -21,7 +21,7 @@ class ConversationWidget extends StatelessWidget {
 
   /// Helper function used to navigate to the current chat screen.
   void _toChat() {
-    WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
+    //WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
   }
 
   // This is fine too.
