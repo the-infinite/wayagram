@@ -160,14 +160,14 @@ class WayaAppRoutes {
     ConfirmGroupDetails.route: () => ConfirmGroupDetails(),
     SuccessPage.route: () => SuccessPage(),
     SuccessGroup.route: () => SuccessGroup(),
-    Pages.route: ()=> Pages(),
-    Suggestion.route: ()=> Suggestion(),
-    PrivatePage.route:()=> PrivatePage(),
-    GroupPublic.route: ()=> GroupPublic(),
-    MembersScreen.route:()=> MembersScreen(),
-    CreatePost.route: ()=> CreatePost(),
-    MutualPage.route: ()=> MutualPage(),
-
+    Pages.route: () => Pages(),
+    Suggestion.route: () => Suggestion(),
+    PrivatePage.route: () => PrivatePage(),
+    GroupPublic.route: () => GroupPublic(),
+    MembersScreen.route: () => MembersScreen(),
+    CreatePost.route: () => CreatePost(),
+    MutualPage.route: () => MutualPage(),
+    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString())
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

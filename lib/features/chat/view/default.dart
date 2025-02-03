@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/conversation.dart';
 import 'package:wayagram/features/chat/widget/search.dart';
@@ -18,6 +19,7 @@ class ConversationScreen extends ConsumerStatefulWidget {
 
 class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   late final conversationState = ref.watch(conversationProvider);
+  late final chatNotifier = ref.watch(chatProvider.notifier);
   late final notifier = ref.watch(conversationProvider.notifier);
   late final profile = ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user;
 
@@ -112,6 +114,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               (index) => ConversationWidget(
                 index: index,
                 chat: conversationState.pinned[index],
+                notifier: chatNotifier,
               ),
             ),
 
@@ -139,6 +142,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             (index) => ConversationWidget(
               index: index,
               chat: conversationState.conversations[index],
+              notifier: chatNotifier,
             ),
           ),
 

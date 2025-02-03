@@ -16,7 +16,7 @@ class TextMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      data.body!,
+      data.content!,
       style: WayaTextStyles.bodyMedium.copyWith(
         fontSize: 15,
         fontWeight: FontWeight.normal,

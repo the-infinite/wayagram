@@ -9,12 +9,14 @@ import 'package:wayagram/features/chat/widget/chat/input.dart';
 class ChatReplyToWidget extends StatefulWidget {
   final MessageModel message;
   final ChatInputController controller;
+  final bool interactive;
 
   // Construct.
   const ChatReplyToWidget({
     super.key,
     required this.message,
     required this.controller,
+    this.interactive = true,
   });
 
   @override
@@ -38,97 +40,113 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
   }
 
   @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = ConversationState.self;
-
-    // First, play the animation.
-    try {
-      animationController?.forward();
-    } catch (_) {}
-
-    //? The reply to component.
-    return SizeTransition(
-      axis: Axis.vertical,
-      sizeFactor: Tween<double>(
-        begin: 0,
-        end: 1,
-      ).animate(
-        CurvedAnimation(
-          curve: Curves.decelerate,
-          parent: animationController!,
-        ),
-      ),
-      child: IntrinsicHeight(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            //? First, the bar that is used to convey color.
-            Container(
-              width: 5,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(200),
-                color: widget.message.senderId == user.id ? WayaColors.primary : WayaColors.primary600,
-              ),
+    final composite = IntrinsicHeight(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          //? First, the bar that is used to convey color.
+          Container(
+            width: 5,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(200),
+              color: widget.message.senderId == user.id ? WayaColors.primary : WayaColors.primary600,
             ),
+          ),
 
-            // Some space.
-            const Gap(8),
+          // Some space.
+          const Gap(8),
 
-            //? Now for the text part of things...
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //? First, the top row where this user happens to keep important
-                    //? data.
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        //* User name.
-                        Text(
-                          widget.message.senderName,
-                          style: WayaTextStyles.titleMedium.copyWith(
-                            color: widget.message.senderId == user.id ? WayaColors.primary : WayaColors.primary600,
-                          ),
+          //? Now for the text part of things...
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //? First, the top row where this user happens to keep important
+                  //? data.
+                  Row(
+                    mainAxisAlignment: widget.interactive ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      //* User name.
+                      Text(
+                        widget.message.senderId == user.id ? "You" : widget.controller.chat.other.fullname,
+                        style: WayaTextStyles.titleMedium.copyWith(
+                          color: widget.message.senderId == user.id ? WayaColors.primary : WayaColors.primary600,
                         ),
+                      ),
 
-                        //* Cancel button.
+                      //* Cancel button.
+                      if (widget.interactive)
                         IconButton(
                           onPressed: () {
                             animationController!.reverse().then((_) => widget.controller.setReplyTo(null));
                           },
                           style: IconButton.styleFrom(
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap, padding: const EdgeInsets.all(2)),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            padding: const EdgeInsets.all(2),
+                          ),
                           icon: WayaAssets.icons.cMultiplyCircle.svg(
                             color: WayaColors.greyColor400,
                           ),
                         ),
-                      ],
-                    ),
+                    ],
+                  ),
 
-                    //? The message contents.
-                    Text(
-                      widget.message.contentDescription,
-                      maxLines: 5,
-                      style: WayaTextStyles.labelMedium.copyWith(
-                        fontSize: 15,
-                        color: Colors.black,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                  //? The message contents.
+                  Text(
+                    widget.message.contentDescription,
+                    maxLines: 5,
+                    style: WayaTextStyles.labelMedium.copyWith(
+                      fontSize: 15,
+                      color: Colors.black,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          )
+        ],
       ),
     );
+
+    //? If this is the interactive variant...
+    if (widget.interactive) {
+      // Play the animation.
+      try {
+        animationController?.forward();
+      } catch (_) {}
+
+      // Now, build the widget itself.
+      return SizeTransition(
+        axis: Axis.vertical,
+        sizeFactor: Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(
+          CurvedAnimation(
+            curve: Curves.decelerate,
+            parent: animationController!,
+          ),
+        ),
+        child: composite,
+      );
+    }
+
+    //? Since this is not out cup of tea...
+    return composite;
   }
 }

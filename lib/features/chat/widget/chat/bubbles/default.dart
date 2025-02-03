@@ -8,8 +8,10 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/chat/widget/chat/bubbles/file.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/text.dart';
+import 'package:wayagram/features/chat/widget/chat/input/reply_to.dart';
 
 class _MyBubbleWidget extends StatelessWidget {
   final MessageModel data;
@@ -25,55 +27,90 @@ class _MyBubbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 7),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //? First, the space before this component.
-          const Gap(30),
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //? First, the space before this component.
+            const Gap(30),
 
-          //? Finally, component itself.
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                //? First, the message box.
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: WayaColors.primary,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      topLeft: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
+            //? Finally, component itself.
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  //? First, the message box.
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: WayaColors.primary,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        topLeft: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //? First, we need to show the reply to of this message
+                        //? if it exists.
+                        if (data.originalMessage != null)
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: WayaColors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: ChatReplyToWidget(
+                              controller: controller,
+                              message: data.originalMessage!,
+                              interactive: false,
+                            ),
+                          ),
+
+                        //? Second below.
+                        switch (data.messageType) {
+                          MessageType.text => TextMessageWidget(
+                              data: data,
+                              textColor: WayaColors.white,
+                            ),
+                          MessageType.voiceNote => TextMessageWidget(
+                              data: data,
+                              textColor: WayaColors.white,
+                            ),
+                          MessageType.file => FileMessageWidget(
+                              data: data,
+                              textColor: WayaColors.white,
+                            ),
+                          _ => Text(
+                              data.contentDescription,
+                            ),
+                        }
+                      ],
                     ),
                   ),
-                  child: switch (data.type) {
-                    MessageType.text => TextMessageWidget(
-                        data: data,
-                        textColor: WayaColors.white,
-                      ),
-                    _ => Text(
-                        data.contentDescription,
-                      ),
-                  },
-                ),
 
-                //? Second, the date and time relevant to it.
-                if (interactive)
-                  Text(
-                    "${data.readAt != null ? 'Read' : data.deliveredAt != null ? 'Delivered' : 'Sent'} ${WayaDateHelper.getTimestamp(data.readAt ?? data.deliveredAt ?? data.updatedAt)}",
-                    style: WayaTextStyles.labelSmall.copyWith(
-                      color: WayaColors.greyColor400,
+                  //? Second, the date and time relevant to it.
+                  if (interactive)
+                    Text(
+                      "${data.readAt != null ? 'Read' : data.deliveredAt != null ? 'Delivered' : 'Sent'} ${WayaDateHelper.getTimestamp(data.readAt ?? data.deliveredAt ?? data.updatedAt)}",
+                      style: WayaTextStyles.labelSmall.copyWith(
+                        color: WayaColors.greyColor400,
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -110,15 +147,47 @@ class _YourBubbleWidget extends StatelessWidget {
                 bottomLeft: Radius.circular(10),
               ),
             ),
-            child: switch (data.type) {
-              MessageType.text => TextMessageWidget(
-                  data: data,
-                  textColor: WayaColors.black,
-                ),
-              _ => Text(
-                  data.contentDescription,
-                ),
-            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //? First, we need to show the reply to of this message
+                //? if it exists.
+                if (data.originalMessage != null)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: WayaColors.primary.withAlpha(90),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ChatReplyToWidget(
+                      controller: controller,
+                      message: data.originalMessage!,
+                      interactive: false,
+                    ),
+                  ),
+
+                //? Second below.
+                switch (data.messageType) {
+                  MessageType.text => TextMessageWidget(
+                      data: data,
+                      textColor: WayaColors.black,
+                    ),
+                  MessageType.voiceNote => TextMessageWidget(
+                      data: data,
+                      textColor: WayaColors.black,
+                    ),
+                  MessageType.file => FileMessageWidget(
+                      data: data,
+                      textColor: WayaColors.black,
+                    ),
+                  _ => Text(
+                      data.contentDescription,
+                    ),
+                }
+              ],
+            ),
           ),
 
           //? Second, the date and time relevant to it.

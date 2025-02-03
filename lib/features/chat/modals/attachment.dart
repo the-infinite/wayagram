@@ -1,0 +1,234 @@
+import 'dart:async';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/helpers/files.dart';
+import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/types/attachment.dart';
+import 'package:wayagram/features/chat/widget/chat/input.dart';
+
+class _AttachmentActionButton extends StatelessWidget {
+  final String icon;
+  final String title;
+  final String description;
+  final FutureOr<void> Function() callback;
+
+  // Construct.
+  const _AttachmentActionButton({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.callback,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: callback,
+      borderRadius: BorderRadius.circular(10),
+      splashColor: WayaColors.primary.withAlpha(30),
+      focusColor: WayaColors.primary.withAlpha(30),
+      highlightColor: WayaColors.primary.withAlpha(30),
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //* First, the icon for this attachment action button.
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: WayaColors.primary.withAlpha(30),
+              ),
+              child: SvgPicture.asset(
+                icon,
+              ),
+            ),
+
+            //* Second, the title of this section.
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: WayaTextStyles.bodyBold,
+            ),
+
+            //* The body of this action button.
+            Text(
+              description,
+              textAlign: TextAlign.center,
+              style: WayaTextStyles.descriptionStyle.copyWith(
+                fontSize: 13,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ChatAttachmentDialog extends StatelessWidget {
+  final ChatInputController controller;
+
+  // Construct.
+  const ChatAttachmentDialog({
+    super.key,
+    required this.controller,
+  });
+
+  // This is fine.
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: Get.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //? First, the title of the popup.
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //* The title.
+                Text(
+                  "Attachment Menu",
+                  style: WayaTextStyles.titleLarge.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                //* The dismiss button.
+                IconButton(
+                  onPressed: () => WayaNav.goBack<AttachmentResult>(result: null),
+                  style: IconButton.styleFrom(
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    padding: const EdgeInsets.all(2),
+                    backgroundColor: WayaColors.greyColor200,
+                  ),
+                  icon: WayaAssets.icons.actonDismiss.svg(
+                    color: WayaColors.black,
+                  ),
+                ),
+              ],
+            ),
+
+            // Something like space.
+            const Gap(10),
+
+            //? Second, the grid of actions.
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 3,
+              children: [
+                _AttachmentActionButton(
+                  icon: WayaAssets.icons.cAttachCamera.path,
+                  title: "Camera",
+                  description: "Send a video or photo from camera",
+                  callback: () {},
+                ),
+
+                // This is fine.
+                _AttachmentActionButton(
+                  icon: WayaAssets.icons.cAttachGallery.path,
+                  title: "Media",
+                  description: "Share photos and videos",
+                  callback: () async {
+                    //? If it is not...
+                    try {
+                      final choices = await ImagePicker().pickMultipleMedia(
+                        imageQuality: 40,
+                        limit: 3,
+                      );
+
+                      //? Our choices.
+                      WayaNav.goBack<AttachmentResult>(
+                        result: AttachmentResult.file(
+                          choices.map((file) => file.path).toList(),
+                        ),
+                      );
+
+                      //? This means it is now media...
+                      controller.setMedia(true);
+                    } catch (_) {}
+                  },
+                ),
+
+                // This is fine.
+                _AttachmentActionButton(
+                  icon: WayaAssets.icons.cAttachDocument.path,
+                  title: "Documents",
+                  description: "Share a document or file",
+                  callback: () async {
+                    //? If it is not...
+                    try {
+                      final result = await FilePicker.platform
+                          .pickFiles(allowMultiple: true, type: FileType.custom, allowedExtensions: [
+                        // Text documents.
+                        ...WayaFileExtensions.textDocuments,
+
+                        // Spreadsheets
+                        ...WayaFileExtensions.spreadSheets,
+
+                        // Presentations.
+                        ...WayaFileExtensions.presentations,
+
+                        // Archives.
+                        ...WayaFileExtensions.archives,
+
+                        // Markup and notation.
+                        ...WayaFileExtensions.markup,
+                      ]);
+
+                      // If this failed.
+                      if (result == null) return;
+
+                      // Leave with the appropriate result.
+                      //? This allows a maximum of 3.
+                      WayaNav.goBack<AttachmentResult>(
+                        result: AttachmentResult.file(
+                          result.files.takeWhile((file) => file.path != null).map((file) => file.xFile.path).toList(),
+                        ),
+                      );
+
+                      //? This means it is no longer media...
+                      controller.setMedia(false);
+                    } catch (_) {}
+                  },
+                ),
+
+                // This is fine.
+                _AttachmentActionButton(
+                  icon: WayaAssets.icons.cAttachLocation.path,
+                  title: "Location",
+                  description: "Share your location to your friends",
+                  callback: () {},
+                ),
+
+                // This is fine.
+                _AttachmentActionButton(
+                  icon: WayaAssets.icons.cAttachContact.path,
+                  title: "Contacts",
+                  description: "Share a contact or a friend",
+                  callback: () {},
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

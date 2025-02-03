@@ -67,7 +67,7 @@ class WayaTextStyles {
   );
   static const bodyBold = TextStyle(
     fontSize: 12,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w700,
     fontFamily: WayaConstants.fontFamily,
   );
   static const bodyExtraMedium = TextStyle(
