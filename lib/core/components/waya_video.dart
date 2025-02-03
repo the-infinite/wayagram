@@ -422,8 +422,8 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
                           ),
                           icon: SvgPicture.asset(
                             isMuted ? WayaAssets.icons.actionVolumeMute.path : WayaAssets.icons.actionVolumeUnmute.path,
-                            height: 26,
-                            width: 26,
+                            height: 20,
+                            width: 20,
                             color: theme.colorScheme.primary,
                           ),
                         );
