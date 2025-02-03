@@ -224,7 +224,7 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
         (_) {
           //? Ensure the first frame is shown after the video is initialized,
           //? even before the play button has been pressed.
-          setState(() {});
+          if (mounted) setState(() {});
 
           //? If this has autoplay enabled...
           if (widget.controller.autoplay) {
@@ -294,9 +294,11 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
         try {
           animationController!.forward().then(
             (_) {
-              setState(() {
-                _controlsHidden = true;
-              });
+              if (mounted) {
+                setState(() {
+                  _controlsHidden = true;
+                });
+              }
             },
           );
         } catch (_) {}
@@ -316,9 +318,11 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
               animationController!.reverse().then(
                 (_) {
                   //? Now, reset the entire page.
-                  setState(() {
-                    _controlsHidden = false;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      _controlsHidden = false;
+                    });
+                  }
                 },
               );
             },
