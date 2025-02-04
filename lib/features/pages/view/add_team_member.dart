@@ -56,12 +56,14 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
             if (_formKey.currentState!.validate()) {
 
             }
-          } : null,
-          centerWidget: LoadingState(
-            loading: viewModel.isLoading, text: 'Add User',
-          ),
+           } : null,
+          // centerWidget: LoadingState(
+          //   loading: viewModel.isLoading, text: 'Add User',
+          // ),
           height: 30,
-          textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+          text: 'Add User',
+          isLoading: viewModel.isLoading,
+          textStyle: WayaTextStyles.bodySmall.copyWith(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
@@ -73,14 +75,17 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
               ref.watch(createGroupProvider.notifier).reset();
             }
           } : null,
-          centerWidget: LoadingState(
-            loading: viewModel.isLoading, text: 'Add User', ),
+          // centerWidget: LoadingState(
+          //   loading: viewModel.isLoading, text: 'Add User', ),
           height: 30,
-          verticalPadding: 2,
-          textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+          text: 'Add User',
+          isLoading: viewModel.isLoading,
+          textStyle: WayaTextStyles.bodySmall.copyWith(
               fontSize: 12,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
+
+
         ),
       ),
       body: Column(
