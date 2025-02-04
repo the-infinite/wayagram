@@ -1,6 +1,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/features/explore/data/model/default.dart';
+//import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/quotation/vm/quotation_vm.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
 
@@ -42,11 +42,12 @@ class ExploreVm extends StateNotifier<void> {
         institution: 'Unilag Talent Hunt',
         logo: 'assets/images/explore/ugt-inst-logo.png',
         noOfParticipants: 20,
-        votes: [
-          Vote(name: 'Wizkid Ayo', noOfVotes: 0.95),
-          Vote(name: ' Ayo', noOfVotes: 0.50),
-          Vote(name: 'Ayan', noOfVotes: 0.30),
-        ])
+        // votes: [
+        //   Vote(name: 'Wizkid Ayo', noOfVotes: 0.95),
+        //   Vote(name: ' Ayo', noOfVotes: 0.50),
+        //   Vote(name: 'Ayan', noOfVotes: 0.30),
+        // ]
+    )
   ];
 
 

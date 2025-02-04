@@ -110,10 +110,13 @@ class WayaButton extends StatelessWidget {
                     ),
                   Text(
                     text,
-                    style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                      fontWeight: FontWeight.w600,
-                      color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
-                    ),
+                    style: textStyle?.copyWith(
+                          color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
+                        ) ??
+                        wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                          fontWeight: FontWeight.w600,
+                          color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
+                        ),
                   ),
                   Gap(10),
                   trailingIcon ?? SizedBox.shrink()

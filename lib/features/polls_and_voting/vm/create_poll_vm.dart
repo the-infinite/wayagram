@@ -16,6 +16,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
 //import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/model.dart';
@@ -424,8 +425,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return am;
   }
 
-
-
   Future<void> createPoll(
       BuildContext context,
       String question,
@@ -535,28 +534,27 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     final response = await _pollAndVotingRepository.getMyPolls(creatorId);
     state = state.copyWith(isLoading: false);
     if (response.success) {
-      GetMyPoll responseModel = GetMyPoll.fromJson(response.data);
-
-      state = state.copyWith(getMyPollModel: responseModel.data);
+      FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+      state = state.copyWith(fetchAllPols: responseModel.data?.docs);
     } else {
       state = state.copyWith(isLoading: false);
     }
   }
 
- /* Future<void> getAllPolls() async {
+  Future<void> getAllPolls() async {
     state = state.copyWith(isLoading: true);
     final response = await _pollAndVotingRepository.getAllPolls();
     state = state.copyWith(isLoading: false);
     if (response.success) {
-      GetPollModel responseModel = GetPollModel.fromJson(response.data);
+      FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
 
-      state = state.copyWith(getPollModel: responseModel.data);
+      state = state.copyWith(fetchAllPols: responseModel.data?.docs);
     } else {
       state = state.copyWith(isLoading: false);
     }
-  }*/
+  }
 
-  Future<void> getAllPolls() async {
+  /*Future<void> getAllPolls() async {
     state = state.copyWith(isLoading: true);
     final response = await _pollAndVotingRepository.getAllPolls();
     state = state.copyWith(isLoading: false);
@@ -567,7 +565,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } else {
       state = state.copyWith(isLoading: false);
     }
-  }
+  }*/
 
   Future<void> getPollsById(String pollId) async {
     state = state.copyWith(isLoading: true);

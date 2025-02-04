@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 // @sekani50 @Darlington885 Don't comment out the lines of code that use Json Serializable
 // just run the flutter gen command.
 
-part 'default.g.dart';
+//part 'default.g.dart';
 
 enum NotificationPriority {
   none,
@@ -55,9 +55,9 @@ class NotificationTarget {
     this.topic,
   });
 
-  factory NotificationTarget.fromJson(Map<String, dynamic> data) => _$NotificationTargetFromJson(data);
-
-  Map<String, dynamic> toJson() => _$NotificationTargetToJson(this);
+  // factory NotificationTarget.fromJson(Map<String, dynamic> data) => _$NotificationTargetFromJson(data);
+  //
+  // Map<String, dynamic> toJson() => _$NotificationTargetToJson(this);
 }
 
 @JsonSerializable()
@@ -71,9 +71,9 @@ class NotificationMessage {
     required this.body,
   });
 
-  factory NotificationMessage.fromJson(Map<String, dynamic> data) => _$NotificationMessageFromJson(data);
-
-  Map<String, dynamic> toJson() => _$NotificationMessageToJson(this);
+  // factory NotificationMessage.fromJson(Map<String, dynamic> data) => _$NotificationMessageFromJson(data);
+  //
+  // Map<String, dynamic> toJson() => _$NotificationMessageToJson(this);
 }
 
 @JsonSerializable()
@@ -103,7 +103,7 @@ class NotificationModel {
     required this.updatedAt,
   });
 
-  factory NotificationModel.fromJson(Map<String, dynamic> data) {
+ /* factory NotificationModel.fromJson(Map<String, dynamic> data) {
     // First, do the basic conversion.
     var json = {...data};
 
@@ -117,11 +117,11 @@ class NotificationModel {
       }
     }
 
-    // Next, return this as is.
+    Next, return this as is.
     return _$NotificationModelFromJson(json);
-  }
+  }*/
 
-  Map<String, dynamic> toJson() => _$NotificationModelToJson(this);
+  //Map<String, dynamic> toJson() => _$NotificationModelToJson(this);
 
   //? This is fine.
   String get notificationAction => switch (messageType) {
