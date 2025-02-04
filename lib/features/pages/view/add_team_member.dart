@@ -12,8 +12,11 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/group/vm/group_vm.dart';
+import 'package:wayagram/features/pages/data/model/role_type.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
@@ -34,72 +37,58 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createPageProvider);
+    final viewModel = ref.watch(createGroupProvider);
 
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-      title: "Add New Team Member",
+      title: "Add New Team Member    ",
       isLoading: viewModel.isLoading,
       isScrollable: true,
+      onTapBackButton: (){
+        Navigator.pop(context);
+        ref.watch(createGroupProvider.notifier).reset();
+      },
       appBarTrailing: Padding(
-        padding: const EdgeInsets.only(right: 20),
-        child: WayaButton(
+        padding: const EdgeInsets.only(right: 16),
+        child:viewModel.username.text.isEmpty? WayaButton(
+          callback:viewModel.isLoading
+              ? () async {
+            if (_formKey.currentState!.validate()) {
+
+            }
+          } : null,
+          centerWidget: LoadingState(
+            loading: viewModel.isLoading, text: 'Add User',
+          ),
+          height: 30,
+          textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.white ),
+        ): WayaButton(
           callback: !viewModel.isLoading
               ? () async {
             if (_formKey.currentState!.validate()) {
-              if(!sel && !sel2){
-
-              } else{
-                WayaNav.toNamed("/privatePage");
-                ref.watch(createPageProvider.notifier).reset();
-
-              }
+              showCustomDialog(context, 'Success! Oluwaseun has been added as a\nModerator','You can now collaborate seamlessly and\nmanage the page together.');
+              ref.watch(createGroupProvider.notifier).reset();
             }
           } : null,
           centerWidget: LoadingState(
             loading: viewModel.isLoading, text: 'Add User', ),
           height: 30,
+          verticalPadding: 2,
           textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
               fontSize: 12,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.white ),
         ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  WayaImage3(
-                    height: Get.height * 0.2,
-                  ),
-                  Gap(15),
 
-                ],
-              ),
-              Positioned(
-                  left: 16.w,
-                  bottom: -20.h,
-                  child: WayaDp(
-                    radius: 28.r,
-                  )),
-            ],
-          ),
-          const Gap(30),
           Text(
-              'Change photo',
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff6B7280),
-              )),
-          const Gap(20),
-          Text(
-              'Page information',
+              'User information',
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
@@ -113,8 +102,8 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FormField<String>(validator: (value) {
-                    if (viewModel.pageName.text.isEmpty) {
-                      return 'Page name is required';
+                    if (viewModel.username.text.isEmpty) {
+                      return 'Username/Email is required';
                     }
 
                     return null;
@@ -124,16 +113,16 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                       children: [
                         WayaTextFormField(
                           keyboardType: TextInputType.text,
-                          controller: viewModel.pageName,
+                          controller: viewModel.username,
                           hintText: 'Enter page name here',
                           borderColor: formState.hasError &&
-                              viewModel.pageName.text.isEmpty
+                              viewModel.username.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
-                          label: 'Page Name',
+                          label: 'Username/Email address',
                         ),
                         if (formState.hasError &&
-                            viewModel.pageName.text.isEmpty
+                            viewModel.username.text.isEmpty
                         )
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
@@ -149,8 +138,8 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                   }),
                   const Gap(20),
                   FormField<String>(validator: (value) {
-                    if (viewModel.pageDescription.text.isEmpty) {
-                      return 'Description is required';
+                    if (viewModel.roleType.isEmpty) {
+                      return ' User\'s Role is required';
                     }
 
                     return null;
@@ -158,20 +147,17 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WayaTextFormField(
-                          line: 6,
-                          keyboardType: TextInputType.text,
-                          controller: viewModel.pageDescription,
-                          hintText: 'Describe what your page does',
-                          borderColor: formState.hasError &&
-                              viewModel.pageDescription.text.isEmpty
-                              ? wayaTheme.colorScheme.error
-                              : null,
-                          label: 'Page Description',
-                        ),
-                        if (formState.hasError &&
-                            viewModel.pageDescription.text.isEmpty
-                        )
+                        WayaSelectField(
+                            height: 0.3,
+                            label: "Select Role",
+                            value: viewModel.roleType.capitalizeFirst,
+                            uniqueKey: 'role-type',
+                            hintText: 'Choose User\'s Role',
+                            items: DummyData.roleList,
+                            onSelected: (value){
+                              ref.read(createGroupProvider.notifier).selectRoleType(value.value);
+                            }),
+                        if (formState.hasError && viewModel.roleType.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
@@ -184,102 +170,192 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                       ],
                     );
                   }),
-                  const Gap(20),
-
-
                 ],
               )),
-
-          Text(
-              'Page Type',
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              )),
-          const Gap(15),
-          FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+        Gap(20),
+        viewModel.roleType.isEmpty ? Container() :
+        viewModel.roleType =='admin'?
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                'Permission & Access',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
+                  color: WayaColors.greyColor700,
+                )),
+            const Gap(15),
+            _permissionType("Manage Roles",  "Assign, update, or remove roles for other members (except\nthe owner)"),
+            const Gap(15),
+            _permissionType("Page Settings", "Edit page info, update images, and modify general settings."),
+            const Gap(15),
+            _permissionType("Content Creation:", "Post updates, photos, and manage page content."),
+            const Gap(15),
+            _permissionType("Community Management",  "Respond to comments, messages, and moderate\ninteractions."),
+            const Gap(15),
+        ],):
+            viewModel.roleType == 'moderator'?
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                InkWell(
-                  splashColor: Colors.transparent,
-                  splashFactory: NoSplash.splashFactory,
-                  onTap: (){
-                    setState(() {
-                      sel = true;
-                      sel2 = false;
-                    });
+                Text(
+                    'Permission & Access',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                        color: WayaColors.greyColor700,
+                    )),
+                const Gap(15),
+                _permissionType("Community Safety",  "Manage and moderate comments to keep discussions civil."),
+                const Gap(15),
+                _permissionType("User Management",  "Block or ban users if necessary"),
+                const Gap(15),
 
-                  },
-                  child: sel ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
-                ),
-                const Gap(10),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Public Page",
-                        style: wayaTheme.textTheme.titleMedium),
-                    const Gap(6),
-                    FittedBox(
-                      fit: BoxFit.contain,
-                      child: Text(
-                        "Everyone on or off Wayagram can check out posts created\nfrom this group. The group will show up in search results.",
-                        style: wayaTheme.textTheme.hintStyle,
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-
-          const Gap(15),
-          FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              ],):
+            viewModel.roleType == 'editor'?
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                InkWell(
-                  splashColor: Colors.transparent,
-                  splashFactory: NoSplash.splashFactory,
-                  onTap: (){
-                    setState(() {
-                      sel = false;
-                      sel2 = true;
-                    });
-
-                  },
-                  child: sel2 ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
-                ),
-                const Gap(10),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Private Page",
-                        style: wayaTheme.textTheme.titleMedium),
-                    const Gap(6),
-                    Text(
-                      "Not everyone can see activity on the group except invited\nmembers",
-                      style: wayaTheme.textTheme.hintStyle,
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-          const Gap(15),
+                Text(
+                    'Permission & Access',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                      color: WayaColors.greyColor700,
+                    )),
+                const Gap(15),
+                _permissionType("Content Focused",  "Create and manage all page posts and media"),
+                const Gap(15),
+                _permissionType("Comment & Message Handling",  "Respond to user comments and messages"),
+                const Gap(15),
+              ],): Container(),
 
         ],
       ),
     );
   }
+ Widget _permissionType(title, subTitle){
+    return FittedBox(
+      fit: BoxFit.fitWidth,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image.asset('assets/images/polls/check.png', height: 20.h,),
+          const Gap(10),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title,
+                  style:TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                    color: WayaColors.greyColor900,
+                  ),
+                  //wayaTheme.textTheme.titleSmall
+              ),
+              FittedBox(
+                fit: BoxFit.contain,
+                child: Text(
+                 subTitle,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: WayaColors.greyColor500,
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
 
+  void showCustomDialog(BuildContext context, title, subTitle) {
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext cxt) {
+        return Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: EdgeInsets.only(left: 10, bottom: 16),
+            child: SizedBox(
+              height: 120,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Material(
+                  color: Colors.white,
+                  shape: Border(
+                    left: BorderSide(
+                        width: 4,color: WayaColors.success
+                    ),
 
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 10,left: 10, right: 10 ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white
+                      ),
+                      child:
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                       children: [
+                         Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           children: [
+                             InkWell(
+                                 onTap:(){
+                                   Navigator.of(cxt).pop();
+                                 },
+                                 child: Image.asset('assets/images/pages/success.png', height: 32, width: 32,)),
+                             Gap(10),
+                             Text(
+                               title,
+                               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                   fontSize: 14,
+                                   fontWeight: FontWeight.w600,
+                                   color: Theme.of(context).colorScheme.black ),
+                             ),
+                             Spacer(),
 
+                             InkWell(
+                                 onTap:(){
+                                   Navigator.of(cxt).pop();
+                                 },
+                                 child: Image.asset('assets/images/pages/x.png', height: 11, width: 11,)),
+                             SizedBox(
+                               width: 5,
+                             ),
+                           ],
+                         ),
+
+                         Padding(
+                           padding: const EdgeInsets.only(left: 40),
+                           child: Text(
+                             subTitle,
+                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                 fontSize: 14,
+                                 fontWeight: FontWeight.w400,
+                                 color: Theme.of(context).colorScheme.greyColor500 ),
+                           ),
+                         ),
+                       ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

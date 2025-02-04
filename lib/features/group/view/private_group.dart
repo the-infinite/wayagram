@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -45,7 +46,63 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
           children: [
             WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
             WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
-            WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+            PopupMenuButton(
+                onSelected: (value) {},
+                iconColor: wayaTheme.colorScheme.greyColor400,
+                position: PopupMenuPosition.under,
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: _buildActionNav(
+                          context: context,
+                          onTap: () {
+                            Navigator.pop(context);
+                            WayaNav.toNamed('/groupSetting');
+
+                          },
+                          asset:
+                          SvgPicture.asset('assets/images/pages/setting.svg'),
+                          text: "Group settings",
+                      color: wayaTheme.colorScheme.customBlack),
+                    ),
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: _buildActionNav(
+                          context: context,
+                          onTap: () {},
+                          asset:WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                          text: "Share Group link",
+                          color:wayaTheme.colorScheme.customBlack),
+                    ),
+                    PopupMenuItem<int>(
+                      value: 2,
+                      child: _buildActionNav(
+                          context: context,
+                          onTap: () {
+                            Navigator.pop(context);
+
+                          },
+                          asset: SvgPicture.asset('assets/images/pages/flag.svg'),
+                          text: "Repost",
+                      color: wayaTheme.colorScheme.customBlack),
+                    ),
+                    PopupMenuItem<int>(
+                      value: 3,
+                      child: _buildActionNav(
+                          context: context,
+                          onTap: () {
+                            Navigator.pop(context);
+
+                          },
+                          asset: SvgPicture.asset('assets/images/pages/delete.svg',
+                            color: wayaTheme.colorScheme.error500, height: 20,),
+                          text: "Delete Group",
+                      color: wayaTheme.colorScheme.error500),
+                    )
+                  ];
+                },
+                child:  WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none)),
             Gap(8)
           ],
         ),
@@ -176,6 +233,33 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500 ),
           ),
+        ],
+      ),
+    );
+  }
+  InkWell _buildActionNav(
+      {required BuildContext context,
+        required VoidCallback onTap,
+        required Widget asset,
+        required String text,
+        required Color color}) {
+    final wayaTheme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          asset,
+          const Gap(4),
+          Text(
+            text,
+            style: TextStyle().wayaCopyWith(
+                color: color,
+                fontWeight: FontWeight.w500,
+                fontSize: 12),
+          )
         ],
       ),
     );

@@ -25,11 +25,24 @@ class GroupVm extends StateNotifier<GroupState> {
 
     state = state.copyWith(groupName: TextEditingController(text:'' ));
     state = state.copyWith(groupDescription: TextEditingController(text:''));
+    state = state.copyWith(username: TextEditingController(text:''));
 
   }
 
   void reset() {
     state = GroupState();
+  }
+
+  void updateOpenToEveryone(bool value) {
+    state = state.copyWith(openToEveryone: value);
+  }
+
+  void updateRequireApproval(bool value) {
+    state = state.copyWith(requireApproval: value);
+  }
+
+  void selectRoleType(String value) {
+    state = state.copyWith(roleType: value.toLowerCase());
   }
 
 

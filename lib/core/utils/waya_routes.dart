@@ -11,6 +11,7 @@ import 'package:wayagram/features/general_settings/profile/view/edit_profile_pag
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
+import 'package:wayagram/features/group/view/group_setting.dart';
 import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
@@ -166,6 +167,7 @@ class WayaAppRoutes {
     EditPageInfo.route: ()=> EditPageInfo(),
     AddTeamMember.route: ()=> AddTeamMember(),
     PrivateGroup.route: ()=> PrivateGroup(),
+    GroupSetting.route: ()=> GroupSetting(),
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {
