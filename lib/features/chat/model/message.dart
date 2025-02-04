@@ -1,0 +1,130 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'message.g.dart';
+
+// This is fine.
+enum MessageType {
+  text,
+  voiceNote,
+  sticker,
+  file,
+  location,
+  contact,
+  call,
+
+  @JsonValue("missed_call")
+  missedCall,
+}
+
+// The status of messages.
+enum MessageStatusCode {
+  sent,
+  read,
+  delivered,
+}
+
+@JsonSerializable()
+class MessageReaction {
+  final String id;
+  final String messageId;
+  final String userId;
+  final String reaction;
+
+  // Construct.
+  const MessageReaction({
+    required this.id,
+    required this.messageId,
+    required this.userId,
+    required this.reaction,
+  });
+
+  factory MessageReaction.fromJson(Map<String, dynamic> json) => _$MessageReactionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MessageReactionToJson(this);
+}
+
+@JsonSerializable()
+class MessageStatus {
+  final String id;
+  final String messageId;
+  final String userId;
+  final MessageStatusCode status;
+  final DateTime createdAt;
+
+  // Construct.
+  MessageStatus({
+    required this.id,
+    required this.messageId,
+    required this.userId,
+    required this.status,
+    required this.createdAt,
+  });
+
+  factory MessageStatus.fromJson(Map<String, dynamic> json) => _$MessageStatusFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MessageStatusToJson(this);
+}
+
+@JsonSerializable()
+class MessageModel {
+  final String id;
+  final String chatId;
+  final String senderId;
+  final String? content;
+  final String? mediaUrl;
+  final MessageType messageType;
+  final bool edited;
+  final String? originalMessageId;
+  final MessageModel? originalMessage;
+  final String? forwardedFrom;
+  final bool isReply;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<MessageStatus> status;
+  final List<String>? media;
+  final List<MessageReaction> messageReaction;
+  final List<String>? contacts;
+
+  // This is fine.
+  MessageModel({
+    required this.id,
+    required this.chatId,
+    required this.senderId,
+    required this.content,
+    required this.mediaUrl,
+    required this.messageType,
+    required this.edited,
+    required this.originalMessageId,
+    required this.originalMessage,
+    required this.forwardedFrom,
+    required this.isReply,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.status,
+    required this.media,
+    required this.messageReaction,
+    required this.contacts,
+  });
+
+  String get contentDescription {
+    return switch (messageType) {
+      MessageType.file => "${media!.length} files",
+      MessageType.location => "Location",
+      _ => content!,
+    };
+  }
+
+  DateTime? get readAt {
+    return status.where((receipt) => receipt.status == MessageStatusCode.read).firstOrNull?.createdAt;
+  }
+
+  DateTime? get deliveredAt {
+    return status.where((receipt) => receipt.status == MessageStatusCode.delivered).firstOrNull?.createdAt;
+  }
+
+  // This is fine.
+  factory MessageModel.fromJson(Map<String, dynamic> json) => _$MessageModelFromJson(json);
+
+  // This is fine.
+  Map<String, dynamic> toJson() => _$MessageModelToJson(this);
+}

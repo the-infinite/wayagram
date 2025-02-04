@@ -16,8 +16,7 @@ class UserAccountModel {
   final int? statusCode;
   final UserData? data;
 
-  factory UserAccountModel.fromJson(Map<String, dynamic> json) =>
-      _$UserAccountModelFromJson(json);
+  factory UserAccountModel.fromJson(Map<String, dynamic> json) => _$UserAccountModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserAccountModelToJson(this);
 }
@@ -30,8 +29,7 @@ class UserData {
 
   final UserAccountData? userdata;
 
-  factory UserData.fromJson(Map<String, dynamic> json) =>
-      _$UserDataFromJson(json);
+  factory UserData.fromJson(Map<String, dynamic> json) => _$UserDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserDataToJson(this);
 }
@@ -46,8 +44,7 @@ class UserAccountData {
   final User? user;
   final UserProfile? profile;
 
-  factory UserAccountData.fromJson(Map<String, dynamic> json) =>
-      _$UserAccountDataFromJson(json);
+  factory UserAccountData.fromJson(Map<String, dynamic> json) => _$UserAccountDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserAccountDataToJson(this);
 }
@@ -121,6 +118,8 @@ class User {
   final DateTime? updatedAt;
   final Role? role;
 
+  String get fullname => "$firstName $lastName";
+
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
@@ -172,8 +171,7 @@ class UserProfile {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileFromJson(json);
+  factory UserProfile.fromJson(Map<String, dynamic> json) => _$UserProfileFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserProfileToJson(this);
 }

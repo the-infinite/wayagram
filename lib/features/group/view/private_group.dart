@@ -96,7 +96,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
 
                           },
                           asset: SvgPicture.asset('assets/images/pages/delete.svg',
-                            color: wayaTheme.colorScheme.error500, height: 20,),
+                            color: wayaTheme.colorScheme.error500, height: 2,),
                           text: "Delete Group",
                       color: wayaTheme.colorScheme.error500),
                     )
