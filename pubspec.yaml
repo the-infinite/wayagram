@@ -1,5 +1,5 @@
 name: wayagram
-description: The codebase for the entire WayaGram application
+description: The codebase for the entire WayaGram application 
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
 version: 1.91.1+128
@@ -50,10 +50,8 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   percent_indicator: ^4.2.4
   slide_countdown: ^2.0.2
-  coast_audio: ^1.0.0
-  flutter_webrtc: ^0.12.7
-  rtmp_broadcaster:
-    git: https://github.com/OlJohnny/flutter_rtmp_broadcaster.git
+
+
 
 dev_dependencies:
   flutter_test:
@@ -120,3 +118,4 @@ flutter:
           weight: 500
         - asset: assets/fonts/SF-Pro-Display-Regular.otf
           weight: 400
+
