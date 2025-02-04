@@ -9,6 +9,7 @@ import 'package:wayagram/features/general_settings/notifications/view/default.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
@@ -133,6 +134,7 @@ class WayaAppRoutes {
     ProductsViewPage.route: () =>ProductsViewPage(),
     WayaNotifications.route: () => WayaNotifications(),
     NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
+    Moment.route: () => Moment()
   };
 
   static List<GetPage> get getPages => routes.entries.map((entry) {

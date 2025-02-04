@@ -206,7 +206,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                           ),
                           const Gap(6),
                           Text(
-                            "Maleek Ventures",
+                            viewModel.product!.shopName,
                             style: wayaTheme.textTheme.labelMedium,
                           )
                         ],

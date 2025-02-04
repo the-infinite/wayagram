@@ -17,14 +17,16 @@ class ShopVm extends StateNotifier<ShopState> {
       List<Select> selectCategories = [];
 
       if (response.success) {
-        CategoryResponseModel responseModel = CategoryResponseModel.fromJson(response.data);
+        CategoryResponseModel responseModel =
+            CategoryResponseModel.fromJson(response.data);
 
         final List<CategoryData?> categories = responseModel.data.categories;
         selectCategories = categories.map((val) {
-          return Select(label: val!.name, value: val.id);
+          return Select(label: val!.name, value: val.id, image: val.image);
         }).toList();
 
-        state = state.copyWith(totalNoOfCategoryPages: responseModel.data.pagination.totalPages);
+        state = state.copyWith(
+            totalNoOfCategoryPages: responseModel.data.pagination.totalPages);
 
         state = state.copyWith(categories: selectCategories);
         // if (selectCategories.isNotEmpty) {
@@ -56,12 +58,7 @@ class ShopVm extends StateNotifier<ShopState> {
       if (response.success) {
         ProductResponse productResponse =
             ProductResponse.fromJson(response.data);
-        allProducts = productResponse.data.data.map((product) {
-          return product.copyWith(
-              category: state.categories?.firstWhere(
-            (cat) => cat.value == product.categoryId,
-          ));
-        }).toList();
+        allProducts = productResponse.data.data;
         hasNextPage = productResponse.data.pagination.hasNextPage;
         state = state.copyWith(products: allProducts);
       }
@@ -87,7 +84,8 @@ class ShopVm extends StateNotifier<ShopState> {
       // search filter
       if (state.searchQuery.isNotEmpty) {
         final query = state.searchQuery.toLowerCase();
-        return product.name.toLowerCase().contains(query) || product.description.toLowerCase().contains(query);
+        return product.name.toLowerCase().contains(query) ||
+            product.description.toLowerCase().contains(query);
       }
 
       return !product.wayagramDeal;
@@ -107,7 +105,8 @@ class ShopVm extends StateNotifier<ShopState> {
       // search filter
       if (state.searchQuery.isNotEmpty) {
         final query = state.searchQuery.toLowerCase();
-        return product.name.toLowerCase().contains(query) || product.description.toLowerCase().contains(query);
+        return product.name.toLowerCase().contains(query) ||
+            product.description.toLowerCase().contains(query);
       }
 
       return product.wayagramDeal;
