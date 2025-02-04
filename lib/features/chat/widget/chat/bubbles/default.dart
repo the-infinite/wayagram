@@ -9,6 +9,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/file.dart';
+import 'package:wayagram/features/chat/widget/chat/bubbles/voice.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/text.dart';
 import 'package:wayagram/features/chat/widget/chat/input/reply_to.dart';
@@ -82,9 +83,9 @@ class _MyBubbleWidget extends StatelessWidget {
                               data: data,
                               textColor: WayaColors.white,
                             ),
-                          MessageType.voiceNote => TextMessageWidget(
+                          MessageType.voiceNote => VoiceMessageWidget(
                               data: data,
-                              textColor: WayaColors.white,
+                              isSender: true,
                             ),
                           MessageType.file => FileMessageWidget(
                               data: data,
@@ -174,9 +175,9 @@ class _YourBubbleWidget extends StatelessWidget {
                       data: data,
                       textColor: WayaColors.black,
                     ),
-                  MessageType.voiceNote => TextMessageWidget(
+                  MessageType.voiceNote => VoiceMessageWidget(
                       data: data,
-                      textColor: WayaColors.black,
+                      isSender: false,
                     ),
                   MessageType.file => FileMessageWidget(
                       data: data,

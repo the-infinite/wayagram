@@ -64,6 +64,7 @@ class _AttachmentActionButton extends StatelessWidget {
             //* The body of this action button.
             Text(
               description,
+              maxLines: 2,
               textAlign: TextAlign.center,
               style: WayaTextStyles.descriptionStyle.copyWith(
                 fontSize: 13,
@@ -133,6 +134,7 @@ class ChatAttachmentDialog extends StatelessWidget {
               shrinkWrap: true,
               crossAxisCount: 3,
               children: [
+                // This can be fine.
                 _AttachmentActionButton(
                   icon: WayaAssets.icons.cAttachCamera.path,
                   title: "Camera",
@@ -211,11 +213,41 @@ class ChatAttachmentDialog extends StatelessWidget {
 
                 // This is fine.
                 _AttachmentActionButton(
-                  icon: WayaAssets.icons.cAttachLocation.path,
-                  title: "Location",
-                  description: "Share your location to your friends",
-                  callback: () {},
+                  icon: WayaAssets.icons.cAttachAudio.path,
+                  title: "Audio",
+                  description: "Share a song or audio",
+                  callback: () async {
+                    //? If it is not...
+                    try {
+                      final result = await FilePicker.platform.pickFiles(
+                        allowMultiple: true,
+                        type: FileType.audio,
+                      );
+
+                      // If this failed.
+                      if (result == null) return;
+
+                      // Leave with the appropriate result.
+                      //? This allows a maximum of 3.
+                      WayaNav.goBack<AttachmentResult>(
+                        result: AttachmentResult.file(
+                          result.files.takeWhile((file) => file.path != null).map((file) => file.xFile.path).toList(),
+                        ),
+                      );
+
+                      //? This means it is no longer media...
+                      controller.setMedia(false);
+                    } catch (_) {}
+                  },
                 ),
+
+                // This is fine.
+                // _AttachmentActionButton(
+                //   icon: WayaAssets.icons.cAttachLocation.path,
+                //   title: "Location",
+                //   description: "Share your location to your friends",
+                //   callback: () {},
+                // ),
 
                 // This is fine.
                 _AttachmentActionButton(

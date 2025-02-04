@@ -5,6 +5,8 @@ import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/logic/files.dart';
 import 'package:wayagram/features/chat/model/message.dart';
+import 'package:wayagram/features/chat/widget/chat/bubbles/file/audio.dart';
+import 'package:wayagram/features/chat/widget/chat/bubbles/file/doc.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/file/image.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/file/video.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
@@ -81,10 +83,7 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
                 final file = files[index];
                 final filename = file.uri.pathSegments.last;
                 final extensionIndex = filename.lastIndexOf(".");
-                final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : null;
-
-                //? if there is no file extension...
-                if (extension == null) {}
+                final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
 
                 //? If this is an image...
                 if (WayaFileExtensions.images.contains(extension)) {
@@ -110,14 +109,34 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
 
                 //? If this is an audio file...
                 if (WayaFileExtensions.audio.contains(extension)) {
-                  // Handle the audio playback file type here.
+                  return AudioFileWidget(
+                    audio: file,
+                    totalSize: files.length,
+                    index: index,
+                    filename: filename,
+                    extension: extension,
+                    interactive: widget.interactive,
+                    controller: widget.controller,
+                    message: widget.message,
+                  );
                 }
 
                 //? Else, treat this like a document.
+                return DocumentFileWidget(
+                  doc: file,
+                  index: index,
+                  filename: filename,
+                  extension: extension,
+                  totalSize: files.length,
+                  interactive: widget.interactive,
+                  controller: widget.controller,
+                  message: widget.message,
+                );
               },
             )
           else
-            Row(
+            Flex(
+              direction: isMediaFiles ? Axis.horizontal : Axis.vertical,
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: List.generate(
@@ -127,34 +146,57 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
                   final file = files[index];
                   final filename = file.uri.pathSegments.last;
                   final extensionIndex = filename.lastIndexOf(".");
-                  final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : null;
+                  final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
 
-                  return Expanded(
-                    child:
-                        //? If this is an image...
-                        WayaFileExtensions.images.contains(extension)
-                            ? ImageFileWidget(
+                  return
+                      //? When this is an image file.
+                      WayaFileExtensions.images.contains(extension)
+                          ? Expanded(
+                              child: ImageFileWidget(
                                 image: file,
                                 totalSize: files.length,
                                 index: index,
                                 interactive: widget.interactive,
                                 controller: widget.controller,
-                              )
-                            :
+                              ),
+                            )
+                          :
 
-                            //? If this is a video file.
-                            WayaFileExtensions.videos.contains(extension)
-                                ? VideoFileWidget(
+                          //? If this is a video file.
+                          WayaFileExtensions.videos.contains(extension)
+                              ? Expanded(
+                                  child: VideoFileWidget(
                                     video: file,
                                     totalSize: files.length,
                                     index: index,
                                     interactive: widget.interactive,
                                     controller: widget.controller,
-                                  )
+                                  ),
+                                )
 
-                                //? If this is something else...
-                                : const SizedBox(),
-                  );
+                              //? If this is for audio files...
+                              : WayaFileExtensions.audio.contains(extension)
+                                  ? AudioFileWidget(
+                                      audio: file,
+                                      totalSize: files.length,
+                                      index: index,
+                                      filename: filename,
+                                      extension: extension,
+                                      interactive: widget.interactive,
+                                      controller: widget.controller,
+                                    )
+
+                                  //? If this is something else...
+                                  : DocumentFileWidget(
+                                      doc: file,
+                                      index: index,
+                                      filename: filename,
+                                      extension: extension,
+                                      totalSize: files.length,
+                                      interactive: widget.interactive,
+                                      controller: widget.controller,
+                                      message: widget.message,
+                                    );
                 },
               ),
             ),

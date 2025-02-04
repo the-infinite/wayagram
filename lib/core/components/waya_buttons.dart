@@ -55,12 +55,14 @@ class WayaButton extends StatelessWidget {
     this.verticalPadding = 0,
     this.height = 48,
     this.isDisabled,
+    this.shape = BoxShape.rectangle,
     this.alignment = Alignment.center,
   });
   final String text;
   final Color? color;
   final Widget? leadingIcon;
   final bool isLoading;
+  final BoxShape shape;
   final Widget? trailingIcon;
   final Alignment alignment;
   final double? radius;
@@ -92,11 +94,12 @@ class WayaButton extends StatelessWidget {
         height: height,
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
         decoration: BoxDecoration(
+          shape: shape,
           color: isButtonDisabled || isLoading
               ? wayaTheme.colorScheme.greyColor300
               : (color ?? wayaTheme.colorScheme.customPrimary),
           border: border,
-          borderRadius: BorderRadius.circular(radius ?? 8),
+          borderRadius: shape == BoxShape.rectangle ? BorderRadius.circular(radius ?? 8) : null,
         ),
         alignment: alignment,
         child: leadingIcon != null
@@ -110,10 +113,13 @@ class WayaButton extends StatelessWidget {
                     ),
                   Text(
                     text,
-                    style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                      fontWeight: FontWeight.w600,
-                      color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
-                    ),
+                    style: textStyle?.copyWith(
+                          color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
+                        ) ??
+                        wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                          fontWeight: FontWeight.w600,
+                          color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
+                        ),
                   ),
                   Gap(10),
                   trailingIcon ?? SizedBox.shrink()
