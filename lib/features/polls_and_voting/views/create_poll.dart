@@ -35,6 +35,37 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
 
   CreatePollVotingState? viewModel;
 
+/*disposeControllers() {
+    // print('POll titk ${ viewModel?.pollTitle.text}');
+    // viewModel?.pollTitle.dispose();
+    // viewModel?.pollDescription.dispose();
+    // viewModel?.pollCompanyDescription.dispose();
+    // viewModel?.votePrice.dispose();
+    // viewModel?.voteNumber.dispose();
+    // viewModel?.firstChoice.dispose();
+    // viewModel?.firstChoiceDescription.dispose();
+    // viewModel?.secondChoice.dispose();
+    // viewModel?.secondChoiceDescription.dispose();
+    super.dispose();
+  }*/
+
+/*  @override
+  void dispose() {
+    //disposeControllers();
+    super.dispose();
+    print('POll titk ${ viewModel?.pollTitle.text}');
+    viewModel?.pollTitle.dispose();
+    viewModel?.pollDescription.dispose();
+    viewModel?.pollCompanyDescription.dispose();
+    viewModel?.votePrice.dispose();
+    viewModel?.voteNumber.dispose();
+    viewModel?.firstChoice.dispose();
+    viewModel?.firstChoiceDescription.dispose();
+    viewModel?.secondChoice.dispose();
+    viewModel?.secondChoiceDescription.dispose();
+    //viewModel?.pollTitle.clear();
+  }*/
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
@@ -482,8 +513,12 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           WayaTextFormField(
                             keyboardType: TextInputType.number,
                             controller: viewModel.votePrice,
+                            // onChanged: (value){
+                            //  // formData['votePrice'] = value;
+                            // },
                             hintText: '0 NGN',
                             borderColor: formState.hasError &&
+                                //formData['votePrice'].isEmpty
                                 viewModel.votePrice.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
@@ -517,9 +552,13 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                         children: [
                           WayaTextFormField(
                             keyboardType: TextInputType.number,
+                            onChanged: (value){
+                              //formData['voteNumber'] = value;
+                            },
                             controller: viewModel.voteNumber,
                             hintText: '0',
                             borderColor: formState.hasError &&
+                                //formData['voteNumber'].isEmpty
                                 viewModel.voteNumber.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
@@ -527,7 +566,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           ),
                           if (formState.hasError &&
                               viewModel.voteNumber.text.isEmpty
-
+                              //formData['voteNumber'].isEmpty
                           )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),

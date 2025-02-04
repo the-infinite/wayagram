@@ -3,6 +3,10 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/event/views/add_event/add_event.dart';
+import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
+import 'package:wayagram/features/event/views/event_view.dart';
+import 'package:wayagram/features/chat/view/chat.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
@@ -11,15 +15,11 @@ import 'package:wayagram/features/general_settings/profile/view/edit_profile_pag
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
-import 'package:wayagram/features/group/view/group_setting.dart';
-import 'package:wayagram/features/group/view/private_group.dart';
-import 'package:wayagram/features/group/view/public_group.dart';
+import 'package:wayagram/features/group/view/group_public.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
-import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/pages/view/create_post.dart';
-import 'package:wayagram/features/pages/view/edit_page_info.dart';
 import 'package:wayagram/features/pages/view/mutual_page.dart';
 import 'package:wayagram/features/pages/view/private_page.dart';
 import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';
@@ -146,30 +146,35 @@ class WayaAppRoutes {
     CreateProfile.route: () => CreateProfile(),
     RegisterContest.route: () => RegisterContest(),
     ShareVotingLink.route: () => ShareVotingLink(),
-    DeliveryRequest.route:() => DeliveryRequest(),
-    SellerProducts.route:() => SellerProducts(),
-    ProductsViewPage.route: () =>ProductsViewPage(),
+    DeliveryRequest.route: () => DeliveryRequest(),
+    SellerProducts.route: () => SellerProducts(),
+    ProductsViewPage.route: () => ProductsViewPage(),
     WayaNotifications.route: () => WayaNotifications(),
     NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
+    EventView.route: () => EventView(),
+    AddEvent.route: () => AddEvent(),
+    EventDetail.route: () => EventDetail(),
     CreatePage.route: () => CreatePage(),
     CreateGroup.route: () => CreateGroup(),
     ConfirmPageDetails.route: () => ConfirmPageDetails(),
     ConfirmGroupDetails.route: () => ConfirmGroupDetails(),
     SuccessPage.route: () => SuccessPage(),
     SuccessGroup.route: () => SuccessGroup(),
-    Pages.route: ()=> Pages(),
-    Suggestion.route: ()=> Suggestion(),
-    PrivatePage.route:()=> PrivatePage(),
-    PublicGroup.route: ()=> PublicGroup(),
-    MembersScreen.route:()=> MembersScreen(),
-    CreatePost.route: ()=> CreatePost(),
-    MutualPage.route: ()=> MutualPage(),
-    EditPageInfo.route: ()=> EditPageInfo(),
-    AddTeamMember.route: ()=> AddTeamMember(),
-    PrivateGroup.route: ()=> PrivateGroup(),
-    GroupSetting.route: ()=> GroupSetting(),
+    Pages.route: () => Pages(),
+    Suggestion.route: () => Suggestion(),
+    PrivatePage.route: () => PrivatePage(),
+    GroupPublic.route: () => GroupPublic(),
+    MembersScreen.route: () => MembersScreen(),
+    CreatePost.route: () => CreatePost(),
+    MutualPage.route: () => MutualPage(),
+    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString())
   };
 
+  /// Helper that shows an example of the generator route pattern with GetX and
+  /// a little bit of hard coded magic.
+  static String getSingleChatRoute(String id) => "${SingleChatScreen.route}?id=$id";
+
+  /// This is fine.
   static List<GetPage> get getPages => routes.entries.map((entry) {
         return GetPage(
           name: entry.key,

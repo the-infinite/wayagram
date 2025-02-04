@@ -44,10 +44,9 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: viewModel.fetchAllPols.length,
+            itemCount: viewModel.getAllPollModel.length,
             itemBuilder: (context, index) {
-              //final poll = viewModel.getAllPollModel[index];
-              final poll = viewModel.fetchAllPols[index];
+              final poll = viewModel.getAllPollModel[index];
               int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
 
               int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;

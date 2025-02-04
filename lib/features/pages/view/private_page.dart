@@ -10,7 +10,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/pages/view/edit_page_info.dart';
 import 'package:wayagram/features/pages/view/pages_for_you.dart';
 import 'package:wayagram/features/pages/view/team_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -66,7 +65,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                     Gap(15),
                     GestureDetector(
                       onTap: () {
-                        WayaNav.toNamed(EditPageInfo.route,);
+                       // WayaNav.toNamed(EditProfilePage.route,);
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 20.w),

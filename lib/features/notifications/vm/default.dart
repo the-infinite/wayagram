@@ -64,8 +64,8 @@ class NotificationVm extends StateNotifier<NotificationState> {
 
       //? If this went well...
       if (response.success) {
-        // final data = NotificationResponseModel.fromJson(response.data['data']);
-        // result.addAll(data.notifications);
+        final data = NotificationResponseModel.fromJson(response.data['data']);
+        result.addAll(data.notifications);
       }
 
       //? Since it failed, we should probably do failure cleanups in the future.

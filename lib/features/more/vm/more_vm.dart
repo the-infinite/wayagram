@@ -34,7 +34,6 @@ class MoreVm {
           title: "Group",
           onTap: () {
             WayaNav.toNamed('/createGroup');
-            // WayaNav.toNamed('/groupSetting');
           }),
       MoreOptionModel(
           asset: WayaAssets.icons.mShop.path,

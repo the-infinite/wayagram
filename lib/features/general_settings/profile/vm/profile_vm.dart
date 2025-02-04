@@ -9,7 +9,7 @@ import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
-//import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 // import 'package:wayagram/features/general_settings/profile/data/model/user_profile_model.dart';
@@ -111,7 +111,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
 
         //? Set who is currently logged in somewhere that is easily accessible
         //? for conversation's sake.
-        //ConversationState.setSelf(userAccountModel.data?.userdata?.user);
+        ConversationState.setSelf(userAccountModel.data?.userdata?.user);
 
         // Finally, update general state.
         state = state.copyWith(userAccountModel: userAccountModel, isLoading: false);

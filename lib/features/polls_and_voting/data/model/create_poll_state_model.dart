@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/cast_vote_model.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_all_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
@@ -22,6 +21,15 @@ class CreatePollVotingState {
   final TextEditingController secondChoice;
   final TextEditingController firstChoiceDescription;
   final TextEditingController secondChoiceDescription;
+  /*final String pollTitle;
+  final String pollDescription;
+  final String pollCompanyDescription;
+  final String votePrice;
+  final String voteNumber;
+  final String firstChoice;
+  final String secondChoice;
+  final String firstChoiceDescription;
+  final String secondChoiceDescription;*/
   final List<DocType> uploadedDocuments;
   final List<Choice> choices;
   final List<Select> pollTypes;
@@ -38,7 +46,6 @@ class CreatePollVotingState {
   final bool isFocused;
   final bool isLoading;
   bool? isPersonalNotUpgradedToBusiness;
-  List<Docs> fetchAllPols;
   List<GetPollData> getPollModel;
   List<GetAllPollData> getAllPollModel;
   List<PollData> getMyPollModel;
@@ -69,7 +76,6 @@ class CreatePollVotingState {
     this.isLoading = false,
     this.candidateImage,
     this.choices = const [],
-    this.fetchAllPols =  const [],
     this.getPollModel = const [],
     this.getAllPollModel = const [],
     this.getMyPollModel = const [],
@@ -112,7 +118,6 @@ class CreatePollVotingState {
     String? pollTypeId,
     bool? isFocused,
     bool? isLoading,
-    List<Docs>? fetchAllPols,
     List<GetPollData>? getPollModel,
     List<GetAllPollData>? getAllPollModel,
     List<PollData>? getMyPollModel,
@@ -141,7 +146,6 @@ class CreatePollVotingState {
       dateIsoFormat: dateIsoFormat ?? this.dateIsoFormat,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
-      fetchAllPols: fetchAllPols  ?? this.fetchAllPols,
       getPollModel: getPollModel ?? this.getPollModel,
       getAllPollModel: getAllPollModel ?? this.getAllPollModel,
       getMyPollModel : getMyPollModel ?? this.getMyPollModel,

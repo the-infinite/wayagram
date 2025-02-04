@@ -18,8 +18,6 @@ import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-import '../../wallet/view/fund_wallet_options_screen.dart';
-
 class CreateGroup extends ConsumerStatefulWidget {
   static const route = '/createGroup';
   const CreateGroup({super.key,});
@@ -60,15 +58,11 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
           centerWidget: LoadingState(
               loading: viewModel.isLoading, text: 'Create'),
           height: 30,
-            textStyle: wayaTheme.textTheme.labelSmall
-                ?.wayaCopyWith(color: wayaTheme.colorScheme.white),
-          horizontalPadding: 10,
         ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Stack(
             clipBehavior: Clip.none,
             children: [

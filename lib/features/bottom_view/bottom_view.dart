@@ -8,7 +8,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
-//import 'package:wayagram/features/chat/view/default.dart';
+import 'package:wayagram/features/chat/view/default.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/more/views/more.dart';
@@ -109,8 +109,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
       WayaShop(),
       Explore(),
       userType == 'PERSONAL' ? WayaBuyerQuotation() : WayaSellerQuotation(),
-      //ConversationScreen(),
-      MoreView(),
+      ConversationScreen(),
       MoreView(),
     ];
 

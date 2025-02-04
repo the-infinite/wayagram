@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
 
-//part 'notification_response.g.dart';
+part 'notification_response.g.dart';
 
 @JsonSerializable()
 class NotificationResponseModel {
@@ -18,9 +18,9 @@ class NotificationResponseModel {
     required this.offset,
   });
 
-  // // This is fine then.
-  // factory NotificationResponseModel.fromJson(Map<String, dynamic> json) => _$NotificationResponseModelFromJson(json);
-  //
-  // // This is also fun.
-  // Map<String, dynamic> toJson() => _$NotificationResponseModelToJson(this);
+  // This is fine then.
+  factory NotificationResponseModel.fromJson(Map<String, dynamic> json) => _$NotificationResponseModelFromJson(json);
+
+  // This is also fun.
+  Map<String, dynamic> toJson() => _$NotificationResponseModelToJson(this);
 }

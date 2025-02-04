@@ -34,7 +34,6 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
     final viewModel = ref.watch(createGroupProvider);
     final wayaTheme = Theme.of(context);
     final type  = ModalRoute.of(context)?.settings.arguments as String?;
-    print("GROUP TYPE $type");
     return WayaScaffold(
       removeAppBar: true,
       isLoading: viewModel.isLoading,
@@ -67,7 +66,7 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
           WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-             type == 'Public Group'? WayaNav.toNamed("/publicGroup"):WayaNav.toNamed("/privateGroup");
+              WayaNav.toNamed("/groupPublic");
             } : null,
             centerWidget: LoadingState(
                 loading: viewModel.isLoading, text: 'Manage Group'),

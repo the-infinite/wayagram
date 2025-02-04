@@ -42,7 +42,7 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
           callback: !viewModel.isLoading
               ? () async {
             viewModel2.reset();
-            WayaNav.toNamed("/successGroup", arguments: '$type');
+            WayaNav.toNamed("/successGroup");
           } : null,
           centerWidget: LoadingState(
               loading: viewModel.isLoading, text: 'Create'),
