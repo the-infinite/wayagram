@@ -7,16 +7,16 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/explore/data/model/default.dart';
+//import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
-import 'package:wayagram/features/explore/widgets/donation_widget.dart';
-import 'package:wayagram/features/explore/widgets/event_card.dart';
+// import 'package:wayagram/features/explore/widgets/donation_widget.dart';
+// import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/explore/widgets/moments_widget.dart';
-import 'package:wayagram/features/explore/widgets/pages_card.dart';
-import 'package:wayagram/features/explore/widgets/polls_card.dart';
+// import 'package:wayagram/features/explore/widgets/moments_widget.dart';
+// import 'package:wayagram/features/explore/widgets/pages_card.dart';
+// import 'package:wayagram/features/explore/widgets/polls_card.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
@@ -25,7 +25,7 @@ import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
-import 'package:wayagram/features/explore/widgets/chat_card.dart';
+//import 'package:wayagram/features/explore/widgets/chat_card.dart';
 
 class Explore extends ConsumerStatefulWidget {
   const Explore({super.key});
@@ -122,9 +122,9 @@ class _ExploreState extends ConsumerState<Explore> {
                   return Row(
                     children: [
                       const Gap(6),
-                      MomentsWidget(
-                        isCreate: index == 0,
-                      ),
+                      // MomentsWidget(
+                      //   isCreate: index == 0,
+                      // ),
                       const Gap(6)
                     ],
                   );
@@ -200,7 +200,7 @@ class _ExploreState extends ConsumerState<Explore> {
                 shrinkWrap: true,
                 itemCount: 2,
                 itemBuilder: (context, index) {
-                  return DonationWidget();
+                 // return DonationWidget();
                 }),
             const Gap(25),
             GroupedWidgetHeader(
@@ -222,9 +222,9 @@ class _ExploreState extends ConsumerState<Explore> {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: groupList.length,
+                //itemCount: groupList.length,
                 itemBuilder: (context, index) {
-                  return PagesCard(group: groupList[index]);
+                  //return PagesCard(group: groupList[index]);
                 }),
             Text(
               "Pages you follow",
@@ -234,9 +234,9 @@ class _ExploreState extends ConsumerState<Explore> {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: groupList.length,
+                //itemCount: groupList.length,
                 itemBuilder: (context, index) {
-                  return PagesCard(isFollowing: true, group: groupList[index]);
+                  //return PagesCard(isFollowing: true, group: groupList[index]);
                 }),
             Text(
               "Recommended or you",
@@ -246,9 +246,9 @@ class _ExploreState extends ConsumerState<Explore> {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: groupList.length,
+                //itemCount: groupList.length,
                 itemBuilder: (context, index) {
-                  return PagesCard(isFollow: true, group: groupList[index]);
+                  //return PagesCard(isFollow: true, group: groupList[index]);
                 }),
             const Gap(25),
 
@@ -265,9 +265,9 @@ class _ExploreState extends ConsumerState<Explore> {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: groupList.length,
+                //itemCount: groupList.length,
                 itemBuilder: (context, index) {
-                  return PagesCard(group: groupList[index]);
+                  //return PagesCard(group: groupList[index]);
                 }),
             Text(
               "Groups you joined",
@@ -277,12 +277,12 @@ class _ExploreState extends ConsumerState<Explore> {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: groupList.length,
+                //itemCount: groupList.length,
                 itemBuilder: (context, index) {
-                  return PagesCard(
-                    group: groupList[index],
-                    isGroupMember: true,
-                  );
+                  // return PagesCard(
+                  //   group: groupList[index],
+                  //   isGroupMember: true,
+                  // );
                 }),
             Text(
               "Recommended groups",
@@ -292,12 +292,12 @@ class _ExploreState extends ConsumerState<Explore> {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: groupList.length,
+                //itemCount: groupList.length,
                 itemBuilder: (context, index) {
-                  return PagesCard(
-                    group: groupList[index],
-                    isRecommendedGroup: true,
-                  );
+                  // return PagesCard(
+                  //   group: groupList[index],
+                  //   isRecommendedGroup: true,
+                  // );
                 }),
             const Gap(25),
             GroupedWidgetHeader(
@@ -308,9 +308,9 @@ class _ExploreState extends ConsumerState<Explore> {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: eventList.length,
+                //itemCount: eventList.length,
                 itemBuilder: (context, index) {
-                  return EventCard(event: eventList[index]);
+                  //return EventCard(event: eventList[index]);
                 }),
             const Gap(25),
             GroupedWidgetHeader(
@@ -327,9 +327,9 @@ class _ExploreState extends ConsumerState<Explore> {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: pollList.length,
+                //itemCount: pollList.length,
                 itemBuilder: (context, index) {
-                  return PollsCard(poll: pollList[index]);
+                  //return PollsCard(poll: pollList[index]);
                 }),
             const Gap(25),
             GroupedWidgetHeader(
@@ -340,9 +340,9 @@ class _ExploreState extends ConsumerState<Explore> {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: chatList.length,
+                //itemCount: chatList.length,
                 itemBuilder: (context, index) {
-                  return ChatCard(chat: chatList[index]);
+                  //return ChatCard(chat: chatList[index]);
                 }),
             const Gap(25),
             GroupedWidgetHeader(

@@ -26,9 +26,7 @@ class PagesForYou extends ConsumerStatefulWidget {
 
 class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProviderStateMixin {
 
-  PageController pageController = PageController(
-    initialPage: 0,
-  );
+  int like = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +198,11 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
         Gap(20),
         Row(
           children: [
-            actionType('346 Likes', 'assets/images/pages/like.png'),
+            actionType('$like Likes', 'assets/images/pages/like.png', onPressed: (){
+              setState(() {
+                like++;
+              });
+            }),
             actionType('0 Comments', 'assets/images/pages/comment.png'),
             actionType('5 Shares', 'assets/images/pages/share.png', onPressed: (){
               Share.share('Shares');

@@ -43,9 +43,10 @@ class _MyPollsState extends ConsumerState<MyPolls> {
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: viewModel.getMyPollModel.length,
+            itemCount: viewModel.fetchAllPols.length,
             itemBuilder: (context, index) {
-              final poll = viewModel.getMyPollModel[index];
+              //final poll = viewModel.getMyPollModel[index];
+              final poll = viewModel.fetchAllPols[index];
               int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
               int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
               print('URL ===> ${poll.url}');
