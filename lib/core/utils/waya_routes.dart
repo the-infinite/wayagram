@@ -152,7 +152,7 @@ class WayaAppRoutes {
     ProductsViewPage.route: () => ProductsViewPage(),
     WayaNotifications.route: () => WayaNotifications(),
     NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
-    Moment.route: () => Moment()
+    Moment.route: () => Moment(),
     EventView.route: () => EventView(),
     AddEvent.route: () => AddEvent(),
     EventDetail.route: () => EventDetail(),

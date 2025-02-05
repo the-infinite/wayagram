@@ -49,6 +49,10 @@ class $AssetsIconsGen {
   SvgGenImage get actionFilter =>
       const SvgGenImage('assets/icons/action-filter.svg');
 
+  /// File path: assets/icons/action-search.svg
+  SvgGenImage get actionSearch =>
+      const SvgGenImage('assets/icons/action-search.svg');
+
   /// File path: assets/icons/add-event-icon.svg
   SvgGenImage get addEventIcon =>
       const SvgGenImage('assets/icons/add-event-icon.svg');
@@ -140,6 +144,10 @@ class $AssetsIconsGen {
   SvgGenImage get cGroupCreate =>
       const SvgGenImage('assets/icons/c-group-create.svg');
 
+  /// File path: assets/icons/c-location-search.svg
+  SvgGenImage get cLocationSearch =>
+      const SvgGenImage('assets/icons/c-location-search.svg');
+
   /// File path: assets/icons/c-multiply-circle.svg
   SvgGenImage get cMultiplyCircle =>
       const SvgGenImage('assets/icons/c-multiply-circle.svg');
@@ -175,6 +183,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/c-profile-user.svg
   SvgGenImage get cProfileUser =>
       const SvgGenImage('assets/icons/c-profile-user.svg');
+
+  /// File path: assets/icons/c-read.svg
+  SvgGenImage get cRead => const SvgGenImage('assets/icons/c-read.svg');
 
   /// File path: assets/icons/c-send.svg
   SvgGenImage get cSend => const SvgGenImage('assets/icons/c-send.svg');
@@ -420,6 +431,7 @@ class $AssetsIconsGen {
         aCart,
         aMoment,
         actionFilter,
+        actionSearch,
         addEventIcon,
         apple,
         arrowBack,
@@ -446,6 +458,7 @@ class $AssetsIconsGen {
         cCornerUpRight,
         cFontStyle,
         cGroupCreate,
+        cLocationSearch,
         cMultiplyCircle,
         cPause,
         cPencil,
@@ -456,6 +469,7 @@ class $AssetsIconsGen {
         cProfileReport,
         cProfileUnmute,
         cProfileUser,
+        cRead,
         cSend,
         chat,
         checkIcon,
@@ -547,6 +561,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/cp-shop.png
   AssetGenImage get cpShop => const AssetGenImage('assets/images/cp-shop.png');
 
+  /// File path: assets/images/create-event-success.png
+  AssetGenImage get createEventSuccess =>
+      const AssetGenImage('assets/images/create-event-success.png');
+
   /// File path: assets/images/d-code-invalid.png
   AssetGenImage get dCodeInvalid =>
       const AssetGenImage('assets/images/d-code-invalid.png');
@@ -581,6 +599,9 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/onboarding
   $AssetsImagesOnboardingGen get onboarding =>
       const $AssetsImagesOnboardingGen();
+
+  /// Directory path: assets/images/pages
+  $AssetsImagesPagesGen get pages => const $AssetsImagesPagesGen();
 
   /// File path: assets/images/placeholder.png
   AssetGenImage get placeholder =>
@@ -635,6 +656,7 @@ class $AssetsImagesGen {
         iconLeft,
         avatars,
         cpShop,
+        createEventSuccess,
         dCodeInvalid,
         dCodeValid,
         deleteImg,
@@ -944,6 +966,125 @@ class $AssetsImagesOnboardingGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [flag, oFirst, oSecond, oThird];
+}
+
+class $AssetsImagesPagesGen {
+  const $AssetsImagesPagesGen();
+
+  /// File path: assets/images/pages/afro.png
+  AssetGenImage get afro => const AssetGenImage('assets/images/pages/afro.png');
+
+  /// File path: assets/images/pages/apple_music.png
+  AssetGenImage get appleMusic =>
+      const AssetGenImage('assets/images/pages/apple_music.png');
+
+  /// File path: assets/images/pages/c1.png
+  AssetGenImage get c1 => const AssetGenImage('assets/images/pages/c1.png');
+
+  /// File path: assets/images/pages/camera.png
+  AssetGenImage get camera =>
+      const AssetGenImage('assets/images/pages/camera.png');
+
+  /// File path: assets/images/pages/cancel.png
+  AssetGenImage get cancel =>
+      const AssetGenImage('assets/images/pages/cancel.png');
+
+  /// File path: assets/images/pages/comment.png
+  AssetGenImage get comment =>
+      const AssetGenImage('assets/images/pages/comment.png');
+
+  /// File path: assets/images/pages/cowry.png
+  AssetGenImage get cowry =>
+      const AssetGenImage('assets/images/pages/cowry.png');
+
+  /// File path: assets/images/pages/crown.png
+  AssetGenImage get crown =>
+      const AssetGenImage('assets/images/pages/crown.png');
+
+  /// File path: assets/images/pages/empire.png
+  AssetGenImage get empire =>
+      const AssetGenImage('assets/images/pages/empire.png');
+
+  /// File path: assets/images/pages/gallery.png
+  AssetGenImage get gallery =>
+      const AssetGenImage('assets/images/pages/gallery.png');
+
+  /// File path: assets/images/pages/img1.png
+  AssetGenImage get img1 => const AssetGenImage('assets/images/pages/img1.png');
+
+  /// File path: assets/images/pages/img2.png
+  AssetGenImage get img2 => const AssetGenImage('assets/images/pages/img2.png');
+
+  /// File path: assets/images/pages/img3.png
+  AssetGenImage get img3 => const AssetGenImage('assets/images/pages/img3.png');
+
+  /// File path: assets/images/pages/like.png
+  AssetGenImage get like => const AssetGenImage('assets/images/pages/like.png');
+
+  /// File path: assets/images/pages/lock.png
+  AssetGenImage get lock => const AssetGenImage('assets/images/pages/lock.png');
+
+  /// File path: assets/images/pages/ls.png
+  AssetGenImage get ls => const AssetGenImage('assets/images/pages/ls.png');
+
+  /// File path: assets/images/pages/moonshoot.png
+  AssetGenImage get moonshoot =>
+      const AssetGenImage('assets/images/pages/moonshoot.png');
+
+  /// File path: assets/images/pages/ms.png
+  AssetGenImage get ms => const AssetGenImage('assets/images/pages/ms.png');
+
+  /// File path: assets/images/pages/post.png
+  AssetGenImage get post => const AssetGenImage('assets/images/pages/post.png');
+
+  /// File path: assets/images/pages/save.png
+  AssetGenImage get save => const AssetGenImage('assets/images/pages/save.png');
+
+  /// File path: assets/images/pages/share.png
+  AssetGenImage get share =>
+      const AssetGenImage('assets/images/pages/share.png');
+
+  /// File path: assets/images/pages/sn.png
+  AssetGenImage get sn => const AssetGenImage('assets/images/pages/sn.png');
+
+  /// File path: assets/images/pages/team.png
+  AssetGenImage get team => const AssetGenImage('assets/images/pages/team.png');
+
+  /// File path: assets/images/pages/temi.png
+  AssetGenImage get temi => const AssetGenImage('assets/images/pages/temi.png');
+
+  /// File path: assets/images/pages/united.png
+  AssetGenImage get united =>
+      const AssetGenImage('assets/images/pages/united.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+        afro,
+        appleMusic,
+        c1,
+        camera,
+        cancel,
+        comment,
+        cowry,
+        crown,
+        empire,
+        gallery,
+        img1,
+        img2,
+        img3,
+        like,
+        lock,
+        ls,
+        moonshoot,
+        ms,
+        post,
+        save,
+        share,
+        sn,
+        team,
+        temi,
+        united
+      ];
 }
 
 class $AssetsImagesPollsGen {
