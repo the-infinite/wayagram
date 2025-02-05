@@ -21,8 +21,6 @@ class ChatVoiceMessageInput extends StatefulWidget {
 
 class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with SingleTickerProviderStateMixin {
   AnimationController? animationController;
-  final isPlaying = ValueNotifier(false);
-  final canPlay = ValueNotifier(false);
 
   @override
   void initState() {
