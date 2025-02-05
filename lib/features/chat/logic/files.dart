@@ -25,16 +25,16 @@ List<File> getMessageFileAttachments(MessageModel message) {
 }
 
 /// Returns the file associated with a voice message from the provided [message].
-/// 
+///
 /// Takes a [MessageModel] as input and locates the corresponding voice message file
 /// in the file system. This method assumes the voice message exists and is accessible.
-/// 
+///
 /// Example:
 /// ```dart
 /// final messageFile = getVoiceMessageFile(someMessage);
 /// ```
-/// 
+///
 /// Throws [FileSystemException] if the file cannot be accessed or does not exist.
 File getVoiceMessageFile(MessageModel message) {
-  return File(message.mediaUrl!);
+  return File(message.mediaUrl!).absolute;
 }

@@ -136,7 +136,9 @@ class WayaButton extends StatelessWidget {
                       )
                     : Text(
                         text,
-                        style: textStyle ??
+                        style: textStyle?.copyWith(
+                              color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
+                            ) ??
                             wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                               fontWeight: FontWeight.w600,
                               color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,

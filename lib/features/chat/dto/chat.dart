@@ -10,7 +10,7 @@ class SendMessageDto {
   final String? body;
   final MessageModel? replyTo;
   final List<String>? files;
-  final String? voiceMessage;
+  final String? mediaUrl;
   final List<String>? contacts;
 
   SendMessageDto({
@@ -19,7 +19,7 @@ class SendMessageDto {
     required this.replyTo,
     required this.body,
     required this.files,
-    required this.voiceMessage,
+    required this.mediaUrl,
     required this.contacts,
   });
 
