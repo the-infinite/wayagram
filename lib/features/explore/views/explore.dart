@@ -20,6 +20,7 @@ import 'package:wayagram/features/explore/widgets/polls_card.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
+import 'package:wayagram/features/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
@@ -116,21 +117,19 @@ class _ExploreState extends ConsumerState<Explore> {
             SizedBox(
               height: 80,
               child: ListView.builder(
-                itemCount: 8,
-                scrollDirection: Axis.horizontal,
-             
-                itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      const Gap(6),
-                      MomentsWidget(
-                        isCreate: index == 0,
-                        onTap: () => WayaNav.toNamed(Moment.route)
-                      ),
-                      const Gap(6)
-                    ],
-                  );
-                }),
+                  itemCount: 8,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      children: [
+                        const Gap(6),
+                        MomentsWidget(
+                            isCreate: index == 0,
+                            onTap: () => WayaNav.toNamed(Moment.route)),
+                        const Gap(6)
+                      ],
+                    );
+                  }),
             ),
             const Gap(25),
             GroupedWidgetHeader(
@@ -177,10 +176,14 @@ class _ExploreState extends ConsumerState<Explore> {
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
             const Gap(10),
-            CategoriesFilterWidget(
-              setCategory: (value) =>
-                  ref.read(shopVmProvider.notifier).setCategory(value),
-            ),
+            CategoriesFilterWidget(setCategory: (value) {
+              ref.read(shopVmProvider.notifier).setCategory(value);
+              for (String categoryId in value) {
+                ref
+                    .read(productEngagementProvider.notifier)
+                    .addCategory(categoryId, ProductPoint.searchPoint.value);
+              }
+            }),
 
             const Gap(25),
             state.isLoading

@@ -46,23 +46,23 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
       bool isOwner = shop.id == product.shopId;
       state = state.copyWith(isProductOwner: isOwner);
     }
-    getSimilarProduct(categoryId: product.categoryId, productId: product.id);
+    //getSimilarProduct(categoryId: product.categoryId, productId: product.id);
   }
 
   // add the api to get similar product when it is made available
-  void getSimilarProduct({required String categoryId, required String productId}) async {
-    state = state.copyWith(isLoading: true);
-    final PaginatedResult<Product>? products =
-        await ref.read(shopVmProvider.notifier).getAllProducts(1);
+  // void getSimilarProduct({required String categoryId, required String productId}) async {
+  //   state = state.copyWith(isLoading: true);
+  //   final PaginatedResult<Product>? products =
+  //       await ref.read(shopVmProvider.notifier).getAllProducts(1);
 
-    if (products != null) {
-      final similar =
-          products.items.where((prod) => prod.categoryId == categoryId && prod.id != productId).toList();
+  //   if (products != null) {
+  //     final similar =
+  //         products.items.where((prod) => prod.categoryId == categoryId && prod.id != productId).toList();
 
-      state = state.copyWith(similarProduct: similar);
-    }
-    state = state.copyWith(isLoading: false);
-  }
+  //     state = state.copyWith(similarProduct: similar);
+  //   }
+  //   state = state.copyWith(isLoading: false);
+  // }
 
   void initiateDelete(BuildContext context, Product product) async {
     if (context.mounted) {
