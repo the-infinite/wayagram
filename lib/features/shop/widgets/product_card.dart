@@ -46,12 +46,14 @@ class ProductCard extends ConsumerWidget {
         children: [
           WayaImage(
             imageUrl: image,
-            height: 180,
+            height: 180 ,
             width: double.infinity,
             fit: BoxFit.contain,
             radius: BorderRadius.circular(8),
             color: wayaTheme.colorScheme.transparent,
           ),
+          if (product.discountPercentage == 0)
+          SizedBox(height: 22,),
           Visibility(
               visible: product.wayagramDeal,
               child: Column(
@@ -75,7 +77,7 @@ class ProductCard extends ConsumerWidget {
               child: Column(
                 children: [
                  SizedBox(height: 3),
-                  Text(product.category!.label,
+                  Text(product.categoryName,
                       style: wayaTheme.textTheme.hintStyle),
                 ],
               )),
@@ -105,7 +107,7 @@ class ProductCard extends ConsumerWidget {
                 ],
               )),
           Visibility(
-              visible: true,
+              visible: product.discountPercentage > 0,
               child: Column(
                 children: [
                  SizedBox(height: 3),

@@ -42,6 +42,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/a-cart.svg
   SvgGenImage get aCart => const SvgGenImage('assets/icons/a-cart.svg');
 
+  /// File path: assets/icons/a-moment.svg
+  SvgGenImage get aMoment => const SvgGenImage('assets/icons/a-moment.svg');
+
   /// File path: assets/icons/action-filter.svg
   SvgGenImage get actionFilter =>
       const SvgGenImage('assets/icons/action-filter.svg');
@@ -114,6 +117,10 @@ class $AssetsIconsGen {
   SvgGenImage get cCallVoice =>
       const SvgGenImage('assets/icons/c-call-voice.svg');
 
+  /// File path: assets/icons/c-color-type.svg
+  SvgGenImage get cColorType =>
+      const SvgGenImage('assets/icons/c-color-type.svg');
+
   /// File path: assets/icons/c-copy.svg
   SvgGenImage get cCopy => const SvgGenImage('assets/icons/c-copy.svg');
 
@@ -124,6 +131,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/c-corner-up-right.svg
   SvgGenImage get cCornerUpRight =>
       const SvgGenImage('assets/icons/c-corner-up-right.svg');
+
+  /// File path: assets/icons/c-font-style.svg
+  SvgGenImage get cFontStyle =>
+      const SvgGenImage('assets/icons/c-font-style.svg');
 
   /// File path: assets/icons/c-group-create.svg
   SvgGenImage get cGroupCreate =>
@@ -407,6 +418,7 @@ class $AssetsIconsGen {
   /// List of all assets
   List<SvgGenImage> get values => [
         aCart,
+        aMoment,
         actionFilter,
         addEventIcon,
         apple,
@@ -428,9 +440,11 @@ class $AssetsIconsGen {
         cCallIncoming,
         cCallVideo,
         cCallVoice,
+        cColorType,
         cCopy,
         cCornerUpLeft,
         cCornerUpRight,
+        cFontStyle,
         cGroupCreate,
         cMultiplyCircle,
         cPause,

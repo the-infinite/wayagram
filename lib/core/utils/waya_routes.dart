@@ -18,6 +18,7 @@ import 'package:wayagram/features/group/view/create_group.dart';
 import 'package:wayagram/features/group/view/group_public.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
+import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/pages/view/create_post.dart';
 import 'package:wayagram/features/pages/view/mutual_page.dart';
@@ -151,6 +152,7 @@ class WayaAppRoutes {
     ProductsViewPage.route: () => ProductsViewPage(),
     WayaNotifications.route: () => WayaNotifications(),
     NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
+    Moment.route: () => Moment()
     EventView.route: () => EventView(),
     AddEvent.route: () => AddEvent(),
     EventDetail.route: () => EventDetail(),

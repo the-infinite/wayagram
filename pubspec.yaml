@@ -50,6 +50,7 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   percent_indicator: ^4.2.4
   slide_countdown: ^2.0.2
+  google_fonts: ^6.2.1
   coast_audio: ^1.0.0
   flutter_webrtc: ^0.12.7
   rtmp_broadcaster:
