@@ -14,6 +14,8 @@ import 'package:wayagram/features/shared/model/base_model.dart';
 import '../components/components.dart';
 
 class WayaUtils {
+  WayaUtils._();
+
   static Future<void> showNotice(
       {required BuildContext context,
       required String title,
@@ -70,39 +72,37 @@ class WayaUtils {
     WayaSnackBar.showToast('Copied');
   }
 
-  static showModalSheet(BuildContext context, {required Widget child}) {
-    return showModalBottomSheet(
-        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
-        context: context,
-        isScrollControlled: true,
-        useRootNavigator: true,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
-        builder: (context) => child);
+  static Future<T?> showModalSheet<T>(BuildContext context, {required Widget child}) {
+    return showModalBottomSheet<T?>(
+      constraints: BoxConstraints(maxHeight: Get.height * 0.8),
+      context: context,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      builder: (context) => child,
+    );
   }
 
   static showModalSheetUgt(BuildContext context, {required Widget child}) {
     return showModalBottomSheet(
-        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
-        context: context,
-        isScrollControlled: true,
-        useRootNavigator: true,
-        /*isDismissible: true,
+      constraints: BoxConstraints(maxHeight: Get.height * 0.8),
+      context: context,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      /*isDismissible: true,
         enableDrag: false,*/
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
-        builder: (context) => child);
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      builder: (context) => child,
+    );
   }
 
-  static showModalSheetQuotation(BuildContext context,
-      {required Widget child}) {
+  static showModalSheetQuotation(BuildContext context, {required Widget child}) {
     return showModalBottomSheet(
         constraints: BoxConstraints(maxHeight: Get.height * 0.8),
         context: context,
         isScrollControlled: true,
         useRootNavigator: true,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
         builder: (context) => child);
   }
 

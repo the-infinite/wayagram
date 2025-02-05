@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 
@@ -48,7 +49,7 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
               ],
             ),
             callback: () {
-              //WayaNav.toNamed('/create-request');
+              WayaNav.toNamed('/addTeamMember');
             },
             color: wayaTheme.colorScheme.primar50,
           ),
@@ -105,12 +106,15 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
                         title:Row(children: [
                           Text(
                               index==0?'Temitope Adebayo':index==1?'Temitope Adebayo':index==2?'Oluwaseun Adeyemi': 'Ifeoma Okeke',
-                              style: wayaTheme.textTheme.bodyMedium),
+                              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.black ),),
                         ],),
                         subtitle:  Text(
                           '@chukwudi2024',
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 14,
+                              fontSize: 12,
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.greyColor500 ),
                         ),),

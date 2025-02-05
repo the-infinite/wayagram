@@ -6,10 +6,11 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/chat/widget/profile_picture.dart';
 
-class SingleChatScreen extends ConsumerStatefulWidget {
+class SingleChatScreen extends ConsumerWidget {
   static const route = "/conversation/chat";
   final String chatId;
 
@@ -19,31 +20,21 @@ class SingleChatScreen extends ConsumerStatefulWidget {
     required this.chatId,
   });
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SingleChatScreenState();
-}
-
-class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
-  final inputController = ChatInputController();
-  late final chat = ref.watch(conversationProvider).conversations.firstWhere((chat) => chat.id == widget.chatId);
-  late final state = ref.watch(chatProvider);
-  late final notifier = ref.watch(chatProvider.notifier);
-
   // We start a video call.
   void _startAudioCall() async {}
 
   // We start a video call.
   void _startVideoCall() async {}
 
-  @override
-  void dispose() {
-    inputController.dispose();
-    super.dispose();
-  }
-
   // This is fine.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final chat = ref.watch(conversationProvider).conversations.firstWhere((chat) => chat.id == chatId);
+    final state = ref.watch(chatProvider);
+    final notifier = ref.watch(chatProvider.notifier);
+    final inputController = ChatInputController(chat);
+
+    // This is fine.
     return WayaScaffold(
       isLoading: state.isLoading,
       isScrollable: false,
@@ -159,25 +150,29 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
             child: RefreshIndicator(
               onRefresh: notifier.getMessages,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // For our messages.
-                  ],
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(
+                    state.messages.length,
+                    (index) => ChatBubbleWidget(
+                      index: index,
+                      data: state.messages[index],
+                      controller: inputController,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
 
-          // An ever so tiny amount of space.
-          const Gap(12),
-
           //? Third, the chat input widget.
           ChatInputWidget(
             controller: inputController,
+            notifier: notifier,
           )
         ],
       ),
