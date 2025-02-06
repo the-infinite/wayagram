@@ -275,25 +275,25 @@ class PageVm extends StateNotifier<PageState> {
     //WayaHelpers.
 
     try {
-      final response = await _pageRepository.createPost(content, choiceMap, postType);
+    //   final response = await _pageRepository.createPost(content, choiceMap, postType);
 
-      //? If this is fine...
-      if (response.success && ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post created successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
+    //   //? If this is fine...
+    //   if (response.success && ctx.mounted) {
+    //     ScaffoldMessenger.of(ctx).showSnackBar(
+    //       const SnackBar(
+    //         content: Text('Post created successfully!'),
+    //         backgroundColor: WayaColors.primary,
+    //         duration: Duration(seconds: 2),
+    //       ),
+    //     );
+    //   }
 
-      //? If it failed...
-      else {
-        _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        print('Create post');
-        _logger.i(response.data['data']);
-      }
+    //   //? If it failed...
+    //   else {
+    //     _logger.i('LOGGER  ==>>> ${response.data['error']}');
+    //     print('Create post');
+    //     _logger.i(response.data['data']);
+    //   }
     } catch (e) {
       _logger.e(e);
     } finally {
