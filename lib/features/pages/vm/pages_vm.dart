@@ -275,8 +275,9 @@ class PageVm extends StateNotifier<PageState> {
     //WayaHelpers.
 
     try {
+      state = state.copyWith(isLoading: true);
       final response = await _pageRepository.createPost(content, choiceMap, postType);
-
+      state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(

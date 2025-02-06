@@ -120,7 +120,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
 
                      );
                       ref.watch(createPageProvider.notifier).reset();
-                     // WayaNav.toNamed("/pages",);
+                     WayaNav.toNamed("/pages",);
                     }
                   } : null,
                   height: 30,
