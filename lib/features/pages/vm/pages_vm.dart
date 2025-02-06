@@ -2,18 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/data/model/followers_model.dart';
 import 'package:wayagram/features/pages/data/model/page_state.dart';
@@ -264,7 +260,7 @@ class PageVm extends StateNotifier<PageState> {
 
     // upload
     for (UploadedImage url in urls) {
-      final file = await http.MultipartFile.fromPath(url.fileName, url.file);
+        final file = File(url.file);
 
        final putImageResponse = await _pageRepository.putImage(url.url, file);
 

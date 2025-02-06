@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -94,9 +96,10 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<WayaRequestResponse> putHttp(
     String route,
     dynamic body, {
-        String? contentType,
+    String? contentType,
     Map<String, dynamic>? params,
     bool formdata = false,
+    bool isBinary = false,
     bool formEncoded = false,
   }) async {
     await _setHeader(
@@ -109,6 +112,11 @@ class DioHttpClient implements WayaHttpClientInterface {
     _logger.i('fullRoute: $fullRoute $body');
     if (formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
+    }
+
+    //? This is fine.
+    if (isBinary) {
+      body = (body as File).openRead();
     }
 
     return _makeRequest(dio.put(
@@ -202,11 +210,12 @@ class DioHttpClient implements WayaHttpClientInterface {
     String? contentType,
   }) async {
     dio.options.headers = {
-      'content-type': contentType ?? (formdata
-          ? 'multipart/form-data'
-          : formEncoded
-              ? 'application/x-www-form-urlencoded'
-              : 'application/json'),
+      'content-type': contentType ??
+          (formdata
+              ? 'multipart/form-data'
+              : formEncoded
+                  ? 'application/x-www-form-urlencoded'
+                  : 'application/json'),
       'Accept': '*/*',
       'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };
