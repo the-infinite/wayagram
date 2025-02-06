@@ -21,8 +21,7 @@ class Pages extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PagesState();
 }
 
-class _PagesState extends ConsumerState<Pages>
-    with SingleTickerProviderStateMixin {
+class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   @override
@@ -32,70 +31,71 @@ class _PagesState extends ConsumerState<Pages>
     final viewModel = ref.watch(createPageProvider);
 
     return WayaScaffold(
-        onTapBackButton: () {
-          Navigator.pushNamed(context, BottomView.route, arguments: 5);
-        },
-        isLoading: viewModel.isLoading,
-        isScrollable: true,
-        title: 'Pages',
-        appBarTrailing: Row(
-          spacing: 12,
-          children: [
-            WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-            WayaDp(
-              radius: 15.r,
-            ),
-            Gap(8)
-          ],
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Gap(10),
-            Row(
-              children: [
-                WayaTabButton(
-                  isSelected: _selectedIndex == 0,
-                  text: 'For You',
-                  onTap: () => setState(() => _selectedIndex = 0),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 1,
-                  text: 'Following',
-                  onTap: () => setState(() => _selectedIndex = 1),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 2,
-                  text: 'Manage Pages',
-                  onTap: () => setState(() => _selectedIndex = 2),
-                ),
-              ],
-            ),
-            const Gap(20),
-            _selectedIndex == 0
-                ? PagesForYou()
-                : _selectedIndex == 1
-                    ? FollowingPage()
-                    : ManagePages()
-          ],
-        ),
-        floatingActionButton: SizedBox(
-          height: 50,
-          width: 50,
-          child: WayaButton(
-            callback: () {
-              WayaNav.toNamed('/createPost');
-            },
-            height: 50,
-            centerWidget: Center(
-              child: Icon(
-                Icons.add,
-                color: wayaTheme.colorScheme.white,
-                size: 40,
+      onTapBackButton: () {
+        Navigator.pushNamed(context, BottomView.route, arguments: 5);
+      },
+      isLoading: viewModel.isLoading,
+      isScrollable: true,
+      title: 'Pages',
+      appBarTrailing: Row(
+        spacing: 12,
+        children: [
+          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          WayaDp(
+            radius: 15.r,
+          ),
+          Gap(8)
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Gap(10),
+          Row(
+            children: [
+              WayaTabButton(
+                isSelected: _selectedIndex == 0,
+                text: 'For You',
+                onTap: () => setState(() => _selectedIndex = 0),
               ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 1,
+                text: 'Following',
+                onTap: () => setState(() => _selectedIndex = 1),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 2,
+                text: 'Manage Pages',
+                onTap: () => setState(() => _selectedIndex = 2),
+              ),
+            ],
+          ),
+          const Gap(20),
+          _selectedIndex == 0
+              ? PagesForYou()
+              : _selectedIndex == 1
+                  ? FollowingPage()
+                  : ManagePages()
+        ],
+      ),
+      floatingActionButton: SizedBox(
+        height: 50,
+        width: 50,
+        child: WayaButton(
+          callback: () {
+            WayaNav.toNamed('/createPost');
+          },
+          height: 50,
+          centerWidget: Center(
+            child: Icon(
+              Icons.add,
+              color: wayaTheme.colorScheme.white,
+              size: 40,
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

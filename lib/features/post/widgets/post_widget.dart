@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,8 +19,8 @@ import '../../pages/data/model/feeds.dart';
 import 'likebtnreaction.dart';
 
 class PostWidget extends ConsumerWidget {
-
-  const PostWidget({required this.post,
+  const PostWidget({
+    required this.post,
     required this.isLiked,
     required this.onLike,
     this.onReact,
@@ -40,9 +39,7 @@ class PostWidget extends ConsumerWidget {
     required this.commentCount,
     required this.isProfilePost,
     this.viewFull,
-  })
-      : super(key: key);
-
+  }) : super(key: key);
 
   final bool isFullPostDetails;
   final bool isFeedsPost;
@@ -105,7 +102,7 @@ class PostWidget extends ConsumerWidget {
         ),
 
 //conditional suggested section
-      /*  if (isSuggested)
+        /*  if (isSuggested)
           Padding(
             padding: EdgeInsets.only(left: 15.0.w, right: 15.w),
             child: Column(
@@ -239,31 +236,27 @@ class PostWidget extends ConsumerWidget {
                           _showShareDialog(context, post.shareLink);
                           break;
                         case 'Unfollow':
-                        // Implement unfollow action
+                          // Implement unfollow action
                           break;
                         case 'Connect':
-                        // Implement connect action
+                          // Implement connect action
                           break;
 
-                      //
+                        //
                         case 'Report post':
-                        //Report post action
+                          //Report post action
                           break;
                       }
                     },
-                    itemBuilder: (BuildContext context) =>
-                    <PopupMenuEntry<String>>[
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                       PopupMenuItem<String>(
                         value: isSaved ? 'Unsave Post' : 'Save Post',
                         child: Padding(
-                          padding: EdgeInsets.only(
-                              top: 30.h, left: 10.w, bottom: 22.h),
+                          padding: EdgeInsets.only(top: 30.h, left: 10.w, bottom: 22.h),
                           child: Row(
                             children: [
                               SvgPicture.asset(
-                                isSaved
-                                    ? 'assets/icons/menus/close_circle.svg'
-                                    : 'assets/icons/menus/archive_tick.svg',
+                                isSaved ? 'assets/icons/menus/close_circle.svg' : 'assets/icons/menus/archive_tick.svg',
                                 height: 24.h,
                                 width: 24.w,
                               ),
@@ -287,7 +280,10 @@ class PostWidget extends ConsumerWidget {
                           padding: EdgeInsets.only(left: 10.w, bottom: 22.h),
                           child: Row(
                             children: [
-                              Image.asset('assets/images/pages/share.png',  height: 32.h,),
+                              Image.asset(
+                                'assets/images/pages/share.png',
+                                height: 32.h,
+                              ),
                               //Icon(IconsaxOutline.share, size: 24.sp),
                               SizedBox(width: 10.w),
                               Text(
@@ -357,21 +353,17 @@ class PostWidget extends ConsumerWidget {
                               children: [
                                 connected
                                     ? SvgPicture.asset(
-                                  'assets/icons/menus/close_circle.svg',
-                                  height: 24.h,
-                                  width: 24.w,
-                                  color: connected
-                                      ? Colors.red
-                                      : Colors.blue,
-                                )
-                                    :  Image.asset('assets/images/pages/delete.svg', height: 24.sp),
+                                        'assets/icons/menus/close_circle.svg',
+                                        height: 24.h,
+                                        width: 24.w,
+                                        color: connected ? Colors.red : Colors.blue,
+                                      )
+                                    : Image.asset('assets/images/pages/delete.svg', height: 24.sp),
                                 //Icon(IconsaxOutline.add_square, size: 24.sp),
                                 SizedBox(width: 10.w),
                                 Flexible(
                                   child: Text(
-                                    connected
-                                        ? 'Unfollow $authorName'
-                                        : 'Connect with $authorName',
+                                    connected ? 'Unfollow $authorName' : 'Connect with $authorName',
                                     style: TextStyle(
                                       fontFamily: WayaConstants.fontFamily,
                                       fontSize: 16.sp,
@@ -414,7 +406,10 @@ class PostWidget extends ConsumerWidget {
                             padding: EdgeInsets.only(left: 10.w, bottom: 22.h),
                             child: Row(
                               children: [
-                                Image.asset('assets/images/pages/flag.png',  height: 32.h,),
+                                Image.asset(
+                                  'assets/images/pages/flag.png',
+                                  height: 32.h,
+                                ),
                                 //Icon(IconsaxOutline.forbidden, size: 24.sp),
                                 SizedBox(width: 10.w),
                                 Text(
@@ -437,7 +432,7 @@ class PostWidget extends ConsumerWidget {
               SizedBox(
                 height: 15.h,
               ),
-            /*  Text(
+              /*  Text(
                 post.title,
                 style: TextStyle(
                   fontFamily: WayaConstants.fontFamily,
@@ -448,7 +443,7 @@ class PostWidget extends ConsumerWidget {
                 height: 15.h,
               ),*/
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   viewFull!();
                 },
                 child: ReadMoreText(
@@ -467,12 +462,12 @@ class PostWidget extends ConsumerWidget {
                             fontSize: 15.sp,
                             color: Colors.blue,
                             decoration: TextDecoration.underline,
-                            decorationColor: Colors.blue
-                        ),
-                        recognizer: TapGestureRecognizer()..onTap = () async {
-                          final String fullUrl = text.startsWith('http') ? text : 'https://$text';
-                          _launchUrl(fullUrl);
-                        },
+                            decorationColor: Colors.blue),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () async {
+                            final String fullUrl = text.startsWith('http') ? text : 'https://$text';
+                            _launchUrl(fullUrl);
+                          },
                       ),
                     ),
                   ],
@@ -511,7 +506,7 @@ class PostWidget extends ConsumerWidget {
         ),
         if (post.media.isNotEmpty)
           GestureDetector(
-              onTap: (){
+              onTap: () {
                 viewFull!();
               },
               child: NormalImage(url: post.media[0], images: post.media, height: 390, width: double.infinity)),
@@ -558,7 +553,7 @@ class PostWidget extends ConsumerWidget {
               LikeButtonWithReactions(
                 isLiked: isLiked,
                 onLike: onLike,
-                onReact: onReact ?? (react){},
+                onReact: onReact ?? (react) {},
               ),
               // Comment button
               GestureDetector(
@@ -588,8 +583,11 @@ class PostWidget extends ConsumerWidget {
                 onTap: onRepost,
                 child: Row(
                   children: [
-                    Image.asset('assets/images/pages/flag.svg',height: 18.sp,
-                      color: isReposted == true ? Colors.blue : Colors.black,),
+                    Image.asset(
+                      'assets/images/pages/flag.svg',
+                      height: 18.sp,
+                      color: isReposted == true ? Colors.blue : Colors.black,
+                    ),
                     // Icon(
                     //   IconsaxOutline.programming_arrow,
                     //   size: 18.sp,
@@ -613,11 +611,14 @@ class PostWidget extends ConsumerWidget {
               GestureDetector(
                 onTap: () {
                   Share.share(post.shareLink);
-                 // _showShareDialog(context, post.shareLink);
+                  // _showShareDialog(context, post.shareLink);
                 },
                 child: Row(
                   children: [
-                    Image.asset('assets/images/pages/share.png',  height: 32.h,),
+                    Image.asset(
+                      'assets/images/pages/share.png',
+                      height: 32.h,
+                    ),
                     //Icon(IconsaxOutline.share, size: 18.sp),
                     SizedBox(width: 6.w),
                     Text(
@@ -660,10 +661,7 @@ class PostWidget extends ConsumerWidget {
               Expanded(
                 child: Text(
                   shareLink,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: Colors.black),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),
                 ),
               ),
               IconButton(

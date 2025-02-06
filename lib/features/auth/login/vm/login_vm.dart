@@ -11,6 +11,7 @@ import 'package:wayagram/features/auth/login/model/user_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/features/notifications/vm/default.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 
 class LoginState {
   final bool isPasswordFocused;
@@ -90,7 +91,7 @@ class LoginVm extends StateNotifier<LoginState> {
 
       // _logger.d(" result ${response.data['message']}");
       if (response.success) {
-       // clearStorage();
+        // clearStorage();
         final remmoteUserData = UserModel.fromJson(response.data);
         state = state.copyWith(userData: remmoteUserData);
 
@@ -108,6 +109,7 @@ class LoginVm extends StateNotifier<LoginState> {
           if (response.success) {
             UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
             _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+            ConversationState.setSelf(userAccountModel.data?.userdata?.user);
 
             if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role!.name != "PERSONAL") {
               final bizResponse =
