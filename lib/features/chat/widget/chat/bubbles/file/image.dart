@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -29,9 +30,7 @@ class ImageFileWidget extends StatelessWidget {
 
     //? Return this here.
     return Padding(
-      padding: (interactive && index == totalSize - 1) || (!interactive && (index == totalSize - 1 || index == 2))
-          ? EdgeInsets.zero
-          : const EdgeInsets.only(right: 10),
+      padding: index == min(totalSize - 1, 2) ? EdgeInsets.zero : const EdgeInsets.only(right: 10),
       child: Stack(
         children: [
           //? First, the image file itself.

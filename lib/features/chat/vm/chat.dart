@@ -43,7 +43,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
         messageType: message.type,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        mediaUrl: null,
+        mediaUrl: message.mediaUrl,
         edited: false,
         originalMessageId: message.replyToId,
         forwardedFrom: null,

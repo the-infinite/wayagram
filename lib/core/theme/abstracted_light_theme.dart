@@ -3,26 +3,27 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 final abstractedLightTheme = ThemeData(
-    primaryColor: WayaColors.primary,
-    colorScheme: ColorScheme.light(
-      primary: WayaColors.primary,
-      secondary: WayaColors.secondaryColor,
-    ),
-    textTheme: TextTheme(
-      labelSmall: WayaTextStyles.labelSmall,
-      labelMedium: WayaTextStyles.labelMedium,
-      titleLarge: WayaTextStyles.titleLarge,
-      titleMedium: WayaTextStyles.titleMedium,
-      headlineLarge: WayaTextStyles.headlineLarge,
-      headlineMedium: WayaTextStyles.headlineMedium,
-      bodyMedium: WayaTextStyles.bodyMedium,
-    ),
-    scaffoldBackgroundColor: WayaColors.scaffoldColor2,
-    appBarTheme: _appBarThemeData(),
-    switchTheme: _switchThemeData(),
-    chipTheme: _chipThemeData(),
-    elevatedButtonTheme: _elevatedButtonThemeData(),
-    checkboxTheme: _checkBoxThemeData());
+  primaryColor: WayaColors.primary,
+  colorScheme: ColorScheme.light(
+    primary: WayaColors.primary,
+    secondary: WayaColors.secondaryColor,
+  ),
+  textTheme: TextTheme(
+    labelSmall: WayaTextStyles.labelSmall,
+    labelMedium: WayaTextStyles.labelMedium,
+    titleLarge: WayaTextStyles.titleLarge,
+    titleMedium: WayaTextStyles.titleMedium,
+    headlineLarge: WayaTextStyles.headlineLarge,
+    headlineMedium: WayaTextStyles.headlineMedium,
+    bodyMedium: WayaTextStyles.bodyMedium,
+  ),
+  scaffoldBackgroundColor: WayaColors.scaffoldColor2,
+  appBarTheme: _appBarThemeData(),
+  switchTheme: _switchThemeData(),
+  chipTheme: _chipThemeData(),
+  elevatedButtonTheme: _elevatedButtonThemeData(),
+  checkboxTheme: _checkBoxThemeData(),
+);
 
 AppBarTheme _appBarThemeData() {
   return const AppBarTheme(

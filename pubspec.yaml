@@ -20,6 +20,7 @@ dependencies:
   get_storage: ^2.1.1
   flutter_secure_storage: ^9.2.2
   path_provider: ^2.1.5
+  sqlite3_flutter_libs: ^0.5.29+1
   dio: ^5.2.1+1
   http: ^1.2.1
   shared_preferences: ^2.2.3
@@ -50,11 +51,12 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   percent_indicator: ^4.2.4
   slide_countdown: ^2.0.2
-  google_fonts: ^6.2.1
-  coast_audio: ^1.0.0
+  # flutter_sound: ^9.6.0
   file_picker: ^8.3.1
   video_player: ^2.9.2
   flutter_webrtc: ^0.12.7
+  permission_handler: ^11.3.1
+  audio_waveforms: ^1.2.0
   rtmp_broadcaster:
     git: https://github.com/OlJohnny/flutter_rtmp_broadcaster.git
   readmore: ^3.0.0
