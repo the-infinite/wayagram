@@ -179,8 +179,7 @@ class WayaAppRoutes {
     PrivateGroup.route: ()=> PrivateGroup(),
     SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route:() => DisplayFeed(),
-    GroupSetting.route: ()=> GroupSetting(),
-    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString())
+    GroupSetting.route: ()=> GroupSetting()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
