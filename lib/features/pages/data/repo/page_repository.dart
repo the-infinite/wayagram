@@ -28,7 +28,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> putImage(url, image) {
-    return put("$url", image, contentType: 'image/jpeg' );
+    return put("$url", {"image": image}, contentType: 'image/jpeg' );
   }
 
 

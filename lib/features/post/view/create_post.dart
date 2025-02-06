@@ -116,11 +116,11 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                      await ref.watch(createPageProvider.notifier).createPost(
                        context, viewModel.content.text,
                          sel ?"public":"private",
-                         '$_selectedImages',
+                         _selectedImages,
 
                      );
                       ref.watch(createPageProvider.notifier).reset();
-                      WayaNav.toNamed("/pages",);
+                     // WayaNav.toNamed("/pages",);
                     }
                   } : null,
                   height: 30,

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 
@@ -22,9 +21,17 @@ import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
-
+import 'package:http/http.dart' as http;
 import '../../post/model/comment.dart';
 
+class UploadedImage {
+  final String url;
+  final String file;
+  final String fileName;
+
+  UploadedImage(
+      {required this.url, required this.file, required this.fileName});
+}
 
 class PageVm extends StateNotifier<PageState> {
   final Ref ref;
@@ -35,14 +42,16 @@ class PageVm extends StateNotifier<PageState> {
 
   final _logger = getLogger('PageVm');
 
-  PageVm(this.ref, this._picker, this._pageRepository,
-      this._localDataSource, this._secureDataSource,)
-      : super(PageState()) {
-
-    state = state.copyWith(pageName: TextEditingController(text:'' ));
-    state = state.copyWith(pageDescription: TextEditingController(text:''));
-    state = state.copyWith(content: TextEditingController(text:''));
-
+  PageVm(
+    this.ref,
+    this._picker,
+    this._pageRepository,
+    this._localDataSource,
+    this._secureDataSource,
+  ) : super(PageState()) {
+    state = state.copyWith(pageName: TextEditingController(text: ''));
+    state = state.copyWith(pageDescription: TextEditingController(text: ''));
+    state = state.copyWith(content: TextEditingController(text: ''));
   }
 
   void reset() {
@@ -95,8 +104,7 @@ class PageVm extends StateNotifier<PageState> {
       } else {
         // Remove like if toggled off
         final response = await _pageRepository.removeReaction(
-            post.id!, post.getReactionId(user.id!)
-            );
+            post.id!, post.getReactionId(user.id!));
         handleLikeResponse(post, response);
       }
     } else {
@@ -120,7 +128,6 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-
   Future<void> unsavePost(BuildContext context, String postId) async {
     try {
       print('Attempting to unsave post with ID: $postId');
@@ -135,7 +142,7 @@ class PageVm extends StateNotifier<PageState> {
             duration: Duration(seconds: 2),
           ),
         );
-       // notifyListeners();
+        // notifyListeners();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -195,7 +202,6 @@ class PageVm extends StateNotifier<PageState> {
   }
 
   Future<void> fetchSavedPosts(userId) async {
-
     print('Fetching saved posts...');
 
     try {
@@ -209,7 +215,7 @@ class PageVm extends StateNotifier<PageState> {
       if (response.success) {
         FetchAllPost responseModel = FetchAllPost.fromJson(response.data);
         state = state.copyWith(fetchAllPostData: responseModel.data?.docs);
-       // final data = SavedPostsResponse.fromJson(response.data);
+        // final data = SavedPostsResponse.fromJson(response.data);
 
         //print('Data parsed: ${data.savedPosts.length} saved posts received.');
 
@@ -221,11 +227,10 @@ class PageVm extends StateNotifier<PageState> {
           _savedPosts.addAll(data.savedPosts); // No need to map, just add the SavedPost directly
           print('Saved posts added: ${_savedPosts.length} posts.');
         } */
-
       } else {
         print('Error: Status code ${response.statusCode}');
         _errorMessage2 =
-        'Failed to fetch saved posts. Status code: ${response.statusCode}';
+            'Failed to fetch saved posts. Status code: ${response.statusCode}';
       }
     } catch (e) {
       print('Exception occurred while fetching saved posts: $e');
@@ -237,17 +242,33 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> createPost(ctx,content, postType, String image,) async {
+  Future<void> createPost(ctx, content, postType, List<XFile> images) async {
+    print("before the loop");
+    List<UploadedImage> urls = [];
+    // get url
+    for (XFile image in images) {
+      print("In the loop ${image.name} ${image.path} ${image.mimeType}");
 
-    final List<String> choiceMap = [image];
+      final uploadImageResponse =
+          await _pageRepository.getUploadImage(image.name);
+     
+      MediaUploadModel mediaUploadModel =
+          MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(
+          url: mediaUploadModel.data!.url!,
+          file: image.path,
+          fileName: image.name));
+    }
 
-    for (PostImage image in state.images) {
-     final fileName = WayaHelpers.extractFileName(image.image);
-     print('uploadImageResponse ===>> ');
-      final uploadImageResponse = await _pageRepository.getUploadImage(fileName);
-print('uploadImageResponse ===>> ');
-     // await MultipartFile.fromFile(state.images[i].image!.path,
-     //     contentType: MediaType.parse('image/*'));
+    //MultipartFile.fromPath('file', file.path)
+
+    // upload
+    for (UploadedImage url in urls) {
+      final file = await http.MultipartFile.fromPath(url.fileName, url.file);
+
+       final putImageResponse = await _pageRepository.putImage(url.url, file);
+
+        print('uploadImageResponse ===>> $putImageResponse');
     }
     //WayaHelpers.
 
@@ -285,11 +306,9 @@ print('uploadImageResponse ===>> ');
   }
 
   Future<bool> commentPost(String postId, String content) async {
-
     try {
       final data = {"content": content};
-      final response =
-      await _pageRepository.commentOnPost(postId,data);
+      final response = await _pageRepository.commentOnPost(postId, data);
       if (response!.statusCode == 200 || response.statusCode == 201) {
         // _isLoading = false;
 
@@ -304,7 +323,6 @@ print('uploadImageResponse ===>> ');
       print("Error: $e");
 
       return false;
-
     }
   }
 
@@ -340,9 +358,7 @@ print('uploadImageResponse ===>> ');
       _errorMessage = e.toString();
 
       rethrow;
-    } finally {
-
-    }
+    } finally {}
   }
 
   Stream<List<Comments>> getCommentsStream(String postId) {
@@ -374,7 +390,6 @@ print('uploadImageResponse ===>> ');
       state = state.copyWith(isLoading: false);
     }
   }
-
 }
 
 final pageProvider = Provider((ref) => PageRepository());
@@ -386,8 +401,13 @@ final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
   final pageRepository = ref.watch(pageProvider);
   final localDataSource = ref.watch(localDataSourceProvider);
 
-  return PageVm(ref, ImagePicker(), pageRepository,
-      localDataSource, WayaSecureDataSource(), );
+  return PageVm(
+    ref,
+    ImagePicker(),
+    pageRepository,
+    localDataSource,
+    WayaSecureDataSource(),
+  );
 });
 
 
