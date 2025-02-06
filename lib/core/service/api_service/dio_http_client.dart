@@ -102,23 +102,34 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool isBinary = false,
     bool formEncoded = false,
   }) async {
+    int? length;
+
+    //? If this is binary, turn the body to a stream.
+    if (isBinary) {
+      body = (body as File).openRead();
+      length = await (body as File).length();
+    }
+
+    //? Now, I need you to set the headers correctly. Please add the content length
+    //? to headers.
     await _setHeader(
       formdata: formdata,
+      contentLength: length,
       contentType: contentType,
       formEncoded: formEncoded,
     );
+
+    //? This is fine.
     params?.removeWhere((key, value) => value == null);
     final fullRoute = '$baseURL$route';
     _logger.i('fullRoute: $fullRoute $body');
-    if (formdata) {
+
+    //? If this is formdata but not binary.
+    if (!isBinary && formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
     }
 
-    //? This is fine.
-    if (isBinary) {
-      body = (body as File).openRead();
-    }
-
+    //? Make the request.
     return _makeRequest(dio.put(
       fullRoute,
       data: body,
@@ -207,9 +218,11 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<void> _setHeader({
     bool formdata = false,
     bool formEncoded = false,
+    int? contentLength,
     String? contentType,
   }) async {
     dio.options.headers = {
+      if (contentLength != null) Headers.contentLengthHeader: '$contentLength',
       'content-type': contentType ??
           (formdata
               ? 'multipart/form-data'
