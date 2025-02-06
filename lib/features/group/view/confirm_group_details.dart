@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
@@ -44,9 +45,14 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
             viewModel2.reset();
             WayaNav.toNamed("/successGroup", arguments: '$type');
           } : null,
-          centerWidget: LoadingState(
-              loading: viewModel.isLoading, text: 'Create'),
+          //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create'),
           height: 30,
+          text: 'Create',
+          horizontalPadding: 12,
+          textStyle: WayaTextStyles.bodySmall.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.white ),
         ),
       ),
       body: Column(

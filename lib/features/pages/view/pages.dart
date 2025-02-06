@@ -36,7 +36,7 @@ class _PagesState extends ConsumerState<Pages>
         onTapBackButton: (){
           Navigator.pushNamed(context, BottomView.route, arguments: 5);
         },
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         isScrollable: true,
         title: 'Pages',
         appBarTrailing: Row(

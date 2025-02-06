@@ -94,12 +94,14 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<WayaRequestResponse> putHttp(
     String route,
     dynamic body, {
+        String? contentType,
     Map<String, dynamic>? params,
     bool formdata = false,
     bool formEncoded = false,
   }) async {
     await _setHeader(
       formdata: formdata,
+      contentType: contentType,
       formEncoded: formEncoded,
     );
     params?.removeWhere((key, value) => value == null);
@@ -197,13 +199,14 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<void> _setHeader({
     bool formdata = false,
     bool formEncoded = false,
+    String? contentType,
   }) async {
     dio.options.headers = {
-      'content-type': formdata
+      'content-type': contentType ?? (formdata
           ? 'multipart/form-data'
           : formEncoded
               ? 'application/x-www-form-urlencoded'
-              : 'application/json',
+              : 'application/json'),
       'Accept': '*/*',
       'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };

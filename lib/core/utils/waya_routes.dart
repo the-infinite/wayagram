@@ -15,13 +15,14 @@ import 'package:wayagram/features/general_settings/profile/view/edit_profile_pag
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
+import 'package:wayagram/features/group/view/group_setting.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/pages/view/add_team_member.dart';
-import 'package:wayagram/features/pages/view/create_post.dart';
+import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/pages/view/edit_page_info.dart';
 import 'package:wayagram/features/pages/view/mutual_page.dart';
 import 'package:wayagram/features/pages/view/private_page.dart';
@@ -173,6 +174,7 @@ class WayaAppRoutes {
     EditPageInfo.route: ()=> EditPageInfo(),
     AddTeamMember.route: ()=> AddTeamMember(),
     PrivateGroup.route: ()=> PrivateGroup(),
+    GroupSetting.route: ()=> GroupSetting(),
     SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString())
   };
 

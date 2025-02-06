@@ -32,11 +32,12 @@ abstract class BaseRepository {
   Future<WayaRequestResponse> put(
     String route,
     dynamic body, {
+        String? contentType,
     Map<String, dynamic>? params,
     bool formdata = false,
     bool formEncoded = false,
   }) {
-    return httpClient.putHttp(route, body,
+    return httpClient.putHttp(route, body, contentType: contentType,
         params: params, formdata: formdata, formEncoded: formEncoded);
   }
 
