@@ -1,5 +1,5 @@
 import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/features/shared/model/base_model.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
 
 class ProductResponse {

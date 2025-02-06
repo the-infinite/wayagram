@@ -8,7 +8,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/shared/components/engagement_range.dart';
+import 'package:wayagram/shared/components/engagement_range.dart';
 
 class DonationWidget extends ConsumerWidget {
   const DonationWidget({super.key});

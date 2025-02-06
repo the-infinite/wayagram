@@ -9,7 +9,7 @@ import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/widgets/event_widget.dart';
-import 'package:wayagram/features/shared/paginated_data/paginated_data_view.dart';
+import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 class MyEvents extends ConsumerStatefulWidget {

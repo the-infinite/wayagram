@@ -11,7 +11,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
-import 'package:wayagram/features/shared/components/engagement_range.dart';
+import 'package:wayagram/shared/components/engagement_range.dart';
 import 'package:flutter/services.dart';
 
 class EventWidget extends ConsumerWidget {

@@ -11,7 +11,7 @@ import 'package:wayagram/features/auth/add_business_account/widget/add_document_
 import 'package:wayagram/features/event/vm/add_event_vm.dart';
 import 'package:wayagram/features/event/widgets/event_date_widget.dart';
 import 'package:wayagram/features/event/widgets/event_time_widget.dart';
-import 'package:wayagram/features/shared/components/radio_select.dart';
+import 'package:wayagram/shared/components/radio_select.dart';
 
 class CreateEvent extends ConsumerStatefulWidget {
   final Function gotoNextTab;

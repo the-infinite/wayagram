@@ -9,7 +9,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
-import 'package:wayagram/features/shared/model/base_model.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 
 import '../components/components.dart';
 

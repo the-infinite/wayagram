@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/features/shared/paginated_data/vm/paginated_data_vm.dart';
+import 'package:wayagram/shared/paginated_data/vm/paginated_data_vm.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 
 class PaginatedDataView<T> extends ConsumerStatefulWidget {

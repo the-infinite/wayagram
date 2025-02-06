@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/features/shared/engagement/model/default.dart';
-import 'package:wayagram/features/shared/engagement/provider/default.dart';
+import 'package:wayagram/shared/engagement/model/default.dart';
+import 'package:wayagram/shared/engagement/provider/default.dart';
 
 enum ProductPoint {
   viewPoints(1),

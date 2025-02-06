@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/features/shared/engagement/model/default.dart';
+import 'package:wayagram/shared/engagement/model/default.dart';
 
 class EngagementNotifier
     extends StateNotifier<Map<ServiceType, EngagementData>> {

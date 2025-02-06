@@ -15,7 +15,7 @@ import 'package:wayagram/features/shop/cart/widgets/cart_card_vm.dart';
 import 'package:wayagram/features/shop/order/widgets/order_address_widget.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
-import '../../../shared/radio_select.dart';
+import '../../../../shared/radio_select.dart';
 
 class Checkout extends ConsumerWidget {
   static const route = '/checkout';
