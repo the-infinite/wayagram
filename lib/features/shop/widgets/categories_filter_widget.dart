@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -59,8 +60,21 @@ class _CategoriesFilterWidgetState
                       : wayaTheme.colorScheme.transparent,
                   radius: 10,
                   height: 40,
-                  centerWidget: Text(categories[index].label,
-                      style: WayaTextStyles.hintStyle),
+                  centerWidget: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      WayaDp(
+                        radius: 10,
+                        image: categories[index].image,
+                      ),
+                      SizedBox(
+                        width: 2.w,
+                      ),
+                      Text(categories[index].label,
+                          style: WayaTextStyles.hintStyle)
+                    ],
+                  ),
                 ),
                 const Gap(6),
               ],

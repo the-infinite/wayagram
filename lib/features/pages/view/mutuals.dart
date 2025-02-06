@@ -19,6 +19,13 @@ class Mutuals extends ConsumerStatefulWidget {
 
 class _MutualsState extends ConsumerState<Mutuals> with SingleTickerProviderStateMixin {
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createPageProvider.notifier);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

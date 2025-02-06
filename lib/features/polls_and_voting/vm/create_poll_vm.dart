@@ -16,6 +16,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
 //import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/model.dart';
@@ -254,6 +255,36 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return def;
   }
 
+  static getMonthNameMini(String mon) {
+    var def = '';
+    if (mon == '01' || mon == '1') {
+      def = 'Jan';
+    } else if (mon == '02' || mon == '2') {
+      def = 'Feb';
+    } else if (mon == '03' || mon == '3') {
+      def = 'Mar';
+    } else if (mon == '04' || mon == '4') {
+      def = 'Apr';
+    } else if (mon == '05' || mon == '5') {
+      def = 'May';
+    } else if (mon == '06' || mon == '6') {
+      def = 'Jun';
+    } else if (mon == '07' || mon == '7') {
+      def = 'Jul';
+    } else if (mon == '08' || mon == '8') {
+      def = 'Aug';
+    } else if (mon == '09' || mon == '9') {
+      def = 'Sep';
+    } else if (mon == '10') {
+      def = 'Oct';
+    } else if (mon == '11') {
+      def = 'Nov';
+    } else if (mon == '12') {
+      def = 'Dec';
+    }
+    return def;
+  }
+
   static getDayAbbreviation(String day) {
     var def = '';
     if (day == '01' || day == '1') {
@@ -288,6 +319,22 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       def = '${day}th';
     }
     return def;
+  }
+
+   formatDt(j) {
+    String dt = '';
+    if(j != null){
+      if(j.contains('-')){
+        String a = j.split('-')[0];
+        String b = j.split('-')[1];
+        String c = j.split('-')[2];
+
+        dt = '${getDayAbbreviation(c)} ${getMonthNameMini(b)} $a';
+      } else {
+        dt = j;
+      }
+    }
+    return dt;
   }
 
   formatDt1(j) {
@@ -468,7 +515,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       ...choiceMap
     };
 
-    print('CHOICE  MAP ==>>  ${choiceMap}');
+    print('CHOICE  MAP ==>>  $choiceMap');
 
     try {
       state = state.copyWith(isLoading: true);
@@ -535,28 +582,27 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     final response = await _pollAndVotingRepository.getMyPolls(creatorId);
     state = state.copyWith(isLoading: false);
     if (response.success) {
-      GetMyPoll responseModel = GetMyPoll.fromJson(response.data);
-
-      state = state.copyWith(getMyPollModel: responseModel.data);
+      FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+      state = state.copyWith(fetchAllPols: responseModel.data?.docs);
     } else {
       state = state.copyWith(isLoading: false);
     }
   }
 
- /* Future<void> getAllPolls() async {
+  Future<void> getAllPolls() async {
     state = state.copyWith(isLoading: true);
     final response = await _pollAndVotingRepository.getAllPolls();
     state = state.copyWith(isLoading: false);
     if (response.success) {
-      GetPollModel responseModel = GetPollModel.fromJson(response.data);
+      FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
 
-      state = state.copyWith(getPollModel: responseModel.data);
+      state = state.copyWith(fetchAllPols: responseModel.data?.docs);
     } else {
       state = state.copyWith(isLoading: false);
     }
-  }*/
+  }
 
-  Future<void> getAllPolls() async {
+  /*Future<void> getAllPolls() async {
     state = state.copyWith(isLoading: true);
     final response = await _pollAndVotingRepository.getAllPolls();
     state = state.copyWith(isLoading: false);
@@ -567,7 +613,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } else {
       state = state.copyWith(isLoading: false);
     }
-  }
+  }*/
 
   Future<void> getPollsById(String pollId) async {
     state = state.copyWith(isLoading: true);

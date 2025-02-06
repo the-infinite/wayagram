@@ -9,6 +9,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/product_detail_vm.dart';
@@ -16,7 +17,6 @@ import 'package:wayagram/features/shop/vm/product_detail_vm.dart';
 import 'package:wayagram/features/shop/widgets/product_description_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_image_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_review_widget.dart';
-import 'package:wayagram/features/shop/widgets/products_grid.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
 class ProductDetail extends ConsumerStatefulWidget {
@@ -37,7 +37,21 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
       ref
           .read(productDetailVmProvider.notifier)
           .getCurrentProduct(product: product);
+
+      final provider = ref.read(productEngagementProvider.notifier);
+
+      provider.startViewingProduct();
+
+      provider.addCategory(product.categoryId, ProductPoint.viewPoints.value );
     });
+  }
+
+// Stop tracking when the page is closed
+  @override
+  void dispose() {
+    ref.read(productEngagementProvider.notifier).stopViewingProduct();
+
+    super.dispose();
   }
 
   @override
@@ -206,7 +220,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                           ),
                           const Gap(6),
                           Text(
-                            "Maleek Ventures",
+                            viewModel.product!.shopName,
                             style: wayaTheme.textTheme.labelMedium,
                           )
                         ],
@@ -249,20 +263,20 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     const Gap(25),
                   ],
                 )),
-            Visibility(
-                visible: viewModel.similarProduct != null &&
-                    viewModel.similarProduct!.isNotEmpty,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Similar Products",
-                      style: wayaTheme.textTheme.titleMedium,
-                    ),
-                    const Gap(25),
-                    ProductsGrid(products: viewModel.similarProduct ?? [])
-                  ],
-                ))
+            // Visibility(
+            //     visible: viewModel.similarProduct != null &&
+            //         viewModel.similarProduct!.isNotEmpty,
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Text(
+            //           "Similar Products",
+            //           style: wayaTheme.textTheme.titleMedium,
+            //         ),
+            //         const Gap(25),
+            //         ProductsGrid(products: viewModel.similarProduct ?? [])
+            //       ],
+            //     ))
           ],
         ),
         bottomNavigationBar: Container(

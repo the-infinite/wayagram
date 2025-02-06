@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/event/vm/add_event_vm.dart';
 import 'package:wayagram/features/event/widgets/about_event.dart';
 import 'package:wayagram/features/quotation/buyer/views/create_request/steps/preview_request.dart';
@@ -39,7 +40,7 @@ class PreviewAddedEvent extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
           child: viewModel.eventImage != null
               ? Image.file(
-                  viewModel.eventImage!,
+                  viewModel.eventImage!.file!,
                   fit: BoxFit.cover,
                   height: 200,
                   width: double.infinity,
@@ -69,15 +70,15 @@ class PreviewAddedEvent extends ConsumerWidget {
               child: AboutEvent(
                   title: 'Event Location', content: viewModel.location),
             ),
-            if (viewModel.address != null)
+            if (viewModel.location == 'Physical')
               Expanded(
                 child: AboutEvent(
-                    title: 'Event Address', content: viewModel.address!.text),
+                    title: 'Event Address', content: viewModel.address.text),
               ),
-            if (viewModel.link != null)
+            if (viewModel.location == 'Virtual')
               Expanded(
                 child: AboutEvent(
-                    title: 'Virtual Event Link', content: viewModel.link!),
+                    title: 'Virtual Event Link', content: viewModel.link.text),
               ),
           ],
         ),
@@ -148,10 +149,15 @@ class PreviewAddedEvent extends ConsumerWidget {
         ),
         const Gap(30),
         WayaButton(
-            text: "Create Event",
-            callback: () {
-              ref.read(addEventVmProvider.notifier).onSubmit(context: context);
-            }),
+            centerWidget: LoadingState(
+                loading: viewModel.isLoading, text: "Create Event"),
+            callback: !viewModel.isLoading
+                ? () {
+                    ref
+                        .read(addEventVmProvider.notifier)
+                        .onSubmit(context: context);
+                  }
+                : null),
         const Gap(8),
         WayaButton(
             text: 'Go Back',

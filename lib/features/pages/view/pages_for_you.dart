@@ -1,21 +1,25 @@
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/post/widgets/post_widget.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../explore/widgets/grouped_widget_header.dart';
 import '../../shop/widgets/filter_widget.dart';
+import '../data/model/feeds.dart';
 
 class PagesForYou extends ConsumerStatefulWidget {
   const PagesForYou({super.key});
@@ -26,15 +30,28 @@ class PagesForYou extends ConsumerStatefulWidget {
 
 class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProviderStateMixin {
 
-  PageController pageController = PageController(
-    initialPage: 0,
-  );
+  int like = 0;
+
+  WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
+
+  static const int _pageSize = 10;
+  final PagingController<int, Post> _pagingController =
+  PagingController(firstPageKey: 1);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createPageProvider.notifier).fetchSavedPosts(_wayaLocalDataSource.getUserId());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createPageProvider);
+    final viewModel = ref.watch(createPageProvider.notifier);
+    final viewModel2 = ref.watch(createPageProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -49,16 +66,64 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                 fontFamily: WayaConstants.fontFamily
             )),
         Gap(10),
+       /* ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: 200),
+          child: Column(
+            children: [
+              Expanded(
+                child: PagedListView<int, Post>(
+                  pagingController: _pagingController,
+                  builderDelegate: PagedChildBuilderDelegate<Post>(
+                    itemBuilder: (context, post, index) {
+                      return Obx(
+                            () => PostWidget(
+                          isSaved: false,
+                          isFeedsPost: true,
+                          post: post,
+                          isLiked: post.getIsLiked().value == true,
+                          connected: false,
+                          isSuggested: true,
+                          onLike: (String? reaction) async {
+                            viewModel.likePost(post, reaction: reaction);
+                          },
+                          onReact: (String reaction) {
+                            viewModel.likePost(post, reaction: reaction);
+                          },
+                          onComment: () {
+                            viewModel.commentPost2(post);
+                          },
+                          isReposted: post.isReposted.value,
+                          onRepost: () async {
+                            //viewModel.repost(post);
+                          },
+                          viewFull: (){
+                           // viewModel.viewFullPost(post);
+                          },
+                          isFullPostDetails: false,
+                          commentCount: post.commentCount.value,
+                          isProfilePost: false,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),*/
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-             itemCount: 3,
-            itemBuilder: (_, index){
-            return pageWidget(
+             itemCount: viewModel2.fetchAllPostData?.length,
+            itemBuilder: (_, index,){
+              final post = viewModel2.fetchAllPostData?[index];
+              int hoursLeft = DateTime.now().difference(DateTime.parse('${post?.createdAt}')).inHours;
+            return
+              pageWidget(
               index == 0? 'Empire Music': index ==1  ? 'Apple Music': 'Manchester United',
               index==0 ?'1' :index ==1  ? '2': '3',
                index == 0? 'assets/images/pages/empire.png':index==1?'assets/images/pages/apple_music.png':
-               'assets/images/pages/united.png'
+               'assets/images/pages/united.png', hoursLeft
             );
         }),
         const Gap(25),
@@ -122,13 +187,15 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: 3,
+            itemCount:viewModel2.fetchAllPostData?.length,
             itemBuilder: (_, index){
+              final post = viewModel2.fetchAllPostData?[index];
+              int hoursLeft = DateTime.now().difference(DateTime.parse('${post?.createdAt}')).inHours;
               return pageWidget(
                   index == 0? 'Empire Music': index ==1  ? 'Apple Music': 'Manchester United',
                   index==0 ?'1' :index ==1  ? '2': '3',
                   index == 0? 'assets/images/pages/empire.png':index==1?'assets/images/pages/apple_music.png':
-                  'assets/images/pages/united.png'
+                  'assets/images/pages/united.png', hoursLeft
               );
             }),
       ],
@@ -159,7 +226,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
       ],);
   }
 
-  pageWidget(txt,img, leadingImg){
+  pageWidget(txt,img, leadingImg, time){
     final wayaTheme = Theme.of(context);
     return Column(mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +238,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
             Text(txt, style: wayaTheme.textTheme.titleLarge),
             const Gap(3),
             Text(
-              ' • 2h ago',
+              ' • ${time}h ago',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -200,7 +267,11 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
         Gap(20),
         Row(
           children: [
-            actionType('346 Likes', 'assets/images/pages/like.png'),
+            actionType('$like Likes', 'assets/images/pages/like.png', onPressed: (){
+              setState(() {
+                like++;
+              });
+            }),
             actionType('0 Comments', 'assets/images/pages/comment.png'),
             actionType('5 Shares', 'assets/images/pages/share.png', onPressed: (){
               Share.share('Shares');

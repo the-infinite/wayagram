@@ -7,8 +7,12 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/event/views/event_view.dart';
+import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/explore/data/model/default.dart';
+import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
+import 'package:wayagram/features/explore/widgets/chat_card.dart';
 import 'package:wayagram/features/explore/widgets/donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
@@ -17,15 +21,16 @@ import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/explore/widgets/pages_card.dart';
 import 'package:wayagram/features/explore/widgets/polls_card.dart';
+import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
+import 'package:wayagram/features/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
-import 'package:wayagram/features/explore/widgets/chat_card.dart';
 
 class Explore extends ConsumerStatefulWidget {
   const Explore({super.key});
@@ -40,6 +45,7 @@ class _ExploreState extends ConsumerState<Explore> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(shopVmProvider.notifier).allCategories(1);
       ref.read(shopVmProvider.notifier).getAllProducts(1);
+      ref.read(eventVmProvider.notifier).getEventWithStatus();
       ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();
@@ -49,8 +55,10 @@ class _ExploreState extends ConsumerState<Explore> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(exploreVmProvider.notifier);
+    final exploreState = ref.watch(exploreVmProvider);
     final state = ref.watch(shopVmProvider);
     final notifier = ref.read(shopVmProvider.notifier);
+    final eventState = ref.watch(eventVmProvider);
 
     return WayaScaffold(
         isLoading: false,
@@ -107,7 +115,6 @@ class _ExploreState extends ConsumerState<Explore> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const ExploreHeader(),
             const Gap(20),
             ExploreOurServices(),
             const Gap(25),
@@ -115,20 +122,19 @@ class _ExploreState extends ConsumerState<Explore> {
             SizedBox(
               height: 80,
               child: ListView.builder(
-                itemCount: 8,
-                scrollDirection: Axis.horizontal,
-             
-                itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      const Gap(6),
-                      MomentsWidget(
-                        isCreate: index == 0,
-                      ),
-                      const Gap(6)
-                    ],
-                  );
-                }),
+                  itemCount: 8,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      children: [
+                        const Gap(6),
+                        MomentsWidget(
+                            isCreate: index == 0,
+                            onTap: () => WayaNav.toNamed(Moment.route)),
+                        const Gap(6)
+                      ],
+                    );
+                  }),
             ),
             const Gap(25),
             GroupedWidgetHeader(
@@ -175,11 +181,14 @@ class _ExploreState extends ConsumerState<Explore> {
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
             const Gap(10),
-            CategoriesFilterWidget(
-              setCategory: (value) =>
-                  ref.read(shopVmProvider.notifier).setCategory(value),
-            ),
-
+            CategoriesFilterWidget(setCategory: (value) {
+              ref.read(shopVmProvider.notifier).setCategory(value);
+              for (String categoryId in value) {
+                ref
+                    .read(productEngagementProvider.notifier)
+                    .addCategory(categoryId, ProductPoint.searchPoint.value);
+              }
+            }),
             const Gap(25),
             state.isLoading
                 ? _buildProductLoadingState(context: context)
@@ -187,13 +196,11 @@ class _ExploreState extends ConsumerState<Explore> {
                     products: notifier.filteredProducts.length > 2
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
-
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {},
                 subTitle: 'Support a course that matters',
                 title: 'Donations'),
-
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -204,10 +211,11 @@ class _ExploreState extends ConsumerState<Explore> {
                 }),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {},
+                onTap: () {
+                  WayaNav.toNamed(DisplayFeed.route);
+                },
                 subTitle: 'Based on your interests',
                 title: 'Discover'),
-
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {},
@@ -251,7 +259,6 @@ class _ExploreState extends ConsumerState<Explore> {
                   return PagesCard(isFollow: true, group: groupList[index]);
                 }),
             const Gap(25),
-
             GroupedWidgetHeader(
                 onTap: () {},
                 subTitle: 'View and manage groups',
@@ -300,24 +307,33 @@ class _ExploreState extends ConsumerState<Explore> {
                   );
                 }),
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Join upcoming activities',
-                title: 'Events'),
-            const Gap(25),
-            ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: eventList.length,
-                itemBuilder: (context, index) {
-                  return EventCard(event: eventList[index]);
-                }),
+            if (eventState.upcomingEvents.isNotEmpty) ...[
+              GroupedWidgetHeader(
+                  onTap: () {
+                    WayaNav.toNamed(EventView.route);
+                  },
+                  subTitle: 'Join upcoming activities',
+                  title: 'Events'),
+              const Gap(25),
+              ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: eventState.upcomingEvents.length > 2
+                      ? eventState.upcomingEvents.sublist(0, 2).length
+                      : eventState.upcomingEvents.length,
+                  itemBuilder: (context, index) {
+                    return EventCard(
+                        event: eventState.upcomingEvents.length > 2
+                            ? eventState.upcomingEvents.sublist(0, 2)[index]
+                            : eventState.upcomingEvents[index],
+                        userId: exploreState.userId);
+                  }),
+            ],
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {},
                 subTitle: 'Join upcoming activities',
                 title: 'Polls & Voting'),
-
             const Gap(25),
             Text(
               "My Polls",

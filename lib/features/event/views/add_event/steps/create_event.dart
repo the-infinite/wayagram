@@ -54,7 +54,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     addFile: ref.read(addEventVmProvider.notifier).addFile,
                     removeFile:
                         ref.read(addEventVmProvider.notifier).removeFile,
-                    title: "Upload Event Thumbnail",
+                    title: viewModel.eventImage != null
+                        ? viewModel.eventImage!.name
+                        : "Upload Event Thumbnail",
                     isUploaded: viewModel.eventImage != null,
                     description: "IMG , JPG Format"),
                 const Gap(10),
@@ -128,10 +130,6 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-                  if (viewModel.title.text.isEmpty) {
-                    return 'Description is required';
-                  }
-
                   return null;
                 }, builder: (formState) {
                   return Column(
@@ -182,7 +180,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           height: 0.3,
                           uniqueKey: 'location-type',
                           label: "Location Type",
-                          value: viewModel.eventType,
+                          value: viewModel.location,
                           hintText: 'Select Location Type',
                           items: ref
                               .read(addEventVmProvider.notifier)
@@ -203,6 +201,71 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     ],
                   );
                 }),
+                if (viewModel.location == 'Physical') ...[
+                  const Gap(10),
+                  FormField<String>(validator: (value) {
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: viewModel.address,
+                          hintText: "Enter Event Address",
+                          borderColor: formState.hasError &&
+                                  viewModel.address.text.isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
+                          label: "Address",
+                        ),
+                        if (formState.hasError &&
+                            viewModel.address.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                ],
+                if (viewModel.location == 'Virtual') ...[
+                  const Gap(10),
+                  FormField<String>(validator: (value) {
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: viewModel.link,
+                          hintText: "Enter Link",
+                          borderColor:
+                              formState.hasError && viewModel.link.text.isEmpty
+                                  ? wayaTheme.colorScheme.error
+                                  : null,
+                          label: "Link",
+                        ),
+                        if (formState.hasError && viewModel.link.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                ],
                 const Gap(30),
                 Text(
                   "Event Date and Time",
@@ -365,50 +428,67 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                   );
                 }),
                 const Gap(10),
-                  Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                 
                   children: [
                     Text("Privacy Option",
                         style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 14,
-                              color: wayaTheme.colorScheme.customBlack)),
+                            fontSize: 14,
+                            color: wayaTheme.colorScheme.customBlack)),
                     const Gap(6),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(child: RadioSelect(
-                      title: Text("Public",
-                          style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
-                              fontSize: 14,
-                              color: wayaTheme.colorScheme.customBlack)),
-                      value: 'Public',
-                      groupedValue: selectedOption,
-                      onChanged: (value) =>
-                          ref.read(radioSelectProvider.notifier).state = value,
-                    ),),
+                        Expanded(
+                          child: RadioSelect(
+                            title: Text("Public",
+                                style: wayaTheme.textTheme.titleMedium!
+                                    .wayaCopyWith(
+                                        fontSize: 14,
+                                        color:
+                                            wayaTheme.colorScheme.customBlack)),
+                            value: 'Public',
+                            groupedValue: selectedOption,
+                            onChanged: (value) {
+                              ref.read(radioSelectProvider.notifier).state =
+                                  value;
+                              ref
+                                .read(addEventVmProvider.notifier)
+                                .updatePrivacyOption(value!);
+                            },
+                          ),
+                        ),
                         const Gap(10),
-                    Expanded(child: RadioSelect(
-                      title: Text("Private",
-                          style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
-                              fontSize: 14,
-                              color: wayaTheme.colorScheme.customBlack)),
-                      value: 'Private',
-                      groupedValue: selectedOption,
-                      onChanged: (value) =>
-                          ref.read(radioSelectProvider.notifier).state = value,
-                    )),
+                        Expanded(
+                            child: RadioSelect(
+                          title: Text("Private",
+                              style: wayaTheme.textTheme.titleMedium!
+                                  .wayaCopyWith(
+                                      fontSize: 14,
+                                      color:
+                                          wayaTheme.colorScheme.customBlack)),
+                          value: 'Private',
+                          groupedValue: selectedOption,
+                          onChanged: (value) {
+                            ref.read(radioSelectProvider.notifier).state =
+                                value;
+                           
+                            ref
+                                .read(addEventVmProvider.notifier)
+                                .updatePrivacyOption(value!);
+                          },
+                        )),
                       ],
                     )
                   ],
                 ),
-               
                 const Gap(20),
                 WayaButton(
                     text: 'Confirm Event Detail',
                     callback: () {
-                      //  ref.read(addProductProvider.notifier).submit();
-                      widget.gotoNextTab();
+                      if (_formKey.currentState!.validate()) {
+                        widget.gotoNextTab();
+                      }
                     })
               ],
             ))

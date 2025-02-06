@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/event/views/add_event/steps/create_event.dart';
 import 'package:wayagram/features/event/views/add_event/steps/preview_added_event.dart';
+import 'package:wayagram/features/event/vm/add_event_vm.dart';
 
 class AddEvent extends ConsumerStatefulWidget {
   static const route = '/add-event';
@@ -30,12 +31,13 @@ class _AddEventState extends ConsumerState<AddEvent>
   Widget build(BuildContext context) {
     // TODO: implement build
     return WayaScaffoldWithProgressBar(
-      isLoading: false,
-      isScrollable: true,
-      tabsView: [
-      CreateEvent(gotoNextTab: _goToNextTab),
-      PreviewAddedEvent(gotoPreviousTab: _goToPreviousTab)
-    ], tabController: _tabController);
+        isLoading: false,
+        isScrollable: true,
+        tabsView: [
+          CreateEvent(gotoNextTab: _goToNextTab),
+          PreviewAddedEvent(gotoPreviousTab: _goToPreviousTab)
+        ],
+        tabController: _tabController);
   }
 
   void _goToNextTab() {
@@ -49,6 +51,4 @@ class _AddEventState extends ConsumerState<AddEvent>
       _tabController.animateTo(_tabController.index - 1);
     }
   }
-
- 
 }

@@ -9,6 +9,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
@@ -35,37 +36,6 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
 
   CreatePollVotingState? viewModel;
 
-/*disposeControllers() {
-    // print('POll titk ${ viewModel?.pollTitle.text}');
-    // viewModel?.pollTitle.dispose();
-    // viewModel?.pollDescription.dispose();
-    // viewModel?.pollCompanyDescription.dispose();
-    // viewModel?.votePrice.dispose();
-    // viewModel?.voteNumber.dispose();
-    // viewModel?.firstChoice.dispose();
-    // viewModel?.firstChoiceDescription.dispose();
-    // viewModel?.secondChoice.dispose();
-    // viewModel?.secondChoiceDescription.dispose();
-    super.dispose();
-  }*/
-
-/*  @override
-  void dispose() {
-    //disposeControllers();
-    super.dispose();
-    print('POll titk ${ viewModel?.pollTitle.text}');
-    viewModel?.pollTitle.dispose();
-    viewModel?.pollDescription.dispose();
-    viewModel?.pollCompanyDescription.dispose();
-    viewModel?.votePrice.dispose();
-    viewModel?.voteNumber.dispose();
-    viewModel?.firstChoice.dispose();
-    viewModel?.firstChoiceDescription.dispose();
-    viewModel?.secondChoice.dispose();
-    viewModel?.secondChoiceDescription.dispose();
-    //viewModel?.pollTitle.clear();
-  }*/
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
@@ -84,9 +54,15 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                 WayaNav.toNamed("/add-choices");
               }
             } : null,
-            centerWidget: LoadingState(
-                loading: viewModel.isLoading, text: 'Create Poll'),
+            //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create Poll'),
             height: 30,
+            text: 'Create',
+            isLoading: viewModel.isLoading,
+            horizontalPadding: 12,
+            textStyle: WayaTextStyles.bodySmall.copyWith(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.white ),
           ),
         ),
         //createPoll(context, sel ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300),
@@ -513,12 +489,8 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           WayaTextFormField(
                             keyboardType: TextInputType.number,
                             controller: viewModel.votePrice,
-                            // onChanged: (value){
-                            //  // formData['votePrice'] = value;
-                            // },
                             hintText: '0 NGN',
                             borderColor: formState.hasError &&
-                                //formData['votePrice'].isEmpty
                                 viewModel.votePrice.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
@@ -552,13 +524,9 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                         children: [
                           WayaTextFormField(
                             keyboardType: TextInputType.number,
-                            onChanged: (value){
-                              //formData['voteNumber'] = value;
-                            },
                             controller: viewModel.voteNumber,
                             hintText: '0',
                             borderColor: formState.hasError &&
-                                //formData['voteNumber'].isEmpty
                                 viewModel.voteNumber.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
@@ -566,7 +534,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           ),
                           if (formState.hasError &&
                               viewModel.voteNumber.text.isEmpty
-                              //formData['voteNumber'].isEmpty
+
                           )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),

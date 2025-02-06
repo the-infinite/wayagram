@@ -91,21 +91,30 @@ class WayaHelpers {
     }).join(' ');
   }
 
- static String abbreviateNumber(int number) {
-  if (number >= 1000000000) {
-    return _formatNumber(number, 1000000000, "B"); 
-  } else if (number >= 1000000) {
-    return _formatNumber(number, 1000000, "M"); 
-  } else if (number >= 1000) {
-    return _formatNumber(number, 1000, "K"); 
-  } else {
-    return number.toString(); 
+  static String abbreviateNumber(int number) {
+    if (number >= 1000000000) {
+      return _formatNumber(number, 1000000000, "B");
+    } else if (number >= 1000000) {
+      return _formatNumber(number, 1000000, "M");
+    } else if (number >= 1000) {
+      return _formatNumber(number, 1000, "K");
+    } else {
+      return number.toString();
+    }
   }
-}
 
-static String _formatNumber(int number, int divisor, String suffix) {
-  double result = number / divisor;
-  return result % 1 == 0 ? "${result.toInt()}$suffix" : "${result.toStringAsFixed(1)}$suffix";
-}
+  static String _formatNumber(int number, int divisor, String suffix) {
+    double result = number / divisor;
+    return result % 1 == 0
+        ? "${result.toInt()}$suffix"
+        : "${result.toStringAsFixed(1)}$suffix";
+  }
 
+ static String format24HRSToAPM(String time) {
+    // Parse the input time (HH:mm)
+    final parsedTime = DateFormat("HH:mm").parse(time);
+
+    // Format it to 12-hour format with am/pm
+    return DateFormat("h:mma").format(parsedTime).toLowerCase();
+  }
 }

@@ -12,11 +12,14 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+
+import '../../wallet/view/fund_wallet_options_screen.dart';
 
 class CreateGroup extends ConsumerStatefulWidget {
   static const route = '/createGroup';
@@ -55,14 +58,21 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               }
             }
           } : null,
-          centerWidget: LoadingState(
-              loading: viewModel.isLoading, text: 'Create'),
+          //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create'),
+          text: 'Create',
+          horizontalPadding: 12,
+          textStyle: WayaTextStyles.bodySmall.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.white ),
           height: 30,
+
         ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           Stack(
             clipBehavior: Clip.none,
             children: [
