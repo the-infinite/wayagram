@@ -9,6 +9,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
@@ -53,9 +54,15 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                 WayaNav.toNamed("/add-choices");
               }
             } : null,
-            centerWidget: LoadingState(
-                loading: viewModel.isLoading, text: 'Create Poll'),
+            //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create Poll'),
             height: 30,
+            text: 'Create',
+            isLoading: viewModel.isLoading,
+            horizontalPadding: 12,
+            textStyle: WayaTextStyles.bodySmall.copyWith(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.white ),
           ),
         ),
         //createPoll(context, sel ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300),

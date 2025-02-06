@@ -9,7 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/post/model/media_upload_model.dart';
 
 import '../../../core/utils/waya_navigation.dart';
 import '../../auth/account_creation/view/loading_state.dart';
@@ -83,7 +85,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
 
     return WayaScaffold(
       resizeToAvoidBottomInset: true,
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         isScrollable: false,
         appBar: AppBar(
           actions: [
@@ -91,18 +93,17 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
               padding: const EdgeInsets.only(right: 20),
               child:SizedBox(
                 width: context.width * 0.15,
-                child:viewModel.content.text.isEmpty? WayaButton(
+                child:viewModel.content.text.isEmpty && _selectedImages.isEmpty? WayaButton(
                   callback:viewModel.isLoading
                       ? () async {
                     if (_formKey.currentState!.validate()) {
-                      //WayaNav.toNamed("/confirmDetails",);
+
                     }
                   } : null,
-                  centerWidget: LoadingState(
-                    loading: viewModel.isLoading, text: 'Post',
-                  ),
                   height: 30,
-                  textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+                  text: 'Post',
+                  isLoading: viewModel.isLoading,
+                  textStyle: WayaTextStyles.bodySmall.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.white ),
@@ -111,18 +112,24 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                   callback:!viewModel.isLoading
                       ? () async {
                     if (_formKey.currentState!.validate()) {
-                      WayaNav.toNamed("/pages",);
+                      print('My Images $_selectedImages');
+                     await ref.watch(createPageProvider.notifier).createPost(
+                       context, viewModel.content.text,
+                         sel ?"public":"private",
+                         _selectedImages,
+
+                     );
                       ref.watch(createPageProvider.notifier).reset();
+                     WayaNav.toNamed("/pages",);
                     }
                   } : null,
-                  centerWidget: LoadingState(
-                    loading: viewModel.isLoading, text: 'Post',
-                  ),
                   height: 30,
-                  textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+                  text: 'Post',
+                  isLoading: viewModel.isLoading,
+                  textStyle: WayaTextStyles.bodySmall.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.white),
+                      color: Theme.of(context).colorScheme.white ),
                 ),
               ),
             ),

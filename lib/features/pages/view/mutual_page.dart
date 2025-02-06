@@ -37,12 +37,13 @@ class _MutualPageState extends ConsumerState<MutualPage>
     final type  = ModalRoute.of(context)?.settings.arguments as String?;
 
     return WayaScaffold(
+
         onTapBackButton: (){
          type == 'more'? Navigator.pushNamed(context, BottomView.route, arguments: 5)
          :Navigator.pop(context);
         },
        backgroundColor: Theme.of(context).colorScheme.greyColor50,
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         isScrollable: true,
         title: 'Empire Music',
         appBarTrailing: Row(

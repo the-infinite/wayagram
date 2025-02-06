@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -94,21 +96,43 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<WayaRequestResponse> putHttp(
     String route,
     dynamic body, {
+    String? contentType,
     Map<String, dynamic>? params,
+    bool isWgUrl = false,
     bool formdata = false,
+    bool isAuth = true,
+    bool isBinary = false,
     bool formEncoded = false,
   }) async {
+    int? length;
+
+    //? If this is binary, turn the body to a stream.
+    if (isBinary) {
+      length = await (body as File).length();
+      body = body.openRead();
+    }
+
+    //? Now, I need you to set the headers correctly. Please add the content length
+    //? to headers.
     await _setHeader(
       formdata: formdata,
+      contentLength: length,
+      isAuth: isAuth,
+      contentType: contentType,
       formEncoded: formEncoded,
     );
+
+    //? This is fine.
     params?.removeWhere((key, value) => value == null);
-    final fullRoute = '$baseURL$route';
+    final fullRoute = '${isWgUrl ? baseURL : ''}$route';
     _logger.i('fullRoute: $fullRoute $body');
-    if (formdata) {
+
+    //? If this is formdata but not binary.
+    if (!isBinary && formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
     }
 
+    //? Make the request.
     return _makeRequest(dio.put(
       fullRoute,
       data: body,
@@ -197,15 +221,20 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<void> _setHeader({
     bool formdata = false,
     bool formEncoded = false,
+    bool isAuth = true,
+    int? contentLength,
+    String? contentType,
   }) async {
     dio.options.headers = {
-      'content-type': formdata
-          ? 'multipart/form-data'
-          : formEncoded
-              ? 'application/x-www-form-urlencoded'
-              : 'application/json',
+      if (contentLength != null) Headers.contentLengthHeader: '$contentLength',
+      'content-type': contentType ??
+          (formdata
+              ? 'multipart/form-data'
+              : formEncoded
+                  ? 'application/x-www-form-urlencoded'
+                  : 'application/json'),
       'Accept': '*/*',
-      'Authorization': 'Bearer ${await secureDataSource.getToken()}',
+      if (isAuth) 'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 

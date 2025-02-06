@@ -255,6 +255,36 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return def;
   }
 
+  static getMonthNameMini(String mon) {
+    var def = '';
+    if (mon == '01' || mon == '1') {
+      def = 'Jan';
+    } else if (mon == '02' || mon == '2') {
+      def = 'Feb';
+    } else if (mon == '03' || mon == '3') {
+      def = 'Mar';
+    } else if (mon == '04' || mon == '4') {
+      def = 'Apr';
+    } else if (mon == '05' || mon == '5') {
+      def = 'May';
+    } else if (mon == '06' || mon == '6') {
+      def = 'Jun';
+    } else if (mon == '07' || mon == '7') {
+      def = 'Jul';
+    } else if (mon == '08' || mon == '8') {
+      def = 'Aug';
+    } else if (mon == '09' || mon == '9') {
+      def = 'Sep';
+    } else if (mon == '10') {
+      def = 'Oct';
+    } else if (mon == '11') {
+      def = 'Nov';
+    } else if (mon == '12') {
+      def = 'Dec';
+    }
+    return def;
+  }
+
   static getDayAbbreviation(String day) {
     var def = '';
     if (day == '01' || day == '1') {
@@ -289,6 +319,22 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       def = '${day}th';
     }
     return def;
+  }
+
+   formatDt(j) {
+    String dt = '';
+    if(j != null){
+      if(j.contains('-')){
+        String a = j.split('-')[0];
+        String b = j.split('-')[1];
+        String c = j.split('-')[2];
+
+        dt = '${getDayAbbreviation(c)} ${getMonthNameMini(b)} $a';
+      } else {
+        dt = j;
+      }
+    }
+    return dt;
   }
 
   formatDt1(j) {
@@ -425,6 +471,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return am;
   }
 
+
+
   Future<void> createPoll(
       BuildContext context,
       String question,
@@ -467,7 +515,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       ...choiceMap
     };
 
-    print('CHOICE  MAP ==>>  ${choiceMap}');
+    print('CHOICE  MAP ==>>  $choiceMap');
 
     try {
       state = state.copyWith(isLoading: true);
