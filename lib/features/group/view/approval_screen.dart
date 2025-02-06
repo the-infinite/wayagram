@@ -126,7 +126,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
                                   width: 68.w,
                                   height: 32.h,
                                   decoration: BoxDecoration(
-                                    color: WayaColors.error500,
+                                    color: WayaColors.error50,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Center(

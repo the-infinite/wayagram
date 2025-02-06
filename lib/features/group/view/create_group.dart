@@ -12,6 +12,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
@@ -57,12 +58,15 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               }
             }
           } : null,
-          centerWidget: LoadingState(
-              loading: viewModel.isLoading, text: 'Create'),
+          //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create'),
+          text: 'Create',
+          horizontalPadding: 12,
+          textStyle: WayaTextStyles.bodySmall.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.white ),
           height: 30,
-            textStyle: wayaTheme.textTheme.labelSmall
-                ?.wayaCopyWith(color: wayaTheme.colorScheme.white),
-          horizontalPadding: 10,
+
         ),
       ),
       body: Column(

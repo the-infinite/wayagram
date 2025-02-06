@@ -1,8 +1,25 @@
-/*
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:readmore/readmore.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/post/model/saved_posts.dart';
 
-class PostWidget extends StatelessWidget {
+import '../../../assetsgen/assets.gen.dart';
+import '../../pages/component/extras.dart';
+import '../../pages/data/model/feeds.dart';
+import 'likebtnreaction.dart';
+
+class PostWidget extends ConsumerWidget {
 
   const PostWidget({required this.post,
     required this.isLiked,
@@ -48,8 +65,8 @@ class PostWidget extends StatelessWidget {
   final void Function()? onDelete;
 
   @override
-  Widget build(BuildContext context) {
-    final feedsProvider = Provider.of<FeedsProvider>(context, listen: false);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = ref.watch(createPageProvider.notifier);
     String postId;
     String timeAgo;
     String content;
@@ -88,7 +105,7 @@ class PostWidget extends StatelessWidget {
         ),
 
 //conditional suggested section
-        if (isSuggested)
+      /*  if (isSuggested)
           Padding(
             padding: EdgeInsets.only(left: 15.0.w, right: 15.w),
             child: Column(
@@ -102,7 +119,7 @@ class PostWidget extends StatelessWidget {
                       child: Text(
                         'Suggested',
                         style: TextStyle(
-                            fontFamily: 'Mulish',
+                            fontFamily: WayaConstants.fontFamily,
                             fontSize: 16.sp,
                             color: Colors.grey),
                       ),
@@ -124,7 +141,7 @@ class PostWidget extends StatelessWidget {
                 const Divider()
               ],
             ),
-          ),
+          ),*/
 /////
 
         // Post header with author details
@@ -140,7 +157,7 @@ class PostWidget extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       if (post is Post) {
-                        showProfilePage(post.author.id);
+                        //showProfilePage(post.author.id);
                       }
                     },
                     child: Row(
@@ -156,7 +173,7 @@ class PostWidget extends StatelessWidget {
                             Text(
                               authorName,
                               style: TextStyle(
-                                fontFamily: 'Mulish',
+                                fontFamily: WayaConstants.fontFamily,
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -172,7 +189,7 @@ class PostWidget extends StatelessWidget {
                                 child: Text(
                                   jobTitle,
                                   style: TextStyle(
-                                    fontFamily: 'Mulish',
+                                    fontFamily: WayaConstants.fontFamily,
                                     fontSize: 14.sp,
                                   ),
                                   overflow: TextOverflow.ellipsis,
@@ -182,7 +199,7 @@ class PostWidget extends StatelessWidget {
                             Text(
                               timeAgo,
                               style: TextStyle(
-                                fontFamily: 'Mulish',
+                                fontFamily: WayaConstants.fontFamily,
                                 fontSize: 14.sp,
                                 // color: Colors.grey,
                               ),
@@ -202,10 +219,10 @@ class PostWidget extends StatelessWidget {
                     onSelected: (value) {
                       switch (value) {
                         case 'Save Post':
-                          feedsProvider.savePost(context, postId);
+                          viewModel.savePost(context, postId);
                           break;
                         case 'Unsave Post':
-                          feedsProvider.unsavePost(context, postId);
+                          viewModel.unsavePost(context, postId);
                           break;
                         case 'Share':
                           _showShareDialog(context, post.shareLink);
@@ -254,7 +271,7 @@ class PostWidget extends StatelessWidget {
                               Text(
                                 isSaved ? 'Unsave Post' : 'Save Post',
                                 style: TextStyle(
-                                  fontFamily: 'Mulish',
+                                  fontFamily: WayaConstants.fontFamily,
                                   fontSize: 16.sp,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w400,
@@ -270,12 +287,13 @@ class PostWidget extends StatelessWidget {
                           padding: EdgeInsets.only(left: 10.w, bottom: 22.h),
                           child: Row(
                             children: [
-                              Icon(IconsaxOutline.share, size: 24.sp),
+                              Image.asset('assets/images/pages/share.png',  height: 32.h,),
+                              //Icon(IconsaxOutline.share, size: 24.sp),
                               SizedBox(width: 10.w),
                               Text(
                                 'Share',
                                 style: TextStyle(
-                                  fontFamily: 'Mulish',
+                                  fontFamily: WayaConstants.fontFamily,
                                   fontSize: 16.sp,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w400,
@@ -292,12 +310,14 @@ class PostWidget extends StatelessWidget {
                             padding: EdgeInsets.only(left: 10.w, bottom: 22.h),
                             child: Row(
                               children: [
-                                Icon(IconsaxOutline.edit_2, size: 24.sp),
+                                //Image.asset(),
+
+                                //Icon(IconsaxOutline.edit_2, size: 24.sp),
                                 SizedBox(width: 10.w),
                                 Text(
                                   'Edit Post',
                                   style: TextStyle(
-                                    fontFamily: 'Mulish',
+                                    fontFamily: WayaConstants.fontFamily,
                                     fontSize: 16.sp,
                                     color: Colors.black,
                                     fontWeight: FontWeight.w400,
@@ -318,7 +338,7 @@ class PostWidget extends StatelessWidget {
                               Text(
                                 'Copy Link to Post',
                                 style: TextStyle(
-                                  fontFamily: 'Mulish',
+                                  fontFamily: WayaConstants.fontFamily,
                                   fontSize: 16.sp,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w400,
@@ -344,8 +364,8 @@ class PostWidget extends StatelessWidget {
                                       ? Colors.red
                                       : Colors.blue,
                                 )
-                                    : Icon(IconsaxOutline.add_square,
-                                    size: 24.sp),
+                                    :  Image.asset('assets/images/pages/delete.svg', height: 24.sp),
+                                //Icon(IconsaxOutline.add_square, size: 24.sp),
                                 SizedBox(width: 10.w),
                                 Flexible(
                                   child: Text(
@@ -353,7 +373,7 @@ class PostWidget extends StatelessWidget {
                                         ? 'Unfollow $authorName'
                                         : 'Connect with $authorName',
                                     style: TextStyle(
-                                      fontFamily: 'Mulish',
+                                      fontFamily: WayaConstants.fontFamily,
                                       fontSize: 16.sp,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w400,
@@ -372,12 +392,12 @@ class PostWidget extends StatelessWidget {
                             child: Row(
                               children: [
                                 ///
-                                Icon(IconsaxOutline.cloud_remove, size: 24.sp),
+                                Image.asset('assets/images/pages/delete.svg', height: 24.sp),
                                 SizedBox(width: 10.w),
                                 Text(
                                   'Delete Post',
                                   style: TextStyle(
-                                    fontFamily: 'Mulish',
+                                    fontFamily: WayaConstants.fontFamily,
                                     fontSize: 16.sp,
                                     color: Colors.black,
                                     fontWeight: FontWeight.w400,
@@ -394,12 +414,13 @@ class PostWidget extends StatelessWidget {
                             padding: EdgeInsets.only(left: 10.w, bottom: 22.h),
                             child: Row(
                               children: [
-                                Icon(IconsaxOutline.forbidden, size: 24.sp),
+                                Image.asset('assets/images/pages/flag.png',  height: 32.h,),
+                                //Icon(IconsaxOutline.forbidden, size: 24.sp),
                                 SizedBox(width: 10.w),
                                 Text(
                                   'Report Post',
                                   style: TextStyle(
-                                    fontFamily: 'Mulish',
+                                    fontFamily: WayaConstants.fontFamily,
                                     fontSize: 16.sp,
                                     color: Colors.black,
                                     fontWeight: FontWeight.w400,
@@ -416,16 +437,16 @@ class PostWidget extends StatelessWidget {
               SizedBox(
                 height: 15.h,
               ),
-              Text(
+            /*  Text(
                 post.title,
                 style: TextStyle(
-                  fontFamily: 'Mulish',
+                  fontFamily: WayaConstants.fontFamily,
                   fontSize: 15.sp,
                 ),
               ),
               SizedBox(
                 height: 15.h,
-              ),
+              ),*/
               GestureDetector(
                 onTap: (){
                   viewFull!();
@@ -433,7 +454,7 @@ class PostWidget extends StatelessWidget {
                 child: ReadMoreText(
                   post.content,
                   style: TextStyle(
-                    fontFamily: 'Mulish',
+                    fontFamily: WayaConstants.fontFamily,
                     fontSize: 15.sp,
                   ),
                   trimLines: 2,
@@ -443,7 +464,6 @@ class PostWidget extends StatelessWidget {
                       spanBuilder: ({required String text, TextStyle? textStyle}) => TextSpan(
                         text: text,
                         style: TextStyle(
-                            fontFamily: 'Mulish',
                             fontSize: 15.sp,
                             color: Colors.blue,
                             decoration: TextDecoration.underline,
@@ -461,7 +481,7 @@ class PostWidget extends StatelessWidget {
                   trimCollapsedText: "read more".toUpperCase(),
                   trimExpandedText: " show less".toUpperCase(),
                   moreStyle: const TextStyle(color: Colors.blue),
-                  lessStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: PColors.warning),
+                  lessStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: WayaColors.primary),
                 ),
               ),
               // PostContent(content: post.content),
@@ -477,7 +497,7 @@ class PostWidget extends StatelessWidget {
                         '#${tag}',
                         //'#${jsonDecode(tag.replaceAll("]", "").replaceAll("[", "")) ?? tag}',
                         style: TextStyle(
-                          fontFamily: 'Mulish',
+                          fontFamily: WayaConstants.fontFamily,
                           fontSize: 15.sp,
                           decoration: TextDecoration.underline,
                           // color: Colors.blue,
@@ -526,7 +546,7 @@ class PostWidget extends StatelessWidget {
               //       Text(
               //         "Like",
               //         style: TextStyle(
-              //           fontFamily: 'Mulish',
+              //           fontFamily: WayaConstants.fontFamily,
               //           fontSize: 12.sp,
               //           color: Colors.black,
               //           // fontWeight: FontWeight.w400,
@@ -554,7 +574,7 @@ class PostWidget extends StatelessWidget {
                     Text(
                       "Comments",
                       style: TextStyle(
-                        fontFamily: 'Mulish',
+                        fontFamily: WayaConstants.fontFamily,
                         fontSize: 12.sp,
                         color: Colors.black,
                         // fontWeight: FontWeight.w400,
@@ -568,16 +588,18 @@ class PostWidget extends StatelessWidget {
                 onTap: onRepost,
                 child: Row(
                   children: [
-                    Icon(
-                      IconsaxOutline.programming_arrow,
-                      size: 18.sp,
-                      color: isReposted == true ? Colors.blue : Colors.black,
-                    ),
+                    Image.asset('assets/images/pages/flag.svg',height: 18.sp,
+                      color: isReposted == true ? Colors.blue : Colors.black,),
+                    // Icon(
+                    //   IconsaxOutline.programming_arrow,
+                    //   size: 18.sp,
+                    //   color: isReposted == true ? Colors.blue : Colors.black,
+                    // ),
                     SizedBox(width: 6.w),
                     Text(
                       "Repost",
                       style: TextStyle(
-                        fontFamily: 'Mulish',
+                        fontFamily: WayaConstants.fontFamily,
                         fontSize: 12.sp,
                         // color: Colors.black,
                         color: isReposted == true ? Colors.blue : Colors.black,
@@ -590,16 +612,18 @@ class PostWidget extends StatelessWidget {
               // Share button
               GestureDetector(
                 onTap: () {
-                  _showShareDialog(context, post.shareLink);
+                  Share.share(post.shareLink);
+                 // _showShareDialog(context, post.shareLink);
                 },
                 child: Row(
                   children: [
-                    Icon(IconsaxOutline.share, size: 18.sp),
+                    Image.asset('assets/images/pages/share.png',  height: 32.h,),
+                    //Icon(IconsaxOutline.share, size: 18.sp),
                     SizedBox(width: 6.w),
                     Text(
                       "Share",
                       style: TextStyle(
-                        fontFamily: 'Mulish',
+                        fontFamily: WayaConstants.fontFamily,
                         fontSize: 12.sp,
                         color: Colors.black,
                         // fontWeight: FontWeight.w400,
@@ -729,4 +753,4 @@ class PostWidget extends StatelessWidget {
       ),
     );
   }
-}*/
+}
