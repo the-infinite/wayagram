@@ -100,6 +100,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     Map<String, dynamic>? params,
     bool isWgUrl = false,
     bool formdata = false,
+    bool isAuth = true,
     bool isBinary = false,
     bool formEncoded = false,
   }) async {
@@ -116,6 +117,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     await _setHeader(
       formdata: formdata,
       contentLength: length,
+      isAuth: isAuth,
       contentType: contentType,
       formEncoded: formEncoded,
     );
@@ -219,6 +221,7 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<void> _setHeader({
     bool formdata = false,
     bool formEncoded = false,
+    bool isAuth = true,
     int? contentLength,
     String? contentType,
   }) async {
@@ -231,7 +234,7 @@ class DioHttpClient implements WayaHttpClientInterface {
                   ? 'application/x-www-form-urlencoded'
                   : 'application/json'),
       'Accept': '*/*',
-      'Authorization': 'Bearer ${await secureDataSource.getToken()}',
+      if (isAuth) 'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 
