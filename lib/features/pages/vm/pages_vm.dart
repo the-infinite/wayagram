@@ -10,6 +10,7 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/data/model/followers_model.dart';
 import 'package:wayagram/features/pages/data/model/page_state.dart';
@@ -25,8 +26,7 @@ class UploadedImage {
   final String file;
   final String fileName;
 
-  UploadedImage(
-      {required this.url, required this.file, required this.fileName});
+  UploadedImage({required this.url, required this.file, required this.fileName});
 }
 
 class PageVm extends StateNotifier<PageState> {
@@ -99,8 +99,7 @@ class PageVm extends StateNotifier<PageState> {
         handleLikeResponse(post, response);
       } else {
         // Remove like if toggled off
-        final response = await _pageRepository.removeReaction(
-            post.id!, post.getReactionId(user.id!));
+        final response = await _pageRepository.removeReaction(post.id!, post.getReactionId(user.id!));
         handleLikeResponse(post, response);
       }
     } else {
@@ -225,8 +224,7 @@ class PageVm extends StateNotifier<PageState> {
         } */
       } else {
         print('Error: Status code ${response.statusCode}');
-        _errorMessage2 =
-            'Failed to fetch saved posts. Status code: ${response.statusCode}';
+        _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
       }
     } catch (e) {
       print('Exception occurred while fetching saved posts: $e');
@@ -241,59 +239,61 @@ class PageVm extends StateNotifier<PageState> {
   Future<void> createPost(ctx, content, postType, List<XFile> images) async {
     print("before the loop");
     List<UploadedImage> urls = [];
+    final choiceMap = <String>[];
     // get url
     for (XFile image in images) {
       print("In the loop ${image.name} ${image.path} ${image.mimeType}");
 
-      final uploadImageResponse =
-          await _pageRepository.getUploadImage(image.name);
-     
-      MediaUploadModel mediaUploadModel =
-          MediaUploadModel.fromJson(uploadImageResponse.data);
-      urls.add(UploadedImage(
-          url: mediaUploadModel.data!.url!,
-          file: image.path,
-          fileName: image.name));
+      final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
+
+      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
     }
 
     //MultipartFile.fromPath('file', file.path)
 
     // upload
     for (UploadedImage url in urls) {
-        final file = File(url.file);
+      final file = File(url.file);
+      final putImageResponse = await _pageRepository.putImage(url.url, file);
 
-       final putImageResponse = await _pageRepository.putImage(url.url, file);
+      //? This is fine.
+      if (!(putImageResponse.success && ctx.mounted)) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to create post'),
+            backgroundColor: WayaColors.error,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      }
 
-        print('uploadImageResponse ===>> $putImageResponse');
+      //? This is fine.
+      print(putImageResponse.data);
     }
     //WayaHelpers.
 
     try {
-      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.createPost(content, choiceMap, postType);
 
-      // state = state.copyWith(isLoading: false);
-      // if (uploadImageResponse.success && ctx.mounted) {
-      //   final putImageResponse = await _pageRepository.putImage(state.data?.url, image);
-      //   state = state.copyWith(isLoading: false);
-      //   if (putImageResponse.success && ctx.mounted) {
-      //     final response = await _pageRepository.createPost(content, choiceMap, postType);
-      //     state = state.copyWith(isLoading: false);
-      //     if(response.success && ctx.mounted){
-      //       ScaffoldMessenger.of(ctx).showSnackBar(
-      //         const SnackBar(
-      //           content: Text('Post created successfully!'),
-      //           backgroundColor: WayaColors.primary,
-      //           duration: Duration(seconds: 2),
-      //         ),
-      //       );
-      //     }else{
-      //       _logger.i('LOGGER  ==>>> ${response.data['error']}');
-      //       print('Create post');
-      //       _logger.i(response.data['data']);
-      //     }
-      // }
-      //
-      // }
+      //? If this is fine...
+      if (response.success && ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post created successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        print('Create post');
+        _logger.i(response.data['data']);
+      }
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -365,10 +365,7 @@ class PageVm extends StateNotifier<PageState> {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data["comments"];
-        return data
-            .cast<Map<String, dynamic>>()
-            .map((json) => Comments.fromJson(json))
-            .toList();
+        return data.cast<Map<String, dynamic>>().map((json) => Comments.fromJson(json)).toList();
       } else {
         return [];
       }
