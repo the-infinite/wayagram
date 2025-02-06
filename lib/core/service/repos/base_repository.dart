@@ -34,6 +34,7 @@ abstract class BaseRepository {
     String? contentType,
     Map<String, dynamic>? params,
     bool formdata = false,
+    bool isWgUrl = true,
     bool isBinary = false,
     bool formEncoded = false,
   }) {
@@ -43,6 +44,7 @@ abstract class BaseRepository {
       contentType: contentType,
       params: params,
       formdata: formdata,
+      isWgUrl: isWgUrl,
       formEncoded: formEncoded,
       isBinary: isBinary,
     );

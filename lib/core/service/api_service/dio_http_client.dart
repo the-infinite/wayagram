@@ -98,6 +98,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     dynamic body, {
     String? contentType,
     Map<String, dynamic>? params,
+    bool isWgUrl = false,
     bool formdata = false,
     bool isBinary = false,
     bool formEncoded = false,
@@ -106,8 +107,8 @@ class DioHttpClient implements WayaHttpClientInterface {
 
     //? If this is binary, turn the body to a stream.
     if (isBinary) {
-      body = (body as File).openRead();
       length = await (body as File).length();
+      body = body.openRead();
     }
 
     //? Now, I need you to set the headers correctly. Please add the content length
@@ -121,7 +122,7 @@ class DioHttpClient implements WayaHttpClientInterface {
 
     //? This is fine.
     params?.removeWhere((key, value) => value == null);
-    final fullRoute = '$baseURL$route';
+    final fullRoute = '${isWgUrl ? baseURL : ''}$route';
     _logger.i('fullRoute: $fullRoute $body');
 
     //? If this is formdata but not binary.
