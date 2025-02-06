@@ -6,11 +6,12 @@ import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/explore/data/model/default.dart';
+import 'package:wayagram/features/event/data/model/event_response_model.dart';
 
 class EventCard extends ConsumerWidget {
-  final EventDefault event;
-  const EventCard({super.key, required this.event});
+  final EventDoc event;
+  final String userId;
+  const EventCard({super.key, required this.event, required this.userId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,13 +33,13 @@ class EventCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   WayaImage(
-                    imageUrl: "",
+                    imageUrl: event.image,
                     height: 70,
                     width: 70,
-                    radius: BorderRadius.circular(16),
+                    radius: BorderRadius.circular(12),
                   ),
                   SizedBox(
-                    width: 4.w,
+                    width: 6.w,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,12 +51,12 @@ class EventCard extends ConsumerWidget {
                             style: wayaTheme.textTheme.bodyMedium),
                       ),
                       SizedBox(
-                        height: 3.h,
+                        height: 8.h,
                       ),
                       SizedBox(
                         width: 150.w,
                         child: Text(
-                          event.locAndTime,
+                          event.locationAddress,
                           style: wayaTheme.textTheme.hintStyle,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -68,13 +69,13 @@ class EventCard extends ConsumerWidget {
                 width: 60,
                 child: WayaButton(
                   callback: () {},
-                  text: 'Register',
+                  text: event.userId == userId ? 'View' : 'Register',
                   height: 30,
                   textStyle: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                       color: wayaTheme.colorScheme.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w500),
-                  radius: 5,
+                  radius: 6,
                 ),
               )
             ],

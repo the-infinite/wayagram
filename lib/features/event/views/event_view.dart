@@ -21,7 +21,7 @@ class _EventViewState extends ConsumerState<EventView>
   Widget build(BuildContext context) {
     return WayaScaffold(
         isLoading: false,
-        isScrollable: true,
+        isScrollable: false,
         title: 'Events',
         body: Column(
           children: [

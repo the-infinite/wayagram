@@ -7,6 +7,7 @@ import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/chat/view/chat.dart';
+import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
@@ -20,6 +21,7 @@ import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
+import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
@@ -155,6 +157,7 @@ class WayaAppRoutes {
     ProductsViewPage.route: () => ProductsViewPage(),
     WayaNotifications.route: () => WayaNotifications(),
     NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
+    Moment.route: () => Moment(),
     EventView.route: () => EventView(),
     AddEvent.route: () => AddEvent(),
     EventDetail.route: () => EventDetail(),
@@ -174,6 +177,8 @@ class WayaAppRoutes {
     EditPageInfo.route: ()=> EditPageInfo(),
     AddTeamMember.route: ()=> AddTeamMember(),
     PrivateGroup.route: ()=> PrivateGroup(),
+    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    DisplayFeed.route:() => DisplayFeed(),
     GroupSetting.route: ()=> GroupSetting(),
     SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString())
   };

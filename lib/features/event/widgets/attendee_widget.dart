@@ -22,7 +22,7 @@ class AttendeeWidget extends ConsumerWidget {
         Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.greyColor100,
+                color: wayaTheme.colorScheme.scaffoldColor,
                 borderRadius: BorderRadius.circular(12)),
             child: Column(
               children: [

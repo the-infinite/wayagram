@@ -7,7 +7,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 class EventTimeWidget extends ConsumerStatefulWidget {
-   final String uniqueKey;
+  final String uniqueKey;
   final String time;
   final String label;
   final String hintText;
@@ -73,9 +73,7 @@ class _EventTimeWidgetState extends ConsumerState<EventTimeWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                            widget.time.isEmpty
-                                ? widget.hintText
-                                : widget.time,
+                            widget.time.isEmpty ? widget.hintText : widget.time,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -137,11 +135,15 @@ class EventDateWidgetVm extends StateNotifier<EventDateWidgetState> {
   Future<void> showDatePickerDialog(
       BuildContext context, Function({required String time}) selectTime) async {
     try {
-      final response = await showTimePicker(
+      TimeOfDay? response = await showTimePicker(
           context: context, initialTime: TimeOfDay(hour: 0, minute: 0));
 
-      if (response != null) {
-        selectTime(time: response.toString());
+      if (response != null && context.mounted) {
+       
+      final time24Hour =
+          "${response.hour.toString().padLeft(2, '0')}:${response.minute.toString().padLeft(2, '0')}";
+
+      selectTime(time: time24Hour);
       }
     } catch (error) {
       print(error);

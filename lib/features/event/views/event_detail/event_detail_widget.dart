@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/theme/extension/padding_extension.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/widgets/about_event.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
@@ -20,11 +22,9 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(eventVmProvider);
     return Expanded(
-     
         child: ListView(
-      //crossAxisAlignment: CrossAxisAlignment.start,
-     
       children: [
         const Gap(15),
         GridView(
@@ -32,33 +32,46 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 0,
-              childAspectRatio: 1.8,
+              childAspectRatio: 1.9,
               crossAxisSpacing: 8),
           children: [
             InventoryWidget(
-                metrics: "0",
+                metrics: "${viewModel.singleEvent?.noOfAttendees ?? 0}",
                 color: Color(0xffE7F6EC),
                 title: "Total Attendees"),
             InventoryWidget(
-                metrics: "0", color: Color(0xffFEF6E7), title: "Total Revenue")
+                metrics: WayaHelpers.formatPrice(
+                    viewModel.singleEvent?.totalRevenue ?? 0),
+                color: Color(0xffFEF6E7),
+                title: "Total Revenue")
           ],
         ),
         const Gap(15),
-        AboutEvent(title: 'Title of Event', content: "Monshoot Techchabal"),
+        AboutEvent(
+            title: 'Title of Event',
+            content: viewModel.singleEvent?.title ?? ""),
         const Gap(15),
-        AboutEvent(title: 'Organizer Name', content: "CNT"),
+        AboutEvent(
+            title: 'Organizer Name',
+            content: viewModel.singleEvent?.organizerName ?? ""),
         const Gap(15),
-        AboutEvent(title: "Event Description", content: "Description"),
+        AboutEvent(
+            title: "Event Description",
+            content: viewModel.singleEvent?.description ?? ""),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutEvent(title: 'Event Location', content: "Physical"),
+              child: AboutEvent(
+                  title: 'Event Location',
+                  content:
+                      viewModel.singleEvent?.location.capitalizeFirst ?? ""),
             ),
             Expanded(
-              child:
-                  AboutEvent(title: 'Event Address', content: "Ikeja, Lagos"),
+              child: AboutEvent(
+                  title: 'Event Address',
+                  content: viewModel.singleEvent?.locationAddress ?? ""),
             ),
           ],
         ),
@@ -72,11 +85,16 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child:
-                  AboutEvent(title: 'Start Date', content: "22nd October 2024"),
+              child: AboutEvent(
+                  title: 'Start Date',
+                  content: WayaHelpers.formatDateMonthYear(
+                      viewModel.singleEvent!.startDate)),
             ),
             Expanded(
-              child: AboutEvent(title: 'Start Time', content: "08:00AM"),
+              child: AboutEvent(
+                  title: 'Start Time',
+                  content: WayaHelpers.format24HRSToAPM(
+                      viewModel.singleEvent!.startTime)),
             ),
           ],
         ),
@@ -85,11 +103,16 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child:
-                  AboutEvent(title: 'EnsdDate', content: "22nd October 2024"),
+              child: AboutEvent(
+                  title: 'EndDate',
+                  content: WayaHelpers.formatDateMonthYear(
+                      viewModel.singleEvent!.endDate)),
             ),
             Expanded(
-              child: AboutEvent(title: 'End Time', content: "08:00AM"),
+              child: AboutEvent(
+                  title: 'End Time',
+                  content: WayaHelpers.format24HRSToAPM(
+                      viewModel.singleEvent!.endTime)),
             ),
           ],
         ),
@@ -103,10 +126,16 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutEvent(title: 'Event Type', content: "Paid"),
+              child: AboutEvent(
+                  title: 'Event Type',
+                  content:
+                      "${viewModel.singleEvent?.eventType.capitalizeFirst}"),
             ),
             Expanded(
-              child: AboutEvent(title: 'Event Fee', content: "N5,000"),
+              child: AboutEvent(
+                  title: 'Event Fee',
+                  content:
+                      WayaHelpers.formatPrice(viewModel.singleEvent?.fee ?? 0)),
             ),
           ],
         ),
@@ -115,15 +144,21 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child:
-                  AboutEvent(title: 'Maximum Capacity', content: "Unlimited"),
+              child: AboutEvent(
+                  title: 'Maximum Capacity',
+                  content: viewModel.singleEvent?.maxCapacity == null
+                      ? "Unlimited"
+                      : "${viewModel.singleEvent?.maxCapacity}"),
             ),
             Expanded(
-              child: AboutEvent(title: 'Privacy Settings', content: "Public"),
+              child: AboutEvent(
+                  title: 'Privacy Settings',
+                  content:
+                      "${viewModel.singleEvent?.privacyOption.capitalizeFirst}"),
             ),
           ],
         ),
-       Gap(context.height * 0.5)
+        Gap(200)
       ],
     ));
   }

@@ -135,25 +135,31 @@ class EventDateWidgetVm extends StateNotifier<EventDateWidgetState> {
   }
 
   Future<void> showDatePickerDialog(BuildContext context,
-      Function({required String date, required String iso}) selectDate) async {
-    try {
-      final currentYear = DateTime.now().year;
-      final nextYear = currentYear + 1;
-      final response = await showDatePicker(
-          context: context,
-          firstDate: DateTime(1950),
-          lastDate: DateTime(nextYear),
-          initialDate: DateTime.now());
+    Function({required String date, required String iso}) selectDate) async {
+  try {
+    final currentYear = DateTime.now().year;
+    final nextYear = currentYear + 1;
+    final response = await showDatePicker(
+      context: context,
+      firstDate: DateTime(1950),
+      lastDate: DateTime(nextYear),
+      initialDate: DateTime.now(),
+    );
 
-      if (response != null) {
-        selectDate(
-            date: "${response.year}-${response.month}-${response.day}",
-            iso: response.toIso8601String());
-      }
-    } catch (error) {
-      print(error);
+    if (response != null) {
+      String formattedDate =
+          "${response.year}-${response.month.toString().padLeft(2, '0')}-${response.day.toString().padLeft(2, '0')}";
+
+      selectDate(
+        date: formattedDate, 
+        iso: response.toIso8601String(), 
+      );
     }
+  } catch (error) {
+    print(error);
   }
+}
+
 }
 
 final eventDateWidgetVmProvider = StateNotifierProvider.family<
