@@ -270,7 +270,7 @@ class PageVm extends StateNotifier<PageState> {
       }
 
       //? This is fine.
-      print(putImageResponse.data);
+      print("Data ${putImageResponse.data}");
     }
     //WayaHelpers.
 
