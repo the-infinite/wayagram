@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
+import 'package:wayagram/features/event/data/model/add_event_request_model.dart';
 
 class AddEventState {
   final bool isLoading;
@@ -8,8 +11,8 @@ class AddEventState {
   final TextEditingController organizer;
   final TextEditingController description;
   final String location;
-  final TextEditingController? address;
-  final String? link;
+  final TextEditingController address;
+  final TextEditingController link;
   final String eventType;
   final TextEditingController eventFee;
   final TextEditingController maxCapacity;
@@ -20,7 +23,9 @@ class AddEventState {
   final String endTime;
   final String startDateString;
   final String endDateString;
-  final File? eventImage;
+  final DocType? eventImage;
+  final MultipartFile? image;
+  final String userId;
 
   AddEventState(
       {this.isLoading = false,
@@ -29,7 +34,7 @@ class AddEventState {
       TextEditingController? description,
       this.location = '',
       TextEditingController? address,
-      this.link,
+      TextEditingController? link,
       this.eventType = '',
       TextEditingController? eventFee,
       TextEditingController? maxCapacity,
@@ -38,14 +43,17 @@ class AddEventState {
       this.startTime = '',
       this.endDate = '',
       this.endTime = '',
+      this.image,
       this.eventImage,
       this.startDateString = '',
+      this.userId = '',
       this.endDateString = ''})
       : title = title ?? TextEditingController(),
         organizer = organizer ?? TextEditingController(),
         description = description ?? TextEditingController(),
         eventFee = eventFee ?? TextEditingController(),
         address = address ?? TextEditingController(),
+        link = link ?? TextEditingController(),
         maxCapacity = maxCapacity ?? TextEditingController();
 
   AddEventState copyWith(
@@ -55,7 +63,7 @@ class AddEventState {
       TextEditingController? description,
       String? location,
       TextEditingController? address,
-      String? link,
+      TextEditingController? link,
       String? eventType,
       TextEditingController? eventFee,
       TextEditingController? maxCapacity,
@@ -64,8 +72,10 @@ class AddEventState {
       String? startTime,
       String? endDate,
       String? endTime,
-      File? eventImage,
+      DocType? eventImage,
       String? startDateString,
+      MultipartFile? image,
+      String? userId,
       String? endDateString}) {
     return AddEventState(
         isLoading: isLoading ?? this.isLoading,
@@ -85,50 +95,77 @@ class AddEventState {
         eventImage: eventImage ?? this.eventImage,
         endTime: endTime ?? this.endTime,
         startDateString: startDateString ?? this.startDateString,
+        image: image ?? this.image,
+        userId: userId ?? this.userId,
         endDateString: endDateString ?? this.endDateString);
   }
 
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'isLoading': isLoading,
-  //     'title': title.text,
-  //     'organizer': organizer.text,
-  //     'description': description.text,
-  //     'location': location,
-  //     'address': address,
-  //     'link': link,
-  //     'eventType': eventType,
-  //     'eventFee': eventFee.text,
-  //     'maxCapacity': maxCapacity.text,
-  //     'privacyOption': privacyOption,
-  //     'startDate': startDate,
-  //     'startTime': startTime,
-  //     'endDate': endDate,
-  //     'endTime': endTime,
-  //   };
-  // }
+  Map<String, dynamic> toJson() {
+    return {
+      'isLoading': isLoading,
+      'title': title.text,
+      'organizer': organizer.text,
+      'description': description.text,
+      'location': location,
+      'address': address,
+      'link': link,
+      'eventType': eventType,
+      'eventFee': eventFee.text,
+      'maxCapacity': maxCapacity.text,
+      'privacyOption': privacyOption,
+      'startDate': startDate,
+      'startTime': startTime,
+      'endDate': endDate,
+      'endTime': endTime,
+      'image': image,
+      'userId': userId
+    };
+  }
 
-  // factory AddEventState.fromJson(Map<String, dynamic> json) {
-  //   return AddEventState(
-  //     isLoading: json['isLoading'] ?? false,
-  //     title: TextEditingController(text: json['title'] ?? ''),
-  //     organizer: TextEditingController(text: json['organizer'] ?? ''),
-  //     description: TextEditingController(text: json['description'] ?? ''),
-  //     location: json['location'] ?? '',
-  //     address: json['address'],
-  //     link: json['link'],
-  //     eventType: json['eventType'] ?? '',
-  //     eventFee: TextEditingController(text: json['eventFee'] ?? ''),
-  //     maxCapacity: TextEditingController(text: json['maxCapacity'] ?? ''),
-  //     privacyOption: json['privacyOption'] ?? '',
-  //     startDate: json['startDate'] ?? '',
-  //     startTime: json['startTime'] ?? '',
-  //     endDate: json['endDate'] ?? '',
-  //     endTime: json['endTime'] ?? '',
-  //   );
-  // }
+  factory AddEventState.fromJson(Map<String, dynamic> json) {
+    return AddEventState(
+        isLoading: json['isLoading'] ?? false,
+        title: TextEditingController(text: json['title'] ?? ''),
+        organizer: TextEditingController(text: json['organizer'] ?? ''),
+        description: TextEditingController(text: json['description'] ?? ''),
+        location: json['location'] ?? '',
+        address: json['address'],
+        link: TextEditingController(text: json['link']),
+        eventType: json['eventType'] ?? '',
+        eventFee: TextEditingController(text: json['eventFee'] ?? ''),
+        maxCapacity: TextEditingController(text: json['maxCapacity'] ?? ''),
+        privacyOption: json['privacyOption'] ?? '',
+        startDate: json['startDate'] ?? '',
+        startTime: json['startTime'] ?? '',
+        endDate: json['endDate'] ?? '',
+        endTime: json['endTime'] ?? '',
+        image: json['image'] ?? '',
+        userId: json['userId'] ?? '');
+  }
 
   // add the creation model
+  AddEventRequestModel get addEvent {
+    return AddEventRequestModel(
+        title: title.text,
+        organizerName: organizer.text,
+        location: location.toLowerCase(),
+        startDate: startDate,
+        endDate: endDate,
+        endTime: endTime,
+        startTime: startTime,
+        eventType: eventType.toLowerCase(),
+        fee: int.parse(eventType == "Free" ? "0" : eventFee.text),
+        privacyOption: privacyOption.toLowerCase(),
+        image: image!,
+        locationAddress: location == 'Physical' ? address.text : link.text,
+        userId: userId);
+  }
 }
 
-const eventReport = ['Spam or misleading content','Inappropriate Content', 'Fraudulent Activity', 'Violates terms and conditions', 'Other'];
+const eventReport = [
+  'Spam or misleading content',
+  'Inappropriate Content',
+  'Fraudulent Activity',
+  'Violates terms and conditions',
+  'Other'
+];

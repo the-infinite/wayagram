@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,7 +32,7 @@ class _PagesState extends ConsumerState<Pages>
     final viewModel = ref.watch(createPageProvider);
 
     return WayaScaffold(
-        onTapBackButton: (){
+        onTapBackButton: () {
           Navigator.pushNamed(context, BottomView.route, arguments: 5);
         },
         isLoading: false,
@@ -74,26 +73,29 @@ class _PagesState extends ConsumerState<Pages>
               ],
             ),
             const Gap(20),
-            _selectedIndex == 0 ? PagesForYou() : _selectedIndex == 1 ? FollowingPage() : ManagePages()
+            _selectedIndex == 0
+                ? PagesForYou()
+                : _selectedIndex == 1
+                    ? FollowingPage()
+                    : ManagePages()
           ],
         ),
         floatingActionButton: SizedBox(
-      height: 50,
-      width: 50,
-      child: WayaButton(
-        callback: () {
-          WayaNav.toNamed('/createPost');
-        },
-        height: 50,
-        centerWidget: Center(
-          child: Icon(
-            Icons.add,
-            color: wayaTheme.colorScheme.white,
-            size: 40,
+          height: 50,
+          width: 50,
+          child: WayaButton(
+            callback: () {
+              WayaNav.toNamed('/createPost');
+            },
+            height: 50,
+            centerWidget: Center(
+              child: Icon(
+                Icons.add,
+                color: wayaTheme.colorScheme.white,
+                size: 40,
+              ),
+            ),
           ),
-        ),
-      ),
-    )
-    );
+        ));
   }
 }

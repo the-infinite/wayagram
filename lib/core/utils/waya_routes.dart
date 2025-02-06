@@ -7,6 +7,7 @@ import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/chat/view/chat.dart';
+import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
@@ -175,7 +176,8 @@ class WayaAppRoutes {
     EditPageInfo.route: ()=> EditPageInfo(),
     AddTeamMember.route: ()=> AddTeamMember(),
     PrivateGroup.route: ()=> PrivateGroup(),
-    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString())
+    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    DisplayFeed.route:() => DisplayFeed()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

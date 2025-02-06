@@ -14,6 +14,8 @@ class EngagementNotifier
     state = {...state};
   }
 
+
+
   void stopTracking(ServiceType service) {
     final engagementData = state[service]!;
     engagementData.addTime(0);

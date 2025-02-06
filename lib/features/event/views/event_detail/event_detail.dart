@@ -9,8 +9,10 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/data/model/add_event_state.dart';
 import 'package:wayagram/features/event/bottom_sheets/report_event.dart';
+import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/views/event_detail/event_attendees.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail_widget.dart';
+import 'package:wayagram/features/event/vm/event_vm.dart';
 
 class EventDetail extends ConsumerStatefulWidget {
   static const route = "/event-detail";
@@ -22,9 +24,20 @@ class EventDetail extends ConsumerStatefulWidget {
 
 class _EventDetailState extends ConsumerState<EventDetail> {
   int _selectedIndex = 0;
+
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final EventDoc event =
+          ModalRoute.of(context)!.settings.arguments as EventDoc;
+      ref.read(eventVmProvider.notifier).getSingleEvent(event);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    final viewModel = ref.watch(eventVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: false,
@@ -36,7 +49,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
           children: [
             const Gap(20),
             WayaImage(
-              imageUrl: "",
+              imageUrl: viewModel.singleEvent?.image ?? '',
               height: context.height * 0.2,
               width: double.infinity,
               radius: BorderRadius.circular(10),
@@ -67,7 +80,45 @@ class _EventDetailState extends ConsumerState<EventDetail> {
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.white,
           ),
-          child: Row(
+          child: viewModel.isUserEvent ?Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: context.width * 0.45,
+                child: WayaButton(
+                  callback: () {},
+                  color: wayaTheme.colorScheme.transparent,
+                  border: Border.all(
+                      width: 1, color: wayaTheme.colorScheme.customPrimary),
+                  centerWidget: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.share,
+                          size: 22, color: wayaTheme.colorScheme.customPrimary),
+                      const Gap(4),
+                      Text(
+                        'Share Event',
+                        style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                          fontWeight: FontWeight.w600,
+                          color: wayaTheme.colorScheme.customPrimary,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              //  Gap(context.width * 0.04),
+              SizedBox(
+                width: context.width * 0.45,
+                child: WayaButton(
+                  callback: () {},
+                  text: 'Edit Event Detail',
+                ),
+              )
+            ],
+          ) : Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -142,15 +193,15 @@ class EventDetailAction extends StatelessWidget {
               child: _buildActionNav(
                   context: context,
                   onTap: () async {
-                     Navigator.pop(context);
+                    Navigator.pop(context);
                     await WayaUtils.showModalSheet(context,
                         child: ReportEvent(
                             statuses: eventReport, currentStatus: ""));
-                      /**
+                    /**
                        *
                        *  show success modal 
                        * 
-                       *  */     
+                       *  */
                   },
                   asset: Icon(
                     Icons.flag_outlined,
