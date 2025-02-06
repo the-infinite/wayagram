@@ -85,6 +85,8 @@ post_install do |installer|
         'PERMISSION_BLUETOOTH=1',
       ]
 
+      # For webRTC
+      config.build_settings['ONLY_ACTIVE_ARCH'] = 'YES' # <= this line
     end
   end
 end

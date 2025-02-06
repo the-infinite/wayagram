@@ -6,3 +6,4 @@
 -dontwarn javax.annotation.concurrent.GuardedBy
 -keep class com.cloudwebrtc.webrtc.** { *; }
 -keep class org.webrtc.** { *; }
+-keep class net.sqlcipher.** { *; }
