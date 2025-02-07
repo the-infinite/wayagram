@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
+import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/features/post/model/media_upload_model.dart';
 
 class PageState{
@@ -11,7 +12,7 @@ class PageState{
   final TextEditingController content;
   final List<PostImage> images;
   final List<Docs>? fetchAllPostData;
-  //final List<Docs>? docs;
+  final List<GetAllPostDocs>? getAllPost;
   final MediaUploadData? data;
 
   final bool isFocused;
@@ -26,6 +27,7 @@ class PageState{
     this.isLoading = false,
     this.images = const [],
     this.fetchAllPostData = const [],
+    this.getAllPost = const [],
     this.data
 }):  pageName = pageName ?? TextEditingController(),
      pageDescription = pageDescription ?? TextEditingController(),
@@ -37,6 +39,7 @@ class PageState{
     TextEditingController? content,
     List<PostImage>? images,
     List<Docs>? fetchAllPostData,
+    List<GetAllPostDocs>? getAllPost,
     MediaUploadData? data,
 
     bool? isFocused,
@@ -49,6 +52,7 @@ class PageState{
       images: images ?? this.images,
       data: data ?? this.data,
       fetchAllPostData: fetchAllPostData ?? this.fetchAllPostData,
+      getAllPost: getAllPost ?? this.getAllPost,
 
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,

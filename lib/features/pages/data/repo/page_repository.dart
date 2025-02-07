@@ -17,11 +17,6 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getUploadImage(image) {
-    // final payload = {
-    //   "fileName": image
-    // };
-    //
-    // return post("$serviceUrl/signed-url/url", payload);
     return get("$serviceUrl/signed-url/$image");
   }
 
@@ -52,6 +47,10 @@ class PageRepository extends BaseRepository {
     final payload = {"content": content};
     return post("$serviceUrl/posts/$postId/comment", payload);
   }
+
+  // Future<WayaRequestResponse> likePost(postId) {
+  //   return post("$serviceUrl/posts/$postId/likes");
+  // }
 
   Future<WayaRequestResponse> removeRepost(String id) async {
     return delete("$serviceUrl/posts/$id/comment");

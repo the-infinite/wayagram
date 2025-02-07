@@ -54,7 +54,7 @@ class NormalImage extends StatefulWidget {
 
 class _NormalImageState extends State<NormalImage> {
   late PageController _pageController;
-  String placeholder = 'assets/images/content/image_placeholder.png';
+  String placeholder = 'assets/images/pages/image_placeholder.png';
   @override
   void initState() {
     _pageController = PageController(initialPage: 0);

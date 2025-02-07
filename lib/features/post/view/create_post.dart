@@ -112,7 +112,6 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                   callback:!viewModel.isLoading
                       ? () async {
                     if (_formKey.currentState!.validate()) {
-                      print('My Images $_selectedImages');
                      await ref.watch(createPageProvider.notifier).createPost(
                        context, viewModel.content.text,
                          sel ?"public":"private",
