@@ -56,7 +56,7 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
               )),
           const Gap(10),
           Text(
-            'Great news! Your Group has been successfully created and you can manage it anytime in the\nGroups section.',
+            'Great news! Your Group has been successfully\ncreated and you can manage it anytime in the\nGroups section.',
             style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w400,

@@ -44,18 +44,21 @@ MediaUploadData dataFromJson(String str) => MediaUploadData.fromJson(json.decode
 String dataToJson(MediaUploadData data) => json.encode(data.toJson());
 class MediaUploadData {
   MediaUploadData({
-      this.url,});
+      this.url, this.publicUrl});
 
   MediaUploadData.fromJson(dynamic json) {
     url = json['url'];
+    publicUrl = json['publicUrl'];
   }
   String? url;
-  MediaUploadData copyWith({  String? url,
-}) => MediaUploadData(  url: url ?? this.url,
+  String? publicUrl;
+  MediaUploadData copyWith({  String? url, String? publicUrl
+}) => MediaUploadData(  url: url ?? this.url, publicUrl: publicUrl ?? this.publicUrl
 );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['url'] = url;
+    map['publicUrl'] = publicUrl;
     return map;
   }
 

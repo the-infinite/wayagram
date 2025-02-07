@@ -50,7 +50,7 @@ class _SuccessPageState extends ConsumerState<SuccessPage> {
               )),
           const Gap(10),
           Text(
-              'Great news! Your Page has been successfully created and you can manage it anytime in the\nPages section.',
+              'Great news! Your Page has been successfully\ncreated and you can manage it anytime in the\nPages section.',
               style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w400,

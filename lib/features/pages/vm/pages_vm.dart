@@ -16,6 +16,7 @@ import 'package:wayagram/features/pages/data/model/followers_model.dart';
 import 'package:wayagram/features/pages/data/model/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
+import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/features/post/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
 import 'package:http/http.dart' as http;
@@ -236,9 +237,50 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
+  Future<void> getAllPosts(userId) async {
+    print('Fetching saved posts...');
+
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.fetchPost(userId);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        GetAllPost responseModel = GetAllPost.fromJson(response.data);
+        state = state.copyWith(getAllPost: responseModel.data?.docs);
+        // final data = SavedPostsResponse.fromJson(response.data);
+
+        //print('Data parsed: ${data.savedPosts.length} saved posts received.');
+
+        // Clear existing saved posts
+        //_savedPosts.clear();
+
+        // Add new saved posts if available
+        /*if (data.savedPosts.isNotEmpty) {
+          _savedPosts.addAll(data.savedPosts); // No need to map, just add the SavedPost directly
+          print('Saved posts added: ${_savedPosts.length} posts.');
+        } */
+      } else {
+        print('Error: Status code ${response.statusCode}');
+        _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
+      }
+    } catch (e) {
+      print('Exception occurred while fetching saved posts: $e');
+      _errorMessage2 = 'Something went wrong. Please try again later.';
+    } finally {
+      // _isLoading = false;
+      // notifyListeners();
+      //print('Saved posts fetch completed. Loading state: $_isLoading');
+    }
+  }
+
   Future<void> createPost(ctx, content, postType, List<XFile> images) async {
     print("before the loop");
     List<UploadedImage> urls = [];
+     List<String> publicUrl = [];
     final choiceMap = <String>[];
     // get url
     for (XFile image in images) {
@@ -248,9 +290,8 @@ class PageVm extends StateNotifier<PageState> {
 
       MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
       urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      publicUrl.add(mediaUploadModel!.data!.publicUrl!);
     }
-
-    //MultipartFile.fromPath('file', file.path)
 
     // upload
     for (UploadedImage url in urls) {
@@ -276,7 +317,8 @@ class PageVm extends StateNotifier<PageState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.createPost(content, choiceMap, postType);
+      final response = await _pageRepository.createPost(content, publicUrl , postType);
+      //final response = await _pageRepository.createPost(content, choiceMap, postType);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
@@ -323,6 +365,27 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
+  Future<void> deletePost( ctx, {required String postId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _pageRepository.deletePost(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post deleted successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   FutureOr<List<Comments>> getComments(String id) async {
     //_isLoading = true;
     _errorMessage = '';
@@ -361,9 +424,9 @@ class PageVm extends StateNotifier<PageState> {
   Stream<List<Comments>> getCommentsStream(String postId) {
     return Stream.periodic(const Duration(seconds: 5), (count) async {
       //final token = await Store.getToken();
-
+      state = state.copyWith(isLoading: true);
       final response = await _pageRepository.getComment(postId);
-
+      state = state.copyWith(isLoading: false);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data["comments"];
         return data.cast<Map<String, dynamic>>().map((json) => Comments.fromJson(json)).toList();
@@ -404,38 +467,3 @@ final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
   );
 });
 
-
-
-// Future<void> createPost(ctx,content, postType, String image) async {
-//
-//   final List<String> choiceMap = [image];
-//
-//   for (var i = 0; i < state.images.length; i++) {
-//     await MultipartFile.fromFile(state.images[i].image!.path, contentType: MediaType.parse('image/*'));
-//   }
-//
-//   try {
-//     state = state.copyWith(isLoading: true);
-//     final response = await _pageRepository.createPost(content, choiceMap, postType);
-//     state = state.copyWith(isLoading: false);
-//     Navigator.of(ctx).pop();
-//     if (response.success && ctx.mounted) {
-//       ScaffoldMessenger.of(ctx).showSnackBar(
-//         const SnackBar(
-//           content: Text('Post created successfully!'),
-//           backgroundColor: WayaColors.primary,
-//           duration: Duration(seconds: 2),
-//         ),
-//       );
-//       _logger.i(response.data['data']);
-//     }else{
-//       _logger.i('LOGGER  ==>>> ${response.data['error']}');
-//       print('CHECKINGGGGG');
-//     }
-//   } catch (e) {
-//     _logger.e(e);
-//   } finally {
-//     state = state.copyWith(isLoading: false);
-//   }
-// }
-//

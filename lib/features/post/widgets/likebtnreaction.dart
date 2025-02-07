@@ -95,12 +95,8 @@ class _LikeButtonWithReactionsState extends State<LikeButtonWithReactions> {
       onLongPress: () => _showReactionsOverlay(context),
       child: Row(
         children: [
-          SvgPicture.asset("assets/icons/thumbsup.svg", color: widget.isLiked ? Colors.red : Colors.grey,),
-          // Icon(
-          //   IconsaxOutline.like_1,
-          //   size: 18.sp,
-          //   color: widget.isLiked ? Colors.red : Colors.grey,
-          // ),
+          Image.asset('assets/images/pages/like.png',
+            color: widget.isLiked ? Colors.red : Colors.grey,),
           const SizedBox(width: 6),
           Text(
             "Like",
