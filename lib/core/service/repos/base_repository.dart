@@ -62,7 +62,7 @@ abstract class BaseRepository {
     return httpClient.patchHttp(route, body, params: params, formdata: formdata, formEncoded: formEncoded);
   }
 
-  Future<WayaRequestResponse> delete(String route, {Map<String, dynamic>? params}) {
-    return httpClient.deleteHttp(route, params: params) as Future<WayaRequestResponse>;
+  Future<WayaRequestResponse> delete(String route, {dynamic body, Map<String, dynamic>? params}) {
+    return httpClient.deleteHttp(route, params: params, body: body) as Future<WayaRequestResponse>;
   }
 }

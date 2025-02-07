@@ -19,8 +19,20 @@ enum MessageType {
 // The status of messages.
 enum MessageStatusCode {
   sent,
+  deleted,
   read,
   delivered,
+}
+
+enum MessageDeleteAction {
+  @JsonValue('delete-for-me')
+  deleteForMe('delete-for-me'),
+
+  @JsonValue('delete-for-everyone')
+  deleteForEveryone('delete-for-everyone');
+
+  const MessageDeleteAction(this.value);
+  final String value;
 }
 
 @JsonSerializable()

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:http_parser/http_parser.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wayagram/core/helpers/value.dart';
 
@@ -154,6 +155,55 @@ class WayaFileExtensions {
     'dsf',
     'dsd'
   ];
+
+  /// Returns the MIME type for a given file extension.
+  ///
+  /// Takes a file extension (without the dot) and returns the corresponding
+  /// MediaType. If the extension is not recognized, returns application/octet-stream.
+  static MediaType getMimeType(String fileExtension) {
+    final ext = fileExtension.toLowerCase();
+
+    // Documents
+    if (['pdf'].contains(ext)) return MediaType('application', 'pdf');
+    if (['doc', 'docx'].contains(ext)) return MediaType('application', 'msword');
+    if (['txt'].contains(ext)) return MediaType('text', 'plain');
+    if (['rtf'].contains(ext)) return MediaType('application', 'rtf');
+
+    // Spreadsheets
+    if (['xls', 'xlsx'].contains(ext)) return MediaType('application', 'vnd.ms-excel');
+    if (['csv'].contains(ext)) return MediaType('text', 'csv');
+
+    // Images
+    if (['jpg', 'jpeg'].contains(ext)) return MediaType('image', 'jpeg');
+    if (['png'].contains(ext)) return MediaType('image', 'png');
+    if (['gif'].contains(ext)) return MediaType('image', 'gif');
+    if (['webp'].contains(ext)) return MediaType('image', 'webp');
+    if (['svg'].contains(ext)) return MediaType('image', 'svg+xml');
+
+    // Videos
+    if (['mp4'].contains(ext)) return MediaType('video', 'mp4');
+    if (['webm'].contains(ext)) return MediaType('video', 'webm');
+    if (['mpeg', 'mpg'].contains(ext)) return MediaType('video', 'mpeg');
+
+    // Audio
+    if (['mp3'].contains(ext)) return MediaType('audio', 'mpeg');
+    if (['wav'].contains(ext)) return MediaType('audio', 'wav');
+    if (['aac'].contains(ext)) return MediaType('audio', 'aac');
+    if (['ogg'].contains(ext)) return MediaType('audio', 'ogg');
+
+    // Archives
+    if (['zip'].contains(ext)) return MediaType('application', 'zip');
+    if (['rar'].contains(ext)) return MediaType('application', 'x-rar-compressed');
+
+    // Markup
+    if (['json'].contains(ext)) return MediaType('application', 'json');
+    if (['xml'].contains(ext)) return MediaType('application', 'xml');
+    if (['html', 'htm'].contains(ext)) return MediaType('text', 'html');
+    if (['css'].contains(ext)) return MediaType('text', 'css');
+
+    // Default fallback for unknown types
+    return MediaType('application', 'octet-stream');
+  }
 }
 
 class WayaFileHelper {
@@ -286,7 +336,7 @@ class WayaFileHelper {
     //? This is fine.
     return directory.parent;
   }
-  
+
   /// Returns the file path for a voice note associated with a specific chat.
   ///
   /// Takes a [chatId] parameter to uniquely identify the chat context.

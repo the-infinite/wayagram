@@ -1,44 +1,66 @@
+import 'package:flutter/material.dart';
+import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 
 class ChatState {
   final bool isLoading;
-  final String chatId;
+  final ChatModel? chat;
+  final ScrollController controller;
   final List<MessageModel> messages;
-  final String cursor;
   final int limit;
+  final int page;
+  final bool hasNextPage;
+  final int totalCount;
+  final int totalPages;
 
   // This is fine.
   const ChatState({
     required this.isLoading,
-    required this.chatId,
+    required this.chat,
     required this.messages,
-    required this.cursor,
     required this.limit,
+    required this.controller,
+    required this.totalCount,
+    required this.totalPages,
+    required this.hasNextPage,
+    required this.page,
   });
 
   // This is fine.
   static final initial = ChatState(
     isLoading: false,
-    chatId: "",
+    chat: null,
     messages: [],
-    cursor: "",
-    limit: 20,
+    limit: 100,
+    controller: ScrollController(),
+    totalCount: 0,
+    totalPages: 0,
+    hasNextPage: true,
+    page: 1,
   );
 
   /// A helper function used to copy the contents of this chat's internal state
   /// and then pass it around.
   ChatState copyWith({
     bool? isLoading,
-    String? chatId,
+    ChatModel? chat,
     List<MessageModel>? messages,
-    String? cursor,
+    int? page,
+    bool? hasNextPage,
+    int? totalCount,
+    int? totalPages,
+    ScrollController? controller,
   }) {
     return ChatState(
       isLoading: isLoading ?? this.isLoading,
-      chatId: chatId ?? this.chatId,
+      chat: chat ?? this.chat,
       messages: messages ?? this.messages,
-      cursor: cursor ?? this.cursor,
       limit: limit,
+      totalCount: totalCount ?? this.totalCount,
+      totalPages: totalPages ?? this.totalPages,
+      hasNextPage: hasNextPage ?? this.hasNextPage,
+      page: page ?? this.page,
+      controller: controller ?? this.controller,
     );
   }
 }

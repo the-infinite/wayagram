@@ -36,11 +36,7 @@ class ChatInputController {
   final _recorderState = ValueNotifier(RecorderState.stopped);
 
   /// Our voice recorder.
-  late final RecorderController _soundRecorder = RecorderController()
-    ..androidEncoder = AndroidEncoder.aac
-    ..androidOutputFormat = AndroidOutputFormat.mpeg4
-    ..iosEncoder = IosEncoder.kAudioFormatMPEG4AAC
-    ..sampleRate = 44100;
+  final RecorderController _soundRecorder = RecorderController();
 
   /// Where we keep the voice note currently being sent in chat.
   final _voiceMessage = ValueNotifier<String?>(null);
@@ -225,12 +221,12 @@ class ChatInputController {
   SendMessageDto get buildMessage {
     // This is fine.
     return SendMessageDto(
+      chatId: chat.id,
       type: _currentType.value,
-      replyToId: _replyTo.value?.id,
-      replyTo: _replyTo.value,
-      body: buildBody,
-      files: _files.value.map((file) => file.absolute.path).toList(),
-      mediaUrl: _voiceMessage.value,
+      originalMessageId: _replyTo.value?.id,
+      originalMessage: _replyTo.value,
+      content: buildBody,
+      media: [if (_voiceMessage.value != null) _voiceMessage.value!, ..._files.value.map((file) => file.absolute.path)],
       contacts: _contacts.value.isEmpty ? null : _contacts.value,
     );
   }
@@ -285,6 +281,10 @@ class ChatInputWidget extends StatelessWidget {
       //? Start recording audio.
       await controller._soundRecorder.record(
         path: await WayaFileHelper.getVoiceNoteFilePath(controller.chat.id),
+        androidEncoder: AndroidEncoder.aac,
+        androidOutputFormat: AndroidOutputFormat.mpeg4,
+        iosEncoder: IosEncoder.kAudioFormatMPEG4AAC,
+        sampleRate: 44100,
       );
 
       //? Now notify the caller that you are recording.
@@ -303,7 +303,7 @@ class ChatInputWidget extends StatelessWidget {
     final result = await notifier.sendMessage(controller.buildMessage);
 
     //? If this succeeded...
-    if (result) {
+    if (result != null) {
       controller._textController.clear();
       controller._replyTo.value = null;
       controller._canSend.value = false;
@@ -426,12 +426,12 @@ class ChatInputWidget extends StatelessWidget {
                         showBorder: false,
                         maxLines: 5,
                         onChanged: (value) {
-                          //? If this is a text message...
+                          //? If this is a text message, allowing a user to send
+                          //? a message would need to ENTIRELY depend on the
+                          //? contents of the message text.
                           if (controller._currentType.value == MessageType.text) {
                             controller._canSend.value = value.trim().isNotEmpty;
                           }
-
-                          // TODO: Repeat this logic for other message types.
                         },
                         isDense: true,
                         textInputAction: TextInputAction.newline,

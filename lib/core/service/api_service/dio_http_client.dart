@@ -169,6 +169,7 @@ class DioHttpClient implements WayaHttpClientInterface {
   @override
   Future deleteHttp(
     String route, {
+    Object? body,
     Map<String, dynamic>? params,
   }) async {
     await _setHeader();
@@ -177,6 +178,7 @@ class DioHttpClient implements WayaHttpClientInterface {
 
     return _makeRequest(dio.delete(
       fullRoute,
+      data: body,
       queryParameters: params,
     ));
   }

@@ -147,22 +147,20 @@ class SingleChatScreen extends ConsumerWidget {
 
           //? Second, the chat messages.
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: notifier.getMessages,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(
-                    state.messages.length,
-                    (index) => ChatBubbleWidget(
-                      index: index,
-                      data: state.messages[index],
-                      controller: inputController,
-                    ),
+            child: SingleChildScrollView(
+              controller: state.controller,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(
+                  state.messages.length,
+                  (index) => ChatBubbleWidget(
+                    index: index,
+                    data: state.messages[index],
+                    controller: inputController,
                   ),
                 ),
               ),

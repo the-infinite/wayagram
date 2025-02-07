@@ -62,7 +62,7 @@ class ConversationWidget extends StatelessWidget {
                 children: [
                   //* For the other person's name.
                   Text(
-                    "${chat.other.firstName} ${chat.other.lastName}",
+                    chat.name,
                     maxLines: 1,
                     style: WayaTextStyles.titleMedium.copyWith(
                       fontWeight: chat.unread.isEmpty ? FontWeight.normal : FontWeight.w600,
