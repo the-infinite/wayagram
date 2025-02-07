@@ -36,11 +36,7 @@ class ChatInputController {
   final _recorderState = ValueNotifier(RecorderState.stopped);
 
   /// Our voice recorder.
-  late final RecorderController _soundRecorder = RecorderController()
-    ..androidEncoder = AndroidEncoder.aac
-    ..androidOutputFormat = AndroidOutputFormat.mpeg4
-    ..iosEncoder = IosEncoder.kAudioFormatMPEG4AAC
-    ..sampleRate = 44100;
+  final RecorderController _soundRecorder = RecorderController();
 
   /// Where we keep the voice note currently being sent in chat.
   final _voiceMessage = ValueNotifier<String?>(null);
@@ -183,6 +179,12 @@ class ChatInputController {
     _isMedia.value = value;
   }
 
+  /// A helper function used to set the text inside this text controller to
+  /// something.
+  void setText(String text) {
+    _textController.text = text;
+  }
+
   /// A helper function used to remove a given file from the list of selected
   /// files using its index.
   void removeFile(int index) {
@@ -196,11 +198,8 @@ class ChatInputController {
   }
 
   /// A helper function used to get the chat body that we would use for the
-  String? get buildBody {
-    final result = _textController.text.trim();
-
-    // This is fine.
-    return result.isNotEmpty ? result : null;
+  String get buildBody {
+    return _textController.text.trim();
   }
 
   /// A helper function used to retrieve all of the selected files.
@@ -225,12 +224,12 @@ class ChatInputController {
   SendMessageDto get buildMessage {
     // This is fine.
     return SendMessageDto(
+      chatId: chat.id,
       type: _currentType.value,
-      replyToId: _replyTo.value?.id,
-      replyTo: _replyTo.value,
-      body: buildBody,
-      files: _files.value.map((file) => file.absolute.path).toList(),
-      mediaUrl: _voiceMessage.value,
+      originalMessageId: _replyTo.value?.id ?? "",
+      originalMessage: _replyTo.value,
+      content: buildBody,
+      media: [if (_voiceMessage.value != null) _voiceMessage.value!, ..._files.value.map((file) => file.absolute.path)],
       contacts: _contacts.value.isEmpty ? null : _contacts.value,
     );
   }
@@ -285,6 +284,10 @@ class ChatInputWidget extends StatelessWidget {
       //? Start recording audio.
       await controller._soundRecorder.record(
         path: await WayaFileHelper.getVoiceNoteFilePath(controller.chat.id),
+        androidEncoder: AndroidEncoder.aac,
+        androidOutputFormat: AndroidOutputFormat.mpeg4,
+        iosEncoder: IosEncoder.kAudioFormatMPEG4AAC,
+        sampleRate: 44100,
       );
 
       //? Now notify the caller that you are recording.
@@ -303,7 +306,7 @@ class ChatInputWidget extends StatelessWidget {
     final result = await notifier.sendMessage(controller.buildMessage);
 
     //? If this succeeded...
-    if (result) {
+    if (result != null) {
       controller._textController.clear();
       controller._replyTo.value = null;
       controller._canSend.value = false;
@@ -410,7 +413,7 @@ class ChatInputWidget extends StatelessWidget {
                     child: AnimatedCrossFade(
                       crossFadeState:
                           messageType == MessageType.voiceNote ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                      duration: const Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 350),
                       firstChild: messageType != MessageType.voiceNote
                           ? const SizedBox()
                           : ValueListenableBuilder(
@@ -426,12 +429,12 @@ class ChatInputWidget extends StatelessWidget {
                         showBorder: false,
                         maxLines: 5,
                         onChanged: (value) {
-                          //? If this is a text message...
+                          //? If this is a text message, allowing a user to send
+                          //? a message would need to ENTIRELY depend on the
+                          //? contents of the message text.
                           if (controller._currentType.value == MessageType.text) {
                             controller._canSend.value = value.trim().isNotEmpty;
                           }
-
-                          // TODO: Repeat this logic for other message types.
                         },
                         isDense: true,
                         textInputAction: TextInputAction.newline,
@@ -453,7 +456,7 @@ class ChatInputWidget extends StatelessWidget {
                       //? Since we cannot send yet, show this message type's
                       //? protocol icon.
                       return AnimatedCrossFade(
-                        duration: const Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 350),
                         crossFadeState: canSend ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                         firstChild: WayaButton(
                           callback: _sendMessage,
@@ -475,7 +478,7 @@ class ChatInputWidget extends StatelessWidget {
                                   recorderState == RecorderState.stopped || recorderState == RecorderState.initialized
                                       ? CrossFadeState.showFirst
                                       : CrossFadeState.showSecond,
-                              duration: const Duration(milliseconds: 200),
+                              duration: const Duration(milliseconds: 350),
                               firstChild: WayaButton(
                                 callback: _recordVoiceNote,
                                 height: null,

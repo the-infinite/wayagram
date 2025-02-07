@@ -30,7 +30,7 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
     try {
       animationController = AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 350),
       );
     } catch (_) {}
   }
@@ -70,7 +70,7 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                   children: [
                     //? First, the pause and record button.
                     AnimatedCrossFade(
-                      duration: const Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 350),
                       crossFadeState: widget.controller.recorderState == RecorderState.recording
                           ? CrossFadeState.showFirst
                           : CrossFadeState.showSecond,

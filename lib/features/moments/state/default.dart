@@ -1,4 +1,4 @@
-import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/features/moments/model/default.dart';
 
 class MomentState {
@@ -18,7 +18,7 @@ class MomentState {
   });
 
   // Our recipient users for mock data.
-  static final _user = User(
+  static final _user = UserDetailsModel(
     id: "user_1",
     role: null,
     phoneNumber: "+234801234567",
@@ -51,7 +51,7 @@ class MomentState {
     updatedAt: DateTime.now(),
     lga: "Ikorodu",
   );
-  static final _user2 = User(
+  static final _user2 = UserDetailsModel(
     id: "user_2",
     role: null,
     phoneNumber: "+234801234568",
@@ -84,7 +84,7 @@ class MomentState {
     updatedAt: DateTime.now(),
     lga: "Ikorodu",
   );
-  static final _user3 = User(
+  static final _user3 = UserDetailsModel(
     id: "user_3",
     role: null,
     phoneNumber: "+234801234578",
@@ -117,7 +117,7 @@ class MomentState {
     updatedAt: DateTime.now(),
     lga: "Ikorodu",
   );
-  static final _user4 = User(
+  static final _user4 = UserDetailsModel(
     id: "user_3",
     role: null,
     phoneNumber: "+234801234578",

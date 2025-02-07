@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -8,6 +9,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/file.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/voice.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
@@ -28,6 +30,10 @@ class _MyBubbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final timeString =
+        "${data.readAt != null ? 'Read' : data.deliveredAt != null ? 'Delivered' : 'Sent'} ${WayaDateHelper.getTimestamp(data.readAt ?? data.deliveredAt ?? data.updatedAt)}";
+
+    //? The time string.
     return SizedBox(
       width: double.infinity,
       child: Padding(
@@ -102,9 +108,13 @@ class _MyBubbleWidget extends StatelessWidget {
                   //? Second, the date and time relevant to it.
                   if (interactive)
                     Text(
-                      "${data.readAt != null ? 'Read' : data.deliveredAt != null ? 'Delivered' : 'Sent'} ${WayaDateHelper.getTimestamp(data.readAt ?? data.deliveredAt ?? data.updatedAt)}",
+                      data.isError ?? false
+                          ? "Failed to send. Tap to retry."
+                          : data.dto != null
+                              ? "Sending"
+                              : timeString,
                       style: WayaTextStyles.labelSmall.copyWith(
-                        color: WayaColors.greyColor400,
+                        color: data.isError ?? false ? WayaColors.error : WayaColors.greyColor400,
                       ),
                     ),
                 ],
@@ -205,7 +215,7 @@ class _YourBubbleWidget extends StatelessWidget {
   }
 }
 
-class ChatBubbleWidget extends StatefulWidget {
+class ChatBubbleWidget extends ConsumerStatefulWidget {
   // The message we are looking at here.
   final MessageModel data;
   final ChatInputController controller;
@@ -222,11 +232,12 @@ class ChatBubbleWidget extends StatefulWidget {
   });
 
   @override
-  State<ChatBubbleWidget> createState() => _ChatBubbleWidgetState();
+  ConsumerState<ChatBubbleWidget> createState() => _ChatBubbleWidgetState();
 }
 
-class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
+class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   OverlayEntry? _entry;
+  late final notifier = ref.watch(chatProvider.notifier);
 
   /// This is the message we are replying to.
   void _replyTo() {
@@ -346,7 +357,7 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                               ),
                               text: "Reply",
                               textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                                fontSize: 12,
+                                fontSize: 13,
                               ),
                             ),
 
@@ -373,7 +384,7 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                               ),
                               text: "Forward",
                               textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                                fontSize: 12,
+                                fontSize: 13,
                               ),
                             ),
 
@@ -386,6 +397,7 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                                 });
 
                                 // Copy to this message.
+                                WayaUtils.copyText(widget.data.content ?? '');
                               },
                               height: null,
                               alignment: Alignment.centerLeft,
@@ -400,7 +412,7 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                               ),
                               text: "Copy",
                               textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                                fontSize: 12,
+                                fontSize: 13,
                               ),
                             ),
 
@@ -427,36 +439,38 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                               ),
                               text: "Edit",
                               textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                                fontSize: 12,
+                                fontSize: 13,
                               ),
                             ),
 
                             //* Fifth, delete this message for me.
-                            WayaButton(
-                              callback: () {
-                                _entry?.remove();
-                                setState(() {
-                                  _entry = null;
-                                });
+                            if (widget.data.dto != null)
+                              WayaButton(
+                                callback: () {
+                                  _entry?.remove();
+                                  setState(() {
+                                    _entry = null;
+                                  });
 
-                                // Delete this message.
-                              },
-                              height: null,
-                              alignment: Alignment.centerLeft,
-                              verticalPadding: 8,
-                              horizontalPadding: 8,
-                              color: Colors.transparent,
-                              textColor: WayaColors.error,
-                              leadingIcon: WayaAssets.icons.cBin.svg(
-                                height: 20,
-                                width: 20,
-                                color: WayaColors.error,
+                                  // Delete this message.
+                                  notifier.deleteMessage(widget.data.id, MessageDeleteAction.deleteForMe);
+                                },
+                                height: null,
+                                alignment: Alignment.centerLeft,
+                                verticalPadding: 8,
+                                horizontalPadding: 8,
+                                color: Colors.transparent,
+                                textColor: WayaColors.error,
+                                leadingIcon: WayaAssets.icons.cBin.svg(
+                                  height: 20,
+                                  width: 20,
+                                  color: WayaColors.error,
+                                ),
+                                text: "Delete for me",
+                                textStyle: WayaTextStyles.bodySemiBold.copyWith(
+                                  fontSize: 13,
+                                ),
                               ),
-                              text: "Delete for me",
-                              textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                                fontSize: 12,
-                              ),
-                            ),
 
                             //* Sixth, the divider.
                             const Divider(color: WayaColors.greyColor200),
@@ -470,6 +484,19 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                                 });
 
                                 // Delete this message.
+                                if (widget.data.dto != null) {
+                                  notifier.removeMessage(widget.data.id);
+                                  return;
+                                }
+
+                                //? Then delete this message.
+                                notifier.deleteMessage(widget.data.id, MessageDeleteAction.deleteForEveryone).then(
+                                  (success) {
+                                    if (success) {
+                                      widget.controller.setText(widget.data.content ?? '');
+                                    }
+                                  },
+                                );
                               },
                               height: null,
                               alignment: Alignment.centerLeft,
@@ -484,7 +511,7 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
                               ),
                               text: "Unsend",
                               textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                                fontSize: 12,
+                                fontSize: 13,
                               ),
                             ),
 
@@ -512,6 +539,14 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
     });
   }
 
+  /// Utility runnable used to resend this message when it failed.
+  Future<void> _resendMessage() async {
+    final notifier = ref.watch(chatProvider.notifier);
+
+    //? If this is actually fine.
+    notifier.sendMessage(widget.data.dto!, widget.data.id);
+  }
+
   // This is fine.
   @override
   Widget build(BuildContext context) {
@@ -533,6 +568,7 @@ class _ChatBubbleWidgetState extends State<ChatBubbleWidget> {
         child: WayaSwiper(
           swipeSensitivity: 5,
           onLongPress: widget.interactive ? _showActions : null,
+          onTap: widget.data.isError ?? false ? _resendMessage : null,
           rightSwipeWidget: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

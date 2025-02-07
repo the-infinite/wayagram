@@ -4,11 +4,12 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
-import 'package:wayagram/features/chat/widget/profile_picture.dart';
+import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class SingleChatScreen extends ConsumerWidget {
   static const route = "/conversation/chat";
@@ -59,7 +60,7 @@ class SingleChatScreen extends ConsumerWidget {
 
               //* First, the user's profile picture.
               ChatProfilePicture(
-                user: chat.other,
+                user: chat.other.user ?? ConversationState.self,
                 radius: 20,
               ),
 
@@ -73,7 +74,7 @@ class SingleChatScreen extends ConsumerWidget {
                     children: [
                       //* For the other person's name.
                       Text(
-                        "${chat.other.firstName} ${chat.other.lastName}",
+                        chat.name ?? chat.other.user?.fullname ?? chat.other.userId,
                         maxLines: 1,
                         style: WayaTextStyles.titleMedium.copyWith(
                           fontSize: 15,
@@ -96,47 +97,47 @@ class SingleChatScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+
+              //* Third, the video call button.
+              Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: IntrinsicHeight(
+                  child: WayaButton(
+                    callback: _startVideoCall,
+                    height: null,
+                    color: WayaColors.greyColor200,
+                    horizontalPadding: 8,
+                    verticalPadding: 8,
+                    centerWidget: WayaAssets.icons.cCallVideo.svg(
+                      color: WayaColors.black,
+                      height: 15,
+                      width: 15,
+                    ),
+                  ),
+                ),
+              ),
+
+              //* Fourth, the audio call button.
+              Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: IntrinsicHeight(
+                  child: WayaButton(
+                    callback: _startAudioCall,
+                    height: null,
+                    color: WayaColors.greyColor200,
+                    horizontalPadding: 8,
+                    verticalPadding: 8,
+                    centerWidget: WayaAssets.icons.cCallVoice.svg(
+                      color: WayaColors.black,
+                      height: 15,
+                      width: 15,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: IntrinsicHeight(
-              child: WayaButton(
-                callback: _startVideoCall,
-                height: null,
-                color: WayaColors.greyColor200,
-                horizontalPadding: 8,
-                verticalPadding: 8,
-                centerWidget: WayaAssets.icons.cCallVideo.svg(
-                  color: WayaColors.black,
-                  height: 15,
-                  width: 15,
-                ),
-              ),
-            ),
-          ),
-
-          //? For the audio call button.
-          Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: IntrinsicHeight(
-              child: WayaButton(
-                callback: _startAudioCall,
-                height: null,
-                color: WayaColors.greyColor200,
-                horizontalPadding: 8,
-                verticalPadding: 8,
-                centerWidget: WayaAssets.icons.cCallVoice.svg(
-                  color: WayaColors.black,
-                  height: 15,
-                  width: 15,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -147,22 +148,20 @@ class SingleChatScreen extends ConsumerWidget {
 
           //? Second, the chat messages.
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: notifier.getMessages,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(
-                    state.messages.length,
-                    (index) => ChatBubbleWidget(
-                      index: index,
-                      data: state.messages[index],
-                      controller: inputController,
-                    ),
+            child: SingleChildScrollView(
+              controller: state.controller,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(
+                  state.messages.length,
+                  (index) => ChatBubbleWidget(
+                    index: index,
+                    data: state.messages[index],
+                    controller: inputController,
                   ),
                 ),
               ),
