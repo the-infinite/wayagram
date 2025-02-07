@@ -2,15 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/event/data/model/add_event_state.dart';
+import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
+import 'package:wayagram/features/event/vm/event_vm.dart';
+import 'package:wayagram/shared/components/radio_select.dart';
 
 class AddEventVm extends StateNotifier<AddEventState> {
   final Ref ref;
@@ -74,7 +77,6 @@ class AddEventVm extends StateNotifier<AddEventState> {
   }
 
   bool isStartDateAfterEndDate(String startDate, String endDate) {
-    print("$startDate $endDate");
     DateTime start = DateTime.parse(startDate);
     DateTime end = DateTime.parse(endDate);
 
@@ -116,40 +118,90 @@ class AddEventVm extends StateNotifier<AddEventState> {
         WayaSnackBar.showToast("Add price for a PAID event");
         return;
       }
+
+      if (state.eventType == 'Free' && state.eventFee.text.isEmpty) {
+        state = state.copyWith(eventFee: TextEditingController(text: '0'));
+      }
+
       state = state.copyWith(isLoading: true);
-      final image = await WayaHelpers.formattedImage(state.eventImage!.file!);
+      final image = state.isEditingMode && state.eventImage!.file == null
+          ? await WayaHelpers.formattedImageFromUrl(state.eventImage!.url)
+          : await WayaHelpers.formattedImage(state.eventImage!.file!);
+
       state = state.copyWith(image: image);
       final userId = await _secureDataSource.getUserId();
       state = state.copyWith(userId: userId);
-      final response = await _eventRepository.createEvent(state.addEvent);
+      final response = state.isEditingMode
+          ? await _eventRepository.editEvent(state.addEvent, state.eventId)
+          : await _eventRepository.createEvent(state.addEvent);
 
       if (response.success) {
-        print(response.data);
         if (context.mounted) {
           WayaUtils.showNotice(
               context: context,
-              title: "Your Event has been created successfully",
+              title: state.isEditingMode
+                  ? "Your Event has been updated successfully"
+                  : "Your Event has been created successfully",
               message:
                   "Your event is now live. Share it with your audience and start engaging with attendees today!",
               onPress: () {
-                WayaNav.toNamed(EventView.route);
+                Navigator.pushReplacementNamed(context, EventView.route);
               },
               buttonText: 'Go To Event Home Page',
               secondButtonText: 'Share Event Link',
               onCancel: () {
-                // state.link
+                ref
+                    .read(eventVmProvider.notifier)
+                    .shareEvent(context: context, shareUrl: "shareUrl");
               },
               icon: Image.asset(
                 "assets/images/create-event-success.png",
                 scale: 1.5,
               ));
         }
+        reset();
       }
     } catch (error) {
       print(error);
     } finally {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  Future<void> initializeForEdit(EventDoc event) async {
+    state = state.copyWith(
+        isEditingMode: true,
+        title: TextEditingController(text: event.title),
+        organizer: TextEditingController(text: event.organizerName),
+        description: TextEditingController(text: event.description ?? ''),
+        location: event.location.capitalizeFirst,
+        address: TextEditingController(
+            text: event.location.toLowerCase() == 'physical'
+                ? event.locationAddress
+                : ''),
+        link: TextEditingController(
+            text: event.location.toLowerCase() == 'virtual'
+                ? event.locationAddress
+                : ''),
+        eventType: event.eventType.capitalizeFirst,
+        eventFee: TextEditingController(text: event.fee.toString()),
+        maxCapacity: TextEditingController(
+            text: event.maxCapacity == null
+                ? null
+                : event.maxCapacity.toString()),
+        privacyOption: event.privacyOption,
+        startDate: event.startDate.split('T')[0],
+        endDate: event.endDate.split('T')[0],
+        startTime: event.startTime,
+        eventId: event.id,
+        endTime: event.endTime,
+        eventImage: DocType(
+            file: null,
+            type: "event-image",
+            name: "uploaded image",
+            url: event.image));
+    ref.read(radioSelectProvider("add-event").notifier).state =
+        event.privacyOption.capitalizeFirst;
   }
 }
 

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 class WayaHelpers {
   static String extractFileName(File? imageFile) {
@@ -75,6 +77,30 @@ class WayaHelpers {
     );
   }
 
+  static Future<MultipartFile> formattedImageFromUrl(String imageUrl) async {
+    // Download 
+    print("ewfefe humb $imageUrl");
+    final response = await http.get(Uri.parse(imageUrl));
+print("ewfefe humb 2");
+    if (response.statusCode == 200) {
+      final fileName = basename(Uri.parse(imageUrl).path);
+
+      final mimeType = lookupMimeType(fileName) ?? 'application/octet-stream';
+
+      final tempDir = Directory.systemTemp;
+      final tempFile = File('${tempDir.path}/$fileName');
+      await tempFile.writeAsBytes(response.bodyBytes);
+
+      return MultipartFile.fromFile(
+        tempFile.path,
+        filename: fileName,
+        contentType: MediaType.parse(mimeType),
+      );
+    } else {
+      throw Exception('Failed to download image from URL');
+    }
+  }
+
   static String calculatedDiscountPrice(String price, int pct) {
     int intPrice = double.parse(price).toInt();
 
@@ -83,13 +109,16 @@ class WayaHelpers {
     return formatPrice(discount.toInt());
   }
 
-  static String removecamelCase(String text) {
-    final regex = RegExp(r'(?<=[a-z])(?=[A-Z])');
-    final words = text.split(regex);
-    return words.map((word) {
-      return word[0].toUpperCase() + word.substring(1).toLowerCase();
-    }).join(' ');
-  }
+ static String removeCamelCaseAndUnderscore(String text) {
+  final regex = RegExp(r'(?<=[a-z])(?=[A-Z])|_'); 
+  final words = text.split(regex);
+  return words
+      .map((word) => word.isNotEmpty
+          ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+          : '')
+      .join(' ');
+}
+
 
   static String abbreviateNumber(int number) {
     if (number >= 1000000000) {
@@ -110,7 +139,7 @@ class WayaHelpers {
         : "${result.toStringAsFixed(1)}$suffix";
   }
 
- static String format24HRSToAPM(String time) {
+  static String format24HRSToAPM(String time) {
     // Parse the input time (HH:mm)
     final parsedTime = DateFormat("HH:mm").parse(time);
 

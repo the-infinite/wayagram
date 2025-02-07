@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/views/add_event/steps/create_event.dart';
 import 'package:wayagram/features/event/views/add_event/steps/preview_added_event.dart';
 import 'package:wayagram/features/event/vm/add_event_vm.dart';
@@ -25,7 +26,14 @@ class _AddEventState extends ConsumerState<AddEvent>
     WidgetsBinding.instance.addPostFrameCallback((_) => _initializeArgs());
   }
 
-  void _initializeArgs() {}
+  void _initializeArgs() {
+    final EventDoc? args =
+        ModalRoute.of(context)?.settings.arguments as EventDoc?;
+
+    if (args != null) {
+      ref.read(addEventVmProvider.notifier).initializeForEdit(args);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

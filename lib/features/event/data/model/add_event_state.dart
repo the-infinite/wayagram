@@ -15,7 +15,7 @@ class AddEventState {
   final TextEditingController link;
   final String eventType;
   final TextEditingController eventFee;
-  final TextEditingController maxCapacity;
+  final TextEditingController? maxCapacity;
   final String privacyOption;
   final String startDate;
   final String startTime;
@@ -26,6 +26,9 @@ class AddEventState {
   final DocType? eventImage;
   final MultipartFile? image;
   final String userId;
+  final bool isEditingMode;
+  final String imageUrl;
+  final String eventId;
 
   AddEventState(
       {this.isLoading = false,
@@ -47,6 +50,9 @@ class AddEventState {
       this.eventImage,
       this.startDateString = '',
       this.userId = '',
+      this.isEditingMode = false,
+      this.imageUrl = '',
+      this.eventId = '',
       this.endDateString = ''})
       : title = title ?? TextEditingController(),
         organizer = organizer ?? TextEditingController(),
@@ -76,6 +82,9 @@ class AddEventState {
       String? startDateString,
       MultipartFile? image,
       String? userId,
+      bool? isEditingMode,
+      String? imageUrl,
+      String? eventId,
       String? endDateString}) {
     return AddEventState(
         isLoading: isLoading ?? this.isLoading,
@@ -97,6 +106,9 @@ class AddEventState {
         startDateString: startDateString ?? this.startDateString,
         image: image ?? this.image,
         userId: userId ?? this.userId,
+        isEditingMode: isEditingMode ?? this.isEditingMode,
+        imageUrl: imageUrl ?? this.imageUrl,
+        eventId: eventId ?? this.eventId,
         endDateString: endDateString ?? this.endDateString);
   }
 
@@ -111,14 +123,17 @@ class AddEventState {
       'link': link,
       'eventType': eventType,
       'eventFee': eventFee.text,
-      'maxCapacity': maxCapacity.text,
+      'maxCapacity': maxCapacity!.text,
       'privacyOption': privacyOption,
       'startDate': startDate,
       'startTime': startTime,
       'endDate': endDate,
       'endTime': endTime,
       'image': image,
-      'userId': userId
+      'userId': userId,
+      'isEditingMode': isEditingMode,
+      'imageUrl': imageUrl,
+      'eventId': eventId
     };
   }
 
@@ -140,11 +155,15 @@ class AddEventState {
         endDate: json['endDate'] ?? '',
         endTime: json['endTime'] ?? '',
         image: json['image'] ?? '',
+        imageUrl: json['imageUrl'] ?? '',
+        isEditingMode: json['isEditingMode'] ?? false,
+        eventId: json['eventId'] ?? '',
         userId: json['userId'] ?? '');
   }
 
   // add the creation model
   AddEventRequestModel get addEvent {
+    print("wfefer");
     return AddEventRequestModel(
         title: title.text,
         organizerName: organizer.text,
@@ -157,15 +176,20 @@ class AddEventState {
         fee: int.parse(eventType == "Free" ? "0" : eventFee.text),
         privacyOption: privacyOption.toLowerCase(),
         image: image!,
+        maxCapacity: maxCapacity!.text.isEmpty && isEditingMode
+            ? 0
+            : maxCapacity!.text.isEmpty
+                ? 0
+                : int.parse(maxCapacity!.text),
         locationAddress: location == 'Physical' ? address.text : link.text,
         userId: userId);
   }
 }
 
 const eventReport = [
-  'Spam or misleading content',
-  'Inappropriate Content',
-  'Fraudulent Activity',
-  'Violates terms and conditions',
-  'Other'
+  "Spam or misleading content",
+  "Inappropriate_Content",
+  "Fraudulent_activity",
+  "Violates_terms_and_conditions",
+  "other"
 ];

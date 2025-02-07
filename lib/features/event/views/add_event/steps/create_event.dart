@@ -28,9 +28,11 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    final key = 'add-event';
     final wayaTheme = Theme.of(context);
+
     final viewModel = ref.watch(addEventVmProvider);
-    final selectedOption = ref.watch(radioSelectProvider);
+    final selectedOption = ref.watch(radioSelectProvider(key));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,12 +163,12 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     ],
                   );
                 }),
-                const Gap(30),
+                const Gap(25),
                 Text(
                   "Location Detail",
                   style: wayaTheme.textTheme.hintStyle,
                 ),
-                const Gap(30),
+                const Gap(25),
                 FormField<String>(validator: (value) {
                   if (viewModel.location.isEmpty) {
                     return 'Location is required';
@@ -266,12 +268,12 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     );
                   }),
                 ],
-                const Gap(30),
+                const Gap(25),
                 Text(
                   "Event Date and Time",
                   style: wayaTheme.textTheme.hintStyle,
                 ),
-                const Gap(30),
+                const Gap(25),
                 SizedBox(
                   width: double.infinity,
                   child: Row(
@@ -333,12 +335,12 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     ],
                   ),
                 ),
-                const Gap(30),
+                const Gap(25),
                 Text(
                   "Configure Ticket",
                   style: wayaTheme.textTheme.hintStyle,
                 ),
-                const Gap(30),
+                const Gap(25),
                 FormField<String>(validator: (value) {
                   if (viewModel.eventType.isEmpty) {
                     return 'Event Type is required';
@@ -450,11 +452,11 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                             value: 'Public',
                             groupedValue: selectedOption,
                             onChanged: (value) {
-                              ref.read(radioSelectProvider.notifier).state =
+                              ref.read(radioSelectProvider(key).notifier).state =
                                   value;
                               ref
-                                .read(addEventVmProvider.notifier)
-                                .updatePrivacyOption(value!);
+                                  .read(addEventVmProvider.notifier)
+                                  .updatePrivacyOption(value!);
                             },
                           ),
                         ),
@@ -470,9 +472,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           value: 'Private',
                           groupedValue: selectedOption,
                           onChanged: (value) {
-                            ref.read(radioSelectProvider.notifier).state =
+                            ref.read(radioSelectProvider(key).notifier).state =
                                 value;
-                           
+
                             ref
                                 .read(addEventVmProvider.notifier)
                                 .updatePrivacyOption(value!);

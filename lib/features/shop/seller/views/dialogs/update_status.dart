@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -120,7 +119,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                             : null,
                           contentPadding:
                             EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                          title: Text(WayaHelpers.removecamelCase(widget.statuses[index]), style:TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),),
+                          title: Text(WayaHelpers.removeCamelCaseAndUnderscore(widget.statuses[index]), style:TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),),
                           onTap: () {
                             setState(() {
                             selectedStatus = widget.statuses[index];

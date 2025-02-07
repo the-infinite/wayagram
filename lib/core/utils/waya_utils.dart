@@ -27,11 +27,10 @@ class WayaUtils {
       Widget? buttonCenterWidget,
       Widget? secondButtonCenterWidget,
       VoidCallback? onCancel}) {
-    return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return WayaNoticeModal(
+    return showModalSheet(
+     context,
+    
+      child:  WayaNoticeModal(
           title: title,
           onPress: onPress,
           message: message,
@@ -41,10 +40,9 @@ class WayaUtils {
           buttonCenterWidget: buttonCenterWidget,
           secondButtonText: secondButtonText,
           onCancel: onCancel,
-        );
-      },
-    );
-  }
+        ));
+      }
+  
 
   static Future<Select> showSelectModal({
     required BuildContext context,

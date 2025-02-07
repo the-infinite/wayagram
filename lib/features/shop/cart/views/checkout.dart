@@ -8,14 +8,12 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-//import 'package:wayagram/features/shared/components/radio_select.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/checkout_vm.dart';
 import 'package:wayagram/features/shop/cart/widgets/cart_card_vm.dart';
 import 'package:wayagram/features/shop/order/widgets/order_address_widget.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
-
-import '../../../../shared/radio_select.dart';
+import 'package:wayagram/shared/components/radio_select.dart';
 
 class Checkout extends ConsumerWidget {
   static const route = '/checkout';
@@ -24,8 +22,9 @@ class Checkout extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final key = "checkout";
     final viewModel = ref.watch(checkoutVmProvider);
-    final selectedOption = ref.watch(radioSelectProvider);
+    final selectedOption = ref.watch(radioSelectProvider(key));
     final CheckoutArg? arg =
         ModalRoute.of(context)?.settings.arguments as CheckoutArg?;
 
@@ -56,8 +55,8 @@ class Checkout extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Text("Delivery Option", style: wayaTheme.textTheme.bodyMedium),
-                 const Gap(6),
+                Text("Delivery Option", style: wayaTheme.textTheme.bodyMedium),
+                const Gap(6),
                 RadioSelect(
                   title: Text("Delivery",
                       style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
@@ -66,7 +65,7 @@ class Checkout extends ConsumerWidget {
                   value: 'Delivery',
                   groupedValue: selectedOption,
                   onChanged: (value) =>
-                      ref.read(radioSelectProvider.notifier).state = value,
+                      ref.read(radioSelectProvider(key).notifier).state = value,
                 ),
                 //      const Gap(10),
                 RadioSelect(
@@ -77,7 +76,7 @@ class Checkout extends ConsumerWidget {
                   value: 'Pickup',
                   groupedValue: selectedOption,
                   onChanged: (value) =>
-                      ref.read(radioSelectProvider.notifier).state = value,
+                      ref.read(radioSelectProvider(key).notifier).state = value,
                 ),
               ],
             ),
@@ -329,8 +328,7 @@ class Checkout extends ConsumerWidget {
                     Positioned(
                         top: 25,
                         child: Text(
-                          WayaHelpers.formatPrice(
-                              subTotal  + deliveryCharge),
+                          WayaHelpers.formatPrice(subTotal + deliveryCharge),
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontSize: 18),
@@ -357,9 +355,10 @@ class Checkout extends ConsumerWidget {
                         context: context,
                         cartId: arg.cartId,
                         shopId: arg.cartItem.shopId,
-                        amount: subTotal  + deliveryCharge,
-                        pickUpAddress:pickUpindex != -1 ?
-                            arg.cartItem.products[pickUpindex!].pickUpAddress : null);
+                        amount: subTotal + deliveryCharge,
+                        pickUpAddress: pickUpindex != -1
+                            ? arg.cartItem.products[pickUpindex!].pickUpAddress
+                            : null);
                   }
                 },
                 text: 'CheckOut',

@@ -1,3 +1,5 @@
+import 'package:wayagram/shared/model/base_model.dart';
+
 class EventResponse {
   final String message;
   final bool status;
@@ -62,13 +64,13 @@ class EventData {
   }
 }
 
-class EventDoc {
+class EventDoc extends BaseModel<EventDoc> {
   final String id;
   final String userId;
   final String image;
   final String title;
   final String organizerName;
-  final String description;
+  final String? description;
   final String location;
   final String locationAddress;
   final String startDate;
@@ -94,11 +96,11 @@ class EventDoc {
     required this.image,
     required this.title,
     required this.organizerName,
-    required this.description,
+    this.description,
     required this.location,
     required this.locationAddress,
-    required this.startDate, // DateTime object
-    required this.endDate, // DateTime object
+    required this.startDate, 
+    required this.endDate, 
     required this.startTime,
     required this.endTime,
     required this.payoutStatus,
@@ -143,4 +145,14 @@ class EventDoc {
       updatedAt: json["updatedAt"],
     );
   }
+
+    @override
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'userId': userId,
+          "title": title,
+      "organizerName": organizerName,
+      "eventType": eventType,
+      "location": location
+      };
 }

@@ -96,9 +96,8 @@ class _MoreBalanceCardState extends ConsumerState<MoreBalanceCard> {
                       ),
                       color: wayaTheme.colorScheme.transparent,
                       text: 'Learn More',
-                      textStyle: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                      ),
+                      textStyle: wayaTheme.textTheme.labelSmall,
+                      textColor: wayaTheme.colorScheme.customPrimary,
                       callback: () {},
                     ),
                   ],
