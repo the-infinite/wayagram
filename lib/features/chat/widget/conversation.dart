@@ -7,7 +7,7 @@ import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/widget/profile_picture.dart';
+import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class ConversationWidget extends StatelessWidget {
   final ChatModel chat;
@@ -31,7 +31,8 @@ class ConversationWidget extends StatelessWidget {
   // This is fine too.
   @override
   Widget build(BuildContext context) {
-    final isMine = chat.lastMessage.senderId == ConversationState.self.id;
+    final isMine = chat.lastMessage?.senderId == ConversationState.self.id;
+    final unread = chat.unread ?? [];
 
     // The thing that you are sending.
     return InkWell(
@@ -47,7 +48,7 @@ class ConversationWidget extends StatelessWidget {
           children: [
             // The user's chat profile picture.
             ChatProfilePicture(
-              user: chat.other,
+              user: chat.other.user ?? ConversationState.self,
               radius: 27,
             ),
 
@@ -62,25 +63,26 @@ class ConversationWidget extends StatelessWidget {
                 children: [
                   //* For the other person's name.
                   Text(
-                    chat.name,
+                    chat.name ?? chat.other.id,
                     maxLines: 1,
                     style: WayaTextStyles.titleMedium.copyWith(
-                      fontWeight: chat.unread.isEmpty ? FontWeight.normal : FontWeight.w600,
+                      fontWeight: unread.isEmpty ? FontWeight.normal : FontWeight.w600,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
 
                   //? For the message content...
-                  Text(
-                    "${isMine ? "You: " : ""}${chat.lastMessage.contentDescription}",
-                    maxLines: 1,
-                    style: WayaTextStyles.titleMedium.copyWith(
-                      fontWeight: chat.unread.isEmpty ? FontWeight.normal : FontWeight.w600,
-                      overflow: TextOverflow.ellipsis,
-                      color: chat.unread.isEmpty ? WayaColors.greyColor400 : WayaColors.greyColor500,
-                      fontSize: 14,
+                  if (chat.lastMessage != null)
+                    Text(
+                      "${isMine ? "You: " : ""}${chat.lastMessage!.contentDescription}",
+                      maxLines: 1,
+                      style: WayaTextStyles.titleMedium.copyWith(
+                        fontWeight: unread.isEmpty ? FontWeight.normal : FontWeight.w600,
+                        overflow: TextOverflow.ellipsis,
+                        color: unread.isEmpty ? WayaColors.greyColor400 : WayaColors.greyColor500,
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -95,11 +97,11 @@ class ConversationWidget extends StatelessWidget {
               children: [
                 // First, the time.
                 Text(
-                  WayaDateHelper.getTimestamp(chat.lastMessage.updatedAt),
+                  WayaDateHelper.getTimestamp(chat.lastMessage?.updatedAt ?? chat.updatedAt),
                   style: WayaTextStyles.titleMedium.copyWith(
-                    fontWeight: chat.unread.isEmpty ? FontWeight.normal : FontWeight.w600,
+                    fontWeight: unread.isEmpty ? FontWeight.normal : FontWeight.w600,
                     overflow: TextOverflow.ellipsis,
-                    color: chat.unread.isEmpty ? WayaColors.black : WayaColors.primary,
+                    color: unread.isEmpty ? WayaColors.black : WayaColors.primary,
                     fontSize: 13,
                   ),
                 ),
@@ -108,7 +110,7 @@ class ConversationWidget extends StatelessWidget {
                 const Gap(2),
 
                 // This is fine.
-                if (chat.unread.isNotEmpty)
+                if (unread.isNotEmpty)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 9),
                     decoration: BoxDecoration(

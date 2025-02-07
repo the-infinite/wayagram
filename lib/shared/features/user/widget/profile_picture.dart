@@ -1,17 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 class ChatProfilePicture extends StatelessWidget {
-  final User user;
+  final UserDetailsModel user;
   final double radius;
+  final bool showActive;
 
   // This is fine.
   const ChatProfilePicture({
     super.key,
     required this.user,
     required this.radius,
+    this.showActive = true,
   });
 
   @override
@@ -37,21 +39,22 @@ class ChatProfilePicture extends StatelessWidget {
           ),
 
           // Second, the activity marker.
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: Container(
-              padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: WayaColors.success,
-                border: Border.all(
-                  color: WayaColors.white,
-                  width: 1,
+          if (showActive)
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: WayaColors.success,
+                  border: Border.all(
+                    color: WayaColors.white,
+                    width: 1,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

@@ -26,8 +26,11 @@ class ConversationVm extends StateNotifier<ConversationState> {
         result.addAll(state.conversations);
       }
 
+      //? The data.
+      final data = response.data['data'];
+
       //? Parse the conversations as they are in the response object...
-      final docs = (response.data['docs'] as List<Map<String, dynamic>>).map((doc) => ChatModel.fromJson(doc));
+      final docs = (data['docs'] as List).map((doc) => ChatModel.fromJson(doc));
 
       //? This is fine.
       result.addAll(docs);
@@ -35,10 +38,10 @@ class ConversationVm extends StateNotifier<ConversationState> {
       //? Update state.
       state = state.copyWith(
         conversations: result,
-        totalCount: response.data['totalDocs'],
-        totalPages: response.data['totalPages'],
-        hasNextPage: response.data['hasNextPage'],
-        page: int.tryParse(response.data['nextPage'].toString()) ?? 1,
+        totalCount: data['totalDocs'],
+        totalPages: data['totalPages'],
+        hasNextPage: data['hasNextPage'],
+        page: int.tryParse(data['nextPage'].toString()) ?? 1,
         isLoading: false,
       );
     }
@@ -53,15 +56,20 @@ class ConversationVm extends StateNotifier<ConversationState> {
   }
 
   /// Helper function used to start a chat with a list of users.
-  Future<bool> startChat(ChatType type, List<String> users) async {
+  Future<ChatModel?> startChat(ChatType type, List<String> users) async {
     //? This is fine.
     final response = await repo.startConversation(type, users);
 
     //? If this was fine...
-    if (response.success) getChats();
+    if (!response.success) {
+      return null;
+    }
+
+    //? Try getting all chats.
+    final chats = await getChats();
 
     //? Now, return this.
-    return response.success;
+    return chats.where((chat) => chat.id == response.data['data']['id']).lastOrNull ??  ChatModel.fromJson(response.data['data']);
   }
 
   /// Helper function used to retrieve all of the details of just one conversation.
@@ -71,7 +79,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
     //? This is fine.
     if (response.success) {
-      final result = ChatModel.fromJson(response.data);
+      final result = ChatModel.fromJson(response.data['data']);
       final pos = state.conversations.indexWhere((chat) => chat.id == id);
 
       //? If this is to replace the chat inside of the list of chats and it is
@@ -156,8 +164,11 @@ class ConversationVm extends StateNotifier<ConversationState> {
         result.addAll(state.archived);
       }
 
+      //? OUr data.
+      final data = response.data['data'];
+
       //? Parse the conversations as they are in the response object...
-      final docs = (response.data['docs'] as List<Map<String, dynamic>>).map((doc) => ChatModel.fromJson(doc));
+      final docs = (data['docs'] as List).map((doc) => ChatModel.fromJson(doc));
 
       //? This is fine.
       result.addAll(docs);
@@ -165,10 +176,10 @@ class ConversationVm extends StateNotifier<ConversationState> {
       //? Update state.
       state = state.copyWith(
         archived: result,
-        archivedTotalCount: response.data['totalDocs'],
-        archivedTotalPages: response.data['totalPages'],
-        archivedHasNextPage: response.data['hasNextPage'],
-        archivedPage: int.tryParse(response.data['nextPage'].toString()) ?? 1,
+        archivedTotalCount: data['totalDocs'],
+        archivedTotalPages: data['totalPages'],
+        archivedHasNextPage: data['hasNextPage'],
+        archivedPage: int.tryParse(data['nextPage'].toString()) ?? 1,
         isLoading: false,
       );
     }

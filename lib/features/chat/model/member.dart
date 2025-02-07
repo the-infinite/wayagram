@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 part 'member.g.dart';
 
@@ -12,7 +12,7 @@ class ChatMember {
   final bool isArchived;
   final bool isPined;
   final DateTime joinedAt;
-  final User user;
+  final UserDetailsModel? user;
 
   ChatMember({
     required this.id,

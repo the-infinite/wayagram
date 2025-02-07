@@ -4,11 +4,12 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/modals/start_conversation.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/conversation.dart';
 import 'package:wayagram/features/chat/widget/search.dart';
-import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
 class ConversationScreen extends ConsumerStatefulWidget {
   const ConversationScreen({super.key});
@@ -18,13 +19,43 @@ class ConversationScreen extends ConsumerStatefulWidget {
 }
 
 class _ConversationScreenState extends ConsumerState<ConversationScreen> {
-  late final conversationState = ref.watch(conversationProvider);
   late final chatNotifier = ref.watch(chatProvider.notifier);
   late final notifier = ref.watch(conversationProvider.notifier);
-  late final profile = ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        notifier.getChats(true);
+      },
+    );
+
+    //? This is fine.
+    super.initState();
+  }
+
+  @override
+  void reassemble() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        notifier.getChats(true);
+      },
+    );
+
+    //? This is fine.
+    super.reassemble();
+  }
 
   /// Helper function used to initiate a conversation with a new person or group.
-  void _startConversation() async {}
+  void _startConversation() async {
+    final result = await WayaUtils.showModalSheet(
+      context,
+      child: StartConversationModal(),
+    );
+
+    //? Do nothing.
+    if (result == null) return;
+  }
 
   /// Used to filter the notification controller
   void _filterChats(String filter) {}
@@ -33,6 +64,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   Widget build(BuildContext context) {
     // For the size of the component.
     // final size = MediaQuery.sizeOf(context);
+    final conversationState = ref.watch(conversationProvider);
 
     // This is fine.
     return WayaScaffold(

@@ -101,9 +101,9 @@ class _FilterWidgetState extends ConsumerState<NotificationFilterWidget> {
                 padding: EdgeInsets.symmetric(horizontal: 1),
                 prefixIcon: Padding(
                   padding: const EdgeInsets.symmetric(vertical:  13),
-                  // child: WayaAssets.icons.actionSearch.svg(
-                  //   fit: BoxFit.contain,
-                  // ),
+                  child: WayaAssets.icons.actionSearch.svg(
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 controller: widget.value.controller,
                 hintText: widget.hintText,

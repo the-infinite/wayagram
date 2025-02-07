@@ -123,7 +123,7 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                                   else
                                     //? First, the pause/play icon.
                                     AnimatedCrossFade(
-                                      duration: const Duration(milliseconds: 200),
+                                      duration: const Duration(milliseconds: 350),
                                       crossFadeState:
                                           isStreamPlaying ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                                       firstChild: WayaButton(

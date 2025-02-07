@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/features/user/repo/default.dart';
 import 'package:wayagram/shared/features/user/state/search.dart';
 
@@ -10,11 +10,11 @@ class UserSearchNotifier extends StateNotifier<UserSearchState> {
   /// Retrieves a list of users based on the search query.
   ///
   /// The [query] parameter is the search string used to filter users.
-  /// Returns a [Future] that resolves to a [List] of [User] objects matching the query.
+  /// Returns a [Future] that resolves to a [List] of [UserDetailsModel] objects matching the query.
   /// The search is asynchronous and may take some time to complete.
-  Future<List<User>> getSearchResults(String query) async {
+  Future<List<UserDetailsModel>> getSearchResults(String query) async {
     //? Our list of results.
-    final results = <User>[];
+    final results = <UserDetailsModel>[];
 
     //? If this is querying something different from the last...
     if (state.query != query) {
@@ -53,8 +53,11 @@ class UserSearchNotifier extends StateNotifier<UserSearchState> {
 
     //? If this was fine...
     if (response.success) {
+      //? This is fine.
+      final data = response.data['data'];
+
       //? Parse the users as they are in the response object...
-      final docs = (response.data['docs'] as List<Map<String, dynamic>>).map((doc) => User.fromJson(doc));
+      final docs = (data['docs'] as List).map((doc) => UserDetailsModel.fromJson(doc));
 
       //? This is fine.
       results.addAll(docs);
@@ -62,10 +65,10 @@ class UserSearchNotifier extends StateNotifier<UserSearchState> {
       //? Update state.
       state = state.copyWith(
         results: results,
-        totalResults: response.data['totalDocs'],
-        totalPages: response.data['totalPages'],
-        hasNextPage: response.data['hasNextPage'],
-        page: response.data['nextPage'] ?? 1,
+        totalResults: data['totalDocs'],
+        totalPages: data['totalPages'],
+        hasNextPage: data['hasNextPage'],
+        page: data['nextPage'] ?? 1,
         isLoading: false,
       );
     }
@@ -78,8 +81,18 @@ class UserSearchNotifier extends StateNotifier<UserSearchState> {
     //? Return this result.
     return results;
   }
-}
 
+  /// When the user clears this out...
+  void clearOut() {
+    state = state.copyWith(query: "");
+  }
+
+  /// Toggle the loading state early while we are still waiting for the debouncer
+  /// to get here.
+  void preflight() {
+    state = state.copyWith(isLoading: true);
+  }
+}
 
 final userSearchProvider = StateNotifierProvider<UserSearchNotifier, UserSearchState>(
   (ref) {

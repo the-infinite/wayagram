@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:wayagram/features/chat/dto/chat.dart';
 
 part 'message.g.dart';
 
@@ -96,6 +97,8 @@ class MessageModel {
   final List<String>? media;
   final List<MessageReaction> messageReaction;
   final List<String>? contacts;
+  final bool? isError;
+  final SendMessageDto? dto;
 
   // This is fine.
   MessageModel({
@@ -116,6 +119,8 @@ class MessageModel {
     required this.media,
     required this.messageReaction,
     required this.contacts,
+    this.isError,
+    this.dto,
   });
 
   String get contentDescription {
@@ -139,4 +144,29 @@ class MessageModel {
 
   // This is fine.
   Map<String, dynamic> toJson() => _$MessageModelToJson(this);
+
+  /// Clones this message in an attempt to set whether this is an error or not.
+  MessageModel copyWith(bool isError) {
+    return MessageModel(
+      id: id,
+      chatId: chatId,
+      senderId: senderId,
+      content: content,
+      mediaUrl: mediaUrl,
+      messageType: messageType,
+      edited: edited,
+      dto: dto,
+      originalMessageId: originalMessageId,
+      originalMessage: originalMessage,
+      forwardedFrom: forwardedFrom,
+      isReply: isReply,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      status: status,
+      media: media,
+      messageReaction: messageReaction,
+      contacts: contacts,
+      isError: isError,
+    );
+  }
 }

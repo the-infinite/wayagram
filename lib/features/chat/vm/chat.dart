@@ -30,8 +30,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
         result.addAll(state.messages);
       }
 
+      // The data.
+      final data = response.data['data'];
+
       //? Parse the conversations as they are in the response object...
-      final docs = (response.data['docs'] as List<Map<String, dynamic>>).map((doc) => MessageModel.fromJson(doc));
+      final docs = (data['docs'] as List).map((doc) => MessageModel.fromJson(doc));
 
       //? This is fine.
       result.addAll(docs);
@@ -39,10 +42,10 @@ class ChatNotifier extends StateNotifier<ChatState> {
       //? Update state.
       state = state.copyWith(
         messages: result,
-        totalCount: response.data['totalDocs'],
-        totalPages: response.data['totalPages'],
-        hasNextPage: response.data['hasNextPage'],
-        page: int.tryParse(response.data['nextPage'].toString()) ?? 1,
+        totalCount: data['totalDocs'],
+        totalPages: data['totalPages'],
+        hasNextPage: data['hasNextPage'],
+        page: int.tryParse(data['nextPage'].toString()) ?? 1,
         isLoading: false,
       );
     }
@@ -55,7 +58,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? Scroll to the last possible message.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       state.controller.animateTo(state.controller.position.maxScrollExtent,
-          duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+          duration: Duration(milliseconds: 350), curve: Curves.easeInOut);
     });
 
     //? Return this collated result.
@@ -64,67 +67,107 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   /// A helper function used to send a message to a given chat. The multipart
   /// file specification
-  Future<MessageModel?> sendMessage(SendMessageDto message) async {
-    final messageId = WayaValueHelper.createUid();
+  Future<MessageModel?> sendMessage(SendMessageDto message, [String? originalId]) async {
+    final messageId = originalId ?? WayaValueHelper.createUid();
 
-    //? While waiting for this message to be sent...
-    final placeholder = MessageModel(
-      id: messageId,
-      chatId: state.chat!.id,
-      content: message.content,
-      media: message.media,
-      originalMessage: message.originalMessage,
-      contacts: message.contacts,
-      senderId: ConversationState.self.id!,
-      messageType: message.type,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      mediaUrl: message.media?.firstOrNull,
-      edited: false,
-      originalMessageId: message.originalMessageId,
-      forwardedFrom: null,
-      isReply: message.originalMessageId != null,
-      status: [],
-      messageReaction: [],
-    );
+    //? If this is not an attempt to resend...
+    if (originalId == null) {
+      final placeholder = MessageModel(
+        id: messageId,
+        chatId: state.chat!.id,
+        content: message.content,
+        media: message.media,
+        originalMessage: message.originalMessage,
+        contacts: message.contacts,
+        senderId: ConversationState.self.id!,
+        messageType: message.type,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        mediaUrl: message.media?.firstOrNull,
+        edited: false,
+        originalMessageId: message.originalMessageId,
+        forwardedFrom: null,
+        isReply: message.originalMessageId != null,
+        status: [],
+        messageReaction: [],
+        dto: message,
+      );
 
-    //? Tell the listeners that this has been updated to first add the message to
-    //? our list of messages.
-    state = state.copyWith(
-      messages: [...state.messages, placeholder],
-      isLoading: true,
-    );
+      //? Tell the listeners that this has been updated to first add the message to
+      //? our list of messages.
+      state = state.copyWith(messages: [...state.messages, placeholder]);
+    }
 
-    //? This is fine.
-    final response = await repo.sendMessage(message);
-
-    //? If this went well...
-    if (response.success) {
-      final result = MessageModel.fromJson(response.data);
+    //? Else, we just flag this message as something that is not an error.
+    else {
       final conversation = state.messages;
       final found = conversation.lastIndexWhere((message) => message.id == messageId);
 
       //? Now, replace this.
       if (found != -1) {
-        conversation[found] = result;
+        conversation[found] = conversation[found].copyWith(false);
       }
 
       //? Now update the UI with our changes...
-      state = state.copyWith(
-        messages: conversation,
-        isLoading: false,
-      );
-
-      //? Scroll to the last possible message.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        state.controller.animateTo(state.controller.position.maxScrollExtent,
-            duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
-      });
+      state = state.copyWith(messages: conversation);
     }
 
-    //? This is not loading.
-    else {
-      state = state.copyWith(isLoading: false);
+    //? Try to send the message.
+    try {
+      //? This is fine.
+      final response = await repo.sendMessage(message);
+
+      //? If this went well...
+      if (response.success) {
+        final result = MessageModel.fromJson(response.data['data']);
+        final conversation = state.messages;
+        final found = conversation.lastIndexWhere((message) => message.id == messageId);
+
+        //? Now, replace this.
+        if (found != -1) {
+          conversation[found] = result;
+        }
+
+        //? Now update the UI with our changes...
+        state = state.copyWith(messages: conversation);
+
+        //? Scroll to the last possible message.
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          state.controller.animateTo(
+            state.controller.position.maxScrollExtent,
+            duration: Duration(milliseconds: 350),
+            curve: Curves.easeInOut,
+          );
+        });
+
+        //? Return the result.
+        return result;
+      }
+
+      //? Turn this into an error.
+      else {
+        final conversation = state.messages;
+        final found = conversation.lastIndexWhere((message) => message.id == messageId);
+
+        //? Now, replace this.
+        if (found != -1) {
+          conversation[found] = conversation[found].copyWith(true);
+        }
+
+        //? Now update the UI with our changes...
+        state = state.copyWith(messages: conversation);
+      }
+    } catch (_) {
+      final conversation = state.messages;
+      final found = conversation.lastIndexWhere((message) => message.id == messageId);
+
+      //? Now, replace this.
+      if (found != -1) {
+        conversation[found] = conversation[found].copyWith(true);
+      }
+
+      //? Now update the UI with our changes...
+      state = state.copyWith(messages: conversation);
     }
 
     //? Since we are in test mode, it would always succeed.
@@ -137,7 +180,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final response = await repo.getUnreadMessagesCount();
 
     //? Then return it directly.
-    return response.success ? response.data : null;
+    return response.success ? response.data['data'] : null;
   }
 
   /// A helper function that is used to mark all messages in the chat as read by
@@ -149,6 +192,21 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     //? This is fine.
     return response.success;
+  }
+
+  /// A helper function used to remove a message from the list of messages in
+  /// this conversation's state object.
+  void removeMessage(String id) {
+    final conversation = state.messages;
+    final found = conversation.lastIndexWhere((message) => message.id == id);
+
+    //? Now, replace this.
+    if (found != -1) {
+      conversation.removeAt(found);
+
+      //? Now update the UI with our changes...
+      state = state.copyWith(messages: conversation);
+    }
   }
 
   /// An API used to update the status of a message in the API.
@@ -169,6 +227,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
   Future<bool> deleteMessage(String id, MessageDeleteAction action) async {
     final response = await repo.deleteMessage([id], action);
 
+    //? If this went well...
+    if (response.success) {
+      removeMessage(id);
+    }
+
     //? Return whether this is fine or not.
     return response.success;
   }
@@ -182,7 +245,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
   }
 
   /// A helper API used to forward a message to a given list of chats.
-  Future<bool> reactToMessage(String id,String reaction) async {
+  Future<bool> reactToMessage(String id, String reaction) async {
     final response = await repo.reactToMessage(id, reaction);
 
     //? This is good.

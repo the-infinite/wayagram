@@ -1,8 +1,8 @@
 import 'package:wayagram/features/chat/model/default.dart';
-import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 class ConversationState {
-  static User? _self;
+  static UserDetailsModel? _self;
   final bool isLoading;
   final String searchFilter;
   final List<ChatModel> conversations;
@@ -39,12 +39,12 @@ class ConversationState {
   });
 
   // This is fine.
-  static void setSelf(User? self) {
+  static void setSelf(UserDetailsModel? self) {
     ConversationState._self ??= self;
   }
 
   // This is a getter.
-  static User get self => _self!;
+  static UserDetailsModel get self => _self!;
 
   /// When this was done.
   static final initial = ConversationState(

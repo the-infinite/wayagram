@@ -1,4 +1,4 @@
-import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 class UserSearchState {
   final bool isLoading;
@@ -8,7 +8,7 @@ class UserSearchState {
   final int totalPages;
   final int totalResults;
   final List<String> searchedFields;
-  final List<User> results;
+  final List<UserDetailsModel> results;
   final String query;
 
   UserSearchState({
@@ -48,7 +48,7 @@ class UserSearchState {
     int? totalPages,
     int? totalResults,
     List<String>? searchedFields,
-    List<User>? results,
+    List<UserDetailsModel>? results,
     String? query,
   }) {
     return UserSearchState(

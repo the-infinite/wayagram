@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 
 part 'default.g.dart';
 
@@ -19,11 +18,11 @@ enum ChatType {
 @JsonSerializable()
 class ChatModel {
   final String id;
-  final String name;
+  final String? name;
   final String createdBy;
-  final String latestMessageId;
-  final MessageModel lastMessage;
-  final List<MessageModel> unread;
+  final String? latestMessageId;
+  final MessageModel? lastMessage;
+  final List<MessageModel>? unread;
   final String chatType;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -50,12 +49,9 @@ class ChatModel {
 
   /// Helper function used to get the other person in this conversation that is
   /// not the currently logged in user.
-  User get other {
-    //? If the author of this conversation is the current user, send the recipient.
-    if (createdBy == ConversationState.self.id) return ConversationState.self;
-
+  ChatMember get other {
     //? Send the sender.
-    return chatMembers.where((user) => user.userId == createdBy).first.user;
+    return chatMembers.where((user) => user.userId != createdBy).first;
   }
 
   /// Helper function  used to return the user that is currently using the app.
@@ -65,9 +61,9 @@ class ChatModel {
 
   /// Helper function used to get the text to show for the unread messages count.
   String get unreadText {
-    if (unread.length > 99) return "99+";
+    if ((unread?.length ?? 0) > 99) return "99+";
 
     // This is fine.
-    return unread.length.toString();
+    return (unread?.length ?? 0).toString();
   }
 }

@@ -46,11 +46,19 @@ class WayaSwiper extends StatefulWidget {
   /// long time.
   final FutureOr<void> Function()? onLongPress;
 
+  /// Callback that is made when the gesture detector has been tapped once.
+  final FutureOr<void> Function()? onTap;
+
+  /// Callback that is made when the gesture detector has been tapped twice in
+  /// rapid succession.
+  final FutureOr<void> Function()? onDoubleTap;
+
   /// Integer specifying value above which it will sense swipe to get triggerred
   /// default minimum value is 20 and maximum value is 35
   /// Putting max value will require use to swipe in short time to get swipe in effect
   final int swipeSensitivity;
 
+  // This is fine.
   const WayaSwiper({
     super.key,
     required this.child,
@@ -59,6 +67,8 @@ class WayaSwiper extends StatefulWidget {
     this.iconOnRightSwipe = Icons.reply,
     this.rightSwipeWidget,
     this.onLongPress,
+    this.onDoubleTap,
+    this.onTap,
     this.iconOnLeftSwipe = Icons.reply,
     this.leftSwipeWidget,
     this.iconSize = 26.0,
@@ -168,6 +178,8 @@ class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateM
           _runAnimation(onRight: false, details: details);
         }
       },
+      onDoubleTap: widget.onDoubleTap,
+      onTap: widget.onTap,
       child: Stack(
         alignment: Alignment.center,
         fit: StackFit.passthrough,

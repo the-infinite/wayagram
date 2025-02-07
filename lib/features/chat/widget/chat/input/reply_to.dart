@@ -82,7 +82,9 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
                     children: [
                       //* User name.
                       Text(
-                        widget.message.senderId == user.id ? "You" : widget.controller.chat.other.fullname,
+                        widget.message.senderId == user.id
+                            ? "You"
+                            : widget.controller.chat.other.user?.fullname ?? widget.controller.chat.other.userId,
                         style: WayaTextStyles.titleMedium.copyWith(
                           color: widget.message.senderId == user.id ? WayaColors.primary : WayaColors.primary600,
                         ),

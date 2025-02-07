@@ -179,6 +179,12 @@ class ChatInputController {
     _isMedia.value = value;
   }
 
+  /// A helper function used to set the text inside this text controller to
+  /// something.
+  void setText(String text) {
+    _textController.text = text;
+  }
+
   /// A helper function used to remove a given file from the list of selected
   /// files using its index.
   void removeFile(int index) {
@@ -192,11 +198,8 @@ class ChatInputController {
   }
 
   /// A helper function used to get the chat body that we would use for the
-  String? get buildBody {
-    final result = _textController.text.trim();
-
-    // This is fine.
-    return result.isNotEmpty ? result : null;
+  String get buildBody {
+    return _textController.text.trim();
   }
 
   /// A helper function used to retrieve all of the selected files.
@@ -223,7 +226,7 @@ class ChatInputController {
     return SendMessageDto(
       chatId: chat.id,
       type: _currentType.value,
-      originalMessageId: _replyTo.value?.id,
+      originalMessageId: _replyTo.value?.id ?? "",
       originalMessage: _replyTo.value,
       content: buildBody,
       media: [if (_voiceMessage.value != null) _voiceMessage.value!, ..._files.value.map((file) => file.absolute.path)],
@@ -410,7 +413,7 @@ class ChatInputWidget extends StatelessWidget {
                     child: AnimatedCrossFade(
                       crossFadeState:
                           messageType == MessageType.voiceNote ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                      duration: const Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 350),
                       firstChild: messageType != MessageType.voiceNote
                           ? const SizedBox()
                           : ValueListenableBuilder(
@@ -453,7 +456,7 @@ class ChatInputWidget extends StatelessWidget {
                       //? Since we cannot send yet, show this message type's
                       //? protocol icon.
                       return AnimatedCrossFade(
-                        duration: const Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 350),
                         crossFadeState: canSend ? CrossFadeState.showFirst : CrossFadeState.showSecond,
                         firstChild: WayaButton(
                           callback: _sendMessage,
@@ -475,7 +478,7 @@ class ChatInputWidget extends StatelessWidget {
                                   recorderState == RecorderState.stopped || recorderState == RecorderState.initialized
                                       ? CrossFadeState.showFirst
                                       : CrossFadeState.showSecond,
-                              duration: const Duration(milliseconds: 200),
+                              duration: const Duration(milliseconds: 350),
                               firstChild: WayaButton(
                                 callback: _recordVoiceNote,
                                 height: null,
