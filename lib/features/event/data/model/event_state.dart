@@ -4,6 +4,8 @@ class EventState {
   final bool isLoading;
   final bool isLoadingUserEvents;
   final bool isLoadingEventWithStatus;
+  final bool isJoiningEvent;
+  final bool isReportingEvent;
   final List<EventDoc> events;
   final List<EventDoc> myEvents;
   final List<EventDoc> upcomingEvents;
@@ -20,6 +22,8 @@ class EventState {
       this.isLoadingEventWithStatus = false,
       this.isUserEvent = false,
       this.singleEvent,
+      this.isJoiningEvent = false,
+      this.isReportingEvent = false,
       this.isLoadingUserEvents = false});
 
   EventState copyWith(
@@ -31,6 +35,8 @@ class EventState {
       bool? isLoadingEventWithStatus,
       EventDoc? singleEvent,
       bool? isUserEvent,
+      bool? isJoiningEvent,
+      bool? isReportingEvent,
       bool? isLoadingUserEvents}) {
     return EventState(
         isLoading: isLoading ?? this.isLoading,
@@ -39,7 +45,9 @@ class EventState {
         upcomingEvents: upcomingEvents ?? this.upcomingEvents,
         pastEvents: pastEvents ?? this.pastEvents,
         singleEvent: singleEvent ?? this.singleEvent,
-        isUserEvent:  isUserEvent ?? this.isUserEvent,
+        isUserEvent: isUserEvent ?? this.isUserEvent,
+        isJoiningEvent: isJoiningEvent ?? this.isJoiningEvent,
+        isReportingEvent: isReportingEvent ?? this.isReportingEvent,
         isLoadingEventWithStatus:
             isLoadingEventWithStatus ?? this.isLoadingEventWithStatus,
         isLoadingUserEvents: isLoadingUserEvents ?? this.isLoadingUserEvents);

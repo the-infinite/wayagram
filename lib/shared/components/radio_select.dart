@@ -37,4 +37,4 @@ class RadioSelect extends StatelessWidget {
 }
 
 
-final radioSelectProvider = StateProvider<String?>((ref) => null);
+final radioSelectProvider = StateProvider.family<String?, String>((ref, uniqueKey) => null);

@@ -27,10 +27,12 @@ class _MyEventState extends ConsumerState<MyEvents> {
     // TODO: implement build
 
     return Expanded(
-      child: PaginatedDataView<EventDoc>(
+      child: ListView(
+        children: [
+          PaginatedDataView<EventDoc>(
           uniqueKey: 'my-events',
           loadingState: Center(
-            child: CircularProgressIndicator(),
+            child: Center(child: CircularProgressIndicator(),),
           ),
           emptyState: EventEmptyState(),
           fetchData: ref.read(eventVmProvider.notifier).getUserEvents,
@@ -43,6 +45,8 @@ class _MyEventState extends ConsumerState<MyEvents> {
                   return EventWidget(event: data[index]);
                 });
           }),
+        ],
+      )
     );
   }
 }

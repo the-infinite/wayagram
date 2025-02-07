@@ -12,7 +12,7 @@ class AddEventRequestModel {
   final String endTime;
   final String eventType;
   final int fee;
-  final String? maxCapacity;
+  final int? maxCapacity;
   final String privacyOption;
   final MultipartFile image;
   final String userId;

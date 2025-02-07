@@ -64,14 +64,14 @@ class EventWidget extends ConsumerWidget {
                                   height: 3.h,
                                 ),
                                 if (event.location == 'physical')
-                                SizedBox(
-                                  width: 250.w,
-                                  child:   Text(
-                                    "${event.locationAddress.capitalizeFirst} by ${WayaHelpers.format24HRSToAPM(event.startTime)}",
-                                    style: wayaTheme.textTheme.hintStyle,
-                                    overflow: TextOverflow.ellipsis,
+                                  SizedBox(
+                                    width: 250.w,
+                                    child: Text(
+                                      "${event.locationAddress.capitalizeFirst} by ${WayaHelpers.format24HRSToAPM(event.startTime)}",
+                                      style: wayaTheme.textTheme.hintStyle,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                ),
                                 if (event.location == 'virtual')
                                   GestureDetector(
                                     onTap: () {
@@ -100,13 +100,13 @@ class EventWidget extends ConsumerWidget {
                             child: WayaButton(
                               callback: () {},
                               text: event.eventStatus,
+                              textColor: wayaTheme.colorScheme.pending,
                               height: 30,
                               color: wayaTheme.colorScheme.pending50,
-                              textStyle: wayaTheme.textTheme.hintStyle
-                                  .copyWith(
-                                      color: wayaTheme.colorScheme.pending,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
+                              textStyle: wayaTheme.textTheme.hintStyle.copyWith(
+                                  color: wayaTheme.colorScheme.pending,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
                               radius: 14,
                             ),
                           ),
@@ -117,10 +117,15 @@ class EventWidget extends ConsumerWidget {
                       ),
                       EngagementRange(
                           bottomLeft: event.location.capitalizeFirst!,
-                          bottomRight: event.maxCapacity == null
+                          bottomRight: event.maxCapacity == null || event.maxCapacity == 0
                               ? "Unlimited"
                               : "${event.maxCapacity! - event.noOfAttendees} Ticket Left",
-                          range:event.maxCapacity == null ? 0 : (event.maxCapacity!  -(event.maxCapacity! - event.noOfAttendees))/100),
+                          range: event.maxCapacity == null ||event.maxCapacity == 0
+                              ? 0
+                              : (event.maxCapacity! -
+                                      (event.maxCapacity! -
+                                          event.noOfAttendees)) /
+                                  100),
                       SizedBox(
                         height: 6.h,
                       ),

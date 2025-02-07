@@ -6,12 +6,16 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/event/vm/event_vm.dart';
 
 class ReportEvent extends ConsumerStatefulWidget {
   final String currentStatus;
+  final String eventId;
   final List<String> statuses;
   const ReportEvent(
-      {super.key, required this.statuses, required this.currentStatus});
+      {super.key, required this.statuses, required this.currentStatus, required this.eventId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReportEventState();
@@ -19,6 +23,7 @@ class ReportEvent extends ConsumerStatefulWidget {
 
 class _ReportEventState extends ConsumerState<ReportEvent> {
   final _formKey = GlobalKey<FormState>();
+  late TextEditingController comment;
 
   late String selectedStatus;
 
@@ -26,12 +31,20 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
   void initState() {
     super.initState();
     selectedStatus = widget.currentStatus;
+    comment = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    comment.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
+    final reportState = ref.watch(eventVmProvider);
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
       child: Column(
@@ -40,6 +53,7 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
           Text("Report ", style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           Text(
+          
               "Help us improve the platform by letting us know you are reporting this event",
               style: wayaTheme.textTheme.hintStyle),
           const Gap(30),
@@ -97,7 +111,8 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 1, horizontal: 1),
                               title: Text(
-                                widget.statuses[index],
+                                WayaHelpers.removeCamelCaseAndUnderscore(
+                                    widget.statuses[index]),
                                 style: TextStyle().wayaCopyWith(
                                     color: wayaTheme.colorScheme.customBlack,
                                     fontSize: 14),
@@ -123,7 +138,7 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
                         WayaTextFormField(
                           line: 6,
                           keyboardType: TextInputType.text,
-                          controller: TextEditingController(),
+                          controller: comment,
                           hintText: 'Provide more detail about the issue',
                           label: 'Additional Comment (Optional)',
                         ),
@@ -132,10 +147,18 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
                   }),
                   const Gap(10),
                   WayaButton(
-                      callback: () {
-                        // Navigator.of(context).pop(selectedStatus);
-                      },
-                      text: "Submit Report"),
+                      callback: !reportState.isReportingEvent
+                          ? () {
+                              ref.read(eventVmProvider.notifier).reportEvent(
+                                  eventId: widget.eventId,
+                                  reason: selectedStatus,
+                                  comment: comment.text,
+                                  context: context);
+                            }
+                          : null,
+                      centerWidget: LoadingState(
+                          loading: reportState.isReportingEvent,
+                          text: "Submit Report")),
                 ],
               )),
           const Gap(10),

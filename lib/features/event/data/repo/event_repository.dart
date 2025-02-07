@@ -24,9 +24,24 @@ class EventRepository extends BaseRepository {
 
   Future<WayaRequestResponse> editEvent(
       AddEventRequestModel payload, String id) {
-    return post("$serviceUrl/events/edit-event/$id", payload.toJson(),
+    return patch("$serviceUrl/events/edit-event/$id", payload.toJson(),
         formdata: true);
   }
 
-  ///
+  Future<WayaRequestResponse> joinEvent(
+      {required String userId, required String eventId}) {
+    return post(
+        "$serviceUrl/join-events", {"userId": userId, "eventId": eventId},
+    );
+  }
+
+  Future<WayaRequestResponse> reportEvent(
+      {required String userId,
+      required String eventId,
+      required String reason,
+      String? comment}) {
+    final payload = {"userId": userId, "eventId": eventId, "reason": reason};
+    if (comment != null) payload['comment'] = comment;
+    return post("$serviceUrl/join-events", payload);
+  }
 }

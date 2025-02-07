@@ -39,8 +39,15 @@ class PreviewAddedEvent extends ConsumerWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: viewModel.eventImage != null
-              ? Image.file(
+              ?  viewModel.eventImage!.file != null ? Image.file(
                   viewModel.eventImage!.file!,
+                  fit: BoxFit.cover,
+                  height: 200,
+                  width: double.infinity,
+                  filterQuality: FilterQuality.high,
+                  scale: 1,
+                ) : Image.network(
+                  viewModel.eventImage!.url,
                   fit: BoxFit.cover,
                   height: 200,
                   width: double.infinity,
@@ -139,7 +146,7 @@ class PreviewAddedEvent extends ConsumerWidget {
             Expanded(
               child: AboutEvent(
                   title: 'Maximum Capacity',
-                  content: viewModel.maxCapacity.text),
+                  content: viewModel.maxCapacity!.text),
             ),
             Expanded(
               child: AboutEvent(
@@ -150,7 +157,7 @@ class PreviewAddedEvent extends ConsumerWidget {
         const Gap(30),
         WayaButton(
             centerWidget: LoadingState(
-                loading: viewModel.isLoading, text: "Create Event"),
+                loading: viewModel.isLoading, text: viewModel.isEditingMode ? "Update Event" : "Create Event"),
             callback: !viewModel.isLoading
                 ? () {
                     ref

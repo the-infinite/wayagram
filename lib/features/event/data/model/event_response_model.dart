@@ -68,7 +68,7 @@ class EventDoc {
   final String image;
   final String title;
   final String organizerName;
-  final String description;
+  final String? description;
   final String location;
   final String locationAddress;
   final String startDate;
@@ -94,11 +94,11 @@ class EventDoc {
     required this.image,
     required this.title,
     required this.organizerName,
-    required this.description,
+    this.description,
     required this.location,
     required this.locationAddress,
-    required this.startDate, // DateTime object
-    required this.endDate, // DateTime object
+    required this.startDate, 
+    required this.endDate, 
     required this.startTime,
     required this.endTime,
     required this.payoutStatus,
