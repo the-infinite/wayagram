@@ -139,7 +139,28 @@ class ChatAttachmentDialog extends StatelessWidget {
                   icon: WayaAssets.icons.cAttachCamera.path,
                   title: "Camera",
                   description: "Send a video or photo from camera",
-                  callback: () {},
+                  callback: () async {
+                    //? If it is not...
+                    try {
+                      final choice = await ImagePicker().pickImage(
+                        source: ImageSource.camera,
+                        imageQuality: 40,
+                      );
+
+                      //? If this is fine.
+                      if (choice == null) return;
+
+                      //? Our choices.
+                      WayaNav.goBack<AttachmentResult>(
+                        result: AttachmentResult.images(
+                          [choice.path],
+                        ),
+                      );
+
+                      //? This means it is now media...
+                      controller.setMedia(true);
+                    } catch (_) {}
+                  },
                 ),
 
                 // This is fine.
@@ -152,12 +173,11 @@ class ChatAttachmentDialog extends StatelessWidget {
                     try {
                       final choices = await ImagePicker().pickMultipleMedia(
                         imageQuality: 40,
-                        limit: 3,
                       );
 
                       //? Our choices.
                       WayaNav.goBack<AttachmentResult>(
-                        result: AttachmentResult.file(
+                        result: AttachmentResult.images(
                           choices.map((file) => file.path).toList(),
                         ),
                       );

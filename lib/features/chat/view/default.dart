@@ -70,6 +70,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
+      onRefresh: () async {
+        await notifier.getChats(true);
+        await notifier.getArchivedChats(true);
+      },
       automaticallyImplyLeading: false,
       backgroundColor: WayaColors.white,
       padding: const EdgeInsets.only(bottom: 20),
@@ -147,6 +151,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                 index: index,
                 chat: conversationState.pinned[index],
                 notifier: chatNotifier,
+                conversationNotifier: notifier,
               ),
             ),
 
@@ -175,6 +180,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               index: index,
               chat: conversationState.conversations[index],
               notifier: chatNotifier,
+              conversationNotifier: notifier,
             ),
           ),
 

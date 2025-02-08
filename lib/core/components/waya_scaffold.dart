@@ -50,6 +50,7 @@ class WayaScaffold extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final size = MediaQuery.sizeOf(context);
     final themeNotifier = ref.read(themeProvider.notifier);
     final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
     return BlurryModalProgressHUD(
@@ -84,9 +85,12 @@ class WayaScaffold extends ConsumerWidget {
                       onRefresh: onRefresh!,
                       child: Container(
                         color: color,
-                        child: Padding(
-                          padding: paddedBody,
-                          child: SingleChildScrollView(child: body),
+                        padding: paddedBody,
+                        height: size.height,
+                        width: size.width,
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: body,
                         ),
                       ),
                     )

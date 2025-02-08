@@ -64,29 +64,47 @@ class DioHttpClient implements WayaHttpClientInterface {
       bool formEncoded = false,
       void Function({int count, int total})? onSendProgress,
       void Function({int count, int total})? onRecieveProgress}) async {
-    await _setHeader(
-      formdata: formdata,
-      formEncoded: formEncoded,
-    );
-    params?.removeWhere((key, value) => value == null);
     final fullRoute = '$baseURL$route';
     _logger.i('fullRoute: $fullRoute');
     _logger.f('headers: ${dio.options.headers}');
+
+    //? Since it is form data.
     if (formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
-      _logger.d("hfhfvjgj $body");
+      _logger.d("FormData =: ${(body as FormData).fields}, ${body.files}");
     }
+
+    //? This is fine.
+    await _setHeader(
+      formdata: formdata,
+      formEncoded: formEncoded,
+      formDataBoundary: formdata ? (body as FormData).boundary : null,
+    );
+    params?.removeWhere((key, value) => value == null);
 
     return _makeRequest(dio.post(
       fullRoute,
       data: body,
+      options: formdata
+          ? Options(
+              headers: {
+                Headers.acceptHeader: "*/*",
+                Headers.contentTypeHeader: "multipart/form-data; boundary=${(body as FormData).boundary}"
+              },
+            )
+          : null,
       onSendProgress: (count, total) {
-        if (onSendProgress != null) onSendProgress(count: count, total: total);
-        _showLoadingProgress(count, total);
+        if (onSendProgress != null) {
+          onSendProgress(count: count, total: total);
+        }
+
+        // _showLoadingProgress(count, total);
       },
       onReceiveProgress: ((count, total) {
-        if (onRecieveProgress != null) onRecieveProgress(count: count, total: total);
-        _showLoadingProgress(count, total);
+        if (onRecieveProgress != null) {
+          onRecieveProgress(count: count, total: total);
+        }
+        // _showLoadingProgress(count, total);
       }),
       queryParameters: params,
     ));
@@ -167,7 +185,7 @@ class DioHttpClient implements WayaHttpClientInterface {
   }
 
   @override
-  Future deleteHttp(
+  Future<WayaRequestResponse> deleteHttp(
     String route, {
     Object? body,
     Map<String, dynamic>? params,
@@ -226,16 +244,18 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool isAuth = true,
     int? contentLength,
     String? contentType,
+    String? formDataBoundary,
   }) async {
     dio.options.headers = {
       if (contentLength != null) Headers.contentLengthHeader: '$contentLength',
       'content-type': contentType ??
           (formdata
-              ? 'multipart/form-data'
+              ? 'multipart/form-data${formDataBoundary != null ? '; boundary=$formDataBoundary' : null}'
               : formEncoded
                   ? 'application/x-www-form-urlencoded'
                   : 'application/json'),
-      'Accept': '*/*',
+      'accept': '*/*',
+      'connection': 'keep-alive',
       if (isAuth) 'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };
   }

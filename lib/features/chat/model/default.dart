@@ -22,7 +22,7 @@ class ChatModel {
   final String createdBy;
   final String? latestMessageId;
   final MessageModel? lastMessage;
-  final List<MessageModel>? unread;
+  final int unreadCount;
   final String chatType;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -38,7 +38,7 @@ class ChatModel {
     required this.updatedAt,
     required this.chatMembers,
     required this.lastMessage,
-    required this.unread,
+    required this.unreadCount,
   });
 
   // This is fine.
@@ -50,8 +50,7 @@ class ChatModel {
   /// Helper function used to get the other person in this conversation that is
   /// not the currently logged in user.
   ChatMember get other {
-    //? Send the sender.
-    return chatMembers.where((user) => user.userId != createdBy).first;
+    return allOthers.first;
   }
 
   /// Helper function  used to return the user that is currently using the app.
@@ -59,11 +58,16 @@ class ChatModel {
     return chatMembers.where((user) => user.userId == ConversationState.self.id).first;
   }
 
+  /// Helper function used to get the other people in the chat.
+  Iterable<ChatMember> get allOthers {
+    return chatMembers.where((user) => user.userId != ConversationState.self.id);
+  }
+
   /// Helper function used to get the text to show for the unread messages count.
   String get unreadText {
-    if ((unread?.length ?? 0) > 99) return "99+";
+    if (unreadCount > 99) return "99+";
 
     // This is fine.
-    return (unread?.length ?? 0).toString();
+    return unreadCount.toString();
   }
 }

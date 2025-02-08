@@ -12,3 +12,6 @@ export 'waya_bottom_sheet_content.dart';
 export 'waya_paginated_select_field.dart';
 export 'waya_swiper.dart';
 export 'waya_dynamic_height_gridview.dart';
+export 'waya_measurable.dart';
+export 'waya_collapsible_text.dart';
+export 'waya_text_strip.dart';

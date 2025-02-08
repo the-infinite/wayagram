@@ -33,7 +33,7 @@ class MessageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getMessages(String chatId, [int limit = 100, int page = 100]) {
-    return get("$serviceUrl/client/message?limit=$limit&page=$limit&chatId=$chatId");
+    return get("$serviceUrl/client/message?limit=$limit&page=$page&chatId=$chatId");
   }
 
   Future<WayaRequestResponse> editMessage(String id, String content) {
