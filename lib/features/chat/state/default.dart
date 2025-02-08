@@ -3,6 +3,7 @@ import 'package:wayagram/shared/features/user/models/default.dart';
 
 class ConversationState {
   static UserDetailsModel? _self;
+  static SocialProfileModel? _profile;
   final bool isLoading;
   final String searchFilter;
   final List<ChatModel> conversations;
@@ -39,12 +40,16 @@ class ConversationState {
   });
 
   // This is fine.
-  static void setSelf(UserDetailsModel? self) {
+  static void setSelf(UserDetailsModel? self, SocialProfileModel? profile) {
     ConversationState._self ??= self;
+    ConversationState._profile ??= profile;
   }
 
-  // This is a getter.
+  /// The currently logged in user's account details.
   static UserDetailsModel get self => _self!;
+
+  /// The social media profile of the currently logged in user.
+  static SocialProfileModel get profile => _profile!;
 
   /// When this was done.
   static final initial = ConversationState(
@@ -54,7 +59,7 @@ class ConversationState {
     archived: [],
     page: 1,
     totalPages: 0,
-    limit: 150,
+    limit: 100,
     totalCount: 0,
     hasNextPage: true,
     archivedTotalCount: 0,
@@ -68,6 +73,22 @@ class ConversationState {
 
   /// Utility used to retrieve the list of chats that are not pinned.
   List<ChatModel> get unpinned => conversations.where((chat) => !chat.self.isPined).toList();
+
+  /// The results displayed whenever you are looking at a list of conversations
+  /// arranged in no particular order.
+  List<ChatModel> get results {
+    if (searchFilter.isEmpty) {
+      return conversations;
+    }
+
+    //? This is fine.
+    return conversations
+        .where((chat) =>
+            (chat.chatType == 'group' && (chat.name ?? '').contains(searchFilter)) ||
+            (chat.other.userData?.fullname.contains(searchFilter) ?? false) ||
+            (chat.other.profileData?.username?.contains(searchFilter) ?? false))
+        .toList();
+  }
 
   /// Clone this conversation but change a little bit of details about it.
   ConversationState copyWith({

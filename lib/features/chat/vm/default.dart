@@ -2,11 +2,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/repo/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 
 class ConversationVm extends StateNotifier<ConversationState> {
   final repo = ChatRepository();
-
   ConversationVm(super.state);
+
+  /// Helper function used to set the filter text.
+  void setFilter(String filter) {
+    state = state.copyWith(searchFilter: filter.trim());
+  }
 
   /// Helper function used to get all chats that are currently being transmitted
   /// from the server-side to the current user.
@@ -30,7 +35,36 @@ class ConversationVm extends StateNotifier<ConversationState> {
       final data = response.data['data'];
 
       //? Parse the conversations as they are in the response object...
-      final docs = (data['docs'] as List).map((doc) => ChatModel.fromJson(doc));
+      final docs = (data['docs'] as List).map((doc) => ChatModel.fromJson(doc)).toList();
+
+      //? First, we check each of the members in each conversation...
+      for (var c = 0; c < docs.length; c++) {
+        final conversation = docs[c];
+
+        //? Do the needful.
+        for (var i = 0; i < conversation.chatMembers.length; i++) {
+          //? Look this bro up.
+          final member = conversation.chatMembers[i];
+
+          //? If this is not found...
+          final details = member.userId == ConversationState.self.id
+              ? (ConversationState.self, ConversationState.profile)
+              : await UserResource.getUserDetails(member.userId);
+
+          //? If this is null...
+          if (details == null) continue;
+
+          //? The user and his or her profile.
+          final user = details.$1;
+          final profile = details.$2;
+
+          //? Since we are in the clear...
+          conversation.chatMembers[i] = member.copyWith(user, profile);
+        }
+
+        //? Then replace what is there.
+        docs[c] = conversation;
+      }
 
       //? This is fine.
       result.addAll(docs);
@@ -66,10 +100,10 @@ class ConversationVm extends StateNotifier<ConversationState> {
     }
 
     //? Try getting all chats.
-    final chats = await getChats();
+    getChats();
 
     //? Now, return this.
-    return chats.where((chat) => chat.id == response.data['data']['id']).lastOrNull ??  ChatModel.fromJson(response.data['data']);
+    return getChatDetails(response.data['data']['id']);
   }
 
   /// Helper function used to retrieve all of the details of just one conversation.
@@ -81,6 +115,27 @@ class ConversationVm extends StateNotifier<ConversationState> {
     if (response.success) {
       final result = ChatModel.fromJson(response.data['data']);
       final pos = state.conversations.indexWhere((chat) => chat.id == id);
+
+      //? First, clean up the chat members details.
+      for (var i = 0; i < result.chatMembers.length; i++) {
+        //? Look this bro up.
+        final member = result.chatMembers[i];
+
+        //? If this is not found...
+        final details = member.userId == ConversationState.self.id
+            ? (ConversationState.self, ConversationState.profile)
+            : await UserResource.getUserDetails(member.userId);
+
+        //? If this is null...
+        if (details == null) continue;
+
+        //? The user and his or her profile.
+        final user = details.$1;
+        final profile = details.$2;
+
+        //? Since we are in the clear...
+        result.chatMembers[i] = member.copyWith(user, profile);
+      }
 
       //? If this is to replace the chat inside of the list of chats and it is
       //? possible to replace it.

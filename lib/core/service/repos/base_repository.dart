@@ -63,6 +63,6 @@ abstract class BaseRepository {
   }
 
   Future<WayaRequestResponse> delete(String route, {dynamic body, Map<String, dynamic>? params}) {
-    return httpClient.deleteHttp(route, params: params, body: body) as Future<WayaRequestResponse>;
+    return httpClient.deleteHttp(route, params: params, body: body);
   }
 }

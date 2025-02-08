@@ -75,15 +75,23 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
-                color: WayaColors.transparent,
+                color: WayaColors.white,
                 border: Border.all(width: 1, color: WayaColors.greyColor300),
                 borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
               ),
               child: Consumer(
                 builder: (context, ref, _) {
                   //? Watch the state.
                   final state = ref.watch(userSearchProvider);
-
+              
                   //? If this is loading...
                   if (state.isLoading) {
                     return AspectRatio(
@@ -93,10 +101,10 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
                       ),
                     );
                   }
-
+              
                   //? Since this is fine...
                   widget.onResult?.call(state.results);
-
+              
                   //? Since it is not loading...
                   return AspectRatio(
                     aspectRatio: 1,
@@ -109,7 +117,7 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
                           state.results.length,
                           (index) {
                             final user = state.results[index];
-
+              
                             //? I have selected this user.
                             return InkWell(
                               onTap: () {

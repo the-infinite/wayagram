@@ -7,6 +7,7 @@ class ChatProfilePicture extends StatelessWidget {
   final UserDetailsModel user;
   final double radius;
   final bool showActive;
+  final DateTime? lastSeen;
 
   // This is fine.
   const ChatProfilePicture({
@@ -14,6 +15,7 @@ class ChatProfilePicture extends StatelessWidget {
     required this.user,
     required this.radius,
     this.showActive = true,
+    this.lastSeen,
   });
 
   @override

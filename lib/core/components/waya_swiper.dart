@@ -10,6 +10,9 @@ class WayaSwiper extends StatefulWidget {
   /// Duration value to define animation duration
   final Duration animationDuration;
 
+  /// Delay added so that we can wait for the other thing to click back slowly.
+  final Duration animationDelay;
+
   /// Icon that will be displayed beneath child widget when swipe right
   final IconData iconOnRightSwipe;
 
@@ -74,6 +77,7 @@ class WayaSwiper extends StatefulWidget {
     this.iconSize = 26.0,
     this.iconColor,
     this.animationDuration = const Duration(milliseconds: 150),
+    this.animationDelay = const Duration(milliseconds: 150),
     this.offsetDx = 0.3,
     this.swipeSensitivity = 5,
   }) : assert(swipeSensitivity >= 5 && swipeSensitivity <= 35, "swipeSensitivity value must be between 5 to 35");
@@ -150,7 +154,8 @@ class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateM
       );
     }
     //Forward animation
-    _controller.forward().whenComplete(() {
+    _controller.forward().whenComplete(() async {
+      await Future.delayed(widget.animationDelay);
       _controller.reverse().whenComplete(() {
         if (onRight) {
           //keep left icon visibility to 0.0 until onRightSwipe triggers again

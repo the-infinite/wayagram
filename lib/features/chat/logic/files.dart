@@ -18,7 +18,7 @@ List<File> getMessageFileAttachments(MessageModel message) {
   final result = <File>[];
 
   //? For now, I just do this magic.
-  result.addAll(message.media?.map((file) => File(file)) ?? []);
+  result.addAll(message.media?.map((file) => File(file.mediaUrl)) ?? []);
 
   //? Return the result.
   return result;
@@ -36,5 +36,5 @@ List<File> getMessageFileAttachments(MessageModel message) {
 ///
 /// Throws [FileSystemException] if the file cannot be accessed or does not exist.
 File getVoiceMessageFile(MessageModel message) {
-  return File(message.mediaUrl!).absolute;
+  return File(message.media!.first.mediaUrl).absolute;
 }

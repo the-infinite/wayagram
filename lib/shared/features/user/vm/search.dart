@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/features/user/repo/default.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/state/search.dart';
 
 class UserSearchNotifier extends StateNotifier<UserSearchState> {
@@ -58,6 +59,11 @@ class UserSearchNotifier extends StateNotifier<UserSearchState> {
 
       //? Parse the users as they are in the response object...
       final docs = (data['docs'] as List).map((doc) => UserDetailsModel.fromJson(doc));
+
+      //? Get the user resource for each of these ones.
+      for (final user in docs) {
+        UserResource.getUserDetails(user.id!);
+      }
 
       //? This is fine.
       results.addAll(docs);
