@@ -20,6 +20,7 @@ import '../widgets/post_widget.dart';
 
 
 class FullPostDetailsScreen extends ConsumerStatefulWidget {
+  static const route = '/fullPostDetails';
   final Post post;
   const FullPostDetailsScreen({super.key, required this.post});
 
@@ -64,7 +65,7 @@ class _FullPostDetailsScreenState extends ConsumerState<FullPostDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Obx(() => PostWidget(
+            /*Obx(() => PostWidget(
                   isProfilePost: false,
                   isSaved: false,
                   post: widget.post,
@@ -81,7 +82,7 @@ class _FullPostDetailsScreenState extends ConsumerState<FullPostDetailsScreen> {
                   isFeedsPost: isFeedsPost,
                   isFullPostDetails: true,
                   commentCount: commentCount,
-                )),
+                )),*/
             // SizedBox(height: 10.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -380,7 +381,7 @@ class _FullPostDetailsScreenState extends ConsumerState<FullPostDetailsScreen> {
                                     return;
                                   }
                                   final success =
-                                      await viewModel.commentPost(
+                                      await viewModel.commentOnPost(
                                     widget.post.id!,
                                     _commentController.text,
                                   );

@@ -30,7 +30,6 @@ class CreatePoll extends ConsumerStatefulWidget {
 class _CreatePollState extends ConsumerState<CreatePoll> {
 
   final _formKey = GlobalKey<FormState>();
- Map<String, dynamic> formData = {};
 
   bool sel = false;
 

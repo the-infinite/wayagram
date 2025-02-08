@@ -74,7 +74,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> likePost(Post post, {String? reaction}) async {
+  /*Future<void> likePost(Post post, {String? reaction}) async {
     post.toggleLike(); // Toggle local like state
     updateValue(post.isLikedCount, post.getIsLiked().value == true);
     WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
@@ -114,7 +114,7 @@ class PageVm extends StateNotifier<PageState> {
       updateValue(post.isLikedCount, post.getIsLiked().value == true);
       //showError(response.message);
     }
-  }
+  }*/
 
   void updateValue(RxInt value, bool isIncreased) {
     if (isIncreased) {
@@ -277,6 +277,32 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
+  Future<void> getSinglePost(userId) async {
+    print('Fetching saved posts...');
+
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.fetchSinglePost(userId);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        GetAllPost responseModel = GetAllPost.fromJson(response.data);
+        state = state.copyWith(getAllPost: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+        _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
+      }
+    } catch (e) {
+      print('Exception occurred while fetching saved posts: $e');
+      _errorMessage2 = 'Something went wrong. Please try again later.';
+    } finally {
+    }
+  }
+
+
   Future<void> createPost(ctx, content, postType, List<XFile> images) async {
     print("before the loop");
     List<UploadedImage> urls = [];
@@ -344,18 +370,15 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<bool> commentPost(String postId, String content) async {
+  Future<bool> commentOnPost(String postId, String content) async {
     try {
-      final data = {"content": content};
-      final response = await _pageRepository.commentOnPost(postId, data);
+
+      final response = await _pageRepository.commentOnPost(postId, content);
       if (response!.statusCode == 200 || response.statusCode == 201) {
-        // _isLoading = false;
 
         return true;
       } else {
-        //_isLoading = false;
         _errorMessage = 'Failed to post comment';
-
         return false;
       }
     } on DioException catch (e) {
@@ -382,6 +405,170 @@ class PageVm extends StateNotifier<PageState> {
     } catch (e) {
       print(e);
     } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> repost( ctx, {required String postId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _pageRepository.repost(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post deleted successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> sharePost( ctx, {required String postId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _pageRepository.sharePost(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+       /* ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post bookmarked successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );*/
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> bookmarkPost( ctx, {required String postId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _pageRepository.bookMarkPost(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post bookmarked successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> likePost( ctx, {required String postId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _pageRepository.likePost(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        // ScaffoldMessenger.of(ctx).showSnackBar(
+        //   const SnackBar(
+        //     content: Text('Post bookmarked successfully!'),
+        //     backgroundColor: WayaColors.primary,
+        //     duration: Duration(seconds: 2),
+        //   ),
+        // );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> unlikePost( ctx, {required String postId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _pageRepository.unlikePost(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> editPost(ctx, content, postType, List<XFile> images, postId) async {
+    print("before the loop");
+    List<UploadedImage> urls = [];
+    List<String> publicUrl = [];
+    final choiceMap = <String>[];
+    // get url
+    for (XFile image in images) {
+      print("In the loop ${image.name} ${image.path} ${image.mimeType}");
+
+      final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
+
+      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      publicUrl.add(mediaUploadModel!.data!.publicUrl!);
+    }
+
+    // upload
+    for (UploadedImage url in urls) {
+      final file = File(url.file);
+      final putImageResponse = await _pageRepository.putImage(url.url, file);
+
+      //? This is fine.
+      if (!(putImageResponse.success && ctx.mounted)) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to create post'),
+            backgroundColor: WayaColors.error,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      }
+
+      //? This is fine.
+      print("Data ${putImageResponse.data}");
+    }
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.editPost(content, publicUrl , postType, postId);
+      state = state.copyWith(isLoading: false);
+      //? If this is fine...
+      if (response.success && ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post updated successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        print('Create post');
+        _logger.i(response.data['data']);
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
