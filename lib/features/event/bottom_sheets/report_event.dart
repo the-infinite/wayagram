@@ -15,7 +15,10 @@ class ReportEvent extends ConsumerStatefulWidget {
   final String eventId;
   final List<String> statuses;
   const ReportEvent(
-      {super.key, required this.statuses, required this.currentStatus, required this.eventId});
+      {super.key,
+      required this.statuses,
+      required this.currentStatus,
+      required this.eventId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReportEventState();
@@ -46,14 +49,16 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
     final wayaTheme = Theme.of(context);
     final reportState = ref.watch(eventVmProvider);
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
+      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Report ", style: wayaTheme.textTheme.titleLarge),
+          Text("Report ",
+              style: TextStyle()
+                  .wayaCopyWith(fontSize: 16, fontWeight: FontWeight.w600)),
           const Gap(5),
           Text(
-          
+              maxLines: 3,
               "Help us improve the platform by letting us know you are reporting this event",
               style: wayaTheme.textTheme.hintStyle),
           const Gap(30),
@@ -145,7 +150,7 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
                       ],
                     );
                   }),
-                  const Gap(10),
+                  const Gap(24),
                   WayaButton(
                       callback: !reportState.isReportingEvent
                           ? () {

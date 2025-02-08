@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/event/bottom_sheets/share/social_share.dart';
 import 'package:wayagram/features/event/data/model/event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
-import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
+import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
+import 'package:wayagram/features/event/data/model/single_event_response_model.dart';
 
 class EventVm extends StateNotifier<EventState> {
   final Ref ref;
@@ -45,17 +47,21 @@ class EventVm extends StateNotifier<EventState> {
   //   }
   // }
 
-  Future<PaginatedResult<EventDoc>?> getEventWithStatus() async {
+  Future<PaginatedResult<EventDoc>?> getEventWithStatus(int page) async {
     try {
       state = state.copyWith(isLoadingEventWithStatus: true);
-      final response =
-          await _eventRepository.getEventWithStatus(status: "upcoming");
+      final response = await _eventRepository.getEventWithStatus(
+          status: "upcoming", page: page);
 
       List<EventDoc> upcoming = [];
       bool hasNextPage = false;
       if (response.success) {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
-        upcoming = eventResponse.data.docs;
+        upcoming = eventResponse.data.docs
+            .where((event) =>
+                event.privacyOption == 'Public' &&
+                event.eventStatus != 'paused')
+            .toList();
         hasNextPage = eventResponse.data.hasNextPage;
         state = state.copyWith(upcomingEvents: upcoming);
       }
@@ -166,6 +172,99 @@ class EventVm extends StateNotifier<EventState> {
       print(error);
     } finally {
       state = state.copyWith(isReportingEvent: false);
+    }
+  }
+
+  Future<PaginatedResult<Doc>?> getAttendees(int page) async {
+    try {
+      state = state.copyWith(isLoadingAttendees: true);
+
+      final response =
+          await _eventRepository.joinedUsers(state.singleEvent!.id, page);
+      List<Doc> attendees = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        AttendeeResponse attendeeResponse =
+            AttendeeResponse.fromJson(response.data);
+
+        attendees = attendeeResponse.data.docs;
+        hasNextPage = attendeeResponse.data.hasNextPage;
+      }
+
+      return PaginatedResult(hasNextPage: hasNextPage, items: attendees);
+    } catch (error) {
+      print(error);
+      return null;
+    } finally {
+      state = state.copyWith(isLoadingAttendees: false);
+    }
+  }
+
+  Future<void> fetchSingleEvent(String id) async {
+    try {
+      state = state.copyWith(isLoadingSingleEvent: true);
+      final response = await _eventRepository.getSingleEvent(id);
+
+      if (response.success) {
+        SingleEventResponse singlEventResponse =
+            SingleEventResponse.fromJson(response.data);
+
+        state = state.copyWith(singleEvent: singlEventResponse.data);
+        //print(response.data);
+      }
+    } catch (error) {
+      print(error);
+    } finally {
+      state = state.copyWith(isLoadingSingleEvent: false);
+    }
+  }
+
+  Future<void> follow(String userId) async {
+    try {
+      final response = await _eventRepository.follow(userId);
+
+      if (response.success) {
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> unfollow(String userId) async {
+    try {
+      final response = await _eventRepository.unfollow(userId);
+
+      if (response.success) {
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<FollowStatus?> getFollow(String userId) async {
+    try {
+      final response = await _eventRepository.getFollow(userId);
+      FollowStatus? followStatus;
+      if (response.success) {
+        FollowStatusResponse followStatusResponse =
+            FollowStatusResponse.fromJson(response.data);
+        followStatus = followStatusResponse.data;
+      }
+
+      return followStatus;
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
+  void shareEvent(
+      {required BuildContext context, required String shareUrl}) async {
+    if (context.mounted) {
+      await WayaUtils.showModalSheet(context,
+          child: ShareSheet(shareUrl: shareUrl));
     }
   }
 }

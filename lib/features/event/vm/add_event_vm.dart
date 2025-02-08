@@ -12,6 +12,7 @@ import 'package:wayagram/features/event/data/model/add_event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
+import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/shared/components/radio_select.dart';
 
 class AddEventVm extends StateNotifier<AddEventState> {
@@ -121,12 +122,11 @@ class AddEventVm extends StateNotifier<AddEventState> {
       if (state.eventType == 'Free' && state.eventFee.text.isEmpty) {
         state = state.copyWith(eventFee: TextEditingController(text: '0'));
       }
-    
+
       state = state.copyWith(isLoading: true);
       final image = state.isEditingMode && state.eventImage!.file == null
           ? await WayaHelpers.formattedImageFromUrl(state.eventImage!.url)
           : await WayaHelpers.formattedImage(state.eventImage!.file!);
-
 
       state = state.copyWith(image: image);
       final userId = await _secureDataSource.getUserId();
@@ -145,12 +145,14 @@ class AddEventVm extends StateNotifier<AddEventState> {
               message:
                   "Your event is now live. Share it with your audience and start engaging with attendees today!",
               onPress: () {
-                WayaNav.offNamed(EventView.route);
+                Navigator.pushReplacementNamed(context, EventView.route);
               },
               buttonText: 'Go To Event Home Page',
               secondButtonText: 'Share Event Link',
               onCancel: () {
-                // state.link
+                ref
+                    .read(eventVmProvider.notifier)
+                    .shareEvent(context: context, shareUrl: "shareUrl");
               },
               icon: Image.asset(
                 "assets/images/create-event-success.png",

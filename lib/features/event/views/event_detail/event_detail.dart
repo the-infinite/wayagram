@@ -15,6 +15,7 @@ import 'package:wayagram/features/event/views/event_detail/event_attendees.dart'
 import 'package:wayagram/features/event/views/event_detail/event_detail_widget.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
+import 'package:share_plus/share_plus.dart';
 
 class EventDetail extends ConsumerStatefulWidget {
   static const route = "/event-detail";
@@ -27,6 +28,7 @@ class EventDetail extends ConsumerStatefulWidget {
 class _EventDetailState extends ConsumerState<EventDetail> {
   int _selectedIndex = 0;
 
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -72,8 +74,10 @@ class _EventDetailState extends ConsumerState<EventDetail> {
               ],
             ),
             const Gap(10),
-            if (_selectedIndex == 0) EventDetailWidget(),
-            if (_selectedIndex == 1) EventAttendees(), //EventAttendees()
+            if (_selectedIndex == 0)
+              EventDetailWidget(eventId: viewModel.singleEvent!.id),
+            if (_selectedIndex == 1)
+              EventAttendees(eventId: viewModel.singleEvent!.id),
           ],
         ),
         bottomNavigationBar: Container(
@@ -90,7 +94,12 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
-                        callback: () {},
+                        callback: () {
+                            ref.read(eventVmProvider.notifier).shareEvent(
+                              context: context,
+                              shareUrl: "https://example.com");
+                        //  Share.share('Shares');
+                        },
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(
                             width: 1,
@@ -135,7 +144,12 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
-                        callback: () {},
+                        callback: () {
+                          ref.read(eventVmProvider.notifier).shareEvent(
+                              context: context,
+                              shareUrl: "https://example.com");
+                          //Share.share('Shares');
+                        },
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(
                             width: 1,
@@ -201,6 +215,7 @@ class EventDetailAction extends StatelessWidget {
               child: _buildActionNav(
                   context: context,
                   onTap: () {
+                    Share.share("Share");
                     Navigator.pop(context);
                   },
                   asset: Icon(

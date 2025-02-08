@@ -63,35 +63,35 @@ class EventWidget extends ConsumerWidget {
                                 SizedBox(
                                   height: 3.h,
                                 ),
-                                if (event.location == 'physical')
-                                  SizedBox(
-                                    width: 250.w,
-                                    child: Text(
-                                      "${event.locationAddress.capitalizeFirst} by ${WayaHelpers.format24HRSToAPM(event.startTime)}",
-                                      style: wayaTheme.textTheme.hintStyle,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                // if (event.location == 'physical')
+                                SizedBox(
+                                  width: 250.w,
+                                  child: Text(
+                                    "${event.locationAddress.capitalizeFirst} by ${WayaHelpers.format24HRSToAPM(event.startTime)}",
+                                    style: wayaTheme.textTheme.hintStyle,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                if (event.location == 'virtual')
-                                  GestureDetector(
-                                    onTap: () {
-                                      Clipboard.setData(ClipboardData(
-                                          text: event.locationAddress));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                "Link copied to clipboard")),
-                                      );
-                                    },
-                                    child: Text("Copy Link",
-                                        style: wayaTheme.textTheme.bodySmall!
-                                            .wayaCopyWith(
-                                                color: wayaTheme
-                                                    .colorScheme.customPrimary,
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w600)),
-                                  ),
+                                ),
+                                // if (event.location == 'virtual')
+                                //   GestureDetector(
+                                //     onTap: () {
+                                //       Clipboard.setData(ClipboardData(
+                                //           text: event.locationAddress));
+                                //       ScaffoldMessenger.of(context)
+                                //           .showSnackBar(
+                                //         SnackBar(
+                                //             content: Text(
+                                //                 "Link copied to clipboard")),
+                                //       );
+                                //     },
+                                //     child: Text("Copy Link",
+                                //         style: wayaTheme.textTheme.bodySmall!
+                                //             .wayaCopyWith(
+                                //                 color: wayaTheme
+                                //                     .colorScheme.customPrimary,
+                                //                 fontSize: 11,
+                                //                 fontWeight: FontWeight.w600)),
+                                //   ),
                               ],
                             ),
                           ),
@@ -117,10 +117,12 @@ class EventWidget extends ConsumerWidget {
                       ),
                       EngagementRange(
                           bottomLeft: event.location.capitalizeFirst!,
-                          bottomRight: event.maxCapacity == null || event.maxCapacity == 0
+                          bottomRight: event.maxCapacity == null ||
+                                  event.maxCapacity == 0
                               ? "Unlimited"
                               : "${event.maxCapacity! - event.noOfAttendees} Ticket Left",
-                          range: event.maxCapacity == null ||event.maxCapacity == 0
+                          range: event.maxCapacity == null ||
+                                  event.maxCapacity == 0
                               ? 0
                               : (event.maxCapacity! -
                                       (event.maxCapacity! -

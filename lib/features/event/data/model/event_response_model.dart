@@ -1,3 +1,5 @@
+import 'package:wayagram/shared/model/base_model.dart';
+
 class EventResponse {
   final String message;
   final bool status;
@@ -62,7 +64,7 @@ class EventData {
   }
 }
 
-class EventDoc {
+class EventDoc extends BaseModel<EventDoc> {
   final String id;
   final String userId;
   final String image;
@@ -143,4 +145,14 @@ class EventDoc {
       updatedAt: json["updatedAt"],
     );
   }
+
+    @override
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'userId': userId,
+          "title": title,
+      "organizerName": organizerName,
+      "eventType": eventType,
+      "location": location
+      };
 }

@@ -18,8 +18,9 @@ class EventRepository extends BaseRepository {
     return get("$serviceUrl/events/get-event?userId=$userId&page=$page");
   }
 
-  Future<WayaRequestResponse> getEventWithStatus({required String status}) {
-    return get("$serviceUrl/events/get-event?eventstatus=$status");
+  Future<WayaRequestResponse> getEventWithStatus(
+      {required String status, required int page}) {
+    return get("$serviceUrl/events/get-event?eventstatus=$status&page=$page");
   }
 
   Future<WayaRequestResponse> editEvent(
@@ -31,7 +32,8 @@ class EventRepository extends BaseRepository {
   Future<WayaRequestResponse> joinEvent(
       {required String userId, required String eventId}) {
     return post(
-        "$serviceUrl/join-events", {"userId": userId, "eventId": eventId},
+      "$serviceUrl/join-events",
+      {"userId": userId, "eventId": eventId},
     );
   }
 
@@ -43,5 +45,25 @@ class EventRepository extends BaseRepository {
     final payload = {"userId": userId, "eventId": eventId, "reason": reason};
     if (comment != null) payload['comment'] = comment;
     return post("$serviceUrl/join-events", payload);
+  }
+
+  Future<WayaRequestResponse> joinedUsers(String id, int page) {
+    return get("$serviceUrl/join-events/get?eventId=$id&page=$page");
+  }
+
+  Future<WayaRequestResponse> getSingleEvent(String id) {
+    return get("$serviceUrl/events/get-event?id=$id");
+  }
+
+  Future<WayaRequestResponse> follow(String id) {
+    return post("$serviceUrl/follow/$id", null);
+  }
+
+  Future<WayaRequestResponse> unfollow(String id) {
+    return post("$serviceUrl/follow/$id/unfollow", null);
+  }
+
+  Future<WayaRequestResponse> getFollow(String id) {
+    return get("$serviceUrl/follow/status/$id");
   }
 }

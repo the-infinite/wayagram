@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
@@ -20,34 +21,33 @@ class MyEvents extends ConsumerStatefulWidget {
 }
 
 class _MyEventState extends ConsumerState<MyEvents> {
- 
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
 
     return Expanded(
-      child: ListView(
-        children: [
-          PaginatedDataView<EventDoc>(
-          uniqueKey: 'my-events',
-          loadingState: Center(
-            child: Center(child: CircularProgressIndicator(),),
-          ),
-          emptyState: EventEmptyState(),
-          fetchData: ref.read(eventVmProvider.notifier).getUserEvents,
-          result: (data) {
-            return ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  return EventWidget(event: data[index]);
-                });
-          }),
-        ],
-      )
-    );
+        child: ListView(
+      children: [
+        PaginatedDataView<EventDoc>(
+            uniqueKey: 'my-events',
+            loadingState: SizedBox(
+                height: context.height * 0.4,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                )),
+            emptyState: EventEmptyState(),
+            fetchData: ref.read(eventVmProvider.notifier).getUserEvents,
+            result: (data) {
+              return ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    return EventWidget(event: data[index]);
+                  });
+            }),
+      ],
+    ));
   }
 }
 

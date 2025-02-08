@@ -73,7 +73,7 @@ import 'package:wayagram/features/ugt/ugt_get_started.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
-
+import 'package:wayagram/features/event/views/all_upcoming_events.dart';
 import '../../features/pages/view/confirm_page_details.dart';
 import '../../features/pages/view/create_page.dart';
 import '../../features/pages/view/pages.dart';
@@ -179,7 +179,8 @@ class WayaAppRoutes {
     PrivateGroup.route: ()=> PrivateGroup(),
     SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route:() => DisplayFeed(),
-    GroupSetting.route: ()=> GroupSetting()
+    GroupSetting.route: ()=> GroupSetting(),
+    AllUpcomingEvents.route:() => AllUpcomingEvents()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
