@@ -32,12 +32,16 @@ class SendMessageDto {
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    if (type != MessageType.text) {
+
+    //? Also fine.
+    if (media != null && (media?.isNotEmpty ?? false)) {
       map['media'] = media?.map((file) {
         final uri = Uri.parse(file);
         final filename = uri.pathSegments.last;
         final extensionIndex = filename.lastIndexOf(".");
         final fileExtension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+
+        //? Get the media file from here.
         return MultipartFile.fromFileSync(
           file,
           filename: filename,
@@ -46,8 +50,8 @@ class SendMessageDto {
       });
     }
     map['chatId'] = chatId;
-    map['originalMessageId'] = originalMessageId ?? '';
-    map['content'] = content;
+    if (originalMessageId != null) map['originalMessageId'] = originalMessageId;
+    if (content?.isNotEmpty ?? false) map['content'] = content;
     map['messageType'] = type.name;
     map['senderId'] = ConversationState.self.id;
     return map;

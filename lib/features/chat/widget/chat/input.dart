@@ -29,6 +29,9 @@ class ChatInputController {
   /// The message that this
   final _replyTo = ValueNotifier<MessageModel?>(null);
 
+  /// The message that this
+  final _isEditing = ValueNotifier(false);
+
   /// Is the sound recorder open yet?
   final _isRecorderOpen = ValueNotifier(false);
 
@@ -55,11 +58,14 @@ class ChatInputController {
   /// not.
   final _canSend = ValueNotifier(false);
 
+  /// Our static
+  static final instance = ChatInputController._();
+
   /// The chat that is bound to this chat input controller.
-  final ChatModel chat;
+  ChatModel? _chat;
 
   // The constructor.
-  ChatInputController(this.chat) {
+  ChatInputController._() {
     //? Request for permission.
     Permission.microphone.request().then(
       (status) async {
@@ -94,6 +100,20 @@ class ChatInputController {
       _voiceMessage.dispose();
       _soundRecorder.dispose();
     } catch (_) {}
+  }
+
+  /// A utility function used to reset the state of all controllers inside of this
+  /// one to prepare it for the next conversation.
+  void reset() {
+    _textController.clear();
+    _replyTo.value = null;
+    _canSend.value = false;
+    _isEditing.value = false;
+    _contacts.value = [];
+    _files.value = [];
+    _isMedia.value = false;
+    _currentType.value = MessageType.text;
+    _voiceMessage.value = null;
   }
 
   /// A helper function used to resume recording audio from the microphone. It is
@@ -163,8 +183,9 @@ class ChatInputController {
 
   /// A helper function used to set the message that this input widget is
   /// supposed to be replying to.
-  void setReplyTo(MessageModel? message) {
+  void quoteMessage(MessageModel? message, [bool isEditing = false]) {
     _replyTo.value = message;
+    _isEditing.value = isEditing;
   }
 
   /// A helper function used to set the type of message that this is currently
@@ -182,7 +203,9 @@ class ChatInputController {
   /// A helper function used to set the text inside this text controller to
   /// something.
   void setText(String text) {
+    reset();
     _textController.text = text;
+    _canSend.value = text.isNotEmpty;
   }
 
   /// A helper function used to remove a given file from the list of selected
@@ -197,13 +220,25 @@ class ChatInputController {
     _canSend.value = _files.value.isNotEmpty;
   }
 
+  /// A helper function used to initialize this controller with a new chat.
+  void setChat(ChatModel chat) {
+    _chat = chat;
+  }
+
   /// A helper function used to get the chat body that we would use for the
   String get buildBody {
     return _textController.text.trim();
   }
 
+  /// A helper used to get the chat that is currently being controlled by this
+  /// controller.
+  ChatModel get chat => _chat!;
+
   /// A helper function used to retrieve all of the selected files.
   List<File> get selectedFiles => _files.value;
+
+  /// Is this currently in the action of editing a message?
+  bool get isEditing => _isEditing.value;
 
   /// A stream used to monitor the sound recorder for when it makes any sizeable
   /// progress.
@@ -226,7 +261,7 @@ class ChatInputController {
     return SendMessageDto(
       chatId: chat.id,
       type: _currentType.value,
-      originalMessageId: _replyTo.value?.id ?? "",
+      originalMessageId: _replyTo.value?.id,
       originalMessage: _replyTo.value,
       content: buildBody,
       media: [if (_voiceMessage.value != null) _voiceMessage.value!, ..._files.value.map((file) => file.absolute.path)],
@@ -260,7 +295,7 @@ class ChatInputWidget extends StatelessWidget {
     if (result == null) return;
 
     //? If there is actual data here and it is a file...
-    if (result.type == MessageType.file) {
+    if (result.type != MessageType.contact) {
       //? Change this to file.
       controller._currentType.value = MessageType.file;
 
@@ -303,22 +338,30 @@ class ChatInputWidget extends StatelessWidget {
 
   /// Helper function used to send a message.
   void _sendMessage() async {
-    final result = await notifier.sendMessage(controller.buildMessage);
+    final message = controller.buildMessage;
+    final quoted = controller._replyTo.value;
+    final isEdit = controller.isEditing;
 
-    //? If this succeeded...
-    if (result != null) {
-      controller._textController.clear();
-      controller._replyTo.value = null;
-      controller._canSend.value = false;
-      controller._contacts.value = [];
-      controller._files.value = [];
-      controller._isMedia.value = false;
-      controller._currentType.value = MessageType.text;
-      controller._voiceMessage.value = null;
-      return;
+    //? Reset the input controller before sending the message so it looks fast.
+    controller.reset();
+
+    //? If this is editing a message.
+    if (isEdit) {
+      //? If this is greater than 5 minutes ago...
+      final result = await notifier.editMessage(quoted!.id, message.content ?? '');
+
+      //? This is fine.
+      if (!result) return;
     }
 
-    //? If this failed...
+    //? Since we are not editing.
+    else {
+      //? Send the message.
+      final result = await notifier.sendMessage(message);
+
+      //? If this succeeded...
+      if (result != null) return;
+    }
   }
 
   @override

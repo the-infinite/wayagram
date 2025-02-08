@@ -53,4 +53,65 @@ class WayaDateHelper {
     final ss = (duration.inSeconds % 60).toString().padLeft(2, '0');
     return '${duration.inHours == 0 ? '' : '$hh:'}$mm:$ss';
   }
+
+  static String getSocialTimestamp(DateTime timestamp) {
+    final now = DateTime.now();
+    final gap = now.difference(timestamp);
+
+    //? If this is less than a minute ago.
+    if (gap.inSeconds.abs() < 60) {
+      return "${gap.inSeconds.abs} seconds ago";
+    }
+
+    //? If this is less than an hour ago...
+    if (gap.inMinutes < 60) {
+      return "${gap.inMinutes.abs()} minutes ago";
+    }
+
+    //? If this is less than a day ago....
+    if (gap.inHours < 24) {
+      return "${gap.inHours.abs()} hours ago";
+    }
+
+    //? If this is today.
+    if (gap.inDays.abs() == 0) {
+      return getTimestamp(timestamp);
+    }
+
+    //? If this is yesterday...
+    if (gap.inDays.abs() < 2) {
+      return "Yesterday, ${getTimestamp(timestamp)}";
+    }
+
+    //? If this is x days ago.
+    if (gap.inDays.abs() < 10) {
+      return "${gap.inDays.abs()} days ago, ${getTimestamp(timestamp)}";
+    }
+
+    //? Then just return the timestamp.
+    return getFullTimestamp(timestamp);
+  }
+
+  static String getSocialDate(DateTime timestamp) {
+    final now = DateTime.now();
+    final gap = now.difference(timestamp);
+
+    //? If this is yesterday...
+    if (gap.inDays.abs() == 0) {
+      return "Today";
+    }
+
+    //? If this is yesterday...
+    if (gap.inDays.abs() == 1) {
+      return "Yesterday";
+    }
+
+    //? If this is x days ago.
+    if (gap.inDays.abs() < 10) {
+      return "${gap.inDays.abs()} days ago";
+    }
+
+    //? Then just return the timestamp.
+    return getFullTimestamp(timestamp);
+  }
 }

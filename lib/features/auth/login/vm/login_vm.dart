@@ -109,7 +109,7 @@ class LoginVm extends StateNotifier<LoginState> {
           if (response.success) {
             UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
             _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
-            ConversationState.setSelf(userAccountModel.data?.userdata?.user);
+            ConversationState.setSelf(userAccountModel.data?.userdata?.user, userAccountModel.data?.userdata?.profile);
 
             if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role!.name != "PERSONAL") {
               final bizResponse =

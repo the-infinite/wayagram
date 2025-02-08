@@ -22,4 +22,22 @@ class AttachmentResult {
       contacts: null,
     );
   }
+
+  factory AttachmentResult.images(List<String> files) {
+    return AttachmentResult(
+      type: MessageType.image,
+      files: files,
+      location: null,
+      contacts: null,
+    );
+  }
+
+  factory AttachmentResult.video(List<String> files) {
+    return AttachmentResult(
+      type: MessageType.video,
+      files: files,
+      location: null,
+      contacts: null,
+    );
+  }
 }

@@ -10,7 +10,7 @@ class UserRepository extends BaseRepository {
   UserRepository._();
 
   Future<WayaRequestResponse> getSearchResults(String query, [int limit = 50, int page = 1]) {
-    return post("$serviceUrl/client/users/search?limit=$limit&page=$page", {"searchText": query});
+    return get("$serviceUrl/client/users/all/search?limit=$limit&page=$page&searchText=$query");
   }
 
   Future<WayaRequestResponse> updateFcmToken(String token) {
@@ -19,6 +19,10 @@ class UserRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getSocialProfile(String id) {
     return get("$serviceUrl/client/users/$id/profile");
+  }
+
+  Future<WayaRequestResponse> getUserDetails(String id) {
+    return get("$serviceUrl/client/users/$id");
   }
 
   Future<WayaRequestResponse> updateUserProfile(UpdateProfileDto data) {

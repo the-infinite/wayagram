@@ -8,6 +8,8 @@ enum MessageType {
   text,
   voiceNote,
   sticker,
+  image,
+  video,
   file,
   location,
   contact,
@@ -25,6 +27,7 @@ enum MessageStatusCode {
   delivered,
 }
 
+// The kind of deletion you want to perform on this message.
 enum MessageDeleteAction {
   @JsonValue('delete-for-me')
   deleteForMe('delete-for-me'),
@@ -34,6 +37,29 @@ enum MessageDeleteAction {
 
   const MessageDeleteAction(this.value);
   final String value;
+}
+
+@JsonSerializable()
+class MessageMedia {
+  final String id;
+  final String messageId;
+  final MessageType mediaType;
+  final String mediaUrl;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  const MessageMedia({
+    required this.id,
+    required this.messageId,
+    required this.mediaType,
+    required this.mediaUrl,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory MessageMedia.fromJson(Map<String, dynamic> json) => _$MessageMediaFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MessageMediaToJson(this);
 }
 
 @JsonSerializable()
@@ -93,9 +119,9 @@ class MessageModel {
   final bool isReply;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final List<MessageStatus> status;
-  final List<String>? media;
-  final List<MessageReaction> messageReaction;
+  final List<MessageStatus>? status;
+  final List<MessageMedia>? media;
+  final List<MessageReaction>? messageReaction;
   final List<String>? contacts;
   final bool? isError;
   final SendMessageDto? dto;
@@ -127,16 +153,16 @@ class MessageModel {
     return switch (messageType) {
       MessageType.file => "${media!.length} files",
       MessageType.location => "Location",
-      _ => content!,
+      _ => content ?? "",
     };
   }
 
   DateTime? get readAt {
-    return status.where((receipt) => receipt.status == MessageStatusCode.read).firstOrNull?.createdAt;
+    return status?.where((receipt) => receipt.status == MessageStatusCode.read).firstOrNull?.createdAt;
   }
 
   DateTime? get deliveredAt {
-    return status.where((receipt) => receipt.status == MessageStatusCode.delivered).firstOrNull?.createdAt;
+    return status?.where((receipt) => receipt.status == MessageStatusCode.delivered).firstOrNull?.createdAt;
   }
 
   // This is fine.
