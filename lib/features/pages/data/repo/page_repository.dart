@@ -93,6 +93,7 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> removeRepost(String id) async {
     return delete("$serviceUrl/posts/$id/comment");
+
   }
 
   Future<WayaRequestResponse> editPost(String content, List<String> images, postType, String postId) {
