@@ -6,6 +6,8 @@ import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/features/post/model/media_upload_model.dart';
 
+import '../../../post/model/share_model.dart';
+
 class PageState{
   final TextEditingController pageName;
   final TextEditingController pageDescription;
@@ -14,6 +16,7 @@ class PageState{
   final List<Docs>? fetchAllPostData;
   final List<GetAllPostDocs>? getAllPost;
   final MediaUploadData? data;
+  final ShareModelData? shareModelData;
 
   final bool isFocused;
   final bool isLoading;
@@ -28,7 +31,8 @@ class PageState{
     this.images = const [],
     this.fetchAllPostData = const [],
     this.getAllPost = const [],
-    this.data
+    this.data,
+    this.shareModelData,
 }):  pageName = pageName ?? TextEditingController(),
      pageDescription = pageDescription ?? TextEditingController(),
      content = content ?? TextEditingController();
@@ -41,6 +45,7 @@ class PageState{
     List<Docs>? fetchAllPostData,
     List<GetAllPostDocs>? getAllPost,
     MediaUploadData? data,
+    ShareModelData? shareModelData,
 
     bool? isFocused,
     bool? isLoading,
@@ -51,6 +56,7 @@ class PageState{
       content: content ?? this.content,
       images: images ?? this.images,
       data: data ?? this.data,
+      shareModelData: shareModelData ?? this.shareModelData,
       fetchAllPostData: fetchAllPostData ?? this.fetchAllPostData,
       getAllPost: getAllPost ?? this.getAllPost,
 

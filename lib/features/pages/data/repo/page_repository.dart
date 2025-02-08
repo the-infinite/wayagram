@@ -31,6 +31,38 @@ class PageRepository extends BaseRepository {
     );
   }
 
+  Future<WayaRequestResponse> bookMarkPost(postId) {
+    final payload = {};
+    return post("$serviceUrl/posts/bookmarks/$postId", payload);
+  }
+
+  Future<WayaRequestResponse> removeBookMark(bookmarkId) {
+    final payload = {};
+    return post("$serviceUrl/posts/bookmarks/$bookmarkId", payload);
+  }
+
+  Future<WayaRequestResponse> sharePost(postId) {
+    final payload = {
+      "shareType": "external"
+    };
+    return post("$serviceUrl/posts/share/$postId", payload);
+  }
+
+  Future<WayaRequestResponse> likePost(postId) {
+    final payload = {};
+    return post("$serviceUrl/posts/likes/$postId", payload);
+  }
+
+  Future<WayaRequestResponse> unlikePost(postId) {
+    final payload = {};
+    return post("$serviceUrl/posts/likes/$postId", payload);
+  }
+
+  Future<WayaRequestResponse> repost(postId) {
+    final payload = {};
+    return post("$serviceUrl/posts/repost/$postId", payload);
+  }
+
   Future<WayaRequestResponse> savePost(postId) {
     return delete("$serviceUrl/posts/$postId/archive");
   }
@@ -43,9 +75,16 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/posts?userId=$userId&status=active");
   }
 
+  Future<WayaRequestResponse> fetchSinglePost(postId) {
+    return get("$serviceUrl/posts?postId=$postId&status=active");
+  }
+
   Future<WayaRequestResponse> commentOnPost(postId, content) {
-    final payload = {"content": content};
-    return post("$serviceUrl/posts/$postId/comment", payload);
+    final payload = {
+      "content": content,
+      "parentCommentId": postId // this is optional and is only required for child comment.
+    };
+    return post("$serviceUrl/posts/comments/$postId", payload);
   }
 
   // Future<WayaRequestResponse> likePost(postId) {
@@ -54,14 +93,25 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> removeRepost(String id) async {
     return delete("$serviceUrl/posts/$id/comment");
+
+  }
+
+  Future<WayaRequestResponse> editPost(String content, List<String> images, postType, String postId) {
+    final payload = {
+      "content": content,
+      "media": images,
+      "privacy": postType
+    };
+
+    return patch("$serviceUrl/posts/$postId", payload);
   }
 
   Future<WayaRequestResponse> reactOnPost(String postId, type) async {
-    return post("$serviceUrl/posts/:postId/like", postId);
+    return post("$serviceUrl/posts/$postId/like", postId);
   }
 
   Future<WayaRequestResponse> removeReaction(String postId, String? reactionId) async {
-    return delete("$serviceUrl/posts/:postId/like");
+    return delete("$serviceUrl/posts/$postId/like");
     // return getBooleanResponse(response);
   }
 

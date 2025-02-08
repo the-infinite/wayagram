@@ -1,8 +1,11 @@
 
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:gap/gap.dart';
@@ -17,6 +20,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:wayagram/features/post/view/full_post_details.dart';
 
 import '../../../assetsgen/assets.gen.dart';
 import '../../explore/widgets/grouped_widget_header.dart';
@@ -143,7 +147,10 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                 return timeago.format(dateTime); // Convert to "time ago" format
               }
 
-              int hoursLeft = DateTime.now().difference(DateTime.parse('${post?.createdAt}')).inHours;
+              String removeHashtags(String text) {
+                return text.replaceAll(RegExp(r'#\w+'), '').trim();
+              }
+
             return  Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -152,47 +159,6 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                   height: 14.h,
                   color: Colors.grey.withOpacity(0.2),
                 ),
-
-//conditional suggested section
-                /*  if (isSuggested)
-          Padding(
-            padding: EdgeInsets.only(left: 15.0.w, right: 15.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 12.h, bottom: 5.h),
-                      child: Text(
-                        'Suggested',
-                        style: TextStyle(
-                            fontFamily: WayaConstants.fontFamily,
-                            fontSize: 16.sp,
-                            color: Colors.grey),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.more_vert,
-                          color: Colors.black.withOpacity(0.5),
-                        ),
-                        Icon(
-                          Icons.close,
-                          color: Colors.black.withOpacity(0.5),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-                const Divider()
-              ],
-            ),
-          ),*/
-/////
-
                 // Post header with author details
                 Padding(
                   padding: EdgeInsets.fromLTRB(15.0.w, 25.h, 15.w, 15.w),
@@ -200,6 +166,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -319,13 +286,15 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                                       top: 30.h, left: 10.w, bottom: 22.h),
                                   child: Row(
                                     children: [
-                                    *//*  SvgPicture.asset(
+                                    */
+                          /*  SvgPicture.asset(
                                         isSaved
                                             ? 'assets/icons/menus/close_circle.svg'
                                             : 'assets/icons/menus/archive_tick.svg',
                                         height: 24.h,
                                         width: 24.w,
-                                      ),*//*
+                                      ),*/
+                          /*
                                       SizedBox(width: 10.w),
                                       Text('Save Post',
                                        // isSaved ? 'Unsave Post' : 'Save Post',
@@ -408,7 +377,8 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                                 ),
                               ),
                               //if (!isProfilePost)
-                               *//* PopupMenuItem<String>(
+                               */
+                          /* PopupMenuItem<String>(
                                   value: connected ? 'Unfollow' : 'Connect',
                                   child: Padding(
                                     padding: EdgeInsets.only(left: 10.w, bottom: 22.h),
@@ -442,7 +412,8 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                                       ],
                                     ),
                                   ),
-                                ),*//*
+                                ),*/
+                          /*
                              // if (isProfilePost)
                                 PopupMenuItem<String>(
                                   value: 'Delete Post',
@@ -496,36 +467,26 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                               position: PopupMenuPosition.under,
                               itemBuilder: (context) {
                                 return [
-                                  PopupMenuItem<int>(
+                                  /*PopupMenuItem<int>(
                                     value: 0,
                                     child: _buildActionNav(
                                         context: context,
                                         onTap: () {
                                           Navigator.pop(context);
-                                          //WayaNav.toNamed('/groupSetting');
-
+                                          //WayaNav.toNamed('/editPost', arguments: '${post?.id}');
                                         },
                                         asset:
-                                        SvgPicture.asset('assets/images/pages/setting.svg'),
-                                        text: "Group settings",
+                                        Icon(Icons.edit, color: WayaColors.greyColor500,),
+                                        text: "Edit Post",
                                         color: wayaTheme.colorScheme.customBlack),
-                                  ),
+                                  ),*/
+
                                   PopupMenuItem<int>(
-                                    value: 1,
+                                    value: 0,
                                     child: _buildActionNav(
                                         context: context,
                                         onTap: () {
-                                          Share.share('');
-                                        },
-                                        asset:WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
-                                        text: "Share link",
-                                        color:wayaTheme.colorScheme.customBlack),
-                                  ),
-                                  PopupMenuItem<int>(
-                                    value: 2,
-                                    child: _buildActionNav(
-                                        context: context,
-                                        onTap: () {
+                                          viewModel.repost(context, postId: '${post?.id}');
                                           Navigator.pop(context);
 
                                         },
@@ -534,13 +495,21 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                                         color: wayaTheme.colorScheme.customBlack),
                                   ),
                                   PopupMenuItem<int>(
-                                    value: 3,
+                                    value: 1,
                                     child: _buildActionNav(
                                         context: context,
                                         onTap: () {
-                                         // ref.read(createPageProvider.notifier).deletePost(postId: '${post?.id}');
                                        viewModel.deletePost(context, postId: '${post?.id}');
-                                          Navigator.pop(context);
+                                       ScaffoldMessenger.of(context).showSnackBar(
+                                         const SnackBar(
+                                           content: Text('Post deleted successfully!'),
+                                           backgroundColor: WayaColors.primary,
+                                           duration: Duration(seconds: 2),
+                                         ),
+                                       );
+                                       Navigator.pop(context);
+                                       WayaNav.toNamed('/pages');
+
                                         },
                                         asset: SvgPicture.asset('assets/images/pages/delete.svg',
                                           color: wayaTheme.colorScheme.error500, height: 20,),
@@ -570,7 +539,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                           //viewFull!();
                         },
                         child: ReadMoreText(
-                          '${post?.content?.replaceAll('#', '')}',
+                         removeHashtags('${post?.content?.capitalizeFirst}'),
                           style: TextStyle(
                             fontFamily: WayaConstants.fontFamily,
                             fontWeight: FontWeight.w400,
@@ -611,6 +580,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                         height: 15.h,
                       ),
                       if ( post!.hashtags!.isNotEmpty)
+
                       //if (isFullPostDetails && post!.hashtags!.isNotEmpty)
                         Row(
                           //children: post.tags.map<Widget>((tag) {
@@ -618,8 +588,8 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                             return Padding(
                               padding: const EdgeInsets.only(right: 8.0),
                               child: Text(
-                                '#$hashtags',
-                                //'#${jsonDecode(tag.replaceAll("]", "").replaceAll("[", "")) ?? tag}',
+                                //'#$hashtags',
+                                '#${jsonDecode(hashtags.replaceAll("]", "").replaceAll("[", "")) ?? hashtags}',
                                 style: TextStyle(
                                   fontFamily: WayaConstants.fontFamily,
                                   fontSize: 15.sp,
@@ -795,17 +765,23 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                         //   viewModel.commentPost2(post);
                         // },
                       ),*/
-                      actionType('$like Likes', 'assets/images/pages/like.png', onPressed: (){
-                        // setState(() {
-                        //   like++;
-                        // });
+                      actionType('${post.likeCount} ${post.likeCount! <= 1?'Like':'Likes'}', 'assets/images/pages/like2.png', onPressed: (){
+                        viewModel.likePost(context, postId: '${post.id}');
+                      }, color: post.likeCount == 0 ? WayaColors. greyColor500: WayaColors.primary),
+                      actionType('${post.commentCount} Comments', 'assets/images/pages/comment2.png',
+                      onPressed: (){
+                       // WayaNav.toNamed('/fullPostDetails');
                       }),
-                      actionType('${post.commentCount} Comments', 'assets/images/pages/comment.png'),
-                      actionType('${post.shareCount} Shares', 'assets/images/pages/share.png', onPressed: (){
+                      actionType('${post.shareCount} Shares', 'assets/images/pages/share2.png', onPressed: (){
                         //viewModel.likePost('${post?.id}');
+                        viewModel.sharePost(context, postId: '${post.id}');
                         Share.share('${post.url}', subject: 'Share Options');
                       }),
-                      Image.asset('assets/images/pages/save.png', height: 32.h,),
+                      InkWell(
+                          onTap: (){
+                            viewModel.bookmarkPost(context, postId: '${post.id}');
+                          },
+                          child: Image.asset('assets/images/pages/save.png', height: 32.h,)),
                     ],
                   ),
                 ),
@@ -905,8 +881,23 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
+          onTap: onPressed,
+          child: Container(
+            height: 32.h,
+            width: 32.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: WayaColors.greyColor100
+            ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Image.asset(img, height: 15.h, color: color,),
+          ),
+          ),
+        ),
+        /*InkWell(
             onTap: onPressed,
-            child: Image.asset(img, height: 32.h, color: color,)),
+            child: Image.asset(img, height: 32.h, color: color,)),*/
         Gap(5),
         Padding(
           padding: const EdgeInsets.only(top: 8),
