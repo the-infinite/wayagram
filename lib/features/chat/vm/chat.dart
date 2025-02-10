@@ -69,8 +69,9 @@ class ChatNotifier extends StateNotifier<ChatState> {
   /// end of the chats visible on screen immediately.
   void scrollToEnd() {
     //? Scroll to the last possible message.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       //? Only do this when we have something to communicate with.
+      await Future.delayed(const Duration(milliseconds: 800));
       if (state.controller.hasClients) state.controller.jumpTo(state.controller.position.maxScrollExtent);
     });
   }

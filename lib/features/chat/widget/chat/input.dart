@@ -395,7 +395,22 @@ class ChatInputWidget extends StatelessWidget {
       if (!result) return;
     }
 
-    //? Since we are not editing.
+    //? If we are not editing and this contains multiple media...
+    else if ((message.media?.length ?? 0) > 1) {
+      final messages = message.fragmentMedia;
+
+      //? This is fine.
+      for (final singleMessage in messages) {
+        //? Send the message.
+        notifier.sendMessage(singleMessage).then(
+          (result) {
+            //
+          },
+        );
+      }
+    }
+
+    //? If we are not editing and this contains one media.
     else {
       //? Send the message.
       final result = await notifier.sendMessage(message);

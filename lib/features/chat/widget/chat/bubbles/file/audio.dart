@@ -51,7 +51,7 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
   final canPlay = ValueNotifier(false);
 
   // Has this been downloaded yet?
-  bool downloaded = false;
+  bool downloaded = true;
 
   // Initialize the message in question here.
   Future<void> _initializeMessage() async {
@@ -151,8 +151,9 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                       return ValueListenableBuilder(
                         valueListenable: isPlaying,
                         builder: (context, isStreamPlaying, _) {
+                          //? This is fine.
                           if (!downloaded && widget.message != null && widget.message!.dto == null) {
-                            //? Since it can be downloaded right now...
+                            //? Since it should be downloaded right now...
                             return StreamBuilder(
                               stream: WayaFileRepository.instance.downloadFile(
                                 widget.message!.media!.first.mediaUrl,
@@ -200,7 +201,7 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                                         children: [
                                           //? The download bar.
                                           Text(
-                                            "${progress > 0 ? progress.toStringAsFixed(2) : 0}% downloaded",
+                                            "${progress > 0 ? progress.toStringAsFixed(0) : 0}% downloaded",
                                             style: WayaTextStyles.bodyMedium.copyWith(
                                               color: WayaColors.primary,
                                             ),
