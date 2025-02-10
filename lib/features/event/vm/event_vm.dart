@@ -8,6 +8,7 @@ import 'package:wayagram/features/event/data/model/event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
+import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
 import 'package:wayagram/features/event/data/model/single_event_response_model.dart';
@@ -59,7 +60,7 @@ class EventVm extends StateNotifier<EventState> {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
         upcoming = eventResponse.data.docs
             .where((event) =>
-                event.privacyOption == 'Public' &&
+                event.privacyOption == 'public' &&
                 event.eventStatus != 'paused')
             .toList();
         hasNextPage = eventResponse.data.hasNextPage;
@@ -117,20 +118,29 @@ class EventVm extends StateNotifier<EventState> {
       final response =
           await _eventRepository.joinEvent(userId: userId!, eventId: eventId);
       if (response.success && context.mounted) {
-        Navigator.of(context).pop();
-        await WayaUtils.showNotice(
-            context: context,
-            buttonText: 'View Event Details',
-            secondButtonText: 'Explore more event',
-            icon: Image.asset(
-              WayaAssets.images.createEventSuccess.path,
-              scale: 1.5,
-            ),
-            title: "You've successfully joined the event",
-            message:
-                'Your spot is confirmed. Stay tuned for update and get ready for an amazing experience',
-            onPress: () => Navigator.of(context).pop(),
-            onCancel: () => WayaNav.toNamed(EventView.route));
+            Navigator.of(context).pop();
+       
+  Future.delayed(Duration(milliseconds: 300), () {
+    if (context.mounted) {
+      WayaUtils.showNotice(
+        context: context,
+        buttonText: 'View Event Details',
+        secondButtonText: 'Explore more events',
+        icon: Image.asset(
+          WayaAssets.images.createEventSuccess.path,
+          scale: 1.5,
+        ),
+        title: "You've successfully joined the event",
+        message:
+            'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
+        onPress: () {
+          Navigator.of(context).pop(); 
+          // Refresh the screen
+        },
+        onCancel: () => WayaNav.toNamed(EventView.route),
+      );
+    }
+  });
         print(response.data);
       }
     } catch (error) {
