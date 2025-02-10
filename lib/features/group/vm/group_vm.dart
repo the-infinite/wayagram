@@ -13,6 +13,7 @@ import 'package:wayagram/features/group/data/model/group_state.dart';
 import 'package:wayagram/features/pages/data/model/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/media_upload_model.dart';
+import 'package:wayagram/shared/features/file/repo/default.dart';
 
 import '../data/repo/group_repository.dart';
 
@@ -59,51 +60,18 @@ class GroupVm extends StateNotifier<GroupState> {
     state = state.copyWith(roleType: value.toLowerCase());
   }
 
- /* Future<void> createGroup(ctx, groupName, groupDesc, groupType, String images) async {
+  Future<void> createGroup(ctx, groupName, groupDesc, groupType, String coverImage, String profileImage) async {
     print("before the loop");
-    List<UploadedImage> urls = [];
-    List<String> publicUrl = [];
-    List<String> coverImage = [];
 
 
-    // get url
-    for (XFile image in images) {
-      print("In the loop ${image.name} ${image.path} ${image.mimeType}");
-
-      final uploadImageResponse = await _groupRepository.getUploadImage(image.name);
-
-      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
-      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
-      publicUrl.add(mediaUploadModel!.data!.publicUrl!);
-    }
-
-    // upload
-    for (UploadedImage url in urls) {
-      final file = File(url.file);
-      final putImageResponse = await _groupRepository.putImage(url.url, file);
-
-      //? This is fine.
-      if (!(putImageResponse.success && ctx.mounted)) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to create group'),
-            backgroundColor: WayaColors.error,
-            duration: Duration(seconds: 2),
-          ),
-        );
-        break;
-      }
-
-      //? This is fine.
-      print("Data ${putImageResponse.data}");
-    }
-    //WayaHelpers.
+   final coverImageUrl = await WayaFileRepository.instance.uploadFile(File(coverImage), );
+    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
 
     try {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.createGroup(
-          groupName, groupDesc, groupType,
-          publicUrl, coverImage);
+          groupName, groupDesc, groupType, coverImageUrl ?? '', profileImageUrl ??''
+         );
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
@@ -128,7 +96,6 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
     }
   }
-*/
 
 
 }

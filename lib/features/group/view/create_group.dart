@@ -168,6 +168,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                   bottom: -20.h,
                   child: WayaDp(
                     radius: 28.r,
+                    isEdit: true,
                   )),
             ],
           ),
