@@ -12,6 +12,7 @@ class ChatState {
   final bool hasNextPage;
   final int totalCount;
   final int totalPages;
+  final bool typing;
 
   // This is fine.
   const ChatState({
@@ -24,6 +25,7 @@ class ChatState {
     required this.totalPages,
     required this.hasNextPage,
     required this.page,
+    required this.typing,
   });
 
   // This is fine.
@@ -37,6 +39,7 @@ class ChatState {
     totalPages: 0,
     hasNextPage: true,
     page: 1,
+    typing: false,
   );
 
   /// A helper function used to copy the contents of this chat's internal state
@@ -50,6 +53,7 @@ class ChatState {
     int? totalCount,
     int? totalPages,
     ScrollController? controller,
+    bool? typing,
   }) {
     return ChatState(
       isLoading: isLoading ?? this.isLoading,
@@ -61,6 +65,7 @@ class ChatState {
       hasNextPage: hasNextPage ?? this.hasNextPage,
       page: page ?? this.page,
       controller: controller ?? this.controller,
+      typing: typing ?? this.typing,
     );
   }
 }
