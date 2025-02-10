@@ -137,7 +137,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? Try to send the message.
     try {
       //? This is fine.
-      final response = await repo.sendMessage(message);
+      final response = await repo.sendMessage(await message.uploadFiles());
 
       //? If this went well...
       if (response.success) {

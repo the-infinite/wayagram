@@ -108,7 +108,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                     user: chat.other.userData ?? ConversationState.self,
                     showActive: userStatus == ChatUserActivity.online,
                     lastSeen: chat.other.chatUser?.lastSeen,
-                    radius: 20,
+                    radius: 16,
                   ),
 
                   //* Second, the user's name.

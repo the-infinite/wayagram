@@ -67,6 +67,23 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
   //? Does this file exist?
   bool downloaded = true;
 
+  Future<void> _initializeMessage() async {
+    final size = MediaQuery.sizeOf(context);
+    final renderBox = context.findRenderObject() as RenderBox?;
+    final mySize = renderBox?.size ?? Size(size.width * 0.8, 70);
+    await player.preparePlayer(
+      path: file!.absolute.path,
+      shouldExtractWaveform: true,
+      noOfSamples: waveStyle.getSamplesForWidth(mySize.width - 130),
+    );
+    canPlay.value = true;
+    player.onCompletion.listen((state) {
+      player.seekTo(0);
+      isPlaying.value = false;
+    });
+    player.setFinishMode(finishMode: FinishMode.pause);
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -75,20 +92,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
 
         //? If this file exists...
         if (await file!.exists()) {
-          final size = MediaQuery.sizeOf(context);
-          final renderBox = context.findRenderObject() as RenderBox?;
-          final mySize = renderBox?.size ?? Size(size.width * 0.8, 70);
-          await player.preparePlayer(
-            path: file!.absolute.path,
-            shouldExtractWaveform: true,
-            noOfSamples: waveStyle.getSamplesForWidth(mySize.width - 130),
-          );
-          canPlay.value = true;
-          player.onCompletion.listen((state) {
-            player.seekTo(0);
-            isPlaying.value = false;
-          });
-          player.setFinishMode(finishMode: FinishMode.pause);
+          await _initializeMessage();
         }
 
         //? Since it does not exist...
@@ -144,13 +148,14 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                 //? Since it can be downloaded right now...
                 return StreamBuilder(
                   stream: WayaFileRepository.instance.downloadFile(
-                    widget.data.media!.first.mediaUrl,
+                    widget.data.media?.first.mediaUrl ?? widget.data.mediaUrl!,
                     file!,
                     (result) {
                       if (result) {
                         setState(() {
                           downloaded = true;
                         });
+                        _initializeMessage();
                       }
                     },
                   ),

@@ -14,8 +14,8 @@ class WayaFileRepository extends BaseRepository {
 
   /// Internal repository function used to get the signed url for a file upload.
   /// Kind of a nice thing to have generally speaking.
-  Future<WayaRequestResponse> _getSignedUrl(File file) {
-    final filename = file.uri.pathSegments.last;
+  Future<WayaRequestResponse> _getSignedUrl(File file, [String? name]) {
+    final filename = name ?? file.uri.pathSegments.last;
     return get("$serviceUrl/signed-url/$filename");
   }
 
@@ -59,9 +59,9 @@ class WayaFileRepository extends BaseRepository {
   }
 
   /// A helper function used to upload a file to a given URL.
-  Future<String?> uploadFile(File file) async {
+  Future<String?> uploadFile(File file, [String? name]) async {
     //? First, get the signed URL
-    final response = await _getSignedUrl(file);
+    final response = await _getSignedUrl(file, name);
     final filename = file.uri.pathSegments.last;
     final extensionIndex = filename.lastIndexOf(".");
     final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';

@@ -111,7 +111,10 @@ class DioHttpClient implements WayaHttpClientInterface {
     ));
   }
 
-  Future<WayaRequestResponse> downloadHttp(String url, String outputPath, WayaDownloadListener onData) {
+  Future<WayaRequestResponse> downloadHttp(String url, String outputPath, WayaDownloadListener onData) async {
+    await _setHeader(isAuth: false);
+
+    // Make the download request.
     return _makeRequest(
       dio.download(
         url,
