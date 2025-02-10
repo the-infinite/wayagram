@@ -211,16 +211,67 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisSize: MainAxisSize.min,
-                      children: List.generate(
-                        state.messages.length,
-                        (index) => ChatBubbleWidget(
-                          index: index,
-                          previousDate:
-                              index == 0 ? DateTime.fromMillisecondsSinceEpoch(0) : state.messages[index - 1].createdAt,
-                          data: state.messages[index],
-                          controller: inputController,
+                      children: [
+                        //? First, the list of messages.
+                        ...List.generate(
+                          state.messages.length,
+                          (index) => ChatBubbleWidget(
+                            index: index,
+                            previousDate: index == 0
+                                ? DateTime.fromMillisecondsSinceEpoch(0)
+                                : state.messages[index - 1].createdAt,
+                            data: state.messages[index],
+                            controller: inputController,
+                          ),
                         ),
-                      ),
+
+                        //? Second, the typing bubble.
+                        if (state.typing)
+                          StreamBuilder(
+                              stream: Stream.periodic(const Duration(seconds: 3), (count) => count),
+                              builder: (context, snapshot) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                                        decoration: BoxDecoration(
+                                          color: WayaColors.greyColor200,
+                                          borderRadius: BorderRadius.circular(18),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: List.generate(
+                                            3,
+                                            (index) => Padding(
+                                              padding: EdgeInsets.only(right: index < 2 ? 4 : 0),
+                                              child: TweenAnimationBuilder<double>(
+                                                tween: Tween(begin: 0.0, end: 1.0),
+                                                duration: Duration(milliseconds: 500),
+                                                curve: Curves.easeInOut,
+                                                builder: (context, value, _) => Transform.translate(
+                                                  offset: Offset(0, -3 * value * (index % 2 == 0 ? 1 : -1)),
+                                                  child: Container(
+                                                    width: 6,
+                                                    height: 6,
+                                                    decoration: BoxDecoration(
+                                                      color: WayaColors.greyColor500,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                      ],
                     ),
                   ),
                 ),

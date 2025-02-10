@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/dto/chat.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
@@ -76,6 +77,63 @@ class ChatNotifier extends StateNotifier<ChatState> {
     });
   }
 
+  /// A helper function used to set whether or not the other user is not
+  /// currently typing in at the moment.
+  void setTyping(bool value) {
+    state = state.copyWith(typing: value);
+  }
+
+  /// A helper function used to get the updated state of a SINGLE message.
+  Future<MessageModel?> getMessage(String id, [bool replace = true]) async {
+    //? This is fine.
+    final response = await repo.getMessage(id);
+
+    //? This is fine.
+    if (response.success) {
+      final result = MessageModel.fromJson(response.data['data']);
+      final pos = state.messages.indexWhere((message) => message.id == id);
+
+      //? If this was found...
+      if (replace && pos != -1) {
+        final messages = state.messages;
+        final previous = messages[pos];
+
+        //? Fix the bug where the latest message is not always guaranteed to be
+        //? showing up here.
+        messages[pos] = result.copyWith(false, previous.originalMessage);
+
+        //? Then update this.
+        state = state.copyWith(messages: messages);
+      }
+
+      //? If this message is not in your list of messages.
+      else {
+        //? First, get the messages.
+        final messages = state.messages;
+        messages.add(result);
+
+        //? Finally, scroll infinitely.
+        state = state.copyWith(messages: [...messages]);
+      }
+
+      //? Return this result.
+      return result;
+    }
+
+    //? Since it failed.
+    else {
+      // TODO: Proper error handling.
+    }
+
+    //? Return null.
+    return null;
+  }
+
+  /// A helper function used to get the current state of this one.
+  ChatState getState() {
+    return state;
+  }
+
   /// A helper function used to send a message to a given chat. The multipart
   /// file specification
   Future<MessageModel?> sendMessage(SendMessageDto message, [String? originalId]) async {
@@ -123,14 +181,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
         //? Now update the UI with our changes...
         state = state.copyWith(messages: conversation);
 
-        //? Scroll to the last possible message.
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          state.controller.animateTo(
-            state.controller.position.maxScrollExtent,
-            duration: Duration(milliseconds: 350),
-            curve: Curves.easeInOut,
-          );
-        });
+        // Notify everyone of it.
+        WayaSocketController.instance.emit("sendMessage", WayaChatSocketArgs.sendMessage(state.chat!.id, result.id));
+
+        //? Scroll to the end.
+        scrollToEnd();
 
         //? Return the result.
         return result;
@@ -181,7 +236,12 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final response = await repo.readAllInChat(state.chat!.id);
 
     //? We need to fetch the messages again.
-    if (response.success) getMessages(true, false);
+    if (response.success) {
+      getMessages(true, false);
+
+      // This is fine.
+      WayaSocketController.instance.emit("markAllAsRead", WayaChatSocketArgs.markAllAsRead(state.chat!.id));
+    }
 
     //? This is fine.
     return response.success;
@@ -207,7 +267,13 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final response = await repo.updateMessageStatus(status, id);
 
     //? If this was fine...
-    if (response.success) getMessages(true, false);
+    if (response.success) {
+      //? If this was read.
+      WayaSocketController.instance.emit("sendMessage", WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+
+      // Now, pull all messages.
+      getMessage(id);
+    }
 
     //? If this was fine...
     return response.success;
@@ -217,8 +283,14 @@ class ChatNotifier extends StateNotifier<ChatState> {
   Future<bool> editMessage(String id, String content) async {
     final response = await repo.editMessage(id, content);
 
-    //? If this succeeded...
-    if (response.success) getMessages(true, false);
+    //? If this was fine...
+    if (response.success) {
+      //? If this was read.
+      WayaSocketController.instance.emit("sendMessage", WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+
+      // Now, pull all messages.
+      getMessage(id);
+    }
 
     // Then we succeeded.
     return response.success;
@@ -230,6 +302,10 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     //? If this went well...
     if (response.success) {
+      // Notify everyone of it.
+      WayaSocketController.instance.emit("deleteMessage", WayaChatSocketArgs.deleteMessage(state.chat!.id, id));
+
+      // Remove this.
       removeMessage(id);
     }
 
@@ -241,6 +317,15 @@ class ChatNotifier extends StateNotifier<ChatState> {
   Future<bool> forwardMessage(String id, List<String> recipients) async {
     final response = await repo.forwardAMessage(recipients, id);
 
+    //? If this succeeded...
+    if (response.success) {
+      // Notify everyone of it.
+      WayaSocketController.instance.emit("sendMessage", WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+
+      // This is fine.
+      getMessage(id);
+    }
+
     //? This is good.
     return response.success;
   }
@@ -249,8 +334,14 @@ class ChatNotifier extends StateNotifier<ChatState> {
   Future<bool> reactToMessage(String id, String reaction) async {
     final response = await repo.reactToMessage(id, reaction);
 
-    //? If this was fine.
-    if (response.success) getMessages(true, false);
+    //? If this succeeded...
+    if (response.success) {
+      // Notify everyone of it.
+      WayaSocketController.instance.emit("sendMessage", WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+
+      // This is fine.
+      getMessage(id);
+    }
 
     //? This is good.
     return response.success;
@@ -260,8 +351,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
   /// would clear out all visible messages and only retrieve messages sent by
   /// a given user.
   void setChat(ChatModel chat) {
-    //? When this is disposed.
-    state.controller.dispose();
+    // Skip this.
+    final previous = state.controller;
 
     //? This is fine.
     state = state.copyWith(
@@ -269,6 +360,9 @@ class ChatNotifier extends StateNotifier<ChatState> {
       messages: [],
       controller: ScrollController(),
     );
+
+    // Then dispose.
+    previous.dispose();
   }
 }
 
