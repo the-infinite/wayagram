@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class WayaMeasurableWidget extends StatefulWidget {
@@ -16,23 +14,16 @@ class WayaMeasurableWidget extends StatefulWidget {
 }
 
 class _WayaMeasurableWidgetState extends State<WayaMeasurableWidget> {
-  bool _hasMeasured = false;
   @override
   Widget build(BuildContext context) {
-    final size = (context.findRenderObject() as RenderBox?)?.size ?? Size.zero;
+    //? Calculate the size after drawing this frame.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        widget.onSized((context.findRenderObject() as RenderBox?)?.size ?? Size.zero);
+      },
+    );
 
-    //? Since we know the size now..
-    if (size != Size.zero) {
-      widget.onSized.call(size);
-    }
-
-    //? This is what we do kind of.
-    else if (!_hasMeasured) {
-      // Need to build twice in order to get size
-      scheduleMicrotask(() => setState(() => _hasMeasured = true));
-    }
-
-    //? This is fine.
+    //? Return the child since we don't need to wrap anything around it.
     return widget.child;
   }
 }

@@ -96,6 +96,11 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                       Expanded(
                         child: AboutEvent(
                             title: 'Event Address',
+                            isLink:
+                                viewModel.singleEvent?.location.toLowerCase() ==
+                                        'physical'
+                                    ? false
+                                    : true,
                             content:
                                 viewModel.singleEvent?.locationAddress ?? ""),
                       ),
