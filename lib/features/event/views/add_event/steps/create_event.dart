@@ -7,6 +7,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
 import 'package:wayagram/features/event/vm/add_event_vm.dart';
 import 'package:wayagram/features/event/widgets/event_date_widget.dart';
@@ -219,7 +220,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                                   viewModel.address.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
-                          label: "Address",
+                          label: "Enter Event Address",
                         ),
                         if (formState.hasError &&
                             viewModel.address.text.isEmpty)
@@ -252,7 +253,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                               formState.hasError && viewModel.link.text.isEmpty
                                   ? wayaTheme.colorScheme.error
                                   : null,
-                          label: "Link",
+                          label: "Enter Virtual Event Link",
                         ),
                         if (formState.hasError && viewModel.link.text.isEmpty)
                           Padding(
@@ -452,8 +453,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                             value: 'Public',
                             groupedValue: selectedOption,
                             onChanged: (value) {
-                              ref.read(radioSelectProvider(key).notifier).state =
-                                  value;
+                              ref
+                                  .read(radioSelectProvider(key).notifier)
+                                  .state = value;
                               ref
                                   .read(addEventVmProvider.notifier)
                                   .updatePrivacyOption(value!);
@@ -493,7 +495,17 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                       }
                     })
               ],
-            ))
+            )),
+        const Gap(8),
+        WayaButton(
+            text: 'Go Back',
+            color: wayaTheme.colorScheme.transparent,
+            textColor: wayaTheme.colorScheme.customBlack,
+            border:
+                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            callback: () {
+              WayaNav.goBack();
+            })
       ],
     );
   }
