@@ -20,7 +20,8 @@ import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/features/post/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
 import 'package:http/http.dart' as http;
-import '../../post/model/comment.dart';
+
+import '../../post/model/fetch_comment.dart';
 
 class UploadedImage {
   final String url;
@@ -370,21 +371,18 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<bool> commentOnPost(String postId, String content) async {
+  Future<void> commentOnPost(String postId, String content) async {
     try {
-
+      state = state.copyWith(isLoading: true);
       final response = await _pageRepository.commentOnPost(postId, content);
+      state = state.copyWith(isLoading: false);
       if (response!.statusCode == 200 || response.statusCode == 201) {
 
-        return true;
       } else {
-        _errorMessage = 'Failed to post comment';
-        return false;
-      }
-    } on DioException catch (e) {
-      print("Error: $e");
 
-      return false;
+      }
+    }catch (e) {
+      print("Error: $e");
     }
   }
 
@@ -573,6 +571,8 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
+
+
   FutureOr<List<Comments>> getComments(String id) async {
     //_isLoading = true;
     _errorMessage = '';
@@ -608,17 +608,21 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Stream<List<Comments>> getCommentsStream(String postId) {
+  //Stream<List<Comments>> getCommentsStream(String postId) {
+  Stream<List<Comments>>? getCommentsStream(String postId) {
     return Stream.periodic(const Duration(seconds: 5), (count) async {
       //final token = await Store.getToken();
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.getComment(postId);
       state = state.copyWith(isLoading: false);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = response.data["comments"];
-        return data.cast<Map<String, dynamic>>().map((json) => Comments.fromJson(json)).toList();
+        FetchComment responseModel = FetchComment.fromJson(response.data);
+        state = state.copyWith(comments: responseModel.data?.comments);
+        //final data = response.data["comments"];
+        //return data.cast<Map<String, dynamic>>().map((json) => Comments.fromJson(json)).toList();
       } else {
-        return [];
+        state = state.copyWith(isLoading: false);
+        //return [];
       }
     }).asyncMap((_) => getComments(postId));
   }

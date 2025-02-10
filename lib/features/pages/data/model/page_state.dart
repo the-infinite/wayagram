@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
+import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/features/post/model/media_upload_model.dart';
 
@@ -15,6 +16,7 @@ class PageState{
   final List<PostImage> images;
   final List<Docs>? fetchAllPostData;
   final List<GetAllPostDocs>? getAllPost;
+  final List<Comments>? comments;
   final MediaUploadData? data;
   final ShareModelData? shareModelData;
 
@@ -30,6 +32,7 @@ class PageState{
     this.isLoading = false,
     this.images = const [],
     this.fetchAllPostData = const [],
+    this.comments = const [],
     this.getAllPost = const [],
     this.data,
     this.shareModelData,
@@ -44,6 +47,7 @@ class PageState{
     List<PostImage>? images,
     List<Docs>? fetchAllPostData,
     List<GetAllPostDocs>? getAllPost,
+    List<Comments>? comments,
     MediaUploadData? data,
     ShareModelData? shareModelData,
 
@@ -59,6 +63,7 @@ class PageState{
       shareModelData: shareModelData ?? this.shareModelData,
       fetchAllPostData: fetchAllPostData ?? this.fetchAllPostData,
       getAllPost: getAllPost ?? this.getAllPost,
+      comments: comments ?? this.comments,
 
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
