@@ -7,6 +7,14 @@ class WayaDateHelper {
     return year % 4 == 0 && year % 100 != 0;
   }
 
+  static bool isSameDay(DateTime first, DateTime second) {
+    return first.year == second.year && first.month == second.month && first.day == second.day;
+  }
+
+  static DateTime pureDate(DateTime timestamp) {
+    return DateTime(timestamp.year, timestamp.month, timestamp.day);
+  }
+
   static int getNumberOfDaysInMonth(int month, int year) {
     return switch (month) {
       DateTime.february => isLeapYear(year) ? 29 : 28,
@@ -60,7 +68,7 @@ class WayaDateHelper {
 
     //? If this is less than a minute ago.
     if (gap.inSeconds.abs() < 60) {
-      return "${gap.inSeconds.abs} seconds ago";
+      return "${gap.inSeconds.abs()} seconds ago";
     }
 
     //? If this is less than an hour ago...
@@ -93,8 +101,8 @@ class WayaDateHelper {
   }
 
   static String getSocialDate(DateTime timestamp) {
-    final now = DateTime.now();
-    final gap = now.difference(timestamp);
+    final now = pureDate(DateTime.now());
+    final gap = now.difference(pureDate(timestamp));
 
     //? If this is yesterday...
     if (gap.inDays.abs() == 0) {

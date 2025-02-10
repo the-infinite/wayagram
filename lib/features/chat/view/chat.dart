@@ -68,6 +68,9 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
       final chat = state.chat!;
       final inputController = ChatInputController.instance;
       final userStatus = chat.other.chatUser?.onlineStatus;
+      final lastSeenText = chat.other.chatUser?.lastSeen != null
+          ? "Last seen ${WayaDateHelper.getSocialTimestamp(chat.other.chatUser!.lastSeen).toLowerCase()}"
+          : null;
 
       // Set this up.
       inputController.setChat(chat);
@@ -130,18 +133,17 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                           ),
 
                           //? For the message content...
-                          Text(
-                            userStatus == ChatUserActivity.online
-                                ? "Online"
-                                : "Last seen ${WayaDateHelper.getSocialTimestamp(chat.other.chatUser?.lastSeen ?? DateTime.now().subtract(const Duration(minutes: 10))).toLowerCase()}",
-                            maxLines: 1,
-                            style: WayaTextStyles.titleMedium.copyWith(
-                              fontWeight: FontWeight.normal,
-                              overflow: TextOverflow.ellipsis,
-                              color: WayaColors.greyColor500,
-                              fontSize: 13,
+                          if (lastSeenText != null)
+                            Text(
+                              userStatus == ChatUserActivity.online ? "Online" : lastSeenText,
+                              maxLines: 1,
+                              style: WayaTextStyles.titleMedium.copyWith(
+                                fontWeight: FontWeight.normal,
+                                overflow: TextOverflow.ellipsis,
+                                color: WayaColors.greyColor500,
+                                fontSize: 13,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),

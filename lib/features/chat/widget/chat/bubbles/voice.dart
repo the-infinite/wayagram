@@ -1,13 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+import 'dart:io';
+
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/date.dart';
+import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/logic/files.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/file/repo/default.dart';
 
 enum _PlaybackSpeed {
   normal(1),
@@ -48,6 +53,7 @@ class VoiceMessageWidget extends StatefulWidget {
 class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
   late final PlayerController player = PlayerController();
   late final isSender = ConversationState.self.id == widget.data.senderId;
+  File? file;
   final isPlaying = ValueNotifier(false);
   final canPlay = ValueNotifier(true);
   final playbackSpeed = ValueNotifier(_PlaybackSpeed.normal);
@@ -58,28 +64,43 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
     waveThickness: 3,
   );
 
-  //? How many times we have extracted wave form data.
-  bool extracted = false;
+  //? Does this file exist?
+  bool downloaded = true;
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final file = getVoiceMessageFile(widget.data);
-      final size = MediaQuery.sizeOf(context);
-      final renderBox = context.findRenderObject() as RenderBox?;
-      final mySize = renderBox?.size ?? Size(size.width * 0.8, 70);
-      await player.preparePlayer(
-        path: file.absolute.path,
-        shouldExtractWaveform: true,
-        noOfSamples: waveStyle.getSamplesForWidth(mySize.width - 130),
-      );
-      canPlay.value = true;
-      player.onCompletion.listen((state) {
-        player.seekTo(0);
-        isPlaying.value = false;
-      });
-      player.setFinishMode(finishMode: FinishMode.pause);
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        file = await getVoiceMessageFile(widget.data);
+
+        //? If this file exists...
+        if (await file!.exists()) {
+          final size = MediaQuery.sizeOf(context);
+          final renderBox = context.findRenderObject() as RenderBox?;
+          final mySize = renderBox?.size ?? Size(size.width * 0.8, 70);
+          await player.preparePlayer(
+            path: file!.absolute.path,
+            shouldExtractWaveform: true,
+            noOfSamples: waveStyle.getSamplesForWidth(mySize.width - 130),
+          );
+          canPlay.value = true;
+          player.onCompletion.listen((state) {
+            player.seekTo(0);
+            isPlaying.value = false;
+          });
+          player.setFinishMode(finishMode: FinishMode.pause);
+        }
+
+        //? Since it does not exist...
+        else {
+          if (mounted) {
+            setState(() {
+              downloaded = false;
+            });
+          }
+        }
+      },
+    );
     super.initState();
   }
 
@@ -116,6 +137,78 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
           return ValueListenableBuilder(
             valueListenable: isPlaying,
             builder: (context, isStreamPlaying, _) {
+              if (!downloaded && widget.data.dto == null) {
+                //? If this is undefined...
+                if (file == null) return const SizedBox();
+
+                //? Since it can be downloaded right now...
+                return StreamBuilder(
+                  stream: WayaFileRepository.instance.downloadFile(
+                    widget.data.media!.first.mediaUrl,
+                    file!,
+                    (result) {
+                      if (result) {
+                        setState(() {
+                          downloaded = true;
+                        });
+                      }
+                    },
+                  ),
+                  builder: (context, snapshot) {
+                    final data = snapshot.data;
+                    final progress = data?.$1 ?? 0;
+                    final total = data?.$2 ?? 0;
+
+                    //? This is where it is at.
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        //? First, the download stream
+                        Container(
+                          height: 30,
+                          width: 30,
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: buttonBackground,
+                          ),
+                          child: CircularProgressIndicator(
+                            value: progress / 100,
+                            color: buttonColor,
+                          ),
+                        ),
+
+                        // Some space.
+                        const Gap(10),
+
+                        //? Second, the slider used to navigate inside of a stream.
+                        Expanded(
+                          child: Text(
+                            "$progress% downloaded",
+                            style: WayaTextStyles.bodyMedium.copyWith(
+                              color: durationColor,
+                            ),
+                          ),
+                        ),
+
+                        //? Finally, the playback duration button.
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            WayaFileHelper.getFileSize(total),
+                            style: WayaTextStyles.bodySmall.copyWith(
+                              color: durationColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+
               //? Now, we stream the playback for actual progress feed.
               return StreamBuilder(
                 stream: player.onCurrentDurationChanged,

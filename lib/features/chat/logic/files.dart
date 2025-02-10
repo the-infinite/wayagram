@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 
 /// Returns a list of files that are attached to a message.
@@ -14,11 +15,33 @@ import 'package:wayagram/features/chat/model/message.dart';
 /// [message] The message model to extract attachments from.
 ///
 /// Returns a [List<File>] containing all file attachments from the message.
-List<File> getMessageFileAttachments(MessageModel message) {
+Future<List<File>> getMessageFileAttachments(MessageModel message) async {
   final result = <File>[];
 
-  //? For now, I just do this magic.
-  result.addAll(message.media?.map((file) => File(file.mediaUrl)) ?? []);
+  //? Let's see what the file extension ends with.
+  for (final file in (message.media ?? <MessageMedia>[])) {
+    final uri = Uri.parse(file.mediaUrl);
+    final filename = uri.pathSegments.last;
+    final extensionIndex = filename.lastIndexOf(".");
+    final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+    var directory = await WayaFileHelper.getDocumentsDirectory();
+
+    //? Now, we check what kind of extension this is.
+    if ([...WayaFileExtensions.images, WayaFileExtensions.videos].contains(extension)) {
+      directory = await WayaFileHelper.getMediaDirectory();
+    }
+
+    //? If this is an audio file.
+    if (WayaFileExtensions.audio.contains(extension)) {
+      directory = await WayaFileHelper.getAudioDirectory();
+    }
+
+    //? Now, we try looking for the rest here.
+    final path = "${WayaFileHelper.getFileSubdirectory(directory, message)}/${message.id}.$extension";
+
+    //? This is fine.
+    result.add(File(path));
+  }
 
   //? Return the result.
   return result;
@@ -35,6 +58,15 @@ List<File> getMessageFileAttachments(MessageModel message) {
 /// ```
 ///
 /// Throws [FileSystemException] if the file cannot be accessed or does not exist.
-File getVoiceMessageFile(MessageModel message) {
-  return File(message.media!.first.mediaUrl).absolute;
+Future<File> getVoiceMessageFile(MessageModel message) async {
+  final file = message.media!.first;
+  final uri = Uri.parse(file.mediaUrl);
+  final filename = uri.pathSegments.last;
+  final extensionIndex = filename.lastIndexOf(".");
+  final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+  final directory = await WayaFileHelper.getVoiceMessagesDirectory();
+  final path = "${WayaFileHelper.getFileSubdirectory(directory, message)}/${message.id}.$extension";
+
+  //? This is fine.
+  return File(path).absolute;
 }

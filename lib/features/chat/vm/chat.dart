@@ -34,7 +34,14 @@ class ChatNotifier extends StateNotifier<ChatState> {
       final docs = (data['docs'] as List).map((doc) => MessageModel.fromJson(doc));
 
       //? This is fine.
-      result.addAll(docs);
+      result.addAll(
+        docs.where(
+          (msg) {
+            return !((msg.isDeleted ?? false) ||
+                (msg.isDeletedBySender ?? false) && msg.senderId == ConversationState.self.id);
+          },
+        ),
+      );
 
       //? Update state.
       state = state.copyWith(
@@ -76,6 +83,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     if (originalId == null) {
       final placeholder = MessageModel(
         id: messageId,
+        isDeleted: false,
+        isDeletedBySender: false,
         chatId: state.chat!.id,
         content: message.content,
         media: message.media
@@ -118,7 +127,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? Now, replace this.
       if (found != -1) {
-        conversation[found] = conversation[found].copyWith(false);
+        conversation[found] = conversation[found].copyWith(false, message.originalMessage);
       }
 
       //? Now update the UI with our changes...
@@ -138,7 +147,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
         //? Now, replace this.
         if (found != -1) {
-          conversation[found] = result;
+          conversation[found] = result.copyWith(false, message.originalMessage);
         }
 
         //? Now update the UI with our changes...
@@ -164,7 +173,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
         //? Now, replace this.
         if (found != -1) {
-          conversation[found] = conversation[found].copyWith(true);
+          conversation[found] = conversation[found].copyWith(true, message.originalMessage);
         }
 
         //? Now update the UI with our changes...
@@ -176,7 +185,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? Now, replace this.
       if (found != -1) {
-        conversation[found] = conversation[found].copyWith(true);
+        conversation[found] = conversation[found].copyWith(true, message.originalMessage);
       }
 
       //? Now update the UI with our changes...
@@ -264,6 +273,9 @@ class ChatNotifier extends StateNotifier<ChatState> {
   /// A helper API used to forward a message to a given list of chats.
   Future<bool> reactToMessage(String id, String reaction) async {
     final response = await repo.reactToMessage(id, reaction);
+
+    //? If this was fine.
+    if (response.success) getMessages(true);
 
     //? This is good.
     return response.success;

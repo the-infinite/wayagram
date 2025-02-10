@@ -8,6 +8,7 @@ class ConversationState {
   final String searchFilter;
   final List<ChatModel> conversations;
   final List<ChatModel> archived;
+  final bool inArchived;
 
   //? For chats.
   final int totalCount;
@@ -32,6 +33,7 @@ class ConversationState {
     required this.totalPages,
     required this.limit,
     required this.hasNextPage,
+    required this.inArchived,
     required this.totalCount,
     required this.archivedTotalCount,
     required this.archivedTotalPages,
@@ -61,6 +63,7 @@ class ConversationState {
     totalPages: 0,
     limit: 100,
     totalCount: 0,
+    inArchived: false,
     hasNextPage: true,
     archivedTotalCount: 0,
     archivedTotalPages: 0,
@@ -77,6 +80,10 @@ class ConversationState {
   /// The results displayed whenever you are looking at a list of conversations
   /// arranged in no particular order.
   List<ChatModel> get results {
+    // The filter.
+    final filter = searchFilter.toLowerCase();
+
+    // Then return this.
     if (searchFilter.isEmpty) {
       return conversations;
     }
@@ -84,9 +91,31 @@ class ConversationState {
     //? This is fine.
     return conversations
         .where((chat) =>
-            (chat.chatType == 'group' && (chat.name ?? '').contains(searchFilter)) ||
-            (chat.other.userData?.fullname.contains(searchFilter) ?? false) ||
-            (chat.other.profileData?.username?.contains(searchFilter) ?? false))
+            (chat.chatType == 'group' && (chat.name ?? '').toLowerCase().contains(filter)) ||
+            (chat.other.userData?.fullname.toLowerCase().contains(filter) ?? false) ||
+            (chat.other.profileData?.username?.toLowerCase().contains(filter) ?? false) ||
+            (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ?? false))
+        .toList();
+  }
+
+  /// The results displayed whenever you are looking at a list of conversations
+  /// arranged in no particular order.
+  List<ChatModel> get archivedResults {
+    // The filter.
+    final filter = searchFilter.toLowerCase();
+
+    // Then return this.
+    if (searchFilter.isEmpty) {
+      return archived;
+    }
+
+    //? This is fine.
+    return archived
+        .where((chat) =>
+            (chat.chatType == 'group' && (chat.name ?? '').toLowerCase().contains(filter)) ||
+            (chat.other.userData?.fullname.toLowerCase().contains(filter) ?? false) ||
+            (chat.other.profileData?.username?.toLowerCase().contains(filter) ?? false) ||
+            (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ?? false))
         .toList();
   }
 
@@ -105,6 +134,7 @@ class ConversationState {
     int? archivedTotalPages,
     int? archivedPage,
     bool? archivedHasNextPage,
+    bool? inArchived,
   }) {
     return ConversationState(
       isLoading: isLoading ?? this.isLoading,
@@ -120,6 +150,7 @@ class ConversationState {
       archivedTotalPages: archivedTotalPages ?? this.archivedTotalPages,
       archivedPage: archivedPage ?? this.archivedPage,
       archivedHasNextPage: archivedHasNextPage ?? this.archivedHasNextPage,
+      inArchived: inArchived ?? this.inArchived,
     );
   }
 }

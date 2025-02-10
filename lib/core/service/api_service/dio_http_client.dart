@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
 import 'package:wayagram/core/service/api_service/dio_exceptions.dart';
@@ -9,6 +8,8 @@ import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
+
+typedef WayaDownloadListener = void Function(double done, int totalSize);
 
 class DioHttpClient implements WayaHttpClientInterface {
   late final Dio dio;
@@ -110,6 +111,27 @@ class DioHttpClient implements WayaHttpClientInterface {
     ));
   }
 
+  Future<WayaRequestResponse> downloadHttp(String url, String outputPath, WayaDownloadListener onData) {
+    return _makeRequest(
+      dio.download(
+        url,
+        outputPath,
+        deleteOnError: true,
+        options: Options(
+          headers: {
+            HttpHeaders.acceptEncodingHeader: '*',
+          },
+        ),
+        onReceiveProgress: (count, total) {
+          if (total != -1) {
+            onData((count * 100) / total, total);
+          }
+        },
+      ),
+      false,
+    );
+  }
+
   @override
   Future<WayaRequestResponse> putHttp(
     String route,
@@ -201,7 +223,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     ));
   }
 
-  Future<WayaRequestResponse> _makeRequest(Future<Response> future) async {
+  Future<WayaRequestResponse> _makeRequest(Future<Response> future, [bool showErrors = true]) async {
     try {
       print("vv");
       final response = await future;
@@ -228,10 +250,12 @@ class DioHttpClient implements WayaHttpClientInterface {
         _logger.e('message: $message, ${e.response?.data}');
 
         // This is fine
-        _snackBarService.showCustomSnackbar(
-          message: message,
-          variant: SnackbarType.failure,
-        );
+        if (showErrors) {
+          _snackBarService.showCustomSnackbar(
+            message: message,
+            variant: SnackbarType.failure,
+          );
+        }
       }
 
       return WayaHttpException.handleDioError(e);
@@ -270,10 +294,4 @@ class DioHttpClient implements WayaHttpClientInterface {
   void dispose() => dio.close(force: true);
 
   void resetDio() => dio = initializeDio();
-
-  void _showLoadingProgress(int received, int total) {
-    if (total != -1 && kDebugMode) {
-      debugPrint('${(received / total * 100).toStringAsFixed(0)}%');
-    }
-  }
 }

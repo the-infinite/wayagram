@@ -10,7 +10,7 @@ class MessageRepository extends BaseRepository {
   Future<WayaRequestResponse> sendMessage(
     SendMessageDto data,
   ) {
-    return post("$serviceUrl/client/message", data.toJson(), formdata: true);
+    return post("$serviceUrl/client/message", data.toJson(), formdata: false);
   }
 
   Future<WayaRequestResponse> getUnreadMessagesCount() {
