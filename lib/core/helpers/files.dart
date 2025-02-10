@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:http_parser/http_parser.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wayagram/core/helpers/value.dart';
+import 'package:wayagram/features/chat/model/message.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 
 class WayaFileExtensions {
   WayaFileExtensions._();
@@ -209,6 +211,14 @@ class WayaFileExtensions {
 class WayaFileHelper {
   WayaFileHelper._();
 
+  /// Returns the number as a size in the largest possible unit.
+  static String getFileSize(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(2)} KB';
+    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
+    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+  }
+
   /// Returns the base storage directory for the application.
   ///
   /// This is an asynchronous method that resolves to a [Directory] object
@@ -217,14 +227,20 @@ class WayaFileHelper {
   ///
   /// Throws a [PlatformException] if the storage directory cannot be accessed.
   static Future<Directory> _getBaseStorageDirectory() async {
-    var directory = Directory("${(await getApplicationDocumentsDirectory()).absolute.path}/WayaGram");
+    //? This is fine.
+    var directory = await getApplicationDocumentsDirectory();
 
-    //? Then print this out.
+    //?  If this is Android.
+    if (Platform.isAndroid) {
+      directory = Directory("${(await getExternalStorageDirectory())!.parent.parent.parent.path}/media/ng.wayagram");
+    }
+
+    //? If this does not exist...
     if (!await directory.exists()) {
       directory = await directory.create(recursive: true);
     }
 
-    //? Since we now know this exists...
+    //? This is fine.
     return directory;
   }
 
@@ -239,7 +255,7 @@ class WayaFileHelper {
   /// Returns a [Future<Directory>] that resolves to the documents directory.
   static Future<Directory> getDocumentsDirectory() async {
     final base = await _getBaseStorageDirectory();
-    var directory = Directory("${base.absolute.path}/Documents");
+    var directory = Directory("${base.absolute.path}/Documents/Sent");
 
     //? Then print this out.
     if (!await directory.exists()) {
@@ -247,7 +263,7 @@ class WayaFileHelper {
     }
 
     //? This is fine.
-    return directory;
+    return directory.parent;
   }
 
   /// Returns a Future that resolves to the media storage directory for the
@@ -264,6 +280,30 @@ class WayaFileHelper {
   static Future<Directory> getMediaDirectory() async {
     final base = await _getBaseStorageDirectory();
     var directory = Directory("${base.absolute.path}/Media/Sent");
+
+    //? Then print this out.
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? This is fine.
+    return directory.parent;
+  }
+
+  /// Returns a Future that resolves to the audio storage directory for the
+  /// application.
+  ///
+  /// The audio directory is used for storing various media files like images,
+  /// videos, and other media content used by the application. This is where all
+  /// the downloaded media by users should go to.
+  ///
+  /// This is an asynchronous operation that needs to be awaited when called.
+  ///
+  /// Returns:
+  ///   * [Directory] - A [Future<Directory>] pointing to the media storage location
+  static Future<Directory> getAudioDirectory() async {
+    final base = await _getBaseStorageDirectory();
+    var directory = Directory("${base.absolute.path}/Audio/Sent");
 
     //? Then print this out.
     if (!await directory.exists()) {
@@ -349,6 +389,11 @@ class WayaFileHelper {
     final directory = await getVoiceMessagesDirectory();
 
     // Then return this bonkers generated file path.
-    return "${directory.absolute.path}/${chatId}_${WayaValueHelper.createUid()}.aac";
+    return "${directory.absolute.path}/Sent/${chatId}_${WayaValueHelper.createUid()}.m4a";
+  }
+
+  /// Returns the final directory of a file using the logic of where we are coming
+  static String getFileSubdirectory(Directory parent, MessageModel message) {
+    return "${parent.absolute.path}${message.senderId == ConversationState.self.id ? "/Sent" : ""}";
   }
 }

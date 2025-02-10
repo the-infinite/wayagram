@@ -86,9 +86,11 @@ class WayaButton extends StatelessWidget {
       onTap: isButtonDisabled || isLoading
           ? null
           : () async {
-              FocusScope.of(context).unfocus();
-              await HapticFeedback.heavyImpact();
               callback?.call();
+              try {
+                FocusScope.of(context).unfocus();
+                await HapticFeedback.heavyImpact();
+              } catch (_) {}
             },
       child: Container(
         height: height,

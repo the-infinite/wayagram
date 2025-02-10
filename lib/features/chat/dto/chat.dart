@@ -1,6 +1,4 @@
-import 'package:dio/dio.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
@@ -34,23 +32,9 @@ class SendMessageDto {
     final map = <String, dynamic>{};
 
     //? Also fine.
-    if (media != null && (media?.isNotEmpty ?? false)) {
-      map['media'] = media?.map((file) {
-        final uri = Uri.parse(file);
-        final filename = uri.pathSegments.last;
-        final extensionIndex = filename.lastIndexOf(".");
-        final fileExtension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
-
-        //? Get the media file from here.
-        return MultipartFile.fromFileSync(
-          file,
-          filename: filename,
-          contentType: WayaFileExtensions.getMimeType(fileExtension),
-        );
-      });
-    }
+    map['media'] = [];
     map['chatId'] = chatId;
-    if (originalMessageId != null) map['originalMessageId'] = originalMessageId;
+    if (originalMessageId?.isNotEmpty ?? false) map['originalMessageId'] = originalMessageId;
     if (content?.isNotEmpty ?? false) map['content'] = content;
     map['messageType'] = type.name;
     map['senderId'] = ConversationState.self.id;

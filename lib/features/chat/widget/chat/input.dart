@@ -4,6 +4,7 @@ import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/files.dart';
@@ -39,7 +40,7 @@ class ChatInputController {
   final _recorderState = ValueNotifier(RecorderState.stopped);
 
   /// Our voice recorder.
-  final RecorderController _soundRecorder = RecorderController();
+  RecorderController? _soundRecorder;
 
   /// Where we keep the voice note currently being sent in chat.
   final _voiceMessage = ValueNotifier<String?>(null);
@@ -50,6 +51,9 @@ class ChatInputController {
 
   /// The list of files currently put inside of this one.
   final _files = ValueNotifier<List<File>>([]);
+
+  /// The message that we are currently focusing on.
+  final _focusedMessage = ValueNotifier<MessageModel?>(null);
 
   /// This is the list of contact that are being sent here.
   final _contacts = ValueNotifier<List<String>>([]);
@@ -64,22 +68,14 @@ class ChatInputController {
   /// The chat that is bound to this chat input controller.
   ChatModel? _chat;
 
+  void Function(bool)? _focusListener;
+
   // The constructor.
   ChatInputController._() {
     //? Request for permission.
     Permission.microphone.request().then(
       (status) async {
-        //? If permission was not granted.
-        if (!await _soundRecorder.checkPermission()) return;
-
-        // This is fine.
-        try {
-          //? Toggle state.
-          _recorderState.value = _soundRecorder.recorderState;
-
-          //? Now, switch this to completed.
-          _isRecorderOpen.value = true;
-        } catch (_) {}
+        //
       },
     );
   }
@@ -95,10 +91,12 @@ class ChatInputController {
       _canSend.dispose();
       _replyTo.dispose();
       _contacts.dispose();
+      _focusedMessage.dispose();
       _recorderState.dispose();
       _isRecorderOpen.dispose();
       _voiceMessage.dispose();
-      _soundRecorder.dispose();
+      _soundRecorder?.dispose();
+      _soundRecorder = null;
     } catch (_) {}
   }
 
@@ -111,6 +109,9 @@ class ChatInputController {
     _isEditing.value = false;
     _contacts.value = [];
     _files.value = [];
+    _soundRecorder?.dispose();
+    _soundRecorder = null;
+    _focusedMessage.value = null;
     _isMedia.value = false;
     _currentType.value = MessageType.text;
     _voiceMessage.value = null;
@@ -121,14 +122,14 @@ class ChatInputController {
   /// in order.
   Future<void> resumeRecording() async {
     //? Only resume when this should be able to.
-    if (_soundRecorder.recorderState != RecorderState.paused) return;
+    if (_soundRecorder!.recorderState != RecorderState.paused) return;
 
     try {
       //? Resume
-      await _soundRecorder.record();
+      await _soundRecorder!.record();
 
       //? Then update state.
-      _recorderState.value = _soundRecorder.recorderState;
+      _recorderState.value = _soundRecorder!.recorderState;
     } catch (_) {}
   }
 
@@ -136,15 +137,15 @@ class ChatInputController {
   /// get your bearings and breathe.
   Future<void> pauseRecording() async {
     //? Only pause when this should be able to.
-    if (!_soundRecorder.isRecording) return;
+    if (!_soundRecorder!.isRecording) return;
 
     //? This is fine.
     try {
       //? pause the recording.
-      await _soundRecorder.pause();
+      await _soundRecorder!.pause();
 
       //? Then update state.
-      _recorderState.value = _soundRecorder.recorderState;
+      _recorderState.value = _soundRecorder!.recorderState;
     } catch (_) {}
   }
 
@@ -153,7 +154,7 @@ class ChatInputController {
   Future<File?> stopRecording() async {
     try {
       //? First, obtain the URI we need.
-      final result = await _soundRecorder.stop(false);
+      final result = await _soundRecorder!.stop();
 
       //? If this is null, just stop at this point with a null.
       if (result == null) return null;
@@ -166,8 +167,11 @@ class ChatInputController {
         return null;
       }
 
+      // This is bad.
+      launchUrl(recordedFile.uri);
+
       //? After moving forward.
-      _recorderState.value = _soundRecorder.recorderState;
+      _recorderState.value = _soundRecorder!.recorderState;
       _voiceMessage.value = recordedFile.path;
 
       // You can now
@@ -221,8 +225,43 @@ class ChatInputController {
   }
 
   /// A helper function used to initialize this controller with a new chat.
-  void setChat(ChatModel chat) {
+  void setChat(ChatModel chat) async {
     _chat = chat;
+    _soundRecorder = RecorderController();
+
+    //? If permission was not granted.
+    if (!await _soundRecorder!.checkPermission()) return;
+
+    // This is fine.
+    try {
+      //? This is fine.
+      _soundRecorder!.reset();
+
+      //? Toggle state.
+      _recorderState.value = _soundRecorder!.recorderState;
+
+      //? Now, switch this to completed.
+      _isRecorderOpen.value = true;
+    } catch (_) {}
+  }
+
+  /// A helper function used to focus on a given message.
+  void setFocus(MessageModel message) {
+    _focusedMessage.value = message;
+    _focusListener?.call(true);
+  }
+
+  /// A wonderful way of setting what to do when we focus away from this chat.
+  void setFocusListener(void Function(bool) listener) {
+    _focusListener = listener;
+  }
+
+  /// A helper function used to remove the message we are currently focusing on
+  /// from focus.
+  void clearFocus() {
+    _focusedMessage.value = null;
+    _focusListener?.call(false);
+    _focusListener = null;
   }
 
   /// A helper function used to get the chat body that we would use for the
@@ -234,6 +273,9 @@ class ChatInputController {
   /// controller.
   ChatModel get chat => _chat!;
 
+  /// A list of all the emojis that the person texting can use for reactions.
+  List<String> get reactions => ['❤️', '👍', '🔥', '😂', '😮', '😢', '😡'];
+
   /// A helper function used to retrieve all of the selected files.
   List<File> get selectedFiles => _files.value;
 
@@ -242,14 +284,17 @@ class ChatInputController {
 
   /// A stream used to monitor the sound recorder for when it makes any sizeable
   /// progress.
-  Stream<Duration>? get onRecordingProgress => _soundRecorder.onCurrentDuration;
+  Stream<Duration>? get onRecordingProgress => _soundRecorder!.onCurrentDuration;
 
   /// The current state of the audio recorder.
   RecorderState get recorderState => _recorderState.value;
 
+  /// The message we are currently focusing on.
+  MessageModel? get focusedMessage => _focusedMessage.value;
+
   /// A helper function used to retrieve the sound recorder that is currently
   /// being used.
-  RecorderController get soundRecorder => _soundRecorder;
+  RecorderController get soundRecorder => _soundRecorder!;
 
   /// A helper function used to get whether or not this is currently consuming
   /// media files.
@@ -317,7 +362,7 @@ class ChatInputWidget extends StatelessWidget {
       if (!controller._isRecorderOpen.value) return;
 
       //? Start recording audio.
-      await controller._soundRecorder.record(
+      await controller._soundRecorder!.record(
         path: await WayaFileHelper.getVoiceNoteFilePath(controller.chat.id),
         androidEncoder: AndroidEncoder.aac,
         androidOutputFormat: AndroidOutputFormat.mpeg4,
@@ -326,7 +371,7 @@ class ChatInputWidget extends StatelessWidget {
       );
 
       //? Now notify the caller that you are recording.
-      controller._recorderState.value = controller._soundRecorder.recorderState;
+      controller._recorderState.value = controller._soundRecorder!.recorderState;
       controller._currentType.value = MessageType.voiceNote;
       controller._isRecorderOpen.value = true;
 
