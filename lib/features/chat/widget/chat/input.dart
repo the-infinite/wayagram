@@ -4,7 +4,6 @@ import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/files.dart';
@@ -166,9 +165,6 @@ class ChatInputController {
       if (!await recordedFile.exists()) {
         return null;
       }
-
-      // This is bad.
-      launchUrl(recordedFile.uri);
 
       //? After moving forward.
       _recorderState.value = _soundRecorder!.recorderState;
