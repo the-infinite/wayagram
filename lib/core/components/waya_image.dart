@@ -118,9 +118,13 @@ class WayaImage2 extends ConsumerWidget {
 
 class WayaImage3 extends ConsumerWidget {
   final String? imageUrl;
+  final void Function()? onTap;
+  final bool isEdit;
   const WayaImage3({
     super.key,
     this.imageUrl,
+    this.onTap,
+    this.isEdit = false,
     required this.height,
   });
 
@@ -152,7 +156,10 @@ class WayaImage3 extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Image.asset('assets/images/pages/camera.png', height: 36.h,),
+            if (isEdit)
+            InkWell(
+                onTap: onTap,
+                child: Image.asset('assets/images/pages/camera.png', height: 36.h,)),
           ],
         ),
       ),

@@ -445,7 +445,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                                     child: _buildActionNav(
                                         context: context,
                                         onTap: () {
-                                          viewModel.repost(context, postId: '${post?.id}');
+                                          viewModel.repost(context, postId: '${post.id}');
                                           Navigator.pop(context);
 
                                         },
@@ -458,7 +458,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                                     child: _buildActionNav(
                                         context: context,
                                         onTap: () {
-                                       viewModel.deletePost(context, postId: '${post?.id}');
+                                       viewModel.deletePost(context, postId: '${post.id}');
                                        ScaffoldMessenger.of(context).showSnackBar(
                                          const SnackBar(
                                            content: Text('Post deleted successfully!'),
@@ -488,7 +488,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                           //viewFull!();
                         },
                         child: ReadMoreText(
-                         removeHashtags('${post?.content?.capitalizeFirst}'),
+                         removeHashtags('${post.content?.capitalizeFirst}'),
                           style: TextStyle(
                             fontFamily: WayaConstants.fontFamily,
                             fontWeight: FontWeight.w400,
@@ -744,6 +744,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
     final viewModel = ref.watch(createPageProvider);
     final viewModel2 =  ref.read(createPageProvider.notifier);
     ref.read(createPageProvider.notifier).getCommentsStream(postId);
+    print('ShowCommentBox ${ ref.read(createPageProvider.notifier).getCommentsStream(postId)}');
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Makes the keyboard push up the bottom sheet
@@ -898,14 +899,19 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                   stream: viewModel2.getCommentsStream(postId),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
+                      print('Streming data ${snapshot.data}');
+                      print('Streaming Comments ${viewModel2.getCommentsStream(postId)}');
                       return const Center(child: CircularProgressIndicator());
                     }
                     //if(!snapshot.hasData || snapshot.data!.isEmpty) {
                     if(snapshot.data?.length == 0 || snapshot.data == null) {
                       return const Center(child: Text("No comments yet"));
                     }
+                    // if(viewModel2.getCommentsStream(postId) == null ) {
+                    //   return const Center(child: Text("No comments yet"));
+                    // }
 
-                   final comments = snapshot.data!;
+                    //final comments = snapshot.data!;
                     //commentCount = comments.length;
                     String formatTimeAgo(String dateString) {
                       DateTime dateTime = DateTime.parse(dateString); // Convert string to DateTime
