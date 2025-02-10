@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/core/helpers/files.dart';
+import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
@@ -45,6 +46,41 @@ class SendMessageDto {
     return map;
   }
 
+  //? This is fine.
+  MessageModel buildMessage(String messageId) => MessageModel(
+        id: messageId,
+        isDeleted: false,
+        isDeletedBySender: false,
+        chatId: chatId,
+        content: content,
+        media: media
+            ?.map(
+              (file) => MessageMedia(
+                id: WayaValueHelper.createUid(),
+                messageId: messageId,
+                mediaType: type,
+                mediaUrl: file,
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              ),
+            )
+            .toList(),
+        originalMessage: originalMessage,
+        contacts: contacts,
+        senderId: ConversationState.self.id!,
+        messageType: type,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        mediaUrl: media?.firstOrNull,
+        edited: false,
+        originalMessageId: originalMessageId,
+        forwardedFrom: null,
+        isReply: originalMessageId != null,
+        status: [],
+        messageReaction: [],
+        dto: this,
+      );
+
   Future<SendMessageDto> uploadFiles() async {
     final files = <String>[];
 
@@ -56,7 +92,37 @@ class SendMessageDto {
       final result = await WayaFileRepository.instance.uploadFile(entity, name);
 
       //? If this did not fail...
-      if (result != null) files.add(result);
+      if (result == null) continue;
+
+      //? Since this worked fine...
+      files.add(result);
+
+      //? We do not need to do this for voice notes.
+      if (type == MessageType.voiceNote) continue;
+
+      //? Next, we copy the file from its source location to where it would be
+      //? when we try to look for it locally.
+      final target = await WayaFileHelper.getFileDirectory(buildMessage(WayaValueHelper.createUid()), file);
+
+      //? Print this.
+      print("SendMessageDTO/ Copying ${entity.path} to ${target.path}");
+
+      //? If this does not exist...
+      if (!await target.exists()) {
+        try {
+          await entity.copy(target.path);
+        } catch (_) {}
+
+        //? This was copied successfully.
+        if (await target.exists()) {
+          print("SendMessageDTO/ Copied ${entity.path} to ${target.path}");
+        }
+
+        //? Log our error.
+        else {
+          print("SendMessageDTO/ Failed to copy ${entity.path} to ${target.path}");
+        }
+      }
     }
 
     //? This is fine.

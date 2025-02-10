@@ -125,7 +125,7 @@ class ConversationWidget extends StatelessWidget {
             children: [
               // The user's chat profile picture.
               ChatProfilePicture(
-                user: chat.other.userData ?? ConversationState.self,
+                user: chat.other.userData!,
                 lastSeen: chat.other.chatUser?.lastSeen,
                 showActive: chat.other.chatUser?.onlineStatus == ChatUserActivity.online,
                 radius: 27,
