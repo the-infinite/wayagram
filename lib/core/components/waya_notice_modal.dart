@@ -47,6 +47,7 @@ class WayaNoticeModal extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             softWrap: true,
+            maxLines: 3,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -55,6 +56,7 @@ class WayaNoticeModal extends StatelessWidget {
           const Gap(12),
           Text(
             message,
+            maxLines: 3,
              softWrap: true,
             textAlign: TextAlign.center,
             style: WayaTextStyles.descriptionStyle,

@@ -13,6 +13,11 @@ class ConversationVm extends StateNotifier<ConversationState> {
     state = state.copyWith(searchFilter: filter.trim());
   }
 
+  /// Enter archived chats activity.
+  void setArchived(bool value) {
+    state = state.copyWith(inArchived: value);
+  }
+
   /// Helper function used to get all chats that are currently being transmitted
   /// from the server-side to the current user.
   Future<List<ChatModel>> getChats([bool reset = false]) async {
@@ -141,7 +146,16 @@ class ConversationVm extends StateNotifier<ConversationState> {
       //? possible to replace it.
       if (replace && pos != -1) {
         final chats = state.conversations;
-        chats[pos] = result;
+        final previous = chats[pos];
+
+        //? Fix the bug where the latest message is not always guaranteed to be
+        //? showing up here.
+        chats[pos] = result.copyWith(
+          lastMessage: result.lastMessage ?? previous.lastMessage,
+          latestMessageId: result.latestMessageId ?? previous.latestMessageId,
+        );
+
+        //? Then update this.
         state = state.copyWith(conversations: chats);
       }
 

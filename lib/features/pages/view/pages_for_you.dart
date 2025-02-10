@@ -20,11 +20,14 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:wayagram/features/post/view/full_post_details.dart';
+import 'package:wayagram/features/post/model/fetch_comment.dart';
+
 
 import '../../../assetsgen/assets.gen.dart';
 import '../../explore/widgets/grouped_widget_header.dart';
+import '../../post/view/create_post.dart';
 import '../../post/widgets/likebtnreaction.dart';
+import '../../shop/widgets/empty_state.dart';
 import '../component/extras.dart';
 import '../data/model/feeds.dart';
 
@@ -37,13 +40,12 @@ class PagesForYou extends ConsumerStatefulWidget {
 
 class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProviderStateMixin {
 
-  int like = 0;
-
   WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
 
   static const int _pageSize = 10;
-  final PagingController<int, Post> _pagingController =
-  PagingController(firstPageKey: 1);
+  final PagingController<int, Post> _pagingController = PagingController(firstPageKey: 1);
+
+  int like = 0;
 
   @override
   void initState() {
@@ -73,51 +75,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                 fontFamily: WayaConstants.fontFamily
             )),
         Gap(10),
-        /*ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: 200),
-          child: Column(
-            children: [
-              Expanded(
-                child: PagedListView<int, Post>(
-                  pagingController: _pagingController,
-                  builderDelegate: PagedChildBuilderDelegate<Post>(
-                    itemBuilder: (context, post, index) {
-                      return Obx(
-                            () => PostWidget(
-                          isSaved: false,
-                          isFeedsPost: true,
-                          post: post,
-                          isLiked: post.getIsLiked().value == true,
-                          connected: false,
-                          isSuggested: true,
-                          onLike: (String? reaction) async {
-                            viewModel.likePost(post, reaction: reaction);
-                          },
-                          onReact: (String reaction) {
-                            viewModel.likePost(post, reaction: reaction);
-                          },
-                          onComment: () {
-                            viewModel.commentPost2(post);
-                          },
-                          isReposted: post.isReposted.value,
-                          onRepost: () async {
-                            //viewModel.repost(post);
-                          },
-                          viewFull: (){
-                           // viewModel.viewFullPost(post);
-                          },
-                          isFullPostDetails: false,
-                          commentCount: post.commentCount.value,
-                          isProfilePost: false,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),*/
+
 
       /*  ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
@@ -139,8 +97,8 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
             shrinkWrap: true,
              itemCount: viewModel2.getAllPost?.length,
             itemBuilder: (_, index,){
-              final post = viewModel2.getAllPost?[index];
-              num daysLeft = DateTime.parse('${post?.createdAt}').day;
+              final post = viewModel2.getAllPost![index];
+              final posts = viewModel2.getAllPost;
 
               String formatTimeAgo(String dateString) {
                 DateTime dateTime = DateTime.parse(dateString); // Convert string to DateTime
@@ -150,6 +108,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
               String removeHashtags(String text) {
                 return text.replaceAll(RegExp(r'#\w+'), '').trim();
               }
+              List<dynamic> mediaUrls = post?.media ?? [];
 
             return  Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -524,16 +483,6 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                       SizedBox(
                         height: 15.h,
                       ),
-                      /*  Text(
-                post.title,
-                style: TextStyle(
-                  fontFamily: WayaConstants.fontFamily,
-                  fontSize: 15.sp,
-                ),
-              ),
-              SizedBox(
-                height: 15.h,
-              ),*/
                       GestureDetector(
                         onTap: (){
                           //viewFull!();
@@ -579,17 +528,24 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                       SizedBox(
                         height: 15.h,
                       ),
-                      if ( post!.hashtags!.isNotEmpty)
+                      if(post.hashtags != null)
+                        ...post.hashtags!.map((e)=>
+                            Row(
+                              children: [
+                                Text('${post.hashtags}'),
+                              ],
+                            )),
 
-                      //if (isFullPostDetails && post!.hashtags!.isNotEmpty)
+
+
+                      if ( post.hashtags!.isNotEmpty)
                         Row(
-                          //children: post.tags.map<Widget>((tag) {
                           children: post.hashtags!.map<Widget>((hashtags){
                             return Padding(
                               padding: const EdgeInsets.only(right: 8.0),
                               child: Text(
-                                //'#$hashtags',
-                                '#${jsonDecode(hashtags.replaceAll("]", "").replaceAll("[", "")) ?? hashtags}',
+                                '#$hashtags',
+                                //'#${jsonDecode(hashtags.replaceAll("]", "").replaceAll("[", "")) ?? hashtags}',
                                 style: TextStyle(
                                   fontFamily: WayaConstants.fontFamily,
                                   fontSize: 15.sp,
@@ -603,6 +559,39 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                     ],
                   ),
                 ),
+                ///
+                ///
+
+
+
+                if (mediaUrls.isNotEmpty)
+                  SizedBox(
+                    height: 200, // Adjust height as needed
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: viewModel2.getAllPost?.length,
+                      //itemCount: mediaUrls.length,
+                      itemBuilder: (context, mediaIndex) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.network(
+                            mediaUrls[mediaIndex],
+                            width: 200, // Adjust width as needed
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const Center(child: CircularProgressIndicator());
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.broken_image, size: 100);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                ///
                 if (post.media!.isNotEmpty)
                   //if(post.media!.isEmpty)
                   GestureDetector(
@@ -622,126 +611,6 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                   ),
                 ),*/
                 // Post actions: Like, Comment, Repost, Share
-               /* Padding(
-                  padding: EdgeInsets.fromLTRB(15.w, 8.0.h, 15.w, 8.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      //Like button
-                      GestureDetector(
-                        onTap: onLike,
-                        child: Row(
-                          children: [
-                            Icon(
-                              IconsaxOutline.like_1,
-                              size: 18.sp,
-                              color: isLiked ? Colors.red : Colors.grey,
-                            ),
-                            SizedBox(width: 6.w),
-                            Text(
-                              "Like",
-                              style: TextStyle(
-                                fontFamily: WayaConstants.fontFamily,
-                                fontSize: 12.sp,
-                                color: Colors.black,
-                                // fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      LikeButtonWithReactions(
-                        // isLiked: post.isLiked,
-                        // onLike: onLike,
-                        // onReact: onReact ?? (react){},
-
-                        isLiked: post.likeCount,
-                        onLike: onLike,
-                        onReact: onReact ?? (react){},
-
-                        // onLike: (String? reaction) async {
-                        //   viewModel.likePost(, reaction: reaction);
-                        // },
-                        // onReact: (String reaction) {
-                        //   viewModel.likePost(post, reaction: reaction);
-                        // },
-                        // onComment: () {
-                        //   viewModel.commentPost2(post);
-                        // },
-                      ),
-                      // Comment button
-                      GestureDetector(
-                        //onTap: onComment,
-                        child: Row(
-                          children: [
-                            Image.asset('assets/images/pages/comment.png',  height: 18.h,),
-                            SizedBox(width: 6.w),
-                            Text(
-                              "Comments",
-                              style: TextStyle(
-                                fontFamily: WayaConstants.fontFamily,
-                                fontSize: 12.sp,
-                                color: Colors.black,
-                                // fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Repost button
-                      GestureDetector(
-                        onTap: (){},
-                        //onTap: onRepost,
-                        child: Row(
-                          children: [
-                            SvgPicture.asset('assets/images/pages/flag.svg',height: 18.sp,
-                              //color: isReposted == true ? Colors.blue : Colors.black,
-                            ),
-                            // Icon(
-                            //   IconsaxOutline.programming_arrow,
-                            //   size: 18.sp,
-                            //   color: isReposted == true ? Colors.blue : Colors.black,
-                            // ),
-                            SizedBox(width: 6.w),
-                            Text(
-                              "Repost",
-                              style: TextStyle(
-                                fontFamily: WayaConstants.fontFamily,
-                                fontSize: 12.sp,
-                                // color: Colors.black,
-                                //color: isReposted == true ? Colors.blue : Colors.black,
-                                // fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Share button
-                      GestureDetector(
-                        onTap: () {
-                          //Share.share(post.shareLink);
-                          // _showShareDialog(context, post.shareLink);
-                        },
-                        child: Row(
-                          children: [
-                            Image.asset('assets/images/pages/share.png',  height: 32.h,),
-                            //Icon(IconsaxOutline.share, size: 18.sp),
-                            SizedBox(width: 6.w),
-                            Text(
-                              "Share",
-                              style: TextStyle(
-                                fontFamily: WayaConstants.fontFamily,
-                                fontSize: 12.sp,
-                                color: Colors.black,
-                                // fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),*/
                 Padding(
                   padding: EdgeInsets.fromLTRB(15.w, 8.0.h, 15.w, 8.w),
                   child: Row(
@@ -770,10 +639,10 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                       }, color: post.likeCount == 0 ? WayaColors. greyColor500: WayaColors.primary),
                       actionType('${post.commentCount} Comments', 'assets/images/pages/comment2.png',
                       onPressed: (){
-                       // WayaNav.toNamed('/fullPostDetails');
+                        showCommentBox(context, post.id);
+                        print(post.id);
                       }),
                       actionType('${post.shareCount} Shares', 'assets/images/pages/share2.png', onPressed: (){
-                        //viewModel.likePost('${post?.id}');
                         viewModel.sharePost(context, postId: '${post.id}');
                         Share.share('${post.url}', subject: 'Share Options');
                       }),
@@ -866,6 +735,321 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
       ],
     );
 
+  }
+
+  void showCommentBox(BuildContext context, postId) {
+    @override
+    final _formKey = GlobalKey<FormState>();
+    final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(createPageProvider);
+    final viewModel2 =  ref.read(createPageProvider.notifier);
+    ref.read(createPageProvider.notifier).getCommentsStream(postId);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Makes the keyboard push up the bottom sheet
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            height: 450.h,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                    'All Comments',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    )),
+                Gap(20),
+                /*Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: viewModel.comments?.length,
+                    //itemCount: comments.length,
+                    itemBuilder: (context, index) {
+                      //final comment = comments[index];
+                      String formatTimeAgo(String dateString) {
+                        DateTime dateTime = DateTime.parse(dateString); // Convert string to DateTime
+                        return timeago.format(dateTime); // Convert to "time ago" format
+                      }
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 15.w),
+                        child: Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // circleImage(
+                                //   radius: 20.r,
+                                //   comment.user.profilePicture ?? '',
+                                // ),
+
+                                circleImage(
+                                  radius: 10.r,
+                                  viewModel.comments?[index].user?.profilePicture ?? '',
+                                ),
+                                Gap(10),
+
+                                Text('${viewModel.comments?[index].user?.firstName} ${viewModel.comments?[index].user?.lastName}',
+                                  //'${comment.user.firstName} ${comment.user.lastName}',
+                                  style: TextStyle(
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontSize: 12.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Gap(10),
+                                Text(
+                                  '• ${formatTimeAgo('${viewModel.comments?[index].createdAt}')}',
+                                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Theme.of(context).colorScheme.greyColor500 ),
+                                ),
+
+                                SizedBox(width: 10.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(12.w.h),
+                                        decoration: BoxDecoration(
+                                          //color: Colors.grey[200],
+                                          borderRadius: BorderRadius.circular(10.r),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+
+                                            SizedBox(height: 15.h),
+                                            Text('${viewModel.comments?[index].content?.capitalizeFirst}',
+                                              // comment.content?.first,
+                                              style: TextStyle(
+                                                //fontFamily: WayaConstants.fontFamily,
+                                                fontSize: 12.sp,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w200,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 4.h),
+                Row(
+                                            children: [
+                                              LikeButtonWithReactions(
+                                                isLiked: false,
+                                                onLike: (String reaction) {},
+                                                onReact: (String reaction) {},
+                                              ),
+                                              SizedBox(width: 10.w),
+                                              // Comment button
+                                              GestureDetector(
+                                                onTap: () {},
+                                                child: Row(
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      'assets/icons/menus/messages_2.svg',
+                                                      height: 18.h,
+                                                      width: 18.h,
+                                                    ),
+                                                    SizedBox(width: 6.w),
+                                                    Text(
+                                                      "Comments",
+                                                      style: TextStyle(
+                                                        //fontFamily: ,
+                                                        fontSize: 12.sp,
+                                                        color: Colors.black,
+                                                        // fontWeight: FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                      //input row for month, like and reply
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),*/
+
+                 StreamBuilder<List<Comments>>(
+                  stream: viewModel2.getCommentsStream(postId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    //if(!snapshot.hasData || snapshot.data!.isEmpty) {
+                    if(snapshot.data?.length == 0 || snapshot.data == null) {
+                      return const Center(child: Text("No comments yet"));
+                    }
+
+                   final comments = snapshot.data!;
+                    //commentCount = comments.length;
+                    String formatTimeAgo(String dateString) {
+                      DateTime dateTime = DateTime.parse(dateString); // Convert string to DateTime
+                      return timeago.format(dateTime); // Convert to "time ago" format
+                    }
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: viewModel.comments?.length,
+                      //itemCount: comments.length,
+                      itemBuilder: (context, index) {
+                        //final comment = comments[index];
+                        return  Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 15.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  circleImage(
+                                    radius: 10.r,
+                                    viewModel.comments?[index].user?.profilePicture ?? '',
+                                  ),
+                                  Gap(10),
+
+                                  Text('${viewModel.comments?[index].user?.firstName} ${viewModel.comments?[index].user?.lastName}',
+                                    style: TextStyle(
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontSize: 12.sp,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Gap(10),
+                                  Text(
+                                    '• ${formatTimeAgo('${viewModel.comments?[index].createdAt}')}',
+                                    style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Theme.of(context).colorScheme.greyColor500 ),
+                                  ),
+
+                                ],
+                              ),
+                              Text('${viewModel.comments?[index].content?.capitalizeFirst}',
+                                style: TextStyle(
+                                  //fontFamily: WayaConstants.fontFamily,
+                                  fontSize: 12.sp,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w200,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: WayaDp( radius: 20,),
+                    ),
+                    Gap(10),
+                    Expanded(
+                      flex: 2,
+                      child:  Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FormField<String>(validator: (value) {
+                              return null;
+                            }, builder: (formState) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  WayaTextFormField(
+                                    showBorder: true,
+                                    keyboardType: TextInputType.text,
+                                    controller: viewModel.content,
+                                    hintText: 'Write comment here',
+                                    borderColor: formState.hasError &&
+                                        viewModel.content.text.isEmpty
+                                        ? wayaTheme.colorScheme.error
+                                        : null,
+                                  ),
+                                  if (formState.hasError &&
+                                      viewModel.content.text.isEmpty
+                                  )
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Text(
+                                        formState.errorText!,
+                                        style: TextStyle(
+                                            color: wayaTheme.colorScheme.error,
+                                            fontSize: 12),
+                                      ),
+                                    ),
+                                ],
+                              );
+                            }),
+                            Gap(20),
+                          ],
+                        )),),
+                    Gap(10),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: SizedBox(
+                        width: 50,
+                        child: WayaButton(
+                          centerWidget: Image.asset('assets/images/pages/send_ic.png', height: 25.h,),
+                          callback:!viewModel.isLoading
+                              ? () async {
+                            if (_formKey.currentState!.validate()) {
+                              await ref.watch(createPageProvider.notifier).commentOnPost(
+                                postId,
+                                viewModel.content.text,
+
+                              );
+                              ref.watch(createPageProvider.notifier).reset();
+                              //Navigator.pop(context);
+                            }
+                          } : null,
+                          height: 50,
+                          isLoading: viewModel.isLoading,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _launchUrl(String link) async {
@@ -1000,4 +1184,33 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
     );
   }
 
+
+}
+
+class PostEmptyState extends StatelessWidget {
+  const PostEmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Container(
+      padding: EdgeInsets.all(30),
+      child: EmptyState(
+          hasButton: false,
+          onTap: () {
+            WayaNav.toNamed(CreatePost.route);
+          },
+          buttontext: 'Create a Post',
+          buttonTrailingIcon: SvgPicture.asset(
+            WayaAssets.icons.addEventIcon.path,
+            colorFilter:
+            ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+          ),
+          assetImage: Image.asset(
+            WayaAssets.images.emptyEvent.path,
+            scale: 1.5,
+          ),
+          message: "You haven't created any post yet"),
+    );
+  }
 }

@@ -122,6 +122,10 @@ class MessageModel {
   final List<MessageStatus>? status;
   final List<MessageMedia>? media;
   final List<MessageReaction>? messageReaction;
+  final bool? isDeletedBySender;
+  final bool? isDeleted;
+
+  // Front-end implementations.
   final List<String>? contacts;
   final bool? isError;
   final SendMessageDto? dto;
@@ -145,13 +149,15 @@ class MessageModel {
     required this.media,
     required this.messageReaction,
     required this.contacts,
+    required this.isDeleted,
+    required this.isDeletedBySender,
     this.isError,
     this.dto,
   });
 
   String get contentDescription {
     return switch (messageType) {
-      MessageType.file => "${media!.length} files",
+      MessageType.file => "${media?.length ?? 1} files",
       MessageType.location => "Location",
       _ => content ?? "",
     };
@@ -165,6 +171,19 @@ class MessageModel {
     return status?.where((receipt) => receipt.status == MessageStatusCode.delivered).firstOrNull?.createdAt;
   }
 
+  Map<String, int> get reactionPairs {
+    final result = <String, int>{};
+
+    //? Now we iterate on each pair.
+    for (final reaction in messageReaction ?? <MessageReaction>[]) {
+      final count = result[reaction.reaction] ?? 0;
+      result[reaction.reaction] = count + 1;
+    }
+
+    //? This is fine.
+    return result;
+  }
+
   // This is fine.
   factory MessageModel.fromJson(Map<String, dynamic> json) => _$MessageModelFromJson(json);
 
@@ -172,7 +191,7 @@ class MessageModel {
   Map<String, dynamic> toJson() => _$MessageModelToJson(this);
 
   /// Clones this message in an attempt to set whether this is an error or not.
-  MessageModel copyWith(bool isError) {
+  MessageModel copyWith(bool isError, MessageModel? replyTo) {
     return MessageModel(
       id: id,
       chatId: chatId,
@@ -182,8 +201,8 @@ class MessageModel {
       messageType: messageType,
       edited: edited,
       dto: dto,
-      originalMessageId: originalMessageId,
-      originalMessage: originalMessage,
+      originalMessageId: replyTo?.id ?? originalMessageId,
+      originalMessage: replyTo ?? originalMessage,
       forwardedFrom: forwardedFrom,
       isReply: isReply,
       createdAt: createdAt,
@@ -193,6 +212,8 @@ class MessageModel {
       messageReaction: messageReaction,
       contacts: contacts,
       isError: isError,
+      isDeleted: isDeleted,
+      isDeletedBySender: isDeletedBySender,
     );
   }
 }

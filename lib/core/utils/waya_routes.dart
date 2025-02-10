@@ -3,6 +3,7 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
@@ -26,6 +27,11 @@ import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/pages/view/add_team_member.dart';
+import 'package:wayagram/features/pages/view/confirm_page_details.dart';
+import 'package:wayagram/features/pages/view/create_page.dart';
+import 'package:wayagram/features/pages/view/pages.dart';
+import 'package:wayagram/features/pages/view/success_page.dart';
+import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/pages/view/edit_page_info.dart';
 import 'package:wayagram/features/pages/view/mutual_page.dart';
@@ -37,7 +43,6 @@ import 'package:wayagram/features/polls_and_voting/views/poll_summary.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/views/share_voting_link.dart';
 import 'package:wayagram/features/post/view/edit_post.dart';
-import 'package:wayagram/features/post/view/full_post_details.dart';
 import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart';
 import 'package:wayagram/features/quotation/buyer/views/buyer_checkout.dart';
 import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
@@ -78,12 +83,6 @@ import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
-import '../../features/pages/data/model/feeds.dart';
-import '../../features/pages/view/confirm_page_details.dart';
-import '../../features/pages/view/create_page.dart';
-import '../../features/pages/view/pages.dart';
-import '../../features/pages/view/success_page.dart';
-import '../../features/pages/view/suggestion.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
@@ -189,7 +188,8 @@ class WayaAppRoutes {
     MediaMoment.route: () => MediaMoment(),
     MyMoments.route:() => MyMoments(),
     EditPost.route: ()=> EditPost(initialContent: '', initialImageUrl: '', title: '', postId: '',),
-    //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,)
+    //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
+    ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

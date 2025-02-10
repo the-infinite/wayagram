@@ -13,19 +13,26 @@ abstract class BaseRepository {
     return httpClient.getHttp(route, params: params);
   }
 
-  Future<WayaRequestResponse> post(String route, dynamic body,
-      {Map<String, dynamic>? params,
-      bool formdata = false,
-      bool formEncoded = false,
-      void Function({int count, int total})? onSendProgress,
-      void Function({int count, int total})? onRecieveProgress}) {
-    _logger.i('Registering user base $body');
+  Future<WayaRequestResponse> post(
+    String route,
+    dynamic body, {
+    Map<String, dynamic>? params,
+    bool formdata = false,
+    bool formEncoded = false,
+    void Function({int count, int total})? onSendProgress,
+    void Function({int count, int total})? onRecieveProgress,
+  }) {
     return httpClient.postHttp(route, body,
         params: params,
         formdata: formdata,
         formEncoded: formEncoded,
         onSendProgress: onSendProgress,
         onRecieveProgress: onRecieveProgress);
+  }
+
+  Future<WayaRequestResponse> download(String url, String outputPath, WayaDownloadListener onData) {
+    _logger.i("Downloading a file $url");
+    return httpClient.downloadHttp(url, outputPath, onData);
   }
 
   Future<WayaRequestResponse> put(

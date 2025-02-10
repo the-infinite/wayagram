@@ -43,11 +43,13 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     // TODO: implement build
     final viewModel = ref.watch(eventVmProvider);
     final wayaTheme = Theme.of(context);
+     final EventDoc event =
+          ModalRoute.of(context)!.settings.arguments as EventDoc;
     return WayaScaffold(
         isLoading: false,
         isScrollable: false,
         title: "Event",
-        appBarTrailing: EventDetailAction(eventId: viewModel.singleEvent!.id),
+        appBarTrailing: EventDetailAction(eventId: event.id),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -75,9 +77,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
             ),
             const Gap(10),
             if (_selectedIndex == 0)
-              EventDetailWidget(eventId: viewModel.singleEvent!.id),
+              EventDetailWidget(eventId: event.id),
             if (_selectedIndex == 1)
-              EventAttendees(eventId: viewModel.singleEvent!.id),
+              EventAttendees(eventId: event.id),
           ],
         ),
         bottomNavigationBar: Container(
@@ -95,10 +97,10 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       width: context.width * 0.45,
                       child: WayaButton(
                         callback: () {
-                            ref.read(eventVmProvider.notifier).shareEvent(
+                          ref.read(eventVmProvider.notifier).shareEvent(
                               context: context,
                               shareUrl: "https://example.com");
-                        //  Share.share('Shares');
+                          //  Share.share('Shares');
                         },
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(
@@ -177,7 +179,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
-                        callback: viewModel.singleEvent?.maxCapacity != null &&
+                        callback: (viewModel.singleEvent?.maxCapacity != null &&
+                                    viewModel.singleEvent!.maxCapacity != 0) &&
                                 (viewModel.singleEvent!.maxCapacity! -
                                         viewModel.singleEvent!.noOfAttendees) ==
                                     0

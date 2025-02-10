@@ -70,4 +70,31 @@ class ChatModel {
     // This is fine.
     return unreadCount.toString();
   }
+
+  /// Helper function used to copy data from one instance of this class to another.
+  ChatModel copyWith({
+    String? id,
+    String? name,
+    String? createdBy,
+    String? latestMessageId,
+    MessageModel? lastMessage,
+    int? unreadCount,
+    String? chatType,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    List<ChatMember>? chatMembers,
+  }) {
+    return ChatModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      createdBy: createdBy ?? this.createdBy,
+      latestMessageId: latestMessageId ?? this.latestMessageId,
+      lastMessage: lastMessage ?? this.lastMessage,
+      unreadCount: unreadCount ?? this.unreadCount,
+      chatType: chatType ?? this.chatType,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      chatMembers: chatMembers ?? this.chatMembers,
+    );
+  }
 }

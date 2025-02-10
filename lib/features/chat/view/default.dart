@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -6,6 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/modals/start_conversation.dart';
+import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/conversation.dart';
@@ -27,6 +29,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         notifier.getChats(true);
+        notifier.getArchivedChats(true);
       },
     );
 
@@ -39,6 +42,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         notifier.getChats(true);
+        notifier.getArchivedChats(true);
       },
     );
 
@@ -57,16 +61,11 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     if (result == null) return;
   }
 
-  /// Used to filter the notification controller
-  void _filterChats(String filter) {}
-
   @override
   Widget build(BuildContext context) {
-    // For the size of the component.
-    // final size = MediaQuery.sizeOf(context);
     final conversationState = ref.watch(conversationProvider);
 
-    // This is fine.
+    //? When watch this one
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -81,37 +80,94 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         toolbarHeight: 70,
         leadingWidth: double.infinity,
         backgroundColor: WayaColors.white,
-        leading: Container(
-          height: double.infinity,
-          alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(left: 20),
-          child: Text(
-            "Messages",
-            style: WayaTextStyles.titleLarge.copyWith(
-              fontWeight: FontWeight.w700,
-              fontSize: 24,
-            ),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: IntrinsicHeight(
-              child: WayaButton(
-                callback: _startConversation,
-                height: null,
-                centerWidget: WayaAssets.icons.cPlus.svg(
-                  color: WayaColors.white,
-                  height: 24,
-                  width: 24,
+        leading: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //? First, the title.
+            Container(
+              height: double.infinity,
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 20),
+              child: Text(
+                "Messages",
+                style: WayaTextStyles.titleLarge.copyWith(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24,
                 ),
-                color: WayaColors.primary,
-                horizontalPadding: 10,
-                verticalPadding: 10,
               ),
             ),
-          ),
-        ],
+
+            // Next, boundless space.
+            const Spacer(),
+
+            //? Second, the archived chats button.
+            InkWell(
+              borderRadius: BorderRadius.circular(200),
+              splashColor: WayaColors.primary.withAlpha(30),
+              focusColor: WayaColors.primary.withAlpha(30),
+              highlightColor: WayaColors.primary.withAlpha(30),
+              onTap: () {
+                notifier.setArchived(true);
+                WayaNav.toNamed(ArchivedChatsScreen.route);
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(200),
+                  color: WayaColors.primary50,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    //? First, the reply icon.
+                    Icon(
+                      CupertinoIcons.archivebox_fill,
+                      color: WayaColors.primary,
+                      size: 18,
+                    ),
+
+                    // Some space.
+                    const Gap(5),
+
+                    //? Second, the text for replying.
+                    Text(
+                      "Archived chats",
+                      style: WayaTextStyles.bodySemiBold.copyWith(
+                        color: WayaColors.primary,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Some space.
+            const Gap(10),
+
+            //? Third and last, the start conversation button.
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: IntrinsicHeight(
+                child: WayaButton(
+                  callback: _startConversation,
+                  height: null,
+                  centerWidget: WayaAssets.icons.cPlus.svg(
+                    color: WayaColors.white,
+                    height: 24,
+                    width: 24,
+                  ),
+                  color: WayaColors.primary,
+                  horizontalPadding: 10,
+                  verticalPadding: 10,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -121,20 +177,22 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SearchConversationWidget(
-              onTextChange: _filterChats,
+              onTextChange: (value) {
+                notifier.setFilter(value);
+              },
             ),
           ),
 
           // Some space.
           const Gap(20),
 
-          //? Second, the pinned chats.
-          if (conversationState.pinned.isNotEmpty) ...[
+          //? If the chats are filtered...
+          if (conversationState.searchFilter.isNotEmpty) ...[
             //* The title comes first.
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                "Pinned Chats",
+                "Filtered Chats",
                 style: WayaTextStyles.titleMedium.copyWith(
                   color: WayaColors.greyColor500,
                 ),
@@ -146,10 +204,66 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
             //? Now, the pinned chats.
             ...List.generate(
-              conversationState.pinned.length,
+              conversationState.results.length,
               (index) => ConversationWidget(
                 index: index,
-                chat: conversationState.pinned[index],
+                chat: conversationState.results[index],
+                notifier: chatNotifier,
+                conversationNotifier: notifier,
+              ),
+            ),
+          ] else ...[
+            //? Second, the pinned chats.
+            if (conversationState.pinned.isNotEmpty) ...[
+              //* The title comes first.
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  "Pinned Chats",
+                  style: WayaTextStyles.titleMedium.copyWith(
+                    color: WayaColors.greyColor500,
+                  ),
+                ),
+              ),
+
+              // Some space.
+              const Gap(5),
+
+              //? Now, the pinned chats.
+              ...List.generate(
+                conversationState.pinned.length,
+                (index) => ConversationWidget(
+                  index: index,
+                  chat: conversationState.pinned[index],
+                  notifier: chatNotifier,
+                  conversationNotifier: notifier,
+                ),
+              ),
+
+              // Finally, more space.
+              const Gap(20),
+            ],
+
+            //* The title comes first.
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                "All Chats",
+                style: WayaTextStyles.titleMedium.copyWith(
+                  color: WayaColors.greyColor500,
+                ),
+              ),
+            ),
+
+            // Some space.
+            const Gap(5),
+
+            //? Now, the pinned chats.
+            ...List.generate(
+              conversationState.unpinned.length,
+              (index) => ConversationWidget(
+                index: index,
+                chat: conversationState.unpinned[index],
                 notifier: chatNotifier,
                 conversationNotifier: notifier,
               ),
@@ -157,35 +271,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
 
             // Finally, more space.
             const Gap(20),
-          ],
-
-          //* The title comes first.
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              "All Chats",
-              style: WayaTextStyles.titleMedium.copyWith(
-                color: WayaColors.greyColor500,
-              ),
-            ),
-          ),
-
-          // Some space.
-          const Gap(5),
-
-          //? Now, the pinned chats.
-          ...List.generate(
-            conversationState.unpinned.length,
-            (index) => ConversationWidget(
-              index: index,
-              chat: conversationState.conversations[index],
-              notifier: chatNotifier,
-              conversationNotifier: notifier,
-            ),
-          ),
-
-          // Finally, more space.
-          const Gap(20),
+          ]
         ],
       ),
     );

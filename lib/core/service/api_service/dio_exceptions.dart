@@ -5,8 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 
 class WayaHttpException {
-
- static  WayaRequestResponse handleDioError(DioException e) {
+  static WayaRequestResponse handleDioError(DioException e) {
     if (kDebugMode) {
       logger.log('DioException: ${e.message}');
       logger.log('Error Type: ${e.type.name}');
@@ -23,14 +22,11 @@ class WayaHttpException {
         e.response?.statusMessage ??
         "An error occurred.";
 
-    
-
     return WayaRequestResponse(
       success: false,
       data: e.response?.data,
       responseCodeError: errorMessage,
       statusCode: e.response?.statusCode,
-      
     );
   }
 }
