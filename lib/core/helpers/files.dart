@@ -392,6 +392,14 @@ class WayaFileHelper {
     return "${directory.absolute.path}/Sent/${chatId}_${WayaValueHelper.createUid()}.m4a";
   }
 
+  /// A helper function used to generate a name for a given file in a chat.
+  static String generateFilename(String chatId, File original) {
+    final filename = original.uri.pathSegments.last;
+    final extensionIndex = filename.lastIndexOf(".");
+    final ext = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+    return "cmf_${chatId}_${WayaValueHelper.createUid()}.$ext".replaceAll("-", "_");
+  }
+
   /// Returns the final directory of a file using the logic of where we are coming
   static String getFileSubdirectory(Directory parent, MessageModel message) {
     return "${parent.absolute.path}${message.senderId == ConversationState.self.id ? "/Sent" : ""}";

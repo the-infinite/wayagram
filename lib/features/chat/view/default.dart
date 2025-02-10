@@ -29,6 +29,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         notifier.getChats(true);
+        notifier.getArchivedChats(true);
       },
     );
 
@@ -41,6 +42,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         notifier.getChats(true);
+        notifier.getArchivedChats(true);
       },
     );
 

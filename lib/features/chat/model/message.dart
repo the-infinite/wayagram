@@ -157,7 +157,7 @@ class MessageModel {
 
   String get contentDescription {
     return switch (messageType) {
-      MessageType.file => "${media!.length} files",
+      MessageType.file => "${media?.length ?? 1} files",
       MessageType.location => "Location",
       _ => content ?? "",
     };
