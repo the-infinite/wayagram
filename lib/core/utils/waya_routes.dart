@@ -21,7 +21,9 @@ import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
+import 'package:wayagram/features/moments/views/media_moment.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
+import 'package:wayagram/features/moments/views/my_moments.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
@@ -184,6 +186,8 @@ class WayaAppRoutes {
     DisplayFeed.route:() => DisplayFeed(),
     GroupSetting.route: ()=> GroupSetting(),
     AllUpcomingEvents.route:() => AllUpcomingEvents(),
+    MediaMoment.route: () => MediaMoment(),
+    MyMoments.route:() => MyMoments(),
     EditPost.route: ()=> EditPost(initialContent: '', initialImageUrl: '', title: '', postId: '',),
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,)
   };

@@ -22,6 +22,7 @@ import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/explore/widgets/pages_card.dart';
 import 'package:wayagram/features/explore/widgets/polls_card.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
+import 'package:wayagram/features/moments/views/my_moments.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
 import 'package:wayagram/shared/engagement/provider/product_engagement_monitor.dart';
@@ -130,7 +131,7 @@ class _ExploreState extends ConsumerState<Explore> {
                         const Gap(6),
                         MomentsWidget(
                             isCreate: index == 0,
-                            onTap: () => WayaNav.toNamed(Moment.route)),
+                            onTap: () => WayaNav.toNamed(MyMoments.route)),
                         const Gap(6)
                       ],
                     );

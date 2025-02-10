@@ -13,6 +13,12 @@ class WayaHelpers {
     return imageFile == null ? 'file is null' : imageFile.path.split('/').last;
   }
 
+  static String? getContentType(File file) {
+    final mimeType = lookupMimeType(file.path);
+
+    return mimeType ?? 'application/octet-stream';
+  }
+
   static String toOrdinal(int number) {
     if (number < 1) return number.toString();
     if (number % 100 >= 11 && number % 100 <= 13) {
@@ -78,10 +84,10 @@ class WayaHelpers {
   }
 
   static Future<MultipartFile> formattedImageFromUrl(String imageUrl) async {
-    // Download 
+    // Download
     print("ewfefe humb $imageUrl");
     final response = await http.get(Uri.parse(imageUrl));
-print("ewfefe humb 2");
+    print("ewfefe humb 2");
     if (response.statusCode == 200) {
       final fileName = basename(Uri.parse(imageUrl).path);
 
@@ -109,16 +115,15 @@ print("ewfefe humb 2");
     return formatPrice(discount.toInt());
   }
 
- static String removeCamelCaseAndUnderscore(String text) {
-  final regex = RegExp(r'(?<=[a-z])(?=[A-Z])|_'); 
-  final words = text.split(regex);
-  return words
-      .map((word) => word.isNotEmpty
-          ? word[0].toUpperCase() + word.substring(1).toLowerCase()
-          : '')
-      .join(' ');
-}
-
+  static String removeCamelCaseAndUnderscore(String text) {
+    final regex = RegExp(r'(?<=[a-z])(?=[A-Z])|_');
+    final words = text.split(regex);
+    return words
+        .map((word) => word.isNotEmpty
+            ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+            : '')
+        .join(' ');
+  }
 
   static String abbreviateNumber(int number) {
     if (number >= 1000000000) {

@@ -8,7 +8,6 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
@@ -17,9 +16,8 @@ import 'package:wayagram/features/pages/data/model/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
-import 'package:wayagram/features/post/model/media_upload_model.dart';
+import 'package:wayagram/shared/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
-import 'package:http/http.dart' as http;
 import '../../post/model/comment.dart';
 
 class UploadedImage {

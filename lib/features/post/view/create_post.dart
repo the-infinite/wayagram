@@ -11,7 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/post/model/media_upload_model.dart';
+import 'package:wayagram/shared/model/media_upload_model.dart';
 
 import '../../../core/utils/waya_navigation.dart';
 import '../../auth/account_creation/view/loading_state.dart';

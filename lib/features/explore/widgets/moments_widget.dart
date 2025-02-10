@@ -14,42 +14,27 @@ class MomentsWidget extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Container(
-          height: 70,
-          width: 70,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: !isCreate ? LinearGradient(
-              colors: [
-                
-                Color(0xFFB43000),
-                Color(0x99FFEF8C),
-                Color(0xFFFF5D2E),
-                
-                
-              ],
-            ):null,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(3),
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: wayaTheme.colorScheme.white,
-              ),
-              child: Center(
-                child: WayaImage(
-                  imageUrl:
-                      "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1725183748/f3632f3a-f9ae-49d2-bd6b-c61a0af3bbc7_do5ub4.jpg",
-                  height: isCreate ? 65 : 55,
-                  width: isCreate ? 65 : 55,
-                  radius: BorderRadius.circular(75),
+        if (isCreate) ...[
+          Container(
+            height: 70,
+            width: 70,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(3),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: wayaTheme.colorScheme.white,
                 ),
+                child: Center(
+                    child: WayaDp(
+                  radius: 65,
+                )),
               ),
             ),
           ),
-        ),
-        if (isCreate)
           Positioned(
               bottom: 0,
               right: -2,
@@ -75,6 +60,46 @@ class MomentsWidget extends StatelessWidget {
                   ),
                 ),
               ))
+        ] else ...[
+          Container(
+            height: 70,
+            width: 70,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.center,
+                  colors: [
+                    Color(0xFFB43000),
+                    Color(0x99FFEF8C),
+                    Color(0xFFFF5D2E),
+                  ],
+                  stops: [
+                    0.0,
+                    0.5,
+                    1.0
+                  ]),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(3),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: wayaTheme.colorScheme.white,
+                ),
+                child: Center(
+                  child: WayaImage(
+                    imageUrl:
+                        "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1725183748/f3632f3a-f9ae-49d2-bd6b-c61a0af3bbc7_do5ub4.jpg",
+                    height: 55,
+                    width: 55,
+                    radius: BorderRadius.circular(75),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ]
       ],
     );
   }
