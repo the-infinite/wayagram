@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
@@ -61,38 +62,43 @@ class WayaFileRepository extends BaseRepository {
   /// A helper function used to upload a file to a given URL.
   Future<String?> uploadFile(File file, [String? name]) async {
     //? First, get the signed URL
-    final response = await _getSignedUrl(file, name);
-    final filename = file.uri.pathSegments.last;
-    final extensionIndex = filename.lastIndexOf(".");
-    final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
-    final fileType = WayaFileExtensions.getMimeType(extension);
+    try {
+      final response = await _getSignedUrl(file, name);
+      final filename = file.uri.pathSegments.last;
+      final extensionIndex = filename.lastIndexOf(".");
+      final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+      final fileType = WayaFileExtensions.getMimeType(extension);
 
-    //? Then send this over.
-    if (!response.success) {
-      return null;
-    }
+      //? Then send this over.
+      if (!response.success) {
+        return null;
+      }
 
-    //? Final output path.
-    final data = response.data['data'];
-    final uploadUrl = data['url'].toString();
-    final outputPath = data['publicUrl'].toString();
+      //? Final output path.
+      final data = response.data['data'];
+      final uploadUrl = data['url'].toString();
+      final outputPath = data['publicUrl'].toString();
 
-    //? Now, we can try.
-    final result = await httpClient.putHttp(
-      uploadUrl,
-      file,
-      contentType: fileType.mimeType,
-      isAuth: false,
-      isWgUrl: false,
-      isBinary: true,
-    );
+      //? Now, we can try.
+      final result = await httpClient.putHttp(
+        uploadUrl,
+        file,
+        contentType: fileType.mimeType,
+        isAuth: false,
+        isWgUrl: false,
+        isBinary: true,
+      );
 
-    //? If this was fine.
-    if (result.success) {
-      return outputPath;
-    }
+      //? If this was fine.
+      if (result.success) {
+        return outputPath;
+      }
+    } catch (_) {}
 
     //? Then fail.
+    debugPrint("SendMessageDTO/ Failed to upload file.");
+
+    //? Return null.
     return null;
   }
 }

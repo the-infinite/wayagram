@@ -192,7 +192,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                "Filtered Chats",
+                "Search results",
                 style: WayaTextStyles.titleMedium.copyWith(
                   color: WayaColors.greyColor500,
                 ),

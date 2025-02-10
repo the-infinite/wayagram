@@ -14,7 +14,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   /// Helper function used to get the list of messages from the back-end so they
   /// can be stored locally on this device.
-  Future<List<MessageModel>> getMessages([bool reset = false]) async {
+  Future<List<MessageModel>> getMessages([bool reset = false, bool scroll = true]) async {
     final result = <MessageModel>[];
 
     //? This is fine.
@@ -58,20 +58,21 @@ class ChatNotifier extends StateNotifier<ChatState> {
       // TODO: Actual error handling.
     }
 
-    //? Scroll to the last possible message.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      //? Only do this when we have something to communicate with.
-      if (state.controller.hasClients) {
-        state.controller.animateTo(
-          state.controller.position.maxScrollExtent,
-          duration: Duration(milliseconds: 50),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
+    //? If I can scroll to this one.
+    if (scroll) scrollToEnd();
 
     //? Return this collated result.
     return result;
+  }
+
+  /// A helper function used to tell the chat input controller to scroll to the
+  /// end of the chats visible on screen immediately.
+  void scrollToEnd() {
+    //? Scroll to the last possible message.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      //? Only do this when we have something to communicate with.
+      if (state.controller.hasClients) state.controller.jumpTo(state.controller.position.maxScrollExtent);
+    });
   }
 
   /// A helper function used to send a message to a given chat. The multipart
@@ -81,39 +82,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     //? If this is not an attempt to resend...
     if (originalId == null) {
-      final placeholder = MessageModel(
-        id: messageId,
-        isDeleted: false,
-        isDeletedBySender: false,
-        chatId: state.chat!.id,
-        content: message.content,
-        media: message.media
-            ?.map(
-              (file) => MessageMedia(
-                id: WayaValueHelper.createUid(),
-                messageId: messageId,
-                mediaType: message.type,
-                mediaUrl: file,
-                createdAt: DateTime.now(),
-                updatedAt: DateTime.now(),
-              ),
-            )
-            .toList(),
-        originalMessage: message.originalMessage,
-        contacts: message.contacts,
-        senderId: ConversationState.self.id!,
-        messageType: message.type,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        mediaUrl: message.media?.firstOrNull,
-        edited: false,
-        originalMessageId: message.originalMessageId,
-        forwardedFrom: null,
-        isReply: message.originalMessageId != null,
-        status: [],
-        messageReaction: [],
-        dto: message,
-      );
+      final placeholder = message.buildMessage(messageId);
 
       //? Tell the listeners that this has been updated to first add the message to
       //? our list of messages.
@@ -211,6 +180,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final response = await repo.readAllInChat(state.chat!.id);
 
     //? We need to fetch the messages again.
+    if (response.success) getMessages(true, false);
 
     //? This is fine.
     return response.success;
@@ -235,6 +205,10 @@ class ChatNotifier extends StateNotifier<ChatState> {
   Future<bool> updateMessageStatus(MessageStatusCode status, String id) async {
     final response = await repo.updateMessageStatus(status, id);
 
+    //? If this was fine...
+    if (response.success) getMessages(true, false);
+
+    //? If this was fine...
     return response.success;
   }
 
@@ -243,7 +217,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final response = await repo.editMessage(id, content);
 
     //? If this succeeded...
-    if (response.success) getMessages(true);
+    if (response.success) getMessages(true, false);
 
     // Then we succeeded.
     return response.success;
@@ -275,7 +249,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final response = await repo.reactToMessage(id, reaction);
 
     //? If this was fine.
-    if (response.success) getMessages(true);
+    if (response.success) getMessages(true, false);
 
     //? This is good.
     return response.success;

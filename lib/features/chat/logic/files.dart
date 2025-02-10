@@ -20,27 +20,7 @@ Future<List<File>> getMessageFileAttachments(MessageModel message) async {
 
   //? Let's see what the file extension ends with.
   for (final file in (message.media ?? <MessageMedia>[])) {
-    final uri = Uri.parse(file.mediaUrl);
-    final filename = uri.pathSegments.last;
-    final extensionIndex = filename.lastIndexOf(".");
-    final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
-    var directory = await WayaFileHelper.getDocumentsDirectory();
-
-    //? Now, we check what kind of extension this is.
-    if ([...WayaFileExtensions.images, WayaFileExtensions.videos].contains(extension)) {
-      directory = await WayaFileHelper.getMediaDirectory();
-    }
-
-    //? If this is an audio file.
-    if (WayaFileExtensions.audio.contains(extension)) {
-      directory = await WayaFileHelper.getAudioDirectory();
-    }
-
-    //? Now, we try looking for the rest here.
-    final path = "${WayaFileHelper.getFileSubdirectory(directory, message)}/${message.id}.$extension";
-
-    //? This is fine.
-    result.add(File(path));
+    result.add(await WayaFileHelper.getFileDirectory(message, file));
   }
 
   //? Return the result.
