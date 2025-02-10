@@ -53,8 +53,8 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
   Widget build(BuildContext context) {
     //? First, the data needed to render this widget.
     final size = MediaQuery.sizeOf(context);
-    final filesFuture = widget.interactive
-        ? Future.value(widget.controller!.selectedFiles)
+    final filesFuture = widget.interactive || widget.message?.dto != null
+        ? Future.value(widget.message?.dto?.asFilesList ?? widget.controller!.selectedFiles)
         : getMessageFileAttachments(widget.message!);
 
     //? Second
@@ -171,6 +171,7 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
                                       index: index,
                                       interactive: widget.interactive,
                                       controller: widget.controller,
+                                      message: widget.message,
                                     ),
                                   )
                                 :
@@ -184,6 +185,7 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
                                           index: index,
                                           interactive: widget.interactive,
                                           controller: widget.controller,
+                                          message: widget.message,
                                         ),
                                       )
 
@@ -195,6 +197,7 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
                                             index: index,
                                             filename: filename,
                                             extension: extension,
+                                            message: widget.message,
                                             interactive: widget.interactive,
                                             controller: widget.controller,
                                           )
