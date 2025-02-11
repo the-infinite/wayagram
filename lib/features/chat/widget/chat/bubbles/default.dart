@@ -861,6 +861,13 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
 
     //? If this is not delivered and it is not read...
     _focusNode.addListener(() {
+      //? If this is already read, leave.
+      if (widget.data.myStatus?.status == MessageStatusCode.read) return;
+
+      //? If this is already deleted leave?
+      if (widget.data.myStatus?.status == MessageStatusCode.deleted) return;
+
+      //? now, move forward.
       if (!_focusNode.hasFocus) {
         debugPrint("Skipping this because ain't no focus on it yet.");
         return;
@@ -881,6 +888,12 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
         notifier.updateMessageStatus(MessageStatusCode.delivered, widget.data.id);
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   // This is fine.
