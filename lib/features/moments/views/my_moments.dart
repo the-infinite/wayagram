@@ -12,6 +12,8 @@ import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_widget.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
+import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 
 class MyMoments extends ConsumerStatefulWidget {
   static const route = "/my-moments";
@@ -24,8 +26,8 @@ class MyMoments extends ConsumerStatefulWidget {
 class _MyMomentState extends ConsumerState<MyMoments> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      ref.read(momentVmProvider.notifier).getUserMoments();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(momentVmProvider.notifier).getUserMoments(1);
     });
     super.initState();
   }
@@ -39,31 +41,31 @@ class _MyMomentState extends ConsumerState<MyMoments> {
       isLoading: state.isLoadingUserMoments,
       title: "My Moments",
       isScrollable: false,
-      onRefresh: () async {
-        ref.read(momentVmProvider.notifier).getUserMoments();
-      },
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
       body: Container(
-        margin: EdgeInsets.fromLTRB(0, 12, 0, 0),
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.white,
-            borderRadius: BorderRadius.circular(12)),
-        child: ListView(
-            children: [
-              addMoment(context: context, ref: ref),
-              const Gap(10),
-              ListView.builder(
-                  itemCount: 3,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return MyMomentWidget();
-                  })
-            ],
-          ),
-        ),
-      
+          margin: EdgeInsets.fromLTRB(0, 12, 0, 0),
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+              color: wayaTheme.colorScheme.white,
+              borderRadius: BorderRadius.circular(12)),
+          child: RefreshIndicator(
+              child: ListView(
+                children: [
+                  addMoment(context: context, ref: ref),
+                  const Gap(10),
+                  ListView.builder(
+                      itemCount: state.myMoments.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return MyMomentWidget(
+                          moment: state.myMoments[index],
+                        );
+                      })
+                ],
+              ),
+              onRefresh: () =>
+                  ref.read(momentVmProvider.notifier).getUserMoments(1))),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class WayaHelpers {
   static String extractFileName(File? imageFile) {
@@ -17,6 +19,25 @@ class WayaHelpers {
     final mimeType = lookupMimeType(file.path);
 
     return mimeType ?? 'application/octet-stream';
+  }
+
+  static String formatMetrics(int number) {
+    if (number == 0) return "0";
+
+    const List<String> suffixes = ["", "K", "M", "B", "T"];
+    int suffixIndex = (number == 0) ? 0 : (math.log(number) ~/ math.log(1000));
+
+    if (suffixIndex == 0) {
+      return number.toString();
+    }
+
+    double shortValue = number / math.pow(1000, suffixIndex);
+    return "${shortValue.toStringAsFixed(1)}${suffixes[suffixIndex]}";
+  }
+
+  static String formatTimeAgo(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    return timeago.format(dateTime);
   }
 
   static String toOrdinal(int number) {

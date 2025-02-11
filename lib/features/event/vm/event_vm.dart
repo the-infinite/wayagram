@@ -117,10 +117,9 @@ class EventVm extends StateNotifier<EventState> {
       final userId = await _secureDataSource.getUserId();
       final response =
           await _eventRepository.joinEvent(userId: userId!, eventId: eventId);
+      Navigator.of(context).pop();
       if (response.success && context.mounted) {
-            Navigator.of(context).pop();
-       
-  Future.delayed(Duration(milliseconds: 300), () {
+ 
     if (context.mounted) {
       WayaUtils.showNotice(
         context: context,
@@ -140,7 +139,7 @@ class EventVm extends StateNotifier<EventState> {
         onCancel: () => WayaNav.toNamed(EventView.route),
       );
     }
-  });
+  
         print(response.data);
       }
     } catch (error) {
@@ -160,14 +159,16 @@ class EventVm extends StateNotifier<EventState> {
       final userId = await _secureDataSource.getUserId();
       final response = await _eventRepository.reportEvent(
           userId: userId!, eventId: eventId, reason: reason);
+          Navigator.of(context).pop();
       if (response.success && context.mounted) {
         // show success modal
-        Navigator.of(context);
+      
         await WayaUtils.showNotice(
             context: context,
             title: "Thank you for reporting",
             onPress: () {
-              WayaNav.offNamed(EventView.route);
+               Navigator.pushReplacementNamed(context, EventView.route);
+              
             },
             icon: Image.asset(
               WayaAssets.images.eCheckEvent.path,

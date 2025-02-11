@@ -31,7 +31,7 @@ class PostMomentWidget extends ConsumerWidget {
                   SizedBox(width: 4.w,),
                   Text("Public Moment", style: TextStyle(
                     color: wayaTheme.colorScheme.white,
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: FontWeight.w500
                   ),)
               ],

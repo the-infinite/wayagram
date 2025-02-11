@@ -58,7 +58,7 @@ class WayaTextStyles {
     fontWeight: FontWeight.w500,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
-    overflow: TextOverflow.ellipsis,
+   // overflow: TextOverflow.ellipsis,
   );
   static const bodySemiBold = TextStyle(
     fontSize: 16,

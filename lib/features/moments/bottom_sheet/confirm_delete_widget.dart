@@ -5,7 +5,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 
 class ConfirmDeleteWidget extends ConsumerWidget {
-  const ConfirmDeleteWidget({super.key});
+  final Future<void> Function() delete;
+  const ConfirmDeleteWidget({super.key, required this.delete});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,6 +33,7 @@ class ConfirmDeleteWidget extends ConsumerWidget {
           WayaButton(
             callback: () {
               Navigator.of(context).pop();
+              delete();
             },
             text: "Yes Delete",
             color: wayaTheme.colorScheme.error,

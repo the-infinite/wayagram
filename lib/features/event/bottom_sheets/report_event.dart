@@ -158,6 +158,7 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
                                   reason: selectedStatus,
                                   comment: comment.text,
                                   context: context);
+                               
                             }
                           : null,
                       centerWidget: LoadingState(

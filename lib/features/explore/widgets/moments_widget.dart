@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 
 class MomentsWidget extends StatelessWidget {
+  final MomentData? moment;
   final bool isCreate;
   final VoidCallback? onTap;
-  const MomentsWidget({super.key, this.isCreate = false, this.onTap});
+  const MomentsWidget(
+      {super.key, this.isCreate = false, this.onTap, this.moment});
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +63,10 @@ class MomentsWidget extends StatelessWidget {
                   ),
                 ),
               ))
-        ] else ...[
-          Container(
+        ] else if (moment != null) ...[
+         GestureDetector(
+          onTap:onTap,
+          child:  Container(
             height: 70,
             width: 70,
             decoration: BoxDecoration(
@@ -89,8 +94,7 @@ class MomentsWidget extends StatelessWidget {
                 ),
                 child: Center(
                   child: WayaImage(
-                    imageUrl:
-                        "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1725183748/f3632f3a-f9ae-49d2-bd6b-c61a0af3bbc7_do5ub4.jpg",
+                    imageUrl: moment!.image,
                     height: 55,
                     width: 55,
                     radius: BorderRadius.circular(75),
@@ -98,7 +102,7 @@ class MomentsWidget extends StatelessWidget {
                 ),
               ),
             ),
-          ),
+          ),)
         ]
       ],
     );
