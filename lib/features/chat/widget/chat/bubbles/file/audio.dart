@@ -55,6 +55,7 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
 
   // Initialize the message in question here.
   Future<void> _initializeMessage() async {
+    if (!mounted) return;
     final size = MediaQuery.sizeOf(context);
     final renderBox = context.findRenderObject() as RenderBox?;
     final mySize = renderBox?.size ?? Size(size.width * 0.8, 70);
@@ -73,6 +74,8 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+
       //? If this file exists...
       if (await widget.audio.exists()) {
         await _initializeMessage();

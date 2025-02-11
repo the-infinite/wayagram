@@ -41,6 +41,17 @@ class WayaNav<T> {
     });
   }
 
+  static void replaceNamed(String route, {dynamic arguments, Function(dynamic)? onResult}) {
+    Get.offNamed(
+      route,
+      arguments: arguments,
+    )?.then((result) {
+      if (onResult != null) {
+        onResult(result);
+      }
+    });
+  }
+
   static void off(Widget page) {
     Get.off(
       () => page,

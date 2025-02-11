@@ -158,7 +158,7 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
     Overlay.of(context).insert(_entry!);
 
     //* Finally, call the function to put this in place and debounce it.
-    debounce(delay: const Duration(milliseconds: 700), () async {
+    debounce(key: "search-user", delay: const Duration(milliseconds: 700), () async {
       await notifier.getSearchResults(text);
     })();
   }

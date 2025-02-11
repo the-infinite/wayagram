@@ -68,6 +68,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
   bool downloaded = true;
 
   Future<void> _initializeMessage() async {
+    if (!mounted) return;
     final size = MediaQuery.sizeOf(context);
     final renderBox = context.findRenderObject() as RenderBox?;
     final mySize = renderBox?.size ?? Size(size.width * 0.8, 70);
@@ -88,6 +89,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
+        if (!mounted) return;
         file = await getVoiceMessageFile(widget.data);
 
         //? If this file exists...

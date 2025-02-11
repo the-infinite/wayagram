@@ -12,6 +12,7 @@ import 'package:wayagram/features/chat/vm/default.dart';
 
 class WayaChatSocketArgs {
   final String chatId;
+  final String command;
   final String senderId;
   final String? messageId;
   final String? content;
@@ -21,6 +22,7 @@ class WayaChatSocketArgs {
 
   //? This is fine.
   WayaChatSocketArgs._({
+    required this.command,
     required this.chatId,
     required this.senderId,
     this.action,
@@ -32,6 +34,7 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.typing(String chatId, bool isTyping, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      command: "typing",
       chatId: chatId,
       senderId: ConversationState.self.id!,
       action: isTyping ? 'start-typing' : 'stop-typing',
@@ -42,6 +45,7 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.sendMessage(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      command: "sendMessage",
       chatId: chatId,
       senderId: ConversationState.self.id!,
       messageId: messageId,
@@ -52,6 +56,7 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.markAsRead(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      command: "markAsRead",
       chatId: chatId,
       senderId: ConversationState.self.id!,
       messageId: messageId,
@@ -62,6 +67,7 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.markAllAsRead(String chatId, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      command: "markAllAsRead",
       chatId: chatId,
       senderId: ConversationState.self.id!,
       isSynced: isSynced,
@@ -71,6 +77,7 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.deleteMessage(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      command: "deleteMessage",
       chatId: chatId,
       senderId: ConversationState.self.id!,
       messageId: messageId,
@@ -81,6 +88,7 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.join(String chatId, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      command: "join",
       chatId: chatId,
       senderId: ConversationState.self.id!,
       isSynced: isSynced,
@@ -97,6 +105,7 @@ class WayaChatSocketArgs {
     bool? isFlagged,
   }) {
     return WayaChatSocketArgs._(
+      command: command,
       chatId: chatId,
       senderId: ConversationState.self.id!,
       action: action,
@@ -112,7 +121,7 @@ class WayaChatSocketArgs {
       'senderId': senderId,
       if (messageId != null) 'messageId': messageId,
       if (content != null) 'content': content,
-      if (content != null) 'action': action,
+      if (action != null) 'action': action,
       if (isSynced != null) 'isSynced': isSynced,
       if (isFlag != null) 'isFlag': isFlag,
     };
@@ -120,6 +129,7 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.fromJson(Map<String, dynamic> json) {
     return WayaChatSocketArgs._(
+      command: "",
       chatId: json['chatId'],
       senderId: json['senderId'],
       messageId: json['messageId'],
@@ -205,7 +215,7 @@ class WayaSocketController {
     //? On any event.
     socket.onAny(
       (event, args) {
-        debugPrint("socket-$event> $args");
+        debugPrint("socket-${args.command}> #$args");
       },
     );
 
@@ -214,7 +224,7 @@ class WayaSocketController {
       "chatListUpdate",
       (data) async {
         //? This is fine.
-        debounce(() async {
+        debounce(key: "chat-list-update", () async {
           await notifier.getChats(true);
           await notifier.getArchivedChats(true);
         })();
@@ -313,15 +323,17 @@ class WayaSocketController {
   }
 
   /// Our utility used to emit a given notification to the chat stream.
-  Future<void> emit(String command, WayaChatSocketArgs args) async {
-    _socket?.emit(command, args.toJson());
+  Future<void> emit(WayaChatSocketArgs args) async {
+    if (_socket == null) return;
+    _socket!.emit(args.command, args.toJson());
+    debugPrint("socket-${args.command}> \$${args.toJson()}");
   }
 
   /// Our utility function used to emit a join instruction so we can enter all
   /// the rooms we need to enter.
   Future<void> join(String room) async {
     if (_rooms.contains(room)) return;
-    emit("join", WayaChatSocketArgs.join(room));
+    emit(WayaChatSocketArgs.join(room));
     _rooms.add(room);
   }
 }
