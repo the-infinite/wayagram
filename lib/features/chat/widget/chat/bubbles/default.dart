@@ -428,6 +428,7 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
   final ChatInputController controller;
   final int index;
   final bool interactive;
+  final bool isLast;
 
   // This is fine.
   const ChatBubbleWidget({
@@ -437,6 +438,7 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
     required this.index,
     required this.previousDate,
     this.interactive = true,
+    this.isLast = false,
   });
 
   @override
@@ -446,6 +448,7 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
 class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   OverlayEntry? _entry;
   late final notifier = ref.watch(chatProvider.notifier);
+  late final _focusNode = FocusNode();
 
   /// This is the message we are replying to.
   void _replyTo() {
@@ -838,6 +841,61 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
     notifier.sendMessage(widget.data.dto!, widget.data.id);
   }
 
+  /// A utility function used to check whether I have seen this message and then
+  /// notify others of it.
+  Future<void> _checkStatusAndNotify() async {
+    //? If this is not interactive, leave.
+    if (!widget.interactive) return;
+
+    //? If this message was sent by me, leave.
+    if (widget.data.senderId == ConversationState.self.id) return;
+
+    //? If this is already read, leave.
+    if (widget.data.myStatus?.status == MessageStatusCode.read) return;
+
+    //? If this is already deleted leave?
+    if (widget.data.myStatus?.status == MessageStatusCode.deleted) return;
+
+    //* My read status.
+    final status = widget.data.myStatus?.status;
+
+    //? If this is not delivered and it is not read...
+    _focusNode.addListener(() {
+      //? If this is already read, leave.
+      if (widget.data.myStatus?.status == MessageStatusCode.read) return;
+
+      //? If this is already deleted leave?
+      if (widget.data.myStatus?.status == MessageStatusCode.deleted) return;
+
+      //? now, move forward.
+      if (!_focusNode.hasFocus) {
+        debugPrint("Skipping this because ain't no focus on it yet.");
+        return;
+      }
+
+      //? If this is the last message, mark all as read.
+      if (widget.isLast && status == MessageStatusCode.delivered) {
+        notifier.markAllAsRead();
+      }
+
+      //? Since this is not the last message, mark this as read.
+      else if (status == MessageStatusCode.delivered) {
+        notifier.updateMessageStatus(MessageStatusCode.read, widget.data.id);
+      }
+
+      //? Since this is still sent, then we can mark this as delivered.
+      else {
+        notifier.updateMessageStatus(MessageStatusCode.delivered, widget.data.id);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   // This is fine.
   @override
   Widget build(BuildContext context) {
@@ -848,62 +906,68 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
       onPopInvokedWithResult: (isRemoved, _) {
         if (isRemoved) widget.controller.clearFocus();
       },
-      child: Opacity(
-        opacity: _entry == null ? 1 : 0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            //? The date separator.
-            if (widget.interactive && !WayaDateHelper.isSameDay(widget.data.createdAt, widget.previousDate))
-              WayaTextStrip(
-                WayaDateHelper.getSocialDate(widget.data.createdAt),
-                style: WayaTextStyles.bodyMedium.copyWith(
-                  fontSize: 14,
+      child: WayaFutureSubscriber(
+        future: _checkStatusAndNotify(),
+        builder: (context, data) => Opacity(
+          opacity: _entry == null ? 1 : 0,
+          child: Focus(
+            focusNode: _focusNode,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                //? The date separator.
+                if (widget.interactive && !WayaDateHelper.isSameDay(widget.data.createdAt, widget.previousDate))
+                  WayaTextStrip(
+                    WayaDateHelper.getSocialDate(widget.data.createdAt),
+                    style: WayaTextStyles.bodyMedium.copyWith(
+                      fontSize: 14,
+                    ),
+                  ),
+
+                //? This is fine.
+                WayaSwiper(
+                  swipeSensitivity: 5,
+                  onLongPress: widget.interactive ? _showActions : null,
+                  onTap: widget.data.isError ?? false ? _resendMessage : null,
+                  rightSwipeWidget: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //? First, the reply icon.
+                      WayaAssets.icons.cCornerUpLeft.svg(
+                        color: WayaColors.primary,
+                      ),
+
+                      // Some space.
+                      const Gap(5),
+
+                      //? Second, the text for replying.
+                      Text(
+                        "Reply",
+                        style: WayaTextStyles.bodySemiBold.copyWith(
+                          color: WayaColors.primary,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onRightSwipe: widget.interactive ? (details) => _replyTo() : null,
+                  child: widget.data.senderId == user.id
+                      ? _MyBubbleWidget(
+                          data: widget.data,
+                          controller: widget.controller,
+                          interactive: widget.interactive,
+                        )
+                      : _YourBubbleWidget(
+                          data: widget.data,
+                          controller: widget.controller,
+                          interactive: widget.interactive,
+                        ),
                 ),
-              ),
-
-            //? This is fine.
-            WayaSwiper(
-              swipeSensitivity: 5,
-              onLongPress: widget.interactive ? _showActions : null,
-              onTap: widget.data.isError ?? false ? _resendMessage : null,
-              rightSwipeWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //? First, the reply icon.
-                  WayaAssets.icons.cCornerUpLeft.svg(
-                    color: WayaColors.primary,
-                  ),
-
-                  // Some space.
-                  const Gap(5),
-
-                  //? Second, the text for replying.
-                  Text(
-                    "Reply",
-                    style: WayaTextStyles.bodySemiBold.copyWith(
-                      color: WayaColors.primary,
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ),
-              onRightSwipe: widget.interactive ? (details) => _replyTo() : null,
-              child: widget.data.senderId == user.id
-                  ? _MyBubbleWidget(
-                      data: widget.data,
-                      controller: widget.controller,
-                      interactive: widget.interactive,
-                    )
-                  : _YourBubbleWidget(
-                      data: widget.data,
-                      controller: widget.controller,
-                      interactive: widget.interactive,
-                    ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

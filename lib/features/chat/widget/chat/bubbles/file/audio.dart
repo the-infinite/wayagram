@@ -155,7 +155,10 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                         valueListenable: isPlaying,
                         builder: (context, isStreamPlaying, _) {
                           //? This is fine.
-                          if (!downloaded && widget.message != null && widget.message!.dto == null) {
+                          if (!downloaded &&
+                              widget.message != null &&
+                              widget.message!.dto == null &&
+                              widget.message!.media!.isNotEmpty) {
                             //? Since it should be downloaded right now...
                             return StreamBuilder(
                               stream: WayaFileRepository.instance.downloadFile(

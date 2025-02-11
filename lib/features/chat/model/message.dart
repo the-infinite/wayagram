@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/features/chat/dto/chat.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 
 part 'message.g.dart';
 
@@ -163,12 +164,20 @@ class MessageModel {
     };
   }
 
+  MessageStatus? get otherStatus {
+    return status?.where((receipt) => receipt.userId != ConversationState.self.id!).firstOrNull;
+  }
+
+  MessageStatus? get myStatus {
+    return status?.where((receipt) => receipt.userId == ConversationState.self.id!).firstOrNull;
+  }
+
   DateTime? get readAt {
-    return status?.where((receipt) => receipt.status == MessageStatusCode.read).firstOrNull?.createdAt;
+    return otherStatus?.status == MessageStatusCode.read ? otherStatus?.createdAt : null;
   }
 
   DateTime? get deliveredAt {
-    return status?.where((receipt) => receipt.status == MessageStatusCode.delivered).firstOrNull?.createdAt;
+    return otherStatus?.status == MessageStatusCode.delivered ? otherStatus?.createdAt : null;
   }
 
   Map<String, int> get reactionPairs {

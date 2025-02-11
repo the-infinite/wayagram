@@ -215,7 +215,7 @@ class WayaSocketController {
     //? On any event.
     socket.onAny(
       (event, args) {
-        debugPrint("socket-${args.command}> #$args");
+        debugPrint("socket-$event> <--#$args");
       },
     );
 
@@ -326,7 +326,7 @@ class WayaSocketController {
   Future<void> emit(WayaChatSocketArgs args) async {
     if (_socket == null) return;
     _socket!.emit(args.command, args.toJson());
-    debugPrint("socket-${args.command}> \$${args.toJson()}");
+    debugPrint("socket-${args.command}> -->\$${args.toJson()}");
   }
 
   /// Our utility function used to emit a join instruction so we can enter all
