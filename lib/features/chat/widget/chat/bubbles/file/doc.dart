@@ -119,7 +119,10 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
             color: background,
             child: Stack(
               children: [
-                if (!downloaded && widget.message != null && widget.message?.dto == null)
+                if (!downloaded &&
+                    widget.message != null &&
+                    widget.message?.dto == null &&
+                    widget.message!.media!.isNotEmpty)
                   //? Since this is not yet downloaded, first, a stream for this.
                   StreamBuilder(
                     stream: WayaFileRepository.instance.downloadFile(

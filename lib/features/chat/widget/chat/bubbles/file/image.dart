@@ -78,7 +78,7 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
       child: Stack(
         children: [
           //? First, the image file itself.
-          if (!downloaded && widget.message != null && widget.message?.dto == null)
+          if (!downloaded && widget.message != null && widget.message?.dto == null && widget.message!.media!.isNotEmpty)
             //? Since this is not yet downloaded, first, a stream for this.
             StreamBuilder(
               stream: WayaFileRepository.instance.downloadFile(

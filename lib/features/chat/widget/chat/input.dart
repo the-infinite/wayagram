@@ -8,7 +8,9 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/task.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/dto/chat.dart';
 import 'package:wayagram/features/chat/modals/attachment.dart';
 import 'package:wayagram/features/chat/model/default.dart';
@@ -61,6 +63,9 @@ class ChatInputController {
   /// not.
   final _canSend = ValueNotifier(false);
 
+  /// Am I currently typing.
+  final _isTyping = ValueNotifier(false);
+
   /// Our static
   static final instance = ChatInputController._();
 
@@ -94,6 +99,7 @@ class ChatInputController {
       _recorderState.dispose();
       _isRecorderOpen.dispose();
       _voiceMessage.dispose();
+      _isTyping.dispose();
       _soundRecorder?.dispose();
       _soundRecorder = null;
     } catch (_) {}
@@ -112,6 +118,7 @@ class ChatInputController {
     _soundRecorder = null;
     _focusedMessage.value = null;
     _isMedia.value = false;
+    _isTyping.value = false;
     _currentType.value = MessageType.text;
     _voiceMessage.value = null;
   }
@@ -534,6 +541,22 @@ class ChatInputWidget extends StatelessWidget {
                           if (controller._currentType.value == MessageType.text) {
                             controller._canSend.value = value.trim().isNotEmpty;
                           }
+
+                          //? If this is not in the state we are thinking of...
+                          if (!controller._isTyping.value) {
+                            WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, true));
+                            controller._isTyping.value = true;
+                          }
+
+                          //? Since this is the case, emit the typing event so
+                          //? everyone knows this user is typing.
+                          debounce(key: "control-typing", delay: const Duration(milliseconds: 800), () {
+                            WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, false));
+                            controller._isTyping.value = false;
+                          })();
+                        },
+                        onFieldSubmitted: (_) {
+                          WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, false));
                         },
                         isDense: true,
                         textInputAction: TextInputAction.newline,

@@ -9,6 +9,7 @@ import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
+import 'package:wayagram/features/chat/widget/chat/bubbles/typing.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
@@ -207,6 +208,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                     controller: state.controller,
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     physics: const AlwaysScrollableScrollPhysics(),
+                    reverse: true,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -222,55 +224,18 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                 : state.messages[index - 1].createdAt,
                             data: state.messages[index],
                             controller: inputController,
+                            isLast: index == state.messages.length - 1,
                           ),
                         ),
 
                         //? Second, the typing bubble.
                         if (state.typing)
-                          StreamBuilder(
-                              stream: Stream.periodic(const Duration(seconds: 3), (count) => count),
-                              builder: (context, snapshot) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                                        decoration: BoxDecoration(
-                                          color: WayaColors.greyColor200,
-                                          borderRadius: BorderRadius.circular(18),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: List.generate(
-                                            3,
-                                            (index) => Padding(
-                                              padding: EdgeInsets.only(right: index < 2 ? 4 : 0),
-                                              child: TweenAnimationBuilder<double>(
-                                                tween: Tween(begin: 0.0, end: 1.0),
-                                                duration: Duration(milliseconds: 500),
-                                                curve: Curves.easeInOut,
-                                                builder: (context, value, _) => Transform.translate(
-                                                  offset: Offset(0, -3 * value * (index % 2 == 0 ? 1 : -1)),
-                                                  child: Container(
-                                                    width: 6,
-                                                    height: 6,
-                                                    decoration: BoxDecoration(
-                                                      color: WayaColors.greyColor500,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              PersonalTypingIndicator(),
+                            ],
+                          ),
                       ],
                     ),
                   ),
