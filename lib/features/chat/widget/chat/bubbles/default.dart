@@ -867,7 +867,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
       //? If this is already deleted leave?
       if (widget.data.myStatus?.status == MessageStatusCode.deleted) return;
 
-      //? now, move forward.
+      //? now, move forward. 
       if (!_focusNode.hasFocus) {
         debugPrint("Skipping this because ain't no focus on it yet.");
         return;
