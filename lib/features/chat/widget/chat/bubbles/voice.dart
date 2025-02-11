@@ -143,14 +143,14 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
           return ValueListenableBuilder(
             valueListenable: isPlaying,
             builder: (context, isStreamPlaying, _) {
-              if (!downloaded && widget.data.dto == null) {
+              if (!downloaded && widget.data.dto == null && widget.data.media!.isNotEmpty) {
                 //? If this is undefined...
                 if (file == null) return const SizedBox();
 
                 //? Since it can be downloaded right now...
                 return StreamBuilder(
                   stream: WayaFileRepository.instance.downloadFile(
-                    widget.data.media?.first.mediaUrl ?? widget.data.mediaUrl!,
+                    widget.data.media!.first.mediaUrl,
                     file!,
                     (result) {
                       if (result) {

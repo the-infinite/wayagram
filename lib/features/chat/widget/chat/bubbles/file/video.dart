@@ -78,8 +78,7 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
       child: Stack(
         children: [
           //? First, the video file itself.
-          //? First, the image file itself.
-          if (!downloaded && widget.message != null && widget.message?.dto == null)
+          if (!downloaded && widget.message != null && widget.message?.dto == null && widget.message!.media!.isNotEmpty)
             //? Since this is not yet downloaded, first, a stream for this.
             StreamBuilder(
               stream: WayaFileRepository.instance.downloadFile(

@@ -224,6 +224,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                 : state.messages[index - 1].createdAt,
                             data: state.messages[index],
                             controller: inputController,
+                            isLast: index == state.messages.length - 1,
                           ),
                         ),
 
