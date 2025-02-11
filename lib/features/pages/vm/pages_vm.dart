@@ -573,16 +573,12 @@ class PageVm extends StateNotifier<PageState> {
 
 
 
-  FutureOr<List<Comments>> getComments(String id) async {
-    //_isLoading = true;
-    _errorMessage = '';
-    //notifyListeners();
-
+  FutureOr<List<Comments>> getComments(String postId) async {
     try {
-      //final token = await Store.getToken();
-      //final dio = Dio();
 
-      final response = await _pageRepository.getComment(id);
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.getComment(postId);
+      state = state.copyWith(isLoading: false);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         //print("uri: ${response.realUri}");
@@ -626,6 +622,10 @@ class PageVm extends StateNotifier<PageState> {
       }
     }).asyncMap((_) => getComments(postId));
   }
+
+
+
+
 
   Future<void> getFollowing() async {
     state = state.copyWith(isLoading: true);

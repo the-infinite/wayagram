@@ -1,10 +1,13 @@
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 
 class GroupState{
   final TextEditingController groupName;
   final TextEditingController groupDescription;
   final TextEditingController username;
+  late final File? image;
 
   final bool isFocused;
   final bool isLoading;
@@ -22,6 +25,7 @@ class GroupState{
     this.openToEveryone = false,
     this.requireApproval = false,
     this.roleType = '',
+    this.image,
   }):   groupName = groupName ?? TextEditingController(),
         groupDescription = groupDescription ?? TextEditingController(),
         username = username ?? TextEditingController();
@@ -36,6 +40,7 @@ class GroupState{
     bool? openToEveryone,
     bool? requireApproval,
     String? roleType,
+    File? image,
   }){
     return GroupState(
       groupName: groupName ?? this.groupName,
@@ -47,6 +52,7 @@ class GroupState{
       openToEveryone: openToEveryone ?? this.openToEveryone,
       requireApproval: requireApproval ?? this.requireApproval,
       roleType: roleType ?? this.roleType,
+      image: image ?? this.image,
     );
   }
 }

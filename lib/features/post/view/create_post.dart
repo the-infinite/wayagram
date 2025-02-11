@@ -93,7 +93,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
               padding: const EdgeInsets.only(right: 20),
               child:SizedBox(
                 width: context.width * 0.15,
-                child:viewModel.content.text.isEmpty && _selectedImages.isEmpty? WayaButton(
+                child:viewModel.content.text.isEmpty? WayaButton(
                   callback:viewModel.isLoading
                       ? () async {
                     if (_formKey.currentState!.validate()) {
