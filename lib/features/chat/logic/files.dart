@@ -39,6 +39,10 @@ Future<List<File>> getMessageFileAttachments(MessageModel message) async {
 ///
 /// Throws [FileSystemException] if the file cannot be accessed or does not exist.
 Future<File> getVoiceMessageFile(MessageModel message) async {
+  if (message.media!.isEmpty) {
+    return File("/");
+  }
+
   final file = message.media!.first;
   final uri = Uri.parse(file.mediaUrl);
   final filename = uri.pathSegments.last;

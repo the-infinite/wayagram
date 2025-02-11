@@ -16,14 +16,14 @@ import 'package:flutter/material.dart';
 class WayaFutureSubscriber<T> extends StatelessWidget {
   final Future<T> future;
   final Widget Function(BuildContext context, T? result) builder;
-  final Widget Function(BuildContext context) suspense;
-  final Widget Function(BuildContext context, dynamic error, StackTrace? stackTrace) error;
+  final Widget Function(BuildContext context)? suspense;
+  final Widget Function(BuildContext context, dynamic error, StackTrace? stackTrace)? error;
 
   const WayaFutureSubscriber({
     super.key,
     required this.future,
-    required this.suspense,
-    required this.error,
+    this.suspense,
+    this.error,
     required this.builder,
   });
 
@@ -34,12 +34,12 @@ class WayaFutureSubscriber<T> extends StatelessWidget {
       builder: (context, snapshot) {
         //? If this is pending...
         if (snapshot.connectionState == ConnectionState.waiting || snapshot.connectionState == ConnectionState.none) {
-          return suspense(context);
+          if (suspense != null) return suspense!(context);
         }
 
         //? If this is completed with errors...
         if (snapshot.connectionState == ConnectionState.done && snapshot.hasError) {
-          return error(context, snapshot.error, snapshot.stackTrace);
+          if (error != null) return error!(context, snapshot.error, snapshot.stackTrace);
         }
 
         //? Else, just return this thing and its result.
