@@ -6,6 +6,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/modals/start_conversation.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
@@ -27,7 +28,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
+      (_) async {
+        await WayaSocketController.instance.connect(ref);
+        WayaSocketController.instance.listen();
         notifier.getChats(true);
         notifier.getArchivedChats(true);
       },
@@ -40,7 +43,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
   @override
   void reassemble() {
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
+      (_) async {
+        await WayaSocketController.instance.disconnect();
+        await WayaSocketController.instance.connect(ref);
+        WayaSocketController.instance.listen();
         notifier.getChats(true);
         notifier.getArchivedChats(true);
       },

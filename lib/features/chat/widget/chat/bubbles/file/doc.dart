@@ -9,6 +9,7 @@ import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
+import 'package:wayagram/shared/features/file/repo/default.dart';
 
 class DocumentFileWidget extends StatefulWidget {
   final File doc;
@@ -120,60 +121,103 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
               children: [
                 if (!downloaded && widget.message != null && widget.message?.dto == null)
                   //? Since this is not yet downloaded, first, a stream for this.
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      //? First, the file icon.
-                      Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: highlights,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              //* First, the icon.
-                              SvgPicture.asset(
-                                icon,
-                                height: 30,
-                                width: 30,
+                  StreamBuilder(
+                    stream: WayaFileRepository.instance.downloadFile(
+                      widget.message!.media!.first.mediaUrl,
+                      widget.doc,
+                      (result) {
+                        if (result) {
+                          setState(() {
+                            downloaded = true;
+                          });
+                        }
+                      },
+                    ),
+                    builder: (context, snapshot) {
+                      final data = snapshot.data;
+                      final progress = data?.$1 ?? 0;
+                      final total = data?.$2 ?? 0;
+
+                      //? This is where it is at.
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          //? First, the download stream
+                          Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              border: Border.all(
                                 color: highlights,
                               ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Stack(
+                                children: [
+                                  //? The progress things.
+                                  CircularProgressIndicator(
+                                    value: progress / 100,
+                                    color: highlights,
+                                  ),
 
-                              //* The text file.
-                              Text(
-                                widget.extension.toUpperCase(),
-                                style: WayaTextStyles.bodySemiBold.copyWith(
-                                  color: highlights,
-                                  fontSize: 14,
-                                ),
+                                  //* First, the icon.
+                                  SvgPicture.asset(
+                                    icon,
+                                    height: 30,
+                                    width: 30,
+                                    color: highlights,
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
 
-                      // Some space.
-                      const Gap(5),
+                          // Some space.
+                          const Gap(10),
 
-                      //? Second, the file's name.
-                      Expanded(
-                        child: Text(
-                          widget.filename,
-                          maxLines: 1,
-                          style: WayaTextStyles.bodyMedium.copyWith(
-                            color: highlights,
-                            overflow: TextOverflow.ellipsis,
+                          //? Second, the file's name.
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                //? The download bar.
+                                Text(
+                                  "${progress > 0 ? progress.toStringAsFixed(0) : 0}% downloaded",
+                                  style: WayaTextStyles.bodyMedium.copyWith(
+                                    color: highlights,
+                                  ),
+                                ),
+
+                                //? The file name.
+                                Text(
+                                  widget.filename,
+                                  maxLines: 1,
+                                  style: WayaTextStyles.bodyMedium.copyWith(
+                                    color: highlights,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+
+                          //? Finally, the playback duration button.
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              WayaFileHelper.getFileSize(total),
+                              style: WayaTextStyles.bodySmall.copyWith(
+                                color: WayaColors.primary,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   )
 
                 //? Since it is real, first, the document file itself.

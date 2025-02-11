@@ -31,6 +31,8 @@ class SendMessageDto {
 
   factory SendMessageDto.fromJson(Map<String, dynamic> json) => _$SendMessageDtoFromJson(json);
 
+  List<File>? get asFilesList => media?.map((file) => File(file)).toList();
+
   Map<String, dynamic> toBrokenJson() => _$SendMessageDtoToJson(this);
 
   Map<String, dynamic> toJson() {
@@ -85,7 +87,7 @@ class SendMessageDto {
     final files = <String>[];
 
     //? This is fine.
-    for (final file in media ?? []) {
+    for (final file in media ?? <String>[]) {
       //? Get the result.
       final entity = File(file);
       final name = type != MessageType.voiceNote ? WayaFileHelper.generateFilename(chatId, entity) : null;
@@ -100,9 +102,12 @@ class SendMessageDto {
       //? We do not need to do this for voice notes.
       if (type == MessageType.voiceNote) continue;
 
+      //? This is fine.
+      final messageId = WayaValueHelper.createUid();
+
       //? Next, we copy the file from its source location to where it would be
       //? when we try to look for it locally.
-      final target = await WayaFileHelper.getFileDirectory(buildMessage(WayaValueHelper.createUid()), file);
+      final target = await WayaFileHelper.getFileLocalDirectory(buildMessage(messageId), "/x/x/$name");
 
       //? Print this.
       print("SendMessageDTO/ Copying ${entity.path} to ${target.path}");
@@ -114,12 +119,7 @@ class SendMessageDto {
         } catch (_) {}
 
         //? This was copied successfully.
-        if (await target.exists()) {
-          print("SendMessageDTO/ Copied ${entity.path} to ${target.path}");
-        }
-
-        //? Log our error.
-        else {
+        if (!await target.exists()) {
           print("SendMessageDTO/ Failed to copy ${entity.path} to ${target.path}");
         }
       }
@@ -135,5 +135,29 @@ class SendMessageDto {
       media: files,
       contacts: contacts,
     );
+  }
+
+  List<SendMessageDto> get fragmentMedia {
+    //? Our list of DTOs that is our result.
+    final result = <SendMessageDto>[];
+
+    //? Now, for each media item in the message body...
+    for (var i = 0; i < (media?.length ?? 0); i++) {
+      final file = media![i];
+
+      // This is fine.
+      result.add(SendMessageDto(
+        chatId: chatId,
+        type: type,
+        originalMessageId: i != 0 ? null : originalMessageId,
+        originalMessage: i != 0 ? null : originalMessage,
+        content: i != 0 ? null : content,
+        media: [file],
+        contacts: contacts,
+      ));
+    }
+
+    //? The result to return.
+    return result;
   }
 }
