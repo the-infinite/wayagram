@@ -56,12 +56,13 @@ class Data {
       this.pagingCounter,});
 
   Data.fromJson(dynamic json) {
-    if (json['docs'] != null) {
-      docs = [];
-      json['docs'].forEach((v) {
-        //docs?.add(Dynamic.fromJson(v));
-      });
-    }
+    // if (json['docs'] != null) {
+    //   docs = [];
+    //   json['docs'].forEach((v) {
+    //     //docs?.add(Dynamic.fromJson(v));
+    //   });
+    // }
+    docs = json['docs'];
     totalDocs = json['totalDocs'];
     limit = json['limit'];
     page = json['page'];
@@ -82,7 +83,8 @@ class Data {
   bool? hasPrevPage;
   dynamic prevPage;
   num? pagingCounter;
-Data copyWith({  List<dynamic>? docs,
+Data copyWith({
+  List<dynamic>? docs,
   num? totalDocs,
   num? limit,
   num? page,

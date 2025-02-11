@@ -18,9 +18,11 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
+import 'package:wayagram/features/post/vm/comment.dart';
 
 import '../../../assetsgen/assets.gen.dart';
 import '../../explore/widgets/grouped_widget_header.dart';
@@ -460,7 +462,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                         context: context,
                                         onTap: () {
                                           viewModel.deletePost(context,
-                                              postId: '${post.id}');
+                                              postId: '${post.id}', userId: '${ConversationState.self.id}');
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             const SnackBar(
@@ -625,7 +627,8 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                         actionType(
                             '${post.likeCount} ${post.likeCount! <= 1 ? 'Like' : 'Likes'}',
                             'assets/images/pages/like2.png', onPressed: () {
-                          viewModel.likePost(context, postId: '${post.id}');
+                          viewModel.likePost(context, postId: '${post.id}',
+                          userId: '${ConversationState.self.id}');
                         },
                             color: post.likeCount == 0
                                 ? WayaColors.greyColor500
@@ -765,9 +768,11 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
     final viewModel2 = ref.read(createPageProvider.notifier);
-    ref.read(createPageProvider.notifier).getCommentsStream(postId);
-    print(
-        'ShowCommentBox ${ref.read(createPageProvider.notifier).getCommentsStream(postId)}');
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+    });
+
+    print('ShowCommentBox ${ref.read(createPageProvider.notifier).getCommentsStream(postId)}');
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Makes the keyboard push up the bottom sheet
@@ -793,7 +798,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                       color: Colors.black,
                     )),
                 Gap(20),
-                /*Expanded(
+            /*    Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: viewModel.comments?.length,
@@ -917,17 +922,17 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                   ),
                 ),*/
 
-                StreamBuilder<List<Comments>>(
+               /* StreamBuilder<List<Comments>>(
                   stream: viewModel2.getCommentsStream(postId),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      print('Streming data ${snapshot.data}');
-                      print(
-                          'Streaming Comments ${viewModel2.getCommentsStream(postId)}');
+                     // print('Streaming data ${snapshot.data}');
+                      print('Streaming Comments ${viewModel2.getCommentsStream(postId)}');
                       return const Center(child: CircularProgressIndicator());
                     }
-                    //if(!snapshot.hasData || snapshot.data!.isEmpty) {
-                    if (snapshot.data?.length == 0 || snapshot.data == null) {
+
+                    print('Streaming data ${snapshot.data}');
+                    if (snapshot.data?.isEmpty  ?? true) {
                       return const Center(child: Text("No comments yet"));
                     }
                     // if(viewModel2.getCommentsStream(postId) == null ) {
@@ -946,7 +951,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: viewModel.comments?.length,
+                      itemCount: viewModel.comments?.length ?? 0,
                       //itemCount: comments.length,
                       itemBuilder: (context, index) {
                         //final comment = comments[index];
@@ -1006,6 +1011,81 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                       },
                     );
                   },
+                ),*/
+
+                Expanded(
+                  child:
+                  WayaFutureSubscriber(
+                      future:  ref.read(createCommentProvider.notifier).getCommentsStream(postId),
+                      suspense:(_) => Center(child: CircularProgressIndicator(),),
+                      error: (_, error, __)=>Center(child: CircularProgressIndicator(),),
+                      builder: (_, data){
+                      return  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: data?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        String formatTimeAgo(String dateString) {
+                          DateTime dateTime = DateTime.parse(dateString); // Convert string to DateTime
+                          return timeago
+                              .format(dateTime); // Convert to "time ago" format
+                        }
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 20.h, horizontal: 15.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  circleImage(
+                                    radius: 10.r,
+                                    data?[index].user
+                                        ?.profilePicture ??
+                                        '',
+                                  ),
+                                  Gap(10),
+                                  Text(
+                                    '${data?[index].user?.firstName} ${data?[index].user?.lastName}',
+                                    style: TextStyle(
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontSize: 12.sp,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Gap(10),
+                                  Text(
+                                    '• ${formatTimeAgo('${data?[index].createdAt}')}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .wayaCopyWith(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .greyColor500),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                '${data?[index].content?.capitalizeFirst}',
+                                style: TextStyle(
+                                  //fontFamily: WayaConstants.fontFamily,
+                                  fontSize: 12.sp,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w200,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                      })
+
                 ),
                 Row(
                   children: [

@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 import '../../../core/theme/waya_colors.dart';
@@ -19,11 +20,21 @@ class ApprovalScreen extends ConsumerStatefulWidget {
 
 class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
     with SingleTickerProviderStateMixin {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createGroupProvider.notifier).getJoinRequest('');
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createPageProvider);
+    final viewModel = ref.watch(createGroupProvider);
 
     return Container(
       width: double.infinity,

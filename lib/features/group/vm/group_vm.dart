@@ -9,7 +9,10 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
-import 'package:wayagram/features/group/data/model/group_state.dart';
+import 'package:wayagram/features/group/data/model/get_all_groups.dart';
+import 'package:wayagram/features/group/data/model/group_response.dart';
+import 'package:wayagram/features/group/data/model/join_request_model.dart';
+import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/pages/data/model/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/media_upload_model.dart';
@@ -44,6 +47,15 @@ class GroupVm extends StateNotifier<GroupState> {
 
   }
 
+  void setGroup(List<GetAllGroupDocs>? docs){
+    if((docs?.length ?? 0) != 1){
+    return;
+    }
+   final groupDoc  = docs!.first;
+    state = state.copyWith( name: groupDoc.name, desc: groupDoc.description,
+    profileImage: groupDoc.profileImage, coverImage: groupDoc.coverImage);
+  }
+
   void reset() {
     state = GroupState();
   }
@@ -60,9 +72,7 @@ class GroupVm extends StateNotifier<GroupState> {
     state = state.copyWith(roleType: value.toLowerCase());
   }
 
-  Future<void> createGroup(ctx, groupName, groupDesc, groupType, String coverImage, String profileImage) async {
-    print("before the loop");
-
+  Future<GroupResponse?> createGroup(ctx, groupName, groupDesc, groupType, String coverImage, String profileImage) async {
 
    final coverImageUrl =  await WayaFileRepository.instance.uploadFile(File(coverImage), );
     final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
@@ -73,9 +83,10 @@ class GroupVm extends StateNotifier<GroupState> {
           groupName, groupDesc, groupType, coverImageUrl ?? '', profileImageUrl ??''
          );
       state = state.copyWith(isLoading: false);
+
       //? If this is fine...
       if (response.success && ctx.mounted) {
-
+        return GroupResponse.fromJson(response.data['data']);
       }
 
       //? If it failed...
@@ -89,10 +100,136 @@ class GroupVm extends StateNotifier<GroupState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
+  }
+
+  Future<void> deleteGroup( ctx,  String postId,  String userId) async {
+    try {
+      final response =  await _groupRepository.deleteGroup(postId);
+      if(response.success && ctx.mounted){
+        //getAllGroups();
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post deleted successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> editGroup(ctx, groupName, groupDesc, groupType, String coverImage, String profileImage, String groupId) async {
+
+    final coverImageUrl =  await WayaFileRepository.instance.uploadFile(File(coverImage), );
+    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.editGroup(
+          groupName, groupDesc, groupType, coverImageUrl ?? '', profileImageUrl ??'', groupId
+      );
+      state = state.copyWith(isLoading: false);
+      //? If this is fine...
+      if (response.success && ctx.mounted) {
+
+      }
+
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        print('Edit group');
+        _logger.i(response.data['data']);
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> leaveGroup( ctx, {required String postId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _groupRepository.leaveGroup(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post bookmarked successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> joinGroup( ctx,  String postId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _groupRepository.joinGroup(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<List<GetAllGroupDocs>?> getAllGroups(id) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getAllGroup(id);
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
+        state = state.copyWith(getAllGroups: responseModel.data?.docs);
+        return responseModel.data?.docs;
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+
+    }
+    return null;
   }
 
 
+  Future<void> getJoinRequest(groupId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.joinRequest(groupId);
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        JoinRequestModel responseModel = JoinRequestModel.fromJson(response.data);
+        state = state.copyWith(docs: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+
+    }
+  }
+
 }
+
+final groupResponseProvider = StateProvider<GroupResponse?>((ref) => null);
 
 final groupProvider = Provider((ref) => GroupRepository());
 final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {

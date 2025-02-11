@@ -2,15 +2,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/view/events.dart';
+import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/view/pages_for_you.dart';
 import 'package:wayagram/features/pages/view/team_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -27,11 +32,38 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
+
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      final id  = ModalRoute.of(context)?.settings.arguments as String;
+   final fetchGroup =  await ref.read(createGroupProvider.notifier).getAllGroups(id);
+   ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
+   print('THE PUBLIC GROUP ID is $id');
+    });
+  }
+
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      final id  = ModalRoute.of(context)?.settings.arguments as String;
+      final fetchGroup =  await ref.read(createGroupProvider.notifier).getAllGroups(id);
+      ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
+      print('THE PUBLIC GROUP ID is $id');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createPageProvider);
+    final viewModel = ref.watch(createGroupProvider);
+
+    //final group = ref.watch(groupResponseProvider);
 
     return WayaScaffold(
       onTapBackButton: (){
@@ -44,7 +76,67 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
         children: [
           WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
           WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
-          WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+          PopupMenuButton(
+              onSelected: (value) {},
+              iconColor: wayaTheme.colorScheme.greyColor400,
+              position: PopupMenuPosition.under,
+              itemBuilder: (context) {
+                return [
+                  PopupMenuItem<int>(
+                    value: 0,
+                    child: _buildActionNav(
+                        context: context,
+                        onTap: () {
+                          Navigator.pop(context);
+                          //WayaNav.toNamed('/groupSetting');
+
+                        },
+                        asset:
+                        SvgPicture.asset('assets/images/pages/mute.svg', height: 20,),
+                        text: "  Mute Group",
+                        color: wayaTheme.colorScheme.customBlack),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 1,
+                    child: _buildActionNav(
+                        context: context,
+                        onTap: () {
+                          Share.share('Share');
+                        },
+                        asset:WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                        text: "  Share Group link",
+                        color:wayaTheme.colorScheme.customBlack),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 2,
+                    child: _buildActionNav(
+                        context: context,
+                        onTap: () {
+                          Navigator.pop(context);
+
+                        },
+                        asset: SvgPicture.asset('assets/images/pages/flag.svg'),
+                        text: "  Report Group",
+                        color: wayaTheme.colorScheme.customBlack),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 3,
+                    child: _buildActionNav(
+                        context: context,
+                        onTap: () {
+                          //viewGroupModel.leaveGroup(context, postId: '', userId: '${ConversationState.self.id}');
+                          Navigator.pop(context);
+
+                        },
+                        asset: SvgPicture.asset('assets/images/pages/door_open.svg',
+                          color: wayaTheme.colorScheme.error500, height: 20,),
+                        text: "  Leave Group",
+                        color: wayaTheme.colorScheme.error500),
+                  )
+                ];
+              },
+              child:  WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none)),
+          //WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
           Gap(8)
         ],
       ),
@@ -59,9 +151,30 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  WayaImage3(
-                    height: Get.height * 0.2,
+                  Container(
+                    width: double.infinity,
+                    height: 200, // Banner height
+                    decoration: BoxDecoration(
+                      color: WayaColors.primaryBrown50,
+                      borderRadius: BorderRadius.circular(0),
+                      image:viewModel.profileImage!=null? DecorationImage(
+                        image: NetworkImage('${viewModel.profileImage}'),
+                        fit: BoxFit.cover,
+                      ):
+                      DecorationImage(
+                        image: AssetImage('assets/images/pages/image_placeholder.png'),
+                        fit: BoxFit.cover,
+                      )
+                      //     : const DecorationImage(
+                      //   image: AssetImage("assets/placeholder.jpg"),
+                      //   fit: BoxFit.cover,
+                      // ),
+                    ),
                   ),
+                  // WayaImage3(
+                  //   imageUrl: '${viewModel.profileImage}',
+                  //   height: Get.height * 0.2,
+                  // ),
                   Gap(15),
                   GestureDetector(
                     onTap: () {
@@ -97,11 +210,13 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
           ),
           const Gap(10),
           Text(
-              'Empire Music',
+            '${viewModel.name?.capitalizeFirst}',
+              //'Empire Music',
               style: wayaTheme.textTheme.bodyMedium),
           //const Gap(10),
           Text(
-            'Find your sound . Discuss writing, composing, recording, and much more',
+            '${viewModel.desc?.capitalizeFirst}',
+            //'Find your sound . Discuss writing, composing, recording, and much more',
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
@@ -179,6 +294,32 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500 ),
           ),
+        ],
+      ),
+    );
+  }
+
+  InkWell _buildActionNav(
+      {required BuildContext context,
+        required VoidCallback onTap,
+        required Widget asset,
+        required String text,
+        required Color color}) {
+    final wayaTheme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          asset,
+          const Gap(4),
+          Text(
+            text,
+            style: TextStyle().wayaCopyWith(
+                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+          )
         ],
       ),
     );

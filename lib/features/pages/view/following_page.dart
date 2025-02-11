@@ -18,9 +18,16 @@ class FollowingPage extends ConsumerStatefulWidget {
 
 class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTickerProviderStateMixin {
 
-  PageController pageController = PageController(
-    initialPage: 0,
-  );
+  PageController pageController = PageController(initialPage: 0,);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createPageProvider.notifier).getFollowing();
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +44,9 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: 6,
+            //viewModel.docs?.length,
             itemBuilder: (_, index){
+             // viewModel.docs?[index].
               return Container(
                 margin: EdgeInsets.only(bottom: 15),
                 padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),

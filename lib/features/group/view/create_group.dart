@@ -16,7 +16,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/group/data/model/group_state.dart';
+import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
@@ -35,8 +35,6 @@ class CreateGroup extends ConsumerStatefulWidget {
 class _CreateGroupState extends ConsumerState<CreateGroup> {
   final _formKey = GlobalKey<FormState>();
 
-
-  GroupState? groupState;
 
   bool sel =  false;
   bool sel2 =  false;

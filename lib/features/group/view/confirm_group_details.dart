@@ -30,7 +30,9 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
     final viewModel = ref.watch(createGroupProvider);
     final viewModel2 = ref.watch(createGroupProvider.notifier);
     final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+print('Group Type ====>>> ${args['type']}');
 
+    final group = ref.watch(groupResponseProvider);
     return WayaScaffold(
       title: "Confirm Details",
       isLoading: viewModel.isLoading,
@@ -40,11 +42,16 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
         child: WayaButton(
           callback: !viewModel.isLoading
               ? () async {
-            await viewModel2.createGroup(context, viewModel.groupName.text,
-                viewModel.groupDescription.text,  true,
+           final createdGroup = await viewModel2.createGroup(context, viewModel.groupName.text,
+                viewModel.groupDescription.text,
+                args['type'] == 'Public Group' ? false : true,
                 (args['coverImage'] as File).path, ( args['image'] as File).path );
             viewModel2.reset();
-            WayaNav.toNamed("/successGroup", arguments: args['type']);
+            //WayaNav.toNamed("/successGroup", arguments: args['type']);
+            WayaNav.toNamed("/successGroup", arguments: {
+              'type': args['type'],
+              'id': createdGroup?.id
+            });
           } : null,
           height: 30,
           isLoading: viewModel.isLoading,
@@ -76,11 +83,16 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
               ),
 
               Positioned(
-                  left: 16.w,
-                  bottom: -20.h,
-                  child: WayaDp(
-                    radius: 28.r,
-                  )),
+                left: 16.w,
+                bottom: -20.h,
+                child:  CircleAvatar(
+                  radius: 20,
+                  backgroundImage:
+                  //args['coverImage'].absolute.path != null?
+                        FileImage(File('${args['coverImage'].absolute.path}'))
+                  // AssetImage('assets/images/pages/image_placeholder.png')
+                  )
+                ),
             ],
           ),
           const Gap(50),
