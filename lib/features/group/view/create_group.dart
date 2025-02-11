@@ -42,6 +42,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
   bool sel2 =  false;
 
   File? _selectedImage; // Holds the selected image
+  File? _coverImage; // Holds the selected image
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
@@ -50,6 +51,15 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
       setState(() {
         _selectedImage = File(pickedFile.path);
         print('SELECTED IMAGES $_selectedImage');
+      });
+    }
+  }
+
+  Future<void> _pickCoverImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _coverImage = File(pickedFile.path);
       });
     }
   }
@@ -89,6 +99,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                 WayaNav.toNamed("/confirmGroupDetails",
                    arguments:{
                   'image': _selectedImage,
+                   'coverImage': _coverImage,
                    'type': sel?'Public Group': 'Private Group'
                     }
                    // arguments: sel?'Public Group': 'Private Group',
@@ -163,13 +174,45 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
 
                 ],
               ),
+
+
+
               Positioned(
-                  left: 16.w,
-                  bottom: -20.h,
-                  child: WayaDp(
-                    radius: 28.r,
-                    isEdit: true,
-                  )),
+                left: 16.w,
+                bottom: -20.h,
+                child: GestureDetector(
+                  onTap: _pickCoverImage,
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: wayaTheme.colorScheme.greyColor200,
+                        backgroundImage: _coverImage != null
+                            ?  FileImage(_coverImage!)
+                            : null,
+                        child: _coverImage == null
+                            ? Icon(
+                          Icons.person,
+                          color: wayaTheme.colorScheme.greyColor600,
+                        )
+                            : null,
+                      ),
+                     /* if (_coverImage == null)
+                        Positioned.fill(
+                          child: CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
+                            child: Icon(
+                              Icons.camera_alt_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),*/
+                    ],
+                  ),
+                ),
+              ),
+
             ],
           ),
           const Gap(30),

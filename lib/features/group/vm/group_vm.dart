@@ -64,7 +64,7 @@ class GroupVm extends StateNotifier<GroupState> {
     print("before the loop");
 
 
-   final coverImageUrl = await WayaFileRepository.instance.uploadFile(File(coverImage), );
+   final coverImageUrl =  await WayaFileRepository.instance.uploadFile(File(coverImage), );
     final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
 
     try {
@@ -75,13 +75,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Group created successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
+
       }
 
       //? If it failed...

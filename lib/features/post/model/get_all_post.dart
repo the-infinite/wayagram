@@ -154,18 +154,8 @@ class GetAllPostDocs {
     pageId = json['pageId'];
     contentType = json['contentType'];
     content = json['content'];
-    if (json['media'] != null) {
-      media = [];
-      json['media'].forEach((v) {
-        //media?.add(Dynamic.fromJson(v));
-      });
-    }
-    if (json['hashtags'] != null) {
-      hashtags = [];
-      json['hashtags'].forEach((v) {
-        //hashtags?.add(Dynamic.fromJson(v));
-      });
-    }
+    hashtags = json['hashtags'];
+    media = json['media'];
     sourceType = json['sourceType'];
     linkedServiceId = json['linkedServiceId'];
     privacy = json['privacy'];
