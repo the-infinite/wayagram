@@ -11,8 +11,10 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/view/approval_screen.dart';
 import 'package:wayagram/features/group/view/events.dart';
+import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/view/pages_for_you.dart';
 import 'package:wayagram/features/pages/view/team_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -33,7 +35,8 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createPageProvider);
+    final viewModel = ref.watch(createGroupProvider);
+    final viewGroupModel = ref.watch(createGroupProvider.notifier);
 
     return WayaScaffold(
         onTapBackButton: (){
@@ -92,6 +95,8 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                       child: _buildActionNav(
                           context: context,
                           onTap: () {
+                            viewGroupModel.deleteGroup(context, '',
+                                '${ConversationState.self.id}');
                             Navigator.pop(context);
 
                           },

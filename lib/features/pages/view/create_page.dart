@@ -32,6 +32,28 @@ class _CreatePageState extends ConsumerState<CreatePage> {
   bool sel =  false;
   bool sel2 =  false;
 
+  File? _selectedImage; // Holds the selected image
+  File? _coverImage; // Holds the selected image
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+        print('SELECTED IMAGES $_selectedImage');
+      });
+    }
+  }
+
+  Future<void> _pickCoverImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _coverImage = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +73,14 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                 if(!sel && !sel2){
 
                 } else{
-                  WayaNav.toNamed("/confirmDetails", arguments: sel?'Public Page': 'Private Page');
+                  WayaNav.toNamed("/confirmDetails",
+                      arguments:{
+                        'image': _selectedImage,
+                        'coverImage': _coverImage,
+                        'type': sel?'Public Group': 'Private Group'
+                      }
+                      //arguments: sel?'Public Page': 'Private Page'
+                  );
 
                 }
               }
@@ -72,7 +101,7 @@ class _CreatePageState extends ConsumerState<CreatePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
+        /*  Stack(
             clipBehavior: Clip.none,
             children: [
               Column(
@@ -91,6 +120,99 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                   child: WayaDp(
                     radius: 28.r,
                   )),
+            ],
+          ),*/
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+
+                  Stack(
+                    children: [
+                      // Banner Container
+                      Container(
+                        width: double.infinity,
+                        height: 200, // Banner height
+                        decoration: BoxDecoration(
+                          color: WayaColors.primaryBrown50,
+                          borderRadius: BorderRadius.circular(0),
+                          image: _selectedImage != null
+                              ? DecorationImage(
+                            image: FileImage(_selectedImage!),
+                            fit: BoxFit.cover,
+                          )
+                              : const DecorationImage(
+                            image: AssetImage("assets/placeholder.jpg"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+
+                      // Upload Icon Button
+                      Positioned(
+                        top: 140,
+                        right: 10,
+                        child: IconButton(
+                          onPressed: _pickImage,
+                          icon: Image.asset('assets/images/pages/cam.png', height: 14.h,),
+                          padding: EdgeInsets.all(10),
+                          constraints: BoxConstraints(),
+                          color: WayaColors.greyColor600, // Background overlay
+                        ),
+                      ),
+                    ],
+                  ),
+                  /* WayaImage3(
+                    imageUrl: '$_selectedImages',
+                    onTap: _pickImages,
+                    height: Get.height * 0.2,
+                    isEdit: true,
+                  ),*/
+                  Gap(15),
+
+                ],
+              ),
+
+
+
+              Positioned(
+                left: 16.w,
+                bottom: -20.h,
+                child: GestureDetector(
+                  onTap: _pickCoverImage,
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: wayaTheme.colorScheme.greyColor200,
+                        backgroundImage: _coverImage != null
+                            ?  FileImage(_coverImage!)
+                            : null,
+                        child: _coverImage == null
+                            ? Icon(
+                          Icons.person,
+                          color: wayaTheme.colorScheme.greyColor600,
+                        )
+                            : null,
+                      ),
+                      /* if (_coverImage == null)
+                        Positioned.fill(
+                          child: CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
+                            child: Icon(
+                              Icons.camera_alt_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),*/
+                    ],
+                  ),
+                ),
+              ),
+
             ],
           ),
           const Gap(30),

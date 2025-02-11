@@ -26,6 +26,15 @@ class MembersScreen extends ConsumerStatefulWidget {
 class _MembersScreenState extends ConsumerState<MembersScreen >
     with SingleTickerProviderStateMixin {
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createPageProvider.notifier).getAllPosts('');
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {

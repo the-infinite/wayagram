@@ -21,7 +21,54 @@ class GroupRepository extends BaseRepository {
     return post("$serviceUrl/groups", payload);
   }
 
-  Future<WayaRequestResponse> getUploadImage(image) {
+  Future<WayaRequestResponse> editGroup(String groupName,
+      String groupDesc, bool groupType,
+      String coverImage, String profileImage, groupId) {
+    final payload = {
+      "name": groupName,
+      "description": groupName,
+      "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
+      "isOpen": false, // this defaults to true if it is not inserted
+      "coverImage":  coverImage,
+      "profileImage":  profileImage
+    };
+
+    return put("$serviceUrl/groups/$groupId", payload);
+  }
+
+  Future<WayaRequestResponse> leaveGroup(String groupId ) {
+    final payload = {};
+    return post("$serviceUrl/groups/leave/$groupId", payload);
+  }
+
+  Future<WayaRequestResponse> joinGroup(String groupId ) {
+    final payload = {};
+    return post("$serviceUrl/groups/join/$groupId", payload);
+  }
+
+  Future<WayaRequestResponse> deleteGroup(groupId) {
+    return delete("$serviceUrl/groups/$groupId");
+  }
+
+  Future<WayaRequestResponse> removeTeamMember(groupId, memberId) {
+    return delete("$serviceUrl/groups/$groupId/members/$memberId");
+  }
+
+  Future<WayaRequestResponse> getAllGroup(id) {
+    return get("$serviceUrl/groups?id=$id");
+  }
+
+  Future<WayaRequestResponse> getGroupMember(image) {
+    return get("$serviceUrl/groups/members");
+  }
+
+  Future<WayaRequestResponse> joinRequest(groupId) {
+    return get("$serviceUrl/groups/join-requests/$groupId?rstatus=pending");
+  }
+
+
+
+/*  Future<WayaRequestResponse> getUploadImage(image) {
     return get("$serviceUrl/signed-url/$image");
   }
 
@@ -34,5 +81,5 @@ class GroupRepository extends BaseRepository {
       isWgUrl: false,
       isAuth: false,
     );
-  }
+  }*/
 }

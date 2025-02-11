@@ -21,6 +21,7 @@ import 'package:wayagram/features/post/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../shared/features/file/repo/default.dart';
 import '../../post/model/fetch_comment.dart';
 
 class UploadedImage {
@@ -303,6 +304,33 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
+  Future<void> createPage(ctx, pageName, pageDesc, pageType, String coverImage, String profileImage) async {
+
+    final coverImageUrl =  await WayaFileRepository.instance.uploadFile(File(coverImage), );
+    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.createPage(
+          pageName, pageDesc, pageType, coverImageUrl ?? '', profileImageUrl ??''
+      );
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+
+      }
+
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        print('Create page');
+        _logger.i(response.data['data']);
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
 
   Future<void> createPost(ctx, content, postType, List<XFile> images) async {
     print("before the loop");
@@ -373,25 +401,20 @@ class PageVm extends StateNotifier<PageState> {
 
   Future<void> commentOnPost(String postId, String content) async {
     try {
-      state = state.copyWith(isLoading: true);
       final response = await _pageRepository.commentOnPost(postId, content);
-      state = state.copyWith(isLoading: false);
       if (response!.statusCode == 200 || response.statusCode == 201) {
-
-      } else {
-
+      getCommentsStream(postId);
       }
     }catch (e) {
       print("Error: $e");
     }
   }
 
-  Future<void> deletePost( ctx, {required String postId}) async {
+  Future<void> deletePost( ctx, {required String postId, required String userId}) async {
     try {
-      state = state.copyWith(isLoading: true);
       final response =  await _pageRepository.deletePost(postId);
-      state = state.copyWith(isLoading: false);
       if(response.success && ctx.mounted){
+        getAllPosts(userId);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Post deleted successfully!'),
@@ -434,13 +457,6 @@ class PageVm extends StateNotifier<PageState> {
       final response =  await _pageRepository.sharePost(postId);
       state = state.copyWith(isLoading: false);
       if(response.success && ctx.mounted){
-       /* ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post bookmarked successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );*/
       }
     } catch (e) {
       print(e);
@@ -470,24 +486,19 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> likePost( ctx, {required String postId}) async {
+  Future<void> likePost( ctx, {required String postId, required String userId}) async {
     try {
-      state = state.copyWith(isLoading: true);
+      //state = state.copyWith(isLoading: true);
       final response =  await _pageRepository.likePost(postId);
-      state = state.copyWith(isLoading: false);
+      //state = state.copyWith(isLoading: false);
       if(response.success && ctx.mounted){
-        // ScaffoldMessenger.of(ctx).showSnackBar(
-        //   const SnackBar(
-        //     content: Text('Post bookmarked successfully!'),
-        //     backgroundColor: WayaColors.primary,
-        //     duration: Duration(seconds: 2),
-        //   ),
-        // );
+        getAllPosts(userId);
+
       }
     } catch (e) {
       print(e);
     } finally{
-      state = state.copyWith(isLoading: false);
+      //state = state.copyWith(isLoading: false);
     }
   }
 
@@ -604,28 +615,22 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  //Stream<List<Comments>> getCommentsStream(String postId) {
-  Stream<List<Comments>>? getCommentsStream(String postId) {
-    return Stream.periodic(const Duration(seconds: 5), (count) async {
-      //final token = await Store.getToken();
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.getComment(postId);
-      state = state.copyWith(isLoading: false);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        FetchComment responseModel = FetchComment.fromJson(response.data);
-        state = state.copyWith(comments: responseModel.data?.comments);
-        //final data = response.data["comments"];
-        //return data.cast<Map<String, dynamic>>().map((json) => Comments.fromJson(json)).toList();
-      } else {
-        state = state.copyWith(isLoading: false);
-        //return [];
-      }
-    }).asyncMap((_) => getComments(postId));
-  }
-
-
-
-
+ Future<List<Comments>> getCommentsStream(String postId) async {
+   try {
+     state = state.copyWith(isLoading: true);
+     final response = await _pageRepository.getComment(postId);
+     state = state.copyWith(isLoading: false);
+     if (response.statusCode == 200 || response.statusCode == 201) {
+       FetchComment responseModel = FetchComment.fromJson(response.data);
+       state = state.copyWith(comments: responseModel.data?.comments);
+       return responseModel.data?.comments ?? [];
+     }
+   } catch (e) {
+     print(e);
+   }
+   state = state.copyWith(isLoading: false);
+   return [];
+ }
 
   Future<void> getFollowing() async {
     state = state.copyWith(isLoading: true);
