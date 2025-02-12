@@ -1,12 +1,12 @@
-Sprint 3 (Chat and Social)
+Sprint 3 Release Candidate (Chat and Social)
 
-Tasks Completed:
+Completed Tasks:
 N/A
 
-Unrelated Tasks Completed:
+Bug Fixes:
 N/A
 
-Observations:
+Coverage:
 N/A
 
 Notes:

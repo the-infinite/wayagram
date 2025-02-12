@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -23,20 +22,21 @@ class _ExploreHeaderState extends ConsumerState<ExploreHeader> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-      //  Image.asset('assets/images/wayalogo_unlabelled.png', scale: 3,),
-       const Gap(1),
+        //  Image.asset('assets/images/wayalogo_unlabelled.png', scale: 3,),
+        const Gap(1),
         SizedBox(
-          width: context.width * 0.48,
+          width: context.width * 0.50,
           child: WayaTextFormField(
             padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
-              prefixIcon: Icon(
-                Icons.search,
-                color: wayaTheme.colorScheme.greyColor400,
-              ),
-              controller: viewModel.search,
-              hintText: 'Search WayaGram'),
+            prefixIcon: Icon(
+              Icons.search,
+              color: wayaTheme.colorScheme.greyColor400,
+            ),
+            controller: viewModel.search,
+            hintText: 'Search WayaGram',
+          ),
         ),
-         const Gap(1),
+        const Gap(1),
         // Row(
         //   mainAxisAlignment: MainAxisAlignment.center,
         //   crossAxisAlignment: CrossAxisAlignment.center,

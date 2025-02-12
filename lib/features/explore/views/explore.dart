@@ -65,8 +65,8 @@ class _ExploreState extends ConsumerState<Explore> {
         isLoading: false,
         backgroundColor: wayaTheme.colorScheme.scaffoldColor,
         appBar: AppBar(
-          toolbarHeight: 70,
-          backgroundColor: wayaTheme.colorScheme.white,
+          toolbarHeight: kToolbarHeight,
+          backgroundColor: wayaTheme.colorScheme.scaffoldColor2,
           title: ExploreHeader(),
           actions: [
             Container(
@@ -153,7 +153,10 @@ class _ExploreState extends ConsumerState<Explore> {
                   Text(
                     "Create a Quote",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                      color: wayaTheme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),
@@ -234,7 +237,7 @@ class _ExploreState extends ConsumerState<Explore> {
                   return PagesCard(isFollowing: true, group: groupList[index]);
                 }),
             Text(
-              "Recommended or you",
+              "Recommended for you",
               style: wayaTheme.textTheme.bodyMedium,
             ),
             const Gap(10),
