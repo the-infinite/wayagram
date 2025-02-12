@@ -31,9 +31,10 @@ extension WayaTextStyleX on TextStyle {
     String? package,
     TextOverflow? overflow,
   }) {
+    //WayaColorHelper.getColorFromInput(color ?? WayaColors.white)
     return copyWith(
       inherit: inherit,
-      color: WayaColorHelper.getColorFromInput(color ?? WayaColors.white),
+      color: color,
       backgroundColor: backgroundColor,
       fontSize: fontSize,
       fontWeight: fontWeight,

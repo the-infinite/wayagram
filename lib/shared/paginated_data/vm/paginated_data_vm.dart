@@ -77,6 +77,8 @@ class PaginatedDataVm<T> extends StateNotifier<PaginatedDataState<T>> {
           hasNextPage: result.hasNextPage,
           isLoading: false,
         );
+        print("erer");
+        print(state.data.length);
       } else {
         state = state.copyWith(isLoading: false);
       }

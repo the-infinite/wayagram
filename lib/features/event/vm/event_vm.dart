@@ -8,7 +8,6 @@ import 'package:wayagram/features/event/data/model/event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
-import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
 import 'package:wayagram/features/event/data/model/single_event_response_model.dart';
@@ -119,27 +118,26 @@ class EventVm extends StateNotifier<EventState> {
           await _eventRepository.joinEvent(userId: userId!, eventId: eventId);
       Navigator.of(context).pop();
       if (response.success && context.mounted) {
- 
-    if (context.mounted) {
-      WayaUtils.showNotice(
-        context: context,
-        buttonText: 'View Event Details',
-        secondButtonText: 'Explore more events',
-        icon: Image.asset(
-          WayaAssets.images.createEventSuccess.path,
-          scale: 1.5,
-        ),
-        title: "You've successfully joined the event",
-        message:
-            'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
-        onPress: () {
-          Navigator.of(context).pop(); 
-          // Refresh the screen
-        },
-        onCancel: () => WayaNav.toNamed(EventView.route),
-      );
-    }
-  
+        if (context.mounted) {
+          WayaUtils.showNotice(
+            context: context,
+            buttonText: 'View Event Details',
+            secondButtonText: 'Explore more events',
+            icon: Image.asset(
+              WayaAssets.images.createEventSuccess.path,
+              scale: 1.5,
+            ),
+            title: "You've successfully joined the event",
+            message:
+                'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
+            onPress: () {
+              Navigator.of(context).pop();
+              // Refresh the screen
+            },
+            onCancel: () => WayaNav.toNamed(EventView.route),
+          );
+        }
+
         print(response.data);
       }
     } catch (error) {
@@ -159,16 +157,15 @@ class EventVm extends StateNotifier<EventState> {
       final userId = await _secureDataSource.getUserId();
       final response = await _eventRepository.reportEvent(
           userId: userId!, eventId: eventId, reason: reason);
-          Navigator.of(context).pop();
+      Navigator.of(context).pop();
       if (response.success && context.mounted) {
         // show success modal
-      
+
         await WayaUtils.showNotice(
             context: context,
             title: "Thank you for reporting",
             onPress: () {
-               Navigator.pushReplacementNamed(context, EventView.route);
-              
+              Navigator.pushReplacementNamed(context, EventView.route);
             },
             icon: Image.asset(
               WayaAssets.images.eCheckEvent.path,
@@ -189,9 +186,10 @@ class EventVm extends StateNotifier<EventState> {
   Future<PaginatedResult<Doc>?> getAttendees(int page) async {
     try {
       state = state.copyWith(isLoadingAttendees: true);
-
-      final response =
-          await _eventRepository.joinedUsers(state.singleEvent!.id, page);
+      final userId = await _secureDataSource.getUserId();
+      state = state.copyWith(userId: userId);
+      final response = await _eventRepository.joinedUsers(
+          id: state.singleEvent!.id, page: page);
       List<Doc> attendees = [];
       bool hasNextPage = false;
       if (response.success) {

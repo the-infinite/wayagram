@@ -93,7 +93,7 @@ class _MyEventState extends ConsumerState<MyEvents> {
                 )),
             emptyState: EventEmptyState(),
             fetchData: ref.read(eventVmProvider.notifier).getUserEvents,
-            result: (data) {
+            result: (data,s) {
               final filteredEvents = WayaUtils.search<EventDoc>(
                 data,
                 ['title', 'organizerName', 'eventType', 'location'],

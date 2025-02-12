@@ -22,8 +22,8 @@ class _EventAttendeesState extends ConsumerState<EventAttendees> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Expanded(
-        child: ListView(
-      children: [
+   
+    child: 
         PaginatedDataView<Doc>(
           uniqueKey: 'attendees',
           loadingState:SizedBox(
@@ -38,17 +38,18 @@ class _EventAttendeesState extends ConsumerState<EventAttendees> {
           ),
           ),
           fetchData: ref.read(eventVmProvider.notifier).getAttendees,
-          result: (data) {
+          result: (data, scroll) {
             return ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
+           // controller: scroll,
+    physics: const NeverScrollableScrollPhysics(), 
+    shrinkWrap: true,
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   return AttendeeWidget(attendee: data[index]);
                 });
           },
         )
-      ],
-    ));
+      
+    );
   }
 }

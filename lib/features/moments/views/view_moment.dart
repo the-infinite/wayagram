@@ -45,22 +45,34 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
     final moment = moments[currentIndex];
     final duration = moment.contentType == 'video' ? 30 : 10;
     _animationController.duration = Duration(seconds: duration);
-    _animationController.forward().then((_) {
-      if (!isPaused) {
+    _animationController.forward(from: 0.0).whenComplete(() {
+      print("completed");
+      if (mounted && !isPaused) {
         _nextMoment();
       }
     });
   }
 
   void _nextMoment() {
+    if (!mounted) return;
+
     if (currentIndex < moments.length - 1) {
+      setState(() {
+        currentIndex++;
+      });
       _pageController.nextPage(
-          duration: Duration(milliseconds: 300), curve: Curves.ease);
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.ease,
+      );
+      _startTimer();
     } else {
-      Navigator.pop(context);
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      } else {
+        debugPrint("No more pages, and cannot pop.");
+      }
     }
   }
-
   // void _previousMoment() {
   //   if (currentIndex > 0) {
   //     _pageController.previousPage(
@@ -69,6 +81,8 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
   // }
 
   void _onPageChanged(int index) {
+    if (!mounted) return;
+
     setState(() {
       currentIndex = index;
       _animationController.reset();
@@ -76,17 +90,21 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
     });
   }
 
-  void _onLongPressStart() {
+  void pauseAnimation() {
+    if (!_animationController.isAnimating) return;
     setState(() {
       isPaused = true;
       _animationController.stop();
     });
   }
 
-  void _onLongPressEnd() {
+  void continueAnimating() {
+    if (_animationController.isAnimating) return;
     setState(() {
       isPaused = false;
-      _animationController.forward();
+      print("completed ${_animationController.duration}");
+      //_animationController.forward();
+      _startTimer();
     });
   }
 
@@ -112,8 +130,8 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
-          onLongPressStart: (_) => _onLongPressStart(),
-          onLongPressEnd: (_) => _onLongPressEnd(),
+          onLongPressStart: (_) => pauseAnimation(),
+          onLongPressEnd: (_) => continueAnimating(),
           child: Container(
             color: moments[currentIndex].contentType == 'text'
                 ? MomentHelper.hexToColor(
@@ -134,58 +152,70 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
                             context: context, ref: ref, moment: moment);
                   },
                 ),
-                Positioned(
-                  top: 20,
-                  left: 0,
-                  right: 0,
-                  child: Row(
-                    children: List.generate(moments.length, (index) {
-                      return Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: AnimatedBuilder(
-                            animation: _animationController,
-                            builder: (context, child) {
-                              return LinearProgressIndicator(
-                                borderRadius: BorderRadius.circular(12),
-                                value: index == currentIndex
-                                    ? _animationController.value
-                                    : (index < currentIndex ? 1.0 : 0.0),
-                                backgroundColor: Colors.black
-                                    .withOpacity(0.5)
-                                    .withOpacity(0.5),
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    }),
+                if (!isPaused)
+                  Positioned(
+                    top: 20,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                      children: List.generate(moments.length, (index) {
+                        return Expanded(
+                          child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: AnimatedBuilder(
+                                animation: _animationController,
+                                builder: (context, child) {
+                                  return LinearProgressIndicator(
+                                    minHeight: 6,
+                                    borderRadius: BorderRadius.circular(12),
+                                    value: index == currentIndex
+                                        ? _animationController.value
+                                        : (index < currentIndex ? 1.0 : 0.0),
+                                    backgroundColor: Colors.black
+                                        .withOpacity(0.5)
+                                        .withOpacity(0.5),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                  );
+                                },
+                              )),
+                        );
+                      }),
+                    ),
                   ),
-                ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 30,
-                  child: MomentUserInfoWidget(moment: moments[currentIndex]),
-                ),
-                if (!args['isMine'])
+                if (!isPaused)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 30,
+                    child: MomentUserInfoWidget(
+                      moment: moments[currentIndex],
+                      pause: pauseAnimation,
+                      continues: continueAnimating,
+                    ),
+                  ),
+                if (!args['isMine'] && !isPaused)
                   Positioned(
                     left: 0,
                     right: 0,
                     bottom: 0,
                     child: ReplyMomentWidget(
+                      pause: pauseAnimation,
+                      continues: continueAnimating,
                       uniqueKey: "$currentIndex",
                       moment: moments[currentIndex],
                     ),
                   ),
-                if (args['isMine'])
+                if (args['isMine'] && !isPaused)
                   Positioned(
                     left: 0,
                     right: 0,
                     bottom: 20,
-                    child: MyMomentMetrics(moment: moments[currentIndex]),
+                    child: MyMomentMetrics(
+                        pause: pauseAnimation,
+                        continues: continueAnimating,
+                        moment: moments[currentIndex]),
                   ),
               ],
             ),

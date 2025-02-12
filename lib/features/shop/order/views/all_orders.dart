@@ -67,7 +67,7 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
               count: 6,
             ),
             fetchData: ref.read(orderVmProvider.notifier).getOrders,
-            result: (data) {
+            result: (data,s) {
               final filteredOrder = WayaUtils.search<Order>(
                   data,
                   [

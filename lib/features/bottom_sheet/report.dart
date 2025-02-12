@@ -11,7 +11,6 @@ import 'package:wayagram/features/auth/account_creation/view/loading_state.dart'
 
 class Report extends ConsumerStatefulWidget {
   final String currentStatus;
-  final bool isLoading;
   final List<String> statuses;
   final Future<void> Function(
       {required String reason,
@@ -20,7 +19,6 @@ class Report extends ConsumerStatefulWidget {
   const Report(
       {super.key,
       required this.statuses,
-      required this.isLoading,
       required this.currentStatus,
       required this.report});
 
@@ -31,6 +29,7 @@ class Report extends ConsumerStatefulWidget {
 class _ReportEventState extends ConsumerState<Report> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController comment;
+  late bool isLoading;
 
   late String selectedStatus;
 
@@ -39,6 +38,7 @@ class _ReportEventState extends ConsumerState<Report> {
     super.initState();
     selectedStatus = widget.currentStatus;
     comment = TextEditingController();
+    isLoading = false;
   }
 
   @override
@@ -155,16 +155,20 @@ class _ReportEventState extends ConsumerState<Report> {
                   }),
                   const Gap(24),
                   WayaButton(
-                      callback: widget.isLoading
-                          ? () {
-                              widget.report(
-                                  reason: selectedStatus,
-                                  comment: comment.text,
-                                  context: context);
-                            }
-                          : null,
+                      callback: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await widget.report(
+                            reason: selectedStatus,
+                            comment: comment.text,
+                            context: context);
+                           setState(() {
+                          isLoading = false;
+                        }); 
+                      },
                       centerWidget: LoadingState(
-                          loading: widget.isLoading, text: "Submit Report")),
+                          loading: isLoading, text: "Submit Report")),
                 ],
               )),
           const Gap(10),

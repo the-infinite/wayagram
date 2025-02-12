@@ -62,7 +62,7 @@ class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents>
                   child: CircularProgressIndicator(),
                 )),
                 fetchData: ref.read(eventVmProvider.notifier).getEventWithStatus,
-                result: (data) {
+                result: (data,s) {
                   final filteredUpcomingEvents = WayaUtils.search<EventDoc>(
                       data,
                       ['title', 'organizerName', 'eventType', 'location'],

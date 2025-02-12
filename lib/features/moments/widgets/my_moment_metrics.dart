@@ -10,7 +10,14 @@ import 'package:wayagram/features/moments/data/model/moment_response_model.dart'
 
 class MyMomentMetrics extends ConsumerWidget {
   final MomentData moment;
-  const MyMomentMetrics({super.key, required this.moment});
+  final Function() pause;
+  final Function() continues;
+
+  const MyMomentMetrics(
+      {super.key,
+      required this.moment,
+      required this.continues,
+      required this.pause});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,8 +28,12 @@ class MyMomentMetrics extends ConsumerWidget {
       children: [
         GestureDetector(
           onTap: () async {
+            pause();
             await WayaUtils.showModalSheet(context,
                 child: MomentViewers(momentId: moment.id));
+     
+              continues();
+            
           },
           child: SvgPicture.asset(WayaAssets.icons.mChevronUp.path),
         ),

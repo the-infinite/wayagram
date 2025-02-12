@@ -13,8 +13,15 @@ import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
 class ReplyMomentWidget extends ConsumerStatefulWidget {
   final String uniqueKey;
   final MomentData moment;
+  final Function() pause;
+  final Function() continues;
+
   const ReplyMomentWidget(
-      {super.key, required this.uniqueKey, required this.moment});
+      {super.key,
+      required this.uniqueKey,
+      required this.moment,
+      required this.continues,
+      required this.pause});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -71,6 +78,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                 ),
               ),
               onChanged: (value) {
+                widget.pause();
                 ref
                     .read(replyMomentVmProvider(widget.uniqueKey).notifier)
                     .updateComment(value);
@@ -91,6 +99,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                   ref
                       .read(replyMomentVmProvider(widget.uniqueKey).notifier)
                       .isCommented(true);
+                  widget.continues();
                 },
                 centerWidget: Center(
                   child: SvgPicture.asset(WayaAssets.icons.aMoment.path),

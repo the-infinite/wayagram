@@ -14,7 +14,13 @@ import 'package:wayagram/features/moments/vm/moment_vm.dart';
 
 class MomentUserInfoWidget extends ConsumerStatefulWidget {
   final MomentData moment;
-  const MomentUserInfoWidget({super.key, required this.moment});
+  final Function() pause;
+  final Function() continues;
+  const MomentUserInfoWidget(
+      {super.key,
+      required this.moment,
+      required this.continues,
+      required this.pause});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -22,7 +28,7 @@ class MomentUserInfoWidget extends ConsumerStatefulWidget {
 }
 
 class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
-  late bool isLoading;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -88,24 +94,22 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                   {required String reason,
                   required BuildContext context,
                   String? comment}) async {
-                setState(() {
-                  isLoading = true;
-                });
+               
                 ref.read(momentVmProvider.notifier).reportMoment(
                     momentId: widget.moment.id,
                     reason: reason,
                     context: context);
-                setState(() {
-                  isLoading = false;
-                });
+               
               }
 
+              widget.pause();
               await WayaUtils.showModalSheet(context,
                   child: Report(
                       statuses: eventReport,
-                      isLoading: isLoading,
+                   
                       currentStatus: '',
                       report: report));
+              widget.continues();
             },
             child: SvgPicture.asset(
               WayaAssets.icons.mThreeDots.path,

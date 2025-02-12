@@ -19,8 +19,9 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
-import 'package:video_trimmer/video_trimmer.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wayagram/features/moments/data/model/moment_viewer_response_model.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 
 class MomentVm extends StateNotifier<MomentState> {
   final Ref ref;
@@ -48,13 +49,14 @@ class MomentVm extends StateNotifier<MomentState> {
 
   void reset() {
     state = MomentState(
-      backgroundColor: const Color(0xFF1D2939),
-      textStyle: GoogleFonts.roboto(
-        fontSize: 32,
-        color: Colors.white,
-        fontWeight: FontWeight.w500,
-      ),
-    );
+        backgroundColor: const Color(0xFF1D2939),
+        textStyle: GoogleFonts.roboto(
+          fontSize: 32,
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+        ),
+        moments: state.moments,
+        myMoments: state.myMoments);
   }
 
   void updateBackgroundColor(Color color) {
@@ -222,7 +224,8 @@ class MomentVm extends StateNotifier<MomentState> {
   }
 
   Future<void> cropImage(BuildContext context, WidgetRef ref) async {
-    if (state.selectedFile == null || state.mediaType != MediaType.image) return;
+    if (state.selectedFile == null || state.mediaType != MediaType.image)
+      return;
 
     final file = state.selectedFile;
     if (file == null) return;
@@ -373,6 +376,48 @@ class MomentVm extends StateNotifier<MomentState> {
     }
   }
 
+  void getMomentId(String mId) {
+    state = state.copyWith(momentId: mId);
+  }
+
+  Future<PaginatedResult<MomentViewer>?> momentViewers(int page) async {
+    try {
+      state = state.copyWith(isLoadingUserMoments: true);
+
+      final response = await _momentRepository.momentViewers(
+          momentId: state.momentId, page: page);
+      List<MomentViewer> momentViewers = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        MomentViewerResponseModel responseModel =
+            MomentViewerResponseModel.fromJson(response.data);
+        List<MomentViewer> viewers = responseModel.data.docs;
+        hasNextPage = responseModel.data.hasNextPage;
+        for (MomentViewer viewer in viewers) {
+          final detail = await UserResource.getUserDetails(viewer.userId);
+          if (detail == null) continue;
+          final user = detail.$1;
+          final profile = detail.$2;
+          viewer = viewer.copyWith(
+            name:
+                "${user.firstName!.capitalizeFirst} ${user.lastName!.capitalizeFirst}",
+            username: "${profile.username}",
+            image: user.profilePicture,
+          );
+
+          momentViewers.add(viewer);
+        }
+      }
+
+      return PaginatedResult(hasNextPage: hasNextPage, items: momentViewers);
+    } catch (error) {
+      print(error);
+      return null;
+    } finally {
+      state = state.copyWith(isLoadingUserMoments: false);
+    }
+  }
+
   Future<void> deleteMoment(String momentId) async {
     try {
       final response = await _momentRepository.deleteMoment(momentId);
@@ -400,7 +445,7 @@ class MomentVm extends StateNotifier<MomentState> {
           userId: userId!, momentId: momentId, reason: reason);
       if (response.success && context.mounted) {
         // show success modal
-        Navigator.of(context);
+        Navigator.of(context).pop();
         await WayaUtils.showNotice(
             context: context,
             title: "Report Submitted Successfully",
@@ -445,6 +490,9 @@ class MomentVm extends StateNotifier<MomentState> {
       final response = await _momentRepository.getAllMoments();
 
       if (response.success) {
+        print("chimelu oooooooooooooooo");
+         print("fwefwefwefwefwefwefwfwefwefwefwefwefwefwfwefwefwe");
+          print("fwefwefwefwefwefwefwfwefwefwefwefwefwefwfwefwefwe ${response.data}");
         MomentResponseModel responseModel =
             MomentResponseModel.fromJson(response.data);
         state = state.copyWith(moments: responseModel.data.docs);

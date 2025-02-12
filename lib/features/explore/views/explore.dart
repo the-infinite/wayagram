@@ -152,7 +152,7 @@ class _ExploreState extends ConsumerState<Explore> {
                             final userId =
                                 await WayaSecureDataSource().getUserId();
                             if (userId != null) {
-                              print("$userId ${moment.userId}");
+                            
                               WayaNav.toNamed(ViewMoment.route, arguments: {
                                 "moments": [moment],
                                 "isMine": userId == moment.userId

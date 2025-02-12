@@ -23,7 +23,7 @@ class MomentRepository extends BaseRepository {
     if (caption != null) payload['caption'] = caption;
     if (color != null) payload['color'] = color;
     if (fontType != null) payload['fontType'] = fontType;
- print("$fontType  $payload");
+    print("$fontType  $payload");
     return post("$serviceUrl/moments/create", payload);
   }
 
@@ -53,8 +53,8 @@ class MomentRepository extends BaseRepository {
   }
 
 // /
-  Future<WayaRequestResponse> getAllMoments({int? limit = 200}) async {
-    return get("$serviceUrl/moments/get?limit=$limit");
+  Future<WayaRequestResponse> getAllMoments({int? limit = 1000}) async {
+    return get("$serviceUrl/moments/get-active?limit=$limit");
   }
 
   Future<WayaRequestResponse> editMoment(
@@ -74,7 +74,7 @@ class MomentRepository extends BaseRepository {
       'content': content,
       'contentType': contentType
     };
- if (caption != null) payload['caption'] = caption;
+    if (caption != null) payload['caption'] = caption;
     if (color != null) payload['color'] = color;
     if (fontType != null) payload['fontType'] = fontType;
     return patch("$serviceUrl/moments/$momentId", payload);
@@ -83,7 +83,7 @@ class MomentRepository extends BaseRepository {
   ///moments/:momentId
   ///
   ///
-   Future<WayaRequestResponse> reportMoment(
+  Future<WayaRequestResponse> reportMoment(
       {required String userId,
       required String momentId,
       required String reason,
@@ -91,5 +91,11 @@ class MomentRepository extends BaseRepository {
     final payload = {"userId": userId, "momentId": momentId, "reason": reason};
     if (comment != null) payload['comment'] = comment;
     return post("$serviceUrl/report-moments", payload);
+  }
+
+  Future<WayaRequestResponse> momentViewers(
+      {int? limit = 10, required String momentId, required int page}) async {
+    return get(
+        "$serviceUrl/view-moments/viewers?momentId=$momentId&limit=$limit&page=$page");
   }
 }

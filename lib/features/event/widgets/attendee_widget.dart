@@ -32,8 +32,9 @@ class _AttendeeWidgetState extends ConsumerState<AttendeeWidget> {
   }
 
   void fetchFollowStatus() async {
-    final FollowStatus? followStatus =
-        await ref.read(eventVmProvider.notifier).getFollow(widget.attendee.userId);
+    final FollowStatus? followStatus = await ref
+        .read(eventVmProvider.notifier)
+        .getFollow(widget.attendee.userId);
     setState(() {
       following = followStatus!.isFollowing;
     });
@@ -43,6 +44,7 @@ class _AttendeeWidgetState extends ConsumerState<AttendeeWidget> {
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
+    final state = ref.watch(eventVmProvider);
     return Column(
       children: [
         Container(
@@ -92,53 +94,59 @@ class _AttendeeWidgetState extends ConsumerState<AttendeeWidget> {
                         )
                       ],
                     ),
-                    if (!following)
-                      SizedBox(
-                        width: 60,
-                        child: WayaButton(
-                          callback: () async {
-                            setState(() {
-                              following = true;
-                            });
-                            ref
-                                .read(eventVmProvider.notifier)
-                                .follow(widget.attendee.userId);
-                            fetchFollowStatus();
-                          },
-                          text: 'Follow',
-                          height: 30,
-                          textStyle: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                              color: wayaTheme.colorScheme.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                          radius: 6,
+                    if (widget.attendee.userId != state.userId) ...[
+                      if (!following)
+                        SizedBox(
+                          width: 60,
+                          child: WayaButton(
+                            callback: () async {
+                              setState(() {
+                                following = true;
+                              });
+                              ref
+                                  .read(eventVmProvider.notifier)
+                                  .follow(widget.attendee.userId);
+                              fetchFollowStatus();
+                            },
+                            text: 'Follow',
+                            height: 30,
+                            textStyle: wayaTheme.textTheme.hintStyle
+                                .wayaCopyWith(
+                                    color: wayaTheme.colorScheme.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
+                            radius: 6,
+                          ),
                         ),
-                      ),
-                    if (following)
-                      SizedBox(
-                        width: 80,
-                        child: WayaButton(
-                          callback: () async {
-                            setState(() {
-                              following = false;
-                            });
-                            ref
-                                .read(eventVmProvider.notifier)
-                                .unfollow(widget.attendee.userId);
-                            fetchFollowStatus();
-                          },
-                          text: 'Following',
-                          textColor: wayaTheme.colorScheme.customPrimary,
-                          height: 30,
-                          textStyle: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                              fontSize: 12, fontWeight: FontWeight.w500),
-                          radius: 5,
-                          color: wayaTheme.colorScheme.transparent,
-                          border: Border.all(
-                              width: 1,
-                              color: wayaTheme.colorScheme.customPrimary),
+                      if (following)
+                        SizedBox(
+                          width: 80,
+                          child: WayaButton(
+                            callback: () async {
+                              setState(() {
+                                following = false;
+                              });
+                              ref
+                                  .read(eventVmProvider.notifier)
+                                  .unfollow(widget.attendee.userId);
+                              fetchFollowStatus();
+                            },
+                            text: 'Following',
+                            textColor: wayaTheme.colorScheme.customPrimary,
+                            height: 30,
+                            textStyle: wayaTheme.textTheme.hintStyle
+                                .wayaCopyWith(
+                                    fontSize: 12, fontWeight: FontWeight.w500),
+                            radius: 5,
+                            color: wayaTheme.colorScheme.transparent,
+                            border: Border.all(
+                                width: 1,
+                                color: wayaTheme.colorScheme.customPrimary),
+                          ),
                         ),
-                      ),
+                    ] else ...[
+                      SizedBox.shrink()
+                    ]
                   ],
                 ),
                 SizedBox(height: 4.h),
