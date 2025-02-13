@@ -28,7 +28,7 @@ class GroupRepository extends BaseRepository {
       "name": groupName,
       "description": groupName,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
-      "isOpen": false, // this defaults to true if it is not inserted
+      //"isOpen": false, // this defaults to true if it is not inserted
       "coverImage":  coverImage,
       "profileImage":  profileImage
     };
@@ -90,6 +90,20 @@ class GroupRepository extends BaseRepository {
     final payload = {};
     return post("$serviceUrl/groups/join-requests/reject/$requestId", payload);
   }
+
+  Future<WayaRequestResponse> inviteUserToGroup(String groupId, String role, targetId) {
+    final payload = {
+    "targetUserId": "d8ad236b-f969-4e1d-acd2-07f439c78574",
+    "role": role
+    };
+    return post("$serviceUrl/groups/invitations/$groupId", payload);
+  }
+
+  Future<WayaRequestResponse> recommendedGroup() {
+    return get("$serviceUrl/groups/recommended");
+  }
+
+
 
 
 }

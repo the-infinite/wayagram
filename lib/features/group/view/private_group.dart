@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -55,7 +56,11 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
           spacing: 12,
           children: [
             WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-            WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+            InkWell(
+              onTap: ()=> Share.share('${args['url']}'),
+              child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+            ),
+
             PopupMenuButton(
                 onSelected: (value) {},
                 iconColor: wayaTheme.colorScheme.greyColor400,
@@ -80,7 +85,9 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                       value: 1,
                       child: _buildActionNav(
                           context: context,
-                          onTap: () {},
+                          onTap: () {
+                            Share.share('${args['url']}');
+                          },
                           asset:WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
                           text: "Share Group link",
                           color:wayaTheme.colorScheme.customBlack),
@@ -125,49 +132,6 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
             Stack(
               clipBehavior: Clip.none,
               children: [
-              /*  Container(
-                  width: double.infinity,
-                  height: 200, // Banner height
-                  decoration: BoxDecoration(
-                      color: WayaColors.primaryBrown50,
-                      borderRadius: BorderRadius.circular(0),
-                      image:
-                      //viewModel.profileImage!=null
-                      args['profileImage'] !=null? DecorationImage(
-                        image: NetworkImage('${args['profileImage']}'),
-                        //image: NetworkImage('${viewModel.profileImage}'),
-                        fit: BoxFit.cover,
-                      ):
-                      DecorationImage(
-                        image: AssetImage('assets/images/pages/image_placeholder.png'),
-                        fit: BoxFit.cover,
-                      )
-
-                  ),
-                ),
-                Gap(15),
-                GestureDetector(
-                  onTap: () {
-                    WayaNav.toNamed('/createGroup');
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(right: 20.w),
-                    padding: EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: wayaTheme.colorScheme.primary600,
-                          width: 1.5),
-                      color: wayaTheme.colorScheme.white,
-                      borderRadius: BorderRadius.circular(7.r),
-                    ),
-                    child: Text(
-                      'Edit Group Info',
-                      style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                          color: wayaTheme.colorScheme.primary600,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),*/
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -194,7 +158,8 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                     Gap(15),
                     GestureDetector(
                       onTap: () {
-                        WayaNav.toNamed('/createGroup');
+                        WayaNav.toNamed('/editGroupInfo',
+                        arguments: '${args['groupId']}');
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 20.w),
@@ -249,7 +214,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   const Gap(10),
                   Row(
                     children: [
-                      actionType('0', 'Members', onPressed: ()=> WayaNav.toNamed('/membersScreen')),
+                      actionType('${args['memberCount']}', 'Members', onPressed: ()=> WayaNav.toNamed('/membersScreen')),
                       const Gap(10),
                       actionType('0', 'Posts'),
                     ],

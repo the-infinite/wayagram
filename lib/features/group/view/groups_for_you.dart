@@ -17,6 +17,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -49,9 +50,10 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPageProvider.notifier).getAllPosts(_wayaLocalDataSource.getUserId());
+      ref.read(createGroupProvider.notifier).getRecommendedGroups();
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +61,8 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider.notifier);
     final viewModel2 = ref.watch(createPageProvider);
+    final recommended = ref.watch(createGroupProvider);
+    final group = ref.watch(createGroupProvider.notifier);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -73,23 +77,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                   color: WayaColors.greyColor700,
                   fontFamily: WayaConstants.fontFamily)),
         ),
-        //Gap(10),
 
-        /*  ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: viewModel2.getAllPost?.length,
-            itemBuilder: (_, index,){
-              final post = viewModel2.getAllPost?[index];
-              int hoursLeft = DateTime.now().difference(DateTime.parse('${post?.createdAt}')).inHours;
-              return
-                pageWidget(
-                    index == 0? 'Empire Music': index ==1  ? 'Apple Music': 'Manchester United',
-                    index==0 ?'1' :index ==1  ? '2': '3',
-                    index == 0? 'assets/images/pages/empire.png':index==1?'assets/images/pages/apple_music.png':
-                    'assets/images/pages/united.png', hoursLeft
-                );
-            }),*/
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -408,17 +396,18 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
             title: 'Suggestions'),
         const Gap(25),
         SizedBox(
-          height: 170,
+          height: 190,
           child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
+              //physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: 3,
+              itemCount: recommended.recommendedGroupDocs?.length,
               itemBuilder: (_, index) {
+                final recommendedGroup = recommended.recommendedGroupDocs?[index];
                 return Container(
-                  margin: EdgeInsets.only(right: 10),
+                  margin: EdgeInsets.only(right: 10,),
                   width: 147.w,
-                  height: 159.h,
+                  height: 180.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
@@ -428,23 +417,21 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        index == 0
-                            ? 'assets/images/pages/ls.png'
-                            : 'assets/images/pages/afro.png',
-                        height: 40.h,
+                      CircleAvatar(
+                          radius: 40,
+                          backgroundColor: WayaColors.greyColor100,
+                          backgroundImage: NetworkImage('${recommendedGroup?.coverImage}')
                       ),
                       const Gap(10),
                       Text(
-                          index == 0
-                              ? 'Livescores'
-                              : index == 1
-                              ? 'Afro Nation'
-                              : 'Olivia Fans',
-                          style: wayaTheme.textTheme.titleLarge),
+                           '${recommendedGroup?.name?.capitalizeFirst}',
+                          style:  wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.black )),
                       const Gap(3),
                       Text(
-                        '48.6k Followers',
+                        '${recommendedGroup?.memberCount} Members',
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium!
@@ -458,9 +445,16 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: WayaButton(
-                          callback: () {},
+                          callback: () async{
+                            await group.joinGroup(context, '${recommendedGroup?.id}');
+                          },
                           text: 'Join Group',
-                          height: 38,
+                          isLoading: viewModel2.isLoading,
+                          height: 30,
+                          textStyle: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.white ),
                         ),
                       )
                     ],
@@ -499,10 +493,10 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    height: 14.h,
-                    color: Colors.grey.withOpacity(0.2),
-                  ),
+                  // Container(
+                  //   height: 14.h,
+                  //   color: Colors.grey.withOpacity(0.2),
+                  // ),
                   // Post header with author details
                   Padding(
                     padding: EdgeInsets.fromLTRB(15.0.w, 25.h, 15.w, 15.w),

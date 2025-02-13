@@ -48,6 +48,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createPageProvider.notifier).getAllPages('${ConversationState.self.id}');
       ref.read(createPageProvider.notifier).getAllPosts(_wayaLocalDataSource.getUserId());
     });
   }
@@ -409,14 +410,16 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
             subTitle: 'Connect with friends and communities',
             title: 'Suggestions'),
         const Gap(25),
+        viewModel2.allPageModelDocs!.isEmpty ? PageEmptyState():
         SizedBox(
-          height: 170,
+          height: 190,
           child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: 3,
+              itemCount: viewModel2.allPageModelDocs?.length,
               itemBuilder: (_, index) {
+                final recommendedPage = viewModel2.allPageModelDocs?[index];
                 return Container(
                   margin: EdgeInsets.only(right: 10),
                   width: 147.w,
@@ -430,23 +433,20 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        index == 0
-                            ? 'assets/images/pages/ls.png'
-                            : 'assets/images/pages/afro.png',
-                        height: 40.h,
+                      CircleAvatar(
+                          radius: 40,
+                          backgroundColor: WayaColors.greyColor100,
+                          backgroundImage: NetworkImage('${recommendedPage?.coverImage}')
                       ),
                       const Gap(10),
-                      Text(
-                          index == 0
-                              ? 'Livescores'
-                              : index == 1
-                              ? 'Afro Nation'
-                              : 'Olivia Fans',
-                          style: wayaTheme.textTheme.titleLarge),
+                      Text('${recommendedPage?.name?.capitalizeFirst}',
+                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.black )),
                       const Gap(3),
                       Text(
-                        '48.6k Followers',
+                        '${recommendedPage?.followerCount} Followers',
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium!
@@ -460,9 +460,15 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: WayaButton(
-                          callback: () {},
+                          callback: () async{
+                            await viewModel.followPage(context, '${recommendedPage?.id}');
+                          },
                           text: 'Follow',
-                          height: 38,
+                          height: 30,
+                          textStyle: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.white ),
                         ),
                       )
                     ],
@@ -1164,24 +1170,56 @@ class PostEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return Container(
-      padding: EdgeInsets.all(30),
-      child: EmptyState(
-          hasButton: false,
-          onTap: () {
-            WayaNav.toNamed(CreatePost.route);
-          },
-          buttontext: 'Create a Post',
-          buttonTrailingIcon: SvgPicture.asset(
-            WayaAssets.icons.addEventIcon.path,
-            colorFilter:
-                ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
-          ),
-          assetImage: Image.asset(
-            WayaAssets.images.emptyEvent.path,
-            scale: 1.5,
-          ),
-          message: "You haven't created any post yet"),
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: EmptyState(
+            hasButton: false,
+            onTap: () {
+              WayaNav.toNamed(CreatePost.route);
+            },
+            buttontext: 'Create a Post',
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+                  ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You haven't created any post yet"),
+      ),
+    );
+  }
+}
+
+class PageEmptyState extends StatelessWidget {
+  const PageEmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: EmptyState(
+            hasButton: false,
+            onTap: () {
+              // WayaNav.toNamed('/createGroup');
+            },
+            //buttontext: 'Create a Post',
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You don't have suggestions yet"),
+      ),
     );
   }
 }

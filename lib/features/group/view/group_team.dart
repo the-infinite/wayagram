@@ -163,24 +163,26 @@ class PostEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return Container(
-      padding: EdgeInsets.all(30),
-      child: EmptyState(
-          hasButton: false,
-          onTap: () {
-            //WayaNav.toNamed(CreatePost.route);
-          },
-          buttontext: 'Create a Post',
-          buttonTrailingIcon: SvgPicture.asset(
-            WayaAssets.icons.addEventIcon.path,
-            colorFilter:
-            ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
-          ),
-          assetImage: Image.asset(
-            WayaAssets.images.emptyEvent.path,
-            scale: 1.5,
-          ),
-          message: "You haven't team members yet"),
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: EmptyState(
+            hasButton: false,
+            onTap: () {
+              //WayaNav.toNamed(CreatePost.route);
+            },
+            buttontext: 'Create a Post',
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You don't have team members yet"),
+      ),
     );
   }
 }

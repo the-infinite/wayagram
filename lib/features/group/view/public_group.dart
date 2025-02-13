@@ -83,7 +83,11 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
         spacing: 12,
         children: [
           WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-          WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+          InkWell(
+            onTap: ()=> Share.share('${args['url']}'),
+            child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+          ),
+
           PopupMenuButton(
               onSelected: (value) {},
               iconColor: wayaTheme.colorScheme.greyColor400,
@@ -109,7 +113,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                     child: _buildActionNav(
                         context: context,
                         onTap: () {
-                          Share.share('Share');
+                          Share.share('${args['url']}');
                         },
                         asset:WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
                         text: "  Share Group link",
@@ -182,10 +186,6 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                       // ),
                     ),
                   ),
-                  // WayaImage3(
-                  //   imageUrl: '${viewModel.profileImage}',
-                  //   height: Get.height * 0.2,
-                  // ),
                   Gap(15),
                   GestureDetector(
                     onTap: () {
@@ -222,12 +222,6 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                       //NetworkImage('${viewModel.coverImage}'),
                   )
               ),
-              /*Positioned(
-                  left: 16.w,
-                  bottom: 3.h,
-                  child: WayaDp(
-                    radius: 28.r,
-                  )),*/
             ],
           ),
           const Gap(10),
@@ -245,7 +239,6 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
               Text(
                 '${args['desc']}',
                 //'${viewModel.desc?.capitalizeFirst}',
-                //'Find your sound . Discuss writing, composing, recording, and much more',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
@@ -254,11 +247,11 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
               const Gap(10),
               Row(
                 children: [
-                  actionType('60', 'Members',
+                  actionType('${args['memberCount']}', 'Members',
                       onPressed: ()=> WayaNav.toNamed('/membersScreen',
                       arguments: '${args['groupId']}')),
                   const Gap(10),
-                  actionType('600', 'Posts'),
+                  actionType('0', 'Posts'),
                 ],
               ),
               const Gap(10),
