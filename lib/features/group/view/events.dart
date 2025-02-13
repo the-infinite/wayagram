@@ -70,11 +70,6 @@ class _EventsState extends ConsumerState<Events> with SingleTickerProviderStateM
                       Row(
                         children: [
                           Image.network('${event?.image}', height: 40.h,),
-                        /*  Image.asset(
-                            index==0?'assets/images/pages/moonshoot.png':
-                            index==1? 'assets/images/pages/cowry.png':index==2?'assets/images/pages/afro.png':
-                            'assets/images/pages/afro.png',
-                            height: 30.h,),*/
                           const Gap(10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

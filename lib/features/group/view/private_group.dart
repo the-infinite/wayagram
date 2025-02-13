@@ -16,6 +16,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/approval_screen.dart';
 import 'package:wayagram/features/group/view/events.dart';
+import 'package:wayagram/features/group/view/group_team.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/view/pages_for_you.dart';
 import 'package:wayagram/features/pages/view/team_page.dart';
@@ -124,7 +125,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
             Stack(
               clipBehavior: Clip.none,
               children: [
-                Container(
+              /*  Container(
                   width: double.infinity,
                   height: 200, // Banner height
                   decoration: BoxDecoration(
@@ -166,8 +167,8 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                           fontWeight: FontWeight.w600),
                     ),
                   ),
-                ),
-              /*  Column(
+                ),*/
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
@@ -214,7 +215,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                       ),
                     )
                   ],
-                ),*/
+                ),
                 Positioned(
                     left: 16.w,
                     top: 190,
@@ -289,7 +290,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
             ),
 
 
-            _selectedIndex == 0 ? PagesForYou() : _selectedIndex == 1 ? Events(): _selectedIndex==2?PagesForYou():_selectedIndex==3?ApprovalScreen(groupId: '${args['groupId']}',):AddGroupMember()
+            _selectedIndex == 0 ? PagesForYou() : _selectedIndex == 1 ? Events(): _selectedIndex==2?PagesForYou():_selectedIndex==3?ApprovalScreen(groupId: '${args['groupId']}',):GroupTeam(groupId: '${args['groupId']}')
             //AllOrders()
           ],
         ),

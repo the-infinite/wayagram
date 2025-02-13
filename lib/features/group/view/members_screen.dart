@@ -63,11 +63,11 @@ class _MembersScreenState extends ConsumerState<MembersScreen >
             Gap(8)
           ],
         ),
-        body:Column(
+        body: viewModel.allGroupMemberDocs!.isEmpty ? MemberEmptyState():Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            viewModel.allGroupMemberDocs!.isEmpty ? MemberEmptyState():
+
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,

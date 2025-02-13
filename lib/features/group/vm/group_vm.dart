@@ -9,6 +9,7 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/group_response.dart';
@@ -190,6 +191,48 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
+  Future<void> approveRequest( ctx,  String requestId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _groupRepository.approveJoinRequest(requestId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Request approved successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> rejectRequest( ctx,  String requestId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _groupRepository.rejectJoinRequest(requestId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Request declined successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   Future<List<GetAllGroupDocs>?> getSingleGroup(id) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -255,8 +298,8 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.getGroupMember(groupId);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        JoinRequestModel responseModel = JoinRequestModel.fromJson(response.data);
-        state = state.copyWith(docs: responseModel.data?.docs);
+        AllGroupMemberModel responseModel = AllGroupMemberModel.fromJson(response.data);
+        state = state.copyWith(allGroupMemberDocs: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
       }

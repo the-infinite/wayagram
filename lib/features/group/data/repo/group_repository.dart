@@ -78,5 +78,18 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/groups/joined-groups");
   }
 
+  Future<WayaRequestResponse> approveJoinRequest(String requestId ) {
+    final payload = {
+      "targetUserId": "",
+      "role": "member"
+    };
+    return post("$serviceUrl/groups/join-requests/approve/$requestId", payload);
+  }
+
+  Future<WayaRequestResponse> rejectJoinRequest(String requestId ) {
+    final payload = {};
+    return post("$serviceUrl/groups/join-requests/reject/$requestId", payload);
+  }
+
 
 }
