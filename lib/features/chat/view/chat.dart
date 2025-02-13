@@ -31,6 +31,30 @@ class SingleChatScreen extends ConsumerStatefulWidget {
 class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   late final notifier = ref.watch(chatProvider.notifier);
 
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        notifier.getMessages(true);
+      },
+    );
+
+    //? This is fine.
+    super.initState();
+  }
+
+  @override
+  void reassemble() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        notifier.getMessages(true);
+      },
+    );
+
+    //? This is fine.
+    super.reassemble();
+  }
+
   // We start a video call.
   void _startAudioCall() async {}
 
@@ -181,7 +205,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
               Divider(color: WayaColors.greyColor200, height: 1),
 
               //? Second, the chat messages.
-              if (state.messages.isEmpty)
+              if (state.messages.isEmpty && !state.isLoading)
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
