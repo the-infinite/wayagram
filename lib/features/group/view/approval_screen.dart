@@ -12,7 +12,8 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import '../../../core/theme/waya_colors.dart';
 
 class ApprovalScreen extends ConsumerStatefulWidget {
-  const ApprovalScreen({super.key});
+  final String groupId;
+  const ApprovalScreen({super.key, required this.groupId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ApprovalScreenState();
@@ -25,7 +26,8 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createGroupProvider.notifier).getJoinRequest('');
+      print('TESTING DARLINGTON ${widget.groupId}');
+      ref.read(createGroupProvider.notifier).getJoinRequest(widget.groupId);
     });
   }
 
@@ -38,7 +40,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.zero,
+      padding: EdgeInsets.only(left: 15, right: 15,),
       color: wayaTheme.colorScheme.greyColor50,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -48,8 +50,9 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
               padding: EdgeInsets.zero,
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: 6,
+              itemCount: viewModel.docs?.length,
               itemBuilder: (_, index) {
+                final group = viewModel.docs?[index];
                 return Container(
                   height: 60.h,
                   margin: EdgeInsets.only(bottom: 8),
@@ -64,15 +67,12 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
                       Gap(10),
                       Row(
                         children: [
-                          Image.asset(
-                            index == 0
-                                ? 'assets/images/pages/c1.png'
-                                : index == 1
-                                    ? 'assets/images/pages/temi.png'
-                                    : index == 2
-                                        ? 'assets/images/pages/temi.png'
-                                        : 'assets/images/pages/c1.png',
-                            height: 30.h,
+                          CircleAvatar(
+                              radius: 40,
+                              backgroundColor: WayaColors.greyColor100,
+                              backgroundImage:group?.user?.profilePicture == null?
+                                  AssetImage('assets/images/pages/cam.png',) :
+                              NetworkImage('${group?.user?.profilePicture}')
                           ),
                           Gap(10),
                           Column(
@@ -80,20 +80,14 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  index == 0
-                                      ? 'Temitope Adebayo'
-                                      : index == 1
-                                          ? 'Temitope Adebayo'
-                                          : index == 2
-                                              ? 'Oluwaseun Adeyemi'
-                                              : 'Ifeoma Okeke',
+                                 '${group?.user?.firstName} ${group?.user?.lastName}',
                                   style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       color: Theme.of(context).colorScheme.black ),),
                               Gap(5),
                               Text(
-                                '@chukwudi2024',
+                                '${group?.user?.email}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!

@@ -10,8 +10,10 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/approval_screen.dart';
 import 'package:wayagram/features/group/view/events.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
@@ -38,10 +40,14 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
     final viewModel = ref.watch(createGroupProvider);
     final viewGroupModel = ref.watch(createGroupProvider.notifier);
 
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+
     return WayaScaffold(
         onTapBackButton: (){
-          Navigator.pushNamed(context, BottomView.route, arguments: 5);
+          WayaNav.toNamed('/groups');
+          //Navigator.pushNamed(context, BottomView.route, arguments: 5);
         },
+      padding: EdgeInsets.zero,
         isLoading: viewModel.isLoading,
         isScrollable: true,
         appBarTrailing: Row(
@@ -115,15 +121,74 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Stack(
               clipBehavior: Clip.none,
               children: [
-                Column(
+                Container(
+                  width: double.infinity,
+                  height: 200, // Banner height
+                  decoration: BoxDecoration(
+                      color: WayaColors.primaryBrown50,
+                      borderRadius: BorderRadius.circular(0),
+                      image:
+                      //viewModel.profileImage!=null
+                      args['profileImage'] !=null? DecorationImage(
+                        image: NetworkImage('${args['profileImage']}'),
+                        //image: NetworkImage('${viewModel.profileImage}'),
+                        fit: BoxFit.cover,
+                      ):
+                      DecorationImage(
+                        image: AssetImage('assets/images/pages/image_placeholder.png'),
+                        fit: BoxFit.cover,
+                      )
+
+                  ),
+                ),
+                Gap(15),
+                GestureDetector(
+                  onTap: () {
+                    WayaNav.toNamed('/createGroup');
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(right: 20.w),
+                    padding: EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: wayaTheme.colorScheme.primary600,
+                          width: 1.5),
+                      color: wayaTheme.colorScheme.white,
+                      borderRadius: BorderRadius.circular(7.r),
+                    ),
+                    child: Text(
+                      'Edit Group Info',
+                      style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                          color: wayaTheme.colorScheme.primary600,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              /*  Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    WayaImage3(
-                      height: Get.height * 0.2,
+                    Container(
+                      width: double.infinity,
+                      height: 200, // Banner height
+                      decoration: BoxDecoration(
+                          color: WayaColors.primaryBrown50,
+                          borderRadius: BorderRadius.circular(0),
+                          image:
+                          //viewModel.profileImage!=null
+                          args['profileImage'] !=null? DecorationImage(
+                            image: NetworkImage('${args['profileImage']}'),
+                            //image: NetworkImage('${viewModel.profileImage}'),
+                            fit: BoxFit.cover,
+                          ):
+                          DecorationImage(
+                            image: AssetImage('assets/images/pages/image_placeholder.png'),
+                            fit: BoxFit.cover,
+                          )
+
+                      ),
                     ),
                     Gap(15),
                     GestureDetector(
@@ -149,70 +214,82 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                       ),
                     )
                   ],
-                ),
+                ),*/
                 Positioned(
                     left: 16.w,
-                    bottom: 3.h,
-                    child: WayaDp(
-                      radius: 28.r,
-                    )),
-              ],
-            ),
-            const Gap(10),
-            Text(
-                'Empire Music',
-                style: wayaTheme.textTheme.bodyMedium),
-            //const Gap(10),
-            Text(
-              'Find your sound . Discuss writing, composing, recording, and much more',
-              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.greyColor500 ),
-            ),
-            const Gap(10),
-            Row(
-              children: [
-                actionType('7k', 'Members', onPressed: ()=> WayaNav.toNamed('/membersScreen')),
-                const Gap(10),
-                actionType('600', 'Posts'),
-              ],
-            ),
-
-            const Gap(10),
-            Row(
-              children: [
-                WayaTabButton(
-                  isSelected: _selectedIndex == 0,
-                  text: 'Posts',
-                  onTap: () => setState(() => _selectedIndex = 0),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 1,
-                  text: 'Events',
-                  onTap: () => setState(() => _selectedIndex = 1),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 2,
-                  text: 'Media',
-                  onTap: () => setState(() => _selectedIndex = 2),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 3,
-                  text: 'Approvals',
-                  onTap: () => setState(() => _selectedIndex = 3),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 4,
-                  text: 'Team',
-                  onTap: () => setState(() => _selectedIndex = 4),
+                    top: 190,
+                    child:  CircleAvatar(
+                        radius: 30,
+                        backgroundColor: WayaColors.greyColor100,
+                        backgroundImage:NetworkImage('${args['coverImage']}')
+                      //NetworkImage('${viewModel.coverImage}'),
+                    )
                 ),
               ],
             ),
+            const Gap(10),
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                      '${args['name']}',
+                      style: wayaTheme.textTheme.bodyMedium),
+                  Text(
+                    '${args['desc']}',
+                    //'Find your sound . Discuss writing, composing, recording, and much more',
+                    style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).colorScheme.greyColor500 ),
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      actionType('0', 'Members', onPressed: ()=> WayaNav.toNamed('/membersScreen')),
+                      const Gap(10),
+                      actionType('0', 'Posts'),
+                    ],
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      WayaTabButton(
+                        isSelected: _selectedIndex == 0,
+                        text: 'Posts',
+                        onTap: () => setState(() => _selectedIndex = 0),
+                      ),
+                      WayaTabButton(
+                        isSelected: _selectedIndex == 1,
+                        text: 'Events',
+                        onTap: () => setState(() => _selectedIndex = 1),
+                      ),
+                      WayaTabButton(
+                        isSelected: _selectedIndex == 2,
+                        text: 'Media',
+                        onTap: () => setState(() => _selectedIndex = 2),
+                      ),
+                      WayaTabButton(
+                        isSelected: _selectedIndex == 3,
+                        text: 'Approvals',
+                        onTap: () => setState(() => _selectedIndex = 3),
+                      ),
+                      WayaTabButton(
+                        isSelected: _selectedIndex == 4,
+                        text: 'Team',
+                        onTap: () => setState(() => _selectedIndex = 4),
+                      ),
+                    ],
+                  ),
 
-            const Gap(20),
+                  //const Gap(20),
+              ],),
+            ),
 
-            _selectedIndex == 0 ? PagesForYou() : _selectedIndex == 1 ? Events(): _selectedIndex==2?PagesForYou():_selectedIndex==3?ApprovalScreen():TeamPage()
+
+            _selectedIndex == 0 ? PagesForYou() : _selectedIndex == 1 ? Events(): _selectedIndex==2?PagesForYou():_selectedIndex==3?ApprovalScreen(groupId: '${args['groupId']}',):AddGroupMember()
             //AllOrders()
           ],
         ),

@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/features/group/view/group_post.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 
@@ -24,7 +27,7 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPageProvider.notifier).getFollowing();
+      ref.read(createPageProvider.notifier).getPagesUserFollows();
     });
   }
 
@@ -43,11 +46,10 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: 6,
-            //viewModel.docs?.length,
+            itemCount: viewModel.pagesUsersFollow?.length,
             itemBuilder: (_, index){
-             // viewModel.docs?[index].
-              return Container(
+             final page = viewModel.pagesUsersFollow?[index];
+              return viewModel.pagesUsersFollow!.isEmpty ? PostEmptyState(): Container(
                 margin: EdgeInsets.only(bottom: 15),
                 padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 decoration: BoxDecoration(
@@ -61,25 +63,37 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
                   children: [
                     ListTile(
                       contentPadding: EdgeInsets.only(left: 0, right: 0),
-                      leading: Image.asset(
-                        index==0?'assets/images/pages/empire.png':
-                        index==1? 'assets/images/pages/ms.png':index==2?'assets/images/pages/united.png':
-                        'assets/images/pages/ls.png',
-                        height: 40.h,),
+                      leading: CircleAvatar(
+                        backgroundColor: WayaColors.greyColor100,
+                        backgroundImage: NetworkImage('${page?.coverImage}'),
+                      ),
                       title:Row(children: [
                         Text(
-                            index==0?'Empire Music':index==1?'Marvel Studios':index==2?'Manchester United': 'Livescores',
-                            style: wayaTheme.textTheme.titleLarge),
+                          '${page?.name?.capitalizeFirst}',
+                            style:Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.black )),
 
                         Spacer(),
-                        WayaButton(
-                          callback: (){},
-                          text: 'Following',
-                          height: 38,
-                          color: Colors.white,
-                          textColor: Theme.of(context).colorScheme.primary600,
-                          border: Border.all(color:Theme.of(context).colorScheme.primary600),
-                        )
+                        SizedBox(
+                          width: context.width * 0.20,
+                          height: 30,
+                          child: WayaButton(
+                            callback: (){},
+                            text: 'Following',
+                            height: 38,
+                            color: Colors.white,
+                            textColor: Theme.of(context).colorScheme.primary600,
+                            border: Border.all(color:Theme.of(context).colorScheme.primary600),
+                            textStyle: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.black ),
+
+                          ),
+                        ),
+
 
                       ],),
                       subtitle:  Text(
@@ -91,7 +105,8 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
                       ),),
                     Gap(10),
                     Text(
-                      'Be the first to know about upcoming marvel movies and get the latest news before anyone',
+                      '${page?.description?.capitalizeFirst}',
+                      //'Be the first to know about upcoming marvel movies and get the latest news before anyone',
                       style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,

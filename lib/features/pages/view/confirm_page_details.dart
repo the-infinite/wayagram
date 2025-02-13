@@ -43,7 +43,7 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
                 viewModel.pageDescription.text,   args['type'] == 'Public Page' ? false : true,
                 (args['coverImage'] as File).path, ( args['image'] as File).path );
             viewModel2.reset();
-            WayaNav.toNamed("/successGroup",
+            WayaNav.toNamed("/successPage",
                 arguments: args['type']
             );
           } : null,
@@ -66,9 +66,9 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  WayaImage3(
-                    height: Get.height * 0.2,
-                  ),
+                  Image.file(File('${args['image'].absolute.path}'),
+                    height:Get.height * 0.2, width: double.infinity,
+                    alignment: Alignment.centerRight, fit: BoxFit.fitWidth,),
                   Gap(15),
 
                 ],

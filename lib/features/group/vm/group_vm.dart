@@ -9,9 +9,11 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/group_response.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
+import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/pages/data/model/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
@@ -152,15 +154,15 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> leaveGroup( ctx, {required String postId}) async {
+  Future<void> leaveGroup( ctx, {required String groupId}) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.leaveGroup(postId);
+      final response =  await _groupRepository.leaveGroup(groupId);
       state = state.copyWith(isLoading: false);
       if(response.success && ctx.mounted){
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Post bookmarked successfully!'),
+            content: Text('Exit group'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),
@@ -188,10 +190,10 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<List<GetAllGroupDocs>?> getAllGroups(id) async {
+  Future<List<GetAllGroupDocs>?> getSingleGroup(id) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.getAllGroup(id);
+      final response = await _groupRepository.getSingleGroup(id);
       state = state.copyWith(isLoading: false);
       if (response.success) {
         GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
@@ -206,6 +208,81 @@ class GroupVm extends StateNotifier<GroupState> {
 
     }
     return null;
+  }
+
+  Future<List<GetAllGroupDocs>?> getAllGroups() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getAllGroups();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
+        state = state.copyWith(getAllGroups: responseModel.data?.docs);
+        return responseModel.data?.docs;
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+
+    }
+    return null;
+  }
+
+  Future<void> getJoinedGroups() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getJoinedGroup();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        JoinedGroupModel responseModel = JoinedGroupModel.fromJson(response.data);
+        state = state.copyWith(joinedGroup: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+
+    }
+    return null;
+  }
+
+  Future<void> getGroupMembers(groupId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getGroupMember(groupId);
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        JoinRequestModel responseModel = JoinRequestModel.fromJson(response.data);
+        state = state.copyWith(docs: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+
+    }
+  }
+
+  Future<void> getEvent() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getEvent();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        FetchAllEventModel responseModel = FetchAllEventModel.fromJson(response.data);
+        state = state.copyWith(fetchAllEventDocs: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+
+    }
   }
 
 

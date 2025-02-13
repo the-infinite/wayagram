@@ -128,8 +128,9 @@ class GetAllGroupDocs {
   GetAllGroupDocs({
       this.id, 
       this.name, 
-      this.description, 
-      this.isOpen, 
+      this.description,
+     this.memberCount,
+     this.isOpen,
       this.isPrivate, 
       this.coverImage, 
       this.profileImage, 
@@ -142,6 +143,7 @@ class GetAllGroupDocs {
     id = json['id'];
     name = json['name'];
     description = json['description'];
+    memberCount = json['memberCount'];
     isOpen = json['isOpen'];
     isPrivate = json['isPrivate'];
     coverImage = json['coverImage'];
@@ -155,6 +157,7 @@ class GetAllGroupDocs {
   String? id;
   String? name;
   String? description;
+  num? memberCount;
   bool? isOpen;
   bool? isPrivate;
   String? coverImage;
@@ -166,6 +169,7 @@ class GetAllGroupDocs {
   GetAllGroupDocs copyWith({  String? id,
   String? name,
   String? description,
+    num? memberCount,
   bool? isOpen,
   bool? isPrivate,
   String? coverImage,
@@ -176,6 +180,7 @@ class GetAllGroupDocs {
 }) => GetAllGroupDocs(  id: id ?? this.id,
   name: name ?? this.name,
   description: description ?? this.description,
+    memberCount: memberCount ?? this.memberCount,
   isOpen: isOpen ?? this.isOpen,
   isPrivate: isPrivate ?? this.isPrivate,
   coverImage: coverImage ?? this.coverImage,
@@ -189,6 +194,7 @@ class GetAllGroupDocs {
     map['id'] = id;
     map['name'] = name;
     map['description'] = description;
+    map['memberCount'] = memberCount;
     map['isOpen'] = isOpen;
     map['isPrivate'] = isPrivate;
     map['coverImage'] = coverImage;
