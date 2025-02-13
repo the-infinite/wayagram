@@ -850,41 +850,56 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
     //? If this message was sent by me, leave.
     if (widget.data.senderId == ConversationState.self.id) return;
 
-    //? If this is already read, leave.
-    if (widget.data.myStatus?.status == MessageStatusCode.read) return;
-
-    //? If this is already deleted leave?
-    if (widget.data.myStatus?.status == MessageStatusCode.deleted) return;
-
     //* My read status.
     final status = widget.data.myStatus?.status;
+
+    //? If this is already read, leave.
+    if (status == MessageStatusCode.read) {
+      debugPrint("MessageNotifier> Skipped the message because it has been read.");
+      return;
+    }
+
+    //? If this is already deleted leave?
+    if (status == MessageStatusCode.deleted) {
+      debugPrint("MessageNotifier> Skipped the message because it has been deleted.");
+      return;
+    }
 
     //? If this is not delivered and it is not read...
     _focusNode.addListener(() {
       //? If this is already read, leave.
-      if (widget.data.myStatus?.status == MessageStatusCode.read) return;
+      if (status == MessageStatusCode.read) {
+        debugPrint("MessageNotifier> Skipped the message because it has been read.");
+        return;
+      }
 
       //? If this is already deleted leave?
-      if (widget.data.myStatus?.status == MessageStatusCode.deleted) return;
+      if (status == MessageStatusCode.deleted) {
+        debugPrint("MessageNotifier> Skipped the message because it has been deleted.");
+        return;
+      }
 
-      //? now, move forward. 
+      //? now, move forward.
       if (!_focusNode.hasFocus) {
-        debugPrint("Skipping this because ain't no focus on it yet.");
+        debugPrint("MessageNotifier> Skipped the message because it does not have focus.");
         return;
       }
 
       //? If this is the last message, mark all as read.
       if (widget.isLast && status == MessageStatusCode.delivered) {
+        debugPrint("MessageNotifier> Marking all messages as read.");
         notifier.markAllAsRead();
       }
 
       //? Since this is not the last message, mark this as read.
       else if (status == MessageStatusCode.delivered) {
+        debugPrint("MessageNotifier> Marking message ${widget.data.id} as read.");
         notifier.updateMessageStatus(MessageStatusCode.read, widget.data.id);
       }
 
       //? Since this is still sent, then we can mark this as delivered.
       else {
+        debugPrint("MessageNotifier> Marking message ${widget.data.id} as delivered.");
         notifier.updateMessageStatus(MessageStatusCode.delivered, widget.data.id);
       }
     });

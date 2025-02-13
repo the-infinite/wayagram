@@ -96,13 +96,17 @@ class WayaScaffold extends ConsumerWidget {
                     )
                   : Container(
                       color: color,
+                      height: size.height,
+                      width: size.width,
                       child: Padding(
                         padding: paddedBody,
                         child: SingleChildScrollView(child: body),
                       ),
                     )
-              : Padding(
+              : Container(
                   padding: paddedBody,
+                  height: size.height,
+                  width: size.width,
                   child: body,
                 ),
           bottomNavigationBar: bottomNavigationBar,
