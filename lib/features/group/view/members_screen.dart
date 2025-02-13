@@ -112,6 +112,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen >
 
                           ],),
                           subtitle:  Text(
+
                            '${member?.user?.email}',
                             style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
                                 fontSize: 12,
