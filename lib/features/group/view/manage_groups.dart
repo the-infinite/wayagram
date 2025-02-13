@@ -67,17 +67,22 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
                     ListTile(
                       contentPadding: EdgeInsets.only(left: 0, right: 0),
                       onTap: (){
+
                        group?.isPrivate == true?
                         WayaNav.toNamed('/privateGroup',
                         arguments: {
+                          'memberCount':'${group?.memberCount}',
                           'name': '${group?.name}',
+                          'url': '${group?.url}',
                           'desc': '${group?.description}',
                           'coverImage': '${group?.coverImage}',
                           'profileImage': '${group?.profileImage}',
                           'groupId': '${group?.id}',
                         }): WayaNav.toNamed('/publicGroup',
                            arguments: {
+                             'memberCount':'${group?.memberCount}',
                              'name': '${group?.name}',
+                             'url': '${group?.url}',
                              'desc': '${group?.description}',
                              'coverImage': '${group?.coverImage}',
                              'profileImage': '${group?.profileImage}',
@@ -91,7 +96,6 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
                       ),
                       title:Row(children: [
                         Text('${group?.name?.capitalizeFirst}',
-                          //  index==0?'Empire Music':index==1?'Marvel Studios':index==2?'Manchester United': 'Livescores',
                             style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,

@@ -85,9 +85,7 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                 }
               }
             } : null,
-           // centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create'),
             height: 30,
-
             isLoading: viewModel.isLoading,
             text: 'Create',
             horizontalPadding: 12,
@@ -101,27 +99,6 @@ class _CreatePageState extends ConsumerState<CreatePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        /*  Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  WayaImage3(
-                    height: Get.height * 0.2,
-                  ),
-                  Gap(15),
-
-                ],
-              ),
-              Positioned(
-                  left: 16.w,
-                  bottom: -20.h,
-                  child: WayaDp(
-                    radius: 28.r,
-                  )),
-            ],
-          ),*/
           Stack(
             clipBehavior: Clip.none,
             children: [
@@ -164,12 +141,6 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                       ),
                     ],
                   ),
-                  /* WayaImage3(
-                    imageUrl: '$_selectedImages',
-                    onTap: _pickImages,
-                    height: Get.height * 0.2,
-                    isEdit: true,
-                  ),*/
                   Gap(15),
 
                 ],
@@ -197,17 +168,6 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                         )
                             : null,
                       ),
-                      /* if (_coverImage == null)
-                        Positioned.fill(
-                          child: CircleAvatar(
-                            radius: 10,
-                            backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
-                            child: Icon(
-                              Icons.camera_alt_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),*/
                     ],
                   ),
                 ),

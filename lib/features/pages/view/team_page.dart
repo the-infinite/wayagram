@@ -4,15 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 
 class TeamPage extends ConsumerStatefulWidget {
-  const TeamPage({super.key});
+  final String pageId;
+  const TeamPage({super.key, required this.pageId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TeamPageState();
@@ -21,10 +24,20 @@ class TeamPage extends ConsumerStatefulWidget {
 class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderStateMixin {
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final id  = ModalRoute.of(context)?.settings.arguments as String;
+      ref.read(createPageProvider.notifier).getPageMember(widget.pageId);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
+    final teamPage = ref.watch(createPageProvider.notifier);
 
     return Container(
       width: double.infinity,
@@ -58,8 +71,9 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
             padding: EdgeInsets.zero,
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: 6,
+              itemCount: viewModel.getPageMemberDocs?.length,
               itemBuilder: (_, index){
+               final page = viewModel.getPageMemberDocs?[index];
                 return Container(
                    margin: EdgeInsets.only(bottom: 15),
                    padding: EdgeInsets.only(left: 10),
@@ -81,12 +95,17 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
                         ),
                         child: Row(
                           children: [
-                            Image.asset('assets/images/pages/crown.png', height: 8.h,),
+                            Image.asset(
+                              page?.role == 'admin' || page?.role == 'owner'?'assets/images/pages/crown.png':
+                              page?.role == 'editor'?
+                              'assets/images/pages/editor.png': 'assets/images/pages/moderator.png', height: 8.h,),
+                            const Gap(5),
                             const Gap(5),
                             Text(
-                              "Admin",
+                              "${page?.role?.capitalizeFirst}",
                               style: TextStyle().wayaCopyWith(
-                                color: wayaTheme.colorScheme.success,
+                                color: page?.role == 'admin' || page?.role == 'owner'?
+                                wayaTheme.colorScheme.success: WayaColors.primary700,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 11,
 
@@ -98,21 +117,21 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
                       //Gap(10),
                       ListTile(
                         contentPadding: EdgeInsets.only(left: 0, right: 0, top: 0),
-                        leading: Image.asset(
-                          index==0?'assets/images/pages/empire.png':
-                          index==1? 'assets/images/pages/ms.png':index==2?'assets/images/pages/united.png':
-                          'assets/images/pages/ls.png',
-                          height: 30.h,),
+                        leading: CircleAvatar(
+                            radius: 20,
+                            backgroundColor: WayaColors.greyColor100,
+                            backgroundImage: NetworkImage('${page?.user?.profilePicture}')
+                        ),
                         title:Row(children: [
                           Text(
-                              index==0?'Temitope Adebayo':index==1?'Temitope Adebayo':index==2?'Oluwaseun Adeyemi': 'Ifeoma Okeke',
+                            '${page?.user?.firstName?.capitalizeFirst} ${page?.user?.lastName?.capitalizeFirst}',
                               style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: Theme.of(context).colorScheme.black ),),
                         ],),
                         subtitle:  Text(
-                          '@chukwudi2024',
+                          '${page?.user?.email}',
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,

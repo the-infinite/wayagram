@@ -13,7 +13,7 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/data/model/followers_model.dart';
-import 'package:wayagram/features/pages/data/model/page_state.dart';
+import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';

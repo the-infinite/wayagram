@@ -4,12 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 
 class JoinedGroup extends ConsumerStatefulWidget {
@@ -42,7 +45,7 @@ class _JoinedGroupState extends ConsumerState<JoinedGroup> with SingleTickerProv
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
+        viewModel.joinedGroup!.isEmpty ? GroupEmptyState():
         ListView.builder(
             shrinkWrap: true,
             itemCount: viewModel.joinedGroup?.length,
@@ -122,4 +125,34 @@ class _JoinedGroupState extends ConsumerState<JoinedGroup> with SingleTickerProv
 
   }
 
+}
+
+class GroupEmptyState extends StatelessWidget {
+  const GroupEmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(20),
+        child: EmptyState(
+            hasButton: false,
+            onTap: () {
+              //WayaNav.toNamed(reatePost.route);
+            },
+            //buttontext: 'Create a Post',
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You have not joined any group yet"),
+      ),
+    );
+  }
 }

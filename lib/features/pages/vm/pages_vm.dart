@@ -13,7 +13,8 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/data/model/followers_model.dart';
-import 'package:wayagram/features/pages/data/model/page_state.dart';
+import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
+import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
@@ -650,6 +651,25 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
+  Future<void> getPageMember(pageId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.getPageMembers(pageId);
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+       GetPageMemberModel responseModel = GetPageMemberModel.fromJson(response.data);
+        state = state.copyWith(getPageMemberDocs: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+
+    }
+  }
+
+
   Future<void> getPagesUserFollows() async {
     try {
       state = state.copyWith(isLoading: true);
@@ -682,6 +702,67 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  Future<void> followPage( ctx, pageId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _pageRepository.followPage(pageId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post unsaved successfully'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> editPage(ctx, pageName, pageDesc, pageType, String coverImage,
+      //String profileImage,
+      String pageId) async {
+
+    final coverImageUrl =  await WayaFileRepository.instance.uploadFile(File(coverImage), );
+    //final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.editPage(
+          pageName, pageDesc, pageType, coverImageUrl ?? '',
+          //profileImageUrl ??'',
+          pageId
+      );
+      state = state.copyWith(isLoading: false);
+      //? If this is fine...
+      if (response.success && ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Page updated successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        print('Edit group');
+        _logger.i(response.data['data']);
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
 
 }
 

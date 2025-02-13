@@ -167,8 +167,24 @@ class PageRepository extends BaseRepository {
     return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload);
   }
 
+  Future<WayaRequestResponse> editPage(String name, String desc, bool pageType, String coverImage, String pageId) {
+    final payload = {
+      "name": name,
+      "description": desc,
+      "isPublic": pageType,
+      "coverImage": coverImage
+    };
+
+    return put("$serviceUrl/pages/$pageId", payload);
+  }
+
   Future<WayaRequestResponse> removePageTeamMember(String pageId, String memberId) async {
     return delete("$serviceUrl/pages/$pageId/team-members/$memberId");
+  }
+
+  Future<WayaRequestResponse> followPage(String pageId) async {
+    final payload = {};
+    return post("$serviceUrl/pages/follow/$pageId", payload);
   }
 
   Future<WayaRequestResponse> unFollowPage(String pageId) async {

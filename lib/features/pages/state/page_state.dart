@@ -2,13 +2,15 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:wayagram/features/pages/data/model/all_page_model.dart';
+import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/features/post/model/media_upload_model.dart';
 
-import '../../../post/model/share_model.dart';
-import 'pages_users_follow_model.dart';
+import '../../post/model/share_model.dart';
+import '../data/model/pages_users_follow_model.dart';
 
 class PageState{
   final TextEditingController pageName;
@@ -19,6 +21,8 @@ class PageState{
   final List<GetAllPostDocs>? getAllPost;
   final List<Comments>? comments;
   List<PagesUsersFollowDocs>? pagesUsersFollow;
+  List<AllPageModelDocs>? allPageModelDocs;
+  List<GetPageMemberDocs>? getPageMemberDocs;
   final MediaUploadData? data;
   List<dynamic>? docs;
   final ShareModelData? shareModelData;
@@ -39,6 +43,8 @@ class PageState{
     this.getAllPost = const [],
     this.docs = const [],
     this.pagesUsersFollow = const [],
+    this.allPageModelDocs = const [],
+    this.getPageMemberDocs = const [],
     this.data,
     this.shareModelData,
 }):  pageName = pageName ?? TextEditingController(),
@@ -53,6 +59,8 @@ class PageState{
     List<Docs>? fetchAllPostData,
     List<GetAllPostDocs>? getAllPost,
     List<PagesUsersFollowDocs>? pagesUsersFollow,
+    List<AllPageModelDocs>? allPageModelDocs,
+    List<GetPageMemberDocs>? getPageMemberDocs,
     List<Comments>? comments,
     List<dynamic>? docs,
     MediaUploadData? data,
@@ -70,9 +78,11 @@ class PageState{
       shareModelData: shareModelData ?? this.shareModelData,
       fetchAllPostData: fetchAllPostData ?? this.fetchAllPostData,
       getAllPost: getAllPost ?? this.getAllPost,
+      allPageModelDocs: allPageModelDocs ?? this.allPageModelDocs,
       comments: comments ?? this.comments,
       docs: docs ?? this.docs,
       pagesUsersFollow: pagesUsersFollow ?? this.pagesUsersFollow,
+      getPageMemberDocs: getPageMemberDocs ?? this.getPageMemberDocs,
 
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
