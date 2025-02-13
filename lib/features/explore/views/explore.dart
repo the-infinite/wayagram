@@ -252,10 +252,10 @@ class _ExploreState extends ConsumerState<Explore> {
             const Gap(25),
             SharedPosts(),
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'View and manage pages',
-                title: 'Pages'),
+
+            GroupedWidgetHeader(onTap: () {
+              WayaNav.toNamed('/pages');
+            }, subTitle: 'View and manage pages', title: 'Pages'),
             const Gap(25),
             Text(
               "My Pages",
@@ -294,10 +294,10 @@ class _ExploreState extends ConsumerState<Explore> {
                   return PagesCard(isFollow: true, group: groupList[index]);
                 }),
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'View and manage groups',
-                title: 'Groups'),
+
+            GroupedWidgetHeader(onTap: () {
+              WayaNav.toNamed('/groups');
+            }, subTitle: 'View and manage groups', title: 'Groups'),
             const Gap(25),
             Text(
               "My Groups",

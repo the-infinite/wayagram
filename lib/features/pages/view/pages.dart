@@ -72,11 +72,7 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
             ],
           ),
           const Gap(20),
-          _selectedIndex == 0
-              ? PagesForYou()
-              : _selectedIndex == 1
-                  ? FollowingPage()
-                  : ManagePages()
+          _selectedIndex == 0 ? PagesForYou() : _selectedIndex == 1 ? FollowingPage() : ManagePages()
         ],
       ),
       floatingActionButton: SizedBox(
