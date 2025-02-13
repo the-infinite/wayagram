@@ -32,7 +32,9 @@ class ExploreOurServicesVm {
       Services(
           icon: WayaAssets.icons.eChat.path,
           name: 'Chat & Socials',
-          onTap: () {}),
+          onTap: () {
+             Navigator.pushNamed(context, BottomView.route, arguments: 4);
+          }),
       Services(
           icon: WayaAssets.icons.eDonation.path,
           name: 'Donations',
@@ -46,7 +48,9 @@ class ExploreOurServicesVm {
       Services(
           icon: WayaAssets.icons.eEvent.path,
           name: 'Events',
-          onTap: () {
+          onTap: (
+            
+          ) {
             WayaNav.toNamed(EventView.route);
           }),
     ];

@@ -9,8 +9,8 @@ class EventRepository extends BaseRepository {
     return post("$serviceUrl/events/create", payload.toJson(), formdata: true);
   }
 
-  Future<WayaRequestResponse> getEvents() {
-    return get("$serviceUrl/events/get-event");
+  Future<WayaRequestResponse> getEvents({int? limit = 500, int? page = 1}) {
+    return get("$serviceUrl/events/get-event?limit=$limit&page=$page");
   }
 
   Future<WayaRequestResponse> getUserEvents(
@@ -47,8 +47,8 @@ class EventRepository extends BaseRepository {
     return post("$serviceUrl/join-events", payload);
   }
 
-  Future<WayaRequestResponse> joinedUsers(String id, int page) {
-    return get("$serviceUrl/join-events/get?eventId=$id&page=$page");
+  Future<WayaRequestResponse> joinedUsers({required String id, required int page, int? limit = 10}) {
+    return get("$serviceUrl/join-events/get?eventId=$id&page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getSingleEvent(String id) {

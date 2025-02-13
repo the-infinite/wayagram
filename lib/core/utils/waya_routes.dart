@@ -15,14 +15,20 @@ import 'package:wayagram/features/general_settings/notifications/view/default.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
 import 'package:wayagram/features/group/view/group_setting.dart';
+import 'package:wayagram/features/group/view/group_suggestion.dart';
+import 'package:wayagram/features/group/view/groups.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
+import 'package:wayagram/features/moments/views/media_moment.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
+import 'package:wayagram/features/moments/views/my_moments.dart';
+import 'package:wayagram/features/moments/views/trim_video.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/pages/view/confirm_page_details.dart';
@@ -81,6 +87,8 @@ import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
+import 'package:wayagram/features/moments/vm/moment_vm.dart';
+import 'package:wayagram/features/moments/views/view_moment.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
@@ -170,14 +178,36 @@ class WayaAppRoutes {
     SuccessPage.route: () => SuccessPage(),
     SuccessGroup.route: () => SuccessGroup(),
     Pages.route: () => Pages(),
+    Groups.route: () => Groups(),
     Suggestion.route: () => Suggestion(),
+    GroupSuggestion.route: () => GroupSuggestion(),
     PrivatePage.route: () => PrivatePage(),
     MembersScreen.route: () => MembersScreen(),
     CreatePost.route: () => CreatePost(),
     MutualPage.route: () => MutualPage(),
+    PublicGroup.route: () => PublicGroup(),
+    EditPageInfo.route: () => EditPageInfo(),
+    AddTeamMember.route: () => AddTeamMember(),
+    PrivateGroup.route: () => PrivateGroup(),
+    SingleChatScreen.route: () =>
+        SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    DisplayFeed.route: () => DisplayFeed(),
+    GroupSetting.route: () => GroupSetting(),
+    AllUpcomingEvents.route: () => AllUpcomingEvents(),
+    MediaMoment.route: () => MediaMoment(),
+    MyMoments.route: () => MyMoments(),
+    ViewMoment.route: () => ViewMoment(),
+    VideoTrimmerScreen.route:() => VideoTrimmerScreen(),
+    EditPost.route: () => EditPost(
+          initialContent: '',
+          initialImageUrl: '',
+          title: '',
+          postId: '',
+        ),
     PublicGroup.route: ()=> PublicGroup(),
     EditPageInfo.route: ()=> EditPageInfo(),
     AddTeamMember.route: ()=> AddTeamMember(),
+    AddGroupMember.route: ()=> AddGroupMember(),
     PrivateGroup.route: ()=> PrivateGroup(),
     SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route:() => DisplayFeed(),
@@ -190,7 +220,8 @@ class WayaAppRoutes {
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getSingleChatRoute(String id) => "${SingleChatScreen.route}?id=$id";
+  static String getSingleChatRoute(String id) =>
+      "${SingleChatScreen.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages => routes.entries.map((entry) {

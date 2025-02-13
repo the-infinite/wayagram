@@ -15,6 +15,8 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/view/events.dart';
+import 'package:wayagram/features/group/view/group_post.dart';
+import 'package:wayagram/features/group/view/mediaPost.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/view/pages_for_you.dart';
 import 'package:wayagram/features/pages/view/team_page.dart';
@@ -39,7 +41,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
       final id  = ModalRoute.of(context)?.settings.arguments as String;
-   final fetchGroup =  await ref.read(createGroupProvider.notifier).getAllGroups(id);
+   final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
    ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
    print('THE PUBLIC GROUP ID is $id');
     });
@@ -51,7 +53,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
     super.reassemble();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
       final id  = ModalRoute.of(context)?.settings.arguments as String;
-      final fetchGroup =  await ref.read(createGroupProvider.notifier).getAllGroups(id);
+      final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
       ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
       print('THE PUBLIC GROUP ID is $id');
     });
@@ -62,12 +64,18 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
     // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
-
+    final viewModel2 = ref.watch(createGroupProvider.notifier);
+    //final id  = ModalRoute.of(context)?.settings.arguments as String;
     //final group = ref.watch(groupResponseProvider);
 
+    /// new implementation
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+
     return WayaScaffold(
+      padding: EdgeInsets.zero,
       onTapBackButton: (){
-        Navigator.pushNamed(context, BottomView.route, arguments: 5);
+        WayaNav.toNamed('/groups');
+       // Navigator.pushNamed(context, BottomView.route, arguments: 5);
       },
       isLoading: viewModel.isLoading,
       isScrollable: true,
@@ -124,7 +132,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                     child: _buildActionNav(
                         context: context,
                         onTap: () {
-                          //viewGroupModel.leaveGroup(context, postId: '', userId: '${ConversationState.self.id}');
+                          viewModel2.leaveGroup(context, groupId: '${args['groupId']}',);
                           Navigator.pop(context);
 
                         },
@@ -135,7 +143,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                   )
                 ];
               },
-              child:  WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none)),
+              child: WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none)),
           //WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
           Gap(8)
         ],
@@ -157,8 +165,11 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                     decoration: BoxDecoration(
                       color: WayaColors.primaryBrown50,
                       borderRadius: BorderRadius.circular(0),
-                      image:viewModel.profileImage!=null? DecorationImage(
-                        image: NetworkImage('${viewModel.profileImage}'),
+                      image:
+                      //viewModel.profileImage!=null
+                        args['profileImage'] !=null? DecorationImage(
+                        image: NetworkImage('${args['profileImage']}'),
+                        //image: NetworkImage('${viewModel.profileImage}'),
                         fit: BoxFit.cover,
                       ):
                       DecorationImage(
@@ -178,7 +189,8 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                   Gap(15),
                   GestureDetector(
                     onTap: () {
-                       WayaNav.toNamed('/membersScreen');
+                       WayaNav.toNamed('/membersScreen',
+                       arguments: '${args['groupId']}');
                     },
                     child: Container(
                       margin: EdgeInsets.only(right: 20.w),
@@ -202,59 +214,79 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
               ),
               Positioned(
                   left: 16.w,
+                  top: 190,
+                  child:  CircleAvatar(
+                      radius: 30,
+                      backgroundColor: WayaColors.greyColor100,
+                      backgroundImage:NetworkImage('${args['coverImage']}')
+                      //NetworkImage('${viewModel.coverImage}'),
+                  )
+              ),
+              /*Positioned(
+                  left: 16.w,
                   bottom: 3.h,
                   child: WayaDp(
                     radius: 28.r,
-                  )),
+                  )),*/
             ],
           ),
           const Gap(10),
-          Text(
-            '${viewModel.name?.capitalizeFirst}',
-              //'Empire Music',
-              style: wayaTheme.textTheme.bodyMedium),
-          //const Gap(10),
-          Text(
-            '${viewModel.desc?.capitalizeFirst}',
-            //'Find your sound . Discuss writing, composing, recording, and much more',
-            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: Theme.of(context).colorScheme.greyColor500 ),
-          ),
-          const Gap(10),
-          Row(
-            children: [
-              actionType('7k', 'Members', onPressed: ()=> WayaNav.toNamed('/membersScreen')),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+              Text(
+                //'${viewModel.name?.capitalizeFirst}',
+                  '${args['name']}',
+                  style: wayaTheme.textTheme.bodyMedium),
+              Text(
+                '${args['desc']}',
+                //'${viewModel.desc?.capitalizeFirst}',
+                //'Find your sound . Discuss writing, composing, recording, and much more',
+                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Theme.of(context).colorScheme.greyColor500 ),
+              ),
               const Gap(10),
-              actionType('600', 'Posts'),
-            ],
+              Row(
+                children: [
+                  actionType('60', 'Members',
+                      onPressed: ()=> WayaNav.toNamed('/membersScreen',
+                      arguments: '${args['groupId']}')),
+                  const Gap(10),
+                  actionType('600', 'Posts'),
+                ],
+              ),
+              const Gap(10),
+              Row(
+                children: [
+                  WayaTabButton(
+                    isSelected: _selectedIndex == 0,
+                    text: 'Posts',
+                    onTap: () => setState(() => _selectedIndex = 0),
+                  ),
+                  WayaTabButton(
+                    isSelected: _selectedIndex == 1,
+                    text: 'Events',
+                    onTap: () => setState(() => _selectedIndex = 1),
+                  ),
+                  WayaTabButton(
+                    isSelected: _selectedIndex == 2,
+                    text: 'Media',
+                    onTap: () => setState(() => _selectedIndex = 2),
+                  ),
+                ],
+              ),
+
+              //const Gap(20),
+            ],),
           ),
 
-          const Gap(10),
-          Row(
-            children: [
-              WayaTabButton(
-                isSelected: _selectedIndex == 0,
-                text: 'Posts',
-                onTap: () => setState(() => _selectedIndex = 0),
-              ),
-              WayaTabButton(
-                isSelected: _selectedIndex == 1,
-                text: 'Events',
-                onTap: () => setState(() => _selectedIndex = 1),
-              ),
-              WayaTabButton(
-                isSelected: _selectedIndex == 2,
-                text: 'Media',
-                onTap: () => setState(() => _selectedIndex = 2),
-              ),
-            ],
-          ),
-
-          const Gap(20),
-
-          _selectedIndex == 0 ? PagesForYou() : _selectedIndex == 1 ? Events(): PagesForYou()
+          _selectedIndex == 0 ? GroupPost() : _selectedIndex == 1 ? Events(): MediaPost()
           //AllOrders()
         ],
       ),

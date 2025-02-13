@@ -88,11 +88,11 @@ class PagesCard extends ConsumerWidget {
                           callback: () {},
                           text: isRecommendedGroup ? 'Join' : 'Follow',
                           height: 30,
-                          textStyle: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                          textStyle: TextStyle(
                               color: wayaTheme.colorScheme.white,
                               fontSize: 12,
                               fontWeight: FontWeight.w500),
-                          radius: 5,
+                          radius: 6,
                         ),
                       ),
                     if (isFollowing || isGroupMember)
@@ -102,11 +102,12 @@ class PagesCard extends ConsumerWidget {
                           callback: () {},
                           text: isGroupMember ? 'Member' : 'Following',
                           height: 30,
-                          textStyle: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                          textColor: wayaTheme.colorScheme.customPrimary,
+                          textStyle: TextStyle(
                               color: wayaTheme.colorScheme.customPrimary,
                               fontSize: 12,
                               fontWeight: FontWeight.w500),
-                          radius: 5,
+                          radius: 6,
                           color: wayaTheme.colorScheme.transparent,
                           border: Border.all(
                               width: 1,

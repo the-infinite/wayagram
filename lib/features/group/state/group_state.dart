@@ -2,7 +2,10 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
+import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
+import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 
 import '../data/model/join_request_model.dart';
 
@@ -17,6 +20,9 @@ class GroupState{
   String? desc;
   List<JoinRequestDocs>? docs;
   List<GetAllGroupDocs>? getAllGroups;
+  List<FetchAllEventDocs>? fetchAllEventDocs;
+  List<AllGroupMemberDocs>? allGroupMemberDocs;
+  List<JoinedGroupDocs>? joinedGroup;
 
   final bool isFocused;
   final bool isLoading;
@@ -39,7 +45,10 @@ class GroupState{
     this.name = '',
     this.desc = '',
     this.docs = const [],
+    this.allGroupMemberDocs = const [],
     this.getAllGroups = const [],
+    this.fetchAllEventDocs = const [],
+    this.joinedGroup = const [],
     this.image,
   }):   groupName = groupName ?? TextEditingController(),
         groupDescription = groupDescription ?? TextEditingController(),
@@ -51,6 +60,9 @@ class GroupState{
     TextEditingController? username,
     List<JoinRequestDocs>? docs,
     List<GetAllGroupDocs>? getAllGroups,
+    List<FetchAllEventDocs>? fetchAllEventDocs,
+    List<AllGroupMemberDocs>? allGroupMemberDocs,
+    List<JoinedGroupDocs>? joinedGroup,
 
     bool? isFocused,
     bool? isLoading,
@@ -70,7 +82,9 @@ class GroupState{
       username: username ?? this.username,
       docs: docs ?? this.docs,
       getAllGroups: getAllGroups ?? this.getAllGroups,
-
+      fetchAllEventDocs: fetchAllEventDocs ?? this.fetchAllEventDocs,
+      allGroupMemberDocs: allGroupMemberDocs ?? this.allGroupMemberDocs,
+      joinedGroup: joinedGroup ?? this.joinedGroup,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
       openToEveryone: openToEveryone ?? this.openToEveryone,

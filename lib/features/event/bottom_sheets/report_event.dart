@@ -54,8 +54,7 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Report ",
-              style: TextStyle()
-                  .wayaCopyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const Gap(5),
           Text(
               maxLines: 3,
@@ -159,6 +158,7 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
                                   reason: selectedStatus,
                                   comment: comment.text,
                                   context: context);
+                               
                             }
                           : null,
                       centerWidget: LoadingState(

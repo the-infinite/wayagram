@@ -7,7 +7,7 @@ import 'package:wayagram/core/theme/theme.dart';
 class WayaNoticeModal extends StatelessWidget {
   final String title;
   final String message;
-  final VoidCallback onPress;
+  final VoidCallback? onPress;
   final VoidCallback? onCancel;
   final String? buttonText;
   final String? secondButtonText;
@@ -34,7 +34,7 @@ class WayaNoticeModal extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 40, 20, 40),
       decoration: BoxDecoration(
         color: wayaTheme.white,
-          borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -57,7 +57,7 @@ class WayaNoticeModal extends StatelessWidget {
           Text(
             message,
             maxLines: 3,
-             softWrap: true,
+            softWrap: true,
             textAlign: TextAlign.center,
             style: WayaTextStyles.descriptionStyle,
           ),
@@ -65,8 +65,8 @@ class WayaNoticeModal extends StatelessWidget {
           WayaButton(
               centerWidget: buttonCenterWidget,
               callback: () {
-                // Navigator.of(context).pop();
-                onPress();
+                if (onPress == null) return Navigator.of(context).pop();
+                onPress?.call();
               },
               text: buttonCenterWidget == null ? buttonText ?? '' : ''),
           const Gap(10),

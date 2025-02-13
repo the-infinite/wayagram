@@ -8,16 +8,16 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/data/model/followers_model.dart';
 import 'package:wayagram/features/pages/data/model/page_state.dart';
+import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
-import 'package:wayagram/features/post/model/media_upload_model.dart';
+import 'package:wayagram/shared/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
 import 'package:http/http.dart' as http;
 
@@ -253,18 +253,7 @@ class PageVm extends StateNotifier<PageState> {
       if (response.success) {
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
         state = state.copyWith(getAllPost: responseModel.data?.docs);
-        // final data = SavedPostsResponse.fromJson(response.data);
 
-        //print('Data parsed: ${data.savedPosts.length} saved posts received.');
-
-        // Clear existing saved posts
-        //_savedPosts.clear();
-
-        // Add new saved posts if available
-        /*if (data.savedPosts.isNotEmpty) {
-          _savedPosts.addAll(data.savedPosts); // No need to map, just add the SavedPost directly
-          print('Saved posts added: ${_savedPosts.length} posts.');
-        } */
       } else {
         print('Error: Status code ${response.statusCode}');
         _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
@@ -273,9 +262,7 @@ class PageVm extends StateNotifier<PageState> {
       print('Exception occurred while fetching saved posts: $e');
       _errorMessage2 = 'Something went wrong. Please try again later.';
     } finally {
-      // _isLoading = false;
-      // notifyListeners();
-      //print('Saved posts fetch completed. Loading state: $_isLoading');
+
     }
   }
 
@@ -438,7 +425,7 @@ class PageVm extends StateNotifier<PageState> {
       if(response.success && ctx.mounted){
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Post deleted successfully!'),
+            content: Text('Post reposted successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),
@@ -632,9 +619,9 @@ class PageVm extends StateNotifier<PageState> {
    return [];
  }
 
-  Future<void> getFollowing() async {
+  Future<void> getFollowers() async {
     state = state.copyWith(isLoading: true);
-    final response = await _pageRepository.getFollowing();
+    final response = await _pageRepository.getFollowers();
     state = state.copyWith(isLoading: false);
     if (response.success) {
       FollowersModel responseModel = FollowersModel.fromJson(response.data);
@@ -643,6 +630,58 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  Future<void> getAllPages(userId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.getAllPages(userId);
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
+        state = state.copyWith(pagesUsersFollow: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+
+    }
+  }
+
+  Future<void> getPagesUserFollows() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.getPagesAUserFollows();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
+        state = state.copyWith(pagesUsersFollow: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+
+    }
+  }
+
+  Future<void> updateTeamMember( ctx, role, pageId, memberId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _pageRepository.updateTeamMember(role, pageId, memberId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
 }
 
 final pageProvider = Provider((ref) => PageRepository());

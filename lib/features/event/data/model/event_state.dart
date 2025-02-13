@@ -16,6 +16,7 @@ class EventState {
   final EventDoc? singleEvent;
   final bool isUserEvent;
   final List<Doc> attendees;
+  final String userId;
 
   EventState(
       {this.isLoading = false,
@@ -31,6 +32,7 @@ class EventState {
       this.isLoadingSingleEvent = false,
       this.isReportingEvent = false,
       this.attendees = const [],
+      this.userId = '',
       this.isLoadingUserEvents = false});
 
   EventState copyWith(
@@ -39,6 +41,7 @@ class EventState {
       List<EventDoc>? myEvents,
       List<EventDoc>? upcomingEvents,
       List<EventDoc>? pastEvents,
+      String? userId,
       bool? isLoadingEventWithStatus,
       EventDoc? singleEvent,
       bool? isUserEvent,
@@ -60,6 +63,7 @@ class EventState {
         isUserEvent: isUserEvent ?? this.isUserEvent,
         isJoiningEvent: isJoiningEvent ?? this.isJoiningEvent,
         attendees: attendees ?? this.attendees,
+        userId: userId ?? this.userId,
         isReportingEvent: isReportingEvent ?? this.isReportingEvent,
         isLoadingEventWithStatus:
             isLoadingEventWithStatus ?? this.isLoadingEventWithStatus,
