@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/model/member.dart';
+import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
@@ -30,30 +31,6 @@ class SingleChatScreen extends ConsumerStatefulWidget {
 class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   late final notifier = ref.watch(chatProvider.notifier);
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        notifier.getMessages(true);
-      },
-    );
-
-    //? This is fine.
-    super.initState();
-  }
-
-  @override
-  void reassemble() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        notifier.getMessages(true);
-      },
-    );
-
-    //? This is fine.
-    super.reassemble();
-  }
-
   // We start a video call.
   void _startAudioCall() async {}
 
@@ -74,7 +51,11 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
           : null;
 
       // Set this up.
-      inputController.setChat(chat);
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) {
+          inputController.setChat(chat);
+        },
+      );
 
       //? This is fine.
       return PopScope(
@@ -83,7 +64,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
           if (popping) inputController.reset();
         },
         child: WayaScaffold(
-          isLoading: state.isLoading,
+          isLoading: false,
           isScrollable: false,
           padding: EdgeInsets.zero,
           resizeToAvoidBottomInset: true,
@@ -91,6 +72,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
             toolbarHeight: kToolbarHeight,
             leadingWidth: double.infinity,
             backgroundColor: WayaColors.white,
+            surfaceTintColor: Colors.transparent,
             leading: Container(
               height: double.infinity,
               alignment: Alignment.centerLeft,
@@ -199,48 +181,78 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
               Divider(color: WayaColors.greyColor200, height: 1),
 
               //? Second, the chat messages.
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    await notifier.getMessages(true);
-                  },
-                  child: SingleChildScrollView(
-                    controller: state.controller,
+              if (state.messages.isEmpty)
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      //* First, the image.
+                      WayaAssets.images.cSayHello.image(
+                        height: 70,
+                        width: 70,
+                        fit: BoxFit.cover,
+                      ),
+
+                      // Some space.
+                      const Gap(20),
+
+                      //* Some text
+                      Text(
+                        "Send the first message",
+                        style: WayaTextStyles.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 24,
+                        ),
+                      ),
+
+                      // Some space.
+                      const Gap(10),
+
+                      //* Some text
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Text(
+                          "Start a conversation with ${chat.other.chatUser?.displayName} by sending the first message",
+                          maxLines: 3,
+                          textAlign: TextAlign.center,
+                          style: WayaTextStyles.hintStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Expanded(
+                  child: WayaPaginatedListView<MessageModel>(
+                    nextPage: state.page,
+                    itemCount: state.messages.length,
+                    isAtEnd: !state.hasNextPage,
+                    shouldFetch: !state.isLoading,
+                    direction: Axis.vertical,
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     physics: const AlwaysScrollableScrollPhysics(),
                     reverse: true,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        //? First, the list of messages.
-                        ...List.generate(
-                          state.messages.length,
-                          (index) => ChatBubbleWidget(
-                            index: index,
-                            previousDate: index == 0
-                                ? DateTime.fromMillisecondsSinceEpoch(0)
-                                : state.messages[index - 1].createdAt,
-                            data: state.messages[index],
-                            controller: inputController,
-                            isLast: index == state.messages.length - 1,
-                          ),
-                        ),
-
-                        //? Second, the typing bubble.
-                        if (state.typing)
-                          Row(
+                    getPage: (page) async {
+                      return notifier.getMessages();
+                    },
+                    builder: (context, index) => ChatBubbleWidget(
+                      index: index,
+                      previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
+                      data: state.messages[index],
+                      controller: inputController,
+                      isLast: index == state.messages.length - 1,
+                    ),
+                    child: state.typing
+                        ? Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               PersonalTypingIndicator(),
                             ],
-                          ),
-                      ],
-                    ),
+                          )
+                        : null,
                   ),
                 ),
-              ),
 
               //? Third, the chat input widget.
               ChatInputWidget(

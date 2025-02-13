@@ -7,12 +7,13 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
-import 'package:wayagram/features/chat/modals/start_conversation.dart';
+import 'package:wayagram/shared/features/chat/modal/start_conversation.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/conversation.dart';
 import 'package:wayagram/features/chat/widget/search.dart';
+import 'package:wayagram/shared/features/chat/widget/empty_conversation.dart';
 
 class ConversationScreen extends ConsumerStatefulWidget {
   const ConversationScreen({super.key});
@@ -74,7 +75,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     //? When watch this one
     return WayaScaffold(
       isLoading: false,
-      isScrollable: true,
+      isScrollable: conversationState.conversations.isNotEmpty,
       onRefresh: () async {
         await notifier.getChats(true);
         await notifier.getArchivedChats(true);
@@ -86,6 +87,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
         toolbarHeight: 70,
         leadingWidth: double.infinity,
         backgroundColor: WayaColors.white,
+        surfaceTintColor: Colors.transparent,
         leading: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -175,111 +177,120 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           ],
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          //? First, the search bar for the chats.
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SearchConversationWidget(
-              onTextChange: (value) {
-                notifier.setFilter(value);
-              },
-            ),
-          ),
-
-          // Some space.
-          const Gap(20),
-
-          //? If the chats are filtered...
-          if (conversationState.searchFilter.isNotEmpty) ...[
-            //* The title comes first.
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                "Search results",
-                style: WayaTextStyles.titleMedium.copyWith(
-                  color: WayaColors.greyColor500,
+      body: conversationState.conversations.isEmpty
+          ? SizedBox.expand(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 17),
+                child: EmptyConversationsWidget(
+                  showButton: true,
                 ),
               ),
-            ),
-
-            // Some space.
-            const Gap(5),
-
-            //? Now, the pinned chats.
-            ...List.generate(
-              conversationState.results.length,
-              (index) => ConversationWidget(
-                index: index,
-                chat: conversationState.results[index],
-                notifier: chatNotifier,
-                conversationNotifier: notifier,
-              ),
-            ),
-          ] else ...[
-            //? Second, the pinned chats.
-            if (conversationState.pinned.isNotEmpty) ...[
-              //* The title comes first.
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  "Pinned Chats",
-                  style: WayaTextStyles.titleMedium.copyWith(
-                    color: WayaColors.greyColor500,
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                //? First, the search bar for the chats.
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SearchConversationWidget(
+                    onTextChange: (value) {
+                      notifier.setFilter(value);
+                    },
                   ),
                 ),
-              ),
 
-              // Some space.
-              const Gap(5),
+                // Some space.
+                const Gap(20),
 
-              //? Now, the pinned chats.
-              ...List.generate(
-                conversationState.pinned.length,
-                (index) => ConversationWidget(
-                  index: index,
-                  chat: conversationState.pinned[index],
-                  notifier: chatNotifier,
-                  conversationNotifier: notifier,
-                ),
-              ),
+                //? If the chats are filtered...
+                if (conversationState.searchFilter.isNotEmpty) ...[
+                  //* The title comes first.
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      "Search results",
+                      style: WayaTextStyles.titleMedium.copyWith(
+                        color: WayaColors.greyColor500,
+                      ),
+                    ),
+                  ),
 
-              // Finally, more space.
-              const Gap(20),
-            ],
+                  // Some space.
+                  const Gap(5),
 
-            //* The title comes first.
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                "All Chats",
-                style: WayaTextStyles.titleMedium.copyWith(
-                  color: WayaColors.greyColor500,
-                ),
-              ),
+                  //? Now, the pinned chats.
+                  ...List.generate(
+                    conversationState.results.length,
+                    (index) => ConversationWidget(
+                      index: index,
+                      chat: conversationState.results[index],
+                      notifier: chatNotifier,
+                      conversationNotifier: notifier,
+                    ),
+                  ),
+                ] else ...[
+                  //? Second, the pinned chats.
+                  if (conversationState.pinned.isNotEmpty) ...[
+                    //* The title comes first.
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        "Pinned Chats",
+                        style: WayaTextStyles.titleMedium.copyWith(
+                          color: WayaColors.greyColor500,
+                        ),
+                      ),
+                    ),
+
+                    // Some space.
+                    const Gap(5),
+
+                    //? Now, the pinned chats.
+                    ...List.generate(
+                      conversationState.pinned.length,
+                      (index) => ConversationWidget(
+                        index: index,
+                        chat: conversationState.pinned[index],
+                        notifier: chatNotifier,
+                        conversationNotifier: notifier,
+                      ),
+                    ),
+
+                    // Finally, more space.
+                    const Gap(20),
+                  ],
+
+                  //* The title comes first.
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      "All Chats",
+                      style: WayaTextStyles.titleMedium.copyWith(
+                        color: WayaColors.greyColor500,
+                      ),
+                    ),
+                  ),
+
+                  // Some space.
+                  const Gap(5),
+
+                  //? Now, the pinned chats.
+                  ...List.generate(
+                    conversationState.unpinned.length,
+                    (index) => ConversationWidget(
+                      index: index,
+                      chat: conversationState.unpinned[index],
+                      notifier: chatNotifier,
+                      conversationNotifier: notifier,
+                    ),
+                  ),
+
+                  // Finally, more space.
+                  const Gap(20),
+                ]
+              ],
             ),
-
-            // Some space.
-            const Gap(5),
-
-            //? Now, the pinned chats.
-            ...List.generate(
-              conversationState.unpinned.length,
-              (index) => ConversationWidget(
-                index: index,
-                chat: conversationState.unpinned[index],
-                notifier: chatNotifier,
-                conversationNotifier: notifier,
-              ),
-            ),
-
-            // Finally, more space.
-            const Gap(20),
-          ]
-        ],
-      ),
     );
   }
 }

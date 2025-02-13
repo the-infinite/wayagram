@@ -13,7 +13,6 @@ import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
-import 'package:wayagram/features/explore/widgets/chat_card.dart';
 import 'package:wayagram/features/explore/widgets/donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
@@ -71,8 +70,8 @@ class _ExploreState extends ConsumerState<Explore> {
         isLoading: false,
         backgroundColor: wayaTheme.colorScheme.scaffoldColor,
         appBar: AppBar(
-          toolbarHeight: 70,
-          backgroundColor: wayaTheme.colorScheme.white,
+          toolbarHeight: kToolbarHeight,
+          backgroundColor: wayaTheme.colorScheme.scaffoldColor2,
           title: ExploreHeader(),
           actions: [
             Container(
@@ -152,8 +151,7 @@ class _ExploreState extends ConsumerState<Explore> {
                         MomentsWidget(
                           moment: moment,
                           onTap: () async {
-                            final userId =
-                                await WayaSecureDataSource().getUserId();
+                            final userId = await WayaSecureDataSource().getUserId();
                             if (userId != null) {
                               WayaNav.toNamed(ViewMoment.route, arguments: {
                                 "moments": [moment],
@@ -171,9 +169,7 @@ class _ExploreState extends ConsumerState<Explore> {
             ),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Have a buy request, just create a quote',
-                title: 'Get Quotation'),
+                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
@@ -189,9 +185,10 @@ class _ExploreState extends ConsumerState<Explore> {
                   Text(
                     "Create a Quote",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16),
+                      color: wayaTheme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),
@@ -217,9 +214,7 @@ class _ExploreState extends ConsumerState<Explore> {
             CategoriesFilterWidget(setCategory: (value) {
               ref.read(shopVmProvider.notifier).setCategory(value);
               for (String categoryId in value) {
-                ref
-                    .read(productEngagementProvider.notifier)
-                    .addCategory(categoryId, ProductPoint.searchPoint.value);
+                ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
               }
             }),
             const Gap(25),
@@ -230,10 +225,7 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Support a course that matters',
-                title: 'Donations'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Support a course that matters', title: 'Donations'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -253,9 +245,12 @@ class _ExploreState extends ConsumerState<Explore> {
             SharedPosts(),
             const Gap(25),
 
-            GroupedWidgetHeader(onTap: () {
-              WayaNav.toNamed('/pages');
-            }, subTitle: 'View and manage pages', title: 'Pages'),
+            GroupedWidgetHeader(
+                onTap: () {
+                  WayaNav.toNamed('/pages');
+                },
+                subTitle: 'View and manage pages',
+                title: 'Pages'),
             const Gap(25),
             Text(
               "My Pages",
@@ -295,9 +290,12 @@ class _ExploreState extends ConsumerState<Explore> {
                 }),
             const Gap(25),
 
-            GroupedWidgetHeader(onTap: () {
-              WayaNav.toNamed('/groups');
-            }, subTitle: 'View and manage groups', title: 'Groups'),
+            GroupedWidgetHeader(
+                onTap: () {
+                  WayaNav.toNamed('/groups');
+                },
+                subTitle: 'View and manage groups',
+                title: 'Groups'),
             const Gap(25),
             Text(
               "My Groups",
@@ -398,10 +396,7 @@ class _ExploreState extends ConsumerState<Explore> {
             const ConversationFeedWidget(isExpanded: false),
 
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Join Upcoming Activities',
-                title: 'University Got Talent'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),

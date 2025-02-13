@@ -18,7 +18,7 @@ class UserResource {
       final lastCached = cachedTimestamps[id]!;
 
       //? Cache again if you should.
-      if (now.difference(lastCached).inSeconds >= 240) {
+      if (now.difference(lastCached).inMinutes >= 30) {
         _getAndSave(id);
       }
 

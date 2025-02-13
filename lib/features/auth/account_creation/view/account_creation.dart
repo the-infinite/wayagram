@@ -40,21 +40,22 @@ class _AccountCreationState extends ConsumerState<AccountCreation> with SingleTi
     }
 
     return WayaScaffoldWithProgressBar(
-        isLoading: true,
-        isScrollable: _tabController.index == 1 ? true : false,
-        padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
-        tabsView: [
-          SelectAccount(
-            goToNextTab: updateSelected,
-          ),
-          PersonalFirstStepView(
-            goToNextTab: _goToNextTab,
-          ),
-          VerifyAccount(
-            goToNextTab: _goToNextTab,
-            type: "account-creation",
-          ),
-        ],
-        tabController: _tabController);
+      isLoading: true,
+      isScrollable: _tabController.index == 1 ? true : false,
+      padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
+      tabsView: [
+        SelectAccount(
+          goToNextTab: updateSelected,
+        ),
+        PersonalFirstStepView(
+          goToNextTab: _goToNextTab,
+        ),
+        VerifyAccount(
+          goToNextTab: _goToNextTab,
+          type: "account-creation",
+        ),
+      ],
+      tabController: _tabController,
+    );
   }
 }
