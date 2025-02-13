@@ -1,18 +1,56 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
-import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
+
+class WayaActionNav extends StatelessWidget {
+  final BuildContext context;
+  final VoidCallback onTap;
+  final Widget asset;
+  final String text;
+  final Color color;
+
+  const WayaActionNav({
+    super.key,
+    required this.context,
+    required this.onTap,
+    required this.asset,
+    required this.text,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          asset,
+          const Gap(4),
+          Text(
+            text,
+            style: TextStyle().wayaCopyWith(color: color, fontWeight: FontWeight.w500, fontSize: 12),
+          )
+        ],
+      ),
+    );
+  }
+}
 
 class ProfilePage extends ConsumerStatefulWidget {
   static const route = '/profile-page';
@@ -29,24 +67,23 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProviderStateMixin {
-  late TabController _accountActivityTabController;
+  final _pageController = ValueNotifier(0);
 
   @override
   void initState() {
     super.initState();
-    _accountActivityTabController = TabController(length: 5, vsync: this);
   }
 
   @override
   void dispose() {
-    _accountActivityTabController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final userState = ref.watch(profileVmProvider);
     final wayaTheme = Theme.of(context);
+    final size = MediaQuery.sizeOf(context);
 
     //? Return the component.
     return WayaScaffold(
@@ -54,130 +91,316 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
       appBarTrailing: Row(
         spacing: 12,
         children: [
+          //
           WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+
+          //
           WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
-          WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+
+          //
+          PopupMenuButton(
+            onSelected: (value) {},
+            iconColor: wayaTheme.colorScheme.greyColor400,
+            position: PopupMenuPosition.under,
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: WayaActionNav(
+                    context: context,
+                    onTap: () {
+                      Navigator.pop(context);
+                      WayaNav.toNamed('/groupSetting');
+                    },
+                    asset: WayaAssets.images.pages,
+                    text: "Group settings",
+                    color: wayaTheme.colorScheme.customBlack,
+                  ),
+                ),
+                PopupMenuItem<int>(
+                  value: 1,
+                  child: WayaActionNav(
+                    context: context,
+                    onTap: () {
+                      Share.share('${args['url']}');
+                    },
+                    asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                    text: "Share Group link",
+                    color: wayaTheme.colorScheme.customBlack,
+                  ),
+                ),
+              ];
+            },
+            child: WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+          ),
+
+          // This is fine.
           Gap(8)
         ],
       ),
       title: '',
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  WayaImage2(
-                    height: Get.height * 0.2,
-                  ),
+      body: WayaFutureSubscriber(
+        future: UserResource.getUserDetails(widget.id),
+        builder: (context, data) {
+          //? When this is undefined...
+          if (data == null) return const SizedBox();
 
-                  // Space.
-                  Gap(15),
+          // This is fine.
+          final user = data.$1;
+          final profile = data.$2;
+          final isSelf = user.id == ConversationState.self.id;
 
-                  //? How we go to the edit profile page.
-                  GestureDetector(
-                    onTap: () {
-                      WayaNav.toNamed(
-                        EditProfilePage.route,
-                      );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 20.w),
-                      padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
-                        color: wayaTheme.colorScheme.white,
-                        borderRadius: BorderRadius.circular(7.r),
-                      ),
-                      child: Text(
-                        'Edit Profile',
-                        style: wayaTheme.textTheme.labelSmall
-                            ?.wayaCopyWith(color: wayaTheme.colorScheme.primary600, fontWeight: FontWeight.w600),
+          //? The main component.
+          return ValueListenableBuilder(
+              valueListenable: _pageController,
+              builder: (context, selectedPage, _) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //? First, the picture set.
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        //? The
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            //? FIrst, the background image.
+                            CachedNetworkImage(
+                              errorWidget: (context, url, error) => Container(
+                                height: (size.height * 0.2).h,
+                                color: wayaTheme.colorScheme.greyColor200,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.image,
+                                    color: wayaTheme.colorScheme.greyColor600,
+                                  ),
+                                ),
+                              ),
+                              fit: BoxFit.fill,
+                              width: double.infinity,
+                              height: (size.height * 0.2).h,
+                              imageUrl: profile.coverImage.toString(),
+                            ),
+
+                            // Space.
+                            const Gap(15),
+
+                            //? How we go to the edit profile page.
+                            if (isSelf)
+                              GestureDetector(
+                                onTap: () {
+                                  WayaNav.toNamed(
+                                    EditProfilePage.route,
+                                  );
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 20.w),
+                                  padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: wayaTheme.colorScheme.primary600,
+                                      width: 1.5,
+                                    ),
+                                    color: wayaTheme.colorScheme.white,
+                                    borderRadius: BorderRadius.circular(7.r),
+                                  ),
+                                  child: Text(
+                                    'Edit Profile',
+                                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                      color: wayaTheme.colorScheme.primary600,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              )
+                          ],
+                        ),
+
+                        //? The user's profile picture.
+                        Positioned(
+                          left: 16.w,
+                          bottom: 3.h,
+                          child: ChatProfilePicture(
+                            user: user,
+                            radius: 28.r,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Some.
+                    const Gap(10),
+
+                    //? Second, the picture set.
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //? First, the name of the user in question.
+                          Text(
+                            user.fullname,
+                            style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: wayaTheme.colorScheme.black,
+                            ),
+                          ),
+
+                          // Some space.
+                          const Gap(5),
+
+                          //? Second, the username of this user in question.
+                          if (profile.username != null) ...[
+                            Text(
+                              '@${profile.username}',
+                              style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                color: wayaTheme.colorScheme.greyColor500,
+                              ),
+                            ),
+
+                            // Some space.
+                            const Gap(5),
+                          ],
+
+                          //? Third, the user's bio.
+                          if (profile.bio != null) ...[
+                            Text(
+                              profile.bio!,
+                              style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                color: wayaTheme.colorScheme.greyColor700,
+                              ),
+                            ),
+                            const Gap(5),
+                          ],
+
+                          //? Fourth the profile overview.
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            spacing: 5,
+                            children: [
+                              //? Users following.
+                              WayaRichText(
+                                title1: WayaValueHelper.formatNumber(0),
+                                title2: ' Following',
+                                style1: wayaTheme.textTheme.bodySmall?.copyWith(
+                                  color: wayaTheme.colorScheme.black,
+                                  fontSize: 11,
+                                ),
+                                style2: wayaTheme.textTheme.bodySmall?.copyWith(
+                                  color: wayaTheme.colorScheme.greyColor500,
+                                  fontSize: 11,
+                                ),
+                              ),
+
+                              //? Followers.
+                              WayaRichText(
+                                title1: WayaValueHelper.formatNumber(0),
+                                title2: ' Followers',
+                                style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.black,
+                                  fontSize: 11,
+                                ),
+                                style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.greyColor500,
+                                  fontSize: 11,
+                                ),
+                              ),
+
+                              //? Posts.
+                              WayaRichText(
+                                title1: WayaValueHelper.formatNumber(0),
+                                title2: ' Posts',
+                                style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.black,
+                                  fontSize: 11,
+                                ),
+                                style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.greyColor500,
+                                  fontSize: 11,
+                                ),
+                              ),
+
+                              //? If this is me...
+                              if (isSelf)
+                                WayaRichText(
+                                  title1: 'Joined: ',
+                                  title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
+                                  style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                    color: wayaTheme.colorScheme.black,
+                                    fontSize: 11,
+                                  ),
+                                  style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                    color: wayaTheme.colorScheme.greyColor500,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                  )
-                ],
-              ),
 
-              //? The user's profile picture.
-              Positioned(
-                left: 16.w,
-                bottom: 3.h,
-                child: WayaDp(
-                  radius: 28.r,
-                ),
-              ),
-            ],
-          ),
-          Gap(10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
-            child: WayaFutureSubscriber(
-                future: UserResource.getSocialProfile(widget.id),
-                builder: (context, user) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //? First, the name of the user in question.
-                      Text(
-                        ConversationState.self.fullname,
-                        style: wayaTheme.textTheme.bodyMedium
-                            ?.wayaCopyWith(fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.black),
-                      ),
-                      Text(
-                        userState.userAccountModel?.data?.userdata?.profile?.username ?? '',
-                        style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-                      ),
-                      Gap(10),
-                      Text(
-                        userState.userAccountModel?.data?.userdata?.profile?.bio ?? '',
-                        style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700),
-                      ),
-                      Gap(10),
-                      buildProfileOverview(wayaTheme, userState),
-                    ],
-                  );
-                }),
-          ),
-          Gap(20),
-        ],
+                    // Some space.
+                    const Gap(10),
+
+                    //? The padding here.
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //?
+                        WayaTabButton(
+                          isSelected: selectedPage == 0,
+                          text: 'Posts',
+                          onTap: () {
+                            if (_pageController.value == 0) return;
+                            _pageController.value = 0;
+                          },
+                        ),
+
+                        // ?
+                        WayaTabButton(
+                          isSelected: selectedPage == 1,
+                          text: 'Reposts',
+                          onTap: () {
+                            if (_pageController.value == 1) return;
+                            _pageController.value = 1;
+                          },
+                        ),
+
+                        //?
+                        WayaTabButton(
+                          isSelected: selectedPage == 2,
+                          text: 'Polls',
+                          onTap: () {
+                            if (_pageController.value == 2) return;
+                            _pageController.value = 2;
+                          },
+                        ),
+
+                        //?
+                        WayaTabButton(
+                          isSelected: selectedPage == 3,
+                          text: 'Donations',
+                          onTap: () {
+                            if (_pageController.value == 3) return;
+                            _pageController.value = 3;
+                          },
+                        ),
+
+                        WayaTabButton(
+                          isSelected: selectedPage > 4,
+                          text: 'More',
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              });
+        },
       ),
-    );
-  }
-
-  Widget buildProfileOverview(ThemeData wayaTheme, ProfileState userState) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        WayaRichText(
-          title1: '0',
-          title2: ' Following',
-          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-        ),
-        WayaRichText(
-          title1: '0',
-          title2: ' Followers',
-          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-        ),
-        WayaRichText(
-          title1: '0',
-          title2: ' Posts',
-          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-        ),
-        WayaRichText(
-          title1: 'Date Joined: ',
-          title2: WayaHelpers.formatDateMonthYear(
-              userState.userProfileModel?.data?.createdAt.toString() ?? DateTime.now().toString()),
-          style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.black),
-          style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
-        ),
-      ],
     );
   }
 }

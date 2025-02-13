@@ -36,7 +36,7 @@ class WayaDateHelper {
   }
 
   static String getMonthlyTimestamp(DateTime timestamp) {
-    return DateFormat("MMM, yyyy").format(timestamp.toLocal());
+    return DateFormat("MMMM yyyy").format(timestamp.toLocal());
   }
 
   static String getYearlyTimestamp(DateTime timestamp) {
