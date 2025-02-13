@@ -88,7 +88,6 @@ import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
-import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
 
 class WayaAppRoutes {
@@ -131,7 +130,7 @@ class WayaAppRoutes {
     VerifyTransactionScreen.route: () => VerifyTransactionScreen(),
     AllTransactionHistory.route: () => AllTransactionHistory(),
     BankTransferScreen.route: () => BankTransferScreen(),
-    ProfilePage.route: () => ProfilePage(),
+    ProfilePage.route: () => ProfilePage(id: WayaNav.search['id'].toString()),
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),
     AddProduct.route: () => AddProduct(),
@@ -190,40 +189,33 @@ class WayaAppRoutes {
     EditPageInfo.route: () => EditPageInfo(),
     AddTeamMember.route: () => AddTeamMember(),
     PrivateGroup.route: () => PrivateGroup(),
-    SingleChatScreen.route: () =>
-        SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
     GroupSetting.route: () => GroupSetting(),
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
     MediaMoment.route: () => MediaMoment(),
     MyMoments.route: () => MyMoments(),
     ViewMoment.route: () => ViewMoment(),
-    VideoTrimmerScreen.route:() => VideoTrimmerScreen(),
+    VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
     EditPost.route: () => EditPost(
           initialContent: '',
           initialImageUrl: '',
           title: '',
           postId: '',
         ),
-    PublicGroup.route: ()=> PublicGroup(),
-    EditPageInfo.route: ()=> EditPageInfo(),
     EditGroupInfo.route: ()=> EditGroupInfo(),
-    AddTeamMember.route: ()=> AddTeamMember(),
     AddGroupMember.route: ()=> AddGroupMember(),
-    PrivateGroup.route: ()=> PrivateGroup(),
-    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
-    DisplayFeed.route:() => DisplayFeed(),
-    GroupSetting.route: ()=> GroupSetting(),
-    AllUpcomingEvents.route:() => AllUpcomingEvents(),
-    EditPost.route: ()=> EditPost(initialContent: '', initialImageUrl: '', title: '', postId: '',),
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getSingleChatRoute(String id) =>
-      "${SingleChatScreen.route}?id=$id";
+  static String getSingleChatRoute(String id) => "${SingleChatScreen.route}?id=$id";
+
+  /// Helper that shows an example of the generator route pattern with GetX and
+  /// a little bit of hard coded magic.
+  static String getProfileRoute(String id) => "${ProfilePage.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages => routes.entries.map((entry) {

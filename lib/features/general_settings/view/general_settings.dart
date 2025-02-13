@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
-import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
@@ -51,16 +52,28 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
+              //
               GeneralSettingsOptionModel(
-                  title: 'Edit Profile', iconPath: 'edit', onTap: () => WayaNav.toNamed(ProfilePage.route)),
+                title: 'Edit Profile',
+                iconPath: 'edit',
+                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id!)),
+              ),
+
+              //
               GeneralSettingsOptionModel(
-                  title: 'Change Password',
-                  iconPath: 'password',
-                  onTap: () => WayaNav.toNamed('/change-password-gen-set')),
+                title: 'Change Password',
+                iconPath: 'password',
+                onTap: () => WayaNav.toNamed(
+                  '/change-password-gen-set',
+                ),
+              ),
+
+              //
               GeneralSettingsOptionModel(
-                  title: 'Change Transaction PIN',
-                  iconPath: 'password',
-                  onTap: () => WayaNav.toNamed('/change-pin-page')),
+                title: 'Change Transaction PIN',
+                iconPath: 'password',
+                onTap: () => WayaNav.toNamed('/change-pin-page'),
+              ),
             ],
           ),
           GeneralSettingsOptionTile(
