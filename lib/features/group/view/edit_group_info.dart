@@ -94,7 +94,6 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
             } else{
                 WayaNav.toNamed('/groups');
                 ref.watch(createGroupProvider.notifier).reset();
-
               }
             }
           } : null,
@@ -274,7 +273,6 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                        if (viewModel.groupDescription.text.isEmpty) {
                          return 'Description is required';
                        }
-
                        return null;
                      }, builder: (formState) {
                        return Column(
