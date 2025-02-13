@@ -11,6 +11,7 @@ import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
 import 'package:wayagram/features/event/data/model/single_event_response_model.dart';
+import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
 
 class EventVm extends StateNotifier<EventState> {
   final Ref ref;
@@ -117,6 +118,10 @@ class EventVm extends StateNotifier<EventState> {
       final response =
           await _eventRepository.joinEvent(userId: userId!, eventId: eventId);
       Navigator.of(context).pop();
+      final provider = ref.read(eventEngagementProvider.notifier);
+
+      provider.addLocation(event.location, EventPoint.joinEvent.value);
+      provider.addEventType(event.eventType, EventPoint.joinEvent.value);
       if (response.success && context.mounted) {
         if (context.mounted) {
           WayaUtils.showNotice(

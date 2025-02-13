@@ -14,8 +14,6 @@ class EngagementNotifier
     state = {...state};
   }
 
-
-
   void stopTracking(ServiceType service) {
     final engagementData = state[service]!;
     engagementData.addTime(0);
@@ -26,6 +24,18 @@ class EngagementNotifier
       ServiceType service, String category, int points) {
     final engagementData = state[service]!;
     engagementData.addProductCategory(category, points);
+    state = {...state};
+  }
+
+  void monitorEventLocation(ServiceType service, String loc, int points) {
+    final engagementData = state[service]!;
+    engagementData.addEventLocation(loc, points);
+    state = {...state};
+  }
+
+  void monitorEventType(ServiceType service, String type, int points) {
+    final engagementData = state[service]!;
+    engagementData.addEventType(type, points);
     state = {...state};
   }
 

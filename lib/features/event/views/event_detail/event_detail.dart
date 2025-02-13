@@ -16,6 +16,7 @@ import 'package:wayagram/features/event/views/event_detail/event_detail_widget.d
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
 
 class EventDetail extends ConsumerStatefulWidget {
   static const route = "/event-detail";
@@ -35,7 +36,22 @@ class _EventDetailState extends ConsumerState<EventDetail> {
       final EventDoc event =
           ModalRoute.of(context)!.settings.arguments as EventDoc;
       ref.read(eventVmProvider.notifier).getSingleEvent(event);
+
+      final provider = ref.read(eventEngagementProvider.notifier);
+
+      provider.startViewingEvent();
+
+      provider.addLocation(event.location, EventPoint.viewEvent.value);
+      provider.addEventType(event.eventType, EventPoint.viewEvent.value);
     });
+  }
+
+  // Stop tracking when the page is closed
+  @override
+  void dispose() {
+    ref.read(eventEngagementProvider.notifier).stopViewingEvent();
+
+    super.dispose();
   }
 
   @override
@@ -43,8 +59,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     // TODO: implement build
     final viewModel = ref.watch(eventVmProvider);
     final wayaTheme = Theme.of(context);
-     final EventDoc event =
-          ModalRoute.of(context)!.settings.arguments as EventDoc;
+    final EventDoc event =
+        ModalRoute.of(context)!.settings.arguments as EventDoc;
     return WayaScaffold(
         isLoading: false,
         isScrollable: false,
@@ -76,10 +92,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
               ],
             ),
             const Gap(10),
-            if (_selectedIndex == 0)
-              EventDetailWidget(eventId: event.id),
-            if (_selectedIndex == 1)
-              EventAttendees(eventId: event.id),
+            if (_selectedIndex == 0) EventDetailWidget(eventId: event.id),
+            if (_selectedIndex == 1) EventAttendees(eventId: event.id),
           ],
         ),
         bottomNavigationBar: Container(

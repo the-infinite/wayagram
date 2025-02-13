@@ -77,7 +77,7 @@ class MomentRepository extends BaseRepository {
     if (caption != null) payload['caption'] = caption;
     if (color != null) payload['color'] = color;
     if (fontType != null) payload['fontType'] = fontType;
-    return patch("$serviceUrl/moments/$momentId", payload);
+    return patch("$serviceUrl/moments/$momentId", payload, );
   }
 
   ///moments/:momentId

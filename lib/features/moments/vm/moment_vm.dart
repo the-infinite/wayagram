@@ -309,6 +309,22 @@ class MomentVm extends StateNotifier<MomentState> {
       } else if (state.mediaUrl != null) {
         content = state.mediaUrl!;
       }
+    } else if (state.type == StatusType.media &&
+        state.mediaType == MediaType.video) {
+      contentType = 'video';
+      if (state.selectedFile != null) {
+        String? publicUrl = await WayaUtils.uploadFile(
+            repository: _uploadFileRepository, file: selectedAsset!);
+
+        if (publicUrl != null) {
+          content = publicUrl;
+        } else {
+          // image uploading failed
+          state = state.copyWith(isCreatingMoment: false);
+        }
+      } else if (state.mediaUrl != null) {
+        content = state.mediaUrl!;
+      }
     }
 
     try {
@@ -363,6 +379,7 @@ class MomentVm extends StateNotifier<MomentState> {
             MomentResponseModel.fromJson(response.data);
 
         moments = responseModel.data.docs;
+        moments.where((m) => m.active).toList();
         hasNextPage = responseModel.data.hasNextPage;
         state = state.copyWith(myMoments: moments);
       }
@@ -491,8 +508,9 @@ class MomentVm extends StateNotifier<MomentState> {
 
       if (response.success) {
         print("chimelu oooooooooooooooo");
-         print("fwefwefwefwefwefwefwfwefwefwefwefwefwefwfwefwefwe");
-          print("fwefwefwefwefwefwefwfwefwefwefwefwefwefwfwefwefwe ${response.data}");
+        print("fwefwefwefwefwefwefwfwefwefwefwefwefwefwfwefwefwe");
+        print(
+            "fwefwefwefwefwefwefwfwefwefwefwefwefwefwfwefwefwe ${response.data}");
         MomentResponseModel responseModel =
             MomentResponseModel.fromJson(response.data);
         state = state.copyWith(moments: responseModel.data.docs);
@@ -512,8 +530,18 @@ class MomentVm extends StateNotifier<MomentState> {
             moment.content == 'video' ? MediaType.video : MediaType.image,
         backgroundColor: MomentHelper.hexToColor(moment.color ?? '#000000'),
         text: moment.contentType == 'text' ? moment.content : '',
-        textStyle: MomentHelper.textStyleFromJson(moment.fontType!),
+        textStyle: moment.fontType != null
+            ? MomentHelper.textStyleFromJson(moment.fontType!)
+            : GoogleFonts.roboto(
+                fontSize: 32,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
         mediaUrl: moment.contentType != 'text' ? moment.content : '');
+
+    if (moment.contentType != 'text') {
+      WayaNav.toNamed(MediaMoment.route);
+    }
   }
 }
 

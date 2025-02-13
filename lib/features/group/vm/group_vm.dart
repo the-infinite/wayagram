@@ -15,7 +15,7 @@ import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/pages/data/model/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
-import 'package:wayagram/features/post/model/media_upload_model.dart';
+
 import 'package:wayagram/shared/features/file/repo/default.dart';
 
 import '../data/repo/group_repository.dart';

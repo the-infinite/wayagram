@@ -6,6 +6,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/data/model/moment_state.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/widgets/post_moment_widget.dart';
@@ -19,9 +20,18 @@ class Moment extends ConsumerStatefulWidget {
 }
 
 class _MomentViewState extends ConsumerState<Moment> {
-
-
-
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final MomentData? args =
+          ModalRoute.of(context)?.settings.arguments as MomentData?;
+      if (args != null) {
+        print("${args.active}");
+        ref.read(momentVmProvider.notifier).initializeEditMoment(args);
+      }
+    });
+    super.initState();
+  }
 
   Future<void> _openImagePicker() async {
     await ref.read(momentVmProvider.notifier).pickMedia(context);
@@ -32,12 +42,12 @@ class _MomentViewState extends ConsumerState<Moment> {
     final status = ref.watch(momentVmProvider);
     final wayaTheme = Theme.of(context);
 
-     if (status.type == StatusType.media &&
-         
-          status.isImagePickerOpen) {
-        _openImagePicker();
-      }
+    if (status.type == StatusType.media && status.isImagePickerOpen) {
+      _openImagePicker();
+    }
+
     
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -136,6 +146,7 @@ class _MomentViewState extends ConsumerState<Moment> {
           style: status.textStyle,
           decoration: InputDecoration(
             border: InputBorder.none,
+            
             counterText: '',
             hintText: 'Type your moment',
             hintStyle: status.textStyle.copyWith(
@@ -151,6 +162,8 @@ class _MomentViewState extends ConsumerState<Moment> {
           onSubmitted: (value) {
             ref.read(momentVmProvider.notifier).submitMoment();
           },
+          controller: TextEditingController(text: status.text)
+          ..selection = TextSelection.collapsed(offset: status.text.length),
         ),
       ),
     );

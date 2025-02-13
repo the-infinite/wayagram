@@ -20,6 +20,8 @@ class MediaMoment extends ConsumerWidget {
     final status = ref.watch(momentVmProvider);
     final wayaTheme = Theme.of(context);
 
+     print("wefwefwef ${status.mediaUrl}");
+
     return WillPopScope(
       onWillPop: () async {
         ref.read(momentVmProvider.notifier).setImagePickerState(true);
@@ -49,9 +51,10 @@ class MediaMoment extends ConsumerWidget {
 }
 
 class VideoPreview extends ConsumerStatefulWidget {
-  final File file;
+  final File? file;
+  final String? mediaUrl;
 
-  const VideoPreview({super.key, required this.file});
+  const VideoPreview({super.key, this.file, this.mediaUrl});
 
   @override
   ConsumerState<VideoPreview> createState() => _VideoPreviewState();
@@ -68,7 +71,9 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
   }
 
   Future<void> _initializeVideo() async {
-    _controller = VideoPlayerController.file(widget.file)
+    _controller = widget.file == null
+        ? VideoPlayerController.networkUrl(Uri.parse(widget.mediaUrl!))
+        : VideoPlayerController.file(widget.file!)
       ..initialize().then((_) {
         setState(() {
           _isInitialized = true;
@@ -123,15 +128,15 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
   }
 }
 
-
 Widget mediaPreview({
   required BuildContext context,
   required WidgetRef ref,
   required MomentState status,
 }) {
+ 
   final wayaTheme = Theme.of(context);
 
-  if (status.selectedFile == null) {
+  if (status.selectedFile == null && status.mediaUrl == null) {
     return Center(
       child: Text(
         'Select Media',
@@ -145,11 +150,16 @@ Widget mediaPreview({
     children: [
       // Media Preview
       status.mediaType == MediaType.video
-          ? VideoPreview(file: status.selectedFile!)
-          : Image.file(
-              status.selectedFile!,
-              fit: BoxFit.cover,
-            ),
+          ? VideoPreview(file: status.selectedFile!, mediaUrl: status.mediaUrl)
+          : status.selectedFile == null
+              ? Image.network(
+                  status.mediaUrl!,
+                  fit: BoxFit.cover,
+                )
+              : Image.file(
+                  status.selectedFile!,
+                  fit: BoxFit.cover,
+                ),
 
       // Top Controls
       Positioned(
@@ -176,13 +186,17 @@ Widget mediaPreview({
                   IconButton(
                     icon: SvgPicture.asset(WayaAssets.icons.mICrop.path),
                     onPressed: () {
-                      ref.read(momentVmProvider.notifier).cropImage(context, ref);
+                      ref
+                          .read(momentVmProvider.notifier)
+                          .cropImage(context, ref);
                     },
                   ),
                 IconButton(
                   icon: SvgPicture.asset(WayaAssets.icons.mICap.path),
                   onPressed: () {
-                    ref.read(momentVmProvider.notifier).toggleCaptionVisibility();
+                    ref
+                        .read(momentVmProvider.notifier)
+                        .toggleCaptionVisibility();
                   },
                 ),
               ],

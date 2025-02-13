@@ -9,8 +9,8 @@ class EventRepository extends BaseRepository {
     return post("$serviceUrl/events/create", payload.toJson(), formdata: true);
   }
 
-  Future<WayaRequestResponse> getEvents() {
-    return get("$serviceUrl/events/get-event");
+  Future<WayaRequestResponse> getEvents({int? limit = 100, int? page = 1}) {
+    return get("$serviceUrl/events/get-event?limit=$limit&page=$page");
   }
 
   Future<WayaRequestResponse> getUserEvents(
