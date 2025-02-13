@@ -112,7 +112,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
                       Navigator.pop(context);
                       WayaNav.toNamed('/groupSetting');
                     },
-                    asset: WayaAssets.images.pages,
+                    asset: WayaAssets.images.pages.setting.svg(),
                     text: "Group settings",
                     color: wayaTheme.colorScheme.customBlack,
                   ),
@@ -122,7 +122,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with SingleTickerProv
                   child: WayaActionNav(
                     context: context,
                     onTap: () {
-                      Share.share('${args['url']}');
+                      Share.share('Hello');
                     },
                     asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
                     text: "Share Group link",
