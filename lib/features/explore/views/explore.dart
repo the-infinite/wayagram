@@ -208,7 +208,7 @@ class _ExploreState extends ConsumerState<Explore> {
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {
-                  WayaNav.toNamed(BottomView.route, arguments: 1);
+                    Navigator.pushNamed(context, BottomView.route, arguments: 1);
                 },
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
@@ -386,7 +386,7 @@ class _ExploreState extends ConsumerState<Explore> {
             //? I have plugged this in here for you. Gbayii omo iyami
             GroupedWidgetHeader(
               onTap: () {
-                WayaNav.replaceNamed(BottomView.route, arguments: 4);
+                  Navigator.pushNamed(context, BottomView.route, arguments: 4);
               },
               subTitle: 'Connect with friends and communities',
               title: 'Chats & Calls',
