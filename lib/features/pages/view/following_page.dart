@@ -97,7 +97,7 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
 
                       ],),
                       subtitle:  Text(
-                        '48.6k Followers',
+                        '${page?.followerCount} ${page?.followerCount==0 || page?.followerCount == 1?'Follower':'Followers'}',
                         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,

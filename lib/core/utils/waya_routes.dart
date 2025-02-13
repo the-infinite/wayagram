@@ -18,6 +18,7 @@ import 'package:wayagram/features/general_settings/profile/view/profile_page.dar
 import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
+import 'package:wayagram/features/group/view/edit_group_info.dart';
 import 'package:wayagram/features/group/view/group_setting.dart';
 import 'package:wayagram/features/group/view/group_suggestion.dart';
 import 'package:wayagram/features/group/view/groups.dart';
@@ -202,7 +203,8 @@ class WayaAppRoutes {
           title: '',
           postId: '',
         ),
-    AddGroupMember.route: () => AddGroupMember(),
+    EditGroupInfo.route: ()=> EditGroupInfo(),
+    AddGroupMember.route: ()=> AddGroupMember(),
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
   };

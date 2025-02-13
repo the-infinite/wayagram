@@ -3,18 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 import '../../../core/theme/waya_colors.dart';
-import '../../pages/empty_state.dart';
 
 class ApprovalScreen extends ConsumerStatefulWidget {
   final String groupId;
@@ -184,24 +181,26 @@ class PostEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return Container(
-      padding: EdgeInsets.all(30),
-      child: EmptyState(
-          hasButton: false,
-          onTap: () {
-            //WayaNav.toNamed(CreatePost.route);
-          },
-          buttontext: 'Create a Post',
-          buttonTrailingIcon: SvgPicture.asset(
-            WayaAssets.icons.addEventIcon.path,
-            colorFilter:
-            ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
-          ),
-          assetImage: Image.asset(
-            WayaAssets.images.emptyEvent.path,
-            scale: 1.5,
-          ),
-          message: "You don't have approvals yet"),
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: EmptyState(
+            hasButton: false,
+            onTap: () {
+              //WayaNav.toNamed(reatePost.route);
+            },
+            //buttontext: 'Create a Post',
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You don't have approvals yet"),
+      ),
     );
   }
 }
