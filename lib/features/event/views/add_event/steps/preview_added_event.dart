@@ -39,21 +39,23 @@ class PreviewAddedEvent extends ConsumerWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: viewModel.eventImage != null
-              ?  viewModel.eventImage!.file != null ? Image.file(
-                  viewModel.eventImage!.file!,
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: double.infinity,
-                  filterQuality: FilterQuality.high,
-                  scale: 1,
-                ) : Image.network(
-                  viewModel.eventImage!.url,
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: double.infinity,
-                  filterQuality: FilterQuality.high,
-                  scale: 1,
-                )
+              ? viewModel.eventImage!.file != null
+                  ? Image.file(
+                      viewModel.eventImage!.file!,
+                      fit: BoxFit.cover,
+                      height: 200,
+                      width: double.infinity,
+                      filterQuality: FilterQuality.high,
+                      scale: 1,
+                    )
+                  : Image.network(
+                      viewModel.eventImage!.url,
+                      fit: BoxFit.cover,
+                      height: 200,
+                      width: double.infinity,
+                      filterQuality: FilterQuality.high,
+                      scale: 1,
+                    )
               : SizedBox.shrink(),
         ),
         const Gap(10),
@@ -157,7 +159,9 @@ class PreviewAddedEvent extends ConsumerWidget {
         const Gap(30),
         WayaButton(
             centerWidget: LoadingState(
-                loading: viewModel.isLoading, text: viewModel.isEditingMode ? "Update Event" : "Create Event"),
+                loading: viewModel.isLoading,
+                text:
+                    viewModel.isEditingMode ? "Update Event" : "Create Event"),
             callback: !viewModel.isLoading
                 ? () {
                     ref

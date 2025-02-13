@@ -5,12 +5,6 @@ class GroupDefault {
   GroupDefault({required this.name, required this.numberOfFollowers});
 }
 
-class EventDefault {
-  final String title;
-  final String locAndTime;
-
-  EventDefault({required this.locAndTime, required this.title});
-}
 
 class ChatDefault {
   final String name;
@@ -55,12 +49,6 @@ final List<GroupDefault> groupList = [
   GroupDefault(name: "Real Madrid", numberOfFollowers: 3500),
 ];
 
-final List<EventDefault> eventList = [
-  EventDefault(
-      locAndTime: "Oriental hotel, Jan 10, 04:40pm",
-      title: 'Cowrywise Championship'),
-  EventDefault(locAndTime: "5 star hotel, Jan 10, 04:40pm", title: 'MTN Quiz'),
-];
 
 final List<ChatDefault> chatList = [
   ChatDefault(

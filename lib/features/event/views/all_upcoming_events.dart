@@ -40,7 +40,7 @@ class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents>
   
     return WayaScaffold(
         isLoading: false,
-        isScrollable: true,
+        isScrollable: false,
         title: "Upcoming Events",
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +50,7 @@ class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents>
               search: searchController,
             ),
             const Gap(25),
-            PaginatedDataView<EventDoc>(
+           Expanded(child:  PaginatedDataView<EventDoc>(
                 uniqueKey: 'upcoming-events',
                 emptyState: EmptyState(
                     assetImage:
@@ -62,7 +62,7 @@ class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents>
                   child: CircularProgressIndicator(),
                 )),
                 fetchData: ref.read(eventVmProvider.notifier).getEventWithStatus,
-                result: (data) {
+                result: (data,s) {
                   final filteredUpcomingEvents = WayaUtils.search<EventDoc>(
                       data,
                       ['title', 'organizerName', 'eventType', 'location'],
@@ -74,7 +74,7 @@ class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents>
                   itemBuilder: (context, index) {
                     return EventWidget(event: filteredUpcomingEvents[index]);
                   });
-                })
+                }))
           ],
         ));
   }

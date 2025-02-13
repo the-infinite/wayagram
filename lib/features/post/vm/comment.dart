@@ -17,7 +17,6 @@ import 'package:wayagram/features/pages/data/model/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
-import 'package:wayagram/features/post/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
 import 'package:http/http.dart' as http;
 import 'package:wayagram/features/post/state/comment.dart';

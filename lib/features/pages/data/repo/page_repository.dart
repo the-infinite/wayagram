@@ -4,7 +4,8 @@ import 'package:wayagram/core/service/repos/base_repository.dart';
 class PageRepository extends BaseRepository {
   static const serviceUrl = "wayagram-graph/api/v2";
 
-  Future<WayaRequestResponse> createPost(String content, List<String> images, postType) {
+  Future<WayaRequestResponse> createPost(
+      String content, List<String> images, postType) {
     final payload = {
       "content": content,
       "type": "generic",
@@ -42,9 +43,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> sharePost(postId) {
-    final payload = {
-      "shareType": "external"
-    };
+    final payload = {"shareType": "external"};
     return post("$serviceUrl/posts/share/$postId", payload);
   }
 
@@ -93,15 +92,11 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> removeRepost(String id) async {
     return delete("$serviceUrl/posts/$id/comment");
-
   }
 
-  Future<WayaRequestResponse> editPost(String content, List<String> images, postType, String postId) {
-    final payload = {
-      "content": content,
-      "media": images,
-      "privacy": postType
-    };
+  Future<WayaRequestResponse> editPost(
+      String content, List<String> images, postType, String postId) {
+    final payload = {"content": content, "media": images, "privacy": postType};
 
     return patch("$serviceUrl/posts/$postId", payload);
   }
@@ -110,7 +105,8 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/posts/$postId/like", postId);
   }
 
-  Future<WayaRequestResponse> removeReaction(String postId, String? reactionId) async {
+  Future<WayaRequestResponse> removeReaction(
+      String postId, String? reactionId) async {
     return delete("$serviceUrl/posts/$postId/like");
     // return getBooleanResponse(response);
   }
@@ -131,19 +127,32 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/follow/followers");
   }
 
-  Future<WayaRequestResponse> createPage(String pageName,
-      String pageDesc, bool pageType,
-      String coverImage, String profileImage ) {
+  Future<WayaRequestResponse> createPage(String pageName, String pageDesc,
+      bool pageType, String coverImage, String profileImage) {
     final payload = {
       "name": pageName,
       "description": pageName,
+
       "isPublic": pageType, //Optional field, if you leave it blank it defaults to false
       //"isOpen": false, // this defaults to true if it is not inserted
       "coverImage":  coverImage,
       "profileImage":  profileImage
+
     };
 
     return post("$serviceUrl/pages", payload);
+  }
+
+
+  Future<WayaRequestResponse> getAllPosts({int? limit = 200}) async {
+    return get(
+        "$serviceUrl/posts/?status=active&&orderBy=popularityScore&orderDirection=DESC&privacy=public&limit=$limit");
+  }
+
+  Future<WayaRequestResponse> getAllPostsWithCategory(
+      {required String category, required int page, int? limit =5}) async {
+    return get(
+        "$serviceUrl/posts/?status=active&&orderBy=popularityScore&orderDirection=DESC&privacy=public&categories=$category&page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getAllPages(ownerId) {

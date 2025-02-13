@@ -6,10 +6,11 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 class PaginatedDataView<T> extends ConsumerStatefulWidget {
   final String uniqueKey;
   final Future<PaginatedResult<T>?> Function(int page) fetchData;
-  final Widget Function(List<T>) result;
+  final Widget Function(List<T>, ScrollController) result;
   final Widget? loadingState;
   final Widget? emptyState;
   final bool hasSearchFilter;
+  final Widget? trailingWidget;
 
   const PaginatedDataView(
       {super.key,
@@ -17,6 +18,7 @@ class PaginatedDataView<T> extends ConsumerStatefulWidget {
       this.hasSearchFilter = false,
       this.emptyState,
       required this.fetchData,
+      this.trailingWidget,
       this.loadingState,
       required this.result});
 
@@ -42,10 +44,11 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
   }
 
   void _scrollListener() {
-    // log("pixel ${_scrollController.position.pixels}");
-    // log("scroll ${_scrollController.position.maxScrollExtent}");
+    print("efwefwefwef");
+    print("pixel ${_scrollController.position.pixels}");
+    print("scroll ${_scrollController.position.maxScrollExtent}");
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent) {
+        _scrollController.position.maxScrollExtent - 100) {
       ref
           .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
           .loadMoreItems(widget.fetchData);
@@ -71,15 +74,19 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
       );
     }
 
-    return Column(
+    return ListView(
+      controller: _scrollController,
+      physics: AlwaysScrollableScrollPhysics(),
       children: [
+        widget.trailingWidget ?? widget.trailingWidget!,
         RefreshIndicator(
-            onRefresh: () async {
-              ref
-                  .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
-                  .initialize(widget.fetchData);
-            },
-            child: widget.result(state.data as List<T>)),
+          onRefresh: () async {
+            ref
+                .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
+                .initialize(widget.fetchData);
+          },
+          child: widget.result(state.data.cast<T>(), _scrollController),
+        ),
         if (state.isLoading)
           widget.loadingState ??
               Center(

@@ -115,7 +115,7 @@ class _AddDocumentWidgetState extends ConsumerState<AddDocumentWidget> {
                         fontWeight: FontWeight.w600,
                         fontSize: 12),
                     height: 35,
-                    horizontalPadding: 8,
+                    horizontalPadding: 10,
                     radius: 6,
                   )
           ],
