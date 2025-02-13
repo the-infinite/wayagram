@@ -56,13 +56,36 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
         : state.topPosts.sublist(0, min(state.topPosts.length, 3));
 
     Future<void> inValidateQuery() async {
-      ref.read(servicesprovider.notifier).getEngagedPost();
+      //ref.read(servicesprovider.notifier).getEngagedPost();
       // ref.read(servicesprovider.notifier).getPosts();
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+            if (state.posts.isNotEmpty && widget.isExpanded) ...[
+          Text(
+            "Based on your Interest",
+            style: TextStyle(
+                color: wayaTheme.colorScheme.greyColor700,
+                fontSize: 13,
+                fontWeight: FontWeight.w500),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: state.posts.length,
+            itemBuilder: (context, index) {
+              return buildPost(
+                context: context,
+                post: state.posts[index],
+                viewModel: viewModel,
+                inValidate: inValidateQuery,
+                provider: provider,
+              );
+            },
+          ),
+        ],
         if (state.topPosts.isNotEmpty) ...[
           Text(
             "Recommended For You",
@@ -86,29 +109,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
             },
           ),
         ],
-        if (state.posts.isNotEmpty && widget.isExpanded) ...[
-          Text(
-            "Based on your Interest",
-            style: TextStyle(
-                color: wayaTheme.colorScheme.greyColor700,
-                fontSize: 13,
-                fontWeight: FontWeight.w500),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: state.posts.length,
-            itemBuilder: (context, index) {
-              return buildPost(
-                context: context,
-                post: state.posts[index],
-                viewModel: viewModel,
-                inValidate: inValidateQuery,
-                provider: provider,
-              );
-            },
-          ),
-        ],
+    
         if (state.categorizedPosts.isNotEmpty && widget.isExpanded) ...[
           for (var category in state.categorizedPosts) ...[
             Padding(

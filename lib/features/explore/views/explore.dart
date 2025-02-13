@@ -13,17 +13,13 @@ import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
-import 'package:wayagram/features/explore/widgets/chat_card.dart';
 import 'package:wayagram/features/explore/widgets/donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/explore/widgets/pages_card.dart';
 import 'package:wayagram/features/explore/widgets/polls_card.dart';
-import 'package:wayagram/features/moments/views/my_moments.dart';
-import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
@@ -37,6 +33,7 @@ import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
 import 'package:wayagram/shared/features/posts/shared_posts.dart';
+import 'package:wayagram/shared/features/moments/shared_moments.dart';
 
 class Explore extends ConsumerStatefulWidget {
   const Explore({super.key});
@@ -49,7 +46,6 @@ class _ExploreState extends ConsumerState<Explore> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(momentVmProvider.notifier).getAllMoments();
       ref.read(shopVmProvider.notifier).allCategories(1);
       ref.read(shopVmProvider.notifier).getAllProducts(1);
       ref.read(eventVmProvider.notifier).getEventWithStatus(1);
@@ -66,7 +62,7 @@ class _ExploreState extends ConsumerState<Explore> {
     final state = ref.watch(shopVmProvider);
     final notifier = ref.read(shopVmProvider.notifier);
     final eventState = ref.watch(eventVmProvider);
-    final momentState = ref.watch(momentVmProvider);
+
     return WayaScaffold(
         isLoading: false,
         backgroundColor: wayaTheme.colorScheme.scaffoldColor,
@@ -126,49 +122,7 @@ class _ExploreState extends ConsumerState<Explore> {
             ExploreOurServices(),
             const Gap(25),
             Text("Moments", style: wayaTheme.textTheme.titleLarge),
-            SizedBox(
-              height: 80,
-              child: ListView.builder(
-                itemCount: 1 + momentState.moments.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    // First
-                    return Row(
-                      children: [
-                        const Gap(6),
-                        MomentsWidget(
-                          isCreate: true,
-                          onTap: () => WayaNav.toNamed(MyMoments.route),
-                        ),
-                        const Gap(6),
-                      ],
-                    );
-                  } else {
-                    // Others
-                    final moment = momentState.moments[index - 1];
-                    return Row(
-                      children: [
-                        MomentsWidget(
-                          moment: moment,
-                          onTap: () async {
-                            final userId =
-                                await WayaSecureDataSource().getUserId();
-                            if (userId != null) {
-                              WayaNav.toNamed(ViewMoment.route, arguments: {
-                                "moments": [moment],
-                                "isMine": userId == moment.userId
-                              });
-                            }
-                          },
-                        ),
-                        const Gap(6),
-                      ],
-                    );
-                  }
-                },
-              ),
-            ),
+            SharedMoments(),
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {},
@@ -253,9 +207,12 @@ class _ExploreState extends ConsumerState<Explore> {
             SharedPosts(),
             const Gap(25),
 
-            GroupedWidgetHeader(onTap: () {
-              WayaNav.toNamed('/pages');
-            }, subTitle: 'View and manage pages', title: 'Pages'),
+            GroupedWidgetHeader(
+                onTap: () {
+                  WayaNav.toNamed('/pages');
+                },
+                subTitle: 'View and manage pages',
+                title: 'Pages'),
             const Gap(25),
             Text(
               "My Pages",
@@ -295,9 +252,12 @@ class _ExploreState extends ConsumerState<Explore> {
                 }),
             const Gap(25),
 
-            GroupedWidgetHeader(onTap: () {
-              WayaNav.toNamed('/groups');
-            }, subTitle: 'View and manage groups', title: 'Groups'),
+            GroupedWidgetHeader(
+                onTap: () {
+                  WayaNav.toNamed('/groups');
+                },
+                subTitle: 'View and manage groups',
+                title: 'Groups'),
             const Gap(25),
             Text(
               "My Groups",

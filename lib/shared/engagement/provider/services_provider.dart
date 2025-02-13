@@ -167,6 +167,11 @@ class ServicesProvider extends StateNotifier<States> {
     }
   }
 
+  void updatePost(String id) {
+    
+
+  }
+
   //// Posts
   Future<void> getPosts() async {
     try {

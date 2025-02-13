@@ -22,6 +22,7 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wayagram/features/moments/data/model/moment_viewer_response_model.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/features/moments/data/model/folllowed_user_moments_model.dart';
 
 class MomentVm extends StateNotifier<MomentState> {
   final Ref ref;
@@ -441,9 +442,12 @@ class MomentVm extends StateNotifier<MomentState> {
 
       if (response.success) {
         WayaSnackBar.showToast("Moment Deleted Successfully");
+
         List<MomentData> moments = List.from(state.myMoments);
         moments.where((m) => m.id != momentId).toList();
-        state = state.copyWith(myMoments: moments);
+
+        state = state.copyWith(
+            myMoments: moments.where((m) => m.id != momentId).toList());
       }
     } catch (error) {
       print(error);
@@ -502,18 +506,15 @@ class MomentVm extends StateNotifier<MomentState> {
   //   }
   // }
 
+// moments of the user I am follwing
   Future<void> getAllMoments() async {
     try {
       final response = await _momentRepository.getAllMoments();
 
       if (response.success) {
-        print("chimelu oooooooooooooooo");
-        print("fwefwefwefwefwefwefwfwefwefwefwefwefwefwfwefwefwe");
-        print(
-            "fwefwefwefwefwefwefwfwefwefwefwefwefwefwfwefwefwe ${response.data}");
-        MomentResponseModel responseModel =
-            MomentResponseModel.fromJson(response.data);
-        state = state.copyWith(moments: responseModel.data.docs);
+        FolllowedUserMomentsModel responseModel =
+            FolllowedUserMomentsModel.fromJson(response.data);
+        state = state.copyWith(moments: responseModel.data);
       }
     } catch (error) {
       print(error);
@@ -524,13 +525,18 @@ class MomentVm extends StateNotifier<MomentState> {
     state = state.copyWith(
         isEditingMode: true,
         caption: moment.caption,
+        showCaption:
+            moment.caption != null && moment.caption!.isNotEmpty ? true : false,
         momentId: moment.id,
+        selectedFile: null,
         type: moment.contentType == 'text' ? StatusType.text : StatusType.media,
         mediaType:
             moment.content == 'video' ? MediaType.video : MediaType.image,
-        backgroundColor: MomentHelper.hexToColor(moment.color ?? '#000000'),
+        backgroundColor: moment.color != null && moment.color!.isNotEmpty
+            ? MomentHelper.hexToColor(moment.color!)
+            : null,
         text: moment.contentType == 'text' ? moment.content : '',
-        textStyle: moment.fontType != null
+        textStyle: moment.fontType != null && moment.fontType!.isNotEmpty
             ? MomentHelper.textStyleFromJson(moment.fontType!)
             : GoogleFonts.roboto(
                 fontSize: 32,
