@@ -91,7 +91,7 @@ class _WayaCollapsibleTextState extends State<WayaCollapsibleText> {
                   //? Second, the other guy here.
                   if (overflowText.isNotEmpty)
                     TextSpan(
-                      text: isExpanded ? '    Show less' : 'Read more',
+                      text: isExpanded ? '    show less' : 'read more',
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           setState(

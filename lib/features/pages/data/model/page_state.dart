@@ -18,6 +18,7 @@ class PageState{
   final List<GetAllPostDocs>? getAllPost;
   final List<Comments>? comments;
   final MediaUploadData? data;
+  List<dynamic>? docs;
   final ShareModelData? shareModelData;
 
   final bool isFocused;
@@ -34,6 +35,7 @@ class PageState{
     this.fetchAllPostData = const [],
     this.comments = const [],
     this.getAllPost = const [],
+    this.docs = const [],
     this.data,
     this.shareModelData,
 }):  pageName = pageName ?? TextEditingController(),
@@ -48,6 +50,7 @@ class PageState{
     List<Docs>? fetchAllPostData,
     List<GetAllPostDocs>? getAllPost,
     List<Comments>? comments,
+    List<dynamic>? docs,
     MediaUploadData? data,
     ShareModelData? shareModelData,
 
@@ -64,6 +67,7 @@ class PageState{
       fetchAllPostData: fetchAllPostData ?? this.fetchAllPostData,
       getAllPost: getAllPost ?? this.getAllPost,
       comments: comments ?? this.comments,
+      docs: docs ?? this.docs,
 
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,

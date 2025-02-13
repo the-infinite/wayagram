@@ -130,4 +130,19 @@ class PageRepository extends BaseRepository {
   Future<WayaRequestResponse> getFollowers() {
     return get("$serviceUrl/follow/followers");
   }
+
+  Future<WayaRequestResponse> createPage(String pageName,
+      String pageDesc, bool pageType,
+      String coverImage, String profileImage ) {
+    final payload = {
+      "name": pageName,
+      "description": pageName,
+      "isPrivate": pageType, //Optional field, if you leave it blank it defaults to false
+      "isOpen": false, // this defaults to true if it is not inserted
+      "coverImage":  coverImage,
+      "profileImage":  profileImage
+    };
+
+    return post("$serviceUrl/pages", payload);
+  }
 }

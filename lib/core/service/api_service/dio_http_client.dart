@@ -65,10 +65,6 @@ class DioHttpClient implements WayaHttpClientInterface {
       bool formEncoded = false,
       void Function({int count, int total})? onSendProgress,
       void Function({int count, int total})? onRecieveProgress}) async {
-    final fullRoute = '$baseURL$route';
-    _logger.i('fullRoute: $fullRoute');
-    _logger.f('headers: ${dio.options.headers}');
-
     //? Since it is form data.
     if (formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
@@ -81,6 +77,12 @@ class DioHttpClient implements WayaHttpClientInterface {
       formEncoded: formEncoded,
       formDataBoundary: formdata ? (body as FormData).boundary : null,
     );
+
+    //? Finished this.
+    final fullRoute = '$baseURL$route';
+    _logger.i('fullRoute: $fullRoute');
+    _logger.f('headers: ${dio.options.headers}');
+
     params?.removeWhere((key, value) => value == null);
 
     return _makeRequest(dio.post(

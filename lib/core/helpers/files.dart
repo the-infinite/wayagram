@@ -397,11 +397,63 @@ class WayaFileHelper {
     final filename = original.uri.pathSegments.last;
     final extensionIndex = filename.lastIndexOf(".");
     final ext = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
-    return "cmf_${chatId}_${WayaValueHelper.createUid()}.$ext".replaceAll("-", "_");
+    return "${chatId}_${WayaValueHelper.createUid()}.$ext".replaceAll("-", "_");
   }
 
   /// Returns the final directory of a file using the logic of where we are coming
   static String getFileSubdirectory(Directory parent, MessageModel message) {
     return "${parent.absolute.path}${message.senderId == ConversationState.self.id ? "/Sent" : ""}";
+  }
+
+  /// A helper function used to calculate the directory of the file for a given
+  /// message.
+  static Future<File> getFileDirectory(MessageModel message, MessageMedia file) async {
+    final uri = Uri.parse(file.mediaUrl);
+    final filename = uri.pathSegments.last;
+    final extensionIndex = filename.lastIndexOf(".");
+    final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+    var directory = await WayaFileHelper.getDocumentsDirectory();
+
+    //? Now, we check what kind of extension this is.
+    if ([...WayaFileExtensions.images, ...WayaFileExtensions.videos].contains(extension)) {
+      directory = await WayaFileHelper.getMediaDirectory();
+    }
+
+    //? If this is an audio file.
+    if (WayaFileExtensions.audio.contains(extension)) {
+      directory = await WayaFileHelper.getAudioDirectory();
+    }
+
+    //? Now, we try looking for the rest here.
+    final path = "${WayaFileHelper.getFileSubdirectory(directory, message)}/$filename";
+
+    // Now, return this file.
+    return File(path);
+  }
+
+  /// A helper function used to calculate the directory of the file for a given
+  /// message.
+  static Future<File> getFileLocalDirectory(MessageModel message, String file) async {
+    final uri = File(file);
+    final filename = uri.uri.pathSegments.last;
+    final extensionIndex = filename.lastIndexOf(".");
+    final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+    var directory = await WayaFileHelper.getDocumentsDirectory();
+
+    //? Now, we check what kind of extension this is.
+    if ([...WayaFileExtensions.images, ...WayaFileExtensions.videos].contains(extension)) {
+      directory = await WayaFileHelper.getMediaDirectory();
+    }
+
+    //? If this is an audio file.
+    if (WayaFileExtensions.audio.contains(extension)) {
+      directory = await WayaFileHelper.getAudioDirectory();
+    }
+
+    //? Now, we try looking for the rest here.
+    final path = "${WayaFileHelper.getFileSubdirectory(directory, message)}/$filename";
+
+    // Now, return this file.
+    return File(path);
   }
 }

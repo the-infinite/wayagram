@@ -13,6 +13,10 @@ class MessageRepository extends BaseRepository {
     return post("$serviceUrl/client/message", data.toJson(), formdata: false);
   }
 
+  Future<WayaRequestResponse> getMessage(String id) {
+    return get("$serviceUrl/client/message/single/$id");
+  }
+
   Future<WayaRequestResponse> getUnreadMessagesCount() {
     return get("$serviceUrl/client/message/unread/total");
   }

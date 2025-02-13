@@ -88,8 +88,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                              color:
-                                  Theme.of(context).colorScheme.greyColor300),
+                              color: Theme.of(context).colorScheme.greyColor300),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

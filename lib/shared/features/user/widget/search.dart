@@ -91,7 +91,7 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
                 builder: (context, ref, _) {
                   //? Watch the state.
                   final state = ref.watch(userSearchProvider);
-              
+
                   //? If this is loading...
                   if (state.isLoading) {
                     return AspectRatio(
@@ -101,10 +101,10 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
                       ),
                     );
                   }
-              
+
                   //? Since this is fine...
                   widget.onResult?.call(state.results);
-              
+
                   //? Since it is not loading...
                   return AspectRatio(
                     aspectRatio: 1,
@@ -117,7 +117,7 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
                           state.results.length,
                           (index) {
                             final user = state.results[index];
-              
+
                             //? I have selected this user.
                             return InkWell(
                               onTap: () {
@@ -158,8 +158,8 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
     Overlay.of(context).insert(_entry!);
 
     //* Finally, call the function to put this in place and debounce it.
-    debounce(delay: const Duration(milliseconds: 400), () {
-      notifier.getSearchResults(text);
+    debounce(key: "search-user", delay: const Duration(milliseconds: 700), () async {
+      await notifier.getSearchResults(text);
     })();
   }
 

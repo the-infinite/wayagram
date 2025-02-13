@@ -12,13 +12,16 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
+import '../../pages/component/extras.dart';
 import '../../wallet/view/fund_wallet_options_screen.dart';
 
 class CreateGroup extends ConsumerStatefulWidget {
@@ -32,16 +35,45 @@ class CreateGroup extends ConsumerStatefulWidget {
 class _CreateGroupState extends ConsumerState<CreateGroup> {
   final _formKey = GlobalKey<FormState>();
 
+
   bool sel =  false;
   bool sel2 =  false;
 
+  File? _selectedImage; // Holds the selected image
+  File? _coverImage; // Holds the selected image
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+        print('SELECTED IMAGES $_selectedImage');
+      });
+    }
+  }
+
+  Future<void> _pickCoverImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _coverImage = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createGroupProvider);
+    final viewModel2 = ref.watch(createGroupProvider.notifier);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       title: "Create a Group",
+      onTapBackButton: (){
+        Navigator.pop(context);
+        viewModel2.reset();
+
+      },
       isLoading: viewModel.isLoading,
       isScrollable: true,
       appBarTrailing: Padding(
@@ -51,14 +83,29 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               ? () async {
             if (_formKey.currentState!.validate()) {
               if(!sel && !sel2){
-
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Select group type', style: TextStyle(
+                      fontFamily: WayaConstants.fontFamily,
+                      fontSize: 12
+                    ),),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               } else{
-                WayaNav.toNamed("/confirmGroupDetails", arguments: sel?'Public Group': 'Private Group');
+                WayaNav.toNamed("/confirmGroupDetails",
+                   arguments:{
+                  'image': _selectedImage,
+                   'coverImage': _coverImage,
+                   'type': sel?'Public Group': 'Private Group'
+                    }
+                   // arguments: sel?'Public Group': 'Private Group',
+                );
 
               }
             }
           } : null,
-          //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create'),
           text: 'Create',
           horizontalPadding: 12,
           textStyle: WayaTextStyles.bodySmall.copyWith(
@@ -79,19 +126,91 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  WayaImage3(
-                    height: Get.height * 0.2,
+
+                  Stack(
+                    children: [
+                      // Banner Container
+                      Container(
+                        width: double.infinity,
+                        height: 200, // Banner height
+                        decoration: BoxDecoration(
+                          color: WayaColors.primaryBrown50,
+                          borderRadius: BorderRadius.circular(0),
+                          image: _selectedImage != null
+                              ? DecorationImage(
+                            image: FileImage(_selectedImage!),
+                            fit: BoxFit.cover,
+                          )
+                              : const DecorationImage(
+                            image: AssetImage("assets/placeholder.jpg"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+
+                      // Upload Icon Button
+                      Positioned(
+                        top: 140,
+                        right: 10,
+                        child: IconButton(
+                          onPressed: _pickImage,
+                          icon: Image.asset('assets/images/pages/cam.png', height: 14.h,),
+                          padding: EdgeInsets.all(10),
+                          constraints: BoxConstraints(),
+                          color: WayaColors.greyColor600, // Background overlay
+                        ),
+                      ),
+                    ],
                   ),
+                 /* WayaImage3(
+                    imageUrl: '$_selectedImages',
+                    onTap: _pickImages,
+                    height: Get.height * 0.2,
+                    isEdit: true,
+                  ),*/
                   Gap(15),
 
                 ],
               ),
+
+
+
               Positioned(
-                  left: 16.w,
-                  bottom: -20.h,
-                  child: WayaDp(
-                    radius: 28.r,
-                  )),
+                left: 16.w,
+                bottom: -20.h,
+                child: GestureDetector(
+                  onTap: _pickCoverImage,
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: wayaTheme.colorScheme.greyColor200,
+                        backgroundImage: _coverImage != null
+                            ?  FileImage(_coverImage!)
+                            : null,
+                        child: _coverImage == null
+                            ? Icon(
+                          Icons.person,
+                          color: wayaTheme.colorScheme.greyColor600,
+                        )
+                            : null,
+                      ),
+                     /* if (_coverImage == null)
+                        Positioned.fill(
+                          child: CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
+                            child: Icon(
+                              Icons.camera_alt_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),*/
+                    ],
+                  ),
+                ),
+              ),
+
             ],
           ),
           const Gap(30),

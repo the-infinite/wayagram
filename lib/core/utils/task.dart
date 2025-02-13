@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 typedef ProcessFn<T> = FutureOr<dynamic> Function(T result);
 typedef PostProcessCallback = void Function(dynamic result);
 
-Timer? _debounceTimer;
+final _debounceTimers = <String, Timer?>{};
 
 /// Creates a debounced function that delays invoking the provided [func] by [delay] duration.
 ///
@@ -26,12 +26,20 @@ Timer? _debounceTimer;
 ///   * [delay]: The duration to delay the function execution. Defaults to 300 milliseconds
 ///
 /// Returns a new function that wraps the original function with debounce functionality.
-Function debounce(Function func, {Duration delay = const Duration(milliseconds: 300)}) {
+Function debounce(Function func, {required String key, Duration delay = const Duration(milliseconds: 300)}) {
   return () {
-    if (_debounceTimer?.isActive ?? false) {
-      _debounceTimer?.cancel();
+    final debounceTimer = _debounceTimers[key];
+
+    //? If this was here...
+    if (debounceTimer?.isActive ?? false) {
+      debounceTimer?.cancel();
     }
-    _debounceTimer = Timer(delay, () => func());
+
+    //? Something like this.
+    _debounceTimers[key] = Timer(delay, () {
+      _debounceTimers.remove(key);
+      func();
+    });
   };
 }
 

@@ -181,7 +181,10 @@ class ConversationVm extends StateNotifier<ConversationState> {
     final response = await repo.archiveOrUnarchiveChat(id);
 
     //? If this went well.
-    if (response.success) getChatDetails(id);
+    if (response.success) {
+      getChats(true);
+      getArchivedChats(true);
+    }
 
     //? Return whether or not this is true.
     return response.success;
@@ -237,7 +240,36 @@ class ConversationVm extends StateNotifier<ConversationState> {
       final data = response.data['data'];
 
       //? Parse the conversations as they are in the response object...
-      final docs = (data['docs'] as List).map((doc) => ChatModel.fromJson(doc));
+      final docs = (data['docs'] as List).map((doc) => ChatModel.fromJson(doc)).toList();
+
+      //? First, we check each of the members in each conversation...
+      for (var c = 0; c < docs.length; c++) {
+        final conversation = docs[c];
+
+        //? Do the needful.
+        for (var i = 0; i < conversation.chatMembers.length; i++) {
+          //? Look this bro up.
+          final member = conversation.chatMembers[i];
+
+          //? If this is not found...
+          final details = member.userId == ConversationState.self.id
+              ? (ConversationState.self, ConversationState.profile)
+              : await UserResource.getUserDetails(member.userId);
+
+          //? If this is null...
+          if (details == null) continue;
+
+          //? The user and his or her profile.
+          final user = details.$1;
+          final profile = details.$2;
+
+          //? Since we are in the clear...
+          conversation.chatMembers[i] = member.copyWith(user, profile);
+        }
+
+        //? Then replace what is there.
+        docs[c] = conversation;
+      }
 
       //? This is fine.
       result.addAll(docs);

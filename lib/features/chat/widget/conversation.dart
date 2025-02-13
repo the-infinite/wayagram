@@ -18,6 +18,7 @@ class ConversationWidget extends StatelessWidget {
   final ChatNotifier notifier;
   final ConversationVm conversationNotifier;
   final int index;
+  final bool isInteractive;
 
   // Construct.
   const ConversationWidget({
@@ -26,6 +27,7 @@ class ConversationWidget extends StatelessWidget {
     required this.index,
     required this.notifier,
     required this.conversationNotifier,
+    this.isInteractive = true,
   });
 
   /// Helper function used to navigate to the current chat screen.
@@ -53,82 +55,92 @@ class ConversationWidget extends StatelessWidget {
         onTap: _toChat,
         swipeSensitivity: 5,
         animationDuration: const Duration(milliseconds: 350),
-        rightSwipeWidget: Container(
-          height: mySize.height,
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              //? First, the reply icon.
-              Icon(
-                chat.self.isArchived ? CupertinoIcons.archivebox : CupertinoIcons.archivebox_fill,
-                color: WayaColors.black,
-                size: 18,
-              ),
+        rightSwipeWidget: !isInteractive
+            ? null
+            : Container(
+                height: mySize.height,
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    //? First, the reply icon.
+                    Icon(
+                      chat.self.isArchived ? CupertinoIcons.archivebox : CupertinoIcons.archivebox_fill,
+                      color: WayaColors.black,
+                      size: 18,
+                    ),
 
-              // Some space.
-              const Gap(10),
+                    // Some space.
+                    const Gap(10),
 
-              //? Second, the text for replying.
-              Text(
-                chat.self.isArchived ? "Unarchive chat" : "Archive chat",
-                style: WayaTextStyles.bodySemiBold.copyWith(
-                  color: WayaColors.black,
-                  fontSize: 13,
+                    //? Second, the text for replying.
+                    Text(
+                      chat.self.isArchived ? "Unarchive chat" : "Archive chat",
+                      style: WayaTextStyles.bodySemiBold.copyWith(
+                        color: WayaColors.black,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-        onRightSwipe: (_) {
-          conversationNotifier.archiveOrUnarchiveChat(chat.id);
-        },
-        leftSwipeWidget: Container(
-          height: mySize.height,
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              //? First, the reply icon.
-              Icon(
-                chat.self.isPined ? CupertinoIcons.pin_slash_fill : CupertinoIcons.pin_fill,
-                color: WayaColors.primary,
-                size: 18,
-              ),
+        onRightSwipe: !isInteractive
+            ? null
+            : (_) {
+                conversationNotifier.archiveOrUnarchiveChat(chat.id);
+              },
+        leftSwipeWidget: !isInteractive
+            ? null
+            : Container(
+                height: mySize.height,
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    //? First, the reply icon.
+                    Icon(
+                      chat.self.isPined ? CupertinoIcons.pin_slash_fill : CupertinoIcons.pin_fill,
+                      color: WayaColors.primary,
+                      size: 18,
+                    ),
 
-              // Some space.
-              const Gap(10),
+                    // Some space.
+                    const Gap(10),
 
-              //? Second, the text for replying.
-              Text(
-                chat.self.isPined ? "Unpin chat" : "Pin chat",
-                style: WayaTextStyles.bodySemiBold.copyWith(
-                  color: WayaColors.primary,
-                  fontSize: 13,
+                    //? Second, the text for replying.
+                    Text(
+                      chat.self.isPined ? "Unpin chat" : "Pin chat",
+                      style: WayaTextStyles.bodySemiBold.copyWith(
+                        color: WayaColors.primary,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-        onLeftSwipe: (_) {
-          conversationNotifier.pinOrUnpinChat(chat.id);
-        },
+        onLeftSwipe: !isInteractive
+            ? null
+            : (_) {
+                conversationNotifier.pinOrUnpinChat(chat.id);
+              },
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: !isInteractive
+              ? const EdgeInsets.symmetric(vertical: 5)
+              : const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // The user's chat profile picture.
               ChatProfilePicture(
-                user: chat.other.userData ?? ConversationState.self,
+                user: chat.other.userData!,
                 lastSeen: chat.other.chatUser?.lastSeen,
                 showActive: chat.other.chatUser?.onlineStatus == ChatUserActivity.online,
-                radius: 27,
+                radius: 25,
               ),
 
               // Some space.

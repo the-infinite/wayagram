@@ -53,19 +53,22 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
   Widget build(BuildContext context) {
     //? First, the data needed to render this widget.
     final size = MediaQuery.sizeOf(context);
-    final filesFuture = widget.interactive
-        ? Future.value(widget.controller!.selectedFiles)
+    final filesFuture = widget.interactive || widget.message?.dto != null
+        ? Future.value(widget.message?.dto?.asFilesList ?? widget.controller!.selectedFiles)
         : getMessageFileAttachments(widget.message!);
 
     //? Second
     final composition = FutureBuilder(
         future: filesFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
+          final files = snapshot.data ?? [];
+
+          //? This is fine.
+          if (snapshot.connectionState != ConnectionState.done || files.isEmpty) {
             return const SizedBox();
           }
 
-          final files = snapshot.data ?? [];
+          //? This is fine.
           final inferenceFile = files.first;
           final inferenceExtensionIndex = inferenceFile.path.lastIndexOf(".");
           final inferredExtension = inferenceFile.path.substring(inferenceExtensionIndex + 1);
@@ -168,6 +171,7 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
                                       index: index,
                                       interactive: widget.interactive,
                                       controller: widget.controller,
+                                      message: widget.message,
                                     ),
                                   )
                                 :
@@ -181,6 +185,7 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
                                           index: index,
                                           interactive: widget.interactive,
                                           controller: widget.controller,
+                                          message: widget.message,
                                         ),
                                       )
 
@@ -192,6 +197,7 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
                                             index: index,
                                             filename: filename,
                                             extension: extension,
+                                            message: widget.message,
                                             interactive: widget.interactive,
                                             controller: widget.controller,
                                           )

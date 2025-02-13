@@ -9,6 +9,7 @@ import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
+import 'package:wayagram/features/chat/widget/chat/bubbles/typing.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
@@ -207,20 +208,35 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                     controller: state.controller,
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     physics: const AlwaysScrollableScrollPhysics(),
+                    reverse: true,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisSize: MainAxisSize.min,
-                      children: List.generate(
-                        state.messages.length,
-                        (index) => ChatBubbleWidget(
-                          index: index,
-                          previousDate:
-                              index == 0 ? DateTime.fromMillisecondsSinceEpoch(0) : state.messages[index - 1].createdAt,
-                          data: state.messages[index],
-                          controller: inputController,
+                      children: [
+                        //? First, the list of messages.
+                        ...List.generate(
+                          state.messages.length,
+                          (index) => ChatBubbleWidget(
+                            index: index,
+                            previousDate: index == 0
+                                ? DateTime.fromMillisecondsSinceEpoch(0)
+                                : state.messages[index - 1].createdAt,
+                            data: state.messages[index],
+                            controller: inputController,
+                            isLast: index == state.messages.length - 1,
+                          ),
                         ),
-                      ),
+
+                        //? Second, the typing bubble.
+                        if (state.typing)
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              PersonalTypingIndicator(),
+                            ],
+                          ),
+                      ],
                     ),
                   ),
                 ),
