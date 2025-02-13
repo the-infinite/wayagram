@@ -158,33 +158,33 @@ class MyMomentActions extends StatelessWidget {
         position: PopupMenuPosition.under,
         itemBuilder: (context) {
           return [
+            // PopupMenuItem<int>(
+            //   value: 0,
+            //   child: _buildActionNav(
+            //       context: context,
+            //       onTap: () {
+            //         Navigator.pop(context);
+            //         WayaNav.toNamed(Moment.route, arguments: moment);
+            //       },
+            //       asset: Icon(
+            //         Icons.edit,
+            //         size: 20,
+            //         color: wayaTheme.colorScheme.greyColor500,
+            //       ),
+            //       text: "Edit"),
+            // ),
+            // PopupMenuItem<int>(
+            //   value: 0,
+            //   child: _buildActionNav(
+            //       context: context,
+            //       onTap: () async {
+            //         Navigator.pop(context);
+            //       },
+            //       asset: SvgPicture.asset(WayaAssets.icons.mFire.path),
+            //       text: "Promote"),
+            // ),
             PopupMenuItem<int>(
               value: 0,
-              child: _buildActionNav(
-                  context: context,
-                  onTap: () {
-                    Navigator.pop(context);
-                    WayaNav.toNamed(Moment.route, arguments: moment);
-                  },
-                  asset: Icon(
-                    Icons.edit,
-                    size: 20,
-                    color: wayaTheme.colorScheme.greyColor500,
-                  ),
-                  text: "Edit"),
-            ),
-            PopupMenuItem<int>(
-              value: 1,
-              child: _buildActionNav(
-                  context: context,
-                  onTap: () async {
-                    Navigator.pop(context);
-                  },
-                  asset: SvgPicture.asset(WayaAssets.icons.mFire.path),
-                  text: "Promote"),
-            ),
-            PopupMenuItem<int>(
-              value: 2,
               child: _buildActionNav(
                   context: context,
                   onTap: () async {

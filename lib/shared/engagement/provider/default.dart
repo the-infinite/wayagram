@@ -39,6 +39,18 @@ class EngagementNotifier
     state = {...state};
   }
 
+  void monitorPostHashTag(ServiceType service, String tag, int points) {
+    final engagementData = state[service]!;
+    engagementData.addHashtag(tag, points);
+    state = {...state};
+  }
+
+  void monitorPostCategory(ServiceType service, String cat, int points) {
+    final engagementData = state[service]!;
+    engagementData.addEventType(cat, points);
+    state = {...state};
+  }
+
   Future<void> sendData() async {
     final engagementData = state;
 

@@ -36,6 +36,7 @@ import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
+import 'package:wayagram/shared/features/posts/shared_posts.dart';
 
 class Explore extends ConsumerStatefulWidget {
   const Explore({super.key});
@@ -208,7 +209,7 @@ class _ExploreState extends ConsumerState<Explore> {
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {
-                    Navigator.pushNamed(context, BottomView.route, arguments: 1);
+                  Navigator.pushNamed(context, BottomView.route, arguments: 1);
                 },
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
@@ -249,6 +250,8 @@ class _ExploreState extends ConsumerState<Explore> {
                 subTitle: 'Based on your interests',
                 title: 'Discover'),
             const Gap(25),
+            SharedPosts(),
+            const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {},
                 subTitle: 'View and manage pages',
@@ -279,7 +282,7 @@ class _ExploreState extends ConsumerState<Explore> {
                   return PagesCard(isFollowing: true, group: groupList[index]);
                 }),
             Text(
-              "Recommended or you",
+              "Recommended for you",
               style: wayaTheme.textTheme.bodyMedium,
             ),
             const Gap(10),
@@ -386,7 +389,7 @@ class _ExploreState extends ConsumerState<Explore> {
             //? I have plugged this in here for you. Gbayii omo iyami
             GroupedWidgetHeader(
               onTap: () {
-                  Navigator.pushNamed(context, BottomView.route, arguments: 4);
+                Navigator.pushNamed(context, BottomView.route, arguments: 4);
               },
               subTitle: 'Connect with friends and communities',
               title: 'Chats & Calls',

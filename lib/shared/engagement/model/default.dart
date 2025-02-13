@@ -2,8 +2,8 @@ enum ServiceType {
   product,
   events,
   ugt,
-  polls,
   chats,
+  posts
 }
 
 class EngagementData {
@@ -12,15 +12,21 @@ class EngagementData {
   final Map<String, int> productCategories;
   final Map<String, int> eventLocationType;
   final Map<String, int> eventType;
+  final Map<String, int> postHashTags;
+  final Map<String, int> postCategory;
 
   EngagementData(
       {this.timeSpent = 0,
       this.pointsEarned = 0,
       Map<String, int>? productCategories,
       Map<String, int>? eventType,
+      Map<String, int>? postHashTags,
+      Map<String, int>? postCategory,
       Map<String, int>? eventLocationType})
       : productCategories = productCategories ?? {},
         eventType = eventType ?? {},
+        postHashTags = postHashTags ?? {},
+        postCategory = postCategory ?? {},
         eventLocationType = eventLocationType ?? {};
 
   void addTime(int seconds) {
@@ -45,7 +51,21 @@ class EngagementData {
     eventType[type] = (eventType[type] ?? 0) + points;
     addPoints(points);
   }
-Map<String, int> getAllEventLocation() => eventLocationType;
-Map<String, int> getAllEventTypee() => eventType;
+
+   void addHashtag(String loc, int points) {
+    postHashTags[loc] = (postHashTags[loc] ?? 0) + points;
+    addPoints(points);
+  }
+
+  void addPostCategory(String cat, int points) {
+    postCategory[cat] = (postCategory[cat] ?? 0) + points;
+    addPoints(points);
+  }
+
+  // summations
+    Map<String, int> getAllPosttags() => postHashTags;
+  Map<String, int> getAllPostCategories() => postCategory;
+  Map<String, int> getAllEventLocation() => eventLocationType;
+  Map<String, int> getAllEventTypee() => eventType;
   Map<String, int> getAllProductCategories() => productCategories;
 }

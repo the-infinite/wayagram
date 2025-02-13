@@ -437,7 +437,7 @@ class PageVm extends StateNotifier<PageState> {
       if(response.success && ctx.mounted){
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Post deleted successfully!'),
+            content: Text('Post reposted successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),

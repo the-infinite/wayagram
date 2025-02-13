@@ -12,8 +12,6 @@ import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_widget.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
-import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 
 class MyMoments extends ConsumerStatefulWidget {
   static const route = "/my-moments";

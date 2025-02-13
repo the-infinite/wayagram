@@ -29,6 +29,8 @@ class EventEngagementMonitor extends StateNotifier<void> {
 
   void addLocation(String loc, int points) {
     _engagementNotifier.monitorEventLocation(ServiceType.events, loc, points);
+
+    print(getAllEventLocation());
   }
 
   Map<String, int> getAllEventLocation() {
@@ -40,8 +42,7 @@ class EventEngagementMonitor extends StateNotifier<void> {
   }
 
   Map<String, int> getAllEventType() {
-    return _engagementNotifier.state[ServiceType.events]!
-        .getAllEventTypee();
+    return _engagementNotifier.state[ServiceType.events]!.getAllEventTypee();
   }
 }
 

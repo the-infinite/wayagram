@@ -41,6 +41,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
       provider.startViewingEvent();
 
+     
+
       provider.addLocation(event.location, EventPoint.viewEvent.value);
       provider.addEventType(event.eventType, EventPoint.viewEvent.value);
     });
@@ -111,10 +113,10 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       width: context.width * 0.45,
                       child: WayaButton(
                         callback: () {
-                          ref.read(eventVmProvider.notifier).shareEvent(
-                              context: context,
-                              shareUrl: "https://example.com");
-                          //  Share.share('Shares');
+                          // ref.read(eventVmProvider.notifier).shareEvent(
+                          //     context: context,
+                          //     shareUrl: "https://example.com");
+                          Share.share('"https://example.com"');
                         },
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(
@@ -161,10 +163,10 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       width: context.width * 0.45,
                       child: WayaButton(
                         callback: () {
-                          ref.read(eventVmProvider.notifier).shareEvent(
-                              context: context,
-                              shareUrl: "https://example.com");
-                          //Share.share('Shares');
+                          // ref.read(eventVmProvider.notifier).shareEvent(
+                          //     context: context,
+                          //     shareUrl: "https://example.com");
+                          Share.share('"https://example.com"');
                         },
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(
@@ -232,7 +234,7 @@ class EventDetailAction extends StatelessWidget {
               child: _buildActionNav(
                   context: context,
                   onTap: () {
-                    Share.share("Share");
+                    Share.share("https://example.com");
                     Navigator.pop(context);
                   },
                   asset: Icon(

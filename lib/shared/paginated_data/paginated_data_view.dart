@@ -10,6 +10,7 @@ class PaginatedDataView<T> extends ConsumerStatefulWidget {
   final Widget? loadingState;
   final Widget? emptyState;
   final bool hasSearchFilter;
+  final Widget? trailingWidget;
 
   const PaginatedDataView(
       {super.key,
@@ -17,6 +18,7 @@ class PaginatedDataView<T> extends ConsumerStatefulWidget {
       this.hasSearchFilter = false,
       this.emptyState,
       required this.fetchData,
+      this.trailingWidget,
       this.loadingState,
       required this.result});
 
@@ -73,16 +75,18 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
     }
 
     return ListView(
-      controller: _scrollController, 
-      physics: AlwaysScrollableScrollPhysics(), 
+      controller: _scrollController,
+      physics: AlwaysScrollableScrollPhysics(),
       children: [
+        widget.trailingWidget ?? widget.trailingWidget!,
         RefreshIndicator(
-            onRefresh: () async {
-              ref
-                  .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
-                  .initialize(widget.fetchData);
-            },
-            child: widget.result(state.data.cast<T>(), _scrollController),),
+          onRefresh: () async {
+            ref
+                .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
+                .initialize(widget.fetchData);
+          },
+          child: widget.result(state.data.cast<T>(), _scrollController),
+        ),
         if (state.isLoading)
           widget.loadingState ??
               Center(

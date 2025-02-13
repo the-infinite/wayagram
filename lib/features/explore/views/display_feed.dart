@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/shared/features/events/shared_event.dart';
+import 'package:wayagram/shared/features/posts/shared_posts.dart';
 
 class DisplayFeed extends ConsumerStatefulWidget {
   static const route = "/feed";
@@ -55,11 +56,8 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-            Text(
-              "Top Events",
-              style: wayaTheme.textTheme.bodyMedium,
-            ),
-            const Gap(10),
+            SharedPosts(isExpanded: true,),
+            const Gap(25),
             SharedEvent()
           ],
         ));
