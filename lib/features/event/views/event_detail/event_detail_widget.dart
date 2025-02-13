@@ -73,15 +73,15 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                   const Gap(15),
                   AboutEvent(
                       title: 'Title of Event',
-                      content: viewModel.singleEvent?.title ?? ""),
+                      content: viewModel.singleEvent?.title.capitalizeFirst ?? ""),
                   const Gap(15),
                   AboutEvent(
                       title: 'Organizer Name',
-                      content: viewModel.singleEvent?.organizerName ?? ""),
+                      content: viewModel.singleEvent?.organizerName.capitalizeFirst ?? ""),
                   const Gap(15),
                   AboutEvent(
                       title: "Event Description",
-                      content: viewModel.singleEvent?.description ?? ""),
+                      content: viewModel.singleEvent?.description!.capitalizeFirst ?? ""),
                   const Gap(15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -61,7 +61,7 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
                     message: "No Product Yet"),
                 loadingState: _recommendedProductLoadingState(context: context),
                 fetchData: productDetail.fetchData,
-                result: (data) {
+                result: (data,s) {
                   final filteredProducts = WayaUtils.search<Product>(
                       data,
                       [

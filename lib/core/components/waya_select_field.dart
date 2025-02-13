@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
@@ -89,11 +88,10 @@ class WayaSelectField extends ConsumerWidget {
 }
 
 class WayaSelectFieldViewModel extends ChangeNotifier {
-  final FocusNode _focusNode = FocusNode();
   final Ref ref;
 
   WayaSelectFieldViewModel(this.ref);
-  String _label = '';
+  final String _label = '';
 
   bool _isFocused = false;
 

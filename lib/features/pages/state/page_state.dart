@@ -7,7 +7,7 @@ import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
-import 'package:wayagram/features/post/model/media_upload_model.dart';
+import 'package:wayagram/shared/model/media_upload_model.dart';
 
 import '../../post/model/share_model.dart';
 import '../data/model/pages_users_follow_model.dart';

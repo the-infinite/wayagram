@@ -96,13 +96,17 @@ class WayaScaffold extends ConsumerWidget {
                     )
                   : Container(
                       color: color,
+                      height: size.height,
+                      width: size.width,
                       child: Padding(
                         padding: paddedBody,
                         child: SingleChildScrollView(child: body),
                       ),
                     )
-              : Padding(
+              : Container(
                   padding: paddedBody,
+                  height: size.height,
+                  width: size.width,
                   child: body,
                 ),
           bottomNavigationBar: bottomNavigationBar,
@@ -129,20 +133,21 @@ class WayaScaffoldWithProgressBar extends StatefulWidget {
 
   final bool? resizeToAvoidBottomInset;
   final PreferredSizeWidget? appBar;
-  const WayaScaffoldWithProgressBar(
-      {super.key,
-      this.resizeToAvoidBottomInset,
-      required this.tabsView,
-      this.floatingActionButton,
-      this.isLoading = false,
-      this.onTap,
-      this.padding,
-      required this.tabController,
-      this.currentIndex = 0,
-      this.isScrollable = false,
-      this.appBar,
-      this.backgroundColor,
-      this.bottomNavigationBar});
+  const WayaScaffoldWithProgressBar({
+    super.key,
+    this.resizeToAvoidBottomInset,
+    required this.tabsView,
+    this.floatingActionButton,
+    this.isLoading = false,
+    this.onTap,
+    this.padding,
+    required this.tabController,
+    this.currentIndex = 0,
+    this.isScrollable = false,
+    this.appBar,
+    this.backgroundColor,
+    this.bottomNavigationBar,
+  });
 
   @override
   State<WayaScaffoldWithProgressBar> createState() => _WayaScaffoldWithProgressBarState();

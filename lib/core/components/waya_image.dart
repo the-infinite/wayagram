@@ -219,7 +219,7 @@ class WayaImage extends StatelessWidget {
         height: height,
         width: width,
         decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.scaffoldColor,
+            color: wayaTheme.colorScheme.greyColor100,
             borderRadius: radius ?? BorderRadius.circular(8)),
       ),
     );

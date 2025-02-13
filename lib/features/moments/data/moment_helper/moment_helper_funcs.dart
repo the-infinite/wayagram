@@ -11,7 +11,7 @@ class MomentHelper {
     fontFamily: json['fontFamily'],
     fontSize: json['fontSize'].toDouble(),
     fontWeight: _parseFontWeight(json['fontWeight']),
-    color: _hexToColor(json['color']),
+    color: hexToColor(json['color']),
   );
 }
 
@@ -40,7 +40,7 @@ static  _parseFontWeight(String fontWeight) {
   }
 }
 
-static Color _hexToColor(String hexColor) {
+static Color hexToColor(String hexColor) {
   hexColor = hexColor.replaceAll('#', '');
   return Color(int.parse(hexColor, radix: 16));
 }

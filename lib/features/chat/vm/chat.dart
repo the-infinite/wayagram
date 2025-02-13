@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
@@ -15,7 +15,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   /// Helper function used to get the list of messages from the back-end so they
   /// can be stored locally on this device.
-  Future<List<MessageModel>> getMessages([bool reset = false, bool scroll = false]) async {
+  Future<List<MessageModel>> getMessages([bool reset = false]) async {
     final result = <MessageModel>[];
 
     //? This is fine.
@@ -23,11 +23,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     //? This is fine.
     if (response.success) {
-      //? If the previous page had a next page, offload them onto this place.
-      if (!reset && state.hasNextPage) {
-        result.addAll(state.messages);
-      }
-
       // The data.
       final data = response.data['data'];
 
@@ -36,13 +31,21 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? This is fine.
       result.addAll(
-        docs.where(
-          (msg) {
-            return !((msg.isDeleted ?? false) ||
-                (msg.isDeletedBySender ?? false) && msg.senderId == ConversationState.self.id);
-          },
-        ),
+        docs
+            .where(
+              (msg) {
+                return !((msg.isDeleted ?? false) ||
+                    (msg.isDeletedBySender ?? false) && msg.senderId == ConversationState.self.id);
+              },
+            )
+            .toList()
+            .reversed,
       );
+
+      //? If the previous page had a next page, offload them onto this place.
+      if (!reset && state.hasNextPage) {
+        result.addAll(state.messages);
+      }
 
       //? Update state.
       state = state.copyWith(
@@ -59,22 +62,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
       // TODO: Actual error handling.
     }
 
-    //? If I can scroll to this one.
-    if (scroll) scrollToEnd();
-
     //? Return this collated result.
     return result;
-  }
-
-  /// A helper function used to tell the chat input controller to scroll to the
-  /// end of the chats visible on screen immediately.
-  void scrollToEnd() {
-    //? Scroll to the last possible message.
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      //? Only do this when we have something to communicate with.
-      await Future.delayed(const Duration(milliseconds: 800));
-      if (state.controller.hasClients) state.controller.jumpTo(state.controller.position.maxScrollExtent);
-    });
   }
 
   /// A helper function used to set whether or not the other user is not
@@ -144,7 +133,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? Tell the listeners that this has been updated to first add the message to
       //? our list of messages.
-      state = state.copyWith(messages: [...state.messages, placeholder]);
+      state = state.copyWith(messages: [...state.messages, placeholder], isLoading: true);
     }
 
     //? Else, we just flag this message as something that is not an error.
@@ -158,11 +147,13 @@ class ChatNotifier extends StateNotifier<ChatState> {
       }
 
       //? Now update the UI with our changes...
-      state = state.copyWith(messages: conversation);
+      state = state.copyWith(messages: [...conversation], isLoading: true);
     }
 
     //? Try to send the message.
     try {
+      //? Now, it is loading.
+
       //? This is fine.
       final response = await repo.sendMessage(await message.uploadFiles());
 
@@ -175,10 +166,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
         //? Now, replace this.
         if (found != -1) {
           conversation[found] = result.copyWith(false, message.originalMessage);
+          debugPrint("MessageNotifier> Updating message ${message.chatId} in list.");
         }
 
         //? Now update the UI with our changes...
-        state = state.copyWith(messages: conversation);
+        state = state.copyWith(messages: [...conversation], isLoading: false);
 
         // Notify everyone of it.
         WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, result.id));
@@ -198,7 +190,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
         }
 
         //? Now update the UI with our changes...
-        state = state.copyWith(messages: conversation);
+        state = state.copyWith(messages: [...conversation], isLoading: false);
       }
     } catch (_) {
       final conversation = state.messages;
@@ -210,7 +202,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
       }
 
       //? Now update the UI with our changes...
-      state = state.copyWith(messages: conversation);
+      state = state.copyWith(messages: [...conversation], isLoading: false);
     }
 
     //? Since we are in test mode, it would always succeed.
@@ -233,7 +225,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     //? We need to fetch the messages again.
     if (response.success) {
-      getMessages(true, false);
+      getMessages(true);
 
       // This is fine.
       WayaSocketController.instance.emit(WayaChatSocketArgs.markAllAsRead(state.chat!.id));
@@ -349,18 +341,10 @@ class ChatNotifier extends StateNotifier<ChatState> {
   /// would clear out all visible messages and only retrieve messages sent by
   /// a given user.
   void setChat(ChatModel chat) {
-    // Skip this.
-    final previous = state.controller;
-
-    //? This is fine.
     state = state.copyWith(
       chat: chat,
       messages: [],
-      controller: ScrollController(),
     );
-
-    // Then dispose.
-    previous.dispose();
   }
 }
 
