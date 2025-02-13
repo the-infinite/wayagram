@@ -137,12 +137,46 @@ class PageRepository extends BaseRepository {
     final payload = {
       "name": pageName,
       "description": pageName,
-      "isPrivate": pageType, //Optional field, if you leave it blank it defaults to false
-      "isOpen": false, // this defaults to true if it is not inserted
+      "isPublic": pageType, //Optional field, if you leave it blank it defaults to false
+      //"isOpen": false, // this defaults to true if it is not inserted
       "coverImage":  coverImage,
       "profileImage":  profileImage
     };
 
     return post("$serviceUrl/pages", payload);
   }
+
+  Future<WayaRequestResponse> getAllPages(ownerId) {
+    return get("$serviceUrl/pages?ownerId=$ownerId");
+  }
+
+
+  Future<WayaRequestResponse> deletePage(String pageId) async {
+    return delete("$serviceUrl/pages/$pageId");
+  }
+
+  Future<WayaRequestResponse> getPageMembers(pageId) {
+    return get("$serviceUrl/pages/team-members/$pageId");
+  }
+
+  Future<WayaRequestResponse> updateTeamMember(String role, String pageId, String memberId) {
+    final payload = {
+      "role": role
+    };
+
+    return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload);
+  }
+
+  Future<WayaRequestResponse> removePageTeamMember(String pageId, String memberId) async {
+    return delete("$serviceUrl/pages/$pageId/team-members/$memberId");
+  }
+
+  Future<WayaRequestResponse> unFollowPage(String pageId) async {
+    return delete("$serviceUrl/pages/follow/$pageId");
+  }
+
+  Future<WayaRequestResponse> getPagesAUserFollows() {
+    return get("$serviceUrl/pages/user/followings");
+  }
+
 }

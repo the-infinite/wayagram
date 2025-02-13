@@ -28,7 +28,7 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.zero,
+      padding: EdgeInsets.only(left: 15, right: 15, ),
       color:wayaTheme.colorScheme.greyColor50 ,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

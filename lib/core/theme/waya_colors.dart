@@ -14,6 +14,7 @@ class WayaColors {
   static const primaryBrown50 = Color(0xffFBF1F1);
   static const primary = Color(0xffFF652E);
   static const primary600 = Color(0xffB54821);
+  static const primary700 = Color(0xff8C3819);
   static const onPrimary = Color(0xffFFFFFF);
 
   //
