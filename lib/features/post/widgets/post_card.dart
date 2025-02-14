@@ -23,6 +23,9 @@ class PostCard extends StatelessWidget {
   final int commentCount;
   final int likeCount;
   final int shareCount;
+  final String time;
+  final String username;
+  final String profilePicture;
   final List<Docs>? fetchAllPostData;
   final List<String>? mediaUrls;
   final List<String>? hashtags;
@@ -35,6 +38,9 @@ class PostCard extends StatelessWidget {
     required this.commentCount,
     required this.likeCount,
     required this.shareCount,
+    required this.time,
+    required this.username,
+    required this.profilePicture,
     required this.fetchAllPostData,
     required this.mediaUrls,
     required this.hashtags,
@@ -78,7 +84,7 @@ class PostCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                        mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        WayaDp(image: 'post.user?.profilePicture', radius: 20,),
+                        WayaDp(image: profilePicture, radius: 20,),
                         //circleImage(profilePicture),
                         SizedBox(width: 10.w),
                         Column(
@@ -88,7 +94,7 @@ class PostCard extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  'username',
+                                  username,
                                   style: TextStyle(
                                     fontFamily: WayaConstants.fontFamily,
                                     fontSize: 16.sp,
@@ -97,7 +103,7 @@ class PostCard extends StatelessWidget {
                                 ),
                                 const Gap(5),
                                 Text(
-                                  '• ',
+                                  '• $time',
                                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
@@ -241,13 +247,11 @@ class PostCard extends StatelessWidget {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: fetchAllPostData?.length,
-              //itemCount: mediaUrls.length,
               itemBuilder: (context, mediaIndex) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Image.network(
-                    '',
-                    //mediaUrls[mediaIndex],
+                    '$mediaUrls',
                     width: 200, // Adjust width as needed
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {

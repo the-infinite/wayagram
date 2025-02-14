@@ -163,21 +163,6 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                         text: 'Team',
                         onTap: () => setState(() => _selectedIndex = 1),
                       ),
-                    /*  WayaTabButton(
-                        isSelected: _selectedIndex == 2,
-                        text: 'Media',
-                        onTap: () => setState(() => _selectedIndex = 2),
-                      ),
-                      WayaTabButton(
-                        isSelected: _selectedIndex == 3,
-                        text: 'Approvals',
-                        onTap: () => setState(() => _selectedIndex = 3),
-                      ),
-                      WayaTabButton(
-                        isSelected: _selectedIndex == 4,
-                        text: 'Team',
-                        onTap: () => setState(() => _selectedIndex = 4),
-                      ),*/
                     ],
                   ),
 

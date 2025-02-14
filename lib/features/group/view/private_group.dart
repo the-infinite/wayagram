@@ -107,24 +107,27 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                           color: wayaTheme.colorScheme.error500,
                           height: 2,
                         ),
-                        text: "Delete Group",
-                        color: wayaTheme.colorScheme.error500),
-                  )
-                ];
-              },
-              child: WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none)),
-          Gap(8)
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                      ),
+                    )
+                  ],
+                ),
+                Positioned(
+                    left: 16.w,
+                    top: 190,
+                    child:  CircleAvatar(
+                        radius: 30,
+                        backgroundColor: WayaColors.greyColor100,
+                        backgroundImage:NetworkImage('${args['coverImage']}'),
+                    )
+                ),
+              ],
+            ),
+            const Gap(10),
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     width: double.infinity,
