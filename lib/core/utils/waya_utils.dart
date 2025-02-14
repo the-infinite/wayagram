@@ -155,26 +155,32 @@ class WayaUtils {
     }
   }
 
-  static List<T> search<T extends BaseModel<T>>(
-    List<T> data,
-    List<String> accessorKeys,
-    String searchTerm,
-  ) {
-    if (searchTerm.isEmpty) {
-      return data;
-    }
-
-    return data.where((item) {
-      final map = item.toMap();
-      return accessorKeys.any((key) {
-        final value = map[key];
-        if (value is String) {
-          return value.toLowerCase().contains(searchTerm.toLowerCase());
-        }
-        return false;
-      });
-    }).toList();
+ static List<T> search<T extends BaseModel<T>>(
+  List<T> data,
+  List<String> accessorKeys,
+  String searchTerm,
+) {
+  if (searchTerm.isEmpty) {
+    return data;
   }
+
+  return data.where((item) {
+    final map = item.toMap();
+    return accessorKeys.any((key) {
+      final value = map[key];
+
+      if (value is String) {
+        return value.toLowerCase().contains(searchTerm.toLowerCase());
+      } else if (value is List<String>) {
+        return value.any((element) =>
+            element.toLowerCase().contains(searchTerm.toLowerCase()));
+      }
+
+      return false;
+    });
+  }).toList();
+}
+
 
   static Future<String?> uploadFile(
       {required UploadFileRepository repository, required File file}) async {
@@ -201,4 +207,33 @@ class WayaUtils {
       return null;
     }
   }
+
+  static List<T> strictSearch<T extends BaseModel<T>>(
+  List<T> data,
+  List<String> accessorKeys,
+  String searchTerm,
+) {
+  if (searchTerm.isEmpty) {
+    return [];
+  }
+
+  final filteredData = data.where((item) {
+    final map = item.toMap();
+    return accessorKeys.any((key) {
+      final value = map[key];
+
+      if (value is String) {
+        return value.toLowerCase().contains(searchTerm.toLowerCase());
+      } else if (value is List<String>) {
+        return value.any((element) =>
+            element.toLowerCase().contains(searchTerm.toLowerCase()));
+      }
+
+      return false;
+    });
+  }).toList();
+
+  return filteredData.isNotEmpty ? filteredData : [];
+}
+
 }

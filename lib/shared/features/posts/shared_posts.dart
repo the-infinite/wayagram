@@ -54,37 +54,9 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
         ? state.topPosts
         : state.topPosts.sublist(0, min(state.topPosts.length, 3));
 
-    Future<void> inValidateQuery() async {
-      ref.read(servicesprovider.notifier).getEngagedPost();
-      // ref.read(servicesprovider.notifier).getPosts();
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (state.topPosts.isNotEmpty) ...[
-          Text(
-            "Recommended For You",
-            style: TextStyle(
-                color: wayaTheme.colorScheme.greyColor700,
-                fontSize: 13,
-                fontWeight: FontWeight.w500),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              return buildPost(
-                context: context,
-                post: posts[index],
-                viewModel: viewModel,
-                inValidate: inValidateQuery,
-                provider: provider,
-              );
-            },
-          ),
-        ],
         if (state.posts.isNotEmpty && widget.isExpanded) ...[
           Text(
             "Based on your Interest",
@@ -98,11 +70,30 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: state.posts.length,
             itemBuilder: (context, index) {
-              return buildPost(
-                context: context,
+              return SharedPostCard(
                 post: state.posts[index],
                 viewModel: viewModel,
-                inValidate: inValidateQuery,
+                provider: provider,
+              );
+            },
+          ),
+        ],
+        if (state.topPosts.isNotEmpty) ...[
+          Text(
+            "Recommended For You",
+            style: TextStyle(
+                color: wayaTheme.colorScheme.greyColor700,
+                fontSize: 13,
+                fontWeight: FontWeight.w500),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              return SharedPostCard(
+                post: posts[index],
+                viewModel: viewModel,
                 provider: provider,
               );
             },
@@ -125,11 +116,9 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: category.posts.length,
               itemBuilder: (context, index) {
-                return buildPost(
-                  context: context,
+                return SharedPostCard(
                   post: category.posts[index],
                   viewModel: viewModel,
-                  inValidate: inValidateQuery,
                   provider: provider,
                 );
               },
@@ -153,17 +142,22 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
       ],
     );
   }
+}
 
-  Column buildPost(
-      {required BuildContext context,
-      required Post post,
-      required PageVm viewModel,
-      required Future<void> Function() inValidate,
-      required PostEngagementMonitor provider}) {
+class SharedPostCard extends ConsumerWidget {
+  final Post post;
+  final PageVm viewModel;
+  final PostEngagementMonitor provider;
+  const SharedPostCard(
+      {super.key,
+      required this.post,
+      required this.viewModel,
+      required this.provider});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    int comment = post.commentCount;
-    int liked = post.likeCount;
-    int shared = post.shareCount;
+    final servicesProvider = ref.read(servicesprovider.notifier);
 
     String removeHashtags(String text) {
       return text.replaceAll(RegExp(r'#\w+'), '').trim();
@@ -191,6 +185,10 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
       }
     }
 
+    int comment = post.commentCount;
+    int liked = post.likeCount;
+    int shared = post.shareCount;
+    // TODO: implement build
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -396,16 +394,14 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
             children: [
               actionType('$liked ${liked <= 1 ? 'Like' : 'Likes'}',
                   'assets/images/pages/like2.png', onPressed: () {
-                setState(() {
-                  liked += 1;
-                });
                 viewModel.likePost(context,
                     postId: '${post.id}',
                     userId: '${ConversationState.self.id}');
+                servicesProvider.invalidatePostData(post.id,
+                    likeCount: liked + 1);
 
                 // liked
                 postEngagement(PostPoints.likedPoint.value);
-                inValidate();
               },
                   color: liked == 0
                       ? WayaColors.greyColor500
@@ -413,34 +409,29 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
               actionType(
                   '$comment Comments', 'assets/images/pages/comment2.png',
                   onPressed: () {
-                showCommentBox(context, post.id);
-                setState(() {
-                  comment += 1;
-                });
+                showCommentBox(context, post.id, ref);
+                servicesProvider.invalidatePostData(post.id,
+                    commentCount: comment + 1);
                 // comment
                 postEngagement(PostPoints.commentPoint.value);
-                inValidate();
 
                 print(post.id);
               }),
               actionType('$shared Shares', 'assets/images/pages/share2.png',
                   onPressed: () {
                 viewModel.sharePost(context, postId: '${post.id}');
-                setState(() {
-                  shared += 1;
-                });
+                servicesProvider.invalidatePostData(post.id,
+                    shareCount: shared + 1);
                 // shared
                 postEngagement(PostPoints.sharePoint.value);
 
                 Share.share('${post.url}', subject: 'Share Options');
-                inValidate();
               }),
               InkWell(
                   onTap: () {
                     viewModel.bookmarkPost(context, postId: '${post.id}');
                     // booked
                     postEngagement(PostPoints.bookedPoint.value);
-                    inValidate();
                   },
                   child: Image.asset(
                     'assets/images/pages/save.png',
@@ -456,7 +447,78 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
     );
   }
 
-  void showCommentBox(BuildContext context, postId) {
+  InkWell _buildActionNav(
+      {required BuildContext context,
+      required VoidCallback onTap,
+      required Widget asset,
+      required String text,
+      required Color color}) {
+    final wayaTheme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          asset,
+          const Gap(4),
+          Text(text,
+              style: TextStyle(
+                  color: color, fontWeight: FontWeight.w500, fontSize: 12))
+        ],
+      ),
+    );
+  }
+
+  Future<void> _launchUrl(String link) async {
+    final Uri url = Uri.parse(link);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  actionType(txt, img, {onPressed, color}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: onPressed,
+          child: Container(
+            height: 32.h,
+            width: 32.w,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: WayaColors.greyColor100),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Image.asset(
+                img,
+                height: 15.h,
+                color: color,
+              ),
+            ),
+          ),
+        ),
+        /*InkWell(
+            onTap: onPressed,
+            child: Image.asset(img, height: 32.h, color: color,)),*/
+        Gap(5),
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Text(txt,
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              )),
+        ),
+        const Gap(15),
+      ],
+    );
+  }
+
+  void showCommentBox(BuildContext context, postId, WidgetRef ref) {
     @override
     final _formKey = GlobalKey<FormState>();
     final wayaTheme = Theme.of(context);
@@ -661,77 +723,6 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
           ),
         );
       },
-    );
-  }
-
-  Future<void> _launchUrl(String link) async {
-    final Uri url = Uri.parse(link);
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
-  }
-
-  actionType(txt, img, {onPressed, color}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InkWell(
-          onTap: onPressed,
-          child: Container(
-            height: 32.h,
-            width: 32.w,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle, color: WayaColors.greyColor100),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Image.asset(
-                img,
-                height: 15.h,
-                color: color,
-              ),
-            ),
-          ),
-        ),
-        /*InkWell(
-            onTap: onPressed,
-            child: Image.asset(img, height: 32.h, color: color,)),*/
-        Gap(5),
-        Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Text(txt,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              )),
-        ),
-        const Gap(15),
-      ],
-    );
-  }
-
-  InkWell _buildActionNav(
-      {required BuildContext context,
-      required VoidCallback onTap,
-      required Widget asset,
-      required String text,
-      required Color color}) {
-    final wayaTheme = Theme.of(context);
-    return InkWell(
-      onTap: onTap,
-      splashFactory: NoSplash.splashFactory,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          asset,
-          const Gap(4),
-          Text(text,
-              style: TextStyle(
-                  color: color, fontWeight: FontWeight.w500, fontSize: 12))
-        ],
-      ),
     );
   }
 }

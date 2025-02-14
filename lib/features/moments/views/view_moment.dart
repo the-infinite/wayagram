@@ -195,7 +195,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
                       continues: continueAnimating,
                     ),
                   ),
-                if (!args['isMine'] && !isPaused)
+                if (!args['isMine'])
                   Positioned(
                     left: 0,
                     right: 0,

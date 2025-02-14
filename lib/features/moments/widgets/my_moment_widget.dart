@@ -12,6 +12,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/moments/bottom_sheet/confirm_delete_widget.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
+// import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
 
@@ -25,8 +26,10 @@ class MyMomentWidget extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     return GestureDetector(
       onTap: () async {
-        
-        WayaNav.toNamed(ViewMoment.route, arguments: {"moments": [moment], "isMine": true});
+        WayaNav.toNamed(ViewMoment.route, arguments: {
+          "moments": [moment],
+          "isMine": true
+        });
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +56,7 @@ class MyMomentWidget extends ConsumerWidget {
                         child: Text(
                           moment.contentType == 'text'
                               ? moment.content
-                              : moment.caption ?? 'No Caption',
+                              : moment.caption!.isNotEmpty ?  moment.caption! : 'No Caption',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize: 14, fontWeight: FontWeight.w600),
@@ -158,21 +161,21 @@ class MyMomentActions extends StatelessWidget {
         position: PopupMenuPosition.under,
         itemBuilder: (context) {
           return [
-            // PopupMenuItem<int>(
-            //   value: 0,
-            //   child: _buildActionNav(
-            //       context: context,
-            //       onTap: () {
-            //         Navigator.pop(context);
-            //         WayaNav.toNamed(Moment.route, arguments: moment);
-            //       },
-            //       asset: Icon(
-            //         Icons.edit,
-            //         size: 20,
-            //         color: wayaTheme.colorScheme.greyColor500,
-            //       ),
-            //       text: "Edit"),
-            // ),
+            PopupMenuItem<int>(
+              value: 0,
+              child: _buildActionNav(
+                  context: context,
+                  onTap: () {
+                    Navigator.pop(context);
+                    WayaNav.toNamed(Moment.route, arguments: moment);
+                  },
+                  asset: Icon(
+                    Icons.edit,
+                    size: 20,
+                    color: wayaTheme.colorScheme.greyColor500,
+                  ),
+                  text: "Edit"),
+            ),
             // PopupMenuItem<int>(
             //   value: 0,
             //   child: _buildActionNav(
@@ -184,7 +187,7 @@ class MyMomentActions extends StatelessWidget {
             //       text: "Promote"),
             // ),
             PopupMenuItem<int>(
-              value: 0,
+              value: 1,
               child: _buildActionNav(
                   context: context,
                   onTap: () async {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
+import 'package:wayagram/features/moments/data/model/folllowed_user_moments_model.dart';
 
 class MomentsWidget extends StatelessWidget {
-  final MomentData? moment;
+  final UserMoments? moment;
   final bool isCreate;
   final VoidCallback? onTap;
   const MomentsWidget(
@@ -94,7 +94,7 @@ class MomentsWidget extends StatelessWidget {
                 ),
                 child: Center(
                   child: WayaImage(
-                    imageUrl: moment!.image,
+                    imageUrl: moment!.moments[0].image,
                     height: 55,
                     width: 55,
                     radius: BorderRadius.circular(75),

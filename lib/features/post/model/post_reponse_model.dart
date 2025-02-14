@@ -1,4 +1,4 @@
-
+import 'package:wayagram/shared/model/base_model.dart';
 
 class PostReponseModel {
   final String message;
@@ -44,7 +44,9 @@ class Data {
   final int? prevPage;
   final int pagingCounter;
 
-  Data({required this.docs,  required this.totalDocs,
+  Data({
+    required this.docs,
+    required this.totalDocs,
     required this.limit,
     required this.page,
     required this.totalPages,
@@ -52,12 +54,13 @@ class Data {
     this.nextPage,
     required this.hasPrevPage,
     this.prevPage,
-    required this.pagingCounter,});
+    required this.pagingCounter,
+  });
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
       docs: (json['docs'] as List).map((e) => Post.fromJson(e)).toList(),
-        totalDocs: json["totalDocs"],
+      totalDocs: json["totalDocs"],
       limit: json["limit"],
       page: json["page"],
       totalPages: json["totalPages"],
@@ -76,7 +79,7 @@ class Data {
   }
 }
 
-class Post {
+class Post extends BaseModel<Post> {
   final String id;
   final String userId;
   final List<dynamic>? categories;
@@ -194,6 +197,69 @@ class Post {
       'user': user.toJson(),
     };
   }
+
+  @override
+  Map<String, dynamic> toMap() =>
+      {'id': id, 'categories': categories, 'hashtags': hashtags};
+
+   Post copyWith({
+    String? id,
+    String? userId,
+    List<dynamic>? categories,
+    String? groupId,
+    String? pageId,
+    String? contentType,
+    String? content,
+    List<String>? media,
+    List<String>? hashtags,
+    String? sourceType,
+    String? linkedServiceId,
+    String? privacy,
+    String? url,
+    String? status,
+    int? likeCount,
+    int? commentCount,
+    int? shareCount,
+    double? popularityScore,
+    bool? isPromoted,
+    bool? isReposted,
+    String? promotionExpiry,
+    String? deletedAt,
+    String? originalPostId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    User? user,
+  }) {
+    return Post(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      categories: categories ?? this.categories,
+      groupId: groupId ?? this.groupId,
+      pageId: pageId ?? this.pageId,
+      contentType: contentType ?? this.contentType,
+      content: content ?? this.content,
+      media: media ?? this.media,
+      hashtags: hashtags ?? this.hashtags,
+      sourceType: sourceType ?? this.sourceType,
+      linkedServiceId: linkedServiceId ?? this.linkedServiceId,
+      privacy: privacy ?? this.privacy,
+      url: url ?? this.url,
+      status: status ?? this.status,
+      likeCount: likeCount ?? this.likeCount,
+      commentCount: commentCount ?? this.commentCount,
+      shareCount: shareCount ?? this.shareCount,
+      popularityScore: popularityScore ?? this.popularityScore,
+      isPromoted: isPromoted ?? this.isPromoted,
+      isReposted: isReposted ?? this.isReposted,
+      promotionExpiry: promotionExpiry ?? this.promotionExpiry,
+      deletedAt: deletedAt ?? this.deletedAt,
+      originalPostId: originalPostId ?? this.originalPostId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      user: user ?? this.user,
+    );
+  }
+
 }
 
 class User {

@@ -78,7 +78,9 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
       controller: _scrollController,
       physics: AlwaysScrollableScrollPhysics(),
       children: [
-        widget.trailingWidget ?? widget.trailingWidget!,
+        if (widget.trailingWidget != null) ...[
+          widget.trailingWidget ?? SizedBox.shrink()
+        ],
         RefreshIndicator(
           onRefresh: () async {
             ref
