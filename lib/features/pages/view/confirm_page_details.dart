@@ -7,12 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_buttons.dart';
-import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class ConfirmPageDetails extends ConsumerStatefulWidget {

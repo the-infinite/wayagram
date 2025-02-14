@@ -16,4 +16,5 @@ export 'waya_measurable.dart';
 export 'waya_collapsible_text.dart';
 export 'waya_text_strip.dart';
 export 'waya_future_subscriber.dart';
-export  'waya_paginated_list.dart';
+export 'waya_paginated_list.dart';
+export 'waya_observable_scroll.dart';

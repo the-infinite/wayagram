@@ -47,23 +47,5 @@ class Wayagram extends ConsumerWidget {
         getPages: WayaAppRoutes.getPages,
       ),
     );
-    /*return DevicePreview(
-        enabled: true,
-        builder: (BuildContext context) {
-          ScreenUtilInit(
-            designSize: Size(size.width, size.height),
-            minTextAdapt: true,
-            splitScreenMode: true,
-            child: GetMaterialApp(
-              initialRoute: '/',
-              title: WayaConstants.appName,
-              theme: WayaTheme.lightTheme,
-              darkTheme: WayaTheme.darkTheme,
-              themeMode: themeMode,
-              debugShowCheckedModeBanner: false,
-              getPages: WayaAppRoutes.getPages,
-            ),
-          );
-        });*/
   }
 }

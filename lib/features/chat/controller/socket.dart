@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
@@ -152,7 +150,7 @@ class WayaSocketController {
   socket_io.Socket? _socket;
 
   WayaChatSocketArgs _quickDecode(dynamic data) {
-    return WayaChatSocketArgs.fromJson(jsonDecode(data.toString()));
+    return WayaChatSocketArgs.fromJson(data);
   }
 
   // This is fine.
