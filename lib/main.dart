@@ -10,11 +10,12 @@ import 'package:wayagram/core/theme/vm/theme_vm.dart';
 import 'package:wayagram/core/theme/waya_theme.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
+import 'firebase_options.dart';
 
 void main() async {
   //? First, initialize everything that should be initialized.
   await GetStorage.init();
-  Firebase.initializeApp();
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PushNotifications.init();
   WayaSnackBar.setUpSnackBarUI();
 
@@ -46,23 +47,5 @@ class Wayagram extends ConsumerWidget {
         getPages: WayaAppRoutes.getPages,
       ),
     );
-    /*return DevicePreview(
-        enabled: true,
-        builder: (BuildContext context) {
-          ScreenUtilInit(
-            designSize: Size(size.width, size.height),
-            minTextAdapt: true,
-            splitScreenMode: true,
-            child: GetMaterialApp(
-              initialRoute: '/',
-              title: WayaConstants.appName,
-              theme: WayaTheme.lightTheme,
-              darkTheme: WayaTheme.darkTheme,
-              themeMode: themeMode,
-              debugShowCheckedModeBanner: false,
-              getPages: WayaAppRoutes.getPages,
-            ),
-          );
-        });*/
   }
 }

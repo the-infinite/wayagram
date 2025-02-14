@@ -87,21 +87,22 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
     if (widget.shouldFetch) {
       _scrollController.addListener(
         () {
+          final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
+          final current = _scrollController.offset;
+
           //? Stop if this is at the end.
           if (widget.isAtEnd) {
-            debugPrint("paginated-list-view> Reached the end");
+            debugPrint("paginated-list-widget> End");
           }
 
           //? If we should scroll.
-          else if (_scrollController.offset == _scrollController.position.maxScrollExtent - widget.scrollNotice) {
+          else if (current >= target) {
+            debugPrint("paginated-list-widget> Fetching (T: $target, X: $current)");
             _getPage(widget.nextPage);
           }
 
           //? Since we cannot scroll...
-          else {
-            debugPrint(
-                "paginated-list-view> (${_scrollController.offset}, ${_scrollController.position.maxScrollExtent - widget.scrollNotice})");
-          }
+          else {}
         },
       );
 
@@ -109,7 +110,6 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) async {
           await _getPage(widget.nextPage);
-          _checkInitialExtent();
         },
       );
     }
@@ -124,7 +124,6 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) async {
           await _getPage(widget.nextPage);
-          _checkInitialExtent();
         },
       );
     }
@@ -150,25 +149,6 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
     _loadingController.value = false;
   }
 
-  void _checkInitialExtent() async {
-    //? If this can be scrolled with...
-    if (_scrollController.hasClients) {
-      //? Show this here.
-      debugPrint(_scrollController.position.maxScrollExtent.toString());
-
-      //? If the list is not scrollable yet
-      if (_scrollController.position.maxScrollExtent == 0 && !widget.isAtEnd) {
-        await _getPage(widget.nextPage);
-        _checkInitialExtent();
-      }
-
-      //? If this is now scrollable again.
-      else {
-        debugPrint("paginated-list-view> Found first scroll extent or reached the end of the list first.");
-      }
-    }
-  }
-
   @override
   void dispose() {
     _scrollController.dispose();
@@ -187,7 +167,7 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
           physics: widget.physics,
           padding: widget.padding,
           scrollDirection: widget.direction,
-          reverse: true,
+          reverse: widget.reverse,
           child: ValueListenableBuilder(
             valueListenable: _itemsNotifier,
             builder: (context, items, _) {

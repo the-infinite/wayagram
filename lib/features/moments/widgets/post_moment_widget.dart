@@ -43,7 +43,7 @@ class PostMomentWidget extends ConsumerWidget {
                 height: 36,
                 radius: 36,
                 callback: () {
-                  ref.read(momentVmProvider.notifier).submitMoment();
+                  ref.read(momentVmProvider.notifier).submitMoment(context: context);
                 },
                 centerWidget: Center(
                   child: SvgPicture.asset(WayaAssets.icons.aMoment.path),

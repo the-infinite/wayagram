@@ -165,11 +165,11 @@ class MessageModel {
   }
 
   MessageStatus? get otherStatus {
-    return status?.where((receipt) => receipt.userId != ConversationState.self.id!).firstOrNull;
+    return status?.where((receipt) => receipt.userId != ConversationState.self.id).firstOrNull;
   }
 
   MessageStatus? get myStatus {
-    return status?.where((receipt) => receipt.userId == ConversationState.self.id!).firstOrNull;
+    return status?.where((receipt) => receipt.userId == ConversationState.self.id).firstOrNull;
   }
 
   DateTime? get readAt {

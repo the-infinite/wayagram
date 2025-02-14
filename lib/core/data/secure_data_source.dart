@@ -1,21 +1,17 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wayagram/core/service/storage_service/secure/waya_secure_storage_interface.dart';
 
 class WayaSecureDataSource extends WayaSecureStorageService {
   final wayaSecureDataSource = WayaSecureStorageService();
 
   saveToken(String? token) async {
-    return await wayaSecureDataSource.write<String?>(
-        key: 'token', value: token);
+    return await wayaSecureDataSource.write<String?>(key: 'token', value: token);
   }
 
   saveRefreshToken(String? token) {
-    return wayaSecureDataSource.write<String?>(
-        key: 'refresh-token', value: token);
+    return wayaSecureDataSource.write<String?>(key: 'refresh-token', value: token);
   }
 
   Future<String?> getToken() async {
-
     return await wayaSecureDataSource.read(key: 'token');
   }
 

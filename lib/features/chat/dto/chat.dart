@@ -69,7 +69,7 @@ class SendMessageDto {
             .toList(),
         originalMessage: originalMessage,
         contacts: contacts,
-        senderId: ConversationState.self.id!,
+        senderId: ConversationState.self.id,
         messageType: type,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),

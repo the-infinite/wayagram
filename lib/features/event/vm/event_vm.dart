@@ -12,6 +12,7 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
 import 'package:wayagram/features/event/data/model/single_event_response_model.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
+import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 
 class EventVm extends StateNotifier<EventState> {
   final Ref ref;
@@ -136,10 +137,11 @@ class EventVm extends StateNotifier<EventState> {
             message:
                 'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
             onPress: () {
-              Navigator.of(context).pop();
+              Navigator.pushReplacementNamed(context, EventDetail.route);
               // Refresh the screen
             },
-            onCancel: () => WayaNav.toNamed(EventView.route),
+            onCancel: () =>
+                Navigator.pushReplacementNamed(context, EventView.route),
           );
         }
 

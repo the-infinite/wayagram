@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
@@ -7,7 +6,6 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/repo/message.dart';
 import 'package:wayagram/features/chat/state/chat.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 
 class ChatNotifier extends StateNotifier<ChatState> {
   final repo = MessageRepository();
@@ -30,17 +28,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
       final docs = (data['docs'] as List).map((doc) => MessageModel.fromJson(doc));
 
       //? This is fine.
-      result.addAll(
-        docs
-            .where(
-              (msg) {
-                return !((msg.isDeleted ?? false) ||
-                    (msg.isDeletedBySender ?? false) && msg.senderId == ConversationState.self.id);
-              },
-            )
-            .toList()
-            .reversed,
-      );
+      result.addAll(docs.where((msg) => msg.myStatus?.status != MessageStatusCode.deleted).toList().reversed);
 
       //? If the previous page had a next page, offload them onto this place.
       if (!reset && state.hasNextPage) {
@@ -152,8 +140,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     //? Try to send the message.
     try {
-      //? Now, it is loading.
-
       //? This is fine.
       final response = await repo.sendMessage(await message.uploadFiles());
 
@@ -166,7 +152,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
         //? Now, replace this.
         if (found != -1) {
           conversation[found] = result.copyWith(false, message.originalMessage);
-          debugPrint("MessageNotifier> Updating message ${message.chatId} in list.");
         }
 
         //? Now update the UI with our changes...

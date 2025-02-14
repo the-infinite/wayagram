@@ -17,7 +17,7 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> resendOtp(String email) {
-    return post('$serviceUrl/client/auth/resend-otp', {"email": email, "purpose": 'USER_PASSWORD_RESET'});
+    return post('$serviceUrl/client/auth/resend-otp', {"email": email, "purpose": 'REGISTER_USER'});
   }
 
   Future<WayaRequestResponse> verifyEmail(String email) {

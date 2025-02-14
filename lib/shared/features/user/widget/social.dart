@@ -20,7 +20,7 @@ class SocialUserWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     //? Now, send this forward.
     return FutureBuilder(
-      future: UserResource.getSocialProfile(user.id!),
+      future: UserResource.getSocialProfile(user.id),
       builder: (context, snapshot) {
         final profile = snapshot.data;
 
@@ -93,7 +93,7 @@ class SocialUserSelectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     //? Now, send this forward.
     return FutureBuilder(
-      future: UserResource.getSocialProfile(user.id!),
+      future: UserResource.getSocialProfile(user.id),
       builder: (context, snapshot) {
         final profile = snapshot.data;
 

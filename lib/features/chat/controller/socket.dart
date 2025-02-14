@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
@@ -36,7 +34,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "typing",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       action: isTyping ? 'start-typing' : 'stop-typing',
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -47,7 +45,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "sendMessage",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       messageId: messageId,
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -58,7 +56,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "markAsRead",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       messageId: messageId,
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -69,7 +67,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "markAllAsRead",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       isSynced: isSynced,
       isFlag: isFlagged,
     );
@@ -79,7 +77,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "deleteMessage",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       messageId: messageId,
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -90,7 +88,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "join",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       isSynced: isSynced,
       isFlag: isFlagged,
     );
@@ -107,7 +105,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: command,
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       action: action,
       messageId: messageId,
       isSynced: isSynced,
@@ -152,7 +150,7 @@ class WayaSocketController {
   socket_io.Socket? _socket;
 
   WayaChatSocketArgs _quickDecode(dynamic data) {
-    return WayaChatSocketArgs.fromJson(jsonDecode(data.toString()));
+    return WayaChatSocketArgs.fromJson(data);
   }
 
   // This is fine.
