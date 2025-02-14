@@ -71,8 +71,29 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                 ? () async {
               if (_formKey.currentState!.validate()) {
                 if(!sel && !sel2){
-
-                } else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Select page type', style: TextStyle(
+                          fontFamily: WayaConstants.fontFamily,
+                          fontSize: 12
+                      ),),
+                      backgroundColor: Colors.red,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }else if(_selectedImage == null && _coverImage == null){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Add Images', style: TextStyle(
+                          fontFamily: WayaConstants.fontFamily,
+                          fontSize: 12
+                      ),),
+                      backgroundColor: Colors.red,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+                else{
                   WayaNav.toNamed("/confirmDetails",
                       arguments:{
                         'image': _selectedImage,

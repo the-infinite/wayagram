@@ -72,11 +72,12 @@ print('Group Type ====>>> ${args['type']}');
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-
+                  args['coverImage'] == null ? Image.asset('assets/images/pages/image_placeholder.png',
+                    height:Get.height * 0.2, width: double.infinity,
+                    alignment: Alignment.centerRight, fit: BoxFit.fitWidth,):
                   Image.file(File('${args['image'].absolute.path}'),
                       height:Get.height * 0.2, width: double.infinity,
                   alignment: Alignment.centerRight, fit: BoxFit.fitWidth,),
-                  //WayaImage3(height: Get.height * 0.2,),
                   Gap(15),
 
                 ],

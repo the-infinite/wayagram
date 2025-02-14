@@ -44,12 +44,14 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
 
   int like = 0;
 
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(createPageProvider.notifier).getAllPages('${ConversationState.self.id}');
-      ref.read(createPageProvider.notifier).getAllPosts(_wayaLocalDataSource.getUserId());
+       ref.read(createPageProvider.notifier).getAllPosts(_wayaLocalDataSource.getUserId());
+
     });
   }
 
@@ -73,7 +75,8 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                   color: WayaColors.greyColor700,
                   fontFamily: WayaConstants.fontFamily)),
         ),
-        viewModel2.getAllPost!.isEmpty? PostEmptyState():
+
+       viewModel2.getAllPost!.isEmpty? PostEmptyState():
         ListView.builder(
             padding: EdgeInsets.only(left: 1, right: 15,),
             physics: const NeverScrollableScrollPhysics(),
