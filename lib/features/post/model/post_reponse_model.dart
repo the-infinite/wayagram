@@ -198,4 +198,67 @@ class Post extends BaseModel<Post> {
       'user': user.toJson(),
     };
   }
+
+  Post copyWith({
+    String? id,
+    String? userId,
+    List<dynamic>? categories,
+    String? groupId,
+    String? pageId,
+    String? contentType,
+    String? content,
+    List<String>? media,
+    List<String>? hashtags,
+    String? sourceType,
+    String? linkedServiceId,
+    String? privacy,
+    String? url,
+    String? status,
+    int? likeCount,
+    int? commentCount,
+    int? shareCount,
+    double? popularityScore,
+    bool? isPromoted,
+    bool? isReposted,
+    String? promotionExpiry,
+    String? deletedAt,
+    String? originalPostId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    UserDetailsModel? user,
+  }) {
+    return Post(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      categories: categories ?? this.categories,
+      groupId: groupId ?? this.groupId,
+      pageId: pageId ?? this.pageId,
+      contentType: contentType ?? this.contentType,
+      content: content ?? this.content,
+      media: media ?? this.media,
+      hashtags: hashtags ?? this.hashtags,
+      sourceType: sourceType ?? this.sourceType,
+      linkedServiceId: linkedServiceId ?? this.linkedServiceId,
+      privacy: privacy ?? this.privacy,
+      url: url ?? this.url,
+      status: status ?? this.status,
+      likeCount: likeCount ?? this.likeCount,
+      commentCount: commentCount ?? this.commentCount,
+      shareCount: shareCount ?? this.shareCount,
+      popularityScore: popularityScore ?? this.popularityScore,
+      isPromoted: isPromoted ?? this.isPromoted,
+      isReposted: isReposted ?? this.isReposted,
+      promotionExpiry: promotionExpiry ?? this.promotionExpiry,
+      deletedAt: deletedAt ?? this.deletedAt,
+      originalPostId: originalPostId ?? this.originalPostId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      user: user ?? this.user,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
 }
