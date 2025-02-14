@@ -103,6 +103,11 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/groups/recommended");
   }
 
+  Future<WayaRequestResponse> followUser(String followingId) {
+    final payload = {};
+    return post("$serviceUrl/follow/$followingId", payload);
+  }
+
 
 
 

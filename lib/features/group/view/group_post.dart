@@ -384,7 +384,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                 );
               }),
           const Gap(25),
-          GroupedWidgetHeader(
+        /*  GroupedWidgetHeader(
               onTap: () {
                 WayaNav.toNamed('/suggestion');
               },
@@ -671,13 +671,13 @@ class _GroupPostState extends ConsumerState<GroupPost>
                                 ),
                               ],
                             )),
-                          /* if(post.media != null)
+                          *//* if(post.media != null)
                           ...post.media!.map((e)=>
                               Row(
                                 children: [
                                  Image.network('$e', fit: BoxFit.fitWidth,)
                                 ],
-                              )),*/
+                              )),*//*
 
                         ],
                       ),
@@ -711,7 +711,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                       padding: EdgeInsets.fromLTRB(0.w, 8.0.h, 15.w, 8.w),
                       child: Row(
                         children: [
-                          /*LikeButtonWithReactions(
+                          *//*LikeButtonWithReactions(
                           // isLiked: post.isLiked,
                           // onLike: onLike,
                           // onReact: onReact ?? (react){},
@@ -729,7 +729,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                           // onComment: () {
                           //   viewModel.commentPost2(post);
                           // },
-                        ),*/
+                        ),*//*
                           actionType(
                               '${post.likeCount} ${post.likeCount! <= 1 ? 'Like' : 'Likes'}',
                               'assets/images/pages/like2.png', onPressed: () {
@@ -764,7 +764,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
 
                   ],
                 );
-              }),
+              }),*/
         ],
       ),
     );
