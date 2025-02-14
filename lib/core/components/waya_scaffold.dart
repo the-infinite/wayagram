@@ -6,7 +6,7 @@ import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/vm/theme_vm.dart';
+// import 'package:wayagram/core/theme/vm/theme_vm.dart';
 
 class WayaScaffold extends ConsumerWidget {
   final Widget body;
@@ -51,8 +51,10 @@ class WayaScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
-    final themeNotifier = ref.read(themeProvider.notifier);
+    // final themeNotifier = ref.read(themeProvider.notifier);
     final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
+
+    //? This is fine.
     return BlurryModalProgressHUD(
       inAsyncCall: isLoading,
       progressIndicator: progressIndicator ?? CircularProgressIndicator(),

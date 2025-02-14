@@ -147,8 +147,8 @@ class PushNotifications {
   // on tap local notification in foreground
   @pragma('vm:entry-point')
   static void onNotificationTap(NotificationResponse notificationResponse) {
-    final payload = notificationResponse.payload;
-
+    // final payload = notificationResponse.payload;
+    //
     // if (payload != null && payload.contains("Onboarding")) {
     //   navRouter.navigateToDocumentsView();
     // } else {

@@ -46,7 +46,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
     if (!_isInitialized) {
       final index = ModalRoute.of(context)?.settings.arguments as int?;
       if (index != null) {
-        _selectedIndex = index ?? 0;
+        _selectedIndex = index;
       }
       _isInitialized = true;
     }

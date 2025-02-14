@@ -35,7 +35,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
         children: [
           ListTile(
             onTap: () {
-              WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id!));
+              WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id));
             },
             visualDensity: VisualDensity(horizontal: -2.0),
             shape: RoundedRectangleBorder(

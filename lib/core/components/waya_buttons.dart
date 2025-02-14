@@ -28,7 +28,9 @@ class WayaBackButton extends StatelessWidget {
             onTap: onTap ??
                 () {
                   WayaNav.goBack();
-                  HapticFeedback.lightImpact();
+                  try {
+                    HapticFeedback.lightImpact();
+                  } catch (_) {}
                 },
             child: SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
           ),
@@ -220,6 +222,7 @@ class WayaTabButton extends StatelessWidget {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
+        behavior: HitTestBehavior.opaque,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: BoxDecoration(
