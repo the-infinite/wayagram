@@ -86,7 +86,6 @@ class _EventsState extends ConsumerState<Events> with SingleTickerProviderStateM
                                    '${event?.title?.capitalizeFirst}',
                                     style: wayaTheme.textTheme.bodyMedium),
                                 Text(
-                                  //''
                                   '${event?.locationAddress?.capitalizeFirst}',
                                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                       fontSize: 14,
