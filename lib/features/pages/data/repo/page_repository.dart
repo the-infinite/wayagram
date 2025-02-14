@@ -4,6 +4,7 @@ import 'package:wayagram/core/service/repos/base_repository.dart';
 class PageRepository extends BaseRepository {
   static const serviceUrl = "wayagram-graph/api/v2";
 
+
   Future<WayaRequestResponse> createPost(
       String content, List<String> images, postType) {
     final payload = {
