@@ -62,6 +62,8 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
                   buttonText: '',
                   chk: false,
                   onTap: (){
+
+                    print('DARLINGTON===>> ${group?.isPrivate}');
                     group?.isPrivate == true?
                     WayaNav.toNamed('/privateGroup',
                         arguments: {

@@ -49,7 +49,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPageProvider.notifier).getAllPages('${ConversationState.self.id}');
+       ref.read(createPageProvider.notifier).getAllPages('${ConversationState.self.id}');
        ref.read(createPageProvider.notifier).getAllPosts(_wayaLocalDataSource.getUserId());
 
     });
@@ -61,7 +61,16 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider.notifier);
     final viewModel2 = ref.watch(createPageProvider);
+ /*   if (viewModel2.isLoading) {
+      return Expanded(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ));
+    }
 
+    if (viewModel2.getAllPost!.isEmpty ) {
+      return PostEmptyState();
+    }*/
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -425,10 +434,11 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                          radius: 40,
-                          backgroundColor: WayaColors.greyColor100,
-                          backgroundImage: NetworkImage('${recommendedPage?.coverImage}')
+                      WayaImage(
+                        imageUrl:'${recommendedPage?.coverImage}',
+                        height: 70,
+                        width: 70,
+                        radius: BorderRadius.circular(12),
                       ),
                       const Gap(10),
                       Text('${recommendedPage?.name?.capitalizeFirst}',

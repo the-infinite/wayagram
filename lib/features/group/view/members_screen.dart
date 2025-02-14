@@ -46,7 +46,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen >
     // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
-    final member = ref.watch(createGroupProvider.notifier);
+    final viewModel2 = ref.watch(createGroupProvider.notifier);
 
 
     final dynamic args  = ModalRoute.of(context)?.settings.arguments;
@@ -69,7 +69,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen >
           children: [
 
             ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
+                //physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 padding: EdgeInsets.only(top: 15),
                 itemCount: viewModel.allGroupMemberDocs?.length,
@@ -90,18 +90,26 @@ class _MembersScreenState extends ConsumerState<MembersScreen >
                       children: [
                         ListTile(
                           contentPadding: EdgeInsets.only(left: 0, right: 0),
-                          leading: Image.network('${member?.user?.profilePicture}',height: 40.h,),
+                          leading:  WayaImage(
+                            imageUrl:'${member?.user?.profilePicture}',
+                            height: 60,
+                            width: 60,
+                            radius: BorderRadius.circular(12),
+                          ),
+                          //Image.network('${member?.user?.profilePicture}',height: 40.h,),
                           title:Row(children: [
                             Text('${member?.user?.firstName?.capitalizeFirst} ${member?.user?.lastName?.capitalizeFirst}',
-                                //index==0?'Chijioke Nwankwo':index==1?'Temitope Adebayo':index==2?'Oluwaseun Adeyemi': 'Ifeoma Okeke',
                                 style: wayaTheme.textTheme.bodyMedium),
 
                             Spacer(),
                             SizedBox(
                               width: context.width * 0.20,
                               child:WayaButton(
-                                callback: (){},
+                                callback: ()async{
+                                  await viewModel2.followUser(context, '${member?.id}');
+                                },
                                 text: 'Follow',
+                                isLoading: viewModel.isLoading,
                                 textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,

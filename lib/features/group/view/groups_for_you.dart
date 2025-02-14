@@ -409,10 +409,11 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                          radius: 40,
-                          backgroundColor: WayaColors.greyColor100,
-                          backgroundImage: NetworkImage('${recommendedGroup?.coverImage}')
+                      WayaImage(
+                        imageUrl:'${recommendedGroup?.coverImage}',
+                        height: 70,
+                        width: 70,
+                        radius: BorderRadius.circular(12),
                       ),
                       const Gap(10),
                       Text(

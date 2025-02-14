@@ -69,26 +69,38 @@ class _EventsState extends ConsumerState<Events> with SingleTickerProviderStateM
                     children: [
                       Row(
                         children: [
-                          Image.network('${event?.image}', height: 40.h,),
-                          const Gap(10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                 '${event?.title?.capitalizeFirst}',
-                                  style: wayaTheme.textTheme.bodyMedium),
-                              Text(
-                                '${event?.locationAddress?.capitalizeFirst} ${event?.description?.capitalizeFirst}',
-                                //'Oriental Hotel, Jan 12, 04:30pm',
-                                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: Theme.of(context).colorScheme.greyColor500 ),
-                              ),
-                            ],
+                          WayaImage(imageUrl: '${event?.image}', height: 40.h,),
+                          WayaImage(
+                            imageUrl:'${event?.image}',
+                            height: 60,
+                            width: 60,
+                            radius: BorderRadius.circular(12),
                           ),
-                          Spacer(),
+                          const Gap(10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                   '${event?.title?.capitalizeFirst}',
+                                    style: wayaTheme.textTheme.bodyMedium),
+                                Text(
+                                  //''
+                                  '${event?.locationAddress?.capitalizeFirst}',
+                                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: Theme.of(context).colorScheme.greyColor500
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                            
+                                ),
+                              ],
+                            ),
+                          ),
+                          //Spacer(),
                           SizedBox(
                             width: context.width * 0.20,
                             child:WayaButton(
