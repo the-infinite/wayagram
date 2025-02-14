@@ -14,12 +14,14 @@ import 'package:wayagram/features/moments/vm/moment_vm.dart';
 
 class MomentUserInfoWidget extends ConsumerStatefulWidget {
   final MomentData moment;
+  final dynamic isMine;
   final Function() pause;
   final Function() continues;
   const MomentUserInfoWidget(
       {super.key,
       required this.moment,
       required this.continues,
+      required this.isMine,
       required this.pause});
 
   @override
@@ -28,8 +30,6 @@ class MomentUserInfoWidget extends ConsumerStatefulWidget {
 }
 
 class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
-  
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -88,34 +88,32 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
               )
             ],
           ),
-          GestureDetector(
-            onTap: () async {
-              Future<void> report(
-                  {required String reason,
-                  required BuildContext context,
-                  String? comment}) async {
-               
-                ref.read(momentVmProvider.notifier).reportMoment(
-                    momentId: widget.moment.id,
-                    reason: reason,
-                    context: context);
-               
-              }
+          if (!widget.isMine)
+            GestureDetector(
+              onTap: () async {
+                Future<void> report(
+                    {required String reason,
+                    required BuildContext context,
+                    String? comment}) async {
+                  ref.read(momentVmProvider.notifier).reportMoment(
+                      momentId: widget.moment.id,
+                      reason: reason,
+                      context: context);
+                }
 
-              widget.pause();
-              await WayaUtils.showModalSheet(context,
-                  child: Report(
-                      statuses: eventReport,
-                   
-                      currentStatus: '',
-                      report: report));
-              widget.continues();
-            },
-            child: SvgPicture.asset(
-              WayaAssets.icons.mThreeDots.path,
-              color: wayaTheme.colorScheme.white,
-            ),
-          )
+                widget.pause();
+                await WayaUtils.showModalSheet(context,
+                    child: Report(
+                        statuses: eventReport,
+                        currentStatus: '',
+                        report: report));
+                widget.continues();
+              },
+              child: SvgPicture.asset(
+                WayaAssets.icons.mThreeDots.path,
+                color: wayaTheme.colorScheme.white,
+              ),
+            )
         ],
       ),
     );

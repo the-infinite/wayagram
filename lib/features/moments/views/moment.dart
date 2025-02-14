@@ -160,7 +160,7 @@ class _MomentViewState extends ConsumerState<Moment> {
             ref.read(momentVmProvider.notifier).updateText(value);
           },
           onSubmitted: (value) {
-            ref.read(momentVmProvider.notifier).submitMoment();
+            ref.read(momentVmProvider.notifier).submitMoment(context: context);
           },
           controller: TextEditingController(text: status.text)
           ..selection = TextSelection.collapsed(offset: status.text.length),

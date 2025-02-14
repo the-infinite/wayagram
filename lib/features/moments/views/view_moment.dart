@@ -191,6 +191,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
                     top: 30,
                     child: MomentUserInfoWidget(
                       moment: moments[currentIndex],
+                      isMine: args['isMine'],
                       pause: pauseAnimation,
                       continues: continueAnimating,
                     ),

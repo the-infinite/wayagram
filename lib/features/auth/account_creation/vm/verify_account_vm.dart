@@ -110,7 +110,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
       _logger.d(" result ${response.data['message']}");
       if (response.data["statusCode"] == 200) {
         _snackbarService.showCustomSnackbar(variant: SnackbarType.success, message: "OTP has been resend to $email");
-
+state = state.copyWith(isResend: false);
         //? Start the countdown since our attempt to resend the OTP was successful.
         _startCountdown();
       }
