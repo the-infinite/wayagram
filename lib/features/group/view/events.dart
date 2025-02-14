@@ -103,7 +103,9 @@ class _EventsState extends ConsumerState<Events> with SingleTickerProviderStateM
                           SizedBox(
                             width: context.width * 0.20,
                             child:WayaButton(
-                              callback: (){},
+                              callback: (){
+
+                              },
                               text: 'Register',
                               textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
                                   fontSize: 14,
@@ -116,11 +118,6 @@ class _EventsState extends ConsumerState<Events> with SingleTickerProviderStateM
 
                         ],
                       ),
-
-
-
-
-
                     ],
                   ),
                 );
