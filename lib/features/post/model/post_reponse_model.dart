@@ -1,4 +1,5 @@
 import 'package:wayagram/shared/features/user/models/default.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 
 class PostReponseModel {
   final String message;
@@ -79,7 +80,7 @@ class Data {
   }
 }
 
-class Post {
+class Post extends BaseModel<Post> {
   final String id;
   final String userId;
   final List<dynamic>? categories;

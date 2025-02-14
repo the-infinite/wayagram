@@ -51,6 +51,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(createGroupProvider.notifier).getRecommendedGroups();
+      ref.read(createPageProvider.notifier).getAllPosts('${ConversationState.self.id}');
     });
   }
 
@@ -82,12 +83,8 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel2.getAllPost?.length,
-            itemBuilder: (
-                _,
-                index,
-                ) {
+            itemBuilder: (_, index,) {
               final post = viewModel2.getAllPost![index];
-              final posts = viewModel2.getAllPost;
 
               String formatTimeAgo(String dateString) {
                 DateTime dateTime =
@@ -98,11 +95,6 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
               String removeHashtags(String text) {
                 return text.replaceAll(RegExp(r'#\w+'), '').trim();
               }
-
-              List<dynamic> mediaUrls = post.media ?? [];
-
-              print('My Hashtags ${post.hashtags}');
-              print('My Images ${post.media}');
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,10 +409,11 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                          radius: 40,
-                          backgroundColor: WayaColors.greyColor100,
-                          backgroundImage: NetworkImage('${recommendedGroup?.coverImage}')
+                      WayaImage(
+                        imageUrl:'${recommendedGroup?.coverImage}',
+                        height: 70,
+                        width: 70,
+                        radius: BorderRadius.circular(12),
                       ),
                       const Gap(10),
                       Text(

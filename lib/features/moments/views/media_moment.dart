@@ -20,7 +20,7 @@ class MediaMoment extends ConsumerWidget {
     final status = ref.watch(momentVmProvider);
     final wayaTheme = Theme.of(context);
 
-     print("wefwefwef ${status.mediaUrl}");
+   //  print("wefwefwef ${status.mediaUrl}");
 
     return WillPopScope(
       onWillPop: () async {
@@ -233,6 +233,8 @@ Widget mediaPreview({
               onChanged: (value) {
                 ref.read(momentVmProvider.notifier).updateCaption(value);
               },
+              controller: TextEditingController(text: status.caption )
+          ..selection = TextSelection.collapsed(offset: status.caption.length),
             ),
           ),
         ),

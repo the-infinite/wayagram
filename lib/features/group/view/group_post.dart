@@ -384,7 +384,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                 );
               }),
           const Gap(25),
-          GroupedWidgetHeader(
+        /*  GroupedWidgetHeader(
               onTap: () {
                 WayaNav.toNamed('/suggestion');
               },
@@ -463,7 +463,6 @@ class _GroupPostState extends ConsumerState<GroupPost>
                   index,
                   ) {
                 final post = viewModel2.getAllPost![index];
-                final posts = viewModel2.getAllPost;
 
                 String formatTimeAgo(String dateString) {
                   DateTime dateTime =
@@ -474,11 +473,6 @@ class _GroupPostState extends ConsumerState<GroupPost>
                 String removeHashtags(String text) {
                   return text.replaceAll(RegExp(r'#\w+'), '').trim();
                 }
-
-                List<dynamic> mediaUrls = post.media ?? [];
-
-                print('My Hashtags ${post.hashtags}');
-                print('My Images ${post.media}');
 
                 return viewModel2.getAllPost!.isEmpty ? PostEmptyState():Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -677,13 +671,13 @@ class _GroupPostState extends ConsumerState<GroupPost>
                                 ),
                               ],
                             )),
-                          /* if(post.media != null)
+                          *//* if(post.media != null)
                           ...post.media!.map((e)=>
                               Row(
                                 children: [
                                  Image.network('$e', fit: BoxFit.fitWidth,)
                                 ],
-                              )),*/
+                              )),*//*
 
                         ],
                       ),
@@ -717,7 +711,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                       padding: EdgeInsets.fromLTRB(0.w, 8.0.h, 15.w, 8.w),
                       child: Row(
                         children: [
-                          /*LikeButtonWithReactions(
+                          *//*LikeButtonWithReactions(
                           // isLiked: post.isLiked,
                           // onLike: onLike,
                           // onReact: onReact ?? (react){},
@@ -735,7 +729,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                           // onComment: () {
                           //   viewModel.commentPost2(post);
                           // },
-                        ),*/
+                        ),*//*
                           actionType(
                               '${post.likeCount} ${post.likeCount! <= 1 ? 'Like' : 'Likes'}',
                               'assets/images/pages/like2.png', onPressed: () {
@@ -770,7 +764,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
 
                   ],
                 );
-              }),
+              }),*/
         ],
       ),
     );
@@ -1134,24 +1128,26 @@ class PostEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return Container(
-      padding: EdgeInsets.all(30),
-      child: EmptyState(
-          hasButton: false,
-          onTap: () {
-            WayaNav.toNamed(CreatePost.route);
-          },
-          buttontext: 'Create a Post',
-          buttonTrailingIcon: SvgPicture.asset(
-            WayaAssets.icons.addEventIcon.path,
-            colorFilter:
-            ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
-          ),
-          assetImage: Image.asset(
-            WayaAssets.images.emptyEvent.path,
-            scale: 1.5,
-          ),
-          message: "You haven't created any post yet"),
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: EmptyState(
+            hasButton: false,
+            onTap: () {
+              WayaNav.toNamed(CreatePost.route);
+            },
+            buttontext: 'Create a Post',
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You haven't created any post yet"),
+      ),
     );
   }
 }

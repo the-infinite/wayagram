@@ -31,6 +31,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(servicesProvider);
+
     List<Post> posts = widget.isExpanded ? state.topPosts : state.topPosts.sublist(0, min(state.topPosts.length, 3));
 
     return Column(
@@ -45,7 +46,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: posts.length,
+            itemCount: state.posts.length,
             itemBuilder: (context, index) {
               return WayaPostWidget(
                 data: posts[index],
@@ -64,7 +65,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: state.posts.length,
+            itemCount: posts.length,
             itemBuilder: (context, index) {
               return WayaPostWidget(
                 data: posts[index],

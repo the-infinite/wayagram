@@ -11,15 +11,14 @@ class MomentViewerResponseModel {
     required this.statusCode,
     required this.data,
   });
-
-  factory MomentViewerResponseModel.fromJson(Map<String, dynamic> json) {
-    return MomentViewerResponseModel(
-      message: json['message'],
-      status: json['status'],
-      statusCode: json['statusCode'],
-      data: Data.fromJson(json['data']),
-    );
-  }
+factory MomentViewerResponseModel.fromJson(Map<String, dynamic> json) {
+  return MomentViewerResponseModel(
+    message: json['message'] ?? '',
+    status: json['status'] ?? false,
+    statusCode: json['statusCode'] ?? 0,
+    data:  Data.fromJson(json['data']) ,
+  );
+}
 
   Map<String, dynamic> toJson() {
     return {
@@ -50,26 +49,27 @@ class Data {
     required this.page,
     required this.totalPages,
     required this.hasNextPage,
-    required this.nextPage,
+     this.nextPage,
     required this.hasPrevPage,
-    required this.prevPage,
+     this.prevPage,
     required this.pagingCounter,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) {
-    return Data(
-      docs: (json['docs'] as List).map((doc) => MomentViewer.fromJson(doc)).toList(),
-      totalDocs: json['totalDocs'],
-      limit: json['limit'],
-      page: json['page'],
-      totalPages: json['totalPages'],
-      hasNextPage: json['hasNextPage'],
-      nextPage: json['nextPage'],
-      hasPrevPage: json['hasPrevPage'],
-      prevPage: json['prevPage'],
-      pagingCounter: json['pagingCounter'],
-    );
-  }
+factory Data.fromJson(Map<String, dynamic> json) {
+  return Data(
+    docs: (json['docs'] as List?)?.map((doc) => MomentViewer.fromJson(doc)).toList() ?? [],
+    totalDocs: json['totalDocs'] ?? 0,
+    limit: json['limit'] ?? 0,
+    page: json['page'] ?? 0,
+    totalPages: json['totalPages'] ?? 0,
+    hasNextPage: json['hasNextPage'] ?? false,
+    nextPage: json['nextPage'],
+    hasPrevPage: json['hasPrevPage'] ?? false,
+    prevPage: json['prevPage'],
+    pagingCounter: json['pagingCounter'] ?? 0,
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {
@@ -110,19 +110,19 @@ class MomentViewer {
     required this.viewedAt,
   });
 
-  factory MomentViewer.fromJson(Map<String, dynamic> json) {
-    return MomentViewer(
-      id: json['id'],
-      momentId: json['momentId'],
-      userId: json['userId'],
-      name: json['name'],
-      username: json['username'],
-      image: json['image'],
-      likeMoment: json['likeMoment'],
-      comment: json['comment'],
-      viewedAt: DateTime.parse(json['viewedAt']),
-    );
-  }
+ factory MomentViewer.fromJson(Map<String, dynamic> json) {
+  return MomentViewer(
+    id: json['id'] ?? '',
+    momentId: json['momentId'] ?? '',
+    userId: json['userId'] ?? '',
+    name: json['name'],
+    username: json['username'],
+    image: json['image'],
+    likeMoment: json['likeMoment'] ?? false,
+    comment: json['comment'] ?? false,
+    viewedAt: json['viewedAt'] != null ? DateTime.parse(json['viewedAt']) : DateTime.now(),
+  );
+}
 
   Map<String, dynamic> toJson() {
     return {

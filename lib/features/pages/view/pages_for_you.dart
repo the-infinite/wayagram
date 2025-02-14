@@ -44,12 +44,14 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
 
   int like = 0;
 
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPageProvider.notifier).getAllPages('${ConversationState.self.id}');
-      ref.read(createPageProvider.notifier).getAllPosts(_wayaLocalDataSource.getUserId());
+       ref.read(createPageProvider.notifier).getAllPages('${ConversationState.self.id}');
+       ref.read(createPageProvider.notifier).getAllPosts(_wayaLocalDataSource.getUserId());
+
     });
   }
 
@@ -59,7 +61,16 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider.notifier);
     final viewModel2 = ref.watch(createPageProvider);
+ /*   if (viewModel2.isLoading) {
+      return Expanded(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ));
+    }
 
+    if (viewModel2.getAllPost!.isEmpty ) {
+      return PostEmptyState();
+    }*/
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,16 +84,14 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                   color: WayaColors.greyColor700,
                   fontFamily: WayaConstants.fontFamily)),
         ),
-        viewModel2.getAllPost!.isEmpty? PostEmptyState():
+
+       viewModel2.getAllPost!.isEmpty? PostEmptyState():
         ListView.builder(
             padding: EdgeInsets.only(left: 1, right: 15,),
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel2.getAllPost?.length,
-            itemBuilder: (
-                _,
-                index,
-                ) {
+            itemBuilder: (_, index,) {
               final post = viewModel2.getAllPost![index];
 
               String formatTimeAgo(String dateString) {
@@ -94,9 +103,6 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
               String removeHashtags(String text) {
                 return text.replaceAll(RegExp(r'#\w+'), '').trim();
               }
-
-              print('My Hashtags ${post.hashtags}');
-              print('My Images ${post.media}');
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,13 +314,8 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                               ),
                             ],
                           )),
-                        /* if(post.media != null)
-                    ...post.media!.map((e)=>
-                        Row(
-                          children: [
-                           Image.network('$e', fit: BoxFit.fitWidth,)
-                          ],
-                        )),*/
+
+
 
                       ],
                     ),
@@ -433,10 +434,11 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                          radius: 40,
-                          backgroundColor: WayaColors.greyColor100,
-                          backgroundImage: NetworkImage('${recommendedPage?.coverImage}')
+                      WayaImage(
+                        imageUrl:'${recommendedPage?.coverImage}',
+                        height: 70,
+                        width: 70,
+                        radius: BorderRadius.circular(12),
                       ),
                       const Gap(10),
                       Text('${recommendedPage?.name?.capitalizeFirst}',
@@ -714,13 +716,6 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                               ),
                             ],
                           )),
-                        /* if(post.media != null)
-                    ...post.media!.map((e)=>
-                        Row(
-                          children: [
-                           Image.network('$e', fit: BoxFit.fitWidth,)
-                          ],
-                        )),*/
 
                       ],
                     ),
@@ -856,7 +851,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                       suspense:(_) => Center(child: CircularProgressIndicator(),),
                       error: (_, error, __)=>Center(child: CircularProgressIndicator(),),
                       builder: (_, data){
-                      return  ListView.builder(
+                      return data!.isEmpty? Center(child: Text('No comments yet.')): ListView.builder(
                       shrinkWrap: true,
                       itemCount: data?.length ?? 0,
                       itemBuilder: (context, index) {
@@ -906,14 +901,58 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                   ),
                                 ],
                               ),
-                              Text(
-                                '${data?[index].content?.capitalizeFirst}',
-                                style: TextStyle(
-                                  //fontFamily: WayaConstants.fontFamily,
-                                  fontSize: 12.sp,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w200,
-                                ),
+                              Gap(10),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${data?[index].content?.capitalizeFirst}',
+                                    style: TextStyle(
+                                      //fontFamily: WayaConstants.fontFamily,
+                                      fontSize: 12.sp,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Row(
+                                    children: [
+                                      /*LikeButtonWithReactions(
+                    // isLiked: post.isLiked,
+                    // onLike: onLike,
+                    // onReact: onReact ?? (react){},
+
+                    isLiked: post.likeCount,
+                    onLike: onLike,
+                    onReact: onReact ?? (react){},
+
+                    // onLike: (String? reaction) async {
+                    //   viewModel.likePost(, reaction: reaction);
+                    // },
+                    // onReact: (String reaction) {
+                    //   viewModel.likePost(post, reaction: reaction);
+                    // },
+                    // onComment: () {
+                    //   viewModel.commentPost2(post);
+                    // },
+                  ),*/
+                                      actionType(
+                                          'Likes',
+                                          'assets/images/pages/like2.png', onPressed: () {
+                                        // viewModel2.likePost(context, postId: '${post.id}',
+                                        //     userId: '${ConversationState.self.id}');
+                                      },
+                                          color:  WayaColors.greyColor500
+                                              //: WayaColors.primary
+                                      ),
+                                      actionType(' Comments',
+                                          'assets/images/pages/comment2.png', onPressed: () {
+                                            //showCommentBox(context, post.id);
+
+                                          }),
+
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
                           ),

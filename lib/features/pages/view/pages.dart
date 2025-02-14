@@ -26,13 +26,12 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
 
     return WayaScaffold(
       onTapBackButton: () {
-        Navigator.pushNamed(context, BottomView.route, arguments: 5);
+        Navigator.pushNamed(context, BottomView.route, arguments: 0);
       },
       isLoading: viewModel.isLoading,
       isScrollable: true,

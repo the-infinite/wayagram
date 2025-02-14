@@ -1,15 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/waya_colors.dart';
-import 'package:wayagram/features/group/view/group_post.dart';
+import 'package:wayagram/features/group/widget/group_widget.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 
 class FollowingPage extends ConsumerStatefulWidget {
@@ -34,88 +32,26 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
+        viewModel.pagesUsersFollow!.isEmpty ? PageEmptyState():
         ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel.pagesUsersFollow?.length,
             itemBuilder: (_, index){
              final page = viewModel.pagesUsersFollow?[index];
-              return viewModel.pagesUsersFollow!.isEmpty ? PostEmptyState(): Container(
-                margin: EdgeInsets.only(bottom: 15),
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Theme.of(context).colorScheme.greyColor200),
-
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.only(left: 0, right: 0),
-                      leading: CircleAvatar(
-                        backgroundColor: WayaColors.greyColor100,
-                        backgroundImage: NetworkImage('${page?.coverImage}'),
-                      ),
-                      title:Row(children: [
-                        Text(
-                          '${page?.name?.capitalizeFirst}',
-                            style:Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Theme.of(context).colorScheme.black )),
-
-                        Spacer(),
-                        SizedBox(
-                          width: context.width * 0.20,
-                          height: 30,
-                          child: WayaButton(
-                            callback: (){},
-                            text: 'Following',
-                            height: 38,
-                            color: Colors.white,
-                            textColor: Theme.of(context).colorScheme.primary600,
-                            border: Border.all(color:Theme.of(context).colorScheme.primary600),
-                            textStyle: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Theme.of(context).colorScheme.black ),
-
-                          ),
-                        ),
-
-
-                      ],),
-                      subtitle:  Text(
-                        '${page?.followerCount} ${page?.followerCount==0 || page?.followerCount == 1?'Follower':'Followers'}',
-                        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Theme.of(context).colorScheme.greyColor500 ),
-                      ),),
-                    Gap(10),
-                    Text(
-                      '${page?.description?.capitalizeFirst}',
-                      //'Be the first to know about upcoming marvel movies and get the latest news before anyone',
-                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).colorScheme.greyColor500 ),
-                    ),
-
-                  ],
-                ),
-              );
+              return GroupWidget(
+                  name: '${page?.name?.capitalizeFirst}',
+                  desc: '${page?.description?.capitalizeFirst}',
+                  image:'${page?.coverImage}',
+                  count:'${page?.followerCount} ${page?.followerCount==0 || page?.followerCount == 1?'Follower':'Followers'}',
+                  buttonText: 'Following',
+                  chk: true,
+                  onTap: (){});
             }),
 
       ],
@@ -123,4 +59,32 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
 
   }
 
+}
+
+class PageEmptyState extends StatelessWidget {
+  const PageEmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: EmptyState(
+            hasButton: false,
+            onTap: () {
+            },
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You haven't followed any page yet"),
+      ),
+    );
+  }
 }

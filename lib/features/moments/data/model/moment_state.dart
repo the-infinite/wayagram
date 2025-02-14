@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
+import 'package:wayagram/features/moments/data/model/folllowed_user_moments_model.dart';
 
 enum StatusType { text, media }
 
@@ -22,7 +23,7 @@ class MomentState {
   final bool isCreatingMoment;
   final bool isLoadingUserMoment;
   final List<MomentData> myMoments;
-  final List<MomentData> moments;
+  final List<UserMoments> moments;
   final bool isReportingMoment;
   final String userId;
   final bool isEditingMode;
@@ -44,7 +45,7 @@ class MomentState {
       this.userId = '',
       this.moments = const [],
       this.isEditingMode = false,
-      this.isReportingMoment =false,
+      this.isReportingMoment = false,
       this.mediaUrl = '',
       this.momentId = '',
       this.isLoadingUserMoments = false});
@@ -67,7 +68,7 @@ class MomentState {
       String? momentId,
       String? mediaUrl,
       bool? isReportingMoment,
-      List<MomentData>? moments,
+      List<UserMoments>? moments,
       bool? isCreatingMoment}) {
     return MomentState(
         backgroundColor: backgroundColor ?? this.backgroundColor,

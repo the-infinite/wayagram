@@ -6,6 +6,8 @@ import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
+import 'package:wayagram/shared/features/user/repo/default.dart';
+import 'package:wayagram/features/explore/search/model/user_detail.dart';
 
 class CategorizedPost {
   final List<Post> posts;
@@ -40,12 +42,14 @@ class States {
   final List<Post> posts;
   final List<Post> topPosts;
   final List<CategorizedPost> categorizedPosts;
+  final List<UserDetails> usersDetails;
 
   States(
       {this.events = const [],
       this.userId = '',
       this.topEvents = const [],
       this.categorizedPosts = const [],
+      this.usersDetails = const [],
       this.posts = const [],
       this.topPosts = const []});
 
@@ -54,12 +58,14 @@ class States {
       String? userId,
       List<EventDoc>? topEvents,
       List<CategorizedPost>? categorizedPosts,
+      List<UserDetails>? usersDetails,
       List<Post>? posts,
       List<Post>? topPosts}) {
     return States(
         events: events ?? this.events,
         userId: userId ?? this.userId,
         topEvents: topEvents ?? this.topEvents,
+        usersDetails: usersDetails ?? this.usersDetails,
         posts: posts ?? this.posts,
         categorizedPosts: categorizedPosts ?? this.categorizedPosts,
         topPosts: topPosts ?? this.topPosts);
@@ -165,6 +171,27 @@ class ServicesProvider extends StateNotifier<States> {
     } catch (error) {
       print(error);
     }
+  }
+
+  void invalidatePostData(String id,
+      {int? likeCount, int? commentCount, int? shareCount}) {
+    Post updatePost(Post post) {
+      return post.id == id
+          ? post.copyWith(
+              likeCount: likeCount ?? post.likeCount,
+              commentCount: commentCount ?? post.commentCount,
+              shareCount: shareCount ?? post.shareCount,
+            )
+          : post;
+    }
+
+    final updatedTopPosts = state.topPosts.map(updatePost).toList();
+    final updatedPosts = state.posts.map(updatePost).toList();
+
+    state = state.copyWith(
+      topPosts: updatedTopPosts,
+      posts: updatedPosts,
+    );
   }
 
   //// Posts
@@ -359,6 +386,23 @@ class ServicesProvider extends StateNotifier<States> {
       }
     } catch (e) {
       print('Error loading more posts for category $category: $e');
+    }
+  }
+
+  Future<void> getAllUsers() async {
+    try {
+      final response = await UserRepository.instance.getAllUsers();
+
+      if (response.success) {
+        print(response.data);
+        final data = response.data['data'];
+        final docs = (data['docs'] as List)
+            .map((doc) => UserDetails.fromJson(doc))
+            .toList();
+        state = state.copyWith(usersDetails: docs);
+      }
+    } catch (error) {
+      print(error);
     }
   }
 }
