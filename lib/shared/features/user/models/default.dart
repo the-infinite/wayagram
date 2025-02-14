@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:get/get.dart';
 
 part 'default.g.dart';
 
@@ -50,7 +51,7 @@ class UserDetailsModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final UserRole? role;
- 
+
   UserDetailsModel({
     required this.id,
     required this.phoneNumber,
@@ -85,7 +86,7 @@ class UserDetailsModel {
     required this.lga,
   });
 
-  String get fullname => "$firstName $lastName";
+  String get fullname => "${firstName?.capitalizeFirst} ${lastName?.capitalizeFirst}";
 
   factory UserDetailsModel.fromJson(Map<String, dynamic> json) => _$UserDetailsModelFromJson(json);
 
