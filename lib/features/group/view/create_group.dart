@@ -162,12 +162,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                       ),
                     ],
                   ),
-                 /* WayaImage3(
-                    imageUrl: '$_selectedImages',
-                    onTap: _pickImages,
-                    height: Get.height * 0.2,
-                    isEdit: true,
-                  ),*/
                   Gap(15),
 
                 ],

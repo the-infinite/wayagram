@@ -10,6 +10,7 @@ import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat_selection.dart';
+import 'package:wayagram/shared/features/chat/widget/empty_conversation.dart';
 
 class ForwardMessageModal extends StatefulWidget {
   final MessageModel message;
@@ -96,112 +97,128 @@ class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTi
                 return Stack(
                   children: [
                     //? First, this one.
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        //? First, the title of the popup.
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //* The title.
-                            Text(
-                              "Forward to",
-                              style: WayaTextStyles.titleLarge.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24,
+                    SingleChildScrollView(
+                      physics: results.isEmpty ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          //? First, the title of the popup.
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //* The title.
+                              Text(
+                                "Forward to",
+                                style: WayaTextStyles.titleLarge.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                ),
+                              ),
+
+                              //* The dismiss button.
+                              IconButton(
+                                onPressed: () => WayaNav.goBack(result: null),
+                                style: IconButton.styleFrom(
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  padding: const EdgeInsets.all(2),
+                                  backgroundColor: WayaColors.greyColor200,
+                                ),
+                                icon: WayaAssets.icons.actonDismiss.svg(
+                                  color: WayaColors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          // Some space.
+                          const Gap(10),
+
+                          //? This is fine.
+                          PopScope(
+                            onPopInvokedWithResult: (popping, result) {
+                              notifier.setFilter("");
+                            },
+                            child: SizedBox(
+                              height: 50,
+                              child: WayaTextFormField(
+                                padding: EdgeInsets.symmetric(horizontal: 1),
+                                onChanged: (value) {
+                                  notifier.setFilter(value);
+                                },
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 13),
+                                  child: WayaAssets.icons.actionSearch.svg(
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                controller: controller,
+                                hintText: "Search chats",
                               ),
                             ),
+                          ),
 
-                            //* The dismiss button.
-                            IconButton(
-                              onPressed: () => WayaNav.goBack(result: null),
-                              style: IconButton.styleFrom(
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                padding: const EdgeInsets.all(2),
-                                backgroundColor: WayaColors.greyColor200,
-                              ),
-                              icon: WayaAssets.icons.actonDismiss.svg(
-                                color: WayaColors.black,
+                          // Some  space.
+                          const Gap(10),
+
+                          //? Next, our list of users to send this to.
+                          if (results.isNotEmpty)
+                            ...List.generate(
+                              results.length,
+                              (index) {
+                                final chat = results[index];
+                                final isSelected = choices.contains(chat.id);
+
+                                //? Something for a single conversation.
+                                return SelectConversationWidget(
+                                  chat: chat,
+                                  index: index,
+                                  isSelected: isSelected,
+                                  onSelect: (chat) async {
+                                    final value = [...choices];
+
+                                    //? Fair enough.
+                                    if (isSelected) {
+                                      value.remove(chat.id);
+                                    }
+
+                                    //? Do it like this.
+                                    else {
+                                      value.add(chat.id);
+                                    }
+
+                                    //? If this is now empty...
+                                    if (value.isEmpty) {
+                                      try {
+                                        await animationController?.reverse();
+                                      } catch (_) {}
+                                    }
+
+                                    //? Update the notifier.
+                                    selection.value = value;
+                                  },
+                                );
+                              },
+                            )
+                          else ...[
+                            // Finally, some bottomless space.
+                            const Gap(70),
+
+                            //? Empty conversations
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 17),
+                                child: EmptyConversationsWidget(),
                               ),
                             ),
                           ],
-                        ),
 
-                        // Some space.
-                        const Gap(10),
-
-                        //? This is fine.
-                        PopScope(
-                          onPopInvokedWithResult: (popping, result) {
-                            notifier.setFilter("");
-                          },
-                          child: SizedBox(
-                            height: 50,
-                            child: WayaTextFormField(
-                              padding: EdgeInsets.symmetric(horizontal: 1),
-                              onChanged: (value) {
-                                notifier.setFilter(value);
-                              },
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 13),
-                                child: WayaAssets.icons.actionSearch.svg(
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                              controller: controller,
-                              hintText: "Search chats",
-                            ),
-                          ),
-                        ),
-
-                        // Some  space.
-                        const Gap(10),
-
-                        //? Next, our list of users to send this to.
-                        ...List.generate(
-                          results.length,
-                          (index) {
-                            final chat = results[index];
-                            final isSelected = choices.contains(chat.id);
-
-                            //? Something for a single conversation.
-                            return SelectConversationWidget(
-                              chat: chat,
-                              index: index,
-                              isSelected: isSelected,
-                              onSelect: (chat) async {
-                                final value = [...choices];
-
-                                //? Fair enough.
-                                if (isSelected) {
-                                  value.remove(chat.id);
-                                }
-
-                                //? Do it like this.
-                                else {
-                                  value.add(chat.id);
-                                }
-
-                                //? If this is now empty...
-                                if (value.isEmpty) {
-                                  try {
-                                    await animationController?.reverse();
-                                  } catch (_) {}
-                                }
-
-                                //? Update the notifier.
-                                selection.value = value;
-                              },
-                            );
-                          },
-                        ),
-
-                        // Finally, some bottomless space.
-                        const Gap(120),
-                      ],
+                          // Finally, some bottomless space.
+                          const Gap(120),
+                        ],
+                      ),
                     ),
 
                     //? Next, this one.

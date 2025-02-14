@@ -126,7 +126,8 @@ GetAllGroupDocs docsFromJson(String str) => GetAllGroupDocs.fromJson(json.decode
 String docsToJson(GetAllGroupDocs data) => json.encode(data.toJson());
 class GetAllGroupDocs {
   GetAllGroupDocs({
-      this.id, 
+      this.id,
+    this.url,
       this.name, 
       this.description,
      this.memberCount,
@@ -141,6 +142,7 @@ class GetAllGroupDocs {
 
   GetAllGroupDocs.fromJson(dynamic json) {
     id = json['id'];
+    url = json['url'];
     name = json['name'];
     description = json['description'];
     memberCount = json['memberCount'];
@@ -155,6 +157,7 @@ class GetAllGroupDocs {
     updatedAt = json['updated_at'];
   }
   String? id;
+  String? url;
   String? name;
   String? description;
   num? memberCount;
@@ -166,7 +169,9 @@ class GetAllGroupDocs {
   String? createdAt;
   String? updatedAt;
 
-  GetAllGroupDocs copyWith({  String? id,
+  GetAllGroupDocs copyWith({
+    String? id,
+    String? url,
   String? name,
   String? description,
     num? memberCount,
@@ -177,7 +182,9 @@ class GetAllGroupDocs {
   dynamic deletedAt,
   String? createdAt,
   String? updatedAt,
-}) => GetAllGroupDocs(  id: id ?? this.id,
+}) => GetAllGroupDocs(
+    id: id ?? this.id,
+  url: url ?? this.url,
   name: name ?? this.name,
   description: description ?? this.description,
     memberCount: memberCount ?? this.memberCount,
@@ -192,6 +199,7 @@ class GetAllGroupDocs {
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
+    map['url'] = id;
     map['name'] = name;
     map['description'] = description;
     map['memberCount'] = memberCount;

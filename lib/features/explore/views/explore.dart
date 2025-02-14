@@ -65,8 +65,8 @@ class _ExploreState extends ConsumerState<Explore> {
         isLoading: false,
         backgroundColor: wayaTheme.colorScheme.scaffoldColor,
         appBar: AppBar(
-          toolbarHeight: 70,
-          backgroundColor: wayaTheme.colorScheme.white,
+          toolbarHeight: kToolbarHeight,
+          backgroundColor: wayaTheme.colorScheme.scaffoldColor2,
           title: ExploreHeader(),
           actions: [
             Container(
@@ -123,9 +123,7 @@ class _ExploreState extends ConsumerState<Explore> {
             SharedMoments(),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Have a buy request, just create a quote',
-                title: 'Get Quotation'),
+                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
@@ -141,9 +139,10 @@ class _ExploreState extends ConsumerState<Explore> {
                   Text(
                     "Create a Quote",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16),
+                      color: wayaTheme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),
@@ -169,9 +168,7 @@ class _ExploreState extends ConsumerState<Explore> {
             CategoriesFilterWidget(setCategory: (value) {
               ref.read(shopVmProvider.notifier).setCategory(value);
               for (String categoryId in value) {
-                ref
-                    .read(productEngagementProvider.notifier)
-                    .addCategory(categoryId, ProductPoint.searchPoint.value);
+                ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
               }
             }),
             const Gap(25),
@@ -182,10 +179,7 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Support a course that matters',
-                title: 'Donations'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Support a course that matters', title: 'Donations'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -356,10 +350,7 @@ class _ExploreState extends ConsumerState<Explore> {
             const ConversationFeedWidget(isExpanded: false),
 
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Join Upcoming Activities',
-                title: 'University Got Talent'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),

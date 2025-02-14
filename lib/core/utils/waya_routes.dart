@@ -18,6 +18,7 @@ import 'package:wayagram/features/general_settings/profile/view/profile_page.dar
 import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
+import 'package:wayagram/features/group/view/edit_group_info.dart';
 import 'package:wayagram/features/group/view/group_setting.dart';
 import 'package:wayagram/features/group/view/group_suggestion.dart';
 import 'package:wayagram/features/group/view/groups.dart';
@@ -130,7 +131,7 @@ class WayaAppRoutes {
     VerifyTransactionScreen.route: () => VerifyTransactionScreen(),
     AllTransactionHistory.route: () => AllTransactionHistory(),
     BankTransferScreen.route: () => BankTransferScreen(),
-    ProfilePage.route: () => ProfilePage(),
+    ProfilePage.route: () => ProfilePage(id: WayaNav.search['id'].toString()),
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),
     AddProduct.route: () => AddProduct(),
@@ -189,8 +190,7 @@ class WayaAppRoutes {
     EditPageInfo.route: () => EditPageInfo(),
     AddTeamMember.route: () => AddTeamMember(),
     PrivateGroup.route: () => PrivateGroup(),
-    SingleChatScreen.route: () =>
-        SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
     GroupSetting.route: () => GroupSetting(),
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
@@ -204,8 +204,8 @@ class WayaAppRoutes {
           title: '',
           postId: '',
         ),
-
-    AddGroupMember.route: () => AddGroupMember(),
+    EditGroupInfo.route: ()=> EditGroupInfo(),
+    AddGroupMember.route: ()=> AddGroupMember(),
     SearchView.route: () => SearchView(),
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
@@ -213,8 +213,11 @@ class WayaAppRoutes {
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getSingleChatRoute(String id) =>
-      "${SingleChatScreen.route}?id=$id";
+  static String getSingleChatRoute(String id) => "${SingleChatScreen.route}?id=$id";
+
+  /// Helper that shows an example of the generator route pattern with GetX and
+  /// a little bit of hard coded magic.
+  static String getProfileRoute(String id) => "${ProfilePage.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages => routes.entries.map((entry) {

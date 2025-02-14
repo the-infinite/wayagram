@@ -3,10 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:svg_flutter/svg_flutter.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 class GroupSuggestion extends ConsumerStatefulWidget {
   static const route = '/groupSuggestion';
@@ -23,13 +29,22 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
   );
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createGroupProvider.notifier).getRecommendedGroups();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createPageProvider);
+    final viewModel = ref.watch(createGroupProvider);
+    final group = ref.watch(createGroupProvider.notifier);
 
     return WayaScaffold(
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         isScrollable: true,
         title: 'Suggested For You',
         backgroundColor: Theme.of(context).colorScheme.greyColor50,
@@ -38,14 +53,16 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
+            viewModel.recommendedGroupDocs!.isEmpty ? GroupEmptyState():
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 padding: EdgeInsets.only(top: 15),
-                itemCount: 6,
+                itemCount: viewModel.recommendedGroupDocs?.length,
                 itemBuilder: (_, index){
+                  final recommendedGroup = viewModel.recommendedGroupDocs?[index];
                   return Container(
-                    margin: EdgeInsets.only(bottom: 15),
+                    //margin: EdgeInsets.only(bottom: 15),
                     padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -59,21 +76,27 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
                       children: [
                         ListTile(
                           contentPadding: EdgeInsets.only(left: 0, right: 0),
-                          leading: Image.asset(
-                            index==0?'assets/images/pages/empire.png':index==1?'assets/images/pages/ms.png':
-                            index==2?'assets/images/pages/united.png':'assets/images/pages/ls.png',
-                            height: 40.h,),
+                          leading: CircleAvatar(
+                              radius: 40,
+                              backgroundColor: WayaColors.greyColor100,
+                              backgroundImage: NetworkImage('${recommendedGroup?.coverImage}')
+                          ),
                           title:Row(children: [
-                            Text(
-                                index==0?'Empire Music':index==1?'Marvel Studios':index==2?'Manchester United': 'Livescores',
-                                style: wayaTheme.textTheme.bodyMedium),
+                            Text('${recommendedGroup?.name?.capitalizeFirst}',
+                                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context).colorScheme.black )),
 
                             Spacer(),
                             SizedBox(
-                              width: context.width * 0.20,
+                              width: context.width * 0.30,
                               child:WayaButton(
-                                callback: (){},
+                                callback: ()async{
+                                  await group.joinGroup(context, '${recommendedGroup?.id}');
+                                },
                                 text: 'Send Join Request',
+                                isLoading: viewModel.isLoading,
                                 textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
@@ -85,14 +108,14 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
 
                           ],),
                           subtitle:  Text(
-                            '48.6k Members',
+                            '${recommendedGroup?.memberCount} Members',
                             style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).colorScheme.greyColor500 ),
                           ),),
                         Text(
-                          'Find your sound . Discuss writing, composing, recording, and much more',
+                          '${recommendedGroup?.description?.capitalizeFirst}',
                           style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
@@ -110,4 +133,34 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
   }
 
 
+}
+
+class GroupEmptyState extends StatelessWidget {
+  const GroupEmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: EmptyState(
+            hasButton: true,
+            onTap: () {
+              WayaNav.toNamed('/createGroup');
+            },
+            //buttontext: 'Create a Post',
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You haven't created group yet"),
+      ),
+    );
+  }
 }

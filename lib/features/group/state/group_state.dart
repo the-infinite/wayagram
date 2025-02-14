@@ -6,6 +6,7 @@ import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
+import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 
 import '../data/model/join_request_model.dart';
 
@@ -23,6 +24,7 @@ class GroupState{
   List<FetchAllEventDocs>? fetchAllEventDocs;
   List<AllGroupMemberDocs>? allGroupMemberDocs;
   List<JoinedGroupDocs>? joinedGroup;
+  List<RecommendedGroupDocs>? recommendedGroupDocs;
 
   final bool isFocused;
   final bool isLoading;
@@ -49,6 +51,7 @@ class GroupState{
     this.getAllGroups = const [],
     this.fetchAllEventDocs = const [],
     this.joinedGroup = const [],
+    this.recommendedGroupDocs = const [],
     this.image,
   }):   groupName = groupName ?? TextEditingController(),
         groupDescription = groupDescription ?? TextEditingController(),
@@ -63,6 +66,7 @@ class GroupState{
     List<FetchAllEventDocs>? fetchAllEventDocs,
     List<AllGroupMemberDocs>? allGroupMemberDocs,
     List<JoinedGroupDocs>? joinedGroup,
+    List<RecommendedGroupDocs>? recommendedGroupDocs,
 
     bool? isFocused,
     bool? isLoading,
@@ -84,6 +88,7 @@ class GroupState{
       getAllGroups: getAllGroups ?? this.getAllGroups,
       fetchAllEventDocs: fetchAllEventDocs ?? this.fetchAllEventDocs,
       allGroupMemberDocs: allGroupMemberDocs ?? this.allGroupMemberDocs,
+      recommendedGroupDocs: recommendedGroupDocs ?? this.recommendedGroupDocs,
       joinedGroup: joinedGroup ?? this.joinedGroup,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,

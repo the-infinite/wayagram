@@ -8,6 +8,7 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
@@ -15,8 +16,9 @@ import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/group_response.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
+import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
-import 'package:wayagram/features/pages/data/model/page_state.dart';
+import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 
 import 'package:wayagram/shared/features/file/repo/default.dart';
@@ -139,7 +141,16 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
-
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Group info updated successfully!', style: TextStyle(
+                fontFamily: WayaConstants.fontFamily,
+                fontSize: 12
+            ),),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
 
       //? If it failed...
@@ -176,13 +187,19 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> joinGroup( ctx,  String postId) async {
+  Future<void> joinGroup( ctx,  String groupId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.joinGroup(postId);
+      final response =  await _groupRepository.joinGroup(groupId);
       state = state.copyWith(isLoading: false);
       if(response.success && ctx.mounted){
-
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Joined successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
     } catch (e) {
       print(e);
@@ -232,6 +249,28 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  Future<void> inviteUserToGroup( ctx, String groupId, String role, String targetId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _groupRepository.inviteUserToGroup(groupId, role, targetId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        // ScaffoldMessenger.of(ctx).showSnackBar(
+        //   const SnackBar(
+        //     content: Text('Request declined successfully!'),
+        //     backgroundColor: WayaColors.primary,
+        //     duration: Duration(seconds: 2),
+        //   ),
+        // );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
 
   Future<List<GetAllGroupDocs>?> getSingleGroup(id) async {
     try {
@@ -308,6 +347,25 @@ class GroupVm extends StateNotifier<GroupState> {
     } finally {
 
     }
+  }
+
+  Future<void> getRecommendedGroups() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.recommendedGroup();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        RecommendedGroupModel responseModel = RecommendedGroupModel.fromJson(response.data);
+        state = state.copyWith(recommendedGroupDocs: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+
+    }
+    return null;
   }
 
   Future<void> getEvent() async {

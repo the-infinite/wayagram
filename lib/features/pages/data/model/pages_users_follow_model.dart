@@ -127,7 +127,8 @@ String docsToJson(PagesUsersFollowDocs data) => json.encode(data.toJson());
 class PagesUsersFollowDocs {
   PagesUsersFollowDocs({
       this.id, 
-      this.ownerId, 
+      this.ownerId,
+      this.followerCount,
       this.name, 
       this.description, 
       this.isPublic, 
@@ -141,6 +142,7 @@ class PagesUsersFollowDocs {
   PagesUsersFollowDocs.fromJson(dynamic json) {
     id = json['id'];
     ownerId = json['ownerId'];
+    followerCount = json['followerCount'];
     name = json['name'];
     description = json['description'];
     isPublic = json['isPublic'];
@@ -155,6 +157,7 @@ class PagesUsersFollowDocs {
   }
   String? id;
   String? ownerId;
+  num? followerCount;
   String? name;
   String? description;
   bool? isPublic;
@@ -167,6 +170,7 @@ class PagesUsersFollowDocs {
   Owner? owner;
   PagesUsersFollowDocs copyWith({  String? id,
   String? ownerId,
+    num? followerCount,
   String? name,
   String? description,
   bool? isPublic,
@@ -179,6 +183,7 @@ class PagesUsersFollowDocs {
   Owner? owner,
 }) => PagesUsersFollowDocs(  id: id ?? this.id,
   ownerId: ownerId ?? this.ownerId,
+    followerCount: followerCount ?? this.followerCount,
   name: name ?? this.name,
   description: description ?? this.description,
   isPublic: isPublic ?? this.isPublic,
@@ -194,6 +199,7 @@ class PagesUsersFollowDocs {
     final map = <String, dynamic>{};
     map['id'] = id;
     map['ownerId'] = ownerId;
+    map['followerCount'] = followerCount;
     map['name'] = name;
     map['description'] = description;
     map['isPublic'] = isPublic;

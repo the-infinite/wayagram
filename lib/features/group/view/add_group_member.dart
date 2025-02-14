@@ -69,7 +69,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
           callback: !viewModel.isLoading
               ? () async {
             if (_formKey.currentState!.validate()) {
-              //await team.u
+              //await team.inviteUserToGroup(context, groupId, role, targetId)
               showCustomDialog(context, 'Success! ${viewModel.username} has been added as a\nModerator','You can now collaborate seamlessly and\nmanage the page together.');
               ref.watch(createGroupProvider.notifier).reset();
               Navigator.pop(context);
