@@ -79,10 +79,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel2.getAllPost?.length,
-            itemBuilder: (
-                _,
-                index,
-                ) {
+            itemBuilder: (_, index,) {
               final post = viewModel2.getAllPost![index];
 
               String formatTimeAgo(String dateString) {
@@ -94,9 +91,6 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
               String removeHashtags(String text) {
                 return text.replaceAll(RegExp(r'#\w+'), '').trim();
               }
-
-              print('My Hashtags ${post.hashtags}');
-              print('My Images ${post.media}');
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,13 +302,8 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                               ),
                             ],
                           )),
-                        /* if(post.media != null)
-                    ...post.media!.map((e)=>
-                        Row(
-                          children: [
-                           Image.network('$e', fit: BoxFit.fitWidth,)
-                          ],
-                        )),*/
+
+
 
                       ],
                     ),
@@ -714,13 +703,6 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                               ),
                             ],
                           )),
-                        /* if(post.media != null)
-                    ...post.media!.map((e)=>
-                        Row(
-                          children: [
-                           Image.network('$e', fit: BoxFit.fitWidth,)
-                          ],
-                        )),*/
 
                       ],
                     ),
@@ -856,7 +838,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                       suspense:(_) => Center(child: CircularProgressIndicator(),),
                       error: (_, error, __)=>Center(child: CircularProgressIndicator(),),
                       builder: (_, data){
-                      return  ListView.builder(
+                      return data!.isEmpty? Center(child: Text('No comments yet.')): ListView.builder(
                       shrinkWrap: true,
                       itemCount: data?.length ?? 0,
                       itemBuilder: (context, index) {
@@ -906,14 +888,58 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                   ),
                                 ],
                               ),
-                              Text(
-                                '${data?[index].content?.capitalizeFirst}',
-                                style: TextStyle(
-                                  //fontFamily: WayaConstants.fontFamily,
-                                  fontSize: 12.sp,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w200,
-                                ),
+                              Gap(10),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${data?[index].content?.capitalizeFirst}',
+                                    style: TextStyle(
+                                      //fontFamily: WayaConstants.fontFamily,
+                                      fontSize: 12.sp,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w200,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Row(
+                                    children: [
+                                      /*LikeButtonWithReactions(
+                    // isLiked: post.isLiked,
+                    // onLike: onLike,
+                    // onReact: onReact ?? (react){},
+
+                    isLiked: post.likeCount,
+                    onLike: onLike,
+                    onReact: onReact ?? (react){},
+
+                    // onLike: (String? reaction) async {
+                    //   viewModel.likePost(, reaction: reaction);
+                    // },
+                    // onReact: (String reaction) {
+                    //   viewModel.likePost(post, reaction: reaction);
+                    // },
+                    // onComment: () {
+                    //   viewModel.commentPost2(post);
+                    // },
+                  ),*/
+                                      actionType(
+                                          'Likes',
+                                          'assets/images/pages/like2.png', onPressed: () {
+                                        // viewModel2.likePost(context, postId: '${post.id}',
+                                        //     userId: '${ConversationState.self.id}');
+                                      },
+                                          color:  WayaColors.greyColor500
+                                              //: WayaColors.primary
+                                      ),
+                                      actionType(' Comments',
+                                          'assets/images/pages/comment2.png', onPressed: () {
+                                            //showCommentBox(context, post.id);
+
+                                          }),
+
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
                           ),

@@ -187,8 +187,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                     child:  CircleAvatar(
                         radius: 30,
                         backgroundColor: WayaColors.greyColor100,
-                        backgroundImage:NetworkImage('${args['coverImage']}')
-                      //NetworkImage('${viewModel.coverImage}'),
+                        backgroundImage:NetworkImage('${args['coverImage']}'),
                     )
                 ),
               ],
