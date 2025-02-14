@@ -240,13 +240,13 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> getAllPosts(userId) async {
+  Future<void> getAllPosts(id) async {
     print('Fetching saved posts...');
 
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.fetchPost(userId);
+      final response = await _pageRepository.fetchPost(id);
       state = state.copyWith(isLoading: false);
       print('API Response: ${response.data}');
       print('Status Code: ${response.statusCode}');
@@ -266,6 +266,8 @@ class PageVm extends StateNotifier<PageState> {
 
     }
   }
+
+
 
   Future<void> getSinglePost(userId) async {
     print('Fetching saved posts...');
@@ -384,6 +386,96 @@ class PageVm extends StateNotifier<PageState> {
       _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> createPagePost(ctx, content, postType, List<XFile> images, postId) async {
+    print("before the loop");
+    List<UploadedImage> urls = [];
+    List<String> publicUrl = [];
+    final choiceMap = <String>[];
+    // get url
+    for (XFile image in images) {
+      print("In the loop ${image.name} ${image.path} ${image.mimeType}");
+
+      final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
+
+      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      publicUrl.add(mediaUploadModel!.data!.publicUrl!);
+    }
+
+    // upload
+    for (UploadedImage url in urls) {
+      final file = File(url.file);
+      final putImageResponse = await _pageRepository.putImage(url.url, file);
+
+      //? This is fine.
+      if (!(putImageResponse.success && ctx.mounted)) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to create post'),
+            backgroundColor: WayaColors.error,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      }
+
+      //? This is fine.
+      print("Data ${putImageResponse.data}");
+    }
+    //WayaHelpers.
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.createPagePost(content, publicUrl , postType, postId);
+      //final response = await _pageRepository.createPost(content, choiceMap, postType);
+      state = state.copyWith(isLoading: false);
+      //? If this is fine...
+      if (response.success && ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post created successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        print('Create post');
+        _logger.i(response.data['data']);
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> getPagePosts(pageId) async {
+    print('Fetching saved posts...');
+
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.fetchSinglePagePost(pageId);
+      state = state.copyWith(isLoading: false);
+
+      if (response.success) {
+        GetAllPost responseModel = GetAllPost.fromJson(response.data);
+        state = state.copyWith(getAllPost: responseModel.data?.docs);
+
+      } else {
+
+      }
+    } catch (e) {
+
+    } finally {
+
     }
   }
 
