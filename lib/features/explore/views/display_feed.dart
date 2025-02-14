@@ -10,6 +10,8 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/shared/features/events/shared_event.dart';
 import 'package:wayagram/shared/features/posts/shared_posts.dart';
+import 'package:wayagram/shared/features/moments/shared_moments.dart';
+import 'package:wayagram/features/search/search.dart';
 
 class DisplayFeed extends ConsumerStatefulWidget {
   static const route = "/feed";
@@ -41,7 +43,10 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SvgPicture.asset(WayaAssets.icons.searchIconFeed.path),
+              GestureDetector(
+                onTap: () => WayaNav.toNamed(SearchView.route),
+                child: SvgPicture.asset(WayaAssets.icons.searchIconFeed.path),
+              ),
               const Gap(6),
               WayaDp(
                 onTap: () {
@@ -55,6 +60,16 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Gap(10),
+              Text(
+            "Based on your follows",
+            style: TextStyle(
+                color: wayaTheme.colorScheme.greyColor700,
+                fontSize: 13,
+                fontWeight: FontWeight.w500),
+          ),
+            const Gap(10),
+            SharedMoments(),
             const Gap(10),
             SharedPosts(isExpanded: true,),
             const Gap(25),

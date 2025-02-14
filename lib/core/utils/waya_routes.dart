@@ -87,8 +87,8 @@ import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
-import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
+import 'package:wayagram/features/search/search.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{
@@ -197,23 +197,16 @@ class WayaAppRoutes {
     MediaMoment.route: () => MediaMoment(),
     MyMoments.route: () => MyMoments(),
     ViewMoment.route: () => ViewMoment(),
-    VideoTrimmerScreen.route:() => VideoTrimmerScreen(),
+    VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
     EditPost.route: () => EditPost(
           initialContent: '',
           initialImageUrl: '',
           title: '',
           postId: '',
         ),
-    PublicGroup.route: ()=> PublicGroup(),
-    EditPageInfo.route: ()=> EditPageInfo(),
-    AddTeamMember.route: ()=> AddTeamMember(),
-    AddGroupMember.route: ()=> AddGroupMember(),
-    PrivateGroup.route: ()=> PrivateGroup(),
-    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
-    DisplayFeed.route:() => DisplayFeed(),
-    GroupSetting.route: ()=> GroupSetting(),
-    AllUpcomingEvents.route:() => AllUpcomingEvents(),
-    EditPost.route: ()=> EditPost(initialContent: '', initialImageUrl: '', title: '', postId: '',),
+
+    AddGroupMember.route: () => AddGroupMember(),
+    SearchView.route: () => SearchView(),
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
   };

@@ -9,12 +9,16 @@ class UserRepository extends BaseRepository {
 
   UserRepository._();
 
-  Future<WayaRequestResponse> getSearchResults(String query, [int limit = 50, int page = 1]) {
-    return get("$serviceUrl/client/users/all/search?limit=$limit&page=$page&searchText=$query");
+  Future<WayaRequestResponse> getSearchResults(String query,
+      [int limit = 50, int page = 1]) {
+    return get(
+        "$serviceUrl/client/users/all/search?limit=$limit&page=$page&searchText=$query");
   }
 
   Future<WayaRequestResponse> updateFcmToken(String token) {
-    return post("$serviceUrl/client/users/${ConversationState.self.id}/add-fcm-token", {"fcmToken": token});
+    return post(
+        "$serviceUrl/client/users/${ConversationState.self.id}/add-fcm-token",
+        {"fcmToken": token});
   }
 
   Future<WayaRequestResponse> getSocialProfile(String id) {
@@ -26,6 +30,12 @@ class UserRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> updateUserProfile(UpdateProfileDto data) {
-    return patch("$serviceUrl/client/users/${ConversationState.self.id}/profile/update", data.toJson());
+    return patch(
+        "$serviceUrl/client/users/${ConversationState.self.id}/profile/update",
+        data.toJson());
+  }
+
+  Future<WayaRequestResponse> getAllUsers({int? limit = 500}) {
+    return get("$serviceUrl//client/users?limit=$limit");
   }
 }

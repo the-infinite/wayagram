@@ -16,7 +16,8 @@ class WayaLocalDataSource {
   }
 
   saveUserType(SelectAccountData type) {
-    wayaFastStorageService.write<SelectAccountData>(key: 'userType', value: type);
+    wayaFastStorageService.write<SelectAccountData>(
+        key: 'userType', value: type);
   }
 
   SelectAccountData getUserType() {
@@ -46,13 +47,7 @@ class WayaLocalDataSource {
   dynamic gettoken() {
     return wayaFastStorageService.read(key: 'token');
   }
-  // saveUserData(UserModel user) {
-  //   return wayaFastStorageService.write(key: 'userData', value: user);
-  // }
 
-  // UserModel getUserData() {
-  //   return wayaFastStorageService.read<UserModel>(key: 'userData');
-  // }
   saveBusiness(BusinessAccountData user) {
     return wayaFastStorageService.write(key: 'business', value: user);
   }
@@ -66,7 +61,8 @@ class WayaLocalDataSource {
   }
 
   saveDeviceToken(String token) {
-    return wayaFastStorageService.write<String>(key: 'isFCMTokenFine', value: token.substring(0, 4));
+    return wayaFastStorageService.write<String>(
+        key: 'isFCMTokenFine', value: token.substring(0, 4));
   }
 
   bool getIsFcmTokenFine() {
@@ -75,5 +71,14 @@ class WayaLocalDataSource {
 
   Select getSelectedBusinessType() {
     return wayaFastStorageService.read(key: 'bizType');
+  }
+
+  saveSearchHistory(List<String> history) {
+    return wayaFastStorageService.write<List<String>>(
+        key: 'search-history', value: history);
+  }
+
+  List<String> getSearchHistory() {
+    return wayaFastStorageService.read(key: 'search-history');
   }
 }
