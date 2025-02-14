@@ -88,7 +88,7 @@ import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
-import 'package:wayagram/features/search/search.dart';
+import 'package:wayagram/features/explore/search/search.dart';
 
 class WayaAppRoutes {
   static final routes = <String, Widget Function()>{

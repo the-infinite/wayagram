@@ -11,7 +11,7 @@ import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/shared/features/events/shared_event.dart';
 import 'package:wayagram/shared/features/posts/shared_posts.dart';
 import 'package:wayagram/shared/features/moments/shared_moments.dart';
-import 'package:wayagram/features/search/search.dart';
+import 'package:wayagram/features/explore/search/search.dart';
 
 class DisplayFeed extends ConsumerStatefulWidget {
   static const route = "/feed";

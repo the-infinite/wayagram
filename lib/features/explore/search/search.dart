@@ -6,9 +6,9 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
-import 'package:wayagram/features/search/model/user_detail.dart';
+import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
-import 'package:wayagram/features/search/widgets/user_widget.dart';
+import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/features/posts/shared_posts.dart';
 
@@ -47,8 +47,11 @@ class _SearchState extends ConsumerState<SearchView> {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(servicesprovider);
 
+//post
     final List<Post> filteredPosts = WayaUtils.strictSearch<Post>(
         state.topPosts, ['hashtags'], searchController.text);
+
+    // user    
     final List<UserDetails> filteredAccounts =
         WayaUtils.strictSearch<UserDetails>(state.usersDetails,
             ['firstName', 'lastName', 'email'], searchController.text);

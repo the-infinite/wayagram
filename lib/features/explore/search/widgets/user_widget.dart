@@ -9,7 +9,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
-import 'package:wayagram/features/search/model/user_detail.dart';
+import 'package:wayagram/features/explore/search/model/user_detail.dart';
 
 class UserWidget extends ConsumerStatefulWidget {
   final UserDetails user;
