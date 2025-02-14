@@ -16,14 +16,14 @@ class _SharedEventState extends ConsumerState<SharedEvent> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(servicesprovider.notifier).getEvents();
+      ref.read(servicesProvider.notifier).getEvents();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(servicesprovider);
+    final state = ref.watch(servicesProvider);
     final wayaTheme = Theme.of(context);
     // TODO: implement build
 

@@ -62,7 +62,7 @@ class UserSearchNotifier extends StateNotifier<UserSearchState> {
 
       //? Get the user resource for each of these ones.
       for (final user in docs) {
-        UserResource.getUserDetails(user.id!);
+        UserResource.getUserDetails(user.id);
       }
 
       //? This is fine.

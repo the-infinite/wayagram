@@ -337,7 +337,7 @@ class MomentVm extends StateNotifier<MomentState> {
           ? await _momentRepository.editMoment(
               userId: userId!,
               name:
-                  "${userProfile?.firstName?.capitalizeFirst ?? ''} ${userProfile?.lastName?.capitalizeFirst ?? ''}",
+                  "${userProfile?.firstName.capitalizeFirst ?? ''} ${userProfile?.lastName.capitalizeFirst ?? ''}",
               image: userProfile?.profilePicture ?? '',
               content: content,
               caption: caption,
@@ -348,7 +348,7 @@ class MomentVm extends StateNotifier<MomentState> {
           : await _momentRepository.createMoment(
               userId: userId!,
               name:
-                  "${userProfile?.firstName?.capitalizeFirst ?? ''} ${userProfile?.lastName?.capitalizeFirst ?? ''}",
+                  "${userProfile?.firstName.capitalizeFirst ?? ''} ${userProfile?.lastName.capitalizeFirst ?? ''}",
               image: userProfile?.profilePicture ?? '',
               content: content,
               caption: caption,
@@ -417,7 +417,7 @@ class MomentVm extends StateNotifier<MomentState> {
           final profile = detail.$2;
           viewer = viewer.copyWith(
             name:
-                "${user.firstName!.capitalizeFirst} ${user.lastName!.capitalizeFirst}",
+                "${user.firstName.capitalizeFirst} ${user.lastName.capitalizeFirst}",
             username: "${profile.username}",
             image: user.profilePicture,
           );

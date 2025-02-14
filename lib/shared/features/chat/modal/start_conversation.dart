@@ -97,7 +97,7 @@ class _StartConversationModalState extends State<StartConversationModal> {
                 return UserSearchBarWidget(
                   onSelect: (users) {
                     //? This is fine.
-                    notifier.startChat(ChatType.personal, users.map((user) => user.id!).toList()).then(
+                    notifier.startChat(ChatType.personal, users.map((user) => user.id).toList()).then(
                       (chat) {
                         //? Leave here.
                         WayaNav.goBack();
