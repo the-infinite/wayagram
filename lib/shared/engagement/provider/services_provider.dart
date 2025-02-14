@@ -407,7 +407,7 @@ class ServicesProvider extends StateNotifier<States> {
   }
 }
 
-final servicesprovider = StateNotifierProvider<ServicesProvider, States>((ref) {
+final servicesProvider = StateNotifierProvider<ServicesProvider, States>((ref) {
   return ServicesProvider(
       PageRepository(), WayaSecureDataSource(), EventRepository(), ref);
 });

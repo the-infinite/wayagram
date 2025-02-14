@@ -36,7 +36,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "typing",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       action: isTyping ? 'start-typing' : 'stop-typing',
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -47,7 +47,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "sendMessage",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       messageId: messageId,
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -58,7 +58,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "markAsRead",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       messageId: messageId,
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -69,7 +69,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "markAllAsRead",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       isSynced: isSynced,
       isFlag: isFlagged,
     );
@@ -79,7 +79,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "deleteMessage",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       messageId: messageId,
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -90,7 +90,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "join",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       isSynced: isSynced,
       isFlag: isFlagged,
     );
@@ -107,7 +107,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: command,
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       action: action,
       messageId: messageId,
       isSynced: isSynced,

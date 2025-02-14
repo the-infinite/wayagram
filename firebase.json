@@ -1,0 +1,22 @@
+{
+	"flutter": {
+		"platforms": {
+			"android": {
+				"default": {
+					"projectId": "new-wayagram",
+					"appId": "1:276195200870:android:948a35f4f34ec7978b42a7",
+					"fileOutput": "android/app/google-services.json"
+				}
+			},
+			"dart": {
+				"lib/firebase_options.dart": {
+					"projectId": "new-wayagram",
+					"configurations": {
+						"android": "1:276195200870:android:948a35f4f34ec7978b42a7",
+						"ios": "1:276195200870:ios:c5b085cee4bdadf88b42a7"
+					}
+				}
+			}
+		}
+	}
+}

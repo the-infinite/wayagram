@@ -18,33 +18,34 @@ class UserRole {
 
 @JsonSerializable()
 class UserDetailsModel {
-  final String? id;
-  final String? phoneNumber;
-  final String? email;
-  final String? passwordHash;
-  final String? firstName;
-  final String? lastName;
-  final String? gender;
-  final String? address;
+  final String id;
+  final String phoneNumber;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final String gender;
+  final String address;
+  final String passwordHash;
   final String? city;
+  final String? lga;
   final String? state;
   final String? country;
-  final dynamic countryCode;
-  final dynamic middleName;
-  final DateTime? dateOfBirth;
-  final bool? twoFactorEnabled;
-  final dynamic profilePicture;
-  final dynamic fcmToken;
-  final bool? emailVerified;
-  final bool? phoneVerified;
-  final String? accountStatus;
-  final bool? tcAgreement;
-  final bool? policyAgreement;
+  final String? countryCode;
+  final String? postalCode;
+  final String? middleName;
+  final DateTime dateOfBirth;
+  final bool twoFactorEnabled;
+  final String? profilePicture;
+  final String? fcmToken;
+  final bool emailVerified;
+  final bool phoneVerified;
+  final String accountStatus;
+  final bool tcAgreement;
+  final bool policyAgreement;
   final DateTime? emailVerifiedDate;
-  final dynamic deletedAt;
+  final String? deletedAt;
   final String? roleId;
   final String? accountTypeId;
-  final String? lga;
 
   @JsonKey(name: '_v')
   final String? v;
@@ -84,9 +85,10 @@ class UserDetailsModel {
     required this.updatedAt,
     required this.role,
     required this.lga,
+    required this.postalCode,
   });
 
-  String get fullname => "${firstName?.capitalizeFirst} ${lastName?.capitalizeFirst}";
+  String get fullname => "${firstName.capitalizeFirst} ${lastName.capitalizeFirst}";
 
   factory UserDetailsModel.fromJson(Map<String, dynamic> json) => _$UserDetailsModelFromJson(json);
 
