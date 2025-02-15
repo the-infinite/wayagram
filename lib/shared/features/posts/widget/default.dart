@@ -11,6 +11,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
@@ -96,7 +97,10 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.data.userId));
+                        },
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

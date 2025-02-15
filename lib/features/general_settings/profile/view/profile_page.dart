@@ -10,9 +10,13 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/shared/features/follow/model/default.dart';
+import 'package:wayagram/shared/features/follow/vm/default.dart';
 import 'package:wayagram/shared/features/posts/vm/default.dart';
+import 'package:wayagram/shared/features/posts/vm/event.dart';
 import 'package:wayagram/shared/features/posts/widget/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
@@ -32,18 +36,45 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
-  late final postNotifier = ref.watch(postsProvider.notifier);
+  late final postNotifier = ref.watch(userPostsProvider.notifier);
+  late final eventNotifier = ref.watch(userEventsProvider.notifier);
+  late final followNotifier = ref.watch(followProvider.notifier);
   final _pageController = ValueNotifier(0);
   final _tabController = ExpandedTabController();
+  FollowStatusModel? _followStatus;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        _fetchMore();
+      (_) async {
+        await _fetchMore();
+        if (widget.id == ConversationState.self.id) return;
+        final result = await followNotifier.getFollowStatus(widget.id);
+        setState(() {
+          _followStatus = result;
+        });
       },
     );
     super.initState();
+  }
+
+  @override
+  void reassemble() {
+    postNotifier.reset();
+    eventNotifier.reset();
+
+    // This is fine.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        await _fetchMore();
+        if (widget.id == ConversationState.self.id) return;
+        final result = await followNotifier.getFollowStatus(widget.id);
+        setState(() {
+          _followStatus = result;
+        });
+      },
+    );
+    super.reassemble();
   }
 
   @override
@@ -53,12 +84,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   Future<void> _fetchMore() async {
-    switch (_pageController.value) {
-      case 0:
-        {
-          await postNotifier.getPostsForUser(widget.id);
-        }
-        break;
+    //? If this is for pages.
+    if (_pageController.value == 0) {
+      await postNotifier.getPostsForUser(widget.id);
+    }
+
+    //? If this is for events..
+    if (_pageController.value == 6) {
+      await eventNotifier.getEventsForUser(widget.id);
     }
   }
 
@@ -66,7 +99,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
-    final postState = ref.watch(postsProvider);
+    final postState = ref.watch(userPostsProvider);
+    final eventState = ref.watch(userEventsProvider);
 
     //? Return the component.
     return WayaScaffold(
@@ -124,6 +158,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       body: PopScope(
         onPopInvokedWithResult: (isPopping, _) {
           postNotifier.reset();
+          eventNotifier.reset();
         },
         child: WayaObservableScrollView(
           shouldFetch: !postState.hasLoaded,
@@ -149,6 +184,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   //? Is this empty?
                   final isEmpty = switch (selectedPage) {
                     0 => postState.posts.isEmpty && postState.hasLoaded,
+                    6 => eventState.events.isEmpty && eventState.hasLoaded,
                     _ => true,
                   };
 
@@ -206,6 +242,29 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     ),
                                     child: Text(
                                       'Edit Profile',
+                                      style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                        color: wayaTheme.colorScheme.primary600,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              else
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 20.w),
+                                    padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: wayaTheme.colorScheme.primary600,
+                                        width: 1.5,
+                                      ),
+                                      color: wayaTheme.colorScheme.white,
+                                      borderRadius: BorderRadius.circular(7.r),
+                                    ),
+                                    child: Text(
+                                      _followStatus?.isUserFollowing == true ? "Following" : "Follow",
                                       style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.primary600,
                                         fontWeight: FontWeight.w600,
@@ -344,7 +403,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       // Some space.
                       const Gap(10),
 
-                      //? The padding here.
+                      //? The tab selector goes here.
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,19 +416,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               if (_pageController.value == 0) return;
                               _pageController.value = 0;
                               _tabController.close();
+                              _fetchMore();
                             },
                           ),
 
                           // ?
-                          WayaTabButton(
-                            isSelected: selectedPage == 1,
-                            text: 'Reposts',
-                            onTap: () {
-                              if (_pageController.value == 1) return;
-                              _pageController.value = 1;
-                              _tabController.close();
-                            },
-                          ),
+                          //   WayaTabButton(
+                          //     isSelected: selectedPage == 1,
+                          //     text: 'Reposts',
+                          //     onTap: () {
+                          //       if (_pageController.value == 1) return;
+                          //       _pageController.value = 1;
+                          //       _tabController.close();
+                          //       _fetchMore();
+                          //     },
+                          //   ),
 
                           //?
                           WayaTabButton(
@@ -379,24 +440,27 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               if (_pageController.value == 2) return;
                               _pageController.value = 2;
                               _tabController.close();
+                              _fetchMore();
+                            },
+                          ),
+
+                          //?
+                          WayaTabButton(
+                            isSelected: selectedPage == 3,
+                            text: 'Donations',
+                            onTap: () {
+                              if (_pageController.value == 3) return;
+                              _pageController.value = 3;
+                              _tabController.close();
+                              _fetchMore();
                             },
                           ),
 
                           WayaExpandedTabButton(
-                            isSelected: selectedPage > 2,
+                            isSelected: selectedPage > 3,
                             text: 'More',
                             controller: _tabController,
                             tabs: [
-                              //?
-                              WayaExpandedTab(
-                                isSelected: selectedPage == 3,
-                                text: 'Donations',
-                                onTap: () {
-                                  if (_pageController.value == 3) return;
-                                  _pageController.value = 3;
-                                },
-                              ),
-
                               // For groups.
                               WayaExpandedTab(
                                 isSelected: selectedPage == 4,
@@ -404,6 +468,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 onTap: () {
                                   if (_pageController.value == 4) return;
                                   _pageController.value = 4;
+                                  _fetchMore();
                                 },
                               ),
 
@@ -414,6 +479,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 onTap: () {
                                   if (_pageController.value == 5) return;
                                   _pageController.value = 5;
+                                  _fetchMore();
                                 },
                               ),
 
@@ -424,6 +490,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 onTap: () {
                                   if (_pageController.value == 6) return;
                                   _pageController.value = 6;
+                                  _fetchMore();
                                 },
                               ),
 
@@ -434,6 +501,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 onTap: () {
                                   if (_pageController.value == 7) return;
                                   _pageController.value = 7;
+                                  _fetchMore();
                                 },
                               ),
                             ],
@@ -466,6 +534,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             data: postState.posts[index],
                             index: index,
                             padded: true,
+                          ),
+                        )
+                      else if (selectedPage == 6)
+                        ...List.generate(
+                          eventState.events.length,
+                          (index) => EventCard(
+                            event: eventState.events[index],
+                            userId: widget.id,
                           ),
                         ),
                     ],

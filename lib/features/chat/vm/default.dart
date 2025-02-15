@@ -76,6 +76,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
       //? Update state.
       state = state.copyWith(
+        hasLoaded: true,
         conversations: result,
         totalCount: data['totalDocs'],
         totalPages: data['totalPages'],
@@ -277,6 +278,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
       //? Update state.
       state = state.copyWith(
         archived: result,
+        hasLoadedArchived: true,
         archivedTotalCount: data['totalDocs'],
         archivedTotalPages: data['totalPages'],
         archivedHasNextPage: data['hasNextPage'],
