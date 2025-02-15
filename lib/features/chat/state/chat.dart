@@ -2,6 +2,7 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 
 class ChatState {
+  final bool hasLoaded;
   final bool isLoading;
   final ChatModel? chat;
   final List<MessageModel> messages;
@@ -14,6 +15,7 @@ class ChatState {
 
   // This is fine.
   const ChatState({
+    required this.hasLoaded,
     required this.isLoading,
     required this.chat,
     required this.messages,
@@ -27,6 +29,7 @@ class ChatState {
 
   // This is fine.
   static final initial = ChatState(
+    hasLoaded: false,
     isLoading: false,
     chat: null,
     messages: [],
@@ -41,6 +44,7 @@ class ChatState {
   /// A helper function used to copy the contents of this chat's internal state
   /// and then pass it around.
   ChatState copyWith({
+    bool? hasLoaded,
     bool? isLoading,
     ChatModel? chat,
     List<MessageModel>? messages,
@@ -51,6 +55,7 @@ class ChatState {
     bool? typing,
   }) {
     return ChatState(
+      hasLoaded: hasLoaded ?? this.hasLoaded,
       isLoading: isLoading ?? this.isLoading,
       chat: chat ?? this.chat,
       messages: messages ?? this.messages,

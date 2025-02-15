@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/conversation.dart';
 import 'package:wayagram/features/chat/widget/search.dart';
+import 'package:wayagram/shared/features/chat/widget/empty_conversation.dart';
 
 class ArchivedChatsScreen extends ConsumerWidget {
   static const route = "/chats/archived";
@@ -53,15 +55,30 @@ class ArchivedChatsScreen extends ConsumerWidget {
             const Gap(10),
 
             //? Now, the pinned chats.
-            ...List.generate(
-              state.archivedResults.length,
-              (index) => ConversationWidget(
-                index: index,
-                chat: state.archivedResults[index],
-                notifier: chatNotifier,
-                conversationNotifier: notifier,
+            if (state.archivedResults.isEmpty && state.hasLoadedArchived) ...[
+              // Space.
+              Gap(160.h),
+
+              // The empty widget.
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 17),
+                  child: EmptyConversationsWidget(),
+                ),
               ),
-            ),
+
+              // Space.
+              Gap(60.h),
+            ] else
+              ...List.generate(
+                state.archivedResults.length,
+                (index) => ConversationWidget(
+                  index: index,
+                  chat: state.archivedResults[index],
+                  notifier: chatNotifier,
+                  conversationNotifier: notifier,
+                ),
+              ),
           ],
         ),
       ),

@@ -7,11 +7,11 @@ class PostNotifier extends StateNotifier<PostState> {
   final repo = PostRepository.instance;
   PostNotifier(super.state);
 
-  /// This is fine.
+  /// An API used to fetch all the posts for a given user.
   Future<List<Post>> getPostsForUser(String id) async {
     final result = <Post>[];
 
-    try {
+    //try {
       // This is fine too.
       final response = await repo.getPostsForUser(id, state.nextPage ?? state.page, state.limit);
 
@@ -42,10 +42,10 @@ class PostNotifier extends StateNotifier<PostState> {
         );
       }
 
-      //? After getting these posts...
-    } catch (e) {
-      // TODO: Actual error handling.
-    }
+    //   //? After getting these posts...
+    // } catch (e) {
+    //   // TODO: Actual error handling.
+    // }
 
     // That's fine.
     return result;
@@ -57,6 +57,6 @@ class PostNotifier extends StateNotifier<PostState> {
   }
 }
 
-final postsProvider = StateNotifierProvider<PostNotifier, PostState>((ref) {
+final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>((ref) {
   return PostNotifier(PostState.initial);
 });

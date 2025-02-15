@@ -18,6 +18,7 @@ import 'package:wayagram/features/general_settings/profile/view/profile_page.dar
 import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
+import 'package:wayagram/features/group/view/create_group_post.dart';
 import 'package:wayagram/features/group/view/edit_group_info.dart';
 import 'package:wayagram/features/group/view/group_setting.dart';
 import 'package:wayagram/features/group/view/group_suggestion.dart';
@@ -34,6 +35,7 @@ import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/pages/view/confirm_page_details.dart';
 import 'package:wayagram/features/pages/view/create_page.dart';
+import 'package:wayagram/features/pages/view/create_page_post.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
@@ -185,6 +187,8 @@ class WayaAppRoutes {
     PrivatePage.route: () => PrivatePage(),
     MembersScreen.route: () => MembersScreen(),
     CreatePost.route: () => CreatePost(),
+    CreateGroupPost.route: () => CreateGroupPost(),
+    CreatePagePost.route: () => CreatePagePost(),
     MutualPage.route: () => MutualPage(),
     PublicGroup.route: () => PublicGroup(),
     EditPageInfo.route: () => EditPageInfo(),

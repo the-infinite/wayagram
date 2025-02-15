@@ -11,6 +11,7 @@ class ConversationState {
   final bool inArchived;
 
   //? For chats.
+  final bool hasLoaded;
   final int totalCount;
   final int totalPages;
   final int limit;
@@ -18,6 +19,7 @@ class ConversationState {
   final bool hasNextPage;
 
   //? For archived chats.
+  final bool hasLoadedArchived;
   final int archivedTotalCount;
   final int archivedTotalPages;
   final int archivedPage;
@@ -25,6 +27,8 @@ class ConversationState {
 
   // This is fine.
   const ConversationState({
+    required this.hasLoaded,
+    required this.hasLoadedArchived,
     required this.isLoading,
     required this.searchFilter,
     required this.conversations,
@@ -63,6 +67,8 @@ class ConversationState {
     totalPages: 0,
     limit: 100,
     totalCount: 0,
+    hasLoaded: false,
+    hasLoadedArchived: false,
     inArchived: false,
     hasNextPage: true,
     archivedTotalCount: 0,
@@ -135,8 +141,12 @@ class ConversationState {
     int? archivedPage,
     bool? archivedHasNextPage,
     bool? inArchived,
+    bool? hasLoaded,
+    bool? hasLoadedArchived,
   }) {
     return ConversationState(
+      hasLoaded: hasLoaded ?? this.hasLoaded,
+      hasLoadedArchived: hasLoadedArchived ?? this.hasLoadedArchived,
       isLoading: isLoading ?? this.isLoading,
       searchFilter: searchFilter ?? this.searchFilter,
       archived: archived ?? this.archived,
