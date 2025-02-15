@@ -29,7 +29,8 @@ import '../component/extras.dart';
 import '../data/model/feeds.dart';
 
 class PagesForYou extends ConsumerStatefulWidget {
-  const PagesForYou({super.key});
+
+  const PagesForYou({super.key,});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PagesForYouState();

@@ -21,6 +21,34 @@ class GroupRepository extends BaseRepository {
     return post("$serviceUrl/groups", payload);
   }
 
+  Future<WayaRequestResponse> getUploadImage(image) {
+    return get("$serviceUrl/signed-url/$image");
+  }
+
+  Future<WayaRequestResponse> putImage(url, image) {
+    return put(
+      "$url",
+      image,
+      contentType: 'image/jpeg',
+      isBinary: true,
+      isWgUrl: false,
+      isAuth: false,
+    );
+  }
+
+  Future<WayaRequestResponse> createGroupPost(
+      String content, List<String> images, postType, String groupId) {
+    final payload = {
+      "content": content,
+      "groupId": groupId,
+      "type": "generic",
+      "media": images,
+      "privacy": postType
+    };
+
+    return post("$serviceUrl/posts", payload);
+  }
+
   Future<WayaRequestResponse> editGroup(String groupName,
       String groupDesc, bool groupType,
       String coverImage, String profileImage, groupId) {
@@ -56,6 +84,10 @@ class GroupRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getSingleGroup(id) {
     return get("$serviceUrl/groups?id=$id");
+  }
+
+  Future<WayaRequestResponse> fetchSingleGroupPost(groupId) {
+    return get("$serviceUrl/posts?groupId=$groupId&status=active");
   }
 
   Future<WayaRequestResponse> getAllGroups() {
@@ -106,6 +138,32 @@ class GroupRepository extends BaseRepository {
   Future<WayaRequestResponse> followUser(String followingId) {
     final payload = {};
     return post("$serviceUrl/follow/$followingId", payload);
+  }
+
+  Future<WayaRequestResponse> commentOnPost(postId, content) {
+    final payload = {
+      "content": content,
+      //"parentCommentId": postId // this is optional and is only required for child comment.
+    };
+    return post("$serviceUrl/posts/comments/$postId", payload);
+  }
+
+  Future<WayaRequestResponse> reactOnPost(String postId, type) async {
+    return post("$serviceUrl/posts/$postId/like", postId);
+  }
+
+  Future<WayaRequestResponse> removeReaction(
+      String postId, String? reactionId) async {
+    return delete("$serviceUrl/posts/$postId/like");
+    // return getBooleanResponse(response);
+  }
+
+  Future<WayaRequestResponse> getComment(postId) {
+    return get("$serviceUrl/posts/comments/$postId");
+  }
+
+  Future<WayaRequestResponse> deleteComment(String commentId) async {
+    return delete("$serviceUrl/posts/$commentId/comment");
   }
 
 

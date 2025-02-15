@@ -365,7 +365,9 @@ class _ExploreState extends ConsumerState<Explore> {
           height: 50,
           width: 50,
           child: WayaButton(
-            callback: () {},
+            callback: () {
+              WayaNav.toNamed('/createPost');
+            },
             height: 50,
             centerWidget: Center(
               child: Icon(
