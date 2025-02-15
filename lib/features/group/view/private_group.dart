@@ -257,18 +257,34 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
           ),
 
           _selectedIndex == 0
-              ? const PagesForYou()
+              ?  GroupPost(groupId: '${args['groupId']}')
               : _selectedIndex == 1
               ? const Events()
               : _selectedIndex == 2
-              ? const PagesForYou()
+              ?  GroupPost(groupId: '${args['groupId']}',)
               :_selectedIndex == 3?
-          ApprovalScreen(groupId: '${args['groupId']}')
+              ApprovalScreen(groupId: '${args['groupId']}')
               : GroupTeam(groupId: '${args['groupId']}'),
           //AllOrders()
         ],
       ),
-
+        floatingActionButton: SizedBox(
+          height: 50,
+          width: 50,
+          child: WayaButton(
+            callback: () {
+              WayaNav.toNamed('/createGroupPost', arguments:'${args['groupId']}');
+            },
+            height: 50,
+            centerWidget: Center(
+              child: Icon(
+                Icons.add,
+                color: wayaTheme.colorScheme.white,
+                size: 40,
+              ),
+            ),
+          ),
+        )
     );
   }
 
@@ -327,16 +343,3 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
 
 }
 
-/*
- Expanded(
-                    child: _selectedIndex == 0
-                        ? const PagesForYou()
-                        : _selectedIndex == 1
-                            ? const Events()
-                            : _selectedIndex == 2
-                                ? const PagesForYou()
-                                : _selectedIndex == 3
-                                    ? ApprovalScreen(groupId: '${args['groupId']}')
-                                    : GroupTeam(groupId: '${args['groupId']}'),
-                  ),
- */

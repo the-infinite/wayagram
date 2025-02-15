@@ -102,7 +102,9 @@ class MomentsWidget extends StatelessWidget {
                 ),
               ),
             ),
-          ),)
+          ),
+          
+          )
         ]
       ],
     );

@@ -93,7 +93,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                     duration: Duration(seconds: 2),
                   ),
                 );
-              }else if(_selectedImage == null && _coverImage == null){
+              }else if(_selectedImage == null || _coverImage == null){
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Add Images', style: TextStyle(

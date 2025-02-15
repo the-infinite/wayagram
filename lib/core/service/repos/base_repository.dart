@@ -22,12 +22,15 @@ abstract class BaseRepository {
     void Function({int count, int total})? onSendProgress,
     void Function({int count, int total})? onRecieveProgress,
   }) {
-    return httpClient.postHttp(route, body,
-        params: params,
-        formdata: formdata,
-        formEncoded: formEncoded,
-        onSendProgress: onSendProgress,
-        onRecieveProgress: onRecieveProgress);
+    return httpClient.postHttp(
+      route,
+      body,
+      params: params,
+      formdata: formdata,
+      formEncoded: formEncoded,
+      onSendProgress: onSendProgress,
+      onRecieveProgress: onRecieveProgress,
+    );
   }
 
   Future<WayaRequestResponse> download(String url, String outputPath, WayaDownloadListener onData) {

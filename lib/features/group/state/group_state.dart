@@ -7,6 +7,7 @@ import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
+import 'package:wayagram/features/post/model/get_all_post.dart';
 
 import '../data/model/join_request_model.dart';
 
@@ -14,6 +15,7 @@ class GroupState{
   final TextEditingController groupName;
   final TextEditingController groupDescription;
   final TextEditingController username;
+  final TextEditingController content;
   late final File? image;
   String? profileImage;
   String? coverImage;
@@ -25,6 +27,7 @@ class GroupState{
   List<AllGroupMemberDocs>? allGroupMemberDocs;
   List<JoinedGroupDocs>? joinedGroup;
   List<RecommendedGroupDocs>? recommendedGroupDocs;
+  List<GetAllPostDocs>? getAllPost;
 
   final bool isFocused;
   final bool isLoading;
@@ -36,6 +39,7 @@ class GroupState{
     TextEditingController? groupName,
     TextEditingController? groupDescription,
     TextEditingController? username,
+    TextEditingController? content,
 
     this.isFocused = false,
     this.isLoading = false,
@@ -52,21 +56,25 @@ class GroupState{
     this.fetchAllEventDocs = const [],
     this.joinedGroup = const [],
     this.recommendedGroupDocs = const [],
+    this.getAllPost = const [],
     this.image,
   }):   groupName = groupName ?? TextEditingController(),
         groupDescription = groupDescription ?? TextEditingController(),
-        username = username ?? TextEditingController();
+        username = username ?? TextEditingController(),
+        content = content ?? TextEditingController();
 
   GroupState copyWith({
     TextEditingController? groupName,
     TextEditingController? groupDescription,
     TextEditingController? username,
+    TextEditingController? content,
     List<JoinRequestDocs>? docs,
     List<GetAllGroupDocs>? getAllGroups,
     List<FetchAllEventDocs>? fetchAllEventDocs,
     List<AllGroupMemberDocs>? allGroupMemberDocs,
     List<JoinedGroupDocs>? joinedGroup,
     List<RecommendedGroupDocs>? recommendedGroupDocs,
+    List<GetAllPostDocs>? getAllPost,
 
     bool? isFocused,
     bool? isLoading,
@@ -84,7 +92,9 @@ class GroupState{
       groupName: groupName ?? this.groupName,
       groupDescription: groupDescription ?? this.groupDescription,
       username: username ?? this.username,
+      content: content ?? this.content,
       docs: docs ?? this.docs,
+      getAllPost: getAllPost ?? this.getAllPost,
       getAllGroups: getAllGroups ?? this.getAllGroups,
       fetchAllEventDocs: fetchAllEventDocs ?? this.fetchAllEventDocs,
       allGroupMemberDocs: allGroupMemberDocs ?? this.allGroupMemberDocs,
