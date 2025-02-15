@@ -58,62 +58,56 @@ class WayaScaffold extends ConsumerWidget {
     return BlurryModalProgressHUD(
       inAsyncCall: isLoading,
       progressIndicator: progressIndicator ?? CircularProgressIndicator(),
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        onDoubleTap: () {
-          // themeNotifier.toggleTheme();
-        },
-        child: Scaffold(
-          backgroundColor: backgroundColor,
-          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-          appBar: removeAppBar
-              ? null
-              : appBar ??
-                  AppBar(
-                    elevation: 0,
-                    scrolledUnderElevation: 0,
-                    backgroundColor: wayaTheme.colorScheme.white,
-                    title: Text(title ?? ''),
-                    leading: automaticallyImplyLeading
-                        ? WayaBackButton(
-                            onTap: onTapBackButton,
-                          )
-                        : SizedBox.shrink(),
-                    actions: appBarTrailing == null ? null : [appBarTrailing!],
-                  ),
-          body: isScrollable
-              ? onRefresh != null
-                  ? RefreshIndicator(
-                      onRefresh: onRefresh!,
-                      child: Container(
-                        color: color,
-                        padding: paddedBody,
-                        height: size.height,
-                        width: size.width,
-                        child: SingleChildScrollView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          child: body,
-                        ),
-                      ),
-                    )
-                  : Container(
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        appBar: removeAppBar
+            ? null
+            : appBar ??
+                AppBar(
+                  elevation: 0,
+                  scrolledUnderElevation: 0,
+                  backgroundColor: wayaTheme.colorScheme.white,
+                  title: Text(title ?? ''),
+                  leading: automaticallyImplyLeading
+                      ? WayaBackButton(
+                          onTap: onTapBackButton,
+                        )
+                      : SizedBox.shrink(),
+                  actions: appBarTrailing == null ? null : [appBarTrailing!],
+                ),
+        body: isScrollable
+            ? onRefresh != null
+                ? RefreshIndicator(
+                    onRefresh: onRefresh!,
+                    child: Container(
                       color: color,
+                      padding: paddedBody,
                       height: size.height,
                       width: size.width,
-                      child: Padding(
-                        padding: paddedBody,
-                        child: SingleChildScrollView(child: body),
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: body,
                       ),
-                    )
-              : Container(
-                  padding: paddedBody,
-                  height: size.height,
-                  width: size.width,
-                  child: body,
-                ),
-          bottomNavigationBar: bottomNavigationBar,
-          floatingActionButton: floatingActionButton,
-        ),
+                    ),
+                  )
+                : Container(
+                    color: color,
+                    height: size.height,
+                    width: size.width,
+                    child: Padding(
+                      padding: paddedBody,
+                      child: SingleChildScrollView(child: body),
+                    ),
+                  )
+            : Container(
+                padding: paddedBody,
+                height: size.height,
+                width: size.width,
+                child: body,
+              ),
+        bottomNavigationBar: bottomNavigationBar,
+        floatingActionButton: floatingActionButton,
       ),
     );
   }
@@ -122,9 +116,7 @@ class WayaScaffold extends ConsumerWidget {
 class WayaScaffoldWithProgressBar extends StatefulWidget {
   final Color? backgroundColor;
   final EdgeInsetsGeometry? padding;
-
   final List<Widget> tabsView;
-
   final Widget? bottomNavigationBar;
   final TabController tabController;
   final Widget? floatingActionButton;

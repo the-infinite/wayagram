@@ -205,7 +205,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
               Divider(color: WayaColors.greyColor200, height: 1),
 
               //? Second, the chat messages.
-              if (state.messages.isEmpty && !state.isLoading)
+              if (state.messages.isEmpty && state.hasLoaded)
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
