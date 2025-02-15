@@ -21,6 +21,8 @@ jobs:
 
       - name: 🐦 Setup Flutter
         uses: subosito/flutter-action@v2
+        with:
+          cache: true
 
       - name: 📦 Install Dependencies
         run: flutter pub get
