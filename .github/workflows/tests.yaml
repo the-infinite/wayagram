@@ -26,6 +26,11 @@ jobs:
 
       - name: 📦 Install Dependencies
         run: flutter pub get
+        with:
+          cache: true
+
+      - name: Build generated files
+        run: dart run build_runner build
 
       - name: 🔍 Analyze
         run: dart analyze --fatal-warnings .

@@ -1,6 +1,8 @@
 # WayaGram
 The Flutter Mobile Application for the Android and iOS platforms. 
 
+[![tests](https://github.com/WAYA-MULTI-LINK/WAYA-PAY-CHAT-2.0-WAYAGRAM-FLUTTER-APP/actions/workflows/tests.yaml/badge.svg)](https://github.com/WAYA-MULTI-LINK/WAYA-PAY-CHAT-2.0-WAYAGRAM-FLUTTER-APP/actions/workflows/tests.yaml)
+
 ## Helpful scripts
 There are a few utilities added to the repository to make working somewhat easier and a little 
 bit more self-explanatory. You would find these utilities in the helpers folder. 
