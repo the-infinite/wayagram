@@ -12,4 +12,8 @@ class PostRepository extends BaseRepository {
       "$serviceUri/posts/?userId=$userId&orderBy=likeCount&orderDirection=DESC&limit=$limit&page=$page",
     );
   }
+
+  Future<WayaRequestResponse> getEventsForUser(String userId, int page, int limit) async {
+    return httpClient.getHttp("$serviceUri/events/get-event?userId=$userId");
+  }
 }
