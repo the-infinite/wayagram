@@ -2,9 +2,6 @@ name: patch
 
 on:
   pull_request:
-    branches:
-      - production
-      - pre-prod
     tags:
       - "v[0-9].[0-9]+.[0-9]+-patch.[0-9]+" # e.g. v1.0.0-patch.1
 
