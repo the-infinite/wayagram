@@ -127,7 +127,7 @@ class EventVm extends StateNotifier<EventState> {
         if (context.mounted) {
           WayaUtils.showNotice(
             context: context,
-            buttonText: 'View Event Details',
+         
             secondButtonText: 'Explore more events',
             icon: Image.asset(
               WayaAssets.images.createEventSuccess.path,
@@ -136,10 +136,7 @@ class EventVm extends StateNotifier<EventState> {
             title: "You've successfully joined the event",
             message:
                 'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
-            onPress: () {
-              Navigator.pushReplacementNamed(context, EventDetail.route);
-              // Refresh the screen
-            },
+           
             onCancel: () =>
                 Navigator.pushReplacementNamed(context, EventView.route),
           );
@@ -164,9 +161,10 @@ class EventVm extends StateNotifier<EventState> {
       final userId = await _secureDataSource.getUserId();
       final response = await _eventRepository.reportEvent(
           userId: userId!, eventId: eventId, reason: reason);
-      Navigator.of(context).pop();
+    
       if (response.success && context.mounted) {
         // show success modal
+          Navigator.of(context).pop();
 
         await WayaUtils.showNotice(
             context: context,

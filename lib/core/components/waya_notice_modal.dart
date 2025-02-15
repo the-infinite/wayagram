@@ -62,13 +62,15 @@ class WayaNoticeModal extends StatelessWidget {
             style: WayaTextStyles.descriptionStyle,
           ),
           const Gap(24),
-          WayaButton(
+         Visibility(
+          visible: onPress != null,
+          child:  WayaButton(
               centerWidget: buttonCenterWidget,
               callback: () {
-                if (onPress == null) return Navigator.of(context).pop();
+              
                 onPress?.call();
               },
-              text: buttonCenterWidget == null ? buttonText ?? '' : ''),
+              text: buttonCenterWidget == null ? buttonText ?? '' : ''),),
           const Gap(10),
           Visibility(
               visible: onCancel != null,

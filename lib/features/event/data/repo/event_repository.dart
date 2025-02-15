@@ -6,7 +6,8 @@ class EventRepository extends BaseRepository {
   static const serviceUrl = "wayagram-graph/api/v2";
 
   Future<WayaRequestResponse> createEvent(AddEventRequestModel payload) {
-    return post("$serviceUrl/events/create", payload.toJson(), formdata: true);
+    print(payload.toJson());
+    return post("$serviceUrl/events/create", payload.toJson(), formdata: false);
   }
 
   Future<WayaRequestResponse> getEvents({int? limit = 500, int? page = 1}) {
@@ -26,7 +27,7 @@ class EventRepository extends BaseRepository {
   Future<WayaRequestResponse> editEvent(
       AddEventRequestModel payload, String id) {
     return patch("$serviceUrl/events/edit-event/$id", payload.toJson(),
-        formdata: true);
+        formdata: false);
   }
 
   Future<WayaRequestResponse> joinEvent(

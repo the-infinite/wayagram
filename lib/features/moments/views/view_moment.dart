@@ -31,6 +31,11 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
     _animationController = AnimationController(vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final dynamic args = ModalRoute.of(context)?.settings.arguments;
+      if (args != null && args['index'] != null) {
+        setState(() {
+          currentIndex = args['index'];
+        });
+      }
       if (args != null && args['moments'] != null) {
         setState(() {
           moments = args['moments'];

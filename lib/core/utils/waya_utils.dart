@@ -23,7 +23,7 @@ class WayaUtils {
       {required BuildContext context,
       required String title,
       required String message,
-      required VoidCallback onPress,
+    VoidCallback? onPress,
       required Widget icon,
       String? buttonText,
       String? secondButtonText,
