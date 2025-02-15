@@ -98,9 +98,7 @@ flutter_gen:
 
   integrations:
     flutter_svg: true
-    flare_flutter: true
     lottie: true
-    sqfentity: true
 
   fonts:
     enabled: false
