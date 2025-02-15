@@ -26,10 +26,11 @@ class MyMomentWidget extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     return GestureDetector(
       onTap: () async {
-        WayaNav.toNamed(ViewMoment.route, arguments: {
+         Navigator.pushReplacementNamed(context, ViewMoment.route, arguments: {
           "moments": [moment],
           "isMine": true
         });
+
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,10 +41,42 @@ class MyMomentWidget extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  WayaDp(
+                  Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.center,
+                  colors: [
+                    Color(0xFFB43000),
+                    Color(0x99FFEF8C),
+                    Color(0xFFFF5D2E),
+                  ],
+                  stops: [
+                    0.0,
+                    0.5,
+                    1.0
+                  ]),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(3),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: wayaTheme.colorScheme.white,
+                ),
+                child: Center(
+                  child:  WayaDp(
                     image: moment.image,
-                    radius: 25,
+                    radius: 20,
                   ),
+                ),
+              ),
+            ),
+          ),
+                 
                   SizedBox(
                     width: 6.w,
                   ),

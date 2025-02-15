@@ -266,7 +266,7 @@ class MomentVm extends StateNotifier<MomentState> {
     }
   }
 
-  Future<void> submitMoment() async {
+  Future<void> submitMoment({required BuildContext context}) async {
     final text = state.text;
     final backgroundColor = state.backgroundColor;
     final textStyle = state.textStyle;
@@ -356,9 +356,10 @@ class MomentVm extends StateNotifier<MomentState> {
               color: color,
               fontType: fontType,
               contentType: contentType);
-      if (response.success) {
+      if (response.success && context.mounted) {
         reset();
-        WayaNav.toNamed(MyMoments.route);
+        Navigator.pushReplacementNamed(context, MyMoments.route);
+        // WayaNav.toNamed(MyMoments.route);
       }
     } catch (error) {
       print(error);
