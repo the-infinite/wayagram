@@ -10,6 +10,7 @@ on:
       - production
       - pre-prod
       - restructured_wayagram
+      - collab
 
 jobs:
   ci_checks:
