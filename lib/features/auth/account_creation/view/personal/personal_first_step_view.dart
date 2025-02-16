@@ -393,6 +393,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                           value: viewModel.country,
                           hintText: 'Select Country',
                           items: viewModel.countries,
+                          
                           onSelected: (value) => ref.read(personalFirstStepProvider.notifier).selectCountry(value)),
                       if (formState.hasError && viewModel.country.isEmpty)
                         Padding(
