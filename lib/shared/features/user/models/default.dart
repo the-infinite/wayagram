@@ -19,13 +19,13 @@ class UserRole {
 @JsonSerializable()
 class UserDetailsModel {
   final String id;
-  final String phoneNumber;
-  final String email;
+  final String? phoneNumber;
+  final String? email;
   final String firstName;
   final String lastName;
-  final String gender;
-  final String address;
-  final String passwordHash;
+  final String? gender;
+  final String? address;
+  final String? passwordHash;
   final String? city;
   final String? lga;
   final String? state;
@@ -33,15 +33,15 @@ class UserDetailsModel {
   final String? countryCode;
   final String? postalCode;
   final String? middleName;
-  final DateTime dateOfBirth;
-  final bool twoFactorEnabled;
+  final DateTime? dateOfBirth;
+  final bool? twoFactorEnabled;
   final String? profilePicture;
   final String? fcmToken;
-  final bool emailVerified;
-  final bool phoneVerified;
-  final String accountStatus;
-  final bool tcAgreement;
-  final bool policyAgreement;
+  final bool? emailVerified;
+  final bool? phoneVerified;
+  final String? accountStatus;
+  final bool? tcAgreement;
+  final bool? policyAgreement;
   final DateTime? emailVerifiedDate;
   final String? deletedAt;
   final String? roleId;

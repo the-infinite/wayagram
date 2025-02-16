@@ -29,8 +29,6 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
 
     return WayaScaffold(
@@ -77,23 +75,6 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
           const Gap(20),
           _selectedIndex == 0 ? GroupsForYou() : _selectedIndex == 1 ? JoinedGroup() : ManageGroups()
         ],
-      ),
-      floatingActionButton: SizedBox(
-        height: 50,
-        width: 50,
-        child: WayaButton(
-          callback: () {
-            WayaNav.toNamed('/createPost');
-          },
-          height: 50,
-          centerWidget: Center(
-            child: Icon(
-              Icons.add,
-              color: wayaTheme.colorScheme.white,
-              size: 40,
-            ),
-          ),
-        ),
       ),
     );
   }

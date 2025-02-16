@@ -41,9 +41,10 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
       final id  = ModalRoute.of(context)?.settings.arguments as String;
-   final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
-   ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
-   print('THE PUBLIC GROUP ID is $id');
+      ref.read(createPageProvider.notifier).getAllPosts(id);
+  // final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
+   //ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
+   print('THE PUBLIC GROUP DarLIINGTON ==>> ID is $id');
     });
   }
 
@@ -52,10 +53,10 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
   void reassemble() {
     super.reassemble();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-      final id  = ModalRoute.of(context)?.settings.arguments as String;
-      final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
-      ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
-      print('THE PUBLIC GROUP ID is $id');
+      // final id  = ModalRoute.of(context)?.settings.arguments as String;
+      // final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
+      // ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
+      //print('THE PUBLIC GROUP ID is $id');
     });
   }
 
@@ -70,6 +71,8 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
 
     /// new implementation
     final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+
+    print('Group ID CHECK ${'${args['groupId']}'}');
 
     return WayaScaffold(
       padding: EdgeInsets.zero,
@@ -279,7 +282,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
             ],),
           ),
 
-          _selectedIndex == 0 ? GroupPost() : _selectedIndex == 1 ? Events(): MediaPost()
+          _selectedIndex == 0 ? GroupPost(groupId: '${args['groupId']}',) : _selectedIndex == 1 ? Events(): MediaPost(groupId: '${args['groupId']}')
           //AllOrders()
         ],
       ),
@@ -287,7 +290,9 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
           height: 50,
           width: 50,
           child: WayaButton(
-            callback: () {},
+            callback: () {
+              WayaNav.toNamed('/createGroupPost', arguments:'${args['groupId']}');
+            },
             height: 50,
             centerWidget: Center(
               child: Icon(

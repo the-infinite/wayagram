@@ -83,6 +83,8 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
 
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+
     return WayaScaffold(
       resizeToAvoidBottomInset: true,
         isLoading: viewModel.isLoading,
@@ -116,7 +118,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                        context, viewModel.content.text,
                          sel ?"public":"private",
                          _selectedImages,
-
+                        //'${args['groupId']}'
                      );
                       ref.watch(createPageProvider.notifier).reset();
                      WayaNav.toNamed("/pages",);

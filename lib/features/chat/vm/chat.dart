@@ -37,6 +37,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? Update state.
       state = state.copyWith(
+        hasLoaded: true,
         messages: result,
         totalCount: data['totalDocs'],
         totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,

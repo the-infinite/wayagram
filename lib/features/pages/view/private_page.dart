@@ -13,6 +13,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/view/edit_page_info.dart';
+import 'package:wayagram/features/pages/view/page_post.dart';
 import 'package:wayagram/features/pages/view/pages_for_you.dart';
 import 'package:wayagram/features/pages/view/team_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -170,10 +171,27 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                 ],),
             ),
             const Gap(20),
-            _selectedIndex == 0 ? PagesForYou() : TeamPage(pageId: '${args['pageId']}',)
+            _selectedIndex == 0 ? PagePost(pageId: '${args['pageId']}') : TeamPage(pageId: '${args['pageId']}',)
             //AllOrders()
           ],
         ),
+        floatingActionButton: SizedBox(
+          height: 50,
+          width: 50,
+          child: WayaButton(
+            callback: () {
+              WayaNav.toNamed('/createPagePost');
+            },
+            height: 50,
+            centerWidget: Center(
+              child: Icon(
+                Icons.add,
+                color: wayaTheme.colorScheme.white,
+                size: 40,
+              ),
+            ),
+          ),
+        )
         );
   }
 
