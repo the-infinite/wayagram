@@ -264,12 +264,14 @@ class WayaCheckButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool isSelected;
   final String text;
+  final double fontSize;
 
   const WayaCheckButton({
     super.key,
     required this.onTap,
     required this.isSelected,
     required this.text,
+    this.fontSize = 16,
   });
 
   @override
@@ -288,7 +290,9 @@ class WayaCheckButton extends StatelessWidget {
             //? First, the title.
             Text(
               text,
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontSize: fontSize,
+              ),
             ),
 
             // Boundless space.
@@ -391,6 +395,7 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
     final renderBox = context.findRenderObject() as RenderBox?;
     final size = renderBox?.size;
     final screenSize = MediaQuery.sizeOf(context);
+    final fontSize = screenSize.width * 0.040;
 
     // If we do  not find the renderBox
     if (size == null || renderBox == null) {
@@ -430,6 +435,7 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
                           },
                           isSelected: tab.isSelected,
                           text: tab.text,
+                          fontSize: fontSize,
                         ))
                     .toList(),
               ),

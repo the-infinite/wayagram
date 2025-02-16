@@ -177,7 +177,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
           ],
         ),
       ),
-      body: conversationState.conversations.isEmpty
+      body: conversationState.conversations.isEmpty && conversationState.hasLoaded
           ? SizedBox.expand(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 17),
