@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
 import 'package:wayagram/core/service/api_service/dio_exceptions.dart';
@@ -39,12 +40,24 @@ class DioHttpClient implements WayaHttpClientInterface {
     );
     final dio = Dio(options);
     //  dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
+    //for proper logging of dio request and response
+    dio.interceptors.add(PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        error: true,
+        compact: true,
+        maxWidth: 90));
     return dio;
   }
 
   @override
   Future<WayaRequestResponse> getHttp(String route,
-      {Map<String, dynamic>? body, Map<String, dynamic>? params, bool formdata = false, dynamic token}) async {
+      {Map<String, dynamic>? body,
+      Map<String, dynamic>? params,
+      bool formdata = false,
+      dynamic token}) async {
     await _setHeader(
       formdata: formdata,
     );
@@ -92,7 +105,8 @@ class DioHttpClient implements WayaHttpClientInterface {
           ? Options(
               headers: {
                 Headers.acceptHeader: "*/*",
-                Headers.contentTypeHeader: "multipart/form-data; boundary=${(body as FormData).boundary}"
+                Headers.contentTypeHeader:
+                    "multipart/form-data; boundary=${(body as FormData).boundary}"
               },
             )
           : null,
@@ -113,7 +127,8 @@ class DioHttpClient implements WayaHttpClientInterface {
     ));
   }
 
-  Future<WayaRequestResponse> downloadHttp(String url, String outputPath, WayaDownloadListener onData) async {
+  Future<WayaRequestResponse> downloadHttp(
+      String url, String outputPath, WayaDownloadListener onData) async {
     await _setHeader(isAuth: false);
 
     // Make the download request.
@@ -228,7 +243,8 @@ class DioHttpClient implements WayaHttpClientInterface {
     ));
   }
 
-  Future<WayaRequestResponse> _makeRequest(Future<Response> future, [bool showErrors = true]) async {
+  Future<WayaRequestResponse> _makeRequest(Future<Response> future,
+      [bool showErrors = true]) async {
     try {
       print("vv");
       final response = await future;
@@ -249,7 +265,9 @@ class DioHttpClient implements WayaHttpClientInterface {
         var message = 'An unknown error occurred';
 
         try {
-          message = e.response?.data['errors'] != null ? e.response?.data['errors'][0] : e.response?.data['message'];
+          message = e.response?.data['errors'] != null
+              ? e.response?.data['errors'][0]
+              : e.response?.data['message'];
           _logger.e('errors: ${e.response?.data['errors']}');
         } catch (_) {}
         _logger.e('message: $message, ${e.response?.data}');
@@ -285,7 +303,8 @@ class DioHttpClient implements WayaHttpClientInterface {
                   : 'application/json'),
       'accept': '*/*',
       'connection': 'keep-alive',
-      if (isAuth) 'Authorization': 'Bearer ${await secureDataSource.getToken()}',
+      if (isAuth)
+        'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 
