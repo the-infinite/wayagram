@@ -51,6 +51,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(createGroupProvider.notifier).getRecommendedGroups();
+      //ref.read(createGroupProvider.notifier).getGroupPosts();
       ref.read(createPageProvider.notifier).getAllPosts('${ConversationState.self.id}');
     });
   }
@@ -62,6 +63,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider.notifier);
     final viewModel2 = ref.watch(createPageProvider);
+    //final viewModel2 = ref.watch(createGroupProvider);
     final recommended = ref.watch(createGroupProvider);
     final group = ref.watch(createGroupProvider.notifier);
 

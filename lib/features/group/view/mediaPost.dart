@@ -50,7 +50,7 @@ class _MediaPostState extends ConsumerState<MediaPost>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createGroupProvider.notifier).getGroupPosts(widget.groupId);
+      ref.read(createGroupProvider.notifier).getGroupSinglePosts(widget.groupId);
     });
   }
 
