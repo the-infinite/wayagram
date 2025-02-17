@@ -266,9 +266,7 @@ class PageVm extends StateNotifier<PageState> {
 
     }
   }
-
-
-
+  
   Future<void> getSinglePost(userId) async {
     print('Fetching saved posts...');
 
