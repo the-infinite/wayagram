@@ -23,7 +23,7 @@ class WayaUtils {
       {required BuildContext context,
       required String title,
       required String message,
-    VoidCallback? onPress,
+   VoidCallback? onPress,
       required Widget icon,
       String? buttonText,
       String? secondButtonText,
@@ -33,7 +33,7 @@ class WayaUtils {
     return showModalSheet(context,
         child: WayaNoticeModal(
           title: title,
-          onPress: onPress,
+          onPress: onPress ?? () => {},
           message: message,
           icon: icon,
           buttonText: buttonText,
@@ -41,7 +41,8 @@ class WayaUtils {
           buttonCenterWidget: buttonCenterWidget,
           secondButtonText: secondButtonText,
           onCancel: onCancel,
-        ));
+        )
+        );
   }
 
   static Future<Select> showSelectModal({

@@ -41,20 +41,18 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
       provider.startViewingEvent();
 
-     
-
       provider.addLocation(event.location, EventPoint.viewEvent.value);
       provider.addEventType(event.eventType, EventPoint.viewEvent.value);
     });
   }
 
-  // Stop tracking when the page is closed
-  @override
-  void dispose() {
-    ref.read(eventEngagementProvider.notifier).stopViewingEvent();
+  // // Stop tracking when the page is closed
+  // @override
+  // void dispose() {
+  //   ref.read(eventEngagementProvider.notifier).stopViewingEvent();
 
-    super.dispose();
-  }
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +65,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
         isLoading: false,
         isScrollable: false,
         title: "Event",
-        appBarTrailing: EventDetailAction(eventId: event.id),
+        appBarTrailing:
+            EventDetailAction(eventId: event.id, isUser: viewModel.isUserEvent),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -217,7 +216,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
 class EventDetailAction extends StatelessWidget {
   final String eventId;
-  const EventDetailAction({super.key, required this.eventId});
+  final bool isUser;
+  const EventDetailAction({super.key, required this.eventId, required this.isUser});
 
   @override
   Widget build(BuildContext context) {
@@ -244,6 +244,7 @@ class EventDetailAction extends StatelessWidget {
                   ),
                   text: "Share Event"),
             ),
+            if( !isUser)
             PopupMenuItem<int>(
               value: 1,
               child: _buildActionNav(

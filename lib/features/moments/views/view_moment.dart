@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
+import 'package:wayagram/features/moments/views/my_moments.dart';
 import 'package:wayagram/features/moments/widgets/moment_user_info_widget.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_metrics.dart';
 import 'package:wayagram/features/moments/widgets/reply_moment_widget.dart';
@@ -23,6 +24,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
   List<MomentData> moments = [];
   int currentIndex = 0;
   bool isPaused = false;
+  bool isMine = false;
 
   @override
   void initState() {
@@ -38,6 +40,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
       }
       if (args != null && args['moments'] != null) {
         setState(() {
+          isMine = args['isMine'];
           moments = args['moments'];
           _startTimer();
         });
@@ -47,7 +50,10 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
 
   void _startTimer() {
     if (moments.isEmpty) return;
+
     final moment = moments[currentIndex];
+    print("in timer $currentIndex");
+    print(moments[currentIndex].id);
     final duration = moment.contentType == 'video' ? 30 : 7;
     _animationController.duration = Duration(seconds: duration);
     _animationController.forward(from: 0.0).whenComplete(() {
@@ -62,6 +68,8 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
     if (!mounted) return;
 
     if (currentIndex < moments.length - 1) {
+      //  print("efew $currentIndex");
+
       setState(() {
         currentIndex++;
       });
@@ -72,7 +80,12 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
       _startTimer();
     } else {
       if (Navigator.canPop(context)) {
-        Navigator.pop(context);
+        if (isMine) {
+          Navigator.pushReplacementNamed(context, MyMoments.route);
+        } else {
+          Navigator.pop(context);
+        }
+        ;
       } else {
         debugPrint("No more pages, and cannot pop.");
       }
@@ -91,6 +104,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
     setState(() {
       currentIndex = index;
       _animationController.reset();
+      print("on page changed $currentIndex");
       _startTimer();
     });
   }
@@ -147,10 +161,12 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
               children: [
                 PageView.builder(
                   controller: _pageController,
-                  onPageChanged: _onPageChanged,
+                  onPageChanged: (index) {
+                    _onPageChanged(currentIndex);
+                  },
                   itemCount: moments.length,
                   itemBuilder: (context, index) {
-                    final moment = moments[index];
+                    final moment = moments[currentIndex];
                     return moment.contentType == 'text'
                         ? textMoment(context: context, ref: ref, moment: moment)
                         : mediaPreview(
@@ -268,7 +284,7 @@ Widget mediaPreview({
             ),
 
       // Caption
-      if (moment.caption != null)
+      if (moment.caption != null && moment.caption!.isNotEmpty)
         Positioned(
           left: 0,
           right: 0,
