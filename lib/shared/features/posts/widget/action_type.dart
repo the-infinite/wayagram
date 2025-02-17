@@ -24,14 +24,18 @@ class PostActionType extends StatelessWidget {
     final theme = Theme.of(context);
 
     //? Return the actual component.
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        //? This is good.
-        InkWell(
-          onTap: onPressed,
-          child: Container(
+    return InkWell(
+      onTap: onPressed,
+      splashColor: theme.colorScheme.primary.withAlpha(30),
+      focusColor: theme.colorScheme.primary.withAlpha(30),
+      highlightColor: theme.colorScheme.primary.withAlpha(30),
+      customBorder: StadiumBorder(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //? This is good.
+          Container(
             height: 32.h,
             width: 32.w,
             decoration: BoxDecoration(
@@ -47,27 +51,27 @@ class PostActionType extends StatelessWidget {
               ),
             ),
           ),
-        ),
 
-        //? This is fine.
-        const Gap(5),
+          //? This is fine.
+          const Gap(5),
 
-        //? The text.
-        Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Text(
-            text,
-            style: theme.textTheme.bodyBold.copyWith(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
+          //? The text.
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(
+              text,
+              style: theme.textTheme.bodyBold.copyWith(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
             ),
           ),
-        ),
 
-        // Some space.
-        const Gap(15),
-      ],
+          // Some space.
+          const Gap(15),
+        ],
+      ),
     );
   }
 }
