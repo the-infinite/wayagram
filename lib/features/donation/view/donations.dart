@@ -31,6 +31,7 @@ class _DonationsState extends ConsumerState<Donations> with SingleTickerProvider
     return WayaScaffold(
         title: "Donations",
         isLoading: viewModel.isLoading,
+
         isScrollable: true,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
