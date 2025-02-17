@@ -409,11 +409,10 @@ class ChatInputWidget extends StatelessWidget {
       //? This is fine.
       for (final singleMessage in messages) {
         //? Send the message.
-        notifier.sendMessage(singleMessage).then(
-          (result) {
-            //
-          },
-        );
+        final result = await notifier.sendMessage(singleMessage);
+
+        //? If this failed..
+        if (result == null) return;
       }
     }
 
@@ -423,8 +422,11 @@ class ChatInputWidget extends StatelessWidget {
       final result = await notifier.sendMessage(message);
 
       //? If this succeeded...
-      if (result != null) return;
+      if (result == null) return;
     }
+
+    // Notify the message listeners of the chat that we have read.
+    WayaSocketController.instance.updateChats();
   }
 
   @override

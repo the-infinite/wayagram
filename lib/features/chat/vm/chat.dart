@@ -323,6 +323,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
     return response.success;
   }
 
+  /// A nice way of resetting this to its primal origin.
+  void reset() {
+    state = ChatState.initial;
+  }
+
   /// A helper function used to update the currently viewable chat on screen. It
   /// would clear out all visible messages and only retrieve messages sent by
   /// a given user.

@@ -18,7 +18,9 @@ import 'package:wayagram/features/moments/views/view_moment.dart';
 
 class MyMomentWidget extends ConsumerWidget {
   final MomentData moment;
-  const MyMomentWidget({super.key, required this.moment});
+  final List<MomentData> allMoments;
+  final int index;
+  const MyMomentWidget({super.key, required this.moment, required this.allMoments, required this.index});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,11 +28,11 @@ class MyMomentWidget extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     return GestureDetector(
       onTap: () async {
-         Navigator.pushReplacementNamed(context, ViewMoment.route, arguments: {
-          "moments": [moment],
-          "isMine": true
+        Navigator.pushReplacementNamed(context, ViewMoment.route, arguments: {
+          "moments": allMoments,
+          "isMine": true,
+          'index': index
         });
-
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,41 +44,40 @@ class MyMomentWidget extends ConsumerWidget {
               Row(
                 children: [
                   Container(
-            height: 50,
-            width: 50,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.center,
-                  colors: [
-                    Color(0xFFB43000),
-                    Color(0x99FFEF8C),
-                    Color(0xFFFF5D2E),
-                  ],
-                  stops: [
-                    0.0,
-                    0.5,
-                    1.0
-                  ]),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(3),
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: wayaTheme.colorScheme.white,
-                ),
-                child: Center(
-                  child:  WayaDp(
-                    image: moment.image,
-                    radius: 20,
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.center,
+                          colors: [
+                            Color(0xFFB43000),
+                            Color(0x99FFEF8C),
+                            Color(0xFFFF5D2E),
+                          ],
+                          stops: [
+                            0.0,
+                            0.5,
+                            1.0
+                          ]),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(3),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: wayaTheme.colorScheme.white,
+                        ),
+                        child: Center(
+                          child: WayaDp(
+                            image: moment.image,
+                            radius: 20,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ),
-                 
                   SizedBox(
                     width: 6.w,
                   ),
@@ -89,7 +90,9 @@ class MyMomentWidget extends ConsumerWidget {
                         child: Text(
                           moment.contentType == 'text'
                               ? moment.content
-                              : moment.caption!.isNotEmpty ?  moment.caption! : 'No Caption',
+                              : moment.caption!.isNotEmpty
+                                  ? moment.caption!
+                                  : 'No Caption',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize: 14, fontWeight: FontWeight.w600),

@@ -204,11 +204,20 @@ class WayaSocketController {
     _socket = null;
   }
 
+  Future<void> updateChats() async {
+    final notifier = ref!.watch(conversationProvider.notifier);
+
+    //? Wait for this to finish
+    await debounce(key: "chat-list-update", () async {
+      await notifier.getChats(true);
+      await notifier.getArchivedChats(true);
+    })();
+  }
+
   /// Our utility function that is used to start listening for socket events.
   Future<void> listen() async {
     final socket = _socket!;
     final chatNotifier = ref!.watch(chatProvider.notifier);
-    final notifier = ref!.watch(conversationProvider.notifier);
 
     //? On any event.
     socket.onAny(
@@ -221,11 +230,7 @@ class WayaSocketController {
     socket.on(
       "chatListUpdate",
       (data) async {
-        //? This is fine.
-        debounce(key: "chat-list-update", () async {
-          await notifier.getChats(true);
-          await notifier.getArchivedChats(true);
-        })();
+        await updateChats();
       },
     );
 
@@ -241,6 +246,9 @@ class WayaSocketController {
 
         //? Since we are in this chat...
         chatNotifier.getMessages(true);
+
+        //? Wait for this to finish
+        await updateChats();
       },
     );
 
@@ -286,6 +294,9 @@ class WayaSocketController {
 
         // This is fine.
         chatNotifier.removeMessage(args.messageId!);
+
+        //? Wait for this to finish
+        await updateChats();
       },
     );
 
@@ -301,6 +312,9 @@ class WayaSocketController {
 
         // This is fine.
         chatNotifier.getMessage(args.messageId!);
+
+        //? Wait for this to finish
+        await updateChats();
       },
     );
 
@@ -316,6 +330,9 @@ class WayaSocketController {
 
         // This is fine.
         chatNotifier.markAllAsRead();
+
+        // This is fine.
+        await updateChats();
       },
     );
   }
