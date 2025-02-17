@@ -47,7 +47,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        await _fetchMore();
+        followNotifier.getFollowersOf(widget.id);
+        followNotifier.getUsersFollowing(widget.id);
         if (widget.id == ConversationState.self.id) return;
         final result = await followNotifier.getFollowStatus(widget.id);
         setState(() {
@@ -62,11 +63,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void reassemble() {
     postNotifier.reset();
     eventNotifier.reset();
+    followNotifier.reset();
 
     // This is fine.
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
         await _fetchMore();
+        followNotifier.getFollowersOf(widget.id);
+        followNotifier.getUsersFollowing(widget.id);
         if (widget.id == ConversationState.self.id) return;
         final result = await followNotifier.getFollowStatus(widget.id);
         setState(() {
@@ -101,6 +105,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final size = MediaQuery.sizeOf(context);
     final postState = ref.watch(userPostsProvider);
     final eventState = ref.watch(userEventsProvider);
+    final followState = ref.watch(followProvider);
 
     //? Return the component.
     return WayaScaffold(
@@ -157,8 +162,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       title: '',
       body: PopScope(
         onPopInvokedWithResult: (isPopping, _) {
+          if (!isPopping) return;
           postNotifier.reset();
           eventNotifier.reset();
+          followNotifier.reset();
         },
         child: WayaObservableScrollView(
           shouldFetch: !postState.hasLoaded,
@@ -330,17 +337,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   color: wayaTheme.colorScheme.greyColor700,
                                 ),
                               ),
+
+                              // This is fine.
                               const Gap(5),
                             ],
 
                             //? Fourth the profile overview.
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
-                              spacing: 5,
+                              spacing: 10.w,
                               children: [
                                 //? Users following.
                                 WayaRichText(
-                                  title1: WayaValueHelper.formatNumber(0),
+                                  title1: WayaValueHelper.formatNumber(followState.followingTotalSize),
                                   title2: ' Following',
                                   style1: wayaTheme.textTheme.bodySmall?.copyWith(
                                     color: wayaTheme.colorScheme.black,
@@ -354,7 +363,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
                                 //? Followers.
                                 WayaRichText(
-                                  title1: WayaValueHelper.formatNumber(0),
+                                  title1: WayaValueHelper.formatNumber(followState.followersTotalSize),
                                   title2: ' Followers',
                                   style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.black,
@@ -365,10 +374,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     fontSize: 11,
                                   ),
                                 ),
+                              ],
+                            ),
 
+                            // This is fine.
+                            Gap(5.w),
+
+                            //? Some more space.
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 10.w,
+                              children: [
                                 //? Posts.
                                 WayaRichText(
-                                  title1: WayaValueHelper.formatNumber(0),
+                                  title1: WayaValueHelper.formatNumber(postState.posts.length),
                                   title2: ' Posts',
                                   style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.black,

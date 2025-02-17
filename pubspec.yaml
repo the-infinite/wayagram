@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.5-staging+133
+version: 1.91.5-prod+134
 
 environment:
   sdk: ^3.6.0
@@ -18,9 +18,10 @@ dependencies:
   get: ^4.6.6
   flutter_riverpod: ^2.6.1
   get_storage: ^2.1.1
+  visibility_detector: ^0.4.0+2
   flutter_secure_storage: ^9.2.2
   path_provider: ^2.1.5
-  sqlite3_flutter_libs: ^0.5.29+1
+  #sqlite3_flutter_libs: ^0.5.29+1
   dio: ^5.2.1+1
   http: ^1.2.1
   shared_preferences: ^2.2.3
@@ -47,7 +48,7 @@ dependencies:
   mime: ^2.0.0
   image_cropper: ^8.1.0
   http_parser: ^4.1.2
-  google_maps_flutter: ^2.10.0
+  #google_maps_flutter: ^2.10.0
   uuid: ^4.5.1
   smooth_page_indicator: ^1.2.0+3
   percent_indicator: ^4.2.4
@@ -58,16 +59,16 @@ dependencies:
   permission_handler: ^11.3.1
   audio_waveforms: ^1.2.0
   socket_io_client: ^3.0.2
-  rtmp_broadcaster:
-    git: https://github.com/OlJohnny/flutter_rtmp_broadcaster.git
+  #rtmp_broadcaster:
+   # git: https://github.com/OlJohnny/flutter_rtmp_broadcaster.git
   readmore: ^3.0.0
   timeago: ^3.2.2
   carousel_slider: ^5.0.0
   url_launcher: ^6.3.1
-  sqfentity: ^2.5.0
-  sqfentity_gen: ^2.5.0
+  #sqfentity: ^2.5.0
+  #sqfentity_gen: ^2.5.0
   infinite_scroll_pagination: ^4.1.0
-  video_trimmer: ^3.0.1
+  video_trimmer: ^3.0.1-LTS
 
 dev_dependencies:
   flutter_test:

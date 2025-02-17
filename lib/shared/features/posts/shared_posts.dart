@@ -46,10 +46,10 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: state.posts.length,
+            itemCount: state.topPosts.length,
             itemBuilder: (context, index) {
               return WayaPostWidget(
-                data: posts[index],
+                data: state.topPosts[index],
                 index: index,
               );
             },
@@ -91,7 +91,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
               itemCount: category.posts.length,
               itemBuilder: (context, index) {
                 return WayaPostWidget(
-                  data: posts[index],
+                  data: category.posts[index],
                   index: index,
                 );
               },
