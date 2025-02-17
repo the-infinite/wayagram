@@ -48,7 +48,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
   void _startTimer() {
     if (moments.isEmpty) return;
     final moment = moments[currentIndex];
-    final duration = moment.contentType == 'video' ? 30 : 10;
+    final duration = moment.contentType == 'video' ? 30 : 7;
     _animationController.duration = Duration(seconds: duration);
     _animationController.forward(from: 0.0).whenComplete(() {
       print("completed");

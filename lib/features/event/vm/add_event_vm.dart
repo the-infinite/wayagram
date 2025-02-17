@@ -149,8 +149,9 @@ class AddEventVm extends StateNotifier<AddEventState> {
               message:
                   "Your event is now live. Share it with your audience and start engaging with attendees today!",
               onPress: () {
-                Navigator.of(context).pop();
+             
                 Navigator.pushReplacementNamed(context, EventView.route);
+                   Navigator.of(context).pop();
               },
               buttonText: 'Go To Event Home Page',
               secondButtonText: 'Share Event Link',
