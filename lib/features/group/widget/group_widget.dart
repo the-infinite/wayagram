@@ -83,6 +83,7 @@ class GroupWidget extends StatelessWidget {
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
+
             ),
           ),
 

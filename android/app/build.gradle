@@ -30,6 +30,28 @@ android {
 
     packagingOptions {
         exclude 'project.clj'
+        pickFirst '**/libavcodec.so'
+        pickFirst '**/libavdevice.so'
+        pickFirst '**/libavfilter.so'
+        pickFirst '**/libavformat.so'
+        pickFirst '**/libavutil.so'
+        pickFirst '**/libavcodec_neon.so'
+        pickFirst '**/libavdevice_neon.so'
+        pickFirst '**/libavfilter_neon.so'
+        pickFirst '**/libavformat_neon.so'
+        pickFirst '**/libavutil_neon.so'
+        pickFirst '**/libffmpegkit_armv7a_neon.so'
+        pickFirst '**/libswresample_neon.so'
+        pickFirst '**/libswscale_neon.so'
+        pickFirst '**/libdatastore_shared_counter.so'
+        pickFirst '**/libffmpegkit.so'
+        pickFirst '**/libffmpegkit_abidetect.so'
+        pickFirst '**/libflutter.so'
+        pickFirst '**/libjingle_peerconnection_so.so'
+        pickFirst '**/libsqlcipher.so'
+        pickFirst '**/libsqlite3.so'
+        pickFirst '**/libswresample.so'
+        pickFirst '**/libswscale.so'
     }
 
     defaultConfig {
@@ -53,8 +75,12 @@ android {
     }
 
     buildTypes {  
-         release {
+        debug {
             signingConfig signingConfigs.debug
+        }
+
+         release {
+            signingConfig signingConfigs.release
             shrinkResources true
             minifyEnabled true
         }

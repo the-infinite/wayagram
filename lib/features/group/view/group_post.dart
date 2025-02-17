@@ -17,6 +17,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/component/extras.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -30,7 +31,8 @@ import '../../shop/widgets/empty_state.dart';
 
 
 class GroupPost extends ConsumerStatefulWidget {
-  const GroupPost({super.key});
+  final String groupId;
+  const GroupPost({super.key, required this.groupId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupPostState();
@@ -38,7 +40,6 @@ class GroupPost extends ConsumerStatefulWidget {
 
 class _GroupPostState extends ConsumerState<GroupPost>
     with SingleTickerProviderStateMixin {
-  WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
 
   static const int _pageSize = 10;
   final PagingController<int, Post> _pagingController = PagingController(firstPageKey: 1);
@@ -49,7 +50,8 @@ class _GroupPostState extends ConsumerState<GroupPost>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPageProvider.notifier).getAllPosts(_wayaLocalDataSource.getUserId());
+      print('GROUP IDIDIDID===>> ${widget.groupId}');
+      ref.read(createGroupProvider.notifier).getGroupPosts(widget.groupId);
     });
   }
 
@@ -384,7 +386,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                 );
               }),
           const Gap(25),
-          GroupedWidgetHeader(
+        /*  GroupedWidgetHeader(
               onTap: () {
                 WayaNav.toNamed('/suggestion');
               },
@@ -671,13 +673,15 @@ class _GroupPostState extends ConsumerState<GroupPost>
                                 ),
                               ],
                             )),
-                          /* if(post.media != null)
+                          */
+          /* if(post.media != null)
                           ...post.media!.map((e)=>
                               Row(
                                 children: [
                                  Image.network('$e', fit: BoxFit.fitWidth,)
                                 ],
                               )),*/
+          /*
 
                         ],
                       ),
@@ -711,7 +715,8 @@ class _GroupPostState extends ConsumerState<GroupPost>
                       padding: EdgeInsets.fromLTRB(0.w, 8.0.h, 15.w, 8.w),
                       child: Row(
                         children: [
-                          /*LikeButtonWithReactions(
+                          */
+          /*LikeButtonWithReactions(
                           // isLiked: post.isLiked,
                           // onLike: onLike,
                           // onReact: onReact ?? (react){},
@@ -730,6 +735,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                           //   viewModel.commentPost2(post);
                           // },
                         ),*/
+          /*
                           actionType(
                               '${post.likeCount} ${post.likeCount! <= 1 ? 'Like' : 'Likes'}',
                               'assets/images/pages/like2.png', onPressed: () {
@@ -764,7 +770,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
 
                   ],
                 );
-              }),
+              }),*/
         ],
       ),
     );

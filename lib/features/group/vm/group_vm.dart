@@ -20,8 +20,12 @@ import 'package:wayagram/features/group/data/model/recommended_group_model.dart'
 import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
+import 'package:wayagram/features/post/model/comment.dart';
+//import 'package:wayagram/features/post/model/fetch_comment.dart';
+import 'package:wayagram/features/post/model/get_all_post.dart';
 
 import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/model/media_upload_model.dart';
 
 import '../data/repo/group_repository.dart';
 
@@ -108,6 +112,73 @@ class GroupVm extends StateNotifier<GroupState> {
     return null;
   }
 
+  Future<void> createGroupPost(ctx, content, postType, List<XFile> images, postId) async {
+    print("before the loop");
+    List<UploadedImage> urls = [];
+    List<String> publicUrl = [];
+    final choiceMap = <String>[];
+    // get url
+    for (XFile image in images) {
+      print("In the loop ${image.name} ${image.path} ${image.mimeType}");
+
+      final uploadImageResponse = await _groupRepository.getUploadImage(image.name);
+
+      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      publicUrl.add(mediaUploadModel!.data!.publicUrl!);
+    }
+
+    // upload
+    for (UploadedImage url in urls) {
+      final file = File(url.file);
+      final putImageResponse = await _groupRepository.putImage(url.url, file);
+
+      //? This is fine.
+      if (!(putImageResponse.success && ctx.mounted)) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to create post'),
+            backgroundColor: WayaColors.error,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        break;
+      }
+
+      //? This is fine.
+      print("Data ${putImageResponse.data}");
+    }
+    //WayaHelpers.
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.createGroupPost(content, publicUrl , postType, postId);
+      state = state.copyWith(isLoading: false);
+      //? If this is fine...
+      if (response.success && ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post created successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        print('Create post');
+        _logger.i(response.data['data']);
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+
   Future<void> deleteGroup( ctx,  String postId,  String userId) async {
     try {
       final response =  await _groupRepository.deleteGroup(postId);
@@ -127,6 +198,26 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  Future<void> followUser( ctx, String followingId) async {
+    try {
+      final response =  await _groupRepository.followUser(followingId);
+      if(response.success && ctx.mounted){
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Followed successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
 
   Future<void> editGroup(ctx, groupName, groupDesc, groupType, String coverImage, String profileImage, String groupId) async {
 
@@ -271,6 +362,30 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
+  Future<void> getGroupPosts(groupId) async {
+    print('Fetching saved posts...');
+
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.fetchSingleGroupPost(groupId);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        GetAllPost responseModel = GetAllPost.fromJson(response.data);
+        state = state.copyWith(getAllPost: responseModel.data?.docs);
+
+      } else {
+
+      }
+    } catch (e) {
+
+    } finally {
+
+    }
+  }
 
   Future<List<GetAllGroupDocs>?> getSingleGroup(id) async {
     try {
@@ -386,7 +501,6 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-
   Future<void> getJoinRequest(groupId) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -404,6 +518,129 @@ class GroupVm extends StateNotifier<GroupState> {
 
     }
   }
+
+/*
+  Future<List<Comments>> getCommentsStream(String postId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getComment(postId);
+      state = state.copyWith(isLoading: false);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        FetchComment responseModel = FetchComment.fromJson(response.data);
+        state = state.copyWith(comments: responseModel.data?.comments);
+        return responseModel.data?.comments ?? [];
+      }
+    } catch (e) {
+      print(e);
+    }
+    state = state.copyWith(isLoading: false);
+    return [];
+  }
+
+
+  Future<void> commentOnPost(String postId, String content) async {
+    try {
+      final response = await _groupRepository.commentOnPost(postId, content);
+      if (response!.statusCode == 200 || response.statusCode == 201) {
+        getCommentsStream(postId);
+      }
+    }catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> deletePost( ctx, {required String postId, required String userId}) async {
+    try {
+      final response =  await _groupRepository.deletePost(postId);
+      if(response.success && ctx.mounted){
+        getAllPosts(userId);
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post deleted successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> repost( ctx, {required String postId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _groupRepository.repost(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post reposted successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> sharePost( ctx, {required String postId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _groupRepository.sharePost(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> bookmarkPost( ctx, {required String postId}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =  await _groupRepository.bookMarkPost(postId);
+      state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Post bookmarked successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> likePost( ctx, {required String postId, required String userId}) async {
+    try {
+      //state = state.copyWith(isLoading: true);
+      final response =  await _groupRepository.likePost(postId);
+      //state = state.copyWith(isLoading: false);
+      if(response.success && ctx.mounted){
+        getAllPosts(userId);
+
+      }
+    } catch (e) {
+      print(e);
+    } finally{
+      //state = state.copyWith(isLoading: false);
+    }
+  }
+*/
 
 }
 

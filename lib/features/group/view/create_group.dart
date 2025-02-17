@@ -93,6 +93,17 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                     duration: Duration(seconds: 2),
                   ),
                 );
+              }else if(_selectedImage == null || _coverImage == null){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Add Images', style: TextStyle(
+                        fontFamily: WayaConstants.fontFamily,
+                        fontSize: 12
+                    ),),
+                    backgroundColor: Colors.red,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               } else{
                 WayaNav.toNamed("/confirmGroupDetails",
                    arguments:{

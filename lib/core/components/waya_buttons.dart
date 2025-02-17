@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -27,7 +28,9 @@ class WayaBackButton extends StatelessWidget {
             onTap: onTap ??
                 () {
                   WayaNav.goBack();
-                  HapticFeedback.lightImpact();
+                  try {
+                    HapticFeedback.lightImpact();
+                  } catch (_) {}
                 },
             child: SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
           ),
@@ -151,24 +154,75 @@ class WayaButton extends StatelessWidget {
   }
 }
 
+class WayaActionNav extends StatelessWidget {
+  final BuildContext context;
+  final VoidCallback onTap;
+  final Widget asset;
+  final String text;
+  final Color color;
+
+  const WayaActionNav({
+    super.key,
+    required this.context,
+    required this.onTap,
+    required this.asset,
+    required this.text,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          asset,
+          const Gap(4),
+          Text(
+            text,
+            style: wayaTheme.textTheme.bodyMedium?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w500,
+              fontSize: 12,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class WayaTabButton extends StatelessWidget {
   final bool isSelected;
   final String text;
   final VoidCallback onTap;
   final double? width;
+  final Widget? end;
 
-  const WayaTabButton({super.key, required this.isSelected, required this.text, required this.onTap, this.width});
+  const WayaTabButton({
+    super.key,
+    required this.isSelected,
+    required this.text,
+    required this.onTap,
+    this.width,
+    this.end,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final screenWidth = context.width;
-
     final fontSize = screenWidth * 0.040;
 
+    //?
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
+        behavior: HitTestBehavior.opaque,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: BoxDecoration(
@@ -179,12 +233,276 @@ class WayaTabButton extends StatelessWidget {
               ),
             ),
           ),
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: fontSize,
-              color: isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor500,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            spacing: 5,
+            children: [
+              //? Fill available space.
+              Expanded(
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    color: isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor500,
+                  ),
+                ),
+              ),
+
+              //? Put the thing here if needed.
+              if (end != null) end!,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class WayaCheckButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final bool isSelected;
+  final String text;
+  final double fontSize;
+
+  const WayaCheckButton({
+    super.key,
+    required this.onTap,
+    required this.isSelected,
+    required this.text,
+    this.fontSize = 16,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    // This is fine.
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //? First, the title.
+            Text(
+              text,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontSize: fontSize,
+              ),
+            ),
+
+            // Boundless space.
+            const Spacer(),
+
+            //? Finally, the toggling checkbox.
+            Checkbox(
+              value: isSelected,
+              tristate: false,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              splashRadius: 12,
+              fillColor: WidgetStateColor.resolveWith(
+                (states) {
+                  //? If this is selected...
+                  if (states.contains(WidgetState.selected)) {
+                    return theme.colorScheme.primary;
+                  }
+
+                  // Since it is not.
+                  return Colors.transparent;
+                },
+              ),
+              side: BorderSide(
+                color: isSelected ? theme.colorScheme.greyColor300 : theme.colorScheme.primary,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100000),
+              ),
+              onChanged: (value) {
+                if (value == true) onTap();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WayaExpandedTab {
+  final bool isSelected;
+  final String text;
+  final VoidCallback onTap;
+
+  const WayaExpandedTab({
+    required this.isSelected,
+    required this.text,
+    required this.onTap,
+  });
+}
+
+class ExpandedTabController {
+  OverlayEntry? _current;
+
+  void close() {
+    try {
+      _current?.remove();
+    } catch (_) {}
+  }
+}
+
+class WayaExpandedTabButton extends StatefulWidget {
+  final bool isSelected;
+  final String text;
+  final ExpandedTabController controller;
+  final double? width;
+  final List<WayaExpandedTab> tabs;
+
+  const WayaExpandedTabButton({
+    super.key,
+    required this.isSelected,
+    required this.text,
+    required this.tabs,
+    required this.controller,
+    this.width,
+  });
+
+  @override
+  State<WayaExpandedTabButton> createState() => _WayaExpandedTabButtonState();
+}
+
+class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
+  OverlayEntry? _entry;
+
+  @override
+  void dispose() {
+    _entry?.dispose();
+    super.dispose();
+  }
+
+  void _showActions(BuildContext context, ThemeData theme) async {
+    //? If this is not undefined, leave.
+    if (_entry?.mounted ?? false) {
+      _entry?.remove();
+      _entry = null;
+      return;
+    }
+
+    // If this is defined, remove it.
+    final renderBox = context.findRenderObject() as RenderBox?;
+    final size = renderBox?.size;
+    final screenSize = MediaQuery.sizeOf(context);
+    final fontSize = screenSize.width * 0.040;
+
+    // If we do  not find the renderBox
+    if (size == null || renderBox == null) {
+      return;
+    }
+
+    // This is fine.
+    final offset = renderBox.localToGlobal(Offset.zero);
+
+    //? The distance between the top of the screen and the popup we want here.
+    double top = offset.dy + size.height + 15;
+
+    // This is fine.
+    _entry = OverlayEntry(
+      builder: (context) {
+        return Positioned(
+          right: 15,
+          top: top,
+          child: Material(
+            child: Container(
+              width: screenSize.width * 0.50,
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.transparent,
+                border: Border.all(width: 1, color: theme.colorScheme.greyColor300),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: widget.tabs
+                    .map((tab) => WayaCheckButton(
+                          onTap: () {
+                            tab.onTap();
+                            _entry?.remove();
+                            _entry = null;
+                          },
+                          isSelected: tab.isSelected,
+                          text: tab.text,
+                          fontSize: fontSize,
+                        ))
+                    .toList(),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    // This is fine.
+    widget.controller._current = _entry;
+
+    //* Now, insert this overlay here.
+    Overlay.of(context).insert(_entry!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final screenWidth = context.width;
+    final fontSize = screenWidth * 0.040;
+
+    //?
+    return PopScope(
+      onPopInvokedWithResult: (doing, _) {
+        if (doing) _entry?.remove();
+      },
+      child: Expanded(
+        child: GestureDetector(
+          onTap: () => _showActions(context, theme),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: widget.isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor300,
+                  width: widget.isSelected ? 2 : 0.9,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              spacing: 5,
+              children: [
+                //? Fill available space.
+                Expanded(
+                  child: Text(
+                    widget.text,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: fontSize,
+                      color: widget.isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor500,
+                    ),
+                  ),
+                ),
+
+                //? Put the thing here if needed.
+                WayaAssets.icons.mChevronDown.svg(
+                  color: widget.isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor500,
+                  height: 18,
+                  width: 18,
+                ),
+
+                //? Some space.
+                const SizedBox.shrink(),
+              ],
             ),
           ),
         ),

@@ -30,7 +30,7 @@ class ChatProfilePicture extends StatelessWidget {
             child: CircleAvatar(
               radius: radius,
               backgroundColor: WayaColors.greyColor200,
-              backgroundImage: user.profilePicture != null ? CachedNetworkImageProvider(user.profilePicture) : null,
+              backgroundImage: user.profilePicture != null ? CachedNetworkImageProvider(user.profilePicture!) : null,
               child: user.profilePicture == null
                   ? Icon(
                       Icons.person,

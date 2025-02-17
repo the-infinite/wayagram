@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'waya_colors.dart';
 

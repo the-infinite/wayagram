@@ -4,13 +4,27 @@ import 'package:wayagram/core/service/repos/base_repository.dart';
 class PageRepository extends BaseRepository {
   static const serviceUrl = "wayagram-graph/api/v2";
 
+
   Future<WayaRequestResponse> createPost(
       String content, List<String> images, postType) {
     final payload = {
       "content": content,
       "type": "generic",
       "media": images,
-      //"linkedServiceId": "123e4567-e89b-12d3-a456-426614174000",
+      "privacy": postType
+    };
+
+    return post("$serviceUrl/posts", payload);
+  }
+
+
+  Future<WayaRequestResponse> createPagePost(
+      String content, List<String> images, postType, postId) {
+    final payload = {
+      "content": content,
+      "postId": postId,
+      "type": "generic",
+      "media": images,
       "privacy": postType
     };
 
@@ -19,6 +33,10 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getUploadImage(image) {
     return get("$serviceUrl/signed-url/$image");
+  }
+
+  Future<WayaRequestResponse> fetchSinglePagePost(pageId) {
+    return get("$serviceUrl/posts?pageId=$pageId&status=active");
   }
 
   Future<WayaRequestResponse> putImage(url, image) {

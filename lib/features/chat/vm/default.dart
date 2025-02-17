@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/repo/default.dart';
@@ -6,7 +7,25 @@ import 'package:wayagram/shared/features/user/resource/default.dart';
 
 class ConversationVm extends StateNotifier<ConversationState> {
   final repo = ChatRepository();
+  OverlayEntry? _entry;
   ConversationVm(super.state);
+
+  /// A utility used to keep track of the current overlay showing on the
+  /// conversation screen.
+  void setOverlay(OverlayEntry entry) {
+    try {
+      _entry?.remove();
+    } catch (_) {}
+    _entry = entry;
+  }
+
+  /// A utility function used to close focus on the current overlay.
+  void dismissOverlay() {
+    try {
+      _entry?.remove();
+      _entry?.dispose();
+    } catch (_) {}
+  }
 
   /// Helper function used to set the filter text.
   void setFilter(String filter) {
@@ -76,6 +95,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
       //? Update state.
       state = state.copyWith(
+        hasLoaded: true,
         conversations: result,
         totalCount: data['totalDocs'],
         totalPages: data['totalPages'],
@@ -211,7 +231,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
     if (response.success) {
       final chats = state.conversations;
       chats.removeWhere((chat) => chat.id == id);
-      state = state.copyWith(conversations: chats);
+      state = state.copyWith(conversations: [...chats]);
     }
 
     //? Return whether or not this is true.
@@ -277,6 +297,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
       //? Update state.
       state = state.copyWith(
         archived: result,
+        hasLoadedArchived: true,
         archivedTotalCount: data['totalDocs'],
         archivedTotalPages: data['totalPages'],
         archivedHasNextPage: data['hasNextPage'],

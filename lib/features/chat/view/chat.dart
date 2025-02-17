@@ -67,6 +67,11 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
     // This is fine.
     return Consumer(builder: (context, ref, _) {
       final state = ref.watch(chatProvider);
+
+      //? If this is after the state of this has been reset.
+      if (state.chat == null) return const SizedBox();
+
+      //? Since there is something to be seen here.
       final chat = state.chat!;
       final inputController = ChatInputController.instance;
       final userStatus = chat.other.chatUser?.onlineStatus;
@@ -84,8 +89,9 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
       //? This is fine.
       return PopScope(
         onPopInvokedWithResult: (popping, _) {
-          //? Reset this when you are popping.
-          if (popping) inputController.reset();
+          if (!popping) return;
+          inputController.reset();
+          notifier.reset();
         },
         child: WayaScaffold(
           isLoading: false,
@@ -205,7 +211,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
               Divider(color: WayaColors.greyColor200, height: 1),
 
               //? Second, the chat messages.
-              if (state.messages.isEmpty && !state.isLoading)
+              if (state.messages.isEmpty && state.hasLoaded)
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -7,11 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 
 
@@ -72,11 +70,12 @@ print('Group Type ====>>> ${args['type']}');
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-
+                  args['coverImage'] == null ? Image.asset('assets/images/pages/image_placeholder.png',
+                    height:Get.height * 0.2, width: double.infinity,
+                    alignment: Alignment.centerRight, fit: BoxFit.fitWidth,):
                   Image.file(File('${args['image'].absolute.path}'),
                       height:Get.height * 0.2, width: double.infinity,
                   alignment: Alignment.centerRight, fit: BoxFit.fitWidth,),
-                  //WayaImage3(height: Get.height * 0.2,),
                   Gap(15),
 
                 ],
@@ -89,7 +88,7 @@ print('Group Type ====>>> ${args['type']}');
                   radius: 20,
                   backgroundImage:
                   //args['coverImage'].absolute.path != null?
-                        FileImage(File('${args['coverImage'].absolute.path}'))
+                        FileImage(File('${args['coverImage']?.absolute.path}'))
                   // AssetImage('assets/images/pages/image_placeholder.png')
                   )
                 ),

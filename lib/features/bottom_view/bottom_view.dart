@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/chat/view/default.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
 //import 'package:wayagram/features/chat/view/default.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
@@ -46,7 +47,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
     if (!_isInitialized) {
       final index = ModalRoute.of(context)?.settings.arguments as int?;
       if (index != null) {
-        _selectedIndex = index ?? 0;
+        _selectedIndex = index;
       }
       _isInitialized = true;
     }
@@ -151,6 +152,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
             elevation: 0,
             currentIndex: _selectedIndex,
             onTap: (index) {
+              ref.watch(conversationProvider.notifier).dismissOverlay();
               setState(() {
                 _selectedIndex = index;
               });

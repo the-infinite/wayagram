@@ -69,7 +69,7 @@ class SendMessageDto {
             .toList(),
         originalMessage: originalMessage,
         contacts: contacts,
-        senderId: ConversationState.self.id!,
+        senderId: ConversationState.self.id,
         messageType: type,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -94,7 +94,7 @@ class SendMessageDto {
       final result = await WayaFileRepository.instance.uploadFile(entity, name);
 
       //? If this did not fail...
-      if (result == null) continue;
+      if (result == null) throw "Failed to upload an image";
 
       //? Since this worked fine...
       files.add(result);

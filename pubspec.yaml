@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.1+128
+version: 1.91.5-staging+133
 
 environment:
   sdk: ^3.6.0
@@ -54,7 +54,7 @@ dependencies:
   slide_countdown: ^2.0.2
   file_picker: ^8.3.1
   video_player: ^2.9.2
-  # flutter_webrtc: ^0.12.7
+  # flutter_webrtc: ^0.12.9
   permission_handler: ^11.3.1
   audio_waveforms: ^1.2.0
   socket_io_client: ^3.0.2
@@ -98,9 +98,7 @@ flutter_gen:
 
   integrations:
     flutter_svg: true
-    flare_flutter: true
     lottie: true
-    sqfentity: true
 
   fonts:
     enabled: false
@@ -124,16 +122,15 @@ flutter:
     - assets/images/auth/
     - assets/icons/gen_set/
     - assets/icons/wallet/
-
     - assets/images/explore/
     - assets/images/shop/
     - assets/images/bid/
     - assets/images/polls/
     - assets/images/pages/
     - assets/images/wallet/
-
     - assets/icons/
     - assets/fonts/
+    - shorebird.yaml
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

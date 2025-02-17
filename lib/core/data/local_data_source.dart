@@ -16,12 +16,11 @@ class WayaLocalDataSource {
   }
 
   saveUserType(SelectAccountData type) {
-    wayaFastStorageService.write<SelectAccountData>(
-        key: 'userType', value: type);
+    wayaFastStorageService.write(key: 'userType', value: type.toJson());
   }
 
   SelectAccountData getUserType() {
-    return wayaFastStorageService.read(key: 'userType');
+    return SelectAccountData.fromJson(wayaFastStorageService.read(key: 'userType'));
   }
 
   saveUser(UserAccountData user) {
@@ -61,8 +60,7 @@ class WayaLocalDataSource {
   }
 
   saveDeviceToken(String token) {
-    return wayaFastStorageService.write<String>(
-        key: 'isFCMTokenFine', value: token.substring(0, 4));
+    return wayaFastStorageService.write<String>(key: 'isFCMTokenFine', value: token.substring(0, 4));
   }
 
   bool getIsFcmTokenFine() {
@@ -74,8 +72,7 @@ class WayaLocalDataSource {
   }
 
   saveSearchHistory(List<String> history) {
-    return wayaFastStorageService.write<List<String>>(
-        key: 'search-history', value: history);
+    return wayaFastStorageService.write<List<String>>(key: 'search-history', value: history);
   }
 
   List<String> getSearchHistory() {

@@ -59,7 +59,7 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
     final size = MediaQuery.sizeOf(context);
     final renderBox = context.findRenderObject() as RenderBox?;
     final mySize = renderBox?.size ?? Size(size.width * 0.8, 70);
-    await player.preparePlayer(
+    player.preparePlayer(
         path: widget.audio.absolute.path,
         shouldExtractWaveform: true,
         noOfSamples: waveStyle.getSamplesForWidth(mySize.width - 70));

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
@@ -36,7 +34,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "typing",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       action: isTyping ? 'start-typing' : 'stop-typing',
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -47,7 +45,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "sendMessage",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       messageId: messageId,
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -58,7 +56,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "markAsRead",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       messageId: messageId,
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -69,7 +67,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "markAllAsRead",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       isSynced: isSynced,
       isFlag: isFlagged,
     );
@@ -79,7 +77,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "deleteMessage",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       messageId: messageId,
       isSynced: isSynced,
       isFlag: isFlagged,
@@ -90,7 +88,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: "join",
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       isSynced: isSynced,
       isFlag: isFlagged,
     );
@@ -107,7 +105,7 @@ class WayaChatSocketArgs {
     return WayaChatSocketArgs._(
       command: command,
       chatId: chatId,
-      senderId: ConversationState.self.id!,
+      senderId: ConversationState.self.id,
       action: action,
       messageId: messageId,
       isSynced: isSynced,
@@ -152,7 +150,7 @@ class WayaSocketController {
   socket_io.Socket? _socket;
 
   WayaChatSocketArgs _quickDecode(dynamic data) {
-    return WayaChatSocketArgs.fromJson(jsonDecode(data.toString()));
+    return WayaChatSocketArgs.fromJson(data);
   }
 
   // This is fine.
@@ -206,11 +204,20 @@ class WayaSocketController {
     _socket = null;
   }
 
+  Future<void> updateChats() async {
+    final notifier = ref!.watch(conversationProvider.notifier);
+
+    //? Wait for this to finish
+    await debounce(key: "chat-list-update", () async {
+      await notifier.getChats(true);
+      await notifier.getArchivedChats(true);
+    })();
+  }
+
   /// Our utility function that is used to start listening for socket events.
   Future<void> listen() async {
     final socket = _socket!;
     final chatNotifier = ref!.watch(chatProvider.notifier);
-    final notifier = ref!.watch(conversationProvider.notifier);
 
     //? On any event.
     socket.onAny(
@@ -223,11 +230,7 @@ class WayaSocketController {
     socket.on(
       "chatListUpdate",
       (data) async {
-        //? This is fine.
-        debounce(key: "chat-list-update", () async {
-          await notifier.getChats(true);
-          await notifier.getArchivedChats(true);
-        })();
+        await updateChats();
       },
     );
 
@@ -243,6 +246,9 @@ class WayaSocketController {
 
         //? Since we are in this chat...
         chatNotifier.getMessages(true);
+
+        //? Wait for this to finish
+        await updateChats();
       },
     );
 
@@ -288,6 +294,9 @@ class WayaSocketController {
 
         // This is fine.
         chatNotifier.removeMessage(args.messageId!);
+
+        //? Wait for this to finish
+        await updateChats();
       },
     );
 
@@ -303,6 +312,9 @@ class WayaSocketController {
 
         // This is fine.
         chatNotifier.getMessage(args.messageId!);
+
+        //? Wait for this to finish
+        await updateChats();
       },
     );
 
@@ -318,6 +330,9 @@ class WayaSocketController {
 
         // This is fine.
         chatNotifier.markAllAsRead();
+
+        // This is fine.
+        await updateChats();
       },
     );
   }

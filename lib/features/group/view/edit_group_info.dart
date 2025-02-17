@@ -72,11 +72,11 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
     return WayaScaffold(
       padding: EdgeInsets.zero,
       title: "Edit Group Info",
-      onTapBackButton: (){
-        Navigator.pop(context);
-        viewModel2.reset();
-
-      },
+      // onTapBackButton: (){
+      //   Navigator.pop(context);
+      //   viewModel2.reset();
+      //
+      // },
       isLoading: viewModel.isLoading,
       isScrollable: true,
       appBarTrailing: Padding(
@@ -153,18 +153,10 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                       ),
                     ],
                   ),
-                  /* WayaImage3(
-                      imageUrl: '$_selectedImages',
-                      onTap: _pickImages,
-                      height: Get.height * 0.2,
-                      isEdit: true,
-                    ),*/
                   Gap(15),
 
                 ],
               ),
-
-
 
               Positioned(
                 left: 16.w,
