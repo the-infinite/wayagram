@@ -1,9 +1,7 @@
 name: release
 
 on:
-  pull_request_target:
-    branches:
-      - main
+  workflow_dispatch:
 
 env:
   SHOREBIRD_TOKEN: eyJyZWZyZXNoX3Rva2VuIjoiMS8vMDNlQmJ5c2RjOHlKUkNnWUlBUkFBR0FNU053Ri1MOUlyX2ZYMlJLOWlsWERHZW15NEdUMHN2VVRlclBlTHY2dEdRTnNMS0x4WEphemFQMHJXSHUtdm4xYi1pZUxZNFZ1a1hJSSIsImF1dGhfcHJvdmlkZXIiOiJnb29nbGUifQ==
