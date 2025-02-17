@@ -1,9 +1,10 @@
 name: patch
 
 on:
-  pull_request:
-    tags:
-      - "v[0-9].[0-9]+.[0-9]+-patch.[0-9]+" # e.g. v1.0.0-patch.1
+  pull_request_review:
+    branches:
+      - pre-prod
+
 
 env:
   SHOREBIRD_TOKEN: eyJyZWZyZXNoX3Rva2VuIjoiMS8vMDNlQmJ5c2RjOHlKUkNnWUlBUkFBR0FNU053Ri1MOUlyX2ZYMlJLOWlsWERHZW15NEdUMHN2VVRlclBlTHY2dEdRTnNMS0x4WEphemFQMHJXSHUtdm4xYi1pZUxZNFZ1a1hJSSIsImF1dGhfcHJvdmlkZXIiOiJnb29nbGUifQ==

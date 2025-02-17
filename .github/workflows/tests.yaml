@@ -33,3 +33,9 @@ jobs:
 
       - name: 🔍 Analyze
         run: dart analyze --no-fatal-warnings .
+
+      - name: 🍎 Build iOS
+        run: flutter build ios --no-codesign
+
+      - name: 🤖 Build Android
+        run: flutter build appbundle --release

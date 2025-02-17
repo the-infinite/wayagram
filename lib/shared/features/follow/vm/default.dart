@@ -152,6 +152,10 @@ class FollowNotifier extends StateNotifier<FollowState> {
     //? This is fine.
     return false;
   }
+
+  void reset() {
+    state = FollowState.initial;
+  }
 }
 
 final followProvider = StateNotifierProvider<FollowNotifier, FollowState>((ref) => FollowNotifier(FollowState.initial));
