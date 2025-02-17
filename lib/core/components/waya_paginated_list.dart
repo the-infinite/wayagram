@@ -13,6 +13,9 @@ class WayaPaginatedListView<T> extends StatefulWidget {
   /// Should we reverse the scroll direction?
   final bool reverse;
 
+  /// Is this the primary scrollable widget on whatever screen it might be on?
+  final bool primary;
+
   /// Should this fetch something, or should it wait in this instance?
   final bool shouldFetch;
 
@@ -68,6 +71,7 @@ class WayaPaginatedListView<T> extends StatefulWidget {
     this.padding = EdgeInsets.zero,
     this.scrollNotice = 0,
     this.shouldFetch = true,
+    this.primary = false,
     this.controller,
     this.onFetch,
     this.child,
@@ -79,7 +83,7 @@ class WayaPaginatedListView<T> extends StatefulWidget {
 
 class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
   late final _scrollController = widget.controller ?? ScrollController();
-  final _itemsNotifier = ValueNotifier<List<T>>([]);
+  final _itemsNotifier = ValueNotifier(0);
   final _loadingController = ValueNotifier(false);
 
   @override
@@ -145,7 +149,7 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
     }
 
     //? Now, notify the listeners of a change in state.
-    _itemsNotifier.value = result;
+    _itemsNotifier.value = _itemsNotifier.value + 1;
     _loadingController.value = false;
   }
 
@@ -170,7 +174,7 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
           reverse: widget.reverse,
           child: ValueListenableBuilder(
             valueListenable: _itemsNotifier,
-            builder: (context, items, _) {
+            builder: (context, redraws, _) {
               //? Now, build and return the widgets.
               return Flex(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

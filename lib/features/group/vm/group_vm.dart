@@ -362,7 +362,7 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> getGroupPosts(groupId) async {
+  Future<void> getGroupSinglePosts(groupId) async {
     print('Fetching saved posts...');
 
     try {
@@ -373,6 +373,28 @@ class GroupVm extends StateNotifier<GroupState> {
       print('API Response: ${response.data}');
       print('Status Code: ${response.statusCode}');
 
+      if (response.success) {
+        GetAllPost responseModel = GetAllPost.fromJson(response.data);
+        state = state.copyWith(getAllPost: responseModel.data?.docs);
+
+      } else {
+
+      }
+    } catch (e) {
+
+    } finally {
+
+    }
+  }
+
+  Future<void> getGroupPosts() async {
+    print('Fetching saved posts...');
+
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getGroupPost();
+      state = state.copyWith(isLoading: false);
       if (response.success) {
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
         state = state.copyWith(getAllPost: responseModel.data?.docs);
