@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/create_contest.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/shared/features/file/repo/default.dart';
 import '../../../core/data/local_data_source.dart';
 import '../../../core/data/model/model.dart';
 import '../../../core/service/logger_service.dart';
@@ -52,13 +56,50 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   //var contestSignUpRequirement = [];
 
-  Future<void> onSubmit() async {
+  Future<void> onSubmit(List<NewRequirementModel> newRequirementList,
+      List<StagePrefModel> stageList) async {
     print(' sss ${_localDataSource.getUserId().toString()}');
     //final userTypeProvider = ref.watch(localDataSourceProvider);
+
+     final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(state.image),);
     try {
       state = state.copyWith(isLoading: true);
+      var map = {
+        "title": state.title.text,
+        "profileId": _localDataSource.getUserId().toString(),
+        "category": state.categorys,
+        "state": state.state,
+        "description": state.description.text,
+        "voteCountToQualify": state.voteCountToQualify.text,
+        "winnerPrize": state.winnerPrize.text,
+        "contestPrivatePublic": "unkown",
+        "contestFreePaid": "unkown",
+        "showOverAllResult": state.overallResult,
+        "amountPerVote": state.amountPerVote.text,
+        "numberOfWeeks": state.numberOfWeeks.text,
+        "image": profileImageUrl,
+        //participation details
+        "howItWorks": state.howItWorks.text,
+        "entryType": state.entrySelectType,
+        "amount": state.amount.text,
+        "durationType": state.durationSelectType,
+        "numberOfDuration": state.numberOfDuration.text,
+        "stateDate": state.startDate,
+        "contestDescription": state.descriptionOfAwards.text,
+        //contest timeline & Stages
+        "timeStartDate": state.contestTimelineStartDate,
+        "timeEndDate": state.contestTimelineEndDate,
+        "timeMultipleStage": state.contestTimelineMultipleStage,
+        "timeCurrentStage": state.contestTimelineCurrentStage,
+        //Stage Settings
+        "stages": stageList,
+        //Contest signup requirement
+        "contestRequirement": newRequirementList,
+      };
+      print(map.toString());
+      final response = await _contestRepository.createContest(map);
 
-      final response = await _contestRepository.createContest(
+      /*  final response = await _contestRepository.createContest(
         CreateContestModel(
             title: state.title.text,
             profileId: _localDataSource.getUserId().toString(),
@@ -87,7 +128,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             contestSettings: ContestSettings(
                 stages: contestStages,
                 formRequirements: contestSignUpRequirement)),
-      );
+      ); */
 
       print("fredGo:  $response");
       if (response.success) {
@@ -286,6 +327,10 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     }
   }
 
+  void updateImage(String name) {
+    state = state.copyWith(image: name);
+  }
+
   //Participation Details
   void updateEntryType(String name) {
     state = state.copyWith(entrySelectType: name);
@@ -306,6 +351,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   void updateContestTimeMultipleStage(String name) {
     state = state.copyWith(contestTimelineMultipleStage: name);
+  }
+    void updateOverAllResult(bool name) {
+    state = state.copyWith(overallResult: name);
   }
 
   void updateContestTimeCurrentStage(String name) {
@@ -358,26 +406,38 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   }
 
   //Stage Preference
-   List<StagePrefModel>? getEditStageList() {
+  List<StagePrefModel>? getEditStageList() {
     return state.stagePrefModels;
   }
+
   void updateEditStagePrefName(String name) {
     state = state.copyWith(stagePrefModel: StagePrefModel(stageName: name));
   }
 
   void updateEditStagePrefList() {
-    state.copyWith(
-        stagePrefModels: [...state.stagePrefModels??[], state.stagePrefModel!]);
+    state.copyWith(stagePrefModels: [
+      ...state.stagePrefModels ?? [],
+      state.stagePrefModel!
+    ]);
   }
 
   void updateEditStagePrefListValue(StagePrefModel model) {
-    state.copyWith(stagePrefModels: [...state.stagePrefModels??[], model]);
+    state.copyWith(stagePrefModels: [...state.stagePrefModels ?? [], model]);
   }
 }
 
 final authRepositoryProvider = Provider((ref) => ContestRepo());
 final contestControllerProvider = Provider((ref) => ContestController());
-final stateContactProvider = StateProvider<List<StagePrefModel>>((ref) => []);
+final stateContactProvider = StateProvider<List<StagePrefModel>>((ref) => [
+      StagePrefModel(id: 0, stageName: "Qualification Stage"),
+      StagePrefModel(id: 1, stageName: "Contest"),
+      StagePrefModel(id: 2, stageName: "Contest"),
+      StagePrefModel(id: 3, stageName: "Contest"),
+      StagePrefModel(id: 4, stageName: "Contest"),
+    ]);
+
+final stateRequirementProvider =
+    StateProvider<List<NewRequirementModel>>((ref) => []);
 final categoryData = Provider((ref) => ContestResponse());
 
 final contestNotifierProvider =

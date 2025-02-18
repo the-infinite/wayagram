@@ -19,7 +19,7 @@ class ContestRepo extends  BaseRepository{
 
 
 
-  Future<WayaRequestResponse> createContest(CreateContestModel payLoad) {
+  Future<WayaRequestResponse> createContest(Map<String ,dynamic> payLoad) {
 
     return post('$serviceUrl2/contests/create', payLoad, formdata: true);
   }

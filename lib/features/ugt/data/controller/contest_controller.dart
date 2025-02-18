@@ -13,6 +13,7 @@ class ContestController extends GetxController {
   //var contestStages = [];
   var contestStages = <StagePrefModel>[].obs;
   var selectedIndex = 0;
+  var selectedIndexSignUPRequire = 0;
   RxBool creating = RxBool(false);
   RxBool loadingAllCategory = RxBool(false);
   var loadedGetAllCategory = ContestResponse().obs;
@@ -113,10 +114,11 @@ class ContestController extends GetxController {
   ///Add New Requirements
   TextEditingController contestRequirementTypeTextController =
       TextEditingController();
-  TextEditingController contestEnterRequirementTextController =
+  TextEditingController contestEnterRequirementNameController =
       TextEditingController();
-  TextEditingController contestEnterTextFieldTextController =
+  TextEditingController contestEnterTextFieldOptionalController =
       TextEditingController();
+      
 
   void addStage(StagePrefModel model) {
     contestStages.add(model);

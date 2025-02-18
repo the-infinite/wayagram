@@ -42,9 +42,12 @@ class ContestState {
   final String endDate;
   final String endDateIsoFormat;
   final String dateIsoFormat;
-  final String overallResult;
+  final bool overallResult;
+  final String contestPrivatePublic;
+  final String contestFreePaid;
   final String profileId;
   final String categorys;
+  final String image;
   final String state;
   final String type;
   final Select? selectedCategory;
@@ -92,6 +95,7 @@ class ContestState {
     this.category = const [],
     this.isLoading = false,
     this.state = '',
+    this.image = '',
     this.endDate = '',
     this.entrySelectType = '',
     this.durationSelectType = '',
@@ -104,7 +108,9 @@ class ContestState {
     this.startDate = '',
     this.selectedCategory,
     this.endDateIsoFormat = '',
-    this.overallResult = '',
+    this.overallResult = false,
+    this.contestPrivatePublic = '',
+    this.contestFreePaid = '',
     this.type = 'Paid',
     this.stagePrefModels,
     this.stagePrefModel,
@@ -162,6 +168,7 @@ class ContestState {
     List<Map<String, dynamic>>? formRequirements,
     List<Select>? category,
     String? categorys,
+    String? image,
     String? profileId,
     String? type,
     bool? approveBeforeLive,
@@ -169,7 +176,9 @@ class ContestState {
     String? endDate,
     String? requirementType,
     String? startDate,
-    String? overallResult,
+    bool? overallResult,
+    String? contestPrivatePublic,
+    String? contestFreePaid,
     String? dateIsoFormat,
     String? endDateIsoFormat,
     List<Select>? categories,
@@ -186,7 +195,7 @@ class ContestState {
     String? contestTimelineMultipleStage,
     String? contestTimelineCurrentStage,
     // Edit Stage Pref
-     List<StagePrefModel>? stagePrefModels ,
+    List<StagePrefModel>? stagePrefModels,
     StagePrefModel? stagePrefModel,
   }) {
     return ContestState(
@@ -206,12 +215,20 @@ class ContestState {
       multipleStages: multipleStages ?? this.multipleStages,
       numberOfDuration: numberOfDuration ?? this.numberOfDuration,
       numberOfWeeks: numberOfWeeks ?? this.numberOfWeeks,
+      /* 
+       bool? overallResult,
+    bool? contestPrivatePublic,
+    bool? contestFreePaid,
+       */
       overallResult: overallResult ?? this.overallResult,
+      contestPrivatePublic: contestPrivatePublic ?? this.contestPrivatePublic,
+      contestFreePaid: contestFreePaid ?? this.contestFreePaid,
       participationStartDate:
           participationStartDate ?? this.participationStartDate,
       profileId: profileId ?? this.profileId,
       categorys: categorys ?? this.categorys,
-      stagePrefModels: stagePrefModels??stagePrefModels ,
+      image: image ?? this.image,
+      stagePrefModels: stagePrefModels ?? stagePrefModels,
       stagePrefModel: stagePrefModel ?? this.stagePrefModel,
       contestTimelineStartDate:
           contestTimelineStartDate ?? this.contestTimelineStartDate,
@@ -256,7 +273,7 @@ class ContestState {
       descriptionOfAwards: descriptionOfAwards.text,
       amountPerVote: amountPerVote.text,
       type: type,
-      overallResult: overallResult,
+      overallResult: "",
       multipleStages: multipleStages.text,
       publicity: publicity.text,
       status: status.text,

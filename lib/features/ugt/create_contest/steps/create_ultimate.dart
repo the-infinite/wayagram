@@ -8,21 +8,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
-//import 'package:wayagram/features/shared/components/radio_select.dart';
-import 'package:wayagram/features/shop/widgets/upload_image.dart';
-import 'package:wayagram/features/ugt/vm/ugt_restructed/model/contest_ugt_model.dart';
 
-import '../../../../core/utils/waya_navigation.dart';
-import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
-import '../../../auth/login/model/user_model.dart';
-import '../../../auth/upgrade_to_business/vm/upgrade_to_business_vm.dart';
-import '../../../shop/seller/vm/add_product_vm.dart';
 import '../../data/controller/contest_controller.dart';
-import '../../data/model/create_contest.dart';
+
 import '../../vm/ugt_vm.dart';
 
 class CreateUltimate extends ConsumerStatefulWidget {
@@ -42,14 +32,19 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
   bool isSwitched = false;
   //final _logger = getLogger("LoginVm");
 
-  XFile? _selectedImage;
+  //XFile? _selectedImage;
 
-  Future<void> _pickImage() async {
+  Future<String?> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
+
+    /*  setState(() {
       _selectedImage = image;
-    });
+    }); */
+    if (image != null) {
+      return image.path;
+    }
+    return null;
   }
 
   @override
@@ -63,7 +58,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(contestNotifierProvider);
-    final viewModel2 = ref.watch(upgradeToBusinessVmProvider);
+    // final viewModel2 = ref.watch(upgradeToBusinessVmProvider);
     final wayaTheme = Theme.of(context);
     return Form(
       key: _formKey,
@@ -103,7 +98,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
-                      formState.errorText!,
+                      formState.errorText ?? "",
                       style: TextStyle(
                           color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
@@ -141,7 +136,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
-                      formState.errorText!,
+                      formState.errorText ?? "",
                       style: TextStyle(
                           color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
@@ -178,7 +173,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
-                      formState.errorText!,
+                      formState.errorText ?? "",
                       style: TextStyle(
                           color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
@@ -211,7 +206,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
-                      formState.errorText!,
+                      formState.errorText ?? "",
                       style: TextStyle(
                           color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
@@ -245,7 +240,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
-                      formState.errorText!,
+                      formState.errorText ?? "",
                       style: TextStyle(
                           color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
@@ -277,7 +272,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
-                      formState.errorText!,
+                      formState.errorText ?? "",
                       style: TextStyle(
                           color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
@@ -364,8 +359,9 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   onChanged: (value) => {
                         setState(() {
                           isSwitched = value;
-                          viewModel.overallResult ==
-                              value; // Update the switch state
+                          ref
+                              .read(contestNotifierProvider.notifier)
+                              .updateOverAllResult(value);
                         }),
                       }),
             ],
@@ -394,6 +390,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 groupValue: selectedValue2,
                 onChanged: (String value) {
                   viewModel.amountPerVote.text = "0";
+                   
                   setState(() {
                     selectedValue2 = value;
                   });
@@ -418,6 +415,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 value: "Paid",
                 groupValue: selectedValue2,
                 onChanged: (String value) {
+                  
                   setState(() {
                     selectedValue2 = value;
                   });
@@ -475,7 +473,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
-                      formState.errorText!,
+                      formState.errorText ?? "",
                       style: TextStyle(
                           color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
@@ -508,7 +506,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
-                      formState.errorText!,
+                      formState.errorText ?? "",
                       style: TextStyle(
                           color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
@@ -522,7 +520,14 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: _pickImage,
+                onTap: () async {
+                  String? image = await _pickImage();
+                  if (image != null) {
+                    ref
+                        .read(contestNotifierProvider.notifier)
+                        .updateImage(image);
+                  }
+                },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -542,7 +547,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     style: wayaTheme.textTheme.bodyMedium,
                   ),
                   SizedBox(height: 4),
-                  _selectedImage == null
+                  viewModel.image.trim().isEmpty
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -552,7 +557,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                           ],
                         )
                       : Image.file(
-                          File(_selectedImage!.path),
+                          File(viewModel.image),
                           height: 100,
                         ),
                 ],
@@ -572,7 +577,14 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     child: WayaButton(
                         horizontalPadding: 50,
                         text: "Browse Files",
-                        callback: _pickImage),
+                        callback: () async {
+                          String? image = await _pickImage();
+                          if (image != null) {
+                            ref
+                                .read(contestNotifierProvider.notifier)
+                                .updateImage(image);
+                          }
+                        }),
                   ),
                 ],
               ),

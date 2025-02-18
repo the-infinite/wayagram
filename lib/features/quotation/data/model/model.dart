@@ -1,4 +1,3 @@
-
 class Category {
   final String id;
   final String category;
@@ -37,7 +36,7 @@ class BidTime {
 List<BidTime> bidTimes = [
   BidTime(id: 'Start now', bidTime: 'Start now'),
   BidTime(id: 'Start later', bidTime: 'Start later'),
- /* BidTime(id: '3 hours', bidTime: '3 hours'),
+  /* BidTime(id: '3 hours', bidTime: '3 hours'),
   BidTime(id: '4 hours', bidTime: '4 hours'),
   BidTime(id: '5 hours', bidTime: '5 hours'),
   BidTime(id: '6 hours', bidTime: '6 hours'),
@@ -47,10 +46,7 @@ List<BidTime> bidTimes = [
   BidTime(id: '10 hours', bidTime: '10 hours'),
   BidTime(id: '11 hours', bidTime: '11 hours'),
   BidTime(id: '12 hours', bidTime: '12 hours'),*/
-
-
 ];
-
 
 class PaymentType {
   final int id;
@@ -66,14 +62,12 @@ class DurationType {
   DurationType({required this.id, required this.durationType});
 }
 
-class  MultipleStage{
+class MultipleStage {
   final int id;
   final String multipleStage;
 
   MultipleStage({required this.id, required this.multipleStage});
 }
-
-
 
 class CurrentStage {
   final int id;
@@ -103,7 +97,6 @@ class UgtCategoryState {
   UgtCategoryState({required this.id, required this.ugtCategoryState});
 }
 
-
 List<Category> categories = [
   Category(id: 'Furniture', category: 'Furniture'),
   Category(id: 'Fashion', category: 'Fashion'),
@@ -116,11 +109,10 @@ List<Category> categories = [
 
 List<ProductCondition> productConditions = [
   ProductCondition(id: 'New', productCondition: 'New'),
- //ProductCondition(id: 'Fairly used', productCondition: 'Fairly used'),
+  //ProductCondition(id: 'Fairly used', productCondition: 'Fairly used'),
 ];
 
 List<State> states = [
-
   State(id: "1", state: 'All States'),
   State(id: "2", state: 'Lagos'),
   State(id: "3", state: 'Abuja'),
@@ -135,49 +127,36 @@ List<UgtCategoryState> ugtCategoryStates = [
   UgtCategoryState(id: 3, ugtCategoryState: 'New talent'),
   UgtCategoryState(id: 4, ugtCategoryState: 'Nigeria talent'),
   UgtCategoryState(id: 5, ugtCategoryState: 'Nigeria talent'),
-
 ];
-
 
 List<PaymentType> paymentTypes = [
   PaymentType(id: 1, paymentType: 'Free'),
   PaymentType(id: 2, paymentType: 'Paid'),
-
 ];
 
 List<RequirementType> requirementTypes = [
   RequirementType(id: 1, requirementType: 'TEXT'),
-  RequirementType(id: 2, requirementType: 'FILE'),
-
+  RequirementType(id: 2, requirementType: 'Document'),
 ];
-
-
 
 List<DurationType> durationTypes = [
   DurationType(id: 1, durationType: 'Weeks'),
   DurationType(id: 2, durationType: 'Months'),
-
 ];
-
 
 List<MultipleStage> multipleStages = [
   MultipleStage(id: 1, multipleStage: 'Yes'),
   MultipleStage(id: 2, multipleStage: 'No'),
-
 ];
 
 List<CurrentStage> currentStages = [
   CurrentStage(id: 1, currentStage: 'Stage 1'),
   CurrentStage(id: 2, currentStage: 'null'),
-
 ];
 
 List<WinnerPrize> winnerPrizes = [
   WinnerPrize(id: 1, winnerPrize: 'Yes'),
   WinnerPrize(id: 2, winnerPrize: 'No'),
-
-
-
 ];
 
 List<Lga> lgas = [

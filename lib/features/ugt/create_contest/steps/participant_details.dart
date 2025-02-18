@@ -101,9 +101,14 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                   items: ref
                       .read(contestNotifierProvider.notifier)
                       .ugtPaymentType(),
-                  onSelected: (value) => ref
-                      .read(contestNotifierProvider.notifier)
-                      .updateEntryType(value.label),
+                  onSelected: (value) {
+                    if (value.label == "Free") {
+                      viewModel2.amount.text = "0";
+                    }
+                    ref
+                        .read(contestNotifierProvider.notifier)
+                        .updateEntryType(value.label);
+                  },
                   uniqueKey: 'contest-state',
                 ),
                 if (formState.hasError && viewModel2.entrySelectType.isEmpty)
@@ -132,7 +137,8 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                 WayaTextFormField(
                   controller: viewModel2.amount,
                   keyboardType: TextInputType.number,
-                  hintText: "0 NGN",
+                  hintText: "NGN0",
+                  isReadOnly: viewModel2.entrySelectType == "Free",
                   label: "Amount",
                   inputFormatters: [
                     CurrencyTextInputFormatter.currency(

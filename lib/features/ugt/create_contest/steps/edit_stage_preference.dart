@@ -38,10 +38,10 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
   @override
   Widget build(BuildContext context) {
     StagePrefModel model =
-        ref.read(stateContactProvider.notifier).state.firstWhere((value) {
-      //  print("${value.toJson()}");
+        ref.read(stateContactProvider.notifier).state[_contestController.selectedIndex];/* state.firstWhere((value) {
+        print("${value.toJson()}");
       return _contestController.selectedIndex == value.id;
-    });
+    }); */
     final entryType = useState(model.entryType ?? "");
     final startDate = useState(model.startDate ?? "");
     final endDate = useState(model.endDate ?? "");

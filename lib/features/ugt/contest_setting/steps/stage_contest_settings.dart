@@ -48,8 +48,10 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
   }
 
   void _removeStage(int index) {
-    ref.read(stateContactProvider.notifier).state =
-        ref.read(stateContactProvider).where((i) => index != i.id).toList();
+    ref.read(stateContactProvider.notifier).state.removeAt(index);
+    ref.read(stateContactProvider.notifier).state = [
+      ...ref.read(stateContactProvider.notifier).state
+    ];
     /*  setState(() {
       _contestController.removeStage(index);
       stages.removeAt(index);
@@ -58,8 +60,8 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(personalFirstStepProvider);
-    final viewModel2 = ref.watch(contestNotifierProvider);
+    // final viewModel = ref.watch(personalFirstStepProvider);
+    // final viewModel2 = ref.watch(contestNotifierProvider);
     final viewModel3 = ref.watch(stateContactProvider);
     final wayaTheme = Theme.of(context);
     return Column(
@@ -75,6 +77,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
           children: [
             ListView.builder(
               shrinkWrap: true,
+              primary: false,
               padding: EdgeInsets.symmetric(vertical: 0),
               itemCount: viewModel3.length,
               itemBuilder: (context, index) {
@@ -165,10 +168,11 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
             ),
             TextButton(
               onPressed: () {
+                int id = ref.read(stateContactProvider.notifier).state.length;
                 ref.read(stateContactProvider.notifier).state = [
                   ...ref.read(stateContactProvider),
                   StagePrefModel(
-                    stageName: "Stage name",
+                    stageName: "Contest",
                     id: ref.read(stateContactProvider.notifier).state.length,
                   )
                 ];
@@ -186,9 +190,10 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
         const Gap(60),
         WayaButton(
           callback: () async {
-            StagePrefModel? model1;
+            widget.goToNextTab();
+            /*  StagePrefModel? model1;
             for (var model in ref.read(stateContactProvider.notifier).state) {
-              if (model.stageName == "Stage name") {
+              if (model.stageName!.contains("Content")) {
                 model1 = model;
               }
             }
@@ -196,7 +201,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
               widget.goToNextTab();
             } else {
               WayaSnackBar.showToast('Please make sure all stages are filled');
-            }
+            } */
           },
           text: "Continue",
         ),
