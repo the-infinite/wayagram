@@ -4,25 +4,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-//import 'package:wayagram/features/shared/components/radio_select.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/Add_new_requirement_modal.dart';
 import 'package:wayagram/features/ugt/data/controller/contest_controller.dart';
-import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import '../../../../core/components/waya_buttons.dart';
-import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/components/waya_text_form_field.dart';
-import '../../../../core/utils/waya_navigation.dart';
 import '../../../../core/utils/waya_utils.dart';
 import '../../../auth/account_creation/view/loading_state.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../create_contest/steps/create_ultimate.dart';
-import '../../create_contest/steps/edit_stage_preference.dart';
-import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
-class ContestSignupRequirement extends ConsumerStatefulWidget {
+
+class ContestSignupRequirement extends StatefulHookConsumerWidget {
   final VoidCallback goToNextTab;
   const ContestSignupRequirement({super.key, required this.goToNextTab});
 

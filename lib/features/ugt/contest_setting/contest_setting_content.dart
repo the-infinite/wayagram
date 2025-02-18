@@ -63,6 +63,6 @@ class _ContestSettingContentState extends ConsumerState<ContestSettingContent> w
          // EditStagePreference(),
           // StageContestSettings(),
         ],
-        tabController: _tabController);;
+        tabController: _tabController);
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -7,8 +8,10 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 //import 'package:wayagram/features/shared/components/radio_select.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 import 'package:wayagram/features/ugt/vm/ugt_restructed/model/contest_ugt_model.dart';
@@ -37,6 +40,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
   String selectedValue = 'Private';
   String selectedValue2 = 'Free';
   bool isSwitched = false;
+  //final _logger = getLogger("LoginVm");
 
   XFile? _selectedImage;
 
@@ -127,7 +131,6 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                       .read(contestNotifierProvider.notifier)
                       .ugtCategoryStat(),
                   onSelected: (value) {
-                    print("i dey here hh ${value.toJson()}");
                     ref
                         .read(contestNotifierProvider.notifier)
                         .update(value, "contestCat");
@@ -163,9 +166,12 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   label: "Contest State",
                   hintText: 'Select Contest State',
                   items: ref.read(contestNotifierProvider.notifier).ugtStates(),
-                  onSelected: (value) => ref
-                      .read(personalFirstStepProvider.notifier)
-                      .selectState(value),
+                  onSelected: (value) {
+                    print(" heree $value");
+                    return ref
+                        .read(contestNotifierProvider.notifier)
+                        .selectState(value);
+                  },
                   uniqueKey: 'contest-state',
                 ),
                 if (formState.hasError && viewModel.state.isEmpty)
@@ -387,6 +393,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 value: "Free",
                 groupValue: selectedValue2,
                 onChanged: (String value) {
+                  viewModel.amountPerVote.text = "0";
                   setState(() {
                     selectedValue2 = value;
                   });
@@ -434,6 +441,31 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   controller: viewModel.amountPerVote,
                   hintText: "Enter Amount per Vote",
                   label: "Amount per Vote",
+                  inputFormatters: [
+                    CurrencyTextInputFormatter.currency(
+                        name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                  ],
+                  onChanged: (value) {
+                    print(
+                        "Amount in word${value.replaceAll(",", "").substring(3)}");
+                    if (value.trim().isNotEmpty) {
+                      if (double.parse(
+                              value.replaceAll(",", "").substring(3).trim()) >
+                          0) {
+                        setState(() {
+                          selectedValue2 = "Paid";
+                        });
+                      } else {
+                        setState(() {
+                          selectedValue2 = "Free";
+                        });
+                      }
+                    } else {
+                      setState(() {
+                        selectedValue2 = "Free";
+                      });
+                    }
+                  },
                   borderColor:
                       formState.hasError && viewModel.amountPerVote.text.isEmpty
                           ? wayaTheme.colorScheme.error
@@ -540,7 +572,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     child: WayaButton(
                         horizontalPadding: 50,
                         text: "Browse Files",
-                        callback: () => {if (_selectedImage != null) {}}),
+                        callback: _pickImage),
                   ),
                 ],
               ),
@@ -554,9 +586,17 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           const Gap(60),
           WayaButton(
             callback: () async {
-              if (_formKey.currentState!.validate()) {
-                widget.goToNextTab();
-              }
+              widget.goToNextTab();
+              /*  if (_formKey.currentState!.validate()) {
+                //check for image null
+                if (_selectedImage == null) {
+                  WayaSnackBar.showToast('Please pick image  to continue');
+
+                  return;
+                }
+                 widget.goToNextTab();
+               
+              } */
             },
             text: "Submit",
           ),

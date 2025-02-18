@@ -1,7 +1,6 @@
-import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/create_contest.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
@@ -90,9 +89,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                 formRequirements: contestSignUpRequirement)),
       );
 
-      print("fredGo:  ${response}");
+      print("fredGo:  $response");
       if (response.success) {
-        print("fredGo:  ${response}");
+        print("fredGo:  $response");
         // final responseModel = ResponseModel.fromJson(response.data);
         //final contestDetails = responseModel.data.user;
         // state = state.copyWith(respose: contestDetails);
@@ -106,11 +105,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
-      final response = await showDatePicker(
-          context: context,
-          firstDate: DateTime(1950),
-          lastDate: DateTime.now(),
-          initialDate: DateTime.now());
+      final response = await pickerDialog(context);
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
@@ -121,6 +116,23 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     } catch (error) {
       print(error);
     }
+  }
+
+  Future<DateTime?> pickerDialog(BuildContext context) async {
+    try {
+      final response = await showDatePicker(
+          context: context,
+          firstDate: DateTime(1950),
+          lastDate: DateTime.now(),
+          initialDate: DateTime.now());
+
+      if (response != null) {
+        return response;
+      }
+    } catch (error) {
+      print(error);
+    }
+    return null;
   }
 
   void focusChanged2(bool hasFocus) {
@@ -232,13 +244,13 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   }
 
   Future<void> selectState(Select value) async {
-    String _state = state.state;
+    //  String state = state.state;
     state = state.copyWith(state: value.label);
 
-    if (_state.isNotEmpty && value.label != _state) {
+    /*  if (state.isNotEmpty && value.label != state) {
       state.copyWith(states: []);
       state = state.copyWith(state: '');
-    }
+    } */
 
     await allCategories();
   }
@@ -273,10 +285,99 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       print('Error: $e');
     }
   }
+
+  //Participation Details
+  void updateEntryType(String name) {
+    state = state.copyWith(entrySelectType: name);
+  }
+
+  void updateDurationType(String name) {
+    state = state.copyWith(durationSelectType: name);
+  }
+
+  //Contest timeline
+  void updateContestTimeStartDate(String name) {
+    state = state.copyWith(contestTimelineStartDate: name);
+  }
+
+  void updateContestTimeEndDate(String name) {
+    state = state.copyWith(contestTimelineEndDate: name);
+  }
+
+  void updateContestTimeMultipleStage(String name) {
+    state = state.copyWith(contestTimelineMultipleStage: name);
+  }
+
+  void updateContestTimeCurrentStage(String name) {
+    state = state.copyWith(contestTimelineCurrentStage: name);
+  }
+
+  Future<void> showDateContestStart(BuildContext context) async {
+    try {
+      final response = await pickerDialog(context);
+
+      if (response != null) {
+        final startDate = "${response.year}-${response.month}-${response.day}";
+        final dateIsoFormat = response.toIso8601String();
+        state = state.copyWith(
+            contestTimelineStartDate: startDate, dateIsoFormat: dateIsoFormat);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> showDateContestEnd(BuildContext context) async {
+    try {
+      final response = await pickerDialog(context);
+
+      if (response != null) {
+        final startDate = "${response.year}-${response.month}-${response.day}";
+        final dateIsoFormat = response.toIso8601String();
+        state = state.copyWith(
+            contestTimelineEndDate: startDate, dateIsoFormat: dateIsoFormat);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<String?> showDatePickerMain(BuildContext context) async {
+    try {
+      final response = await pickerDialog(context);
+
+      if (response != null) {
+        final startDate = "${response.year}-${response.month}-${response.day}";
+        final dateIsoFormat = response.toIso8601String();
+        return startDate;
+      }
+    } catch (error) {
+      print(error);
+    }
+    return null;
+  }
+
+  //Stage Preference
+   List<StagePrefModel>? getEditStageList() {
+    return state.stagePrefModels;
+  }
+  void updateEditStagePrefName(String name) {
+    state = state.copyWith(stagePrefModel: StagePrefModel(stageName: name));
+  }
+
+  void updateEditStagePrefList() {
+    state.copyWith(
+        stagePrefModels: [...state.stagePrefModels??[], state.stagePrefModel!]);
+  }
+
+  void updateEditStagePrefListValue(StagePrefModel model) {
+    state.copyWith(stagePrefModels: [...state.stagePrefModels??[], model]);
+  }
 }
 
 final authRepositoryProvider = Provider((ref) => ContestRepo());
 final contestControllerProvider = Provider((ref) => ContestController());
+final stateContactProvider = StateProvider<List<StagePrefModel>>((ref) => []);
 final categoryData = Provider((ref) => ContestResponse());
 
 final contestNotifierProvider =

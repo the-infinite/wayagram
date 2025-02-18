@@ -1,9 +1,13 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -18,236 +22,354 @@ import '../../data/controller/contest_controller.dart';
 import '../../vm/ugt_vm.dart';
 import 'create_ultimate.dart';
 
-class EditStagePreference extends ConsumerStatefulWidget {
+class EditStagePreference extends StatefulHookConsumerWidget {
   static const route = '/edit-stage-preference';
   const EditStagePreference({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _EditStagePreferenceState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _EditStagePreferenceState();
 }
 
-
 class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
+  final _formKey = GlobalKey<FormState>();
   final _contestController = Get.put(ContestController());
-  bool isSwitched = false;
+
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(personalFirstStepProvider);
+    StagePrefModel model =
+        ref.read(stateContactProvider.notifier).state.firstWhere((value) {
+      //  print("${value.toJson()}");
+      return _contestController.selectedIndex == value.id;
+    });
+    final entryType = useState(model.entryType ?? "");
+    final startDate = useState(model.startDate ?? "");
+    final endDate = useState(model.endDate ?? "");
+    final isSwitched = useState(model.reviewApprovePost ?? false);
+    useEffect(() {
+      _contestController.contestStageNameTextController.text =
+          model.stageName == "Stage name" ? "" : model.stageName ?? "";
+      _contestController.entryAmountController.text = model.entryAmount ?? "";
+      _contestController.contestNumberPostsPerWeekTextController.text =
+          model.numPostPerWeek ?? "";
+      return null;
+    }, []);
+    final priceWinner = useState(model.priceWinner ?? "");
+
+    // final viewModel1 = ref.watch(personalFirstStepProvider);
+    final viewModel = ref.watch(contestNotifierProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-        isLoading: false,
-        isScrollable: true,
-        title: "Edit Stage Preference",
+      isLoading: false,
+      isScrollable: true,
+      title: "Edit Stage Preference",
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Gap(20),
-          WayaTextFormField(
+          FormField<String>(validator: (value) {
+            if (_contestController
+                .contestStageNameTextController.text.isEmpty) {
+              return 'Contest title is required';
+            }
+
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WayaTextFormField(
+                  controller: _contestController.contestStageNameTextController,
+                  hintText: "Qualification Stage",
+                  label: "Stage Name ",
+                  borderColor:
+                      formState.hasError && viewModel.amountPerVote.text.isEmpty
+                          ? wayaTheme.colorScheme.error
+                          : null,
+                ),
+                if (formState.hasError && viewModel.title.text.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText!,
+                      style: TextStyle(
+                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          }),
+
+/*           WayaTextFormField(
             controller: TextEditingController(),
             hintText: "Qualification Stage",
             label: "Stage Name ",
-          ),
+          ), */
           const Gap(15),
-          WayaSelectField(
-            height: 0.3,
-            value: "Free",
-            label: "Entry Type ",
-            hintText: 'Choose entry type',
-            items: ref
-                .read(contestNotifierProvider.notifier)
-                .ugtPaymentType(),
-            onSelected: (value) {},
-            uniqueKey: 'contest-category',
-          ),
-          const Gap(15),
-          WayaTextFormField(
-            controller: TextEditingController(),
-            hintText: "0 NGN",
-            label: "Entry Amount",
-          ),
-          const Gap(15),
-          FormField<String>(
-            validator: (value) {
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                FormField<String>(validator: (value) {
+                  if (entryType.value.isEmpty) {
+                    return 'Entry type is required';
+                  }
 
-              return null;
-            },
-            builder: (formState) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Select Start Date",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.wayaCopyWith(
-                        fontSize: 14,
-                        color: wayaTheme.colorScheme.greyColor900,
-                      )),
-                  const Gap(4),
-                  WayaButton(
-                    callback: () {
-                      ref.read(personalFirstStepProvider.notifier).showDatePickerDialog(context);
-                    },
-                    horizontalPadding: 0,
-                    color: wayaTheme.colorScheme.transparent,
-                    centerWidget: Focus(
-                        onFocusChange: (hasFocus) {
-                          ref.read(personalFirstStepProvider.notifier).focusChanged(hasFocus);
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaSelectField(
+                        height: 0.3,
+                        value: entryType.value,
+                        label: "Entry Type ",
+                        hintText: 'Choose entry type',
+                        items: ref
+                            .read(contestNotifierProvider.notifier)
+                            .ugtPaymentType(),
+                        onSelected: (value) {
+                          entryType.value = value.label;
                         },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  viewModel.dateOfBirth.isEmpty
-                                      ? 'DD/MM/YYYY'
-                                      : viewModel.dateOfBirth,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.wayaCopyWith(
-                                    fontSize: 14,
-                                    color: viewModel
-                                        .dateOfBirth.isEmpty
-                                        ? wayaTheme.colorScheme
-                                        .greyColor300
-                                        : wayaTheme.colorScheme
-                                        .customBlack,
-                                  )),
-                              Icon(
-                                Icons.arrow_drop_down,
-                                color:
-                                wayaTheme.colorScheme.greyColor300,
-                              )
-                            ],
-                          ),
-                        )),
-                    border: Border.all(
-                        width: 1,
-                        color: viewModel.isFocused
-                            ? wayaTheme.colorScheme.customPrimary
-                            : wayaTheme.colorScheme.greyColor300),
-                  ),
-                  if (formState.hasError &&
-                      viewModel.dateOfBirth.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        formState.errorText!,
-                        style: TextStyle(
-                            color: wayaTheme.colorScheme.error,
-                            fontSize: 12),
+                        uniqueKey: 'entry-type',
                       ),
-                    ),
-                ],
-              );
-            },
-          ),
-          const Gap(15),
-          FormField<String>(
-            validator: (value) {
+                      const Gap(15),
+                      if (formState.hasError && entryType.value.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                FormField<String>(validator: (value) {
+                  if (_contestController.entryAmountController.text.isEmpty) {
+                    return 'Entry Amount is required';
+                  }
 
-              return null;
-            },
-            builder: (formState) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Select End Date",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.wayaCopyWith(
-                        fontSize: 14,
-                        color: wayaTheme.colorScheme.greyColor900,
-                      )),
-                  const Gap(4),
-                  WayaButton(
-                    callback: () {
-                      ref.read(personalFirstStepProvider.notifier).showDatePickerDialog(context);
-                    },
-                    horizontalPadding: 0,
-                    color: wayaTheme.colorScheme.transparent,
-                    centerWidget: Focus(
-                        onFocusChange: (hasFocus) {
-                          ref.read(personalFirstStepProvider.notifier).focusChanged(hasFocus);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  viewModel.dateOfBirth.isEmpty
-                                      ? 'DD/MM/YYYY'
-                                      : viewModel.dateOfBirth,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.wayaCopyWith(
-                                    fontSize: 14,
-                                    color: viewModel
-                                        .dateOfBirth.isEmpty
-                                        ? wayaTheme.colorScheme
-                                        .greyColor300
-                                        : wayaTheme.colorScheme
-                                        .customBlack,
-                                  )),
-                              Icon(
-                                Icons.arrow_drop_down,
-                                color:
-                                wayaTheme.colorScheme.greyColor300,
-                              )
-                            ],
-                          ),
-                        )),
-                    border: Border.all(
-                        width: 1,
-                        color: viewModel.isFocused
-                            ? wayaTheme.colorScheme.customPrimary
-                            : wayaTheme.colorScheme.greyColor300),
-                  ),
-                  if (formState.hasError &&
-                      viewModel.dateOfBirth.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        formState.errorText!,
-                        style: TextStyle(
-                            color: wayaTheme.colorScheme.error,
-                            fontSize: 12),
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
+                        controller: _contestController.entryAmountController,
+                        keyboardType: TextInputType.number,
+                        hintText: "0 NGN",
+                        label: "Entry Amount",
+                        inputFormatters: [
+                          CurrencyTextInputFormatter.currency(
+                              name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                        ],
+                        borderColor: formState.hasError &&
+                                _contestController
+                                    .entryAmountController.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
                       ),
-                    ),
-                ],
-              );
-            },
+                      if (formState.hasError &&
+                          _contestController.entryAmountController.text.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(15),
+                FormField<String>(validator: (value) {
+                  if (startDate.value.isEmpty) {
+                    return 'Duration type is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          startDate.value = await ref
+                                  .read(contestNotifierProvider.notifier)
+                                  .showDatePickerMain(context) ??
+                              "";
+                        },
+                        child: AbsorbPointer(
+                          child: WayaSelectField(
+                            height: 0.3,
+                            value: startDate.value.isEmpty
+                                ? 'DD/MM/YYYY'
+                                : startDate.value,
+                            label: "Start Date",
+                            hintText: 'Select Start Date',
+                            items: ref
+                                .read(contestNotifierProvider.notifier)
+                                .ugtDurationType(),
+                            onSelected: (value) => ref
+                                .read(contestNotifierProvider.notifier)
+                                .updateDurationType(value.label),
+                            uniqueKey: 'contest-state',
+                          ),
+                        ),
+                      ),
+                      if (formState.hasError && startDate.value.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(15),
+                FormField<String>(validator: (value) {
+                  if (endDate.value.isEmpty) {
+                    return 'End Date is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          endDate.value = await ref
+                                  .read(contestNotifierProvider.notifier)
+                                  .showDatePickerMain(context) ??
+                              "";
+                        },
+                        child: AbsorbPointer(
+                          child: WayaSelectField(
+                            height: 0.3,
+                            value: endDate.value.isEmpty
+                                ? 'DD/MM/YYYY'
+                                : endDate.value,
+                            label: "End Date",
+                            hintText: 'Select End Date',
+                            items: ref
+                                .read(contestNotifierProvider.notifier)
+                                .ugtDurationType(),
+                            onSelected: (value) => ref
+                                .read(contestNotifierProvider.notifier)
+                                .updateDurationType(value.label),
+                            uniqueKey: 'End Date',
+                          ),
+                        ),
+                      ),
+                      if (formState.hasError && endDate.value.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(15),
+                FormField<String>(validator: (value) {
+                  if (_contestController
+                      .contestNumberPostsPerWeekTextController.text.isEmpty) {
+                    return 'Number of Posts per week required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
+                        controller: _contestController
+                            .contestNumberPostsPerWeekTextController,
+                        hintText: "E.g 4",
+                        keyboardType: TextInputType.number,
+                        label: "Number of Posts per week",
+                        borderColor: formState.hasError &&
+                                _contestController
+                                    .contestNumberPostsPerWeekTextController
+                                    .text
+                                    .isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
+                      ),
+                      if (formState.hasError &&
+                          _contestController
+                              .contestNumberPostsPerWeekTextController
+                              .text
+                              .isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(15),
+                FormField<String>(validator: (value) {
+                  if (priceWinner.value.isEmpty) {
+                    return 'Prize for the Winner is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaSelectField(
+                        height: 0.3,
+                        value: priceWinner.value,
+                        label: "Prize for the Winner?",
+                        hintText: 'Select Yes or No',
+                        items: ref
+                            .read(contestNotifierProvider.notifier)
+                            .ugtWinnerPrize(),
+                        onSelected: (value) {
+                          priceWinner.value = value.label;
+                        },
+                        uniqueKey: 'Price for winner',
+                      ),
+                      if (formState.hasError && priceWinner.value.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(15),
+              ],
+            ),
           ),
-          const Gap(15),
-          WayaTextFormField(
-            controller: TextEditingController(),
-            hintText: "E.g 4",
-            label: "Number of Posts per week",
-          ),
-          const Gap(15),
-          WayaSelectField(
-            height: 0.3,
-            value: "No",
-            label: "Prize for the Winner?",
-            hintText: 'Select Yes or No',
-            items: ref
-                .read(contestNotifierProvider.notifier)
-                .ugtWinnerPrize(),
-            onSelected: (value) {},
-            uniqueKey: 'contest-state',
-          ),
-          const Gap(15),
-         /* WayaTextFormField(
+          /* WayaTextFormField(
             controller: TextEditingController(),
             hintText: "0 NGN",
             label: "Prize Amount",
@@ -257,21 +379,20 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Switch(
-                  value: isSwitched,
+                  value: isSwitched.value,
                   onChanged: (value) {
                     setState(() {
-                      isSwitched = value;
+                      isSwitched.value = value;
                     });
                   },
                   activeColor: Colors.white,
-                  activeTrackColor: wayaTheme.colorScheme.customPrimary
-              ),
+                  activeTrackColor: wayaTheme.colorScheme.customPrimary),
               const SizedBox(width: 10),
               Text(
                 "Review and approve post before going live",
                 style: TextStyle(
                   fontSize: 12,
-                  color: isSwitched ? Colors.black : Colors.grey,
+                  color: isSwitched.value ? Colors.black : Colors.grey,
                 ),
               ),
             ],
@@ -279,10 +400,48 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
           const Gap(40),
           WayaButton(
             callback: () {
+              ref.read(stateContactProvider.notifier).state = ref
+                  .read(stateContactProvider)
+                  .where((i) => _contestController.selectedIndex != i.id)
+                  .toList();
+              ref.read(stateContactProvider.notifier).state.insert(
+                  _contestController.selectedIndex,
+                  StagePrefModel(
+                      id: _contestController.selectedIndex,
+                      endDate: endDate.value,
+                      stageName: _contestController
+                          .contestStageNameTextController.text,
+                      startDate: startDate.value,
+                      priceWinner: priceWinner.value,
+                      entryType: entryType.value,
+                      reviewApprovePost: isSwitched.value,
+                      entryAmount:
+                          _contestController.entryAmountController.text,
+                      numPostPerWeek: _contestController
+                          .contestNumberPostsPerWeekTextController.text));
+              /*  if (_formKey.currentState!.validate()) {
+                ref.read(stateContactProvider.notifier).state = ref
+                  .read(stateContactProvider)
+                  .where((i) => _contestController.selectedIndex != i.id)
+                  .toList();
+              ref.read(stateContactProvider.notifier).state.insert(
+                  _contestController.selectedIndex,
+                  StagePrefModel(
+                      id: _contestController.selectedIndex,
+                      endDate: endDate.value,
+                      stageName: _contestController
+                          .contestStageNameTextController.text,
+                      startDate: startDate.value,
+                      priceWinner: priceWinner.value,
+                      entryType: entryType.value,
+                      reviewApprovePost: isSwitched.value,
+                      entryAmount:
+                          _contestController.entryAmountController.text,
+                      numPostPerWeek: _contestController
+                          .contestNumberPostsPerWeekTextController.text));
+              } */
 
-              _contestController.addStage();
               Navigator.pop(context);
-
             },
             text: "Save Stage Changes",
           ),
@@ -291,15 +450,13 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
               text: 'Go Back',
               color: wayaTheme.colorScheme.greyColor300,
               textColor: wayaTheme.colorScheme.customBlack,
-              border:
-              Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+              border: Border.all(
+                  width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
                 Navigator.pop(context);
               })
         ],
       ),
     );
-
-
   }
 }

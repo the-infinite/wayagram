@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import '/core/data/model/model.dart';
 import 'create_contest.dart';
 
@@ -48,6 +49,17 @@ class ContestState {
   final String type;
   final Select? selectedCategory;
   bool approveBeforeLive;
+  //Participation Details
+  final String entrySelectType;
+  final String durationSelectType;
+  // Contest timeline
+  final String contestTimelineStartDate;
+  final String contestTimelineEndDate;
+  final String contestTimelineMultipleStage;
+  final String contestTimelineCurrentStage;
+  //Edit Stage Preference
+  final List<StagePrefModel>? stagePrefModels;
+  final StagePrefModel? stagePrefModel;
 
   ContestState({
     TextEditingController? title,
@@ -81,6 +93,12 @@ class ContestState {
     this.isLoading = false,
     this.state = '',
     this.endDate = '',
+    this.entrySelectType = '',
+    this.durationSelectType = '',
+    this.contestTimelineStartDate = '',
+    this.contestTimelineEndDate = '',
+    this.contestTimelineCurrentStage = '',
+    this.contestTimelineMultipleStage = '',
     this.requirementType = '',
     this.dateIsoFormat = '',
     this.startDate = '',
@@ -88,6 +106,8 @@ class ContestState {
     this.endDateIsoFormat = '',
     this.overallResult = '',
     this.type = 'Paid',
+    this.stagePrefModels,
+    this.stagePrefModel,
     this.approveBeforeLive = false,
   })  : title = title ?? TextEditingController(),
         winnerPrize = winnerPrize ?? TextEditingController(),
@@ -157,6 +177,17 @@ class ContestState {
     List<Select>? states,
     bool? isFocused,
     Select? selectedCategory,
+    //participation details
+    String? entrySelectType,
+    String? durationSelectType,
+    // Contest timeline
+    String? contestTimelineStartDate,
+    String? contestTimelineEndDate,
+    String? contestTimelineMultipleStage,
+    String? contestTimelineCurrentStage,
+    // Edit Stage Pref
+     List<StagePrefModel>? stagePrefModels ,
+    StagePrefModel? stagePrefModel,
   }) {
     return ContestState(
       title: title ?? this.title,
@@ -180,6 +211,18 @@ class ContestState {
           participationStartDate ?? this.participationStartDate,
       profileId: profileId ?? this.profileId,
       categorys: categorys ?? this.categorys,
+      stagePrefModels: stagePrefModels??stagePrefModels ,
+      stagePrefModel: stagePrefModel ?? this.stagePrefModel,
+      contestTimelineStartDate:
+          contestTimelineStartDate ?? this.contestTimelineStartDate,
+      contestTimelineEndDate:
+          contestTimelineEndDate ?? this.contestTimelineEndDate,
+      contestTimelineMultipleStage:
+          contestTimelineMultipleStage ?? this.contestTimelineMultipleStage,
+      contestTimelineCurrentStage:
+          contestTimelineCurrentStage ?? this.contestTimelineCurrentStage,
+      entrySelectType: entrySelectType ?? this.entrySelectType,
+      durationSelectType: durationSelectType ?? this.durationSelectType,
       publicity: publicity ?? this.publicity,
       stages: stages ?? this.stages,
       dateIsoFormat: dateIsoFormat ?? this.dateIsoFormat,
