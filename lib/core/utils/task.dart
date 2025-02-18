@@ -294,6 +294,9 @@ class TaskScheduler {
   /// round-robin scheduled to execute the next task.
   int _currentIsolate = 0;
 
+  // Our scheduler singleton instance.
+  static TaskScheduler? _instance;
+
   /// This is used to modify the value of current isolate appropriately to allow
   ///  scheduling feel more simple.
   TaskExecutor get _nextExecutor {
@@ -315,10 +318,23 @@ class TaskScheduler {
   // Enclosed dummy constructor.
   TaskScheduler._();
 
+  /// How we get our singleton instance.
+  static TaskScheduler get instance => _instance!;
+
+  /// Helper function used to ensure that the task scheduler is initialized.
+  static Future<void> ensureInitialized() {
+    if (_instance == null) return init();
+
+    // This is fine.
+    return Future.value(null);
+  }
+
   /// This creates a new scheduler that preserves the total number of processors
   /// on this machine as the current number of isolates that can be spawned and
   /// used to consume and execute computations in the background.
-  static Future<TaskScheduler> init([int? maxParallel]) async {
+  static Future<void> init([int? maxParallel]) async {
+    if (_instance != null) return;
+
     final scheduler = TaskScheduler._();
     final schedulerCount = maxParallel ?? TaskScheduler.maxParallel;
 
@@ -329,7 +345,7 @@ class TaskScheduler {
     } while (scheduler._isolates.length < schedulerCount);
 
     // Return the scheduler.
-    return scheduler;
+    _instance = scheduler;
   }
 
   /// A helper function used to provision a function to run a new task on a dart
