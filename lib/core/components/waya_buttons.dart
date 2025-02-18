@@ -281,6 +281,7 @@ class WayaCheckButton extends StatelessWidget {
     // This is fine.
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
         child: Row(

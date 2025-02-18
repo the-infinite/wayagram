@@ -15,9 +15,13 @@ import 'package:wayagram/features/general_settings/profile/view/edit_profile_pag
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
-import 'package:wayagram/shared/features/posts/vm/default.dart';
-import 'package:wayagram/shared/features/posts/vm/event.dart';
-import 'package:wayagram/shared/features/posts/widget/default.dart';
+import 'package:wayagram/shared/features/profile/widget/group.dart';
+import 'package:wayagram/shared/features/profile/vm/default.dart';
+import 'package:wayagram/shared/features/profile/vm/event.dart';
+import 'package:wayagram/shared/features/profile/vm/groups.dart';
+import 'package:wayagram/shared/features/profile/vm/pages.dart';
+import 'package:wayagram/shared/features/profile/widget/page.dart';
+import 'package:wayagram/shared/features/profile/widget/post.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
@@ -38,10 +42,20 @@ class ProfilePage extends ConsumerStatefulWidget {
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   late final postNotifier = ref.watch(userPostsProvider.notifier);
   late final eventNotifier = ref.watch(userEventsProvider.notifier);
+  late final groupsNotifier = ref.watch(userGroupsProvider.notifier);
+  late final pagesNotifier = ref.watch(userPagesProvider.notifier);
   late final followNotifier = ref.watch(followProvider.notifier);
   final _pageController = ValueNotifier(0);
   final _tabController = ExpandedTabController();
   FollowStatusModel? _followStatus;
+
+  void _getFollowState() async {
+    if (widget.id == ConversationState.self.id) return;
+    final result = await followNotifier.getFollowStatus(widget.id);
+    setState(() {
+      _followStatus = result;
+    });
+  }
 
   @override
   void initState() {
@@ -49,11 +63,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       (_) async {
         followNotifier.getFollowersOf(widget.id);
         followNotifier.getUsersFollowing(widget.id);
-        if (widget.id == ConversationState.self.id) return;
-        final result = await followNotifier.getFollowStatus(widget.id);
-        setState(() {
-          _followStatus = result;
-        });
+        _getFollowState();
       },
     );
     super.initState();
@@ -71,11 +81,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         await _fetchMore();
         followNotifier.getFollowersOf(widget.id);
         followNotifier.getUsersFollowing(widget.id);
-        if (widget.id == ConversationState.self.id) return;
-        final result = await followNotifier.getFollowStatus(widget.id);
-        setState(() {
-          _followStatus = result;
-        });
+        _getFollowState();
       },
     );
     super.reassemble();
@@ -93,10 +99,28 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       await postNotifier.getPostsForUser(widget.id);
     }
 
+    //? If this is for groups.
+    if (_pageController.value == 4) {
+      await groupsNotifier.getGroupsForUser(widget.id);
+    }
+
+    //? If this is for pages.
+    if (_pageController.value == 5) {
+      await groupsNotifier.getGroupsForUser(widget.id);
+    }
+
     //? If this is for events..
     if (_pageController.value == 6) {
       await eventNotifier.getEventsForUser(widget.id);
     }
+  }
+
+  void _shareProfile() async {
+    //? Share the post.
+    final result = await Share.share('https://wayagram.ng/user/profile?id=${widget.id}', subject: 'Share Profile');
+
+    // This is fi
+    if (result.status == ShareResultStatus.success) return;
   }
 
   @override
@@ -105,6 +129,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final size = MediaQuery.sizeOf(context);
     final postState = ref.watch(userPostsProvider);
     final eventState = ref.watch(userEventsProvider);
+    final groupsState = ref.watch(userGroupsProvider);
+    final pagesState = ref.watch(userPagesProvider);
     final followState = ref.watch(followProvider);
 
     //? Return the component.
@@ -114,44 +140,50 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       appBarTrailing: Row(
         spacing: 12,
         children: [
-          //
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          //? Search
+          IconButton(
+            icon: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+            onPressed: () async {},
+          ),
 
-          //
-          WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+          //? Share
+          IconButton(
+            icon: WayaAssets.icons.genSet.share.svg(
+              fit: BoxFit.none,
+            ),
+            onPressed: _shareProfile,
+          ),
 
-          //
+          //? More
           PopupMenuButton(
             onSelected: (value) {},
             iconColor: wayaTheme.colorScheme.greyColor400,
             position: PopupMenuPosition.under,
-            offset: Offset(0, 5),
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem<int>(
-                  value: 0,
-                  child: WayaActionNav(
-                    context: context,
-                    onTap: () {},
-                    asset: WayaAssets.images.pages.setting.svg(),
-                    text: "Group settings",
-                    color: wayaTheme.colorScheme.customBlack,
-                  ),
+            offset: Offset(0, 10),
+            itemBuilder: (context) => [
+              PopupMenuItem<int>(
+                value: 0,
+                child: WayaActionNav(
+                  context: context,
+                  onTap: () {},
+                  asset: WayaAssets.images.pages.setting.svg(),
+                  text: "Group settings",
+                  color: wayaTheme.colorScheme.customBlack,
                 ),
-                PopupMenuItem<int>(
-                  value: 1,
-                  child: WayaActionNav(
-                    context: context,
-                    onTap: () {
-                      Share.share('Hello');
-                    },
-                    asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
-                    text: "Share Group link",
-                    color: wayaTheme.colorScheme.customBlack,
-                  ),
+              ),
+
+              //? Share.
+              PopupMenuItem<int>(
+                value: 1,
+                child: WayaActionNav(
+                  context: context,
+                  onTap: _shareProfile,
+                  asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                  text: "Share profile",
+                  color: wayaTheme.colorScheme.customBlack,
                 ),
-              ];
-            },
+              ),
+            ],
             child: WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
           ),
 
@@ -191,6 +223,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   //? Is this empty?
                   final isEmpty = switch (selectedPage) {
                     0 => postState.posts.isEmpty && postState.hasLoaded,
+                    4 => groupsState.groups.isEmpty && groupsState.hasLoaded,
+                    5 => pagesState.pages.isEmpty && pagesState.hasLoaded,
                     6 => eventState.events.isEmpty && eventState.hasLoaded,
                     _ => true,
                   };
@@ -258,7 +292,22 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 )
                               else
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: _followStatus == null
+                                      ? null
+                                      : () async {
+                                          //? If this user is following this one.
+                                          if (_followStatus!.isUserFollowing) {
+                                            await followNotifier.unfollowUser(widget.id);
+                                          }
+
+                                          //? Since I am not yet following this user...
+                                          else {
+                                            await followNotifier.followUser(widget.id);
+                                          }
+
+                                          //? Update the following state on screen.
+                                          _getFollowState();
+                                        },
                                   child: Container(
                                     margin: EdgeInsets.only(right: 20.w),
                                     padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
@@ -285,7 +334,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           //? The user's profile picture.
                           Positioned(
                             left: 16.w,
-                            bottom: 3.h,
+                            bottom: 10.h,
                             child: ChatProfilePicture(
                               user: user,
                               radius: 28.r,
@@ -296,7 +345,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ),
 
                       // Some.
-                      const Gap(10),
+                      const Gap(2),
 
                       //? Second, the picture set.
                       Padding(
@@ -322,6 +371,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 '@${profile.username}',
                                 style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                                   color: wayaTheme.colorScheme.greyColor500,
+                                  fontSize: 13,
                                 ),
                               ),
 
@@ -353,11 +403,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   title2: ' Following',
                                   style1: wayaTheme.textTheme.bodySmall?.copyWith(
                                     color: wayaTheme.colorScheme.black,
-                                    fontSize: 11,
+                                    fontSize: 12,
                                   ),
                                   style2: wayaTheme.textTheme.bodySmall?.copyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
-                                    fontSize: 11,
+                                    fontSize: 12,
                                   ),
                                 ),
 
@@ -367,11 +417,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   title2: ' Followers',
                                   style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.black,
-                                    fontSize: 11,
+                                    fontSize: 12,
                                   ),
                                   style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
-                                    fontSize: 11,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ],
@@ -392,11 +442,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   title2: ' Posts',
                                   style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.black,
-                                    fontSize: 11,
+                                    fontSize: 12,
                                   ),
                                   style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
-                                    fontSize: 11,
+                                    fontSize: 12,
                                   ),
                                 ),
 
@@ -407,11 +457,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
                                     style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                       color: wayaTheme.colorScheme.black,
-                                      fontSize: 11,
+                                      fontSize: 12,
                                     ),
                                     style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                       color: wayaTheme.colorScheme.greyColor500,
-                                      fontSize: 11,
+                                      fontSize: 12,
                                     ),
                                   ),
                               ],
@@ -476,6 +526,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             },
                           ),
 
+                          //? The rest
                           WayaExpandedTabButton(
                             isSelected: selectedPage > 3,
                             text: 'More',
@@ -554,6 +605,22 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             data: postState.posts[index],
                             index: index,
                             padded: true,
+                          ),
+                        )
+                      else if (selectedPage == 4)
+                        ...List.generate(
+                          groupsState.groups.length,
+                          (index) => SingleGroupWidget(
+                            group: groupsState.groups[index],
+                            index: index,
+                          ),
+                        )
+                      else if (selectedPage == 5)
+                        ...List.generate(
+                          pagesState.pages.length,
+                          (index) => SinglePageWidget(
+                            page: pagesState.pages[index],
+                            index: index,
                           ),
                         )
                       else if (selectedPage == 6)
