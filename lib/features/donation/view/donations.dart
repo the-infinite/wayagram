@@ -6,6 +6,8 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/donation/view/all_donations.dart';
+import 'package:wayagram/features/donation/view/my_donations.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
@@ -54,40 +56,8 @@ class _DonationsState extends ConsumerState<Donations> with SingleTickerProvider
               ],
             ),
             const Gap(20),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WayaButton(
-                  centerWidget: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
 
-                      Text(
-                        "Create a Donation Post",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
-                      ),
-                      const Gap(8),
-                      Icon(
-                        Icons.add,
-                        size: 28,
-                        color: wayaTheme.colorScheme.customPrimary,
-                      ),
-
-                    ],
-                  ),
-                  callback: () {
-                    //WayaNav.toNamed('/create-poll');
-                  },
-                  color: wayaTheme.colorScheme.primar50,
-                ),
-              ],
-            ),
-
-            const Gap(25),
-            _selectedIndex == 0 ? MyPolls() : MyPolls(),
+            _selectedIndex == 0 ? AllDonations() : MyDonations(),
 
           ],
         ) );
