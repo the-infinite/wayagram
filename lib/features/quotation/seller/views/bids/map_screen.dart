@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -25,7 +25,7 @@ class MapScreen extends ConsumerStatefulWidget {
 }
 
 class _MapScreenState extends ConsumerState<MapScreen> {
-  final Completer<GoogleMapController> _controller = Completer();
+/*  final Completer<GoogleMapController> _controller = Completer();
 
   static final CameraPosition _kGoogle = const CameraPosition(
     target: LatLng(37.42796133580664, -122.885749655962),
@@ -66,7 +66,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         infoWindow: InfoWindow(
           title: 'Location 2',
         )),
-  ];
+  ];*/
 
 
 
@@ -74,7 +74,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   void initState() {
 
     super.initState();
-    _marker.addAll(_list);
+    //_marker.addAll(_list);
   }
 
   @override
@@ -84,7 +84,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     return Scaffold(
       //appBarTrailing: bidIcon(context),
       body: Stack(children: [
-        GoogleMap(
+      /*  GoogleMap(
             initialCameraPosition: _kLake,
             mapType: MapType.normal,
             myLocationEnabled: true,
@@ -95,7 +95,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             },
             myLocationButtonEnabled: true,
             minMaxZoomPreference: const MinMaxZoomPreference(3,13)
-        ),
+        ),*/
         /*Positioned(
           top: 130,
           bottom: 40,

@@ -15,6 +15,7 @@ import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dar
 import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class PollsForYou extends ConsumerStatefulWidget {
   const PollsForYou({super.key});
@@ -52,6 +53,12 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
 
               int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
           print('URL ===> ${poll.url}');
+
+              String formatTimeAgo(String dateString) {
+                DateTime dateTime =
+                DateTime.parse(dateString); // Convert string to DateTime
+                return timeago.format(dateTime); // Convert to "time ago" format
+              }
               void checkEndDate(String endDateFromBackend) {
                 try {
                   // Parse the endDate string from the backend
@@ -90,7 +97,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                       Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
                       const Gap(3),
                       Text(
-                        ' • ${hoursLeft}h ago',
+                        //' • ${hoursLeft}h ago',
+                        ' • ${formatTimeAgo('${poll.createdAt}')}',
                         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,

@@ -25,7 +25,9 @@ class ArchivedChatsScreen extends ConsumerWidget {
     return PopScope(
       onPopInvokedWithResult: (isPopped, _) {
         //? We are no longer in archived.
-        if (isPopped) notifier.setArchived(false);
+        if (!isPopped) return;
+        notifier.setArchived(false);
+        notifier.dismissOverlay();
       },
       child: WayaScaffold(
         title: "Archived Chats",
@@ -33,6 +35,7 @@ class ArchivedChatsScreen extends ConsumerWidget {
         isScrollable: true,
         padding: EdgeInsets.zero,
         onRefresh: () async {
+          notifier.dismissOverlay();
           await notifier.getArchivedChats(false);
         },
         resizeToAvoidBottomInset: true,

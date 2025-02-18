@@ -11,7 +11,7 @@ class PostNotifier extends StateNotifier<PostState> {
   Future<List<Post>> getPostsForUser(String id) async {
     final result = <Post>[];
 
-    //try {
+    try {
       // This is fine too.
       final response = await repo.getPostsForUser(id, state.nextPage ?? state.page, state.limit);
 
@@ -42,10 +42,10 @@ class PostNotifier extends StateNotifier<PostState> {
         );
       }
 
-    //   //? After getting these posts...
-    // } catch (e) {
-    //   // TODO: Actual error handling.
-    // }
+      //? After getting these posts...
+    } catch (e) {
+      // TODO: Actual error handling.
+    }
 
     // That's fine.
     return result;
