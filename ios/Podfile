@@ -86,6 +86,9 @@ post_install do |installer|
         'PERMISSION_BLUETOOTH=1',
       ]
 
+      # This is necessary for merge compatibility of all packages
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+
       # For webRTC
       config.build_settings['ONLY_ACTIVE_ARCH'] = 'YES' # <= this line
     end
