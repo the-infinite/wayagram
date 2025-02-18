@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
 import 'package:wayagram/core/service/api_service/dio_exceptions.dart';
@@ -7,6 +8,8 @@ import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
+
+typedef WayaDownloadListener = void Function(double done, int totalSize);
 
 class DioHttpClient implements WayaHttpClientInterface {
   late final Dio dio;
@@ -62,53 +65,119 @@ class DioHttpClient implements WayaHttpClientInterface {
       bool formEncoded = false,
       void Function({int count, int total})? onSendProgress,
       void Function({int count, int total})? onRecieveProgress}) async {
+    //? Since it is form data.
+    if (formdata) {
+      body = FormData.fromMap(body as Map<String, dynamic>);
+      _logger.d("FormData =: ${(body as FormData).fields}, ${body.files}");
+    }
+
+    //? This is fine.
     await _setHeader(
       formdata: formdata,
       formEncoded: formEncoded,
+      formDataBoundary: formdata ? (body as FormData).boundary : null,
     );
-    params?.removeWhere((key, value) => value == null);
+
+    //? Finished this.
     final fullRoute = '$baseURL$route';
     _logger.i('fullRoute: $fullRoute');
     _logger.f('headers: ${dio.options.headers}');
-    if (formdata) {
-      body = FormData.fromMap(body as Map<String, dynamic>);
-      _logger.d("hfhfvjgj $body");
-    }
+
+    params?.removeWhere((key, value) => value == null);
 
     return _makeRequest(dio.post(
       fullRoute,
       data: body,
+      options: formdata
+          ? Options(
+              headers: {
+                Headers.acceptHeader: "*/*",
+                Headers.contentTypeHeader: "multipart/form-data; boundary=${(body as FormData).boundary}"
+              },
+            )
+          : null,
       onSendProgress: (count, total) {
-        if (onSendProgress != null) onSendProgress(count: count, total: total);
-        _showLoadingProgress(count, total);
+        if (onSendProgress != null) {
+          onSendProgress(count: count, total: total);
+        }
+
+        // _showLoadingProgress(count, total);
       },
       onReceiveProgress: ((count, total) {
-        if (onRecieveProgress != null) onRecieveProgress(count: count, total: total);
-        _showLoadingProgress(count, total);
+        if (onRecieveProgress != null) {
+          onRecieveProgress(count: count, total: total);
+        }
+        // _showLoadingProgress(count, total);
       }),
       queryParameters: params,
     ));
+  }
+
+  Future<WayaRequestResponse> downloadHttp(String url, String outputPath, WayaDownloadListener onData) async {
+    await _setHeader(isAuth: false);
+
+    // Make the download request.
+    return _makeRequest(
+      dio.download(
+        url,
+        outputPath,
+        deleteOnError: true,
+        options: Options(
+          headers: {
+            HttpHeaders.acceptEncodingHeader: '*',
+          },
+        ),
+        onReceiveProgress: (count, total) {
+          if (total != -1) {
+            onData((count * 100) / total, total);
+          }
+        },
+      ),
+      false,
+    );
   }
 
   @override
   Future<WayaRequestResponse> putHttp(
     String route,
     dynamic body, {
+    String? contentType,
     Map<String, dynamic>? params,
+    bool isWgUrl = false,
     bool formdata = false,
+    bool isAuth = true,
+    bool isBinary = false,
     bool formEncoded = false,
   }) async {
+    int? length;
+
+    //? If this is binary, turn the body to a stream.
+    if (isBinary) {
+      length = await (body as File).length();
+      body = body.openRead();
+    }
+
+    //? Now, I need you to set the headers correctly. Please add the content length
+    //? to headers.
     await _setHeader(
       formdata: formdata,
+      contentLength: length,
+      isAuth: isAuth,
+      contentType: contentType,
       formEncoded: formEncoded,
     );
+
+    //? This is fine.
     params?.removeWhere((key, value) => value == null);
-    final fullRoute = '$baseURL$route';
+    final fullRoute = '${isWgUrl ? baseURL : ''}$route';
     _logger.i('fullRoute: $fullRoute $body');
-    if (formdata) {
+
+    //? If this is formdata but not binary.
+    if (!isBinary && formdata) {
       body = FormData.fromMap(body as Map<String, dynamic>);
     }
 
+    //? Make the request.
     return _makeRequest(dio.put(
       fullRoute,
       data: body,
@@ -143,8 +212,9 @@ class DioHttpClient implements WayaHttpClientInterface {
   }
 
   @override
-  Future deleteHttp(
+  Future<WayaRequestResponse> deleteHttp(
     String route, {
+    Object? body,
     Map<String, dynamic>? params,
   }) async {
     await _setHeader();
@@ -153,11 +223,12 @@ class DioHttpClient implements WayaHttpClientInterface {
 
     return _makeRequest(dio.delete(
       fullRoute,
+      data: body,
       queryParameters: params,
     ));
   }
 
-  Future<WayaRequestResponse> _makeRequest(Future<Response> future) async {
+  Future<WayaRequestResponse> _makeRequest(Future<Response> future, [bool showErrors = true]) async {
     try {
       print("vv");
       final response = await future;
@@ -184,10 +255,12 @@ class DioHttpClient implements WayaHttpClientInterface {
         _logger.e('message: $message, ${e.response?.data}');
 
         // This is fine
-        _snackBarService.showCustomSnackbar(
-          message: message,
-          variant: SnackbarType.failure,
-        );
+        if (showErrors) {
+          _snackBarService.showCustomSnackbar(
+            message: message,
+            variant: SnackbarType.failure,
+          );
+        }
       }
 
       return WayaHttpException.handleDioError(e);
@@ -197,15 +270,22 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<void> _setHeader({
     bool formdata = false,
     bool formEncoded = false,
+    bool isAuth = true,
+    int? contentLength,
+    String? contentType,
+    String? formDataBoundary,
   }) async {
     dio.options.headers = {
-      'content-type': formdata
-          ? 'multipart/form-data'
-          : formEncoded
-              ? 'application/x-www-form-urlencoded'
-              : 'application/json',
-      'Accept': '*/*',
-      'Authorization': 'Bearer ${await secureDataSource.getToken()}',
+      if (contentLength != null) Headers.contentLengthHeader: '$contentLength',
+      'content-type': contentType ??
+          (formdata
+              ? 'multipart/form-data${formDataBoundary != null ? '; boundary=$formDataBoundary' : null}'
+              : formEncoded
+                  ? 'application/x-www-form-urlencoded'
+                  : 'application/json'),
+      'accept': '*/*',
+      'connection': 'keep-alive',
+      if (isAuth) 'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 
@@ -219,10 +299,4 @@ class DioHttpClient implements WayaHttpClientInterface {
   void dispose() => dio.close(force: true);
 
   void resetDio() => dio = initializeDio();
-
-  void _showLoadingProgress(int received, int total) {
-    if (total != -1 && kDebugMode) {
-      debugPrint('${(received / total * 100).toStringAsFixed(0)}%');
-    }
-  }
 }

@@ -23,9 +23,6 @@ class SuccessGroup extends ConsumerStatefulWidget {
 }
 
 class _SuccessGroupState extends ConsumerState<SuccessGroup> {
-  final _formKey = GlobalKey<FormState>();
-
-  Map<String, dynamic> formData = {};
 
   bool sel =  false;
 
@@ -33,8 +30,9 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createGroupProvider);
     final wayaTheme = Theme.of(context);
-    final type  = ModalRoute.of(context)?.settings.arguments as String?;
-    print("GROUP TYPE $type");
+    //final type  = ModalRoute.of(context)?.settings.arguments as String?;
+    //final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+    //print("GROUP TYPE ID  ${args['id']}");
     return WayaScaffold(
       removeAppBar: true,
       isLoading: viewModel.isLoading,
@@ -56,7 +54,7 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
               )),
           const Gap(10),
           Text(
-            'Great news! Your Group has been successfully created and you can manage it anytime in the\nGroups section.',
+            'Great news! Your Group has been successfully\ncreated and you can manage it anytime in the\nGroups section.',
             style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w400,
@@ -67,7 +65,10 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
           WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-             type == 'Public Group'? WayaNav.toNamed("/publicGroup"):WayaNav.toNamed("/privateGroup");
+              WayaNav.toNamed("/groups");
+            /* args['type'] == 'Public Group'? WayaNav.toNamed("/publicGroup", arguments: args['id'])
+             //type == 'Public Group'? WayaNav.toNamed("/publicGroup", arguments: id)
+                 :WayaNav.toNamed("/privateGroup");*/
             } : null,
             centerWidget: LoadingState(
                 loading: viewModel.isLoading, text: 'Manage Group'),

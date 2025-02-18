@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/shared/paginated_data/paginated_data_view.dart';
+import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 import 'package:wayagram/features/shop/data/model/product_detail_type.dart';
 import 'package:wayagram/features/shop/mixin/product_mixin.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
@@ -61,7 +61,7 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
                     message: "No Product Yet"),
                 loadingState: _recommendedProductLoadingState(context: context),
                 fetchData: productDetail.fetchData,
-                result: (data) {
+                result: (data,s) {
                   final filteredProducts = WayaUtils.search<Product>(
                       data,
                       [

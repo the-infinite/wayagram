@@ -1,14 +1,43 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class WayaHelpers {
   static String extractFileName(File? imageFile) {
     return imageFile == null ? 'file is null' : imageFile.path.split('/').last;
+  }
+
+  static String? getContentType(File file) {
+    final mimeType = lookupMimeType(file.path);
+
+    return mimeType ?? 'application/octet-stream';
+  }
+
+  static String formatMetrics(int number) {
+    if (number == 0) return "0";
+
+    const List<String> suffixes = ["", "K", "M", "B", "T"];
+    int suffixIndex = (number == 0) ? 0 : (math.log(number) ~/ math.log(1000));
+
+    if (suffixIndex == 0) {
+      return number.toString();
+    }
+
+    double shortValue = number / math.pow(1000, suffixIndex);
+    return "${shortValue.toStringAsFixed(1)}${suffixes[suffixIndex]}";
+  }
+
+  static String formatTimeAgo(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    return timeago.format(dateTime);
   }
 
   static String toOrdinal(int number) {
@@ -75,6 +104,30 @@ class WayaHelpers {
     );
   }
 
+  static Future<MultipartFile> formattedImageFromUrl(String imageUrl) async {
+    // Download
+    print("ewfefe humb $imageUrl");
+    final response = await http.get(Uri.parse(imageUrl));
+    print("ewfefe humb 2");
+    if (response.statusCode == 200) {
+      final fileName = basename(Uri.parse(imageUrl).path);
+
+      final mimeType = lookupMimeType(fileName) ?? 'application/octet-stream';
+
+      final tempDir = Directory.systemTemp;
+      final tempFile = File('${tempDir.path}/$fileName');
+      await tempFile.writeAsBytes(response.bodyBytes);
+
+      return MultipartFile.fromFile(
+        tempFile.path,
+        filename: fileName,
+        contentType: MediaType.parse(mimeType),
+      );
+    } else {
+      throw Exception('Failed to download image from URL');
+    }
+  }
+
   static String calculatedDiscountPrice(String price, int pct) {
     int intPrice = double.parse(price).toInt();
 
@@ -83,29 +136,40 @@ class WayaHelpers {
     return formatPrice(discount.toInt());
   }
 
-  static String removecamelCase(String text) {
-    final regex = RegExp(r'(?<=[a-z])(?=[A-Z])');
+  static String removeCamelCaseAndUnderscore(String text) {
+    final regex = RegExp(r'(?<=[a-z])(?=[A-Z])|_');
     final words = text.split(regex);
-    return words.map((word) {
-      return word[0].toUpperCase() + word.substring(1).toLowerCase();
-    }).join(' ');
+    return words
+        .map((word) => word.isNotEmpty
+            ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+            : '')
+        .join(' ');
   }
 
- static String abbreviateNumber(int number) {
-  if (number >= 1000000000) {
-    return _formatNumber(number, 1000000000, "B"); 
-  } else if (number >= 1000000) {
-    return _formatNumber(number, 1000000, "M"); 
-  } else if (number >= 1000) {
-    return _formatNumber(number, 1000, "K"); 
-  } else {
-    return number.toString(); 
+  static String abbreviateNumber(int number) {
+    if (number >= 1000000000) {
+      return _formatNumber(number, 1000000000, "B");
+    } else if (number >= 1000000) {
+      return _formatNumber(number, 1000000, "M");
+    } else if (number >= 1000) {
+      return _formatNumber(number, 1000, "K");
+    } else {
+      return number.toString();
+    }
   }
-}
 
-static String _formatNumber(int number, int divisor, String suffix) {
-  double result = number / divisor;
-  return result % 1 == 0 ? "${result.toInt()}$suffix" : "${result.toStringAsFixed(1)}$suffix";
-}
+  static String _formatNumber(int number, int divisor, String suffix) {
+    double result = number / divisor;
+    return result % 1 == 0
+        ? "${result.toInt()}$suffix"
+        : "${result.toStringAsFixed(1)}$suffix";
+  }
 
+  static String format24HRSToAPM(String time) {
+    // Parse the input time (HH:mm)
+    final parsedTime = DateFormat("HH:mm").parse(time);
+
+    // Format it to 12-hour format with am/pm
+    return DateFormat("h:mma").format(parsedTime).toLowerCase();
+  }
 }

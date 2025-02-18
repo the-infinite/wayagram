@@ -20,6 +20,14 @@ class FollowersPage extends ConsumerStatefulWidget {
 class _FollowersPageState extends ConsumerState<FollowersPage> with SingleTickerProviderStateMixin {
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createPageProvider.notifier).getFollowers();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
@@ -29,6 +37,7 @@ class _FollowersPageState extends ConsumerState<FollowersPage> with SingleTicker
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -54,7 +63,7 @@ class _FollowersPageState extends ConsumerState<FollowersPage> with SingleTicker
                           leading: Image.asset(index.isEven?'assets/images/pages/c1.png':'assets/images/pages/temi.png',height: 40.h,),
                           title:Row(children: [
                             Text(
-                                index==0?'Chijioke Nwankwo':index==1?'Temitope Adebayo':index==2?'Oluwaseun Adeyemi': 'Ifeoma Okeke',
+                                index==0?'ChiFjioke Nwankwo':index==1?'Temitope Adebayo':index==2?'Oluwaseun Adeyemi': 'Ifeoma Okeke',
                                 style: wayaTheme.textTheme.bodyMedium),
 
                             Spacer(),

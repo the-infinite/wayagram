@@ -23,52 +23,43 @@ class WayaDp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-   final avatar = image?.isNotEmpty == true
-    ? image
-    : ref
-        .watch(profileVmProvider)
-        .userAccountModel
-        ?.data
-        ?.userdata
-        ?.user
-        ?.profilePicture;
+    final avatar = image?.isNotEmpty == true
+        ? image
+        : ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user?.profilePicture;
 
-return GestureDetector(
-  onTap: isEdit
-      ? () {
-          updateProfileImage(ref);
-        }
-      : onTap,
-  child: Stack(
-    children: [
-      CircleAvatar(
-        radius: radius,
-        backgroundColor: wayaTheme.colorScheme.greyColor200,
-        backgroundImage: avatar?.isNotEmpty == true
-            ? NetworkImage(avatar!)
-            : null,
-        child: avatar?.isNotEmpty != true
-            ? Icon(
-                Icons.person,
-                color: wayaTheme.colorScheme.greyColor600,
-              )
-            : null,
-      ),
-      if (isEdit)
-        Positioned.fill(
-          child: CircleAvatar(
+    return GestureDetector(
+      onTap: isEdit
+          ? () {
+              updateProfileImage(ref);
+            }
+          : onTap,
+      child: Stack(
+        children: [
+          CircleAvatar(
             radius: radius,
-            backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
-            child: Icon(
-              Icons.camera_alt_outlined,
-              color: Colors.white,
-            ),
+            backgroundColor: wayaTheme.colorScheme.greyColor200,
+            backgroundImage: avatar?.isNotEmpty == true ? NetworkImage(avatar!) : null,
+            child: avatar?.isNotEmpty != true
+                ? Icon(
+                    Icons.person,
+                    color: wayaTheme.colorScheme.greyColor600,
+                  )
+                : null,
           ),
-        ),
-    ],
-  ),
-);
-
+          if (isEdit)
+            Positioned.fill(
+              child: CircleAvatar(
+                radius: radius,
+                backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
+                child: Icon(
+                  Icons.camera_alt_outlined,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   void updateProfileImage(WidgetRef ref) {
@@ -90,8 +81,7 @@ class WayaImage2 extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final coverImage =
-        ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
+    final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
     return coverImage == null
         ? errorWidget(wayaTheme)
         : CachedNetworkImage(
@@ -99,7 +89,8 @@ class WayaImage2 extends ConsumerWidget {
             fit: BoxFit.fill,
             width: double.infinity,
             height: height,
-            imageUrl: imageUrl ?? coverImage);
+            imageUrl: imageUrl ?? coverImage,
+          );
   }
 
   Container errorWidget(ThemeData wayaTheme) {
@@ -118,9 +109,13 @@ class WayaImage2 extends ConsumerWidget {
 
 class WayaImage3 extends ConsumerWidget {
   final String? imageUrl;
+  final void Function()? onTap;
+  final bool isEdit;
   const WayaImage3({
     super.key,
     this.imageUrl,
+    this.onTap,
+    this.isEdit = false,
     required this.height,
   });
 
@@ -130,29 +125,34 @@ class WayaImage3 extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final coverImage =
-        ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
+    final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
     return coverImage == null
         ? errorWidget(wayaTheme)
         : CachedNetworkImage(
-        errorWidget: (context, url, error) => errorWidget(wayaTheme),
-        fit: BoxFit.fill,
-        width: double.infinity,
-        height: height,
-        imageUrl: imageUrl ?? coverImage);
+            errorWidget: (context, url, error) => errorWidget(wayaTheme),
+            fit: BoxFit.fill,
+            width: double.infinity,
+            height: height,
+            imageUrl: imageUrl ?? coverImage);
   }
 
   Container errorWidget(ThemeData wayaTheme) {
     return Container(
       height: height,
       width: double.infinity,
-      color:  WayaColors.primaryBrown50,
+      color: WayaColors.primaryBrown50,
       child: Padding(
         padding: const EdgeInsets.only(top: 90),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Image.asset('assets/images/pages/camera.png', height: 36.h,),
+            if (isEdit)
+              InkWell(
+                  onTap: onTap,
+                  child: Image.asset(
+                    'assets/images/pages/camera.png',
+                    height: 36.h,
+                  )),
           ],
         ),
       ),
@@ -202,18 +202,16 @@ class WayaImage extends StatelessWidget {
         curve: Curves.easeInOut,
         height: height,
         width: width,
-        decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.scaffoldColor,
-            borderRadius: radius ?? BorderRadius.circular(8)),
+        decoration:
+            BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: radius ?? BorderRadius.circular(8)),
       ),
       errorWidget: (context, url, error) => AnimatedContainer(
         duration: const Duration(milliseconds: 700),
         curve: Curves.easeInOut,
         height: height,
         width: width,
-        decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.scaffoldColor,
-            borderRadius: radius ?? BorderRadius.circular(8)),
+        decoration:
+            BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: radius ?? BorderRadius.circular(8)),
       ),
     );
   }

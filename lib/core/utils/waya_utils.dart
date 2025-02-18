@@ -9,7 +9,10 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
-import 'package:wayagram/features/shared/model/base_model.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/shared/model/base_model.dart';
+import 'package:wayagram/shared/model/media_upload_model.dart';
+import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 import '../components/components.dart';
 
@@ -27,11 +30,8 @@ class WayaUtils {
       Widget? buttonCenterWidget,
       Widget? secondButtonCenterWidget,
       VoidCallback? onCancel}) {
-    return showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return WayaNoticeModal(
+    return showModalSheet(context,
+        child: WayaNoticeModal(
           title: title,
           onPress: onPress,
           message: message,
@@ -41,9 +41,7 @@ class WayaUtils {
           buttonCenterWidget: buttonCenterWidget,
           secondButtonText: secondButtonText,
           onCancel: onCancel,
-        );
-      },
-    );
+        ));
   }
 
   static Future<Select> showSelectModal({
@@ -72,13 +70,15 @@ class WayaUtils {
     WayaSnackBar.showToast('Copied');
   }
 
-  static Future<T?> showModalSheet<T>(BuildContext context, {required Widget child}) {
+  static Future<T?> showModalSheet<T>(BuildContext context,
+      {required Widget child}) {
     return showModalBottomSheet<T?>(
       constraints: BoxConstraints(maxHeight: Get.height * 0.8),
       context: context,
       isScrollControlled: true,
       useRootNavigator: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
       builder: (context) => child,
     );
   }
@@ -91,18 +91,21 @@ class WayaUtils {
       useRootNavigator: true,
       /*isDismissible: true,
         enableDrag: false,*/
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
       builder: (context) => child,
     );
   }
 
-  static showModalSheetQuotation(BuildContext context, {required Widget child}) {
+  static showModalSheetQuotation(BuildContext context,
+      {required Widget child}) {
     return showModalBottomSheet(
         constraints: BoxConstraints(maxHeight: Get.height * 0.8),
         context: context,
         isScrollControlled: true,
         useRootNavigator: true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
         builder: (context) => child);
   }
 
@@ -152,24 +155,85 @@ class WayaUtils {
     }
   }
 
-  static List<T> search<T extends BaseModel<T>>(
-    List<T> data,
-    List<String> accessorKeys,
-    String searchTerm,
-  ) {
-    if (searchTerm.isEmpty) {
-      return data;
-    }
-
-    return data.where((item) {
-      final map = item.toMap();
-      return accessorKeys.any((key) {
-        final value = map[key];
-        if (value is String) {
-          return value.toLowerCase().contains(searchTerm.toLowerCase());
-        }
-        return false;
-      });
-    }).toList();
+ static List<T> search<T extends BaseModel<T>>(
+  List<T> data,
+  List<String> accessorKeys,
+  String searchTerm,
+) {
+  if (searchTerm.isEmpty) {
+    return data;
   }
+
+  return data.where((item) {
+    final map = item.toMap();
+    return accessorKeys.any((key) {
+      final value = map[key];
+
+      if (value is String) {
+        return value.toLowerCase().contains(searchTerm.toLowerCase());
+      } else if (value is List<String>) {
+        return value.any((element) =>
+            element.toLowerCase().contains(searchTerm.toLowerCase()));
+      }
+
+      return false;
+    });
+  }).toList();
+}
+
+
+  static Future<String?> uploadFile(
+      {required UploadFileRepository repository, required File file}) async {
+    String publicUrl = '';
+    try {
+      // filename and content-type
+      String fileName = WayaHelpers.extractFileName(file);
+      String? contentType = WayaHelpers.getContentType(file);
+
+      final uploadUrlResponse =
+          await repository.getUploadUrl(fileName: fileName);
+      if (uploadUrlResponse.success) {
+        MediaUploadModel uploadModel =
+            MediaUploadModel.fromJson(uploadUrlResponse.data);
+
+        final String url = uploadModel.data!.url!;
+        publicUrl = uploadModel.data!.publicUrl!;
+        await repository.putFile(
+            url: url, file: file, contentType: contentType!);
+      }
+
+      return publicUrl;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  static List<T> strictSearch<T extends BaseModel<T>>(
+  List<T> data,
+  List<String> accessorKeys,
+  String searchTerm,
+) {
+  if (searchTerm.isEmpty) {
+    return [];
+  }
+
+  final filteredData = data.where((item) {
+    final map = item.toMap();
+    return accessorKeys.any((key) {
+      final value = map[key];
+
+      if (value is String) {
+        return value.toLowerCase().contains(searchTerm.toLowerCase());
+      } else if (value is List<String>) {
+        return value.any((element) =>
+            element.toLowerCase().contains(searchTerm.toLowerCase()));
+      }
+
+      return false;
+    });
+  }).toList();
+
+  return filteredData.isNotEmpty ? filteredData : [];
+}
+
 }

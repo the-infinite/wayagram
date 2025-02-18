@@ -7,11 +7,12 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
 import 'package:wayagram/features/event/vm/add_event_vm.dart';
 import 'package:wayagram/features/event/widgets/event_date_widget.dart';
 import 'package:wayagram/features/event/widgets/event_time_widget.dart';
-import 'package:wayagram/features/shared/components/radio_select.dart';
+import 'package:wayagram/shared/components/radio_select.dart';
 
 class CreateEvent extends ConsumerStatefulWidget {
   final Function gotoNextTab;
@@ -28,9 +29,11 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    final key = 'add-event';
     final wayaTheme = Theme.of(context);
+
     final viewModel = ref.watch(addEventVmProvider);
-    final selectedOption = ref.watch(radioSelectProvider);
+    final selectedOption = ref.watch(radioSelectProvider(key));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +57,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     addFile: ref.read(addEventVmProvider.notifier).addFile,
                     removeFile:
                         ref.read(addEventVmProvider.notifier).removeFile,
-                    title: "Upload Event Thumbnail",
+                    title: viewModel.eventImage != null
+                        ? viewModel.eventImage!.name
+                        : "Upload Event Thumbnail",
                     isUploaded: viewModel.eventImage != null,
                     description: "IMG , JPG Format"),
                 const Gap(10),
@@ -128,10 +133,6 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-                  if (viewModel.title.text.isEmpty) {
-                    return 'Description is required';
-                  }
-
                   return null;
                 }, builder: (formState) {
                   return Column(
@@ -163,12 +164,12 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     ],
                   );
                 }),
-                const Gap(30),
+                const Gap(25),
                 Text(
                   "Location Detail",
                   style: wayaTheme.textTheme.hintStyle,
                 ),
-                const Gap(30),
+                const Gap(25),
                 FormField<String>(validator: (value) {
                   if (viewModel.location.isEmpty) {
                     return 'Location is required';
@@ -182,7 +183,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           height: 0.3,
                           uniqueKey: 'location-type',
                           label: "Location Type",
-                          value: viewModel.eventType,
+                          value: viewModel.location,
                           hintText: 'Select Location Type',
                           items: ref
                               .read(addEventVmProvider.notifier)
@@ -203,12 +204,77 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     ],
                   );
                 }),
-                const Gap(30),
+                if (viewModel.location == 'Physical') ...[
+                  const Gap(10),
+                  FormField<String>(validator: (value) {
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: viewModel.address,
+                          hintText: "Enter Event Address",
+                          borderColor: formState.hasError &&
+                                  viewModel.address.text.isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
+                          label: "Enter Event Address",
+                        ),
+                        if (formState.hasError &&
+                            viewModel.address.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                ],
+                if (viewModel.location == 'Virtual') ...[
+                  const Gap(10),
+                  FormField<String>(validator: (value) {
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: viewModel.link,
+                          hintText: "Enter Link",
+                          borderColor:
+                              formState.hasError && viewModel.link.text.isEmpty
+                                  ? wayaTheme.colorScheme.error
+                                  : null,
+                          label: "Enter Virtual Event Link",
+                        ),
+                        if (formState.hasError && viewModel.link.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                ],
+                const Gap(25),
                 Text(
                   "Event Date and Time",
                   style: wayaTheme.textTheme.hintStyle,
                 ),
-                const Gap(30),
+                const Gap(25),
                 SizedBox(
                   width: double.infinity,
                   child: Row(
@@ -270,12 +336,12 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     ],
                   ),
                 ),
-                const Gap(30),
+                const Gap(25),
                 Text(
                   "Configure Ticket",
                   style: wayaTheme.textTheme.hintStyle,
                 ),
-                const Gap(30),
+                const Gap(25),
                 FormField<String>(validator: (value) {
                   if (viewModel.eventType.isEmpty) {
                     return 'Event Type is required';
@@ -365,53 +431,81 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                   );
                 }),
                 const Gap(10),
-                  Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                 
                   children: [
                     Text("Privacy Option",
                         style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 14,
-                              color: wayaTheme.colorScheme.customBlack)),
+                            fontSize: 14,
+                            color: wayaTheme.colorScheme.customBlack)),
                     const Gap(6),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(child: RadioSelect(
-                      title: Text("Public",
-                          style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
-                              fontSize: 14,
-                              color: wayaTheme.colorScheme.customBlack)),
-                      value: 'Public',
-                      groupedValue: selectedOption,
-                      onChanged: (value) =>
-                          ref.read(radioSelectProvider.notifier).state = value,
-                    ),),
+                        Expanded(
+                          child: RadioSelect(
+                            title: Text("Public",
+                                style: wayaTheme.textTheme.titleMedium!
+                                    .wayaCopyWith(
+                                        fontSize: 14,
+                                        color:
+                                            wayaTheme.colorScheme.customBlack)),
+                            value: 'Public',
+                            groupedValue: selectedOption,
+                            onChanged: (value) {
+                              ref
+                                  .read(radioSelectProvider(key).notifier)
+                                  .state = value;
+                              ref
+                                  .read(addEventVmProvider.notifier)
+                                  .updatePrivacyOption(value!);
+                            },
+                          ),
+                        ),
                         const Gap(10),
-                    Expanded(child: RadioSelect(
-                      title: Text("Private",
-                          style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
-                              fontSize: 14,
-                              color: wayaTheme.colorScheme.customBlack)),
-                      value: 'Private',
-                      groupedValue: selectedOption,
-                      onChanged: (value) =>
-                          ref.read(radioSelectProvider.notifier).state = value,
-                    )),
+                        Expanded(
+                            child: RadioSelect(
+                          title: Text("Private",
+                              style: wayaTheme.textTheme.titleMedium!
+                                  .wayaCopyWith(
+                                      fontSize: 14,
+                                      color:
+                                          wayaTheme.colorScheme.customBlack)),
+                          value: 'Private',
+                          groupedValue: selectedOption,
+                          onChanged: (value) {
+                            ref.read(radioSelectProvider(key).notifier).state =
+                                value;
+
+                            ref
+                                .read(addEventVmProvider.notifier)
+                                .updatePrivacyOption(value!);
+                          },
+                        )),
                       ],
                     )
                   ],
                 ),
-               
                 const Gap(20),
                 WayaButton(
                     text: 'Confirm Event Detail',
                     callback: () {
-                      //  ref.read(addProductProvider.notifier).submit();
-                      widget.gotoNextTab();
+                      if (_formKey.currentState!.validate()) {
+                        widget.gotoNextTab();
+                      }
                     })
               ],
-            ))
+            )),
+        const Gap(8),
+        WayaButton(
+            text: 'Go Back',
+            color: wayaTheme.colorScheme.transparent,
+            textColor: wayaTheme.colorScheme.customBlack,
+            border:
+                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            callback: () {
+              WayaNav.goBack();
+            })
       ],
     );
   }

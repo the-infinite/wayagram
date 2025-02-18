@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/features/moments/data/model/folllowed_user_moments_model.dart';
 
 class MomentsWidget extends StatelessWidget {
+  final UserMoments? moment;
   final bool isCreate;
-  const MomentsWidget({super.key, this.isCreate = false});
+  final VoidCallback? onTap;
+  const MomentsWidget(
+      {super.key, this.isCreate = false, this.onTap, this.moment});
 
   @override
   Widget build(BuildContext context) {
@@ -13,48 +17,95 @@ class MomentsWidget extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Container(
-          height: 70,
-          width: 70,
-          decoration: BoxDecoration(
+        if (isCreate) ...[
+          Container(
+            height: 70,
+            width: 70,
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                  width: 4,
-                  color: isCreate
-                      ? wayaTheme.colorScheme.transparent
-                      : wayaTheme.colorScheme.customPrimary)),
-          child: Center(
-            child: WayaImage(
-              imageUrl: "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1725183748/f3632f3a-f9ae-49d2-bd6b-c61a0af3bbc7_do5ub4.jpg",
-              height: isCreate ? 60: 55,
-              width: isCreate ?60 :55,
-              radius: BorderRadius.circular(75),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(3),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: wayaTheme.colorScheme.white,
+                ),
+                child: Center(
+                    child: WayaDp(
+                  radius: 65,
+                )),
+              ),
             ),
           ),
-        ),
-        if (isCreate)
           Positioned(
               bottom: 0,
               right: -2,
-              child: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                        width: 2, color: wayaTheme.colorScheme.white)),
+              child: GestureDetector(
+                onTap: onTap,
                 child: Container(
-                  width: 26,
-                  height: 26,
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: Color(0xff3D89DF)),
-                  child: Center(
-                    child: Icon(
-                      Icons.add,
-                      size: 20,
-                      color: wayaTheme.colorScheme.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          width: 2, color: wayaTheme.colorScheme.white)),
+                  child: Container(
+                    width: 26,
+                    height: 26,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Color(0xff3D89DF)),
+                    child: Center(
+                      child: Icon(
+                        Icons.add,
+                        size: 20,
+                        color: wayaTheme.colorScheme.white,
+                      ),
                     ),
                   ),
                 ),
               ))
+        ] else if (moment != null) ...[
+         GestureDetector(
+          onTap:onTap,
+          child:  Container(
+            height: 70,
+            width: 70,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.center,
+                  colors: [
+                    Color(0xFFB43000),
+                    Color(0x99FFEF8C),
+                    Color(0xFFFF5D2E),
+                  ],
+                  stops: [
+                    0.0,
+                    0.5,
+                    1.0
+                  ]),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(3),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: wayaTheme.colorScheme.white,
+                ),
+                child: Center(
+                  child: WayaImage(
+                    imageUrl: moment!.moments[0].image,
+                    height: 55,
+                    width: 55,
+                    radius: BorderRadius.circular(75),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          
+          )
+        ]
       ],
     );
   }

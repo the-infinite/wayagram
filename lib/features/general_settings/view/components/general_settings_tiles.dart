@@ -10,7 +10,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
 import '../../data/model/model.dart';
@@ -34,7 +35,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
         children: [
           ListTile(
             onTap: () {
-              WayaNav.toNamed(ProfilePage.route);
+              WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id));
             },
             visualDensity: VisualDensity(horizontal: -2.0),
             shape: RoundedRectangleBorder(

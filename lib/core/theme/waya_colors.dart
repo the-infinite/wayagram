@@ -14,11 +14,13 @@ class WayaColors {
   static const primaryBrown50 = Color(0xffFBF1F1);
   static const primary = Color(0xffFF652E);
   static const primary600 = Color(0xffB54821);
+  static const primary700 = Color(0xff8C3819);
   static const onPrimary = Color(0xffFFFFFF);
 
   //
   static const error200 = Color(0xffE26E6A);
   static const error = Color(0xffD42620);
+  static const error50 = Color(0xffFBEAE9);
   static const error500 = Color(0xffCB1A14);
   static const error700 = Color(0xff9E0A05);
 

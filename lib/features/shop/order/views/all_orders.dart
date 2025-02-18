@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/shared/paginated_data/paginated_data_view.dart';
+import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/order/vm/order_vm.dart';
 import 'package:wayagram/features/shop/widgets/card_loading_state.dart';
@@ -67,7 +67,7 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
               count: 6,
             ),
             fetchData: ref.read(orderVmProvider.notifier).getOrders,
-            result: (data) {
+            result: (data,s) {
               final filteredOrder = WayaUtils.search<Order>(
                   data,
                   [

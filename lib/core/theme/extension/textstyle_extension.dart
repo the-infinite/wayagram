@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wayagram/core/theme/func/get_waya_color.dart';
-import 'package:wayagram/core/theme/waya_colors.dart';
 
 extension WayaTextStyleX on TextStyle {
   TextStyle wayaCopyWith({
@@ -31,9 +29,10 @@ extension WayaTextStyleX on TextStyle {
     String? package,
     TextOverflow? overflow,
   }) {
+    //WayaColorHelper.getColorFromInput(color ?? WayaColors.white)
     return copyWith(
       inherit: inherit,
-      color: WayaColorHelper.getColorFromInput(color ?? WayaColors.white),
+      color: color,
       backgroundColor: backgroundColor,
       fontSize: fontSize,
       fontWeight: fontWeight,

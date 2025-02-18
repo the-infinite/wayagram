@@ -16,11 +16,11 @@ class WayaLocalDataSource {
   }
 
   saveUserType(SelectAccountData type) {
-    wayaFastStorageService.write<SelectAccountData>(key: 'userType', value: type);
+    wayaFastStorageService.write(key: 'userType', value: type.toJson());
   }
 
   SelectAccountData getUserType() {
-    return wayaFastStorageService.read(key: 'userType');
+    return SelectAccountData.fromJson(wayaFastStorageService.read(key: 'userType'));
   }
 
   saveUser(UserAccountData user) {
@@ -46,13 +46,7 @@ class WayaLocalDataSource {
   dynamic gettoken() {
     return wayaFastStorageService.read(key: 'token');
   }
-  // saveUserData(UserModel user) {
-  //   return wayaFastStorageService.write(key: 'userData', value: user);
-  // }
 
-  // UserModel getUserData() {
-  //   return wayaFastStorageService.read<UserModel>(key: 'userData');
-  // }
   saveBusiness(BusinessAccountData user) {
     return wayaFastStorageService.write(key: 'business', value: user);
   }
@@ -75,5 +69,13 @@ class WayaLocalDataSource {
 
   Select getSelectedBusinessType() {
     return wayaFastStorageService.read(key: 'bizType');
+  }
+
+  saveSearchHistory(List<String> history) {
+    return wayaFastStorageService.write<List<String>>(key: 'search-history', value: history);
+  }
+
+  List<String> getSearchHistory() {
+    return wayaFastStorageService.read(key: 'search-history');
   }
 }

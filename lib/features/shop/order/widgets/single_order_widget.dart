@@ -126,7 +126,7 @@ class SingleOrderWidget extends ConsumerWidget {
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
-        WayaHelpers.removecamelCase(status),
+        WayaHelpers.removeCamelCaseAndUnderscore(status),
         style: TextStyle().wayaCopyWith(
           color: textColor,
           fontWeight: FontWeight.w500,

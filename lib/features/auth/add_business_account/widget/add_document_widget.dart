@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget_vm.dart';
 
 class AddDocumentWidget extends ConsumerStatefulWidget {
@@ -109,8 +110,12 @@ class _AddDocumentWidgetState extends ConsumerState<AddDocumentWidget> {
                       viewModel.uploadFile(widget.addFile, widget.type);
                     },
                     text: "Upload",
+                    textStyle: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                        color: wayaTheme.colorScheme.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12),
                     height: 35,
-                    horizontalPadding: 8,
+                    horizontalPadding: 10,
                     radius: 6,
                   )
           ],

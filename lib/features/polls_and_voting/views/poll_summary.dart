@@ -50,13 +50,18 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     final viewModel2 = ref.watch(createPollVotingProvider.notifier);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
-    print('END DATE ${viewModel.endDate}');
+
     String startDate = viewModel.startDate;
+    print('START DATE ==>>>$startDate');
     String endDate = viewModel.endDate;
+    print('END DARTE ==>> ${viewModel.endDate}');
     DateFormat format = DateFormat("yyyy-M-d");
     DateTime parsedDate = format.parse(startDate);
     DateTime parsedDate2 = format.parse(endDate);
     num daysLeft = parsedDate2.difference(parsedDate).inDays;
+    //print('Start Date is ${viewModel.startDate}');
+    //print(" ${DateFormat('yyyy-MM--dd').format(viewModel.startDate as DateTime)}");
+
     return WayaScaffold(
         title: "Polls Summary",
         isLoading: viewModel.isLoading,
@@ -90,17 +95,21 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   viewModel.firstChoiceDescription.text,
                   viewModel.votePrice.text
                 );
-               viewModel2.reset();
+               //viewModel2.reset();
               }
 
 
             }
                 : null,
-            centerWidget: LoadingState(
-              loading: viewModel.isLoading,
-              text: 'Create',
-            ),
+            //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create',),
             height: 30,
+            isLoading: viewModel.isLoading,
+            text: 'Create',
+            horizontalPadding: 12,
+            textStyle: WayaTextStyles.bodySmall.copyWith(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.white ),
           )
         ),
         //createPoll(context),
@@ -110,12 +119,10 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           children: [
             const Gap(10),
             Text(
-                //'${formData['pollTitle']}',
                 "${viewModel.pollTitle.text.capitalizeFirst}",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
-                //'${formData['pollDescription']}'
               '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
@@ -130,8 +137,11 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //21st of July\n2024
-                summary('Start Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.startDate)}\n', 'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
-                summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt1(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
+                summary('Start Date',
+                    //formatDate(viewModel.startDate),
+                    '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.startDate)}\n',
+                    'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
+                summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
                 summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'
                 ),
                 summary('Duration', '$daysLeft Weeks\n' , '', ''),
@@ -196,6 +206,37 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               color: Theme.of(context).colorScheme.black ),
         ),
       ],);
+  }
+
+  String formatDate(String dateString) {
+    // Convert "21-2-2025" to DateTime
+    DateFormat inputFormat = DateFormat("d-M-yyyy");
+    DateTime date = inputFormat.parse(dateString);
+
+    // Get day, month, and year
+    int day = date.day;
+    String month = DateFormat("MMMM").format(date);
+    String year = DateFormat("yyyy").format(date);
+
+    // Add ordinal suffix
+    String suffix = getDaySuffix(day);
+
+    return "$day$suffix of $month $year";
+  }
+
+// Function to get ordinal suffix (st, nd, rd, th)
+  String getDaySuffix(int day) {
+    if (day >= 11 && day <= 13) return "th"; // Special case for 11-13
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
   }
 
   presImage(img, name, ctx,){

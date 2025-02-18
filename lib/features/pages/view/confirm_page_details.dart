@@ -1,15 +1,15 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_buttons.dart';
-import 'package:wayagram/core/components/waya_scaffold.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class ConfirmPageDetails extends ConsumerStatefulWidget {
@@ -21,17 +21,12 @@ class ConfirmPageDetails extends ConsumerStatefulWidget {
 }
 
 class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
-  final _formKey = GlobalKey<FormState>();
-
-  Map<String, dynamic> formData = {};
-
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPageProvider);
     final viewModel2 = ref.watch(createPageProvider.notifier);
-    final wayaTheme = Theme.of(context);
-    final type  = ModalRoute.of(context)?.settings.arguments as String?;
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+    //final type  = ModalRoute.of(context)?.settings.arguments as String?;
     return WayaScaffold(
       title: "Confirm Details",
       isLoading: viewModel.isLoading,
@@ -41,14 +36,22 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
         child: WayaButton(
           callback: !viewModel.isLoading
               ? () async {
-            //if (_formKey.currentState!.validate()) {
-             viewModel2.reset();
-              WayaNav.toNamed("/successPage");
-           // }
+            await viewModel2.createPage(context, viewModel.pageName.text,
+                viewModel.pageDescription.text,   args['type'] == 'Public Page' ? false : true,
+                (args['coverImage'] as File).path, ( args['image'] as File).path );
+            viewModel2.reset();
+            WayaNav.toNamed("/successPage",
+                arguments: args['type']
+            );
           } : null,
-          centerWidget: LoadingState(
-              loading: viewModel.isLoading, text: 'Create'),
           height: 30,
+          text: 'Create',
+          horizontalPadding: 12,
+          isLoading: viewModel.isLoading,
+          textStyle: WayaTextStyles.bodySmall.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.white ),
         ),
       ),
       body: Column(
@@ -60,19 +63,26 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  WayaImage3(
-                    height: Get.height * 0.2,
-                  ),
+                  args['coverImage'] == null ? Image.asset('assets/images/pages/image_placeholder.png',
+                    height:Get.height * 0.2, width: double.infinity,
+                    alignment: Alignment.centerRight, fit: BoxFit.fitWidth,):
+                  Image.file(File('${args['image'].absolute.path}'),
+                    height:Get.height * 0.2, width: double.infinity,
+                    alignment: Alignment.centerRight, fit: BoxFit.fitWidth,),
                   Gap(15),
 
                 ],
               ),
+
               Positioned(
                   left: 16.w,
                   bottom: -20.h,
-                  child: WayaDp(
-                    radius: 28.r,
-                  )),
+                  child:  CircleAvatar(
+                      radius: 20,
+                      backgroundImage:
+                      FileImage(File('${args['coverImage'].absolute.path}'))
+                  )
+              ),
             ],
           ),
           const Gap(50),
@@ -80,7 +90,7 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
           Gap(20),
           details('Page Description', viewModel.pageDescription.text.capitalizeFirst),
           Gap(20),
-          details('Page Type', '$type')
+          details('Page Type', args['type'])
         ],
       ),
     );

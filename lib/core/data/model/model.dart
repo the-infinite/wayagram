@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 part 'model.g.dart';
 
@@ -6,11 +5,11 @@ part 'model.g.dart';
 class Select {
   final String label;
   final String value;
+  final String image;
 
-  Select({required this.label, required this.value});
+  Select({required this.label, required this.value, this.image = ''});
 
-   factory Select.fromJson(Map<String, dynamic> json) =>
-      _$SelectFromJson(json);
+  factory Select.fromJson(Map<String, dynamic> json) => _$SelectFromJson(json);
 
   Map<String, dynamic> toJson() {
     return _$SelectToJson(this);

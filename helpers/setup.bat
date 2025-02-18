@@ -14,6 +14,7 @@ REM Third, initialize fvm and install Flutter stable.
 ECHO "Activating Flutter Version Manager"
 flutter pub global activate fvm
 fvm install stable
+fvm use stable
 
 REM Fourth, run the build script for good measure.
 ECHO "Running Code First CodeGen"

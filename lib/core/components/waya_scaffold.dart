@@ -6,7 +6,7 @@ import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/vm/theme_vm.dart';
+// import 'package:wayagram/core/theme/vm/theme_vm.dart';
 
 class WayaScaffold extends ConsumerWidget {
   final Widget body;
@@ -50,60 +50,64 @@ class WayaScaffold extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final themeNotifier = ref.read(themeProvider.notifier);
+    final size = MediaQuery.sizeOf(context);
+    // final themeNotifier = ref.read(themeProvider.notifier);
     final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
+
+    //? This is fine.
     return BlurryModalProgressHUD(
       inAsyncCall: isLoading,
       progressIndicator: progressIndicator ?? CircularProgressIndicator(),
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        onDoubleTap: () {
-          // themeNotifier.toggleTheme();
-        },
-        child: Scaffold(
-          backgroundColor: backgroundColor,
-          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-          appBar: removeAppBar
-              ? null
-              : appBar ??
-                  AppBar(
-                    elevation: 0,
-                    scrolledUnderElevation: 0,
-                    backgroundColor: wayaTheme.colorScheme.white,
-                    title: Text(title ?? ''),
-                    leading: automaticallyImplyLeading
-                        ? WayaBackButton(
-                            onTap: onTapBackButton,
-                          )
-                        : SizedBox.shrink(),
-                    actions: appBarTrailing == null ? null : [appBarTrailing!],
-                  ),
-          body: isScrollable
-              ? onRefresh != null
-                  ? RefreshIndicator(
-                      onRefresh: onRefresh!,
-                      child: Container(
-                        color: color,
-                        child: Padding(
-                          padding: paddedBody,
-                          child: SingleChildScrollView(child: body),
-                        ),
-                      ),
-                    )
-                  : Container(
-                      color: color,
-                      child: Padding(
-                        padding: paddedBody,
-                        child: SingleChildScrollView(child: body),
-                      ),
-                    )
-              : Padding(
-                  padding: paddedBody,
-                  child: body,
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        appBar: removeAppBar
+            ? null
+            : appBar ??
+                AppBar(
+                  elevation: 0,
+                  scrolledUnderElevation: 0,
+                  backgroundColor: wayaTheme.colorScheme.white,
+                  title: Text(title ?? ''),
+                  leading: automaticallyImplyLeading
+                      ? WayaBackButton(
+                          onTap: onTapBackButton,
+                        )
+                      : SizedBox.shrink(),
+                  actions: appBarTrailing == null ? null : [appBarTrailing!],
                 ),
-          bottomNavigationBar: bottomNavigationBar,
-          floatingActionButton: floatingActionButton,
-        ),
+        body: isScrollable
+            ? onRefresh != null
+                ? RefreshIndicator(
+                    onRefresh: onRefresh!,
+                    child: Container(
+                      color: color,
+                      padding: paddedBody,
+                      height: size.height,
+                      width: size.width,
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: body,
+                      ),
+                    ),
+                  )
+                : Container(
+                    color: color,
+                    height: size.height,
+                    width: size.width,
+                    child: Padding(
+                      padding: paddedBody,
+                      child: SingleChildScrollView(child: body),
+                    ),
+                  )
+            : Container(
+                padding: paddedBody,
+                height: size.height,
+                width: size.width,
+                child: body,
+              ),
+        bottomNavigationBar: bottomNavigationBar,
+        floatingActionButton: floatingActionButton,
       ),
     );
   }
@@ -112,9 +116,7 @@ class WayaScaffold extends ConsumerWidget {
 class WayaScaffoldWithProgressBar extends StatefulWidget {
   final Color? backgroundColor;
   final EdgeInsetsGeometry? padding;
-
   final List<Widget> tabsView;
-
   final Widget? bottomNavigationBar;
   final TabController tabController;
   final Widget? floatingActionButton;
@@ -125,20 +127,21 @@ class WayaScaffoldWithProgressBar extends StatefulWidget {
 
   final bool? resizeToAvoidBottomInset;
   final PreferredSizeWidget? appBar;
-  const WayaScaffoldWithProgressBar(
-      {super.key,
-      this.resizeToAvoidBottomInset,
-      required this.tabsView,
-      this.floatingActionButton,
-      this.isLoading = false,
-      this.onTap,
-      this.padding,
-      required this.tabController,
-      this.currentIndex = 0,
-      this.isScrollable = false,
-      this.appBar,
-      this.backgroundColor,
-      this.bottomNavigationBar});
+  const WayaScaffoldWithProgressBar({
+    super.key,
+    this.resizeToAvoidBottomInset,
+    required this.tabsView,
+    this.floatingActionButton,
+    this.isLoading = false,
+    this.onTap,
+    this.padding,
+    required this.tabController,
+    this.currentIndex = 0,
+    this.isScrollable = false,
+    this.appBar,
+    this.backgroundColor,
+    this.bottomNavigationBar,
+  });
 
   @override
   State<WayaScaffoldWithProgressBar> createState() => _WayaScaffoldWithProgressBarState();

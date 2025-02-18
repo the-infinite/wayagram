@@ -8,36 +8,58 @@ abstract class BaseRepository {
 
   BaseRepository() : httpClient = DioHttpClient();
 
-  Future<WayaRequestResponse> get(String route,
-      {Map<String, dynamic>? params}) {
-     print(' route ${route}');
+  Future<WayaRequestResponse> get(String route, {Map<String, dynamic>? params}) {
+    print(' route ${route}');
     return httpClient.getHttp(route, params: params);
   }
 
-  Future<WayaRequestResponse> post(String route, dynamic body,
-      {Map<String, dynamic>? params,
-      bool formdata = false,
-      bool formEncoded = false,
-      void Function({int count, int total})? onSendProgress,
-      void Function({int count, int total})? onRecieveProgress}) {
-    _logger.i('Registering user base $body');
-    return httpClient.postHttp(route, body,
-        params: params,
-        formdata: formdata,
-        formEncoded: formEncoded,
-        onSendProgress: onSendProgress,
-        onRecieveProgress: onRecieveProgress);
-  }
-
-  Future<WayaRequestResponse> put(
+  Future<WayaRequestResponse> post(
     String route,
     dynamic body, {
     Map<String, dynamic>? params,
     bool formdata = false,
     bool formEncoded = false,
+    void Function({int count, int total})? onSendProgress,
+    void Function({int count, int total})? onRecieveProgress,
   }) {
-    return httpClient.putHttp(route, body,
-        params: params, formdata: formdata, formEncoded: formEncoded);
+    return httpClient.postHttp(
+      route,
+      body,
+      params: params,
+      formdata: formdata,
+      formEncoded: formEncoded,
+      onSendProgress: onSendProgress,
+      onRecieveProgress: onRecieveProgress,
+    );
+  }
+
+  Future<WayaRequestResponse> download(String url, String outputPath, WayaDownloadListener onData) {
+    _logger.i("Downloading a file $url");
+    return httpClient.downloadHttp(url, outputPath, onData);
+  }
+
+  Future<WayaRequestResponse> put(
+    String route,
+    dynamic body, {
+    String? contentType,
+    Map<String, dynamic>? params,
+    bool formdata = false,
+    bool isAuth = true,
+    bool isWgUrl = true,
+    bool isBinary = false,
+    bool formEncoded = false,
+  }) {
+    return httpClient.putHttp(
+      route,
+      body,
+      contentType: contentType,
+      params: params,
+      formdata: formdata,
+      isAuth: isAuth,
+      isWgUrl: isWgUrl,
+      formEncoded: formEncoded,
+      isBinary: isBinary,
+    );
   }
 
   Future<WayaRequestResponse> patch(
@@ -47,13 +69,10 @@ abstract class BaseRepository {
     bool formdata = false,
     bool formEncoded = false,
   }) {
-    return httpClient.patchHttp(route, body,
-        params: params, formdata: formdata, formEncoded: formEncoded);
+    return httpClient.patchHttp(route, body, params: params, formdata: formdata, formEncoded: formEncoded);
   }
 
-  Future<WayaRequestResponse> delete(String route,
-      {Map<String, dynamic>? params}) {
-    return httpClient.deleteHttp(route, params: params)
-        as Future<WayaRequestResponse>;
+  Future<WayaRequestResponse> delete(String route, {dynamic body, Map<String, dynamic>? params}) {
+    return httpClient.deleteHttp(route, params: params, body: body);
   }
 }

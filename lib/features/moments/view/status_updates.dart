@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/features/moments/model/default.dart';
 
 class _StatusUpdateWidget extends StatelessWidget {
@@ -16,7 +16,7 @@ class _StatusUpdateWidget extends StatelessWidget {
 }
 
 class StatusUpdatesWidget extends StatelessWidget {
-  final User? profile;
+  final UserDetailsModel? profile;
   final List<StatusUpdateModel> updates;
   final double width;
 

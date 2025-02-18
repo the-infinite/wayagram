@@ -13,12 +13,14 @@ class WayaTextStyles {
     fontWeight: FontWeight.w400,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
+    //overflow: TextOverflow.ellipsis,
   );
   static const labelMedium = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
+    // overflow: TextOverflow.ellipsis,
   );
   //
   static const titleLarge = TextStyle(
@@ -26,12 +28,14 @@ class WayaTextStyles {
     fontWeight: FontWeight.w600,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
   static const titleMedium = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
 //
   static const headlineLarge = TextStyle(
@@ -39,12 +43,14 @@ class WayaTextStyles {
     fontWeight: FontWeight.w700,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
   static const headlineMedium = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w700,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
+    //overflow: TextOverflow.ellipsis,
   );
   //
   static const bodyMedium = TextStyle(
@@ -52,29 +58,34 @@ class WayaTextStyles {
     fontWeight: FontWeight.w500,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
   static const bodySemiBold = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
   static const bodySmall = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w500,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
   static const bodyBold = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w700,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
   static const bodyExtraMedium = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
   //
   static const hintStyle = TextStyle(
@@ -82,12 +93,21 @@ class WayaTextStyles {
     fontWeight: FontWeight.w400,
     color: WayaColors.greyColor400,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
+  );
+  static const errorhintStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: WayaColors.error,
+    fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
   static const hintStyleSemiBold = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: WayaColors.greyColor400,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
 
   static const hintStyleBold = TextStyle(
@@ -95,6 +115,7 @@ class WayaTextStyles {
     fontWeight: FontWeight.w600,
     color: WayaColors.greyColor400,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
 
   // description
@@ -103,12 +124,14 @@ class WayaTextStyles {
     fontWeight: FontWeight.w400,
     color: WayaColors.greyColor500,
     fontFamily: WayaConstants.fontFamily,
+  //  overflow: TextOverflow.ellipsis,
   );
   static const mediumDescriptionStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
     color: WayaColors.greyColor500,
     fontFamily: WayaConstants.fontFamily,
+   // overflow: TextOverflow.ellipsis,
   );
   //
   static const smallActiveLinkStyle = TextStyle(

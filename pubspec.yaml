@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.1+128
+version: 1.91.6-staging+135
 
 environment:
   sdk: ^3.6.0
@@ -18,8 +18,10 @@ dependencies:
   get: ^4.6.6
   flutter_riverpod: ^2.6.1
   get_storage: ^2.1.1
+  visibility_detector: ^0.4.0+2
   flutter_secure_storage: ^9.2.2
   path_provider: ^2.1.5
+  #sqlite3_flutter_libs: ^0.5.29+1
   dio: ^5.2.1+1
   http: ^1.2.1
   shared_preferences: ^2.2.3
@@ -40,32 +42,56 @@ dependencies:
   logger: ^2.5.0
   firebase_messaging: ^15.1.6
   firebase_core: ^3.9.0
+  google_fonts: ^6.2.1
   flutter_local_notifications: ^18.0.1
   blurry_modal_progress_hud: ^1.1.1
   mime: ^2.0.0
   image_cropper: ^8.1.0
   http_parser: ^4.1.2
-  google_maps_flutter: ^2.10.0
+  #google_maps_flutter: ^2.10.0
   uuid: ^4.5.1
   smooth_page_indicator: ^1.2.0+3
   percent_indicator: ^4.2.4
   slide_countdown: ^2.0.2
-  coast_audio: ^1.0.0
   file_picker: ^8.3.1
   video_player: ^2.9.2
-  flutter_webrtc: ^0.12.7
-  rtmp_broadcaster:
-    git: https://github.com/OlJohnny/flutter_rtmp_broadcaster.git
+  # flutter_webrtc: ^0.12.9
+  permission_handler: ^11.3.1
+  audio_waveforms: ^1.2.0
+  socket_io_client: ^3.0.2
+  #rtmp_broadcaster:
+   # git: https://github.com/OlJohnny/flutter_rtmp_broadcaster.git
+  readmore: ^3.0.0
+  timeago: ^3.2.2
+  carousel_slider: ^5.0.0
+  url_launcher: ^6.3.1
+  #sqfentity: ^2.5.0
+  #sqfentity_gen: ^2.5.0
+  infinite_scroll_pagination: ^4.1.0
+  video_trimmer: ^3.0.1-LTS
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   json_serializable: ^6.9.2
   build_runner: ^2.4.14
+  build_verify: ^3.1.0
   flutter_gen_runner: ^5.8.0
+  flutter_launcher_icons: ^0.14.3
+
+dependency_overrides:
+  intl: "^0.20.1"
+  source_gen: "^2.0.0"
 
   # This is fine.
   flutter_lints: ^5.0.0
+
+flutter_launcher_icons:
+  image_path: "assets/images/waya-gen-logo.png"
+  android: "wayagram_ic"
+  min_sdk_android: 21
+  ios: true
+  remove_alpha_ios: true
 
 flutter_gen:
   output: lib/assetsgen/
@@ -73,7 +99,6 @@ flutter_gen:
 
   integrations:
     flutter_svg: true
-    flare_flutter: true
     lottie: true
 
   fonts:
@@ -98,16 +123,15 @@ flutter:
     - assets/images/auth/
     - assets/icons/gen_set/
     - assets/icons/wallet/
-
     - assets/images/explore/
     - assets/images/shop/
     - assets/images/bid/
     - assets/images/polls/
     - assets/images/pages/
     - assets/images/wallet/
-
     - assets/icons/
     - assets/fonts/
+    - shorebird.yaml
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

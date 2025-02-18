@@ -5,7 +5,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/shared/paginated_data/paginated_data_view.dart';
+import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
@@ -114,7 +114,7 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                   count: 6,
                 ),
                 fetchData: ref.read(sellerOrdersVmProvider.notifier).getOrders,
-                result: (data) {
+                result: (data,s) {
                   final filteredOrder = WayaUtils.search<Order>(
                       data,
                       [

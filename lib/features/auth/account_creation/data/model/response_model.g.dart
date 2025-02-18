@@ -23,7 +23,7 @@ Map<String, dynamic> _$ResponseModelToJson(ResponseModel instance) =>
     };
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
-      user: User.fromJson(json['user'] as Map<String, dynamic>),
+      user: UserDetailsModel.fromJson(json['user'] as Map<String, dynamic>),
       profile:
           UserProfileData.fromJson(json['profile'] as Map<String, dynamic>),
       business: json['business'] == null

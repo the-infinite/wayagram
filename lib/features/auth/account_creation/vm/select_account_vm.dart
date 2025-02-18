@@ -27,17 +27,17 @@ class SelectAccountVm extends StateNotifier<AccountState> {
   void setSelectedType(SelectAccountData account) {
     state = state.copyWith(selectedType: account.type);
 
-    _localDataSource.saveUserType(account);
+    try {
+      _localDataSource.saveUserType(account);
+    } catch (_) {}
   }
 }
 
-final selectAccountProvider =
-    StateNotifierProvider<SelectAccountVm, AccountState>((ref) {
+final selectAccountProvider = StateNotifierProvider<SelectAccountVm, AccountState>((ref) {
   return SelectAccountVm(WayaLocalDataSource());
 });
 
-class SelectAccountTypes
-    extends StateNotifier<AsyncValue<List<SelectAccountData>>> {
+class SelectAccountTypes extends StateNotifier<AsyncValue<List<SelectAccountData>>> {
   final AuthRepository _authRepository;
   final _logger = getLogger('SelectAccountTypes');
 
@@ -58,8 +58,7 @@ class SelectAccountTypes
                 title: item.title,
                 description: item.description,
                 type: item.type,
-                id: accountTypes.firstWhere(
-                    (element) => element['name'] == item.type)['id'],
+                id: accountTypes.firstWhere((element) => element['name'] == item.type)['id'],
               ))
           .toList();
       state = AsyncValue.data(accountData);
@@ -79,8 +78,8 @@ class SelectAccountTypes
 
 final authRepositoryProvider = Provider((ref) => AuthRepository());
 
-final selectAccountTypesProvider = StateNotifierProvider<SelectAccountTypes,
-    AsyncValue<List<SelectAccountData>>>((ref) {
+final selectAccountTypesProvider =
+    StateNotifierProvider<SelectAccountTypes, AsyncValue<List<SelectAccountData>>>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return SelectAccountTypes(authRepository);
 });

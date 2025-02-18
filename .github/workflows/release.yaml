@@ -1,0 +1,165 @@
+name: release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-android:
+    runs-on: ubuntu-latest
+    name: 🤖 Release Android
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v4
+
+      - name: ☕️ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: gradle
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.27.2"
+          channel: "stable"
+
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      - name: ⚙️ Build generated files
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: ⏳ Build android bundle
+        run: flutter build appbundle --release
+
+      - name: 🚀 Upload Artifacts
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: Android Releases
+          path: |
+            build/app/outputs/bundle/release/app-release.aab
+
+      - name: 🔎 Extract version
+        id: extract_version
+        run: |
+          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+          echo "VERSION=$version" >> $GITHUB_ENV
+
+      - name: 🔎 Confirm if version tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: 🔎 Modify tag if it exists
+        if: env.TAG_EXISTS == 'true'
+        id: modify_tag
+        run: |
+          new_version="${{ env.VERSION }}-build-${{ github.run_number }}-android"
+          echo "VERSION=$new_version" >> $GITHUB_ENV
+
+      - name: 🚀 Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/bundle/release/app-release.aab"
+          tag: v${{ env.VERSION }}
+
+  release-ios:
+    runs-on: macos-latest
+    name: 🍎 Release iOS
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v4
+
+      - name: ✍️ Setup XCode Signing
+        env:
+          CERTIFICATE_PASSWORD: "root"
+          KEYCHAIN_PASSWORD: "@Nigria123@"
+        # https://docs.github.com/en/actions/deployment/deploying-xcode-applications/installing-an-apple-certificate-on-macos-runners-for-xcode-development
+        # Also adds a uuid to the mobile provision so XCode can find it.
+        run: |
+          # create variables
+          CERTIFICATE_PATH=ios_keys/cert/dist.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          PP_PATH=ios_keys/profile/dist.mobileprovision
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+          security find-identity -v
+
+          # use uuid for the name of provisioning profile
+          UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i $PP_PATH))
+
+          # apply provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.27.2"
+          channel: "stable"
+
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      - name: ⚙️ Build generated files
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: ⏳ Build iOS app
+        run: flutter build ios --release
+
+      - name: ⏳ Compress Archives and IPAs
+        run: |
+          cd build
+          tar -czf ios_build.tar.gz ios
+
+      - name: 🚀 Upload Artifacts
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: iOS Releases
+          path: |
+            build/ios_build.tar.gz
+
+      - name: 🔎 Extract version
+        id: extract_version
+        run: |
+          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+          echo "VERSION=$version" >> $GITHUB_ENV
+
+      - name: 🔎 Confirm if version tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: 🔎 Modify tag if it exists
+        if: env.TAG_EXISTS == 'true'
+        id: modify_tag
+        run: |
+          new_version="${{ env.VERSION }}-build-${{ github.run_number }}-ios"
+          echo "VERSION=$new_version" >> $GITHUB_ENV
+
+      - name: 🚀 Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/ios_build.tar.gz"
+          tag: v${{ env.VERSION }}
+
+      - name: 🧹 Clean Up
+        if: ${{ always() }}
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db

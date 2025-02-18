@@ -1,3 +1,11 @@
+import 'dart:io';
+
+import 'package:http_parser/http_parser.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:wayagram/core/helpers/value.dart';
+import 'package:wayagram/features/chat/model/message.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+
 class WayaFileExtensions {
   WayaFileExtensions._();
 
@@ -149,4 +157,303 @@ class WayaFileExtensions {
     'dsf',
     'dsd'
   ];
+
+  /// Returns the MIME type for a given file extension.
+  ///
+  /// Takes a file extension (without the dot) and returns the corresponding
+  /// MediaType. If the extension is not recognized, returns application/octet-stream.
+  static MediaType getMimeType(String fileExtension) {
+    final ext = fileExtension.toLowerCase();
+
+    // Documents
+    if (['pdf'].contains(ext)) return MediaType('application', 'pdf');
+    if (['doc', 'docx'].contains(ext)) return MediaType('application', 'msword');
+    if (['txt'].contains(ext)) return MediaType('text', 'plain');
+    if (['rtf'].contains(ext)) return MediaType('application', 'rtf');
+
+    // Spreadsheets
+    if (['xls', 'xlsx'].contains(ext)) return MediaType('application', 'vnd.ms-excel');
+    if (['csv'].contains(ext)) return MediaType('text', 'csv');
+
+    // Images
+    if (['jpg', 'jpeg'].contains(ext)) return MediaType('image', 'jpeg');
+    if (['png'].contains(ext)) return MediaType('image', 'png');
+    if (['gif'].contains(ext)) return MediaType('image', 'gif');
+    if (['webp'].contains(ext)) return MediaType('image', 'webp');
+    if (['svg'].contains(ext)) return MediaType('image', 'svg+xml');
+
+    // Videos
+    if (['mp4'].contains(ext)) return MediaType('video', 'mp4');
+    if (['webm'].contains(ext)) return MediaType('video', 'webm');
+    if (['mpeg', 'mpg'].contains(ext)) return MediaType('video', 'mpeg');
+
+    // Audio
+    if (['mp3'].contains(ext)) return MediaType('audio', 'mpeg');
+    if (['wav'].contains(ext)) return MediaType('audio', 'wav');
+    if (['aac'].contains(ext)) return MediaType('audio', 'aac');
+    if (['ogg'].contains(ext)) return MediaType('audio', 'ogg');
+
+    // Archives
+    if (['zip'].contains(ext)) return MediaType('application', 'zip');
+    if (['rar'].contains(ext)) return MediaType('application', 'x-rar-compressed');
+
+    // Markup
+    if (['json'].contains(ext)) return MediaType('application', 'json');
+    if (['xml'].contains(ext)) return MediaType('application', 'xml');
+    if (['html', 'htm'].contains(ext)) return MediaType('text', 'html');
+    if (['css'].contains(ext)) return MediaType('text', 'css');
+
+    // Default fallback for unknown types
+    return MediaType('application', 'octet-stream');
+  }
+}
+
+class WayaFileHelper {
+  WayaFileHelper._();
+
+  /// Returns the number as a size in the largest possible unit.
+  static String getFileSize(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(2)} KB';
+    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
+    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+  }
+
+  /// Returns the base storage directory for the application.
+  ///
+  /// This is an asynchronous method that resolves to a [Directory] object
+  /// representing the root storage location where application files will be
+  /// stored.
+  ///
+  /// Throws a [PlatformException] if the storage directory cannot be accessed.
+  static Future<Directory> _getBaseStorageDirectory() async {
+    //? This is fine.
+    var directory = await getApplicationDocumentsDirectory();
+
+    //?  If this is Android.
+    if (Platform.isAndroid) {
+      directory = Directory("${(await getExternalStorageDirectory())!.parent.parent.parent.path}/media/ng.wayagram");
+    }
+
+    //? If this does not exist...
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? This is fine.
+    return directory;
+  }
+
+  /// Get the directory where the app always stores downloaded documents.
+  ///
+  /// This asynchronous method returns a [Directory] representing the device's
+  /// document storage location where the application can store and access downloaded files.
+  /// The exact location varies by platform:
+  /// * On Android: Internal storage/Android/data/your.package.name/files
+  /// * On iOS: Application Documents directory
+  ///
+  /// Returns a [Future<Directory>] that resolves to the documents directory.
+  static Future<Directory> getDocumentsDirectory() async {
+    final base = await _getBaseStorageDirectory();
+    var directory = Directory("${base.absolute.path}/Documents/Sent");
+
+    //? Then print this out.
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? This is fine.
+    return directory.parent;
+  }
+
+  /// Returns a Future that resolves to the media storage directory for the
+  /// application.
+  ///
+  /// The media directory is used for storing various media files like images,
+  /// videos, and other media content used by the application. This is where all
+  /// the downloaded media by users should go to.
+  ///
+  /// This is an asynchronous operation that needs to be awaited when called.
+  ///
+  /// Returns:
+  ///   * [Directory] - A [Future<Directory>] pointing to the media storage location
+  static Future<Directory> getMediaDirectory() async {
+    final base = await _getBaseStorageDirectory();
+    var directory = Directory("${base.absolute.path}/Media/Sent");
+
+    //? Then print this out.
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? This is fine.
+    return directory.parent;
+  }
+
+  /// Returns a Future that resolves to the audio storage directory for the
+  /// application.
+  ///
+  /// The audio directory is used for storing various media files like images,
+  /// videos, and other media content used by the application. This is where all
+  /// the downloaded media by users should go to.
+  ///
+  /// This is an asynchronous operation that needs to be awaited when called.
+  ///
+  /// Returns:
+  ///   * [Directory] - A [Future<Directory>] pointing to the media storage location
+  static Future<Directory> getAudioDirectory() async {
+    final base = await _getBaseStorageDirectory();
+    var directory = Directory("${base.absolute.path}/Audio/Sent");
+
+    //? Then print this out.
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? This is fine.
+    return directory.parent;
+  }
+
+  /// Returns a [Directory] object representing the directory where voice messages
+  /// are stored.
+  ///
+  /// This function asynchronously retrieves or creates a dedicated directory for
+  /// storing voice message files in the application's storage space.
+  ///
+  /// Returns a [Future] that completes with the [Directory] instance.
+  ///
+  /// Throws [IOException] if the directory cannot be accessed or created.
+  static Future<Directory> getVoiceMessagesDirectory() async {
+    final base = await _getBaseStorageDirectory();
+    var directory = Directory("${base.absolute.path}/VoiceMessages/Sent");
+
+    //? Then print this out.
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? This is fine.
+    return directory.parent;
+  }
+
+  /// Returns a [Directory] instance representing the path to the databases directory.
+  ///
+  /// This method asynchronously retrieves the directory where database files should be stored.
+  /// The returned [Future] completes with a [Directory] object pointing to the databases path.
+  ///
+  /// Throws a [PlatformException] if the directory cannot be accessed or created.
+  static Future<Directory> getDatabasesDirectory() async {
+    final base = await _getBaseStorageDirectory();
+    var directory = Directory("${base.absolute.path}/Databases");
+
+    //? Then print this out.
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? This is fine.
+    return directory.parent;
+  }
+
+  /// Returns a Directory object representing the backups directory for the application.
+  ///
+  /// The directory path is platform-specific and follows standard backup storage conventions.
+  /// This method is asynchronous and returns a Future that resolves to the Directory object.
+  ///
+  /// Example:
+  /// ```dart
+  /// Directory backupDir = await Files.getBackupsDirectory();
+  /// ```
+  static Future<Directory> getBackupsDirectory() async {
+    final base = await _getBaseStorageDirectory();
+    var directory = Directory("${base.absolute.path}/Backups");
+
+    //? Then print this out.
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? This is fine.
+    return directory.parent;
+  }
+
+  /// Returns the file path for a voice note associated with a specific chat.
+  ///
+  /// Takes a [chatId] parameter to uniquely identify the chat context.
+  /// Creates a directory for voice notes if it doesn't exist and generates
+  /// a unique file path for storing the voice note.
+  ///
+  /// Returns a [Future<String>] with the complete file path where the voice
+  /// note should be stored.
+  static Future<String> getVoiceNoteFilePath(String chatId) async {
+    final directory = await getVoiceMessagesDirectory();
+
+    // Then return this bonkers generated file path.
+    return "${directory.absolute.path}/Sent/${chatId}_${WayaValueHelper.createUid()}.m4a";
+  }
+
+  /// A helper function used to generate a name for a given file in a chat.
+  static String generateFilename(String chatId, File original) {
+    final filename = original.uri.pathSegments.last;
+    final extensionIndex = filename.lastIndexOf(".");
+    final ext = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+    return "${chatId}_${WayaValueHelper.createUid()}.$ext".replaceAll("-", "_");
+  }
+
+  /// Returns the final directory of a file using the logic of where we are coming
+  static String getFileSubdirectory(Directory parent, MessageModel message) {
+    return "${parent.absolute.path}${message.senderId == ConversationState.self.id ? "/Sent" : ""}";
+  }
+
+  /// A helper function used to calculate the directory of the file for a given
+  /// message.
+  static Future<File> getFileDirectory(MessageModel message, MessageMedia file) async {
+    final uri = Uri.parse(file.mediaUrl);
+    final filename = uri.pathSegments.last;
+    final extensionIndex = filename.lastIndexOf(".");
+    final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+    var directory = await WayaFileHelper.getDocumentsDirectory();
+
+    //? Now, we check what kind of extension this is.
+    if ([...WayaFileExtensions.images, ...WayaFileExtensions.videos].contains(extension)) {
+      directory = await WayaFileHelper.getMediaDirectory();
+    }
+
+    //? If this is an audio file.
+    if (WayaFileExtensions.audio.contains(extension)) {
+      directory = await WayaFileHelper.getAudioDirectory();
+    }
+
+    //? Now, we try looking for the rest here.
+    final path = "${WayaFileHelper.getFileSubdirectory(directory, message)}/$filename";
+
+    // Now, return this file.
+    return File(path);
+  }
+
+  /// A helper function used to calculate the directory of the file for a given
+  /// message.
+  static Future<File> getFileLocalDirectory(MessageModel message, String file) async {
+    final uri = File(file);
+    final filename = uri.uri.pathSegments.last;
+    final extensionIndex = filename.lastIndexOf(".");
+    final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+    var directory = await WayaFileHelper.getDocumentsDirectory();
+
+    //? Now, we check what kind of extension this is.
+    if ([...WayaFileExtensions.images, ...WayaFileExtensions.videos].contains(extension)) {
+      directory = await WayaFileHelper.getMediaDirectory();
+    }
+
+    //? If this is an audio file.
+    if (WayaFileExtensions.audio.contains(extension)) {
+      directory = await WayaFileHelper.getAudioDirectory();
+    }
+
+    //? Now, we try looking for the rest here.
+    final path = "${WayaFileHelper.getFileSubdirectory(directory, message)}/$filename";
+
+    // Now, return this file.
+    return File(path);
+  }
 }

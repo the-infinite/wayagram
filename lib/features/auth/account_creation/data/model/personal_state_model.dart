@@ -30,7 +30,7 @@ class PersonalFirstStepState {
   final bool isConfirmPasswordFocused;
   final bool isPasswordFocused;
   final bool isLoading;
-  final User? user;
+  final UserDetailsModel? user;
   final BusinessAccountData? business;
   final bool? isLoadingBusinessType;
   final List<Select> businessTypes;
@@ -120,7 +120,7 @@ class PersonalFirstStepState {
       List<Select>? businessTypes,
           List<Select>? cities,
 
-      User? user,
+      UserDetailsModel? user,
 
       BusinessAccountData? business}) {
     return PersonalFirstStepState(

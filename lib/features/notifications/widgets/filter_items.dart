@@ -33,7 +33,7 @@ class _FilterWidgetState extends ConsumerState<NotificationFilterWidget> {
   /// the filters that can be applied on each product.
   void _showFilters() {
     //? If this is not undefined, leave.
-    if (_entry != null) {
+    if (_entry?.mounted ?? false) {
       controller.close();
       return;
     }
@@ -100,10 +100,10 @@ class _FilterWidgetState extends ConsumerState<NotificationFilterWidget> {
               child: WayaTextFormField(
                 padding: EdgeInsets.symmetric(horizontal: 1),
                 prefixIcon: Padding(
-                  padding: const EdgeInsets.symmetric(vertical:  13),
-                  // child: WayaAssets.icons.actionSearch.svg(
-                  //   fit: BoxFit.contain,
-                  // ),
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                  child: WayaAssets.icons.actionSearch.svg(
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 controller: widget.value.controller,
                 hintText: widget.hintText,

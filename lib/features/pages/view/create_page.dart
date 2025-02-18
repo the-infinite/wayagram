@@ -12,6 +12,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -31,6 +32,28 @@ class _CreatePageState extends ConsumerState<CreatePage> {
   bool sel =  false;
   bool sel2 =  false;
 
+  File? _selectedImage; // Holds the selected image
+  File? _coverImage; // Holds the selected image
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+        print('SELECTED IMAGES $_selectedImage');
+      });
+    }
+  }
+
+  Future<void> _pickCoverImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _coverImage = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,16 +71,50 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                 ? () async {
               if (_formKey.currentState!.validate()) {
                 if(!sel && !sel2){
-
-                } else{
-                  WayaNav.toNamed("/confirmDetails", arguments: sel?'Public Page': 'Private Page');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Select page type', style: TextStyle(
+                          fontFamily: WayaConstants.fontFamily,
+                          fontSize: 12
+                      ),),
+                      backgroundColor: Colors.red,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }else if(_selectedImage == null && _coverImage == null){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Add Images', style: TextStyle(
+                          fontFamily: WayaConstants.fontFamily,
+                          fontSize: 12
+                      ),),
+                      backgroundColor: Colors.red,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+                else{
+                  WayaNav.toNamed("/confirmDetails",
+                      arguments:{
+                        'image': _selectedImage,
+                        'coverImage': _coverImage,
+                        'type': sel?'Public Group': 'Private Group'
+                      }
+                      //arguments: sel?'Public Page': 'Private Page'
+                  );
 
                 }
               }
             } : null,
-            centerWidget: LoadingState(
-                loading: viewModel.isLoading, text: 'Create'),
             height: 30,
+            isLoading: viewModel.isLoading,
+            text: 'Create',
+            horizontalPadding: 12,
+            textStyle: WayaTextStyles.bodySmall.copyWith(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.white ),
+
           ),
         ),
       body: Column(
@@ -69,19 +126,74 @@ class _CreatePageState extends ConsumerState<CreatePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  WayaImage3(
-                    height: Get.height * 0.2,
+
+                  Stack(
+                    children: [
+                      // Banner Container
+                      Container(
+                        width: double.infinity,
+                        height: 200, // Banner height
+                        decoration: BoxDecoration(
+                          color: WayaColors.primaryBrown50,
+                          borderRadius: BorderRadius.circular(0),
+                          image: _selectedImage != null
+                              ? DecorationImage(
+                            image: FileImage(_selectedImage!),
+                            fit: BoxFit.cover,
+                          )
+                              : const DecorationImage(
+                            image: AssetImage("assets/placeholder.jpg"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+
+                      // Upload Icon Button
+                      Positioned(
+                        top: 140,
+                        right: 10,
+                        child: IconButton(
+                          onPressed: _pickImage,
+                          icon: Image.asset('assets/images/pages/cam.png', height: 14.h,),
+                          padding: EdgeInsets.all(10),
+                          constraints: BoxConstraints(),
+                          color: WayaColors.greyColor600, // Background overlay
+                        ),
+                      ),
+                    ],
                   ),
                   Gap(15),
 
                 ],
               ),
+
+
+
               Positioned(
-                  left: 16.w,
-                  bottom: -20.h,
-                  child: WayaDp(
-                    radius: 28.r,
-                  )),
+                left: 16.w,
+                bottom: -20.h,
+                child: GestureDetector(
+                  onTap: _pickCoverImage,
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: wayaTheme.colorScheme.greyColor200,
+                        backgroundImage: _coverImage != null
+                            ?  FileImage(_coverImage!)
+                            : null,
+                        child: _coverImage == null
+                            ? Icon(
+                          Icons.person,
+                          color: wayaTheme.colorScheme.greyColor600,
+                        )
+                            : null,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
             ],
           ),
           const Gap(30),

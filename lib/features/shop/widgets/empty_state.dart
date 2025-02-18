@@ -25,7 +25,7 @@ class EmptyState extends StatelessWidget {
     // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Gap(40),

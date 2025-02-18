@@ -2,12 +2,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/group/view/approval_screen.dart';
+import 'package:wayagram/features/group/widget/group_widget.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 
 class ManagePages extends ConsumerStatefulWidget {
@@ -20,67 +28,45 @@ class ManagePages extends ConsumerStatefulWidget {
 class _ManagePagesState extends ConsumerState<ManagePages> with SingleTickerProviderStateMixin {
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createPageProvider.notifier).getAllPages('${ConversationState.self.id}');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
+        viewModel.pagesUsersFollow!.isEmpty ? PageEmptyState():
         ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: 6,
+            itemCount: viewModel.pagesUsersFollow?.length,
             itemBuilder: (_, index){
-              return Container(
-                margin: EdgeInsets.only(bottom: 15),
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Theme.of(context).colorScheme.greyColor200),
+              final page = viewModel.pagesUsersFollow?[index];
+              return GroupWidget(
+                  name: '${page?.name?.capitalizeFirst}',
+                  desc: '${page?.description?.capitalizeFirst}',
+                  image:'${page?.coverImage}', count: '${page?.followerCount} Followers',
+                  buttonText: '',
+                  chk: false,
+                  onTap: (){
+                    WayaNav.toNamed('/privatePage',
+                        arguments: {
+                          'pageId': '${page?.id}',
+                          'followerCount':'${page?.followerCount}',
+                          'name': '${page?.name}',
+                          'desc': '${page?.description}',
+                          'coverImage': '${page?.coverImage}',
+                          'profileImage': '${page?.profileImage}',
+                        });
+                  });
 
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.only(left: 0, right: 0),
-                      onTap: ()=> WayaNav.toNamed('/privatePage'),
-                      leading: Image.asset(
-                        index==0?'assets/images/pages/empire.png':
-                        index==1? 'assets/images/pages/ms.png':index==2?'assets/images/pages/united.png':
-                        'assets/images/pages/ls.png',
-                        height: 40.h,),
-                      title:Row(children: [
-                        Text(
-                            index==0?'Empire Music':index==1?'Marvel Studios':index==2?'Manchester United': 'Livescores',
-                            style: wayaTheme.textTheme.titleLarge),
-
-
-                      ],),
-                      subtitle:  Text(
-                        '48.6k Followers',
-                        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Theme.of(context).colorScheme.greyColor500 ),
-                      ),),
-                    Gap(10),
-                    Text(
-                      'Be the first to know about upcoming marvel movies and get the latest news before anyone',
-                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).colorScheme.greyColor500 ),
-                    ),
-
-                  ],
-                ),
-              );
             }),
 
       ],
@@ -88,4 +74,34 @@ class _ManagePagesState extends ConsumerState<ManagePages> with SingleTickerProv
 
   }
 
+}
+
+class PageEmptyState extends StatelessWidget {
+  const PageEmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: EmptyState(
+            hasButton: true,
+            onTap: () {
+              WayaNav.toNamed('/createPage');
+            },
+            buttontext: 'Create a Page',
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You haven't created pages yet"),
+      ),
+    );
+  }
 }

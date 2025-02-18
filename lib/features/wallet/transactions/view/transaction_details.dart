@@ -9,7 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
-import 'package:wayagram/features/shared/components/loading_dialog.dart';
+import 'package:wayagram/shared/components/loading_dialog.dart';
 import 'package:wayagram/features/wallet/mixin/wallet_mixin.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';

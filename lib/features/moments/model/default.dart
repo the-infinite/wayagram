@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 part 'default.g.dart';
 
@@ -15,7 +15,7 @@ enum UpdateType {
 class StatusUpdateModel {
   final String id;
   final String userId;
-  final User? user;
+  final UserDetailsModel? user;
   final UpdateType type;
   final String mood;
   final String content;
@@ -43,7 +43,7 @@ class StatusUpdateModel {
   /// A very lazy way of adding the user of a status update to the status update.
   /// Only really useful in contexts where the user is not assigned at the startup
   /// time.
-  StatusUpdateModel bindUser({User? user}) {
+  StatusUpdateModel bindUser({UserDetailsModel? user}) {
     return StatusUpdateModel(
       id: id,
       userId: userId,

@@ -10,6 +10,9 @@ class WayaSwiper extends StatefulWidget {
   /// Duration value to define animation duration
   final Duration animationDuration;
 
+  /// Delay added so that we can wait for the other thing to click back slowly.
+  final Duration animationDelay;
+
   /// Icon that will be displayed beneath child widget when swipe right
   final IconData iconOnRightSwipe;
 
@@ -46,11 +49,19 @@ class WayaSwiper extends StatefulWidget {
   /// long time.
   final FutureOr<void> Function()? onLongPress;
 
+  /// Callback that is made when the gesture detector has been tapped once.
+  final FutureOr<void> Function()? onTap;
+
+  /// Callback that is made when the gesture detector has been tapped twice in
+  /// rapid succession.
+  final FutureOr<void> Function()? onDoubleTap;
+
   /// Integer specifying value above which it will sense swipe to get triggerred
   /// default minimum value is 20 and maximum value is 35
   /// Putting max value will require use to swipe in short time to get swipe in effect
   final int swipeSensitivity;
 
+  // This is fine.
   const WayaSwiper({
     super.key,
     required this.child,
@@ -59,11 +70,14 @@ class WayaSwiper extends StatefulWidget {
     this.iconOnRightSwipe = Icons.reply,
     this.rightSwipeWidget,
     this.onLongPress,
+    this.onDoubleTap,
+    this.onTap,
     this.iconOnLeftSwipe = Icons.reply,
     this.leftSwipeWidget,
     this.iconSize = 26.0,
     this.iconColor,
     this.animationDuration = const Duration(milliseconds: 150),
+    this.animationDelay = const Duration(milliseconds: 150),
     this.offsetDx = 0.3,
     this.swipeSensitivity = 5,
   }) : assert(swipeSensitivity >= 5 && swipeSensitivity <= 35, "swipeSensitivity value must be between 5 to 35");
@@ -140,7 +154,8 @@ class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateM
       );
     }
     //Forward animation
-    _controller.forward().whenComplete(() {
+    _controller.forward().whenComplete(() async {
+      await Future.delayed(widget.animationDelay);
       _controller.reverse().whenComplete(() {
         if (onRight) {
           //keep left icon visibility to 0.0 until onRightSwipe triggers again
@@ -168,6 +183,8 @@ class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateM
           _runAnimation(onRight: false, details: details);
         }
       },
+      onDoubleTap: widget.onDoubleTap,
+      onTap: widget.onTap,
       child: Stack(
         alignment: Alignment.center,
         fit: StackFit.passthrough,

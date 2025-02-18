@@ -5,14 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
-//import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
-// import 'package:wayagram/features/general_settings/profile/data/model/user_profile_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
 class ProfileVm extends StateNotifier<ProfileState> {

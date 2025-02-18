@@ -61,38 +61,40 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
   void _startCountdown() {
     _timer?.cancel();
     state = state.copyWith(countdown: 40);
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (state.countdown > 0) {
-        state = state.copyWith(countdown: state.countdown - 1);
-      } else {
-        state = state.copyWith(isResend: true);
-        _timer?.cancel();
-      }
-    });
+    _timer = Timer.periodic(
+      Duration(seconds: 1),
+      (timer) {
+        if (state.countdown > 0) {
+          state = state.copyWith(countdown: state.countdown - 1);
+        } else {
+          state = state.copyWith(isResend: true);
+          _timer?.cancel();
+        }
+      },
+    );
   }
 
   void onCodeChanged(String value) {
     state = state.copyWith(inputCode: value);
   }
 
-  void onEditited(bool value) {
+  void onEdited(bool value) {
     state = state.copyWith(isEditing: value);
   }
 
-  Future<void> verifyAccount(VoidCallback onSucess, String code) async {
+  Future<void> verifyAccount(VoidCallback onSuccess, String code) async {
     state = state.copyWith(isLoading: true);
 
     try {
       final email = ref.watch(personalFirstStepProvider).email.text;
-      final response =
-          await _authRepository.verifyOtp(VerifyOtp(email: email, otp: code));
+      final response = await _authRepository.verifyOtp(VerifyOtp(email: email, otp: code));
       if (response.success) {
         final token = response.data['data']['token']['token'];
         final refreshToken = response.data['data']['token']['refreshToken'];
 
         _secureDataSource.saveToken(token);
         _secureDataSource.saveRefreshToken(refreshToken);
-        onSucess();
+        onSuccess();
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -107,9 +109,10 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
       final response = await _authRepository.resendOtp(email);
       _logger.d(" result ${response.data['message']}");
       if (response.data["statusCode"] == 200) {
-        _snackbarService.showCustomSnackbar(
-            variant: SnackbarType.success,
-            message: "Otp has been resend to $email");
+        _snackbarService.showCustomSnackbar(variant: SnackbarType.success, message: "OTP has been resend to $email");
+state = state.copyWith(isResend: false);
+        //? Start the countdown since our attempt to resend the OTP was successful.
+        _startCountdown();
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -121,7 +124,6 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
   }
 }
 
-final verifyAccountProvider =
-    NotifierProvider<VerifyAccountVm, VerifyAccountState>(() {
+final verifyAccountProvider = NotifierProvider<VerifyAccountVm, VerifyAccountState>(() {
   return VerifyAccountVm(WayaLocalDataSource(), AuthRepository());
 });

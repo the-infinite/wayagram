@@ -38,6 +38,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createGroupProvider);
+    final team = ref.watch(createPageProvider.notifier);
 
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
@@ -57,9 +58,6 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
 
             }
            } : null,
-          // centerWidget: LoadingState(
-          //   loading: viewModel.isLoading, text: 'Add User',
-          // ),
           height: 30,
           text: 'Add User',
           isLoading: viewModel.isLoading,
@@ -71,12 +69,12 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
           callback: !viewModel.isLoading
               ? () async {
             if (_formKey.currentState!.validate()) {
-              showCustomDialog(context, 'Success! Oluwaseun has been added as a\nModerator','You can now collaborate seamlessly and\nmanage the page together.');
+              await team.updateTeamMember(context, '', 'pageId','memberId');
+              showCustomDialog(context, 'Success! ${viewModel.username} has been added as a\nModerator','You can now collaborate seamlessly and\nmanage the page together.');
               ref.watch(createGroupProvider.notifier).reset();
+              Navigator.pop(context);
             }
           } : null,
-          // centerWidget: LoadingState(
-          //   loading: viewModel.isLoading, text: 'Add User', ),
           height: 30,
           text: 'Add User',
           isLoading: viewModel.isLoading,

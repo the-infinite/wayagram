@@ -1,5 +1,3 @@
-#!/usr/bin/zsh
-# shellcheck disable=SC1090
-source ~/.zshrc
-fvm dart run build_runner build
+#!/usr/bin/sh
+dart run build_runner build --delete-conflicting-outputs
 exit

@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
-import 'package:wayagram/features/shared/components/engagement_range.dart';
+import 'package:wayagram/shared/components/engagement_range.dart';
+import 'package:flutter/services.dart';
 
 class EventWidget extends ConsumerWidget {
-  const EventWidget({super.key});
+  final EventDoc event;
+  const EventWidget({super.key, required this.event});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +35,7 @@ class EventWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaImage(
-                  imageUrl: "",
+                  imageUrl: event.image,
                   height: 180.h,
                   width: double.infinity,
                   radius: BorderRadius.only(
@@ -52,18 +56,42 @@ class EventWidget extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Monshoot by Techchabal",
+                                  event.title,
                                   overflow: TextOverflow.ellipsis,
                                   style: wayaTheme.textTheme.bodyMedium,
                                 ),
                                 SizedBox(
                                   height: 3.h,
                                 ),
-                                Text(
-                                  "Oriental Hotel by 12:30pm",
-                                  style: wayaTheme.textTheme.hintStyle,
-                                  overflow: TextOverflow.ellipsis,
-                                )
+                                // if (event.location == 'physical')
+                                SizedBox(
+                                  width: 250.w,
+                                  child: Text(
+                                    "${event.locationAddress.capitalizeFirst} by ${WayaHelpers.format24HRSToAPM(event.startTime)}",
+                                    style: wayaTheme.textTheme.hintStyle,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                // if (event.location == 'virtual')
+                                //   GestureDetector(
+                                //     onTap: () {
+                                //       Clipboard.setData(ClipboardData(
+                                //           text: event.locationAddress));
+                                //       ScaffoldMessenger.of(context)
+                                //           .showSnackBar(
+                                //         SnackBar(
+                                //             content: Text(
+                                //                 "Link copied to clipboard")),
+                                //       );
+                                //     },
+                                //     child: Text("Copy Link",
+                                //         style: wayaTheme.textTheme.bodySmall!
+                                //             .wayaCopyWith(
+                                //                 color: wayaTheme
+                                //                     .colorScheme.customPrimary,
+                                //                 fontSize: 11,
+                                //                 fontWeight: FontWeight.w600)),
+                                //   ),
                               ],
                             ),
                           ),
@@ -71,14 +99,14 @@ class EventWidget extends ConsumerWidget {
                             width: 68,
                             child: WayaButton(
                               callback: () {},
-                              text: "Upcoming",
+                              text: event.eventStatus,
+                              textColor: wayaTheme.colorScheme.pending,
                               height: 30,
                               color: wayaTheme.colorScheme.pending50,
-                              textStyle: wayaTheme.textTheme.hintStyle
-                                  .wayaCopyWith(
-                                      color: wayaTheme.colorScheme.pending,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
+                              textStyle: wayaTheme.textTheme.hintStyle.copyWith(
+                                  color: wayaTheme.colorScheme.pending,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
                               radius: 14,
                             ),
                           ),
@@ -88,15 +116,24 @@ class EventWidget extends ConsumerWidget {
                         height: 6.h,
                       ),
                       EngagementRange(
-                          bottomLeft: "Physical",
-                          bottomRight: "20 tickets left",
-                          range: 0.4),
+                          bottomLeft: event.location.capitalizeFirst!,
+                          bottomRight: event.maxCapacity == null ||
+                                  event.maxCapacity == 0
+                              ? "Unlimited"
+                              : "${event.maxCapacity! - event.noOfAttendees} Ticket Left",
+                          range: event.maxCapacity == null ||
+                                  event.maxCapacity == 0
+                              ? 0
+                              : (event.maxCapacity! -
+                                      (event.maxCapacity! -
+                                          event.noOfAttendees)) /
+                                  100),
                       SizedBox(
                         height: 6.h,
                       ),
                       WayaButton(
                         callback: () {
-                          WayaNav.toNamed(EventDetail.route);
+                          WayaNav.toNamed(EventDetail.route, arguments: event);
                         },
                         color: wayaTheme.colorScheme.primar50,
                         textColor: wayaTheme.colorScheme.customPrimary,

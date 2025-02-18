@@ -1,44 +1,70 @@
+import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 
 class ChatState {
+  final bool hasLoaded;
   final bool isLoading;
-  final String chatId;
+  final ChatModel? chat;
   final List<MessageModel> messages;
-  final String cursor;
   final int limit;
+  final int page;
+  final bool hasNextPage;
+  final int totalCount;
+  final int totalPages;
+  final bool typing;
 
   // This is fine.
   const ChatState({
+    required this.hasLoaded,
     required this.isLoading,
-    required this.chatId,
+    required this.chat,
     required this.messages,
-    required this.cursor,
     required this.limit,
+    required this.totalCount,
+    required this.totalPages,
+    required this.hasNextPage,
+    required this.page,
+    required this.typing,
   });
 
   // This is fine.
   static final initial = ChatState(
+    hasLoaded: false,
     isLoading: false,
-    chatId: "",
+    chat: null,
     messages: [],
-    cursor: "",
-    limit: 20,
+    limit: 100,
+    totalCount: 0,
+    totalPages: 0,
+    hasNextPage: true,
+    page: 1,
+    typing: false,
   );
 
   /// A helper function used to copy the contents of this chat's internal state
   /// and then pass it around.
   ChatState copyWith({
+    bool? hasLoaded,
     bool? isLoading,
-    String? chatId,
+    ChatModel? chat,
     List<MessageModel>? messages,
-    String? cursor,
+    int? page,
+    bool? hasNextPage,
+    int? totalCount,
+    int? totalPages,
+    bool? typing,
   }) {
     return ChatState(
+      hasLoaded: hasLoaded ?? this.hasLoaded,
       isLoading: isLoading ?? this.isLoading,
-      chatId: chatId ?? this.chatId,
+      chat: chat ?? this.chat,
       messages: messages ?? this.messages,
-      cursor: cursor ?? this.cursor,
       limit: limit,
+      totalCount: totalCount ?? this.totalCount,
+      totalPages: totalPages ?? this.totalPages,
+      hasNextPage: hasNextPage ?? this.hasNextPage,
+      page: page ?? this.page,
+      typing: typing ?? this.typing,
     );
   }
 }

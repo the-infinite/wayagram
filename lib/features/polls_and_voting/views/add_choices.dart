@@ -88,8 +88,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                              color:
-                                  Theme.of(context).colorScheme.greyColor300),
+                              color: Theme.of(context).colorScheme.greyColor300),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,7 +264,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
       child: Row(
         children: [
           Container(
-            height: 35,
+            height: 30,
             padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
             decoration: BoxDecoration(
                 color: wayaTheme.colorScheme.customPrimary,
@@ -281,7 +280,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 14),
+                        fontSize: 12),
                   ),
                 ],
               ),

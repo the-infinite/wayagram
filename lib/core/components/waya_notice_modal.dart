@@ -7,7 +7,7 @@ import 'package:wayagram/core/theme/theme.dart';
 class WayaNoticeModal extends StatelessWidget {
   final String title;
   final String message;
-  final VoidCallback onPress;
+  final VoidCallback? onPress;
   final VoidCallback? onCancel;
   final String? buttonText;
   final String? secondButtonText;
@@ -30,64 +30,61 @@ class WayaNoticeModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context).colorScheme;
-    return Dialog(
-      shape: RoundedRectangleBorder(
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 40, 20, 40),
+      decoration: BoxDecoration(
+        color: wayaTheme.white,
         borderRadius: BorderRadius.circular(16),
       ),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 40, 20, 40),
-        decoration: BoxDecoration(
-          color: wayaTheme.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            icon,
-            const Gap(30),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon,
+          const Gap(30),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            softWrap: true,
+            maxLines: 3,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
-            const Gap(12),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: WayaTextStyles.descriptionStyle,
-            ),
-            const Gap(24),
-            WayaButton(
-                centerWidget: buttonCenterWidget,
-                callback: () {
-                  // Navigator.of(context).pop();
-                  onPress();
-                },
-                text: buttonCenterWidget == null ? buttonText ?? '' : ''),
-            const Gap(10),
-            Visibility(
-                visible: onCancel != null,
-                child: WayaButton(
-                    callback: () {
-                      Navigator.of(context).pop();
-                      onCancel?.call();
-                    },
-                    textColor: wayaTheme.greyColor500,
-                    color: wayaTheme.transparent,
-                    centerWidget: secondButtonCenterWidget,
-                    border: Border.all(color: wayaTheme.greyColor500, width: 1),
-                    text: secondButtonCenterWidget == null
-                        ? secondButtonText ?? 'Cancel'
-                        : ''))
-          ],
-        ),
+          ),
+          const Gap(12),
+          Text(
+            message,
+            maxLines: 3,
+            softWrap: true,
+            textAlign: TextAlign.center,
+            style: WayaTextStyles.descriptionStyle,
+          ),
+          const Gap(24),
+          WayaButton(
+              centerWidget: buttonCenterWidget,
+              callback: () {
+                if (onPress == null) return Navigator.of(context).pop();
+                onPress?.call();
+              },
+              text: buttonCenterWidget == null ? buttonText ?? '' : ''),
+          const Gap(10),
+          Visibility(
+              visible: onCancel != null,
+              child: WayaButton(
+                  callback: () {
+                    Navigator.of(context).pop();
+                    onCancel?.call();
+                  },
+                  textColor: wayaTheme.greyColor500,
+                  color: wayaTheme.transparent,
+                  centerWidget: secondButtonCenterWidget,
+                  border: Border.all(color: wayaTheme.greyColor500, width: 1),
+                  text: secondButtonCenterWidget == null
+                      ? secondButtonText ?? 'Cancel'
+                      : ''))
+        ],
       ),
     );
   }

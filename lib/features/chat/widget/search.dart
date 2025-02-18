@@ -6,11 +6,13 @@ import 'package:wayagram/core/components/components.dart';
 
 class SearchConversationWidget extends StatefulWidget {
   final FutureOr<void> Function(String) onTextChange;
+  final bool isArchived;
 
   // This is fine.
   const SearchConversationWidget({
     super.key,
     required this.onTextChange,
+    this.isArchived = false,
   });
 
   @override
@@ -33,6 +35,7 @@ class _SearchConversationWidgetState extends State<SearchConversationWidget> {
           padding: const EdgeInsets.symmetric(vertical: 13),
           child: WayaAssets.icons.actionSearch.svg(),
         ),
+        onChanged: widget.onTextChange,
         hintText: "Search chats",
       ),
     );

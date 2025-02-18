@@ -64,6 +64,7 @@ class _AttachmentActionButton extends StatelessWidget {
             //* The body of this action button.
             Text(
               description,
+              maxLines: 2,
               textAlign: TextAlign.center,
               style: WayaTextStyles.descriptionStyle.copyWith(
                 fontSize: 13,
@@ -133,11 +134,33 @@ class ChatAttachmentDialog extends StatelessWidget {
               shrinkWrap: true,
               crossAxisCount: 3,
               children: [
+                // This can be fine.
                 _AttachmentActionButton(
                   icon: WayaAssets.icons.cAttachCamera.path,
                   title: "Camera",
                   description: "Send a video or photo from camera",
-                  callback: () {},
+                  callback: () async {
+                    //? If it is not...
+                    try {
+                      final choice = await ImagePicker().pickImage(
+                        source: ImageSource.camera,
+                        imageQuality: 40,
+                      );
+
+                      //? If this is fine.
+                      if (choice == null) return;
+
+                      //? Our choices.
+                      WayaNav.goBack<AttachmentResult>(
+                        result: AttachmentResult.images(
+                          [choice.path],
+                        ),
+                      );
+
+                      //? This means it is now media...
+                      controller.setMedia(true);
+                    } catch (_) {}
+                  },
                 ),
 
                 // This is fine.
@@ -150,12 +173,11 @@ class ChatAttachmentDialog extends StatelessWidget {
                     try {
                       final choices = await ImagePicker().pickMultipleMedia(
                         imageQuality: 40,
-                        limit: 3,
                       );
 
                       //? Our choices.
                       WayaNav.goBack<AttachmentResult>(
-                        result: AttachmentResult.file(
+                        result: AttachmentResult.images(
                           choices.map((file) => file.path).toList(),
                         ),
                       );
@@ -211,11 +233,41 @@ class ChatAttachmentDialog extends StatelessWidget {
 
                 // This is fine.
                 _AttachmentActionButton(
-                  icon: WayaAssets.icons.cAttachLocation.path,
-                  title: "Location",
-                  description: "Share your location to your friends",
-                  callback: () {},
+                  icon: WayaAssets.icons.cAttachAudio.path,
+                  title: "Audio",
+                  description: "Share a song or audio",
+                  callback: () async {
+                    //? If it is not...
+                    try {
+                      final result = await FilePicker.platform.pickFiles(
+                        allowMultiple: true,
+                        type: FileType.audio,
+                      );
+
+                      // If this failed.
+                      if (result == null) return;
+
+                      // Leave with the appropriate result.
+                      //? This allows a maximum of 3.
+                      WayaNav.goBack<AttachmentResult>(
+                        result: AttachmentResult.file(
+                          result.files.takeWhile((file) => file.path != null).map((file) => file.xFile.path).toList(),
+                        ),
+                      );
+
+                      //? This means it is no longer media...
+                      controller.setMedia(false);
+                    } catch (_) {}
+                  },
                 ),
+
+                // This is fine.
+                // _AttachmentActionButton(
+                //   icon: WayaAssets.icons.cAttachLocation.path,
+                //   title: "Location",
+                //   description: "Share your location to your friends",
+                //   callback: () {},
+                // ),
 
                 // This is fine.
                 _AttachmentActionButton(

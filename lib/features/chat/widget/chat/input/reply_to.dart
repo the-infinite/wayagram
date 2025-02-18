@@ -82,7 +82,13 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
                     children: [
                       //* User name.
                       Text(
-                        widget.message.senderId == user.id ? "You" : widget.controller.chat.other.fullname,
+                        (widget.interactive && widget.controller.isEditing)
+                            ? "Edit message"
+                            : widget.message.senderId == user.id
+                                ? "You"
+                                : widget.controller.chat.other.userData?.fullname ??
+                                    widget.controller.chat.other.chatUser?.displayName ??
+                                    "WayaGram User",
                         style: WayaTextStyles.titleMedium.copyWith(
                           color: widget.message.senderId == user.id ? WayaColors.primary : WayaColors.primary600,
                         ),
@@ -92,7 +98,7 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
                       if (widget.interactive)
                         IconButton(
                           onPressed: () {
-                            animationController!.reverse().then((_) => widget.controller.setReplyTo(null));
+                            animationController!.reverse().then((_) => widget.controller.quoteMessage(null));
                           },
                           style: IconButton.styleFrom(
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
