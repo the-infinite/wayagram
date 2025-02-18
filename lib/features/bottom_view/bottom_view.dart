@@ -10,6 +10,7 @@ import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.d
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/chat/view/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/donation/view/donations.dart';
 //import 'package:wayagram/features/chat/view/default.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
@@ -109,7 +110,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
     final List<Widget> _pages = [
       Explore(),
       WayaShop(),
-      Explore(),
+      Donations(),
       userType == 'PERSONAL' ? WayaBuyerQuotation() : WayaSellerQuotation(),
       ConversationScreen(),
       MoreView(),
