@@ -54,7 +54,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_){
       viewModel = ref.read(createRequestProvider);
-      print(viewModel?.brandName.text);
+
     });
     super.initState();
   }
