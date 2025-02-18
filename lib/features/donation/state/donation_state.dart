@@ -17,6 +17,10 @@ class DonationState{
     final String startDateString;
     final String endDateString;
 
+    final bool isLoading;
+    final bool showAmountRaised;
+    final bool showNumberOfDonors;
+
     DonationState({
     TextEditingController? title,
     TextEditingController? description,
@@ -31,6 +35,9 @@ class DonationState{
       this.endDate = '',
       this.startDateString = '',
       this.endDateString = '',
+      this.isLoading = false,
+      this.showAmountRaised = false,
+      this.showNumberOfDonors = false,
 
 
   }):     title = title ?? TextEditingController(),
@@ -53,8 +60,11 @@ class DonationState{
       String? endDate,
       String? startDateString,
       String? endDateString,
+      bool? isLoading,
+      bool? showAmountRaised,
+      bool? showNumberOfDonors,
 
-  }){
+    }){
     return DonationState(
       title: title ?? this.title,
       description: description ?? this.description,
@@ -66,8 +76,11 @@ class DonationState{
       image: image ?? this.image,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
-        startDateString: startDateString ?? this.startDateString,
-        endDateString: endDateString ?? this.endDateString
+      startDateString: startDateString ?? this.startDateString,
+      endDateString: endDateString ?? this.endDateString,
+      isLoading: isLoading ?? this.isLoading,
+      showAmountRaised: showAmountRaised ?? this.showAmountRaised,
+      showNumberOfDonors: showNumberOfDonors ?? this.showNumberOfDonors
     );
   }
 }
