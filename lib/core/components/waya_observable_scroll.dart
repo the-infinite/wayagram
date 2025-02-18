@@ -63,7 +63,7 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
           final current = _scrollController.offset;
 
           //? Stop if this is at the end.
-          if (widget.isAtEnd) return;
+          if (widget.isAtEnd || !widget.shouldFetch) return;
 
           //? If we should scroll.
           if (current >= target) {
@@ -72,31 +72,10 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
           }
         },
       );
-
-      //? When fetching this is fine.
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) async {
-          await _getPage();
-        },
-      );
     }
 
     // Initialize state.
     super.initState();
-  }
-
-  @override
-  void reassemble() {
-    if (widget.shouldFetch) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) async {
-          await _getPage();
-        },
-      );
-    }
-
-    //? When fetching this is fine.
-    super.reassemble();
   }
 
   Future<void> _getPage() async {

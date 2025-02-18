@@ -1,19 +1,12 @@
 name: release
 
 on:
-  pull_request:
-    tags:
-      - "v[0-9].[0-9]+.[0-9]+" # e.g. v1.0.0
-
-env:
-  SHOREBIRD_TOKEN: eyJyZWZyZXNoX3Rva2VuIjoiMS8vMDNlQmJ5c2RjOHlKUkNnWUlBUkFBR0FNU053Ri1MOUlyX2ZYMlJLOWlsWERHZW15NEdUMHN2VVRlclBlTHY2dEdRTnNMS0x4WEphemFQMHJXSHUtdm4xYi1pZUxZNFZ1a1hJSSIsImF1dGhfcHJvdmlkZXIiOiJnb29nbGUifQ==
+  workflow_dispatch:
 
 jobs:
   release-android:
     runs-on: ubuntu-latest
-
     name: 🤖 Release Android
-
     steps:
       - name: 📚 Git Checkout
         uses: actions/checkout@v4
@@ -25,64 +18,74 @@ jobs:
           distribution: "temurin"
           cache: gradle
 
-      - name: 🐦 Setup Shorebird
-        uses: shorebirdtech/setup-shorebird@v1
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          cache: true
+          flutter-version: "3.27.2"
+          channel: "stable"
 
-      - name: 🚀 Shorebird Release
-        uses: shorebirdtech/shorebird-release@v0
-        env:
-          KEYSTORE_FILE: keystore/upload-keystore.jks
-          KEYSTORE_PASSWORD: masterkeys
-          KEYSTORE_ALIAS: upload
-        with:
-          platform: android
-          args: "--verbose --artifact=apk"
+      - name: 📦 Install Dependencies
+        run: flutter pub get
 
-      - name: 📦 Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: wayagram-${{ github.ref_name }}.apk
-          path: build/app/outputs/apk/release/app-release.apk
+      - name: ⚙️ Build generated files
+        run: dart run build_runner build --delete-conflicting-outputs
 
-      - name: 📦 Upload App Bundle
-        uses: actions/upload-artifact@v4
+      - name: ⏳ Build android bundle
+        run: flutter build appbundle --release
+
+      - name: 🚀 Upload Artifacts
+        uses: actions/upload-artifact@v4.6.0
         with:
-          name: wayagram-${{ github.ref_name }}.aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          name: Android Releases
+          path: |
+            build/app/outputs/bundle/release/app-release.aab
+
+      - name: 🔎 Extract version
+        id: extract_version
+        run: |
+          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+          echo "VERSION=$version" >> $GITHUB_ENV
+
+      - name: 🔎 Confirm if version tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: 🔎 Modify tag if it exists
+        if: env.TAG_EXISTS == 'true'
+        id: modify_tag
+        run: |
+          new_version="${{ env.VERSION }}-build-${{ github.run_number }}-android"
+          echo "VERSION=$new_version" >> $GITHUB_ENV
+
+      - name: 🚀 Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/bundle/release/app-release.aab"
+          tag: v${{ env.VERSION }}
 
   release-ios:
     runs-on: macos-latest
-
     name: 🍎 Release iOS
-
     steps:
       - name: 📚 Git Checkout
         uses: actions/checkout@v4
 
-      - name: 🐦 Setup Shorebird
-        uses: shorebirdtech/setup-shorebird@v1
-        with:
-          cache: true
-
       - name: ✍️ Setup XCode Signing
         env:
-          CERTIFICATE: ${{ secrets.CERTIFICATE }}
-          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
-          PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          CERTIFICATE_PASSWORD: "root"
+          KEYCHAIN_PASSWORD: "@Nigria123@"
         # https://docs.github.com/en/actions/deployment/deploying-xcode-applications/installing-an-apple-certificate-on-macos-runners-for-xcode-development
         # Also adds a uuid to the mobile provision so XCode can find it.
         run: |
           # create variables
-          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          CERTIFICATE_PATH=ios_keys/cert/dist.p12
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
-          PP_PATH=$RUNNER_TEMP/temp.mobileprovision
-
-          # import certificate and provisioning profile from secrets
-          echo -n "$CERTIFICATE" | base64 --decode -o $CERTIFICATE_PATH
-          echo -n "$PROVISIONING_PROFILE" | base64 --decode -o $PP_PATH
+          PP_PATH=ios_keys/profile/dist.mobileprovision
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
@@ -101,21 +104,62 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
 
-      - name: 🚀 Shorebird Release
-        uses: shorebirdtech/shorebird-release@v0
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          platform: ios
-          args: "--export-options-plist ios/GHAExportOptions.plist --verbose"
+          flutter-version: "3.27.2"
+          channel: "stable"
+
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      - name: ⚙️ Build generated files
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: ⏳ Build iOS app
+        run: flutter build ios --release
+
+      - name: ⏳ Compress Archives and IPAs
+        run: |
+          cd build
+          tar -czf ios_build.tar.gz ios
+
+      - name: 🚀 Upload Artifacts
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: iOS Releases
+          path: |
+            build/ios_build.tar.gz
+
+      - name: 🔎 Extract version
+        id: extract_version
+        run: |
+          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+          echo "VERSION=$version" >> $GITHUB_ENV
+
+      - name: 🔎 Confirm if version tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: 🔎 Modify tag if it exists
+        if: env.TAG_EXISTS == 'true'
+        id: modify_tag
+        run: |
+          new_version="${{ env.VERSION }}-build-${{ github.run_number }}-ios"
+          echo "VERSION=$new_version" >> $GITHUB_ENV
+
+      - name: 🚀 Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/ios_build.tar.gz"
+          tag: v${{ env.VERSION }}
 
       - name: 🧹 Clean Up
         if: ${{ always() }}
         run: |
-          PP_PATH=$RUNNER_TEMP/temp.mobileprovision
           security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
-          rm $RUNNER_TEMP/temp.mobileprovision
-
-      - name: 📦 Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: wayagram-${{ github.ref_name }}.ipa
-          path: build/ios/ipa/wayagram.ipa

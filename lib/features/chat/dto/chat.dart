@@ -94,7 +94,7 @@ class SendMessageDto {
       final result = await WayaFileRepository.instance.uploadFile(entity, name);
 
       //? If this did not fail...
-      if (result == null) continue;
+      if (result == null) throw "Failed to upload an image";
 
       //? Since this worked fine...
       files.add(result);

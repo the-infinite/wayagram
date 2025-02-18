@@ -51,7 +51,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       print('GROUP IDIDIDID===>> ${widget.groupId}');
-      ref.read(createGroupProvider.notifier).getGroupPosts(widget.groupId);
+      ref.read(createGroupProvider.notifier).getGroupSinglePosts(widget.groupId);
     });
   }
 
