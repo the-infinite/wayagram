@@ -299,7 +299,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.primary ),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
                 ],),
               )

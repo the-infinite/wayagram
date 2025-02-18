@@ -5,12 +5,11 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/event/widgets/event_date_widget.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
-
-
 
 class CreateNewDonation extends ConsumerStatefulWidget {
   final Function gotoNextTab;
@@ -26,8 +25,8 @@ class CreateNewDonation extends ConsumerStatefulWidget {
 class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
   final _formKey = GlobalKey<FormState>();
 
-  bool delivery = false;
-  bool pickup = false;
+  bool public = false;
+  bool private = false;
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +223,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       WayaTextFormField(
-                        keyboardType: TextInputType.streetAddress,
+                        keyboardType: TextInputType.number,
                         controller: viewModel.amount,
                         hintText: 'e.g., 500,000',
                         suffixIcon: Padding(
@@ -260,15 +259,17 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Switch(
-                      value: true,
-                        //value: viewModel.skipAddress,
-                        onChanged: (value) => ref.read(createRequestProvider.notifier).updateSkipAddress(value)),
+                        value: viewModel.showAmountRaised,
+                        onChanged: (value) => ref.read(donationVmProvider.notifier).updateAmountRaised(value)),
                     const Gap(10),
 
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: Text("Show Amount Raised",
-                          style: wayaTheme.textTheme.titleMedium),
+                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).colorScheme.black),),
                     ),
                   ],
                 ),
@@ -304,7 +305,34 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                   ),
                 ),
 
-                const Gap(10),
+                const Gap(20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Switch(
+                        value: viewModel.showNumberOfDonors,
+                        onChanged: (value) => ref.read(donationVmProvider.notifier).updateNumberOfDonors(value)
+                    ),
+                    const Gap(10),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Show Number of Donors",
+                            style:  Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).colorScheme.black),),
+                        const Gap(6),
+                        Text(
+                          "Allow donors to view the total number of\ncontributors.",
+                          style: wayaTheme.textTheme.hintStyle,
+                        )
+                      ],
+                    )
+                  ],
+                ),
                 const Gap(10),
                 FormField<String>(validator: (value) {
                   if (viewModel.details.text.isEmpty) {
@@ -341,6 +369,52 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     ],
                   );
                 }),
+                const Gap(20),
+                Text('Privacy Options',
+                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.black),),
+                const Gap(10),
+                Row(children: [
+                  InkWell(
+                    splashFactory: NoSplash.splashFactory,
+                    splashColor: Colors.transparent,
+                    onTap: (){
+                      setState(() {
+                        public = true;
+                        private = false;
+                        //
+                      });
+                    },
+                    child: public ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
+                  ),
+                  const Gap(6),
+                  Text("Public",
+                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).colorScheme.black),),
+
+                  const Gap(80),
+                  InkWell(
+                    splashFactory: NoSplash.splashFactory,
+                    splashColor: Colors.transparent,
+                    onTap: (){
+                      setState(() {
+                        public = false;
+                        private = true;
+                      });
+                    },
+                    child: private ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
+                  ),
+                  const Gap(6),
+                  Text("Private",
+                      style:  Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).colorScheme.black),),
+                ],),
                 const Gap(20),
                 WayaButton(
                     callback:  () async {
