@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -11,7 +10,7 @@ import 'package:wayagram/features/post/model/get_all_post.dart';
 
 import '../data/model/join_request_model.dart';
 
-class GroupState{
+class GroupState {
   final TextEditingController groupName;
   final TextEditingController groupDescription;
   final TextEditingController username;
@@ -26,8 +25,10 @@ class GroupState{
   List<FetchAllEventDocs>? fetchAllEventDocs;
   List<AllGroupMemberDocs>? allGroupMemberDocs;
   List<JoinedGroupDocs>? joinedGroup;
+  List<GetAllGroupDocs>? myGroups;
   List<RecommendedGroupDocs>? recommendedGroupDocs;
   List<GetAllPostDocs>? getAllPost;
+  
 
   final bool isFocused;
   final bool isLoading;
@@ -40,7 +41,6 @@ class GroupState{
     TextEditingController? groupDescription,
     TextEditingController? username,
     TextEditingController? content,
-
     this.isFocused = false,
     this.isLoading = false,
     this.openToEveryone = false,
@@ -57,8 +57,9 @@ class GroupState{
     this.joinedGroup = const [],
     this.recommendedGroupDocs = const [],
     this.getAllPost = const [],
+    this.myGroups = const [],
     this.image,
-  }):   groupName = groupName ?? TextEditingController(),
+  })  : groupName = groupName ?? TextEditingController(),
         groupDescription = groupDescription ?? TextEditingController(),
         username = username ?? TextEditingController(),
         content = content ?? TextEditingController();
@@ -70,12 +71,12 @@ class GroupState{
     TextEditingController? content,
     List<JoinRequestDocs>? docs,
     List<GetAllGroupDocs>? getAllGroups,
+    List<GetAllGroupDocs>? myGroups,
     List<FetchAllEventDocs>? fetchAllEventDocs,
     List<AllGroupMemberDocs>? allGroupMemberDocs,
     List<JoinedGroupDocs>? joinedGroup,
     List<RecommendedGroupDocs>? recommendedGroupDocs,
     List<GetAllPostDocs>? getAllPost,
-
     bool? isFocused,
     bool? isLoading,
     bool? openToEveryone,
@@ -85,9 +86,8 @@ class GroupState{
     String? coverImage,
     String? name,
     String? desc,
-
     File? image,
-  }){
+  }) {
     return GroupState(
       groupName: groupName ?? this.groupName,
       groupDescription: groupDescription ?? this.groupDescription,
@@ -99,6 +99,7 @@ class GroupState{
       fetchAllEventDocs: fetchAllEventDocs ?? this.fetchAllEventDocs,
       allGroupMemberDocs: allGroupMemberDocs ?? this.allGroupMemberDocs,
       recommendedGroupDocs: recommendedGroupDocs ?? this.recommendedGroupDocs,
+      myGroups: myGroups ?? this.myGroups,
       joinedGroup: joinedGroup ?? this.joinedGroup,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
@@ -110,7 +111,6 @@ class GroupState{
       coverImage: coverImage ?? coverImage,
       name: name ?? this.name,
       desc: desc ?? this.desc,
-
     );
   }
 }

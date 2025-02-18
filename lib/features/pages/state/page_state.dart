@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -12,7 +11,7 @@ import 'package:wayagram/shared/model/media_upload_model.dart';
 import '../../post/model/share_model.dart';
 import '../data/model/pages_users_follow_model.dart';
 
-class PageState{
+class PageState {
   final TextEditingController pageName;
   final TextEditingController pageDescription;
   final TextEditingController content;
@@ -21,6 +20,8 @@ class PageState{
   final List<GetAllPostDocs>? getAllPost;
   final List<Comments>? comments;
   List<PagesUsersFollowDocs>? pagesUsersFollow;
+  List<PagesUsersFollowDocs>? myPages;
+  List<PagesUsersFollowDocs>? recommendedPages;
   List<AllPageModelDocs>? allPageModelDocs;
   List<GetPageMemberDocs>? getPageMemberDocs;
   final MediaUploadData? data;
@@ -34,7 +35,6 @@ class PageState{
     TextEditingController? pageName,
     TextEditingController? pageDescription,
     TextEditingController? content,
-
     this.isFocused = false,
     this.isLoading = false,
     this.images = const [],
@@ -45,11 +45,13 @@ class PageState{
     this.pagesUsersFollow = const [],
     this.allPageModelDocs = const [],
     this.getPageMemberDocs = const [],
+    this.myPages = const [],
+    this.recommendedPages = const [],
     this.data,
     this.shareModelData,
-}):  pageName = pageName ?? TextEditingController(),
-     pageDescription = pageDescription ?? TextEditingController(),
-     content = content ?? TextEditingController();
+  })  : pageName = pageName ?? TextEditingController(),
+        pageDescription = pageDescription ?? TextEditingController(),
+        content = content ?? TextEditingController();
 
   PageState copyWith({
     TextEditingController? pageName,
@@ -59,22 +61,25 @@ class PageState{
     List<Docs>? fetchAllPostData,
     List<GetAllPostDocs>? getAllPost,
     List<PagesUsersFollowDocs>? pagesUsersFollow,
+    List<PagesUsersFollowDocs>? myPages,
+    List<PagesUsersFollowDocs>? recommendedPages,
     List<AllPageModelDocs>? allPageModelDocs,
     List<GetPageMemberDocs>? getPageMemberDocs,
     List<Comments>? comments,
     List<dynamic>? docs,
     MediaUploadData? data,
     ShareModelData? shareModelData,
-
     bool? isFocused,
     bool? isLoading,
-}){
+  }) {
     return PageState(
       pageName: pageName ?? this.pageName,
+      myPages: myPages ?? this.myPages,
       pageDescription: pageDescription ?? this.pageDescription,
       content: content ?? this.content,
       images: images ?? this.images,
       data: data ?? this.data,
+      recommendedPages: recommendedPages ?? this.recommendedPages,
       shareModelData: shareModelData ?? this.shareModelData,
       fetchAllPostData: fetchAllPostData ?? this.fetchAllPostData,
       getAllPost: getAllPost ?? this.getAllPost,
@@ -83,11 +88,10 @@ class PageState{
       docs: docs ?? this.docs,
       pagesUsersFollow: pagesUsersFollow ?? this.pagesUsersFollow,
       getPageMemberDocs: getPageMemberDocs ?? this.getPageMemberDocs,
-
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
     );
-}
+  }
 }
 
 class PostImage {
@@ -95,8 +99,7 @@ class PostImage {
 
   PostImage({this.image});
 
-  PostImage copyWith(
-      {File? image}) {
+  PostImage copyWith({File? image}) {
     return PostImage(image: image ?? this.image);
   }
 }
