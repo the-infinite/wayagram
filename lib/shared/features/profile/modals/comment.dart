@@ -15,7 +15,7 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/features/post/vm/comment.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
-import 'package:wayagram/shared/features/posts/logic/default.dart';
+import 'package:wayagram/shared/features/profile/logic/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class PostCommentModal extends ConsumerStatefulWidget {

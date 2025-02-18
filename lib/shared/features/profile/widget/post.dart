@@ -17,9 +17,9 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
-import 'package:wayagram/shared/features/posts/logic/default.dart';
-import 'package:wayagram/shared/features/posts/modals/comment.dart';
-import 'package:wayagram/shared/features/posts/widget/action_type.dart';
+import 'package:wayagram/shared/features/profile/logic/default.dart';
+import 'package:wayagram/shared/features/profile/modals/comment.dart';
+import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class WayaPostWidget extends StatefulWidget {
