@@ -47,6 +47,7 @@ class ContestState {
   final String contestFreePaid;
   final String profileId;
   final String categorys;
+  final String categoryId;
   final String image;
   final String state;
   final String type;
@@ -90,6 +91,7 @@ class ContestState {
     TextEditingController? requirementText,
     this.profileId = '',
     this.categorys = '',
+    this.categoryId = '',
     this.formRequirements = const [],
     this.stages = const [],
     this.category = const [],
@@ -168,6 +170,7 @@ class ContestState {
     List<Map<String, dynamic>>? formRequirements,
     List<Select>? category,
     String? categorys,
+    String? categoryId,
     String? image,
     String? profileId,
     String? type,
@@ -227,6 +230,7 @@ class ContestState {
           participationStartDate ?? this.participationStartDate,
       profileId: profileId ?? this.profileId,
       categorys: categorys ?? this.categorys,
+      categoryId: categoryId ?? this.categoryId,
       image: image ?? this.image,
       stagePrefModels: stagePrefModels ?? stagePrefModels,
       stagePrefModel: stagePrefModel ?? this.stagePrefModel,

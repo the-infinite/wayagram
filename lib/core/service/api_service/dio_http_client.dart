@@ -41,14 +41,14 @@ class DioHttpClient implements WayaHttpClientInterface {
     final dio = Dio(options);
     //  dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
     //for proper logging of dio request and response
-    dio.interceptors.add(PrettyDioLogger(
+    /* dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
         responseBody: true,
         responseHeader: false,
         error: true,
         compact: true,
-        maxWidth: 90));
+        maxWidth: 90)); */
     return dio;
   }
 

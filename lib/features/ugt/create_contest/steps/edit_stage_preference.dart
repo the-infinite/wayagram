@@ -37,8 +37,9 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
 
   @override
   Widget build(BuildContext context) {
-    StagePrefModel model =
-        ref.read(stateContactProvider.notifier).state[_contestController.selectedIndex];/* state.firstWhere((value) {
+    StagePrefModel model = ref.read(stateContactProvider.notifier).state[
+        _contestController
+            .selectedIndex]; /* state.firstWhere((value) {
         print("${value.toJson()}");
       return _contestController.selectedIndex == value.id;
     }); */
@@ -52,9 +53,11 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
       _contestController.entryAmountController.text = model.entryAmount ?? "";
       _contestController.contestNumberPostsPerWeekTextController.text =
           model.numPostPerWeek ?? "";
+      _contestController.contestPrizeWinnerTextController.text =
+          model.priceWinner ?? "";
       return null;
     }, []);
-    final priceWinner = useState(model.priceWinner ?? "");
+    //  final priceWinner = useState(model.priceWinner ?? "");
 
     // final viewModel1 = ref.watch(personalFirstStepProvider);
     final viewModel = ref.watch(contestNotifierProvider);
@@ -330,6 +333,45 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                 }),
                 const Gap(15),
                 FormField<String>(validator: (value) {
+                  if (_contestController
+                      .contestStageNameTextController.text.isEmpty) {
+                    return 'Winner Price is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
+                        controller:
+                            _contestController.contestPrizeWinnerTextController,
+                        hintText: "Enter Winners price",
+                        label: "Prize for the Winner? ",
+                        borderColor: formState.hasError &&
+                                _contestController
+                                    .contestPrizeWinnerTextController
+                                    .text
+                                    .isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
+                      ),
+                      if (formState.hasError &&
+                          _contestController
+                              .contestPrizeWinnerTextController.text.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                /*  FormField<String>(validator: (value) {
                   if (priceWinner.value.isEmpty) {
                     return 'Prize for the Winner is required';
                   }
@@ -365,6 +407,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                     ],
                   );
                 }),
+               */
                 const Gap(15),
               ],
             ),
@@ -412,7 +455,8 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                       stageName: _contestController
                           .contestStageNameTextController.text,
                       startDate: startDate.value,
-                      priceWinner: priceWinner.value,
+                      priceWinner: _contestController
+                          .contestPrizeWinnerTextController.text,
                       entryType: entryType.value,
                       reviewApprovePost: isSwitched.value,
                       entryAmount:

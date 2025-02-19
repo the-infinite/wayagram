@@ -2,13 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
+import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/components/waya_scaffold.dart';
 import '../../../core/components/waya_select_field.dart';
@@ -17,20 +22,21 @@ import '../../../core/theme/waya_textstyles.dart';
 import '../../../core/utils/waya_utils.dart';
 import '../../auth/account_creation/vm/personal_first_step_vm.dart';
 
-class RegisterContest extends ConsumerStatefulWidget {
+class RegisterContest extends StatefulHookConsumerWidget {
   static const route = '/register-contest1';
   const RegisterContest({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _RegisterContestState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _RegisterContestState();
 }
+
 bool isSwitched = false;
 
 class _RegisterContestState extends ConsumerState<RegisterContest> {
-
   // String term ="terms";
-   Color redColor = Colors.yellowAccent;
-    String resetColor = '\x1B[0m';
+  Color redColor = Colors.yellowAccent;
+  String resetColor = '\x1B[0m';
 
   XFile? _selectedImage;
 
@@ -45,8 +51,11 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
   @override
   Widget build(BuildContext context) {
     String term = "${redColor}terms";
-    final viewModel = ref.watch(personalFirstStepProvider);
+    final viewModel = ref.watch(registerFormProvider);
+    final notifier = ref.read(registerFormProvider.notifier);
     final wayaTheme = Theme.of(context);
+    final selectedUniversity = useState("");
+    final selectedState = useState("");
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -62,30 +71,28 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
               "Sign up now to be part of the biggest university talent\n competition and make your mark!",
               style: wayaTheme.textTheme.hintStyle),
           const Gap(20),
-          Text(
-              "Personal Information",
-              style: wayaTheme.textTheme.hintStyle),
+          Text("Personal Information", style: wayaTheme.textTheme.hintStyle),
           const Gap(20),
           WayaTextFormField(
-            controller: TextEditingController(),
+            controller: notifier.fullName,
             hintText: "Enter Full Name",
             label: "Full Name",
           ),
           const Gap(15),
           WayaTextFormField(
-            controller: TextEditingController(),
+            controller: notifier.emailAddress,
             hintText: "example@mail.com",
             label: "Email Address",
           ),
           const Gap(15),
           WayaTextFormField(
-            controller: TextEditingController(),
+            controller: notifier.address,
             hintText: "Enter Address here",
             label: "Address",
           ),
           const Gap(15),
           FormField<String>(validator: (value) {
-            if (viewModel.phoneNumber.text.isEmpty) {
+            if (notifier.phoneNumber.text.isEmpty) {
               return 'Phone is required';
             }
 
@@ -96,13 +103,10 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
               children: [
                 Text(
                   "Phone Number",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.wayaCopyWith(
-                    fontSize: 14,
-                    color: wayaTheme.colorScheme.greyColor900,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+                        fontSize: 14,
+                        color: wayaTheme.colorScheme.greyColor900,
+                      ),
                 ),
                 const Gap(3),
                 Row(
@@ -116,8 +120,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                           border: Border.all(
                               color: wayaTheme.colorScheme.greyColor300,
                               width: 1),
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(6.0))),
+                          borderRadius: BorderRadius.all(Radius.circular(6.0))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,41 +142,45 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     Expanded(
                       child: WayaTextFormField(
                         keyboardType: TextInputType.phone,
-                        controller: viewModel.phoneNumber,
+                        controller: notifier.phoneNumber,
                         hintText: '000-000-000',
                         borderColor: formState.hasError &&
-                            viewModel.phoneNumber.text.isEmpty
+                                notifier.phoneNumber.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                       ),
                     )
                   ],
                 ),
-                if (formState.hasError &&
-                    viewModel.phoneNumber.text.isEmpty)
+                if (formState.hasError && notifier.phoneNumber.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error,
-                          fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
                   ),
               ],
             );
           }),
           const Gap(20),
-          Text(
-              "University Information",
-              style: wayaTheme.textTheme.hintStyle),
+          Text("University Information", style: wayaTheme.textTheme.hintStyle),
           const Gap(20),
           WayaSelectField(
             height: 0.3,
             label: "Which University do you represent?",
             hintText: 'Select University',
-            items: [],
-            onSelected: (value) {},
+            items: [
+              Select(label: "Unilag", value: "1"),
+              Select(label: "Ahmadu Bello University", value: "1"),
+              Select(label: "UniBen", value: "1"),
+              Select(label: "FUTA", value: "1"),
+            ],
+            onSelected: (value) {
+              selectedUniversity.value = value.label;
+              notifier.university = value.label;
+            },
             uniqueKey: 'contest-state',
           ),
           const Gap(15),
@@ -181,8 +188,11 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             height: 0.3,
             label: "State",
             hintText: 'Select state ',
-            items: [],
-            onSelected: (value) {},
+            items: ref.read(contestNotifierProvider.notifier).ugtStates(),
+            onSelected: (value) {
+              selectedState.value = value.label;
+              notifier.selectedState = value.label;
+            },
             uniqueKey: 'contest-state',
           ),
           Gap(15),
@@ -191,8 +201,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                    "Upload School ID or Acceptance Letter.",
+                Text("Upload School ID or Acceptance Letter.",
                     style: wayaTheme.textTheme.bodyMedium),
                 SizedBox(height: 16),
                 Row(
@@ -205,45 +214,34 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                         ],
                       ),
                     ),
-
                     SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              "upload your valid school ID.",
+                          Text("upload your valid school ID.",
                               style: wayaTheme.textTheme.bodyMedium),
                           SizedBox(height: 4),
                           _selectedImage == null
                               ? Column(
-                            children: [
-                              Text(
-                                  "JPG, MP4 format . Max. 25MB",
-                                  style: wayaTheme.textTheme.hintStyle),
-                            ],
-                          )
+                                  children: [
+                                    Text("JPG, MP4 format . Max. 25MB",
+                                        style: wayaTheme.textTheme.hintStyle),
+                                  ],
+                                )
                               : Image.file(
-                            File(_selectedImage!.path),
-                            height: 100,
-                          ),
-
+                                  File(_selectedImage!.path),
+                                  height: 100,
+                                ),
                         ],
                       ),
                     ),
-
                     Column(
                       children: [
                         WayaButton(
-                          horizontalPadding: 15,
+                            horizontalPadding: 15,
                             text: "Upload",
-                            callback: ()=> {
-                              if (_selectedImage != null) {
-
-                              }
-                            }
-
-                        ),
+                            callback: () => {if (_selectedImage != null) {}}),
                       ],
                     ),
                   ],
@@ -252,9 +250,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             ),
           ),
           const Gap(20),
-          Text(
-              "Talent Description",
-              style: wayaTheme.textTheme.hintStyle),
+          Text("Talent Description", style: wayaTheme.textTheme.hintStyle),
           const Gap(20),
           WayaSelectField(
             height: 0.3,
@@ -267,7 +263,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
           const Gap(15),
           WayaTextFormField(
             controller: TextEditingController(),
-            hintText: "Tell us about your talent in a few words. What makes you stand out?",
+            hintText:
+                "Tell us about your talent in a few words. What makes you stand out?",
             label: "Description of Talent",
             line: 6,
           ),
@@ -277,8 +274,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                    "Show Us Your Talent",
+                Text("Show Us Your Talent",
                     style: wayaTheme.textTheme.bodyMedium),
                 SizedBox(height: 16),
                 Row(
@@ -291,45 +287,34 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                         ],
                       ),
                     ),
-
                     SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              "Upload images / Videos of your Talent.",
+                          Text("Upload images / Videos of your Talent.",
                               style: wayaTheme.textTheme.bodyMedium),
                           SizedBox(height: 4),
                           _selectedImage == null
                               ? Column(
-                            children: [
-                              Text(
-                                  "JPG, MP4 format . Max. 25MB",
-                                  style: wayaTheme.textTheme.hintStyle),
-                            ],
-                          )
+                                  children: [
+                                    Text("JPG, MP4 format . Max. 25MB",
+                                        style: wayaTheme.textTheme.hintStyle),
+                                  ],
+                                )
                               : Image.file(
-                            File(_selectedImage!.path),
-                            height: 100,
-                          ),
-
+                                  File(_selectedImage!.path),
+                                  height: 100,
+                                ),
                         ],
                       ),
                     ),
-
                     Column(
                       children: [
                         WayaButton(
                             horizontalPadding: 15,
                             text: "Upload",
-                            callback: ()=> {
-                              if (_selectedImage != null) {
-
-                              }
-                            }
-
-                        ),
+                            callback: () => {if (_selectedImage != null) {}}),
                       ],
                     ),
                   ],
@@ -338,9 +323,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             ),
           ),
           const Gap(20),
-          Text(
-              "Other Information",
-              style: wayaTheme.textTheme.hintStyle),
+          Text("Other Information", style: wayaTheme.textTheme.hintStyle),
           const Gap(20),
           WayaTextFormField(
             controller: TextEditingController(),
@@ -353,9 +336,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                    "Passport",
-                    style: wayaTheme.textTheme.bodyMedium),
+                Text("Passport", style: wayaTheme.textTheme.bodyMedium),
                 SizedBox(height: 16),
                 Row(
                   children: [
@@ -367,45 +348,34 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                         ],
                       ),
                     ),
-
                     SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              "Upload image of your Passport.",
+                          Text("Upload image of your Passport.",
                               style: wayaTheme.textTheme.bodyMedium),
                           SizedBox(height: 4),
                           _selectedImage == null
                               ? Column(
-                            children: [
-                              Text(
-                                  "JPG, MP4 format . Max. 25MB",
-                                  style: wayaTheme.textTheme.hintStyle),
-                            ],
-                          )
+                                  children: [
+                                    Text("JPG, MP4 format . Max. 25MB",
+                                        style: wayaTheme.textTheme.hintStyle),
+                                  ],
+                                )
                               : Image.file(
-                            File(_selectedImage!.path),
-                            height: 100,
-                          ),
-
+                                  File(_selectedImage!.path),
+                                  height: 100,
+                                ),
                         ],
                       ),
                     ),
-
                     Column(
                       children: [
                         WayaButton(
                             horizontalPadding: 15,
                             text: "Upload",
-                            callback: ()=> {
-                              if (_selectedImage != null) {
-
-                              }
-                            }
-
-                        ),
+                            callback: () => {if (_selectedImage != null) {}}),
                       ],
                     ),
                   ],
@@ -425,8 +395,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     });
                   },
                   activeColor: Colors.white,
-                  activeTrackColor: wayaTheme.colorScheme.customPrimary
-              ),
+                  activeTrackColor: wayaTheme.colorScheme.customPrimary),
               const SizedBox(width: 10),
               Text(
                 "By checking this box, you agree to our term and\n conditions",
@@ -452,15 +421,13 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
               text: 'Go Back',
               color: wayaTheme.colorScheme.greyColor300,
               textColor: wayaTheme.colorScheme.customBlack,
-              border:
-              Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+              border: Border.all(
+                  width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
                 Navigator.pop(context);
               })
         ],
       ),
     );
-
-
   }
 }

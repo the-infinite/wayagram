@@ -59,6 +59,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(contestNotifierProvider);
     // final viewModel2 = ref.watch(upgradeToBusinessVmProvider);
+    final notifier = ref.read(contestNotifierProvider.notifier);
     final wayaTheme = Theme.of(context);
     return Form(
       key: _formKey,
@@ -74,7 +75,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               style: wayaTheme.textTheme.hintStyle),
           const Gap(30),
           FormField<String>(validator: (value) {
-            if (viewModel.title.text.isEmpty) {
+            if (notifier.title.text.isEmpty) {
               return 'Contest title is required';
             }
 
@@ -86,15 +87,15 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 WayaTextFormField(
                   helperText:
                       "This name will be displayed as the official contest title. You can update it if needed",
-                  controller: viewModel.title,
+                  controller: notifier.title,
                   hintText: "Enter Contest Title",
                   label: "Contest Title",
                   borderColor:
-                      formState.hasError && viewModel.amountPerVote.text.isEmpty
+                      formState.hasError && notifier.title.text.isEmpty
                           ? wayaTheme.colorScheme.error
                           : null,
                 ),
-                if (formState.hasError && viewModel.title.text.isEmpty)
+                if (formState.hasError &&notifier.title.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
@@ -123,9 +124,10 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   label: "Contest Category",
                   hintText: 'Select Contest Category',
                   items: ref
-                      .read(contestNotifierProvider.notifier)
-                      .ugtCategoryStat(),
+                        .read(contestNotifierProvider.notifier)
+                        .ugtCategory(),
                   onSelected: (value) {
+                    print('eee ${value.toJson()}');
                     ref
                         .read(contestNotifierProvider.notifier)
                         .update(value, "contestCat");
@@ -183,7 +185,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           }),
           const Gap(15),
           FormField<String>(validator: (value) {
-            if (viewModel.description.text.isEmpty) {
+            if (notifier.description.text.isEmpty) {
               return '"Contest Description is required';
             }
 
@@ -193,16 +195,16 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaTextFormField(
-                  controller: viewModel.description,
+                  controller: notifier.description,
                   hintText: "Enter Contest Description",
                   label: "Contest Description",
                   line: 6,
                   borderColor:
-                      formState.hasError && viewModel.description.text.isEmpty
+                      formState.hasError &&  notifier.description.text.isEmpty
                           ? wayaTheme.colorScheme.error
                           : null,
                 ),
-                if (formState.hasError && viewModel.description.text.isEmpty)
+                if (formState.hasError &&  notifier.description.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
@@ -216,7 +218,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           }),
           const Gap(15),
           FormField<String>(validator: (value) {
-            if (viewModel.voteCountToQualify.text.isEmpty) {
+            if (notifier.voteCountToQualify.text.isEmpty) {
               return 'Vote Counts to Qualify is required';
             }
 
@@ -227,16 +229,16 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               children: [
                 WayaTextFormField(
                   keyboardType: TextInputType.number,
-                  controller: viewModel.voteCountToQualify,
+                  controller:  notifier.description,
                   hintText: "Enter Vote Counts to Qualify",
                   label: "Vote Counts to Qualify",
                   borderColor: formState.hasError &&
-                          viewModel.voteCountToQualify.text.isEmpty
+                          notifier.voteCountToQualify.text.isEmpty
                       ? wayaTheme.colorScheme.error
                       : null,
                 ),
                 if (formState.hasError &&
-                    viewModel.voteCountToQualify.text.isEmpty)
+                    notifier.voteCountToQualify.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
@@ -250,7 +252,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           }),
           const Gap(15),
           FormField<String>(validator: (value) {
-            if (viewModel.winnerPrize.text.isEmpty) {
+            if (notifier.winnerPrize.text.isEmpty) {
               return 'Winner`s Award is required';
             }
 
@@ -260,15 +262,15 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaTextFormField(
-                  controller: viewModel.winnerPrize,
+                  controller: notifier.winnerPrize,
                   hintText: "Enter Winner's Award",
                   label: "Winner's Award",
                   borderColor:
-                      formState.hasError && viewModel.winnerPrize.text.isEmpty
+                      formState.hasError && notifier.winnerPrize.text.isEmpty
                           ? wayaTheme.colorScheme.error
                           : null,
                 ),
-                if (formState.hasError && viewModel.winnerPrize.text.isEmpty)
+                if (formState.hasError && notifier.winnerPrize.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
@@ -305,6 +307,9 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 onChanged: (String value) {
                   setState(() {
                     selectedValue = value;
+                    ref
+                        .read(contestNotifierProvider.notifier)
+                        .updatePrivatePublic(value);
 
                     // Update selected value
                   });
@@ -330,6 +335,9 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 groupValue: selectedValue,
                 onChanged: (String value) {
                   setState(() {
+                    ref
+                        .read(contestNotifierProvider.notifier)
+                        .updatePrivatePublic(value);
                     selectedValue = value;
                   });
                 },
@@ -390,7 +398,9 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 groupValue: selectedValue2,
                 onChanged: (String value) {
                   viewModel.amountPerVote.text = "0";
-                   
+                  ref
+                      .read(contestNotifierProvider.notifier)
+                      .updateContestFreePaid(value);
                   setState(() {
                     selectedValue2 = value;
                   });
@@ -415,7 +425,9 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 value: "Paid",
                 groupValue: selectedValue2,
                 onChanged: (String value) {
-                  
+                  ref
+                      .read(contestNotifierProvider.notifier)
+                      .updateContestFreePaid(value);
                   setState(() {
                     selectedValue2 = value;
                   });
@@ -425,7 +437,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           ),
           const Gap(15),
           FormField<String>(validator: (value) {
-            if (viewModel.amountPerVote.text.isEmpty) {
+            if (notifier.amountPerVote.text.isEmpty) {
               return 'Amount is required';
             }
 
@@ -436,7 +448,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               children: [
                 WayaTextFormField(
                   keyboardType: TextInputType.number,
-                  controller: viewModel.amountPerVote,
+                  controller: notifier.amountPerVote,
                   hintText: "Enter Amount per Vote",
                   label: "Amount per Vote",
                   inputFormatters: [
@@ -465,11 +477,11 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     }
                   },
                   borderColor:
-                      formState.hasError && viewModel.amountPerVote.text.isEmpty
+                      formState.hasError && notifier.amountPerVote.text.isEmpty
                           ? wayaTheme.colorScheme.error
                           : null,
                 ),
-                if (formState.hasError && viewModel.amountPerVote.text.isEmpty)
+                if (formState.hasError && notifier.amountPerVote.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
@@ -483,7 +495,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           }),
           const Gap(15),
           FormField<String>(validator: (value) {
-            if (viewModel.numberOfWeeks.text.isEmpty) {
+            if (notifier.numberOfWeeks.text.isEmpty) {
               return 'Number of Weeks is required';
             }
 
@@ -494,15 +506,15 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               children: [
                 WayaTextFormField(
                   keyboardType: TextInputType.number,
-                  controller: viewModel.numberOfWeeks,
+                  controller: notifier.numberOfWeeks,
                   hintText: "Enter Number of Weeks",
                   label: "Number of Weeks",
                   borderColor:
-                      formState.hasError && viewModel.numberOfWeeks.text.isEmpty
+                      formState.hasError && notifier.numberOfWeeks.text.isEmpty
                           ? wayaTheme.colorScheme.error
                           : null,
                 ),
-                if (formState.hasError && viewModel.numberOfWeeks.text.isEmpty)
+                if (formState.hasError && notifier.numberOfWeeks.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(

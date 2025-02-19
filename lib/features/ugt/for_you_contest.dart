@@ -7,6 +7,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 
 class ForYouContest extends ConsumerWidget {
@@ -27,6 +28,7 @@ class ForYouContest extends ConsumerWidget {
         const Gap(10),
         WayaButton(
           callback: () {
+            ref.invalidate(contestNotifierProvider);
             //WayaNav.toNamed('/create-profile-contest1');
             WayaNav.toNamed('/create-contest');
           },

@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
+import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
+import 'package:wayagram/features/ugt/data/model/category_response.dart';
 import 'package:wayagram/features/ugt/data/model/contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/create_contest.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
@@ -20,17 +23,43 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   final WayaLocalDataSource _localDataSource;
   final ContestResponse _contestRespons;
   final _logger = getLogger('ContestRepo');
+  late TextEditingController title;
+
+  late TextEditingController winnerPrize;
+  late TextEditingController description;
+  late TextEditingController voteCountToQualify;
+
+  late TextEditingController amountPerVote;
+  late TextEditingController numberOfWeeks;
 
   CreateContestNotifier(
     this._contestRepository,
     this._localDataSource,
     this._contestController,
     this._contestRespons,
-  ) : super(ContestState());
+  ) : super(ContestState()) {
+    title = TextEditingController();
+    winnerPrize = TextEditingController();
+    description = TextEditingController();
+    voteCountToQualify = TextEditingController();
+    amountPerVote = TextEditingController();
+    numberOfWeeks = TextEditingController();
+  }
 
   final ContestController _contestController;
 
   // var contestStages = [];
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    title.dispose();
+    winnerPrize.dispose();
+    description.dispose();
+    voteCountToQualify.dispose();
+    amountPerVote.dispose();
+    numberOfWeeks.dispose();
+    super.dispose();
+  }
 
   var contestStages = [
     {
@@ -58,43 +87,83 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   Future<void> onSubmit(List<NewRequirementModel> newRequirementList,
       List<StagePrefModel> stageList) async {
-    print(' sss ${_localDataSource.getUserId().toString()}');
+    //  print(' sss ${_localDataSource.getUserId().toString()}');
     //final userTypeProvider = ref.watch(localDataSourceProvider);
+    /* 
+      "requirementType": "TEXT",
+        "requirementName": "Full Name",
+        "textDescription": "Participant's full name",
+        "required": true
+     */
+    List<Map<String, dynamic>> mapRequireList = newRequirementList
+        .map(
+          (user) => <String, dynamic>{
+            "requirementType": user.requirementType,
+            "requirementName": user.requirementName,
+            "textDescription": user.requirementOptional,
+            "required": user.isRequired
+          },
+        )
+        .toList();
+    List<Map<String, dynamic>> mapStageList = stageList
+        .map(
+          (model) => <String, dynamic>{
+            "stageName": model.stageName,
+            "entryType": model.entryType,
+            "entryAmount": model.entryAmount
+                ?.split('.')
+                .first
+                .replaceAll(",", "")
+                .substring(3),
+            "numberOfPostPerWeek": model.numPostPerWeek,
+            "priceOfTheWinner": model.priceWinner,
+            "startDate": model.startDate,
+            "endDate": model.endDate,
+            "approveBeforeLive": model.reviewApprovePost
+          },
+        )
+        .toList();
 
-     final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(state.image),);
+    final profileImageUrl = await WayaFileRepository.instance.uploadFile(
+      File(state.image),
+    );
     try {
       state = state.copyWith(isLoading: true);
       var map = {
-        "title": state.title.text,
+        "title": title.text,
         "profileId": _localDataSource.getUserId().toString(),
-        "category": state.categorys,
+        "category": state.categoryId,
         "state": state.state,
-        "description": state.description.text,
-        "voteCountToQualify": state.voteCountToQualify.text,
-        "winnerPrize": state.winnerPrize.text,
-        "contestPrivatePublic": "unkown",
-        "contestFreePaid": "unkown",
-        "showOverAllResult": state.overallResult,
-        "amountPerVote": state.amountPerVote.text,
-        "numberOfWeeks": state.numberOfWeeks.text,
-        "image": profileImageUrl,
-        //participation details
-        "howItWorks": state.howItWorks.text,
-        "entryType": state.entrySelectType,
-        "amount": state.amount.text,
-        "durationType": state.durationSelectType,
+        "winnerPrize": 500, //state.winnerPrize.text,
+        "description": description.text,
+        "voteCountToQualify": 5, //voteCountToQualify.text,
+        "amount":
+            state.amount.text.split('.').first.replaceAll(",", "").substring(3),
+        "durationType": state.durationSelectType.toUpperCase(),
         "numberOfDuration": state.numberOfDuration.text,
-        "stateDate": state.startDate,
-        "contestDescription": state.descriptionOfAwards.text,
-        //contest timeline & Stages
-        "timeStartDate": state.contestTimelineStartDate,
-        "timeEndDate": state.contestTimelineEndDate,
-        "timeMultipleStage": state.contestTimelineMultipleStage,
-        "timeCurrentStage": state.contestTimelineCurrentStage,
-        //Stage Settings
-        "stages": stageList,
-        //Contest signup requirement
-        "contestRequirement": newRequirementList,
+        "descriptionOfAwards": state.descriptionOfAwards.text,
+        "amountPerVote": state.amountPerVote.text
+            .split('.')
+            .first
+            .replaceAll(",", "")
+            .substring(3),
+        "type": state.contestFreePaid.toUpperCase(),
+        "overallResult": state.overallResult == true ? "Yes" : "No",
+        "multipleStages": state.contestTimelineMultipleStage,
+        "publicity": state.contestPrivatePublic.toUpperCase(),
+        "status": "ACTIVE",
+        "howItWorks": state.howItWorks.text,
+        "numberOfWeeks": state.numberOfWeeks.text,
+        "currentStage": state.contestTimelineCurrentStage,
+        "participationStartDate": "2024-01-01T00:00:00Z", //state.startDate,
+        "startDate": "2024-01-01T00:00:00Z", //state.contestTimelineStartDate,
+        "endDate": "2024-01-01T00:00:00Z", //state.contestTimelineEndDate,
+        "entryType": state.entrySelectType,
+
+        "contestSettings": {
+          "stages": mapStageList,
+          "formRequirements": mapRequireList
+        }
       };
       print(map.toString());
       final response = await _contestRepository.createContest(map);
@@ -217,9 +286,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   }*/
 
   List<Select> ugtCategory() {
-    return categories.asMap().entries.map((entries) {
+    return state.category.asMap().entries.map((entries) {
       return Select(
-          value: entries.value.id.toString(), label: entries.value.category);
+          value: entries.value.value.toString(), label: entries.value.label);
     }).toList();
   }
 
@@ -246,11 +315,12 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   }
 
   void update(Select value, String name) {
-    switch (name) {
-      case "contestCat":
-        state = state.copyWith(categorys: value.label);
-        state = state.copyWith(selectedCategory: value);
-    }
+    print('were ${value.toJson()}');
+    state = state.copyWith(categorys: value.label);
+    state = state.copyWith(categoryId: value.value);
+    state = state.copyWith(
+        selectedCategory: Select(label: value.label, value: value.value));
+    print('were ${state.categoryId}');
   }
 
   List<Select> ugtDurationType() {
@@ -308,19 +378,15 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     try {
       final response = await _contestRepository.getCategory();
       if (response.success) {
-        print('Na Gadus: ${response.data}');
+        ContestCategory2 responseModel =
+            ContestCategory2.fromJson(response.data);
 
-        //ContestResponse responseModel = allCategoryDetailModelFromJson(response.data);
-
-        // print('Nyash Message: ${responseModel.message}');
-        // final List<ContestCategory>? categories = responseModel.data;
-
-        // print('categories ${categories![0].name}');
-        // final List<Select> selectCategories = categories.map((val) {
-        //   return Select(label: val.name, value: val.id);
-        // }).toList();
-
-        //state = state.copyWith(categories: selectCategories);
+        final List<Select> allCategory = responseModel.data.map((val) {
+          print('Error: ${val.id}');
+          return Select(
+              label: val.name ?? "", value: val.id ?? "", image: val.id ?? "");
+        }).toList();
+        state = state.copyWith(category: allCategory);
       }
     } catch (e) {
       print('Error: $e');
@@ -352,8 +418,17 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   void updateContestTimeMultipleStage(String name) {
     state = state.copyWith(contestTimelineMultipleStage: name);
   }
-    void updateOverAllResult(bool name) {
+
+  void updateOverAllResult(bool name) {
     state = state.copyWith(overallResult: name);
+  }
+
+  void updatePrivatePublic(String name) {
+    state = state.copyWith(contestPrivatePublic: name);
+  }
+
+  void updateContestFreePaid(String name) {
+    state = state.copyWith(contestFreePaid: name);
   }
 
   void updateContestTimeCurrentStage(String name) {
