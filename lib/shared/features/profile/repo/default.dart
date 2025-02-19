@@ -1,11 +1,11 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 
-class PostRepository extends BaseRepository {
+class UserProfileRepository extends BaseRepository {
   static const serviceUri = "wayagram-graph/api/v2";
-  static final instance = PostRepository._();
+  static final instance = UserProfileRepository._();
 
-  PostRepository._();
+  UserProfileRepository._();
 
   Future<WayaRequestResponse> getPostsForUser(String userId, int page, int limit) async {
     return httpClient.getHttp(
@@ -15,5 +15,13 @@ class PostRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getEventsForUser(String userId, int page, int limit) async {
     return httpClient.getHttp("$serviceUri/events/get-event?userId=$userId");
+  }
+
+  Future<WayaRequestResponse> getGroupsForUser(String userId, int page, int limit) async {
+    return httpClient.getHttp("$serviceUri/groups?userId=$userId&page=$page&limit=$limit");
+  }
+
+  Future<WayaRequestResponse> getPagesForUser(String userId, int page, int limit) async {
+    return httpClient.getHttp("$serviceUri/pages?userId=$userId&page=$page&limit=$limit");
   }
 }

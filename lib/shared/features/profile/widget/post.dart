@@ -17,9 +17,9 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
-import 'package:wayagram/shared/features/posts/logic/default.dart';
-import 'package:wayagram/shared/features/posts/modals/comment.dart';
-import 'package:wayagram/shared/features/posts/widget/action_type.dart';
+import 'package:wayagram/shared/features/profile/logic/default.dart';
+import 'package:wayagram/shared/features/profile/modals/comment.dart';
+import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class WayaPostWidget extends StatefulWidget {
@@ -66,11 +66,17 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
     //? Do nothing.
     if (result == null) return;
+
+    // Update the state of comments.
+    setState(() {
+      comment += 1;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final screenSize = MediaQuery.sizeOf(context);
 
     //? Listening to the consumer here might have the downside of every post
     //? that is spawned using this listening for state changes by itself. Might
@@ -93,6 +99,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // The user's profile location
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -179,6 +186,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     ],
                   ),
 
+                  // Some space.
                   SizedBox(
                     height: 15.h,
                   ),
@@ -272,7 +280,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                             child: WayaImage(
                               imageUrl: widget.data.media[index],
                               fit: BoxFit.cover,
-                              width: 350, // Adjust width for better display
+                              width: screenSize.width - (widget.padded ? 15 : 0), // Adjust width for better display
                               height: 200, // Matches the container height
                             ),
                           ),
@@ -295,13 +303,22 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     image: WayaAssets.images.pages.like2.path,
                     color: liked == 0 ? wayaTheme.colorScheme.greyColor500 : wayaTheme.colorScheme.primary,
                     onPressed: () {
+                      int value = liked;
+
                       // Increment count.
                       setState(() {
                         liked += 1;
                       });
 
                       //? Perform the action on the post.
-                      pageNotifier.likePost(context, postId: widget.data.id, userId: ConversationState.self.id);
+                      pageNotifier.likePost(context, postId: widget.data.id, userId: ConversationState.self.id).then(
+                        (result) {
+                          if (result) return;
+                          setState(() {
+                            liked = value;
+                          });
+                        },
+                      );
 
                       //? Persist this engagement action.
                       postEngagement(engagementMonitor, widget.data, PostPoints.likedPoint.value);
@@ -319,11 +336,6 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     onPressed: () {
                       showComments(context);
 
-                      // Update the state of comments.
-                      setState(() {
-                        comment += 1;
-                      });
-
                       // comment
                       postEngagement(engagementMonitor, widget.data, PostPoints.commentPoint.value);
 
@@ -338,8 +350,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     image: WayaAssets.images.pages.share2.path,
                     color: shared == 0 ? wayaTheme.colorScheme.greyColor500 : wayaTheme.colorScheme.primary,
                     onPressed: () {
-                      // Share the post.
-                      pageNotifier.sharePost(context, postId: widget.data.id);
+                      // Save the old value here.
+                      final previous = shared;
 
                       // Increment the count.
                       setState(() {
@@ -350,7 +362,22 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                       postEngagement(engagementMonitor, widget.data, PostPoints.sharePoint.value);
 
                       //? Share the post.
-                      Share.share('${widget.data.url}', subject: 'Share Options');
+                      Share.share('${widget.data.url}', subject: 'Share Options').then(
+                        (value) {
+                          if (value.status == ShareResultStatus.success) {
+                            // Share the post.
+                            pageNotifier.sharePost(context, postId: widget.data.id);
+
+                            // Now stop.
+                            return;
+                          }
+
+                          // Only
+                          setState(() {
+                            shared = previous;
+                          });
+                        },
+                      );
 
                       // Notify all.
                       invalidate(serviceNotifier);

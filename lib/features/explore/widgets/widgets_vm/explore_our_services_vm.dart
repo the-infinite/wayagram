@@ -39,7 +39,9 @@ class ExploreOurServicesVm {
       Services(
           icon: WayaAssets.icons.eDonation.path,
           name: 'Donations',
-          onTap: () {}),
+          onTap: () {
+            Navigator.pushNamed(context, BottomView.route, arguments: 2);
+          }),
       Services(
           icon: WayaAssets.icons.ePoll.path,
           name: 'Polls & Votes',

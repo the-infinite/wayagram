@@ -50,7 +50,7 @@ class DonationWidget extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Send Micheal to oxford univeristy",
+                                  "Send Micheal to oxford university",
                                   overflow: TextOverflow.ellipsis,
                                   style: wayaTheme.textTheme.bodyMedium,
                                 ),

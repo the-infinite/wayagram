@@ -9,11 +9,11 @@ class FollowRepository extends BaseRepository {
   FollowRepository._();
 
   Future<WayaRequestResponse> getFollowers(String id, int page, int limit) {
-    return httpClient.getHttp("$serviceUri/follow/followers?userId=$id&page=$page&limit=$limit");
+    return httpClient.getHttp("$serviceUri/follow/followers/$id?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getFollowing(String id, int page, int limit) {
-    return httpClient.getHttp("$serviceUri/follow/following?userId=$id&page=$page&limit=$limit");
+    return httpClient.getHttp("$serviceUri/follow/following/$id?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getFollowStatus(String id) {

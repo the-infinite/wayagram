@@ -6,7 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
-import 'package:wayagram/shared/features/posts/widget/default.dart';
+import 'package:wayagram/shared/features/profile/widget/post.dart';
 
 class SharedPosts extends ConsumerStatefulWidget {
   final bool isExpanded;
@@ -46,10 +46,10 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: state.posts.length,
+            itemCount: state.topPosts.length,
             itemBuilder: (context, index) {
               return WayaPostWidget(
-                data: posts[index],
+                data: state.topPosts[index],
                 index: index,
               );
             },
@@ -91,7 +91,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
               itemCount: category.posts.length,
               itemBuilder: (context, index) {
                 return WayaPostWidget(
-                  data: posts[index],
+                  data: category.posts[index],
                   index: index,
                 );
               },

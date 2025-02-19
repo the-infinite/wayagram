@@ -8,6 +8,7 @@ import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/theme/vm/theme_vm.dart';
 import 'package:wayagram/core/theme/waya_theme.dart';
+import 'package:wayagram/core/utils/task.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'firebase_options.dart';
@@ -18,6 +19,7 @@ void main() async {
   Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PushNotifications.init();
   WayaSnackBar.setUpSnackBarUI();
+  await TaskScheduler.ensureInitialized();
 
   //? Second, remove the native splash screen at this point in time.
   // TODO: Switch to native splash screens when possible.

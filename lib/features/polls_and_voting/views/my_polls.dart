@@ -14,6 +14,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class MyPolls extends ConsumerStatefulWidget {
   const MyPolls({super.key});
@@ -50,6 +51,12 @@ class _MyPollsState extends ConsumerState<MyPolls> {
               int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
               int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
               print('URL ===> ${poll.url}');
+
+              String formatTimeAgo(String dateString) {
+                DateTime dateTime =
+                DateTime.parse(dateString); // Convert string to DateTime
+                return timeago.format(dateTime); // Convert to "time ago" format
+              }
               return  Container(
                 margin: EdgeInsets.only(bottom: 20.h),
                 child:  Column(
@@ -66,7 +73,8 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                       Text('${poll.userData?.firstName} ${poll.userData?.lastName}', style: wayaTheme.textTheme.titleLarge),
                       const Gap(3),
                       Text(
-                        ' • ${hoursLeft}h ago',
+                        //' • ${hoursLeft}h ago',
+                        ' • ${formatTimeAgo('${poll.createdAt}')}',
                         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -119,7 +127,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                          //WayaNav.to(PollDashboard(pollId: '${poll.choices?[index].pollId}',));
                         WayaNav.toNamed('/poll-dashboard',
                            // arguments: '${e.pollId}'
-                            arguments: '${poll.choices?[index].pollId}'
+                           // arguments: '${poll.choices?[index].pollId}'
                         );
                       },
                       text: 'Manage Poll',

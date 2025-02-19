@@ -266,7 +266,7 @@ class PageVm extends StateNotifier<PageState> {
       _errorMessage2 = 'Something went wrong. Please try again later.';
     } finally {}
   }
-
+ 
   Future<void> getSinglePost(userId) async {
     print('Fetching saved posts...');
 
@@ -292,8 +292,7 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> createPage(ctx, pageName, pageDesc, pageType, String coverImage,
-      String profileImage) async {
+  Future<void> createPage(ctx, pageName, pageDesc, pageType, String coverImage, String profileImage) async {
     final coverImageUrl = await WayaFileRepository.instance.uploadFile(
       File(coverImage),
     );
@@ -303,8 +302,9 @@ class PageVm extends StateNotifier<PageState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.createPage(pageName, pageDesc,
-          pageType, coverImageUrl ?? '', profileImageUrl ?? '');
+      final response = await _pageRepository.createPage(
+          pageName, pageDesc, pageType, coverImageUrl ?? '', profileImageUrl ??''
+      );
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
       }
@@ -367,8 +367,7 @@ class PageVm extends StateNotifier<PageState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response =
-          await _pageRepository.createPost(content, publicUrl, postType);
+      final response = await _pageRepository.createPost(content, publicUrl, postType);
       //final response = await _pageRepository.createPost(content, choiceMap, postType);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
@@ -441,8 +440,7 @@ class PageVm extends StateNotifier<PageState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.createPagePost(
-          content, publicUrl, postType, postId);
+      final response = await _pageRepository.createPagePost(content, publicUrl, postType, postId);
       //final response = await _pageRepository.createPost(content, choiceMap, postType);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
@@ -497,8 +495,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> deletePost(ctx,
-      {required String postId, required String userId}) async {
+  Future<void> deletePost(ctx, {required String postId, required String userId}) async {
     try {
       final response = await _pageRepository.deletePost(postId);
       if (response.success && ctx.mounted) {
@@ -573,8 +570,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> likePost(ctx,
-      {required String postId, required String userId}) async {
+  Future<bool> likePost(ctx, {required String postId, required String userId}) async {
     try {
       //state = state.copyWith(isLoading: true);
       final response = await _pageRepository.likePost(postId);
@@ -582,11 +578,15 @@ class PageVm extends StateNotifier<PageState> {
       if (response.success && ctx.mounted) {
         getAllPosts(userId);
       }
+
+      return response.success;
     } catch (e) {
       print(e);
     } finally {
       //state = state.copyWith(isLoading: false);
     }
+
+    return false;
   }
 
   Future<void> unlikePost(ctx, {required String postId}) async {
@@ -647,8 +647,7 @@ class PageVm extends StateNotifier<PageState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response =
-          await _pageRepository.editPost(content, publicUrl, postType, postId);
+      final response = await _pageRepository.editPost(content, publicUrl, postType, postId);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
@@ -757,8 +756,7 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.getPageMembers(pageId);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        GetPageMemberModel responseModel =
-            GetPageMemberModel.fromJson(response.data);
+        GetPageMemberModel responseModel = GetPageMemberModel.fromJson(response.data);
         state = state.copyWith(getPageMemberDocs: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
@@ -806,8 +804,7 @@ class PageVm extends StateNotifier<PageState> {
   Future<void> updateTeamMember(ctx, role, pageId, memberId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response =
-          await _pageRepository.updateTeamMember(role, pageId, memberId);
+      final response =  await _pageRepository.updateTeamMember(role, pageId, memberId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {}
     } catch (e) {
