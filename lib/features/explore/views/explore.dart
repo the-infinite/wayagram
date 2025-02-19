@@ -322,7 +322,8 @@ class _ExploreState extends ConsumerState<Explore> {
               ),
             ),
           ),
-        ));
+        )
+        );
   }
 
   Widget _buildProductGrid({required List<Product> products}) {

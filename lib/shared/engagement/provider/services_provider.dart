@@ -163,7 +163,7 @@ class ServicesProvider extends StateNotifier<States> {
           sortedByAttendee.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         }
 
-        List<EventDoc> topEvents = sortedByAttendee.take(3).toList();
+        List<EventDoc> topEvents = sortedByAttendee.take(8).toList();
 
         state = state.copyWith(
             events: finalEvents.take(10).toList(), topEvents: topEvents);

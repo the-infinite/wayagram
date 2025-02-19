@@ -49,13 +49,13 @@ class EventRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> joinedUsers(
-      {required String id, required int page, int? limit = 10}) {
+      {required String id,  int? page = 100, int? limit = 10}) {
     return get(
         "$serviceUrl/join-events/get?eventId=$id&page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> eventsIJoined(
-      {required String userId, required int page, int? limit = 10}) {
+  Future<WayaRequestResponse> eventsJoined(
+      {required String userId,  int? page = 100, int? limit = 10}) {
     return get(
         "$serviceUrl/join-events/get?userId=$userId&page=$page&limit=$limit");
   }

@@ -80,6 +80,7 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
               itemBuilder: (context, index) {
                 final group = myGroups[index];
                 return GroupWidget(
+                   isWhite: true,
                   name: '${group.name?.capitalizeFirst}',
                   desc: '${group.description?.capitalizeFirst}',
                   image: '${group.coverImage}',
@@ -106,6 +107,7 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
               itemBuilder: (context, index) {
                 final group = joinedGroups[index];
                 return GroupWidget(
+                   isWhite: true,
                   name: '${group.name?.capitalizeFirst}',
                   desc: '${group.description?.capitalizeFirst}',
                   image: '${group.coverImage}',
@@ -132,6 +134,7 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
               itemBuilder: (context, index) {
                 final group = recommendedGroups[index];
                 return GroupWidget(
+                   isWhite: true,
                   name: '${group.name?.capitalizeFirst}',
                   desc: '${group.description?.capitalizeFirst}',
                   image: '${group.coverImage}',

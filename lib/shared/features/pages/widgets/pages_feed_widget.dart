@@ -80,6 +80,7 @@ class _PagesFeedWidgetState extends ConsumerState<PagesFeedWidget> {
               itemBuilder: (context, index) {
                 final page = myPages[index];
                 return GroupWidget(
+                  isWhite: true,
                  name: '${page.name?.capitalizeFirst}',
                   desc: '${page.description?.capitalizeFirst}',
                   image: '${page.coverImage}',
@@ -107,6 +108,7 @@ class _PagesFeedWidgetState extends ConsumerState<PagesFeedWidget> {
               itemBuilder: (context, index) {
                 final page = followedPages[index];
                 return GroupWidget(
+                   isWhite: true,
                   name: '${page.name?.capitalizeFirst}',
                   desc: '${page.description?.capitalizeFirst}',
                   image: '${page.coverImage}',
@@ -134,6 +136,7 @@ class _PagesFeedWidgetState extends ConsumerState<PagesFeedWidget> {
               itemBuilder: (context, index) {
                 final page = recommendedPages[index];
                 return GroupWidget(
+                   isWhite: true,
                     name: '${page.name?.capitalizeFirst}',
                   desc: '${page.description?.capitalizeFirst}',
                   image: '${page.coverImage}',

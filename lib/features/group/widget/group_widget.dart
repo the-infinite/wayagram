@@ -14,6 +14,7 @@ class GroupWidget extends StatelessWidget {
   final String buttonText;
   final bool chk;
   final bool isRecommended;
+  final bool isWhite;
   final Function()? onTap;
   const GroupWidget(
       {super.key,
@@ -23,7 +24,8 @@ class GroupWidget extends StatelessWidget {
       required this.count,
       required this.buttonText,
       required this.chk,
-       this.isRecommended =  false,
+      this.isRecommended = false,
+      this.isWhite = false,
       required this.onTap});
 
   @override
@@ -33,6 +35,9 @@ class GroupWidget extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 15),
       padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
       decoration: BoxDecoration(
+        color: isWhite
+            ? wayaTheme.colorScheme.white
+            : wayaTheme.colorScheme.transparent,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Theme.of(context).colorScheme.greyColor200),
       ),
@@ -41,6 +46,7 @@ class GroupWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
+
             contentPadding: EdgeInsets.only(left: 0, right: 0),
             onTap: onTap,
             leading: CircleAvatar(
@@ -59,29 +65,36 @@ class GroupWidget extends StatelessWidget {
                     ? SizedBox(
                         width: context.width * 0.20,
                         height: 30,
-                        child: isRecommended ?WayaButton(
-                          callback: onTap,
-                          text:  buttonText,
-                          height: 38,
-                          textStyle: TextStyle(
-                              color: wayaTheme.colorScheme.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                         // radius: 6,
-                        ) : WayaButton(
-                          callback: () {},
-                          text: buttonText,
-                          height: 38,
-                          color: Colors.white,
-                          textColor: Theme.of(context).colorScheme.primary600,
-                          border: Border.all(
-                              color: Theme.of(context).colorScheme.primary600),
-                          textStyle: wayaTheme.textTheme.bodyMedium!
-                              .wayaCopyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: Theme.of(context).colorScheme.black),
-                        ),
+                        child: isRecommended
+                            ? WayaButton(
+                                callback: onTap,
+                                text: buttonText,
+                                height: 38,
+                                textStyle: TextStyle(
+                                    color: wayaTheme.colorScheme.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
+                                // radius: 6,
+                              )
+                            : WayaButton(
+                                callback: () {},
+                                text: buttonText,
+                                height: 38,
+                                color: Colors.white,
+                                textColor:
+                                    Theme.of(context).colorScheme.primary600,
+                                border: Border.all(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary600),
+                                textStyle: wayaTheme.textTheme.bodyMedium!
+                                    .wayaCopyWith(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .black),
+                              ),
                       )
                     : Container(),
               ],
