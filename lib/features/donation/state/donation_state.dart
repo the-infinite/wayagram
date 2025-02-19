@@ -39,7 +39,6 @@ class DonationState{
       this.showAmountRaised = false,
       this.showNumberOfDonors = false,
 
-
   }):     title = title ?? TextEditingController(),
           description = description ?? TextEditingController(),
           solution = solution ?? TextEditingController(),
@@ -80,7 +79,7 @@ class DonationState{
       endDateString: endDateString ?? this.endDateString,
       isLoading: isLoading ?? this.isLoading,
       showAmountRaised: showAmountRaised ?? this.showAmountRaised,
-      showNumberOfDonors: showNumberOfDonors ?? this.showNumberOfDonors
+      showNumberOfDonors: showNumberOfDonors ?? this.showNumberOfDonors,
     );
   }
 }

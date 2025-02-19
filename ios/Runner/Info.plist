@@ -38,6 +38,24 @@
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
 		<string>Main</string>
+		<key>NSAppleMusicUsageDescription</key>
+        <string>Play using while you are hiking</string>
+        <key>NSBluetoothAlwaysUsageDescription</key>
+        <string>Some useful description: </string>
+        <key>NSCalendarsUsageDescription</key>
+        <string>Wayagram would like to access your calender</string>
+		<key>ITSAppUsesNonExemptEncryption</key>
+                <false/>
+                <key>NSPhotoLibraryAddUsageDescription</key>
+                <string> photos add description.</string>
+                <key>NSPhotoLibraryUsageDescription</key>
+                <string> photos description.</string>
+                <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+                <string>This app requires access to your location to provide personalized services and content even when the app is in the background.</string>
+                <key>NSLocationWhenInUseUsageDescription</key>
+                <string>This app requires access to your location to provide personalized services and content while you are using the app.</string>
+            <key>NSLocationAlwaysUsageDescription</key>
+                <string>This app requires access to your location to provide personalized services and content even when the app is in the background.</string>
 		<key>UISupportedInterfaceOrientations</key>
 		<array>
 			<string>UIInterfaceOrientationPortrait</string>

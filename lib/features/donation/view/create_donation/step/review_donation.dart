@@ -54,7 +54,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_){
       viewModel = ref.read(createRequestProvider);
-      print(viewModel?.brandName.text);
+
     });
     super.initState();
   }
@@ -68,134 +68,24 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Review Request Details", style: wayaTheme.textTheme.titleLarge),
+        Text("Review Donation Details", style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
-        Text("Review your request details before submission",
+        Text("Review your donation details before submission",
             style: wayaTheme.textTheme.hintStyle),
+        const Gap(20),
+        Text("Donation Thumbnail",
+          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.black),),
         const Gap(30),
         EditHeader(
           onTap: () {
             widget.goBack(0);
           },
-          title: 'Product Information',
+          title: 'Donation Information ',
         ),
-        const Gap(30),
-        AboutProduct(
-            title: 'Product Name',
-            content: '${viewModel?.productName.text}'),
-        const Gap(15),
-        AboutProduct(title: 'Brand Name', content: '${viewModel?.brandName.text.capitalizeFirst}'),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'Product Category', content: '${viewModel?.productCategory}'),
-            ),
-            Expanded(
-              child: AboutProduct(
-                  title: 'Product Condition', content: '${viewModel?.productCondition}'),
-            )
-          ],
-        ),
-        const Gap(15),
-        AboutProduct(
-            title: 'Product Description',
-            content:
-            '${viewModel?.productDescription.text.capitalizeFirst}'),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'Quantity', content: '${viewModel?.quantity.text}'),
-            ),
-            Expanded(
-              flex: 2,
-              child: AboutProduct(title: 'State of Purchase', content: '${viewModel?.stateOfPurchase}'),
-            ),
-            Expanded(
-              child: AboutProduct(title: 'LGA', content: '${viewModel?.lga}'),
-            )
-          ],
-        ),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'Min Distance', content: '${viewModel?.minDistance.text}Km'),
-            ),
-            Expanded(
-              child: AboutProduct(title: 'Product Condition', content: '${viewModel?.productCondition}'),
-            ),
 
-          ],
-        ),
-        const Gap(30),
-        EditHeader(
-          onTap: () {
-            widget.goBack(1);
-          },
-          title: 'Pricing & Delivery',
-        ),
-        const Gap(30),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'Bid Starting Amount', content: '${viewModel?.bidStartingAmount.text} NGN'),
-            ),
-            Expanded(
-              child: AboutProduct(title: 'Maximum Bid Amount', content: '${viewModel?.maxBidAmount.text} NGN'),
-            ),
-
-          ],
-        ),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: AboutProduct(
-                  title: 'Delivery Address',
-                  content: '${viewModel?.deliveryAddress.text.capitalizeFirst}'),
-            )
-          ],
-        ),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'State', content: '${viewModel?.deliveryState.capitalizeFirst}'),
-            ),
-            Expanded(
-              child: AboutProduct(title: 'LGA', content: '${viewModel?.deliveryLga.capitalizeFirst}'),
-            )
-          ],
-        ),
-        const Gap(30),
-        EditHeader(
-          onTap: () {
-            widget.goBack(1);
-          },
-          title: 'Bid Timing',
-        ),
-        const Gap(30),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'Start Time', content: '${viewModel?.startDate}'),
-            ),
-            Expanded(
-              child: AboutProduct(
-                  title: 'End Time', content: '${viewModel?.endDate}'),
-            )
-          ],
-        ),
         const Gap(30),
         WayaButton(
           callback: !viewModel!.isLoading
@@ -229,47 +119,13 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
             );
 
             disposeControllers();
-            WayaNav.toNamed('/seeBuyer-bids');
+            //WayaNav.toNamed('/seeBuyer-bids');
           }
               : null,
           centerWidget: LoadingState(
-              loading: viewModel!.isLoading, text: 'Find offers'),
+              loading: viewModel!.isLoading, text: 'Post Donation'),
         ),
-        /* WayaButton(
-            text: 'Find offers',
-            callback: () async{
 
-              final buyerId = _wayaLocalDataSource.getUserId();
-              CreateBuyerRequest createBuyerRequest = CreateBuyerRequest(
-                  buyerId: buyerId,
-                  productName: viewModel!.productName.text,
-                  brand: viewModel!.brandName.text,
-                  category: viewModel!.productCategory,
-                  condition: viewModel!.productCondition.toLowerCase(),
-                  description: viewModel!.productDescription.text,
-                  quantity: viewModel!.quantity.text,
-                  bidStart: viewModel!.startDate,
-                  bidEnd: viewModel!.endDate,
-                  deliveryDetails: '----',
-                  minDistance: viewModel!.minDistance.text,
-                  maxDistance: viewModel!.maxDistance.text,
-                  stateOfPurchase: viewModel!.stateOfPurchase,
-                  lga: viewModel!.lga,
-                  vendorsCanSeeBidFromAnyDistance: '${viewModel!.vendorSeeBuyRequest}',
-                  deliveryType: 'delivery',
-                  deliveryAddress: viewModel!.deliveryAddress.text,
-                  deliveryState: viewModel!.deliveryState,
-                  deliveryLga: viewModel!.deliveryLga,
-                  maxBidAmount: viewModel!.maxBidAmount.text,
-                  bidStartingAmount: viewModel!.bidStartingAmount.text.replaceAll(',', ''));
-              await ref.read(createRequestProvider.notifier).createBuyerRequest(
-                createBuyerRequest
-              );
-
-              disposeControllers();
-              WayaNav.toNamed('/seeBuyer-bids');
-            }
-            ),*/
         const Gap(8),
         WayaButton(
             text: 'Go Back',
