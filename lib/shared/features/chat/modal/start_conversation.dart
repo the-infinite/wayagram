@@ -109,6 +109,13 @@ class _StartConversationModalState extends State<StartConversationModal> {
                         chatNotifier.setChat(chat);
                         WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
                       },
+                    ).catchError(
+                      (_) {
+                        //? Leave here.
+                        WayaNav.goBack();
+
+                        // Print some error message here.
+                      },
                     );
 
                     //? After starting the conversation...

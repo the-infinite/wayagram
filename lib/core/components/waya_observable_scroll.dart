@@ -72,6 +72,7 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
           }
         },
       );
+      _getPage();
     }
 
     // Initialize state.
