@@ -10,7 +10,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/search/search.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/shared/features/posts/shared_posts.dart';
 import 'package:wayagram/shared/features/moments/shared_moments.dart';
 import 'package:wayagram/shared/features/pages/widgets/pages_feed_widget.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
@@ -18,6 +17,7 @@ import 'package:wayagram/shared/features/groups/widgets/groups_feed_widget.dart'
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/shared/features/events/shared_event.dart';
 import 'package:wayagram/features/explore/bottom_sheet/create_sheet.dart';
+import 'package:wayagram/shared/features/profile/shared_posts.dart';
 
 class ChatAndSocial extends ConsumerStatefulWidget {
   static const route = "/chat-and-social";
@@ -36,7 +36,7 @@ class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
         isLoading: false,
         isScrollable: true,
         title: "Chat & Socials",
-         backgroundColor: wayaTheme.colorScheme.scaffoldColor,
+        backgroundColor: wayaTheme.colorScheme.scaffoldColor,
         appBarTrailing: Container(
           padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
           child: Row(
