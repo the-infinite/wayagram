@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -64,6 +64,9 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   // This is fine.
   @override
   Widget build(BuildContext context) {
+    // Get the theme.
+    final theme = Theme.of(context);
+
     // This is fine.
     return Consumer(builder: (context, ref, _) {
       final state = ref.watch(chatProvider);
@@ -116,47 +119,66 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                   // Some space.
                   const Gap(10),
 
-                  //* First, the user's profile picture.
-                  ChatProfilePicture(
-                    user: chat.other.userData ?? ConversationState.self,
-                    showActive: userStatus == ChatUserActivity.online,
-                    lastSeen: chat.other.chatUser?.lastSeen,
-                    radius: 16,
-                  ),
-
-                  //* Second, the user's name.
+                  //* Second the profile picture and name.
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: InkWell(
+                      splashColor: theme.colorScheme.primary.withAlpha(30),
+                      focusColor: theme.colorScheme.primary.withAlpha(30),
+                      highlightColor: theme.colorScheme.primary.withAlpha(30),
+                      customBorder: StadiumBorder(),
+                      splashFactory: NoSplash.splashFactory,
+                      onTap: () {
+                        WayaNav.toNamed(WayaAppRoutes.getProfileRoute(chat.other.userId));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          //* For the other person's name.
-                          Text(
-                            chat.name ??
-                                chat.other.userData?.fullname ??
-                                chat.other.chatUser?.displayName ??
-                                "WayaGram User",
-                            maxLines: 1,
-                            style: WayaTextStyles.titleMedium.copyWith(
-                              fontSize: 15,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                          // First, the user's profile picture.
+                          ChatProfilePicture(
+                            user: chat.other.userData ?? ConversationState.self,
+                            showActive: userStatus == ChatUserActivity.online,
+                            lastSeen: chat.other.chatUser?.lastSeen,
+                            radius: 16,
                           ),
 
-                          //? For the message content...
-                          if (lastSeenText != null)
-                            Text(
-                              userStatus == ChatUserActivity.online ? "Online" : lastSeenText,
-                              maxLines: 1,
-                              style: WayaTextStyles.titleMedium.copyWith(
-                                fontWeight: FontWeight.normal,
-                                overflow: TextOverflow.ellipsis,
-                                color: WayaColors.greyColor500,
-                                fontSize: 13,
+                          // Second, the user's name.
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //* For the other person's name.
+                                  Text(
+                                    chat.name ??
+                                        chat.other.userData?.fullname ??
+                                        chat.other.chatUser?.displayName ??
+                                        "WayaGram User",
+                                    maxLines: 1,
+                                    style: WayaTextStyles.titleMedium.copyWith(
+                                      fontSize: 15,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+
+                                  //? For the message content...
+                                  if (lastSeenText != null)
+                                    Text(
+                                      userStatus == ChatUserActivity.online ? "Online" : lastSeenText,
+                                      maxLines: 1,
+                                      style: WayaTextStyles.titleMedium.copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        overflow: TextOverflow.ellipsis,
+                                        color: WayaColors.greyColor500,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                ],
                               ),
                             ),
+                          ),
                         ],
                       ),
                     ),

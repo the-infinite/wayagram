@@ -19,7 +19,7 @@ void main() async {
   Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PushNotifications.init();
   WayaSnackBar.setUpSnackBarUI();
-  await TaskScheduler.ensureInitialized();
+  await TaskScheduler.init();
 
   //? Second, remove the native splash screen at this point in time.
   // TODO: Switch to native splash screens when possible.
