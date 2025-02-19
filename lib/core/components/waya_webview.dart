@@ -25,6 +25,7 @@ class _CustomWebViewState extends State<WayaWebview> {
   bool _isLoading = true;
   String? transactionId;
   String? fundingOption;
+  String? redirect;
 
   @override
   void initState() {
@@ -46,8 +47,11 @@ class _CustomWebViewState extends State<WayaWebview> {
           onUrlChange: (change) {
             if (fundingOption != null && fundingOption == "PAYSTACK") {
               if (change.url!.contains("wayagram")) {
-                WayaNav.offNamed(VerifyTransactionScreen.route,
-                    arguments: {"transactionId": transactionId, "fundingOption": fundingOption});
+                WayaNav.offNamed(VerifyTransactionScreen.route, arguments: {
+                  "transactionId": transactionId,
+                  "fundingOption": fundingOption,
+                  'redirect' : redirect
+                });
               }
             }
           },
@@ -61,7 +65,8 @@ class _CustomWebViewState extends State<WayaWebview> {
       ..loadRequest(Uri.parse(url ?? "https://www.google.com"));
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
       if (args != null) {
         _controller.loadRequest(Uri.parse(args['url']));
         url = args['url'];
@@ -69,6 +74,7 @@ class _CustomWebViewState extends State<WayaWebview> {
         showAppBar = args['showAppBar'] ?? false;
         transactionId = args["transactionId"];
         fundingOption = args["fundingOption"];
+        redirect = args['redirect'] ?? '';
       }
     });
   }
@@ -81,7 +87,8 @@ class _CustomWebViewState extends State<WayaWebview> {
     return WayaScaffold(
       appBar: showAppBar
           ? AppBar(
-              title: Text(title ?? "Waya Webview", style: wayaTheme.textTheme.titleLarge),
+              title: Text(title ?? "Waya Webview",
+                  style: wayaTheme.textTheme.titleLarge),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.refresh),

@@ -222,4 +222,8 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/pages/user/followings");
   }
 
+   Future<WayaRequestResponse> getRecommendedPages() {
+    return get("$serviceUrl/pages/recommended");
+  }
+
 }

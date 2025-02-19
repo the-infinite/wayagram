@@ -7,7 +7,7 @@ import 'package:wayagram/core/theme/theme.dart';
 class WayaNoticeModal extends StatelessWidget {
   final String title;
   final String message;
-  final VoidCallback? onPress;
+  final VoidCallback onPress;
   final VoidCallback? onCancel;
   final String? buttonText;
   final String? secondButtonText;
@@ -24,8 +24,8 @@ class WayaNoticeModal extends StatelessWidget {
       this.secondButtonText = "",
       this.buttonCenterWidget,
       this.secondButtonCenterWidget,
-      this.onCancel,
-      required this.onPress});
+       this.onCancel,
+     required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -62,28 +62,29 @@ class WayaNoticeModal extends StatelessWidget {
             style: WayaTextStyles.descriptionStyle,
           ),
           const Gap(24),
+          
           WayaButton(
-              centerWidget: buttonCenterWidget,
-              callback: () {
-                if (onPress == null) return Navigator.of(context).pop();
-                onPress?.call();
-              },
-              text: buttonCenterWidget == null ? buttonText ?? '' : ''),
-          const Gap(10),
+                centerWidget: buttonCenterWidget,
+                callback: () {
+
+                  onPress();
+                },
+                text: buttonCenterWidget == null ? buttonText ?? '' : ''),
+            const Gap(10),
           Visibility(
-              visible: onCancel != null,
-              child: WayaButton(
-                  callback: () {
-                    Navigator.of(context).pop();
-                    onCancel?.call();
-                  },
-                  textColor: wayaTheme.greyColor500,
-                  color: wayaTheme.transparent,
-                  centerWidget: secondButtonCenterWidget,
-                  border: Border.all(color: wayaTheme.greyColor500, width: 1),
-                  text: secondButtonCenterWidget == null
-                      ? secondButtonText ?? 'Cancel'
-                      : ''))
+            visible: onCancel != null,
+            child: WayaButton(
+            
+              callback: () {
+                onCancel?.call();
+              },
+              textColor: wayaTheme.greyColor500,
+              color: wayaTheme.transparent,
+              centerWidget: secondButtonCenterWidget,
+              border: Border.all(color: wayaTheme.greyColor500, width: 1),
+              text: secondButtonCenterWidget == null
+                  ? secondButtonText ?? 'Cancel'
+                  : ''))
         ],
       ),
     );

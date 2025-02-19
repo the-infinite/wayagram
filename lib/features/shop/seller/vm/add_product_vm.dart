@@ -18,15 +18,19 @@ import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
+import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 final addProductProvider =
     StateNotifierProvider.family<AddProductVm, AddProductState, String>(
-        (ref, uniqueKey) => AddProductVm(ShopRepository(), ref));
+        (ref, uniqueKey) =>
+            AddProductVm(UploadFileRepository(), ShopRepository(), ref));
 
 class AddProductVm extends StateNotifier<AddProductState> {
   final ShopRepository _shopRepository;
   final Ref ref;
-  AddProductVm(this._shopRepository, this.ref) : super(AddProductState()) {
+  final UploadFileRepository _uploadRepository;
+  AddProductVm(this._uploadRepository, this._shopRepository, this.ref)
+      : super(AddProductState()) {
     final shop = ref.watch(manageShopVmProvider).singleShop;
     if (shop != null) {
       state = state.copyWith(shopId: shop.id);
@@ -130,12 +134,18 @@ class AddProductVm extends StateNotifier<AddProductState> {
       }
       state = state.copyWith(isLoading: true);
 
-      List<MultipartFile> addedimages = [];
+      List<String> addedimages = [];
 
-      for (DocType doc
-          in state.uploadedDocuments.where((d) => d.file != null)) {
-        final imgPartFile = await WayaHelpers.formattedImage(doc.file!);
-        addedimages.add(imgPartFile);
+      for (DocType doc in state.uploadedDocuments) {
+        if (doc.file != null) {
+          final imgPartFile = await WayaUtils.uploadFile(
+              repository: _uploadRepository, file: doc.file!);
+          if (imgPartFile != null) {
+            addedimages.add(imgPartFile);
+          }
+        } else if (doc.url.isNotEmpty) {
+          addedimages.add(doc.url);
+        }
       }
       state = state.copyWith(images: addedimages);
 
@@ -200,7 +210,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
   Future<void> deleteProduct(
       {required String shopId, required String productId}) async {
     try {
-      final response = _shopRepository.deleteProductRequest(
+      final response = await _shopRepository.deleteProductRequest(
           shopId: shopId, productId: productId);
     } catch (e) {
       print(e);

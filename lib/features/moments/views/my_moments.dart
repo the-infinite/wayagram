@@ -58,6 +58,8 @@ class _MyMomentState extends ConsumerState<MyMoments> {
                       itemBuilder: (context, index) {
                         return MyMomentWidget(
                           moment: state.myMoments[index],
+                          allMoments: state.myMoments,
+                          index: index
                         );
                       })
                 ],

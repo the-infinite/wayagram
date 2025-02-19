@@ -41,7 +41,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
         if (state.topPosts.isNotEmpty) ...[
           Text(
             "Recommended For You",
-            style: TextStyle(color: wayaTheme.colorScheme.greyColor700, fontSize: 13, fontWeight: FontWeight.w500),
+            style:wayaTheme.textTheme.bodyMedium,
           ),
           ListView.builder(
             shrinkWrap: true,
@@ -60,7 +60,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
         if (state.posts.isNotEmpty && widget.isExpanded) ...[
           Text(
             "Based on your Interest",
-            style: TextStyle(color: wayaTheme.colorScheme.greyColor700, fontSize: 13, fontWeight: FontWeight.w500),
+           style: wayaTheme.textTheme.bodyMedium,
           ),
           ListView.builder(
             shrinkWrap: true,

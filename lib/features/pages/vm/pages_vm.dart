@@ -30,7 +30,8 @@ class UploadedImage {
   final String file;
   final String fileName;
 
-  UploadedImage({required this.url, required this.file, required this.fileName});
+  UploadedImage(
+      {required this.url, required this.file, required this.fileName});
 }
 
 class PageVm extends StateNotifier<PageState> {
@@ -228,7 +229,8 @@ class PageVm extends StateNotifier<PageState> {
         } */
       } else {
         print('Error: Status code ${response.statusCode}');
-        _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
+        _errorMessage2 =
+            'Failed to fetch saved posts. Status code: ${response.statusCode}';
       }
     } catch (e) {
       print('Exception occurred while fetching saved posts: $e');
@@ -256,7 +258,8 @@ class PageVm extends StateNotifier<PageState> {
         state = state.copyWith(getAllPost: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
-        _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
+        _errorMessage2 =
+            'Failed to fetch saved posts. Status code: ${response.statusCode}';
       }
     } catch (e) {
       print('Exception occurred while fetching saved posts: $e');
@@ -280,7 +283,8 @@ class PageVm extends StateNotifier<PageState> {
         state = state.copyWith(getAllPost: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
-        _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
+        _errorMessage2 =
+            'Failed to fetch saved posts. Status code: ${response.statusCode}';
       }
     } catch (e) {
       print('Exception occurred while fetching saved posts: $e');
@@ -298,8 +302,9 @@ class PageVm extends StateNotifier<PageState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response =
-          await _pageRepository.createPage(pageName, pageDesc, pageType, coverImageUrl ?? '', profileImageUrl ?? '');
+      final response = await _pageRepository.createPage(
+          pageName, pageDesc, pageType, coverImageUrl ?? '', profileImageUrl ??''
+      );
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
       }
@@ -326,10 +331,15 @@ class PageVm extends StateNotifier<PageState> {
     for (XFile image in images) {
       print("In the loop ${image.name} ${image.path} ${image.mimeType}");
 
-      final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
+      final uploadImageResponse =
+          await _pageRepository.getUploadImage(image.name);
 
-      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
-      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      MediaUploadModel mediaUploadModel =
+          MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(
+          url: mediaUploadModel.data!.url!,
+          file: image.path,
+          fileName: image.name));
       publicUrl.add(mediaUploadModel!.data!.publicUrl!);
     }
 
@@ -384,7 +394,8 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> createPagePost(ctx, content, postType, List<XFile> images, postId) async {
+  Future<void> createPagePost(
+      ctx, content, postType, List<XFile> images, postId) async {
     print("before the loop");
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
@@ -393,10 +404,15 @@ class PageVm extends StateNotifier<PageState> {
     for (XFile image in images) {
       print("In the loop ${image.name} ${image.path} ${image.mimeType}");
 
-      final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
+      final uploadImageResponse =
+          await _pageRepository.getUploadImage(image.name);
 
-      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
-      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      MediaUploadModel mediaUploadModel =
+          MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(
+          url: mediaUploadModel.data!.url!,
+          file: image.path,
+          fileName: image.name));
       publicUrl.add(mediaUploadModel!.data!.publicUrl!);
     }
 
@@ -586,7 +602,8 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> editPost(ctx, content, postType, List<XFile> images, postId) async {
+  Future<void> editPost(
+      ctx, content, postType, List<XFile> images, postId) async {
     print("before the loop");
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
@@ -595,10 +612,15 @@ class PageVm extends StateNotifier<PageState> {
     for (XFile image in images) {
       print("In the loop ${image.name} ${image.path} ${image.mimeType}");
 
-      final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
+      final uploadImageResponse =
+          await _pageRepository.getUploadImage(image.name);
 
-      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
-      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      MediaUploadModel mediaUploadModel =
+          MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(
+          url: mediaUploadModel.data!.url!,
+          file: image.path,
+          fileName: image.name));
       publicUrl.add(mediaUploadModel!.data!.publicUrl!);
     }
 
@@ -716,8 +738,10 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.getAllPages(userId);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
+        PagesUsersFollowModel responseModel =
+            PagesUsersFollowModel.fromJson(response.data);
         state = state.copyWith(pagesUsersFollow: responseModel.data?.docs);
+        state = state.copyWith(myPages: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
       }
@@ -748,7 +772,8 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.getPagesAUserFollows();
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
+        PagesUsersFollowModel responseModel =
+            PagesUsersFollowModel.fromJson(response.data);
         state = state.copyWith(pagesUsersFollow: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
@@ -758,10 +783,28 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
+    Future<void> getRecommendedPages() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.getRecommendedPages();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PagesUsersFollowModel responseModel =
+            PagesUsersFollowModel.fromJson(response.data);
+        state = state.copyWith(recommendedPages: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+
   Future<void> updateTeamMember(ctx, role, pageId, memberId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.updateTeamMember(role, pageId, memberId);
+      final response =  await _pageRepository.updateTeamMember(role, pageId, memberId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {}
     } catch (e) {

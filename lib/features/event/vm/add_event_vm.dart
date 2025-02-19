@@ -14,12 +14,15 @@ import 'package:wayagram/features/event/data/repo/event_repository.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/shared/components/radio_select.dart';
+import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 class AddEventVm extends StateNotifier<AddEventState> {
   final Ref ref;
   final EventRepository _eventRepository;
+  final UploadFileRepository _uploadFileRepository;
   final WayaSecureDataSource _secureDataSource;
-  AddEventVm(this._secureDataSource, this._eventRepository, this.ref)
+  AddEventVm(this._uploadFileRepository, this._secureDataSource,
+      this._eventRepository, this.ref)
       : super(AddEventState());
 
   void reset() {
@@ -125,8 +128,9 @@ class AddEventVm extends StateNotifier<AddEventState> {
 
       state = state.copyWith(isLoading: true);
       final image = state.isEditingMode && state.eventImage!.file == null
-          ? await WayaHelpers.formattedImageFromUrl(state.eventImage!.url)
-          : await WayaHelpers.formattedImage(state.eventImage!.file!);
+          ? state.eventImage!.url
+          : await WayaUtils.uploadFile(
+              file: state.eventImage!.file!, repository: _uploadFileRepository);
 
       state = state.copyWith(image: image);
       final userId = await _secureDataSource.getUserId();
@@ -145,7 +149,9 @@ class AddEventVm extends StateNotifier<AddEventState> {
               message:
                   "Your event is now live. Share it with your audience and start engaging with attendees today!",
               onPress: () {
-                Navigator.pushReplacementNamed(context, EventView.route);
+             
+                WayaNav.replaceNamed(EventView.route);
+                  // Navigator.of(context).pop();
               },
               buttonText: 'Go To Event Home Page',
               secondButtonText: 'Share Event Link',
@@ -207,5 +213,6 @@ class AddEventVm extends StateNotifier<AddEventState> {
 
 final addEventVmProvider =
     StateNotifierProvider<AddEventVm, AddEventState>((ref) {
-  return AddEventVm(WayaSecureDataSource(), EventRepository(), ref);
+  return AddEventVm(
+      UploadFileRepository(), WayaSecureDataSource(), EventRepository(), ref);
 });
