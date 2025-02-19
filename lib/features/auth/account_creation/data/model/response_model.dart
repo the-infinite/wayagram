@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
-import 'package:wayagram/features/general_settings/profile/data/model/user_profile_model.dart';
 import 'business_account_model.dart';
 
 part 'response_model.g.dart';
@@ -26,7 +25,7 @@ class ResponseModel {
 @JsonSerializable()
 class Data {
   final UserDetailsModel user;
-  final UserProfileData profile;
+  final SocialProfileModel profile;
   final BusinessAccountData? business;
 
   Data({

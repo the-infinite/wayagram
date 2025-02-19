@@ -99,14 +99,14 @@ class UserDetailsModel {
 class SocialProfileModel {
   final String? id;
   final String? userId;
-  final dynamic avatar;
-  final dynamic coverImage;
-  final dynamic bio;
+  final String? avatar;
+  final String? coverImage;
+  final String? bio;
   final String? username;
   final String? displayName;
   final bool? isPublic;
   final bool? isBanned;
-  final dynamic deletedAt;
+  final DateTime? deletedAt;
   final bool? simulatedUser;
   final bool? isMuted;
   final String? referenceCode;
