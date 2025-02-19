@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
+import 'package:wayagram/features/ugt/data/model/register_for_contest_model.dart';
 
 final uuid = Uuid();
 
@@ -12,7 +13,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   String university = "";
   String selectedState = "";
 
-  RegisterFormNotifier() : super([]) {
+  RegisterFormNotifier() : super([..._addDefault()]) {
     fullName = TextEditingController();
     emailAddress = TextEditingController();
     address = TextEditingController();
@@ -23,11 +24,11 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   void addTextField() {
     state = [
       ...state,
-      DynamicField(
+      /*  DynamicField(
         id: uuid.v4(),
         type: FieldType.text,
         textController: TextEditingController(),
-      ),
+      ), */
     ];
   }
 
@@ -35,11 +36,36 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   void addImageField() {
     state = [
       ...state,
-      DynamicField(
+      /*  DynamicField(
         id: uuid.v4(),
         type: FieldType.image,
-      ),
+      ), */
     ];
+  }
+
+  void submitDetail() {
+    List<Map<String, dynamic>> detailsList = state
+        .map(
+          (model) => <String, dynamic>{
+            "title": model.title,
+            "titleDetails": model.textController?.text ?? "",
+            "imagePath": model.imagePath,
+            "modeltype": model.type
+          },
+        )
+        .toList();
+    print("Mean $detailsList");
+
+    var map = {
+      "fullName": fullName.text,
+      "email": emailAddress.text,
+      "address": address.text,
+      "phoneNumber": phoneNumber.text,
+      "university": university,
+      "state": selectedState,
+      "list": detailsList
+    };
+    print("Mean2 $map");
   }
 
   // Remove a field by ID
@@ -80,20 +106,66 @@ class DynamicField {
   final FieldType type;
   final TextEditingController? textController; // Only for text fields
   final String? imagePath; // Only for images
+  final String title; // Only for images
+  final bool isRequired; // Only for images
 
   DynamicField({
     required this.id,
     required this.type,
+    required this.isRequired,
     this.textController,
     this.imagePath,
+    required this.title,
   });
 
   DynamicField copyWith({String? imagePath}) {
     return DynamicField(
       id: id,
       type: type,
+      title: title,
+      isRequired: isRequired,
       textController: textController,
       imagePath: imagePath ?? this.imagePath,
     );
   }
+}
+
+List<DynamicField> _addDefault() {
+  var fieldList = <DynamicField>[];
+  var list = [
+    RegisterForContestModel(
+        id: uuid.v4(),
+        title: "Name of School",
+        isRequired: true,
+        isFile: false),
+    RegisterForContestModel(
+        id: uuid.v4(),
+        title: "Birth Certificate",
+        isRequired: true,
+        isFile: true),
+    RegisterForContestModel(
+        id: uuid.v4(), title: "Birth Name", isRequired: false, isFile: false),
+  ];
+
+  for (var model in list) {
+    if (model.isFile) {
+      fieldList.add(
+        DynamicField(
+          id: uuid.v4(),
+          isRequired: model.isRequired,
+          title: model.title,
+          type: FieldType.image,
+        ),
+      );
+    } else {
+      fieldList.add(DynamicField(
+        id: uuid.v4(),
+        isRequired: model.isRequired,
+        title: model.title,
+        type: FieldType.text,
+        textController: TextEditingController(),
+      ));
+    }
+  }
+  return fieldList;
 }

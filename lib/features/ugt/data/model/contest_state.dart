@@ -53,6 +53,7 @@ class ContestState {
   final String type;
   final Select? selectedCategory;
   bool approveBeforeLive;
+
   //Participation Details
   final String entrySelectType;
   final String durationSelectType;
@@ -99,7 +100,7 @@ class ContestState {
     this.state = '',
     this.image = '',
     this.endDate = '',
-    this.entrySelectType = '',
+    this.entrySelectType = 'Free',
     this.durationSelectType = '',
     this.contestTimelineStartDate = '',
     this.contestTimelineEndDate = '',
@@ -111,8 +112,8 @@ class ContestState {
     this.selectedCategory,
     this.endDateIsoFormat = '',
     this.overallResult = false,
-    this.contestPrivatePublic = '',
-    this.contestFreePaid = '',
+    this.contestPrivatePublic = 'PRIVATE',
+    this.contestFreePaid = 'Paid',
     this.type = 'Paid',
     this.stagePrefModels,
     this.stagePrefModel,

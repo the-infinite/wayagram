@@ -3,13 +3,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/ugt/data/model/category_response.dart';
 import 'package:wayagram/features/ugt/data/model/contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/create_contest.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/ugt_modal.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import '../../../core/data/local_data_source.dart';
 import '../../../core/data/model/model.dart';
@@ -17,6 +21,13 @@ import '../../../core/service/logger_service.dart';
 import '../../quotation/data/model/model.dart';
 import '../data/controller/contest_controller.dart';
 import '../data/model/category_model.dart';
+
+String _convertToISO(String dateString) {
+  DateTime dateTime = DateFormat("yyyy-M-d").parse(dateString);
+
+  // Convert to UTC ISO 8601 format
+  return "${dateTime.toUtc().toIso8601String().split('.')[0]}Z";
+}
 
 class CreateContestNotifier extends StateNotifier<ContestState> {
   final ContestRepo _contestRepository;
@@ -58,6 +69,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     voteCountToQualify.dispose();
     amountPerVote.dispose();
     numberOfWeeks.dispose();
+    
     super.dispose();
   }
 
@@ -85,7 +97,10 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   //var contestSignUpRequirement = [];
 
-  Future<void> onSubmit(List<NewRequirementModel> newRequirementList,
+  Future<void> onSubmit(
+      BuildContext context,
+      ValueNotifier<bool> isLoading,
+      List<NewRequirementModel> newRequirementList,
       List<StagePrefModel> stageList) async {
     //  print(' sss ${_localDataSource.getUserId().toString()}');
     //final userTypeProvider = ref.watch(localDataSourceProvider);
@@ -95,120 +110,108 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "textDescription": "Participant's full name",
         "required": true
      */
+    isLoading.value = true;
+    state = state.copyWith(isLoading: true);
+
     List<Map<String, dynamic>> mapRequireList = newRequirementList
         .map(
           (user) => <String, dynamic>{
             "requirementType": user.requirementType,
             "requirementName": user.requirementName,
-            "textDescription": user.requirementOptional,
+            "textDescription": "ef", //user.requirementOptional,
             "required": user.isRequired
           },
         )
         .toList();
-    List<Map<String, dynamic>> mapStageList = stageList
-        .map(
-          (model) => <String, dynamic>{
-            "stageName": model.stageName,
-            "entryType": model.entryType,
-            "entryAmount": model.entryAmount
-                ?.split('.')
-                .first
-                .replaceAll(",", "")
-                .substring(3),
-            "numberOfPostPerWeek": model.numPostPerWeek,
-            "priceOfTheWinner": model.priceWinner,
-            "startDate": model.startDate,
-            "endDate": model.endDate,
-            "approveBeforeLive": model.reviewApprovePost
-          },
-        )
-        .toList();
+    List<Map<String, dynamic>> mapStageList = stageList.map(
+      (model) {
+        return <String, dynamic>{
+          "stageName": model.stageName,
+          "entryType": model.entryType?.toUpperCase(),
+          "entryAmount": model.entryAmount!.contains("NGN")
+              ? model.entryAmount!
+                  .split(".")
+                  .first
+                  .substring(3)
+                  .replaceAll(",", "")
+              : model.entryAmount,
+          "numberOfPostPerWeek": model.numPostPerWeek,
+          "priceOfTheWinner": model.priceWinner,
+          "startDate": _convertToISO(model.startDate!), // model.startDate,
+          "endDate": _convertToISO(model.endDate!), // model.endDate,
+          "approveBeforeLive": model.reviewApprovePost
+        };
+      },
+    ).toList();
 
     final profileImageUrl = await WayaFileRepository.instance.uploadFile(
       File(state.image),
     );
+    //NGN8.00
     try {
-      state = state.copyWith(isLoading: true);
+      //  print("wwwww ${amountPerVote.text}");
+
       var map = {
         "title": title.text,
         "profileId": _localDataSource.getUserId().toString(),
         "category": state.categoryId,
         "state": state.state,
-        "winnerPrize": 500, //state.winnerPrize.text,
+        //  "numberOfWeeks":numberOfWeeks.text,
+        "winnerPrize": winnerPrize.text,
         "description": description.text,
-        "voteCountToQualify": 5, //voteCountToQualify.text,
-        "amount":
-            state.amount.text.split('.').first.replaceAll(",", "").substring(3),
+        "voteCountToQualify": voteCountToQualify.text,
+        "amount": state.amount.text.contains("NGN")
+            ? state.amount.text
+                .split(".")
+                .first
+                .substring(3)
+                .replaceAll(",", "")
+            : state.amount.text,
+
         "durationType": state.durationSelectType.toUpperCase(),
         "numberOfDuration": state.numberOfDuration.text,
         "descriptionOfAwards": state.descriptionOfAwards.text,
-        "amountPerVote": state.amountPerVote.text
-            .split('.')
-            .first
-            .replaceAll(",", "")
-            .substring(3),
+        "amountPerVote": amountPerVote.text.contains("NGN")
+            ? amountPerVote.text
+                .split(".")
+                .first
+                .substring(3)
+                .replaceAll(",", "")
+            : amountPerVote.text,
         "type": state.contestFreePaid.toUpperCase(),
-        "overallResult": state.overallResult == true ? "Yes" : "No",
-        "multipleStages": state.contestTimelineMultipleStage,
+        "overallResult": state.overallResult == true ? "YES" : "NO",
+        "multipleStages": state.contestTimelineMultipleStage.toUpperCase(),
         "publicity": state.contestPrivatePublic.toUpperCase(),
         "status": "ACTIVE",
         "howItWorks": state.howItWorks.text,
-        "numberOfWeeks": state.numberOfWeeks.text,
+        "numberOfWeeks": numberOfWeeks.text,
         "currentStage": state.contestTimelineCurrentStage,
-        "participationStartDate": "2024-01-01T00:00:00Z", //state.startDate,
-        "startDate": "2024-01-01T00:00:00Z", //state.contestTimelineStartDate,
-        "endDate": "2024-01-01T00:00:00Z", //state.contestTimelineEndDate,
-        "entryType": state.entrySelectType,
+        "participationStartDate": _convertToISO(state.startDate),
+        "startDate": _convertToISO(state.contestTimelineStartDate),
+        "uploadCoverImages":profileImageUrl,
+        "endDate": _convertToISO(state.contestTimelineEndDate),
 
+        "entryType": state.entrySelectType.toUpperCase(),
         "contestSettings": {
           "stages": mapStageList,
           "formRequirements": mapRequireList
         }
       };
       print(map.toString());
+
       final response = await _contestRepository.createContest(map);
+      isLoading.value = false;
 
-      /*  final response = await _contestRepository.createContest(
-        CreateContestModel(
-            title: state.title.text,
-            profileId: _localDataSource.getUserId().toString(),
-            category: 'db201982-1c25-4c51-b183-cb9e5ddf2a8e',
-            state: 'Lagos',
-            winnerPrize: state.winnerPrize.text,
-            description: state.description.text,
-            voteCountToQualify: state.voteCountToQualify.text,
-            amount: state.amount.text,
-            durationType: state.durationType.text,
-            numberOfDuration: state.numberOfDuration.text,
-            descriptionOfAwards: state.descriptionOfAwards.text,
-            amountPerVote: state.amountPerVote.toString(),
-            type: 'Free',
-            overallResult: 'Yes',
-            multipleStages: state.multipleStages.text,
-            publicity: 'Yes',
-            status: state.status.text,
-            howItWorks: state.howItWorks.text,
-            numberOfWeeks: state.numberOfWeeks.text,
-            currentStage: state.currentStage.text,
-            participationStartDate: state.participationStartDate.text,
-            startDate: state.startDate,
-            endDate: state.endDate,
-            entryType: 'Free',
-            contestSettings: ContestSettings(
-                stages: contestStages,
-                formRequirements: contestSignUpRequirement)),
-      ); */
-
-      print("fredGo:  $response");
       if (response.success) {
-        print("fredGo:  $response");
-        // final responseModel = ResponseModel.fromJson(response.data);
-        //final contestDetails = responseModel.data.user;
-        // state = state.copyWith(respose: contestDetails);
+        WayaUtils.showModalSheetUgt(
+          context,
+          child: SuccessfulModal(),
+        );
       }
     } catch (e) {
       _logger.e(e.toString());
     } finally {
+      isLoading.value = false;
       state = state.copyWith(isLoading: false);
     }
   }
@@ -397,6 +400,10 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     state = state.copyWith(image: name);
   }
 
+  String getImage() {
+    return state.image;
+  }
+
   //Participation Details
   void updateEntryType(String name) {
     state = state.copyWith(entrySelectType: name);
@@ -505,16 +512,12 @@ final authRepositoryProvider = Provider((ref) => ContestRepo());
 final contestControllerProvider = Provider((ref) => ContestController());
 final stateContactProvider = StateProvider<List<StagePrefModel>>((ref) => [
       StagePrefModel(id: 0, stageName: "Qualification Stage"),
-      StagePrefModel(id: 1, stageName: "Contest"),
-      StagePrefModel(id: 2, stageName: "Contest"),
-      StagePrefModel(id: 3, stageName: "Contest"),
-      StagePrefModel(id: 4, stageName: "Contest"),
     ]);
 
 final stateRequirementProvider =
     StateProvider<List<NewRequirementModel>>((ref) => []);
 final categoryData = Provider((ref) => ContestResponse());
-
+//final loadingProvider = StateProvider<bool>((ref) => false);
 final contestNotifierProvider =
     StateNotifierProvider<CreateContestNotifier, ContestState>(
   (ref) {
@@ -530,3 +533,9 @@ final contestNotifierProvider =
 final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
+
+ivalidateUGTVM(WidgetRef ref){
+   ref.invalidate(contestNotifierProvider);
+            ref.invalidate(stateRequirementProvider);
+            ref.invalidate(stateContactProvider);
+}

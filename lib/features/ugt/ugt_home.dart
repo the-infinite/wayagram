@@ -57,7 +57,8 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
         width: 50,
         child: WayaButton(
           callback: () {
-            ref.invalidate(contestNotifierProvider);
+            ivalidateUGTVM(ref);
+
             WayaNav.toNamed('/create-contest');
           },
           height: 50,

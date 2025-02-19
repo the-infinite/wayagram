@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
 import '../widgets/contest_applied_card.dart';
@@ -13,14 +14,18 @@ class MyContestDetails extends ConsumerStatefulWidget {
   const MyContestDetails({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MyContestDetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MyContestDetailsState();
 }
-
 
 class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
   int _selectedIndex = 0;
 
-  final List<String> _tabs = ["All Contests","Hosted Contests","Applied Contests"];
+  final List<String> _tabs = [
+    "All Contests",
+    "Hosted Contests",
+    "Applied Contests"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -41,20 +46,29 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                   });
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 12.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 6.0, vertical: 12.0),
                   decoration: BoxDecoration(
-                    color: _selectedIndex == index ?  wayaTheme.colorScheme.primar50: Colors.white,
+                    color: _selectedIndex == index
+                        ? wayaTheme.colorScheme.primar50
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(6.0),
-                    border: Border.all(color: _selectedIndex == index ? Colors.transparent: wayaTheme.colorScheme.secondaryColor, ),
+                    border: Border.all(
+                      color: _selectedIndex == index
+                          ? Colors.transparent
+                          : wayaTheme.colorScheme.secondaryColor,
+                    ),
                   ),
                   child: Text(
                     _tabs[index],
                     style: TextStyle(
-                      color: _selectedIndex == index ? wayaTheme.colorScheme.customPrimary : Colors.black,
-                      fontWeight: _selectedIndex == index ? FontWeight.bold : FontWeight.bold,
-                      fontSize: 12
-
-                    ),
+                        color: _selectedIndex == index
+                            ? wayaTheme.colorScheme.customPrimary
+                            : Colors.black,
+                        fontWeight: _selectedIndex == index
+                            ? FontWeight.bold
+                            : FontWeight.bold,
+                        fontSize: 12),
                   ),
                 ),
               );
@@ -81,6 +95,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                   children: [
                     WayaButton(
                       callback: () {
+                         ivalidateUGTVM(ref);
                         WayaNav.toNamed('/create-contest');
                       },
                       color: wayaTheme.colorScheme.primar50,
@@ -103,19 +118,19 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                 UgtEmptyState(
                     icon: Image.asset("assets/images/u-emptystate.png"),
                     desc:
-                    "You don’t have any active contest here. Create a \n contest and have different participant",
+                        "You don’t have any active contest here. Create a \n contest and have different participant",
                     title: "No Contest Created",
                     buttonText: "Host a Contest",
                     onTap: () {
+                      ivalidateUGTVM(ref);
                       WayaNav.toNamed("/create-contest");
                     }),
 
-              /// Applied Contests
+                /// Applied Contests
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     const Gap(10),
                     ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
@@ -125,7 +140,6 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                         return ContestAppliedCard();
                       },
                     ),
-
                   ],
                 ),
               ],

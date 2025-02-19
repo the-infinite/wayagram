@@ -28,7 +28,7 @@ class ForYouContest extends ConsumerWidget {
         const Gap(10),
         WayaButton(
           callback: () {
-            ref.invalidate(contestNotifierProvider);
+            ivalidateUGTVM(ref);
             //WayaNav.toNamed('/create-profile-contest1');
             WayaNav.toNamed('/create-contest');
           },

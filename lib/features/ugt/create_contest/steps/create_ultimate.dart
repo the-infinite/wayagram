@@ -90,12 +90,11 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   controller: notifier.title,
                   hintText: "Enter Contest Title",
                   label: "Contest Title",
-                  borderColor:
-                      formState.hasError && notifier.title.text.isEmpty
-                          ? wayaTheme.colorScheme.error
-                          : null,
+                  borderColor: formState.hasError && notifier.title.text.isEmpty
+                      ? wayaTheme.colorScheme.error
+                      : null,
                 ),
-                if (formState.hasError &&notifier.title.text.isEmpty)
+                if (formState.hasError && notifier.title.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
@@ -123,9 +122,8 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   value: viewModel.categorys,
                   label: "Contest Category",
                   hintText: 'Select Contest Category',
-                  items: ref
-                        .read(contestNotifierProvider.notifier)
-                        .ugtCategory(),
+                  items:
+                      ref.read(contestNotifierProvider.notifier).ugtCategory(),
                   onSelected: (value) {
                     print('eee ${value.toJson()}');
                     ref
@@ -200,11 +198,11 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   label: "Contest Description",
                   line: 6,
                   borderColor:
-                      formState.hasError &&  notifier.description.text.isEmpty
+                      formState.hasError && notifier.description.text.isEmpty
                           ? wayaTheme.colorScheme.error
                           : null,
                 ),
-                if (formState.hasError &&  notifier.description.text.isEmpty)
+                if (formState.hasError && notifier.description.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
@@ -229,7 +227,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               children: [
                 WayaTextFormField(
                   keyboardType: TextInputType.number,
-                  controller:  notifier.description,
+                  controller: notifier.voteCountToQualify,
                   hintText: "Enter Vote Counts to Qualify",
                   label: "Vote Counts to Qualify",
                   borderColor: formState.hasError &&
@@ -262,6 +260,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaTextFormField(
+                  keyboardType: TextInputType.number,
                   controller: notifier.winnerPrize,
                   hintText: "Enter Winner's Award",
                   label: "Winner's Award",
@@ -610,17 +609,20 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           const Gap(60),
           WayaButton(
             callback: () async {
-              widget.goToNextTab();
-              /*  if (_formKey.currentState!.validate()) {
+              // widget.goToNextTab();
+              if (_formKey.currentState!.validate()) {
                 //check for image null
-                if (_selectedImage == null) {
+                if (ref
+                    .read(contestNotifierProvider.notifier)
+                    .getImage()
+                    .trim()
+                    .isEmpty) {
                   WayaSnackBar.showToast('Please pick image  to continue');
 
                   return;
                 }
-                 widget.goToNextTab();
-               
-              } */
+                widget.goToNextTab();
+              }
             },
             text: "Submit",
           ),

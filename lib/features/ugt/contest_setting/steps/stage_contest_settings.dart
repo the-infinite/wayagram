@@ -190,18 +190,25 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
         const Gap(60),
         WayaButton(
           callback: () async {
-            widget.goToNextTab();
-            /*  StagePrefModel? model1;
+            //  widget.goToNextTab();
+            if (ref.read(stateContactProvider.notifier).state.isEmpty) {
+              WayaSnackBar.showToast('Minimum of a stage required');
+              return;
+            }
+            StagePrefModel? model1;
             for (var model in ref.read(stateContactProvider.notifier).state) {
-              if (model.stageName!.contains("Content")) {
+              if (model.stageName!.trim().isEmpty ||
+                  model.entryAmount!.trim().isEmpty ||
+                  model.numPostPerWeek!.trim().isEmpty) {
                 model1 = model;
               }
             }
+
             if (model1 == null) {
               widget.goToNextTab();
             } else {
               WayaSnackBar.showToast('Please make sure all stages are filled');
-            } */
+            }
           },
           text: "Continue",
         ),

@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -59,6 +61,7 @@ class _ContestSignupRequirementState
     final viewModel = ref.watch(personalFirstStepProvider);
     final viewModel1 = ref.watch(stateRequirementProvider);
     final wayaTheme = Theme.of(context);
+    final isLoading = useState(false);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,7 +300,10 @@ class _ContestSignupRequirementState
                   ...ref.read(stateRequirementProvider),
                   NewRequirementModel(
                     requirementType: "Select Type",
-                    id: ref.read(stateContactProvider.notifier).state.length,
+                    id: ref
+                        .read(stateRequirementProvider.notifier)
+                        .state
+                        .length,
                   )
                 ];
               },
@@ -310,14 +316,29 @@ class _ContestSignupRequirementState
         const Gap(15),
         WayaButton(
             centerWidget:
-                LoadingState(loading: viewModel.isLoading, text: 'Submit'),
-                
-            callback: !viewModel.isLoading
+                LoadingState(loading: isLoading.value, text: 'Submit'),
+            callback: !isLoading.value
                 ? () {
+                    if (ref
+                        .read(stateRequirementProvider.notifier)
+                        .state
+                        .isNotEmpty) {
+                      for (var model in ref
+                          .read(stateRequirementProvider.notifier)
+                          .state) {
+                        if (model.requirementName!.trim().isEmpty ||
+                            model.requirementType!.trim().isEmpty) {
+                          WayaSnackBar.showToast(
+                              "Please make sure all required field are filled");
+                          return;
+                        }
+                      }
+                    }
                     ref.read(contestNotifierProvider.notifier).onSubmit(
-                      ref.read(stateRequirementProvider.notifier).state ,
-                      ref.read(stateContactProvider.notifier).state 
-                    );
+                        context,
+                        isLoading,
+                        ref.read(stateRequirementProvider.notifier).state,
+                        ref.read(stateContactProvider.notifier).state);
                     //   provider.submit(context, widget.isWayagramDeal);
                   }
                 : null),

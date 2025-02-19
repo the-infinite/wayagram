@@ -221,16 +221,16 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
           const Gap(60),
           WayaButton(
             callback: () {
-              WayaUtils.showModalSheetUgt(
+              /*  WayaUtils.showModalSheetUgt(
                 context,
                 child: UgtModal(),
-              );
-              /*  if (_formKey.currentState!.validate()) {
+              ); */
+              if (_formKey.currentState!.validate()) {
                 WayaUtils.showModalSheetUgt(
                   context,
                   child: UgtModal(),
                 );
-              } */
+              }
             },
             text: "Save Contest",
           ),

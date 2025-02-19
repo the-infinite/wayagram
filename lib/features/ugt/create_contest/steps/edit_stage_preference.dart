@@ -133,6 +133,9 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             .read(contestNotifierProvider.notifier)
                             .ugtPaymentType(),
                         onSelected: (value) {
+                          if (value.label == "Free") {
+                            _contestController.entryAmountController.text = "0";
+                          }
                           entryType.value = value.label;
                         },
                         uniqueKey: 'entry-type',
@@ -165,6 +168,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                         controller: _contestController.entryAmountController,
                         keyboardType: TextInputType.number,
                         hintText: "0 NGN",
+                        isReadOnly: entryType.value == "Free",
                         label: "Entry Amount",
                         inputFormatters: [
                           CurrencyTextInputFormatter.currency(
@@ -334,7 +338,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                 const Gap(15),
                 FormField<String>(validator: (value) {
                   if (_contestController
-                      .contestStageNameTextController.text.isEmpty) {
+                      .contestPrizeWinnerTextController.text.isEmpty) {
                     return 'Winner Price is required';
                   }
 
@@ -344,6 +348,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       WayaTextFormField(
+                        keyboardType: TextInputType.number,
                         controller:
                             _contestController.contestPrizeWinnerTextController,
                         hintText: "Enter Winners price",

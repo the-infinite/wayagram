@@ -8,6 +8,7 @@ import 'package:wayagram/features/ugt/create_contest/steps/contest_timeline.dart
 import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/participant_details.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
 class CreateContest extends ConsumerStatefulWidget {
   static const route = '/create-contest';
@@ -33,8 +34,6 @@ class _CreateContestState extends ConsumerState<CreateContest>
     }
   }
 
-
-
   void _goToPreviousTab() {
     if (_tabController.index > 1) {
       _tabController.animateTo(_tabController.index - 1);
@@ -48,8 +47,9 @@ class _CreateContestState extends ConsumerState<CreateContest>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    final viewModel = ref.watch(contestNotifierProvider);
     return WayaScaffoldWithProgressBar(
-        isLoading: false,
+        isLoading:false,
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
@@ -61,7 +61,7 @@ class _CreateContestState extends ConsumerState<CreateContest>
           ),
           ContestTimeline(),
           EditStagePreference(),
-         // StageContestSettings(),
+          // StageContestSettings(),
         ],
         tabController: _tabController);
   }

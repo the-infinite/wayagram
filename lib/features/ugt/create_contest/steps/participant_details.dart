@@ -332,12 +332,11 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
           const Gap(60),
           WayaButton(
             callback: () async {
-              widget.goToNextTab();
+              // widget.goToNextTab();
 
-              /*  if (_formKey.currentState!.validate()) {
-               
+              if (_formKey.currentState!.validate()) {
                 widget.goToNextTab();
-              } */
+              }
             },
             text: "Continue",
           ),

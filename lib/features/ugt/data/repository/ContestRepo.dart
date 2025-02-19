@@ -4,11 +4,10 @@ import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import '../model/create_contest.dart';
 
-class ContestRepo extends  BaseRepository{
- static const serviceUrl2 = "school-contest/api/v1";
+class ContestRepo extends BaseRepository {
+  static const serviceUrl2 = "school-contest/api/v1";
 
   Future<WayaRequestResponse> getCategory() {
-
     return get('$serviceUrl2/category/getAll');
   }
 
@@ -17,13 +16,13 @@ class ContestRepo extends  BaseRepository{
   //   return post('$serviceUrl/contests/create',payLoad.toJson());
   // }
 
-
-
-  Future<WayaRequestResponse> createContest(Map<String ,dynamic> payLoad) {
-
-    return post('$serviceUrl2/contests/create', payLoad, formdata: true);
+  Future<WayaRequestResponse> createContest(payLoad) {
+    return post('$serviceUrl2/contests/create', payLoad, formdata: false);
   }
 
+    Future<WayaRequestResponse> getAllContestForYou(payLoad) {
+    return get('$serviceUrl2//contests/contest-for-you', );
+  }
 
   /*Future<WayaRequestResponse> createContestController({
     required final String contestStatus,
@@ -87,6 +86,4 @@ class ContestRepo extends  BaseRepository{
     print("newSingle ${response}");
     return response;
   }*/
-
-
 }

@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -35,22 +36,24 @@ bool isSwitched = false;
 
 class _RegisterContestState extends ConsumerState<RegisterContest> {
   // String term ="terms";
+  final _formKey = GlobalKey<FormState>();
   Color redColor = Colors.yellowAccent;
   String resetColor = '\x1B[0m';
 
-  XFile? _selectedImage;
+  //XFile? _selectedImage;
 
-  Future<void> _pickImage() async {
+  Future<String?> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _selectedImage = image;
-    });
+    if (image != null) {
+      return image.path;
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
-    String term = "${redColor}terms";
+    // String term = "${redColor}terms";
     final viewModel = ref.watch(registerFormProvider);
     final notifier = ref.read(registerFormProvider.notifier);
     final wayaTheme = Theme.of(context);
@@ -60,372 +63,464 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
       isLoading: false,
       isScrollable: true,
       title: "Register For Contest",
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Join University Got Talent and Let\n Your Talent Shine!",
-              style: wayaTheme.textTheme.titleLarge),
-          const Gap(5),
-          Text(
-              "Sign up now to be part of the biggest university talent\n competition and make your mark!",
-              style: wayaTheme.textTheme.hintStyle),
-          const Gap(20),
-          Text("Personal Information", style: wayaTheme.textTheme.hintStyle),
-          const Gap(20),
-          WayaTextFormField(
-            controller: notifier.fullName,
-            hintText: "Enter Full Name",
-            label: "Full Name",
-          ),
-          const Gap(15),
-          WayaTextFormField(
-            controller: notifier.emailAddress,
-            hintText: "example@mail.com",
-            label: "Email Address",
-          ),
-          const Gap(15),
-          WayaTextFormField(
-            controller: notifier.address,
-            hintText: "Enter Address here",
-            label: "Address",
-          ),
-          const Gap(15),
-          FormField<String>(validator: (value) {
-            if (notifier.phoneNumber.text.isEmpty) {
-              return 'Phone is required';
-            }
+      body: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Join University Got Talent and Let\n Your Talent Shine!",
+                style: wayaTheme.textTheme.titleLarge),
+            const Gap(5),
+            Text(
+                "Sign up now to be part of the biggest university talent\n competition and make your mark!",
+                style: wayaTheme.textTheme.hintStyle),
+            const Gap(20),
+            Text("Personal Information", style: wayaTheme.textTheme.hintStyle),
+            const Gap(20),
+            FormField<String>(validator: (value) {
+              if (notifier.fullName.text.isEmpty) {
+                return 'Full Name is required';
+              }
 
-            return null;
-          }, builder: (formState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Phone Number",
-                  style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                        fontSize: 14,
-                        color: wayaTheme.colorScheme.greyColor900,
-                      ),
-                ),
-                const Gap(3),
-                Row(
-                  children: [
-                    //   Expanded(
-                    Container(
-                      height: 48,
-                      width: 90,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: wayaTheme.colorScheme.greyColor300,
-                              width: 1),
-                          borderRadius: BorderRadius.all(Radius.circular(6.0))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/onboarding/flag.png',
-                            width: 30,
-                            height: 30,
-                          ),
-                          const Gap(3),
-                          Text(
-                            "+234",
-                            style: WayaTextStyles.hintStyle,
-                          )
-                        ],
-                      ),
-                    ),
-                    const Gap(4),
-                    Expanded(
-                      child: WayaTextFormField(
-                        keyboardType: TextInputType.phone,
-                        controller: notifier.phoneNumber,
-                        hintText: '000-000-000',
-                        borderColor: formState.hasError &&
-                                notifier.phoneNumber.text.isEmpty
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaTextFormField(
+                    controller: notifier.fullName,
+                    hintText: "Enter Full Name",
+                    label: "Full Name",
+                    borderColor:
+                        formState.hasError && notifier.fullName.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
-                      ),
-                    )
-                  ],
-                ),
-                if (formState.hasError && notifier.phoneNumber.text.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      formState.errorText!,
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
-                    ),
+                    //  label: 'Business Name',
                   ),
-              ],
-            );
-          }),
-          const Gap(20),
-          Text("University Information", style: wayaTheme.textTheme.hintStyle),
-          const Gap(20),
-          WayaSelectField(
-            height: 0.3,
-            label: "Which University do you represent?",
-            hintText: 'Select University',
-            items: [
-              Select(label: "Unilag", value: "1"),
-              Select(label: "Ahmadu Bello University", value: "1"),
-              Select(label: "UniBen", value: "1"),
-              Select(label: "FUTA", value: "1"),
-            ],
-            onSelected: (value) {
-              selectedUniversity.value = value.label;
-              notifier.university = value.label;
-            },
-            uniqueKey: 'contest-state',
-          ),
-          const Gap(15),
-          WayaSelectField(
-            height: 0.3,
-            label: "State",
-            hintText: 'Select state ',
-            items: ref.read(contestNotifierProvider.notifier).ugtStates(),
-            onSelected: (value) {
-              selectedState.value = value.label;
-              notifier.selectedState = value.label;
-            },
-            uniqueKey: 'contest-state',
-          ),
-          Gap(15),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Upload School ID or Acceptance Letter.",
-                    style: wayaTheme.textTheme.bodyMedium),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _pickImage,
-                      child: Column(
-                        children: [
-                          Image.asset("assets/images/upload.png"),
-                        ],
+                  if (formState.hasError && notifier.fullName.text.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
                       ),
                     ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("upload your valid school ID.",
-                              style: wayaTheme.textTheme.bodyMedium),
-                          SizedBox(height: 4),
-                          _selectedImage == null
-                              ? Column(
-                                  children: [
-                                    Text("JPG, MP4 format . Max. 25MB",
-                                        style: wayaTheme.textTheme.hintStyle),
-                                  ],
-                                )
-                              : Image.file(
-                                  File(_selectedImage!.path),
-                                  height: 100,
-                                ),
-                        ],
+                ],
+              );
+            }),
+
+            /*    WayaTextFormField(
+              controller: notifier.fullName,
+              hintText: "Enter Full Name",
+              label: "Full Name",
+            ), */
+            const Gap(15),
+            FormField<String>(validator: (value) {
+              if (notifier.emailAddress.text.isEmpty) {
+                return 'Email is required';
+              }
+              final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+              if (!regexp.hasMatch(notifier.emailAddress.text)) {
+                return 'Invalid email address';
+              }
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaTextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: notifier.emailAddress,
+                    hintText: 'example@gmail.com',
+                    borderColor:
+                        formState.hasError && notifier.emailAddress.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
+                    label: 'Email Address',
+                  ),
+                  if (formState.hasError && notifier.emailAddress.text.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
                       ),
                     ),
-                    Column(
-                      children: [
-                        WayaButton(
-                            horizontalPadding: 15,
-                            text: "Upload",
-                            callback: () => {if (_selectedImage != null) {}}),
+                ],
+              );
+            }),
+            const Gap(15),
+            FormField<String>(validator: (value) {
+              if (notifier.address.text.isEmpty) {
+                return 'Business Name is required';
+              }
+
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaTextFormField(
+                    controller: notifier.address,
+                    hintText: "Enter Address here",
+                    label: "Address",
+                    borderColor:
+                        formState.hasError && notifier.address.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
+                  ),
+                  if (formState.hasError && notifier.address.text.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                      ),
+                    ),
+                ],
+              );
+            }),
+            const Gap(15),
+            FormField<String>(validator: (value) {
+              if (notifier.phoneNumber.text.isEmpty) {
+                return 'Phone is required';
+              }
+
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Phone Number",
+                    style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+                          fontSize: 14,
+                          color: wayaTheme.colorScheme.greyColor900,
+                        ),
+                  ),
+                  const Gap(3),
+                  Row(
+                    children: [
+                      //   Expanded(
+                      Container(
+                        height: 48,
+                        width: 90,
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: wayaTheme.colorScheme.greyColor300,
+                                width: 1),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(6.0))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/onboarding/flag.png',
+                              width: 30,
+                              height: 30,
+                            ),
+                            const Gap(3),
+                            Text(
+                              "+234",
+                              style: WayaTextStyles.hintStyle,
+                            )
+                          ],
+                        ),
+                      ),
+                      const Gap(4),
+                      Expanded(
+                        child: WayaTextFormField(
+                          keyboardType: TextInputType.phone,
+                          controller: notifier.phoneNumber,
+                          hintText: '000-000-000',
+                          borderColor: formState.hasError &&
+                                  notifier.phoneNumber.text.isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
+                        ),
+                      )
+                    ],
+                  ),
+                  if (formState.hasError && notifier.phoneNumber.text.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                      ),
+                    ),
+                ],
+              );
+            }),
+            const Gap(20),
+            Text("University Information",
+                style: wayaTheme.textTheme.hintStyle),
+            const Gap(20),
+            FormField<String>(validator: (value) {
+              if (notifier.university.isEmpty) {
+                return 'Business Type is required';
+              }
+
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaSelectField(
+                      height: 0.3,
+                      label: "Which University do you represent?",
+                      value: selectedUniversity.value,
+                      hintText: 'Select University',
+                      items: [
+                        Select(label: "Unilag", value: "1"),
+                        Select(label: "Ahmadu Bello University", value: "1"),
+                        Select(label: "UniBen", value: "1"),
+                        Select(label: "FUTA", value: "1"),
                       ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const Gap(20),
-          Text("Talent Description", style: wayaTheme.textTheme.hintStyle),
-          const Gap(20),
-          WayaSelectField(
-            height: 0.3,
-            label: "Talent Category",
-            hintText: 'Select Category of Talent',
-            items: [],
-            onSelected: (value) {},
-            uniqueKey: 'contest-state',
-          ),
-          const Gap(15),
-          WayaTextFormField(
-            controller: TextEditingController(),
-            hintText:
-                "Tell us about your talent in a few words. What makes you stand out?",
-            label: "Description of Talent",
-            line: 6,
-          ),
-          Gap(15),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Show Us Your Talent",
-                    style: wayaTheme.textTheme.bodyMedium),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _pickImage,
-                      child: Column(
-                        children: [
-                          Image.asset("assets/images/upload.png"),
-                        ],
+                      onSelected: (value) {
+                        selectedUniversity.value = value.label;
+                        notifier.university = value.label;
+                      },
+                      uniqueKey: 'contest-university'),
+                  if (formState.hasError && notifier.university.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
                       ),
                     ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Upload images / Videos of your Talent.",
-                              style: wayaTheme.textTheme.bodyMedium),
-                          SizedBox(height: 4),
-                          _selectedImage == null
-                              ? Column(
-                                  children: [
-                                    Text("JPG, MP4 format . Max. 25MB",
-                                        style: wayaTheme.textTheme.hintStyle),
-                                  ],
-                                )
-                              : Image.file(
-                                  File(_selectedImage!.path),
-                                  height: 100,
+                ],
+              );
+            }),
+
+            /*   WayaSelectField(
+              height: 0.3,
+              label: "Which University do you represent?",
+              hintText: 'Select University',
+              items: [
+                Select(label: "Unilag", value: "1"),
+                Select(label: "Ahmadu Bello University", value: "1"),
+                Select(label: "UniBen", value: "1"),
+                Select(label: "FUTA", value: "1"),
+              ],
+              onSelected: (value) {
+                selectedUniversity.value = value.label;
+                notifier.university = value.label;
+              },
+              uniqueKey: 'contest-state',
+            ), */
+
+            const Gap(15),
+            FormField<String>(validator: (value) {
+              if (selectedState.value.isEmpty) {
+                return 'State is required';
+              }
+
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaSelectField(
+                    height: 0.3,
+                    label: "State",
+                    value: selectedState.value,
+                    hintText: 'Select state ',
+                    items:
+                        ref.read(contestNotifierProvider.notifier).ugtStates(),
+                    onSelected: (value) {
+                      selectedState.value = value.label;
+                      notifier.selectedState = value.label;
+                    },
+                    uniqueKey: 'contest-state',
+                  ),
+                  if (formState.hasError && selectedState.value.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                      ),
+                    ),
+                ],
+              );
+            }),
+            Gap(15),
+
+            ListView.builder(
+              shrinkWrap: true, // Makes the ListView take only the needed space
+              physics:
+                  NeverScrollableScrollPhysics(), // Disables ListView's scrolling
+
+              itemCount: viewModel.length,
+              itemBuilder: (context, index) {
+                final field = viewModel[index];
+
+                return Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: Column(
+                    children: [
+                      if (field.type == FieldType.text) ...[
+                        // Text Input Field
+                        Gap(15),
+                        FormField<String>(validator: (value) {
+                          if (field.textController!.text.isEmpty) {
+                            return 'Full Name is required';
+                          }
+
+                          return null;
+                        }, builder: (formState) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              WayaTextFormField(
+                                controller: field.textController,
+                                hintText: "${field.title} is required",
+                                label: field.title,
+                                borderColor: formState.hasError &&
+                                        field.textController!.text.isEmpty
+                                    ? wayaTheme.colorScheme.error
+                                    : null,
+                                //  label: 'Business Name',
+                              ),
+                              if (formState.hasError &&
+                                  field.textController!.text.isEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    formState.errorText!,
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12),
+                                  ),
                                 ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        WayaButton(
-                            horizontalPadding: 15,
-                            text: "Upload",
-                            callback: () => {if (_selectedImage != null) {}}),
+                            ],
+                          );
+                        }),
+                      ] else if (field.type == FieldType.image) ...[
+                        // Image Display & Upload Button
+                        Gap(15),
+                        imageWidget(context, field, field.id),
                       ],
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                );
+              },
             ),
-          ),
-          const Gap(20),
-          Text("Other Information", style: wayaTheme.textTheme.hintStyle),
-          const Gap(20),
-          WayaTextFormField(
-            controller: TextEditingController(),
-            hintText: "Enter Your Age",
-            label: "Age",
-          ),
-          Gap(15),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Passport", style: wayaTheme.textTheme.bodyMedium),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _pickImage,
-                      child: Column(
-                        children: [
-                          Image.asset("assets/images/upload.png"),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Upload image of your Passport.",
-                              style: wayaTheme.textTheme.bodyMedium),
-                          SizedBox(height: 4),
-                          _selectedImage == null
-                              ? Column(
-                                  children: [
-                                    Text("JPG, MP4 format . Max. 25MB",
-                                        style: wayaTheme.textTheme.hintStyle),
-                                  ],
-                                )
-                              : Image.file(
-                                  File(_selectedImage!.path),
-                                  height: 100,
-                                ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        WayaButton(
-                            horizontalPadding: 15,
-                            text: "Upload",
-                            callback: () => {if (_selectedImage != null) {}}),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+
+            // Add Buttons for Text or Image
+
+            const Gap(40),
+            WayaButton(
+              callback: () {
+                if (_formKey.currentState!.validate()) {
+                  for (var model in viewModel) {
+                    if (model.isRequired) {
+                      if (model.type == FieldType.image) {
+                        if (model.imagePath == null ||
+                            model.imagePath!.trim().isEmpty) {
+                          WayaSnackBar.showToast(
+                              "please pick image for ${model.title}");
+
+                          return;
+                        }
+                      }
+                    }
+                  }
+                  notifier.submitDetail();
+                }
+
+                print("Mean i am here");
+
+                /*  WayaUtils.showModalSheetUgt(
+                  context,
+                  child: ApplicationStatus(),
+                ); */
+              },
+              text: "Apply Now & Join the Fun!",
             ),
-          ),
-          const Gap(15),
+            const Gap(8),
+            WayaButton(
+                text: 'Go Back',
+                color: wayaTheme.colorScheme.greyColor300,
+                textColor: wayaTheme.colorScheme.customBlack,
+                border: Border.all(
+                    width: 1, color: wayaTheme.colorScheme.greyColor300),
+                callback: () {
+                  Navigator.pop(context);
+                })
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget imageWidget(BuildContext context, DynamicField field, String id) {
+    final wayaTheme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(field.title, style: wayaTheme.textTheme.bodyMedium),
+          SizedBox(height: 16),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Switch(
-                  value: isSwitched,
-                  onChanged: (value) {
-                    setState(() {
-                      isSwitched = value;
-                    });
-                  },
-                  activeColor: Colors.white,
-                  activeTrackColor: wayaTheme.colorScheme.customPrimary),
-              const SizedBox(width: 10),
-              Text(
-                "By checking this box, you agree to our term and\n conditions",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isSwitched ? Colors.black : Colors.grey,
+              GestureDetector(
+                onTap: _pickImage,
+                child: Column(
+                  children: [
+                    Image.asset("assets/images/upload.png"),
+                  ],
                 ),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    field.imagePath == null
+                        ? Column(
+                            children: [
+                              Text("JPG, MP4 format . Max. 25MB",
+                                  style: wayaTheme.textTheme.hintStyle),
+                            ],
+                          )
+                        : Image.file(
+                            File(field.imagePath!),
+                            height: 100,
+                          ),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  WayaButton(
+                      horizontalPadding: 15,
+                      text: "Upload",
+                      callback: () async {
+                        // {if (_selectedImage != null) {
+                        String? image = await _pickImage();
+                        if (image != null) {
+                          ref
+                              .read(registerFormProvider.notifier)
+                              .updateImage(id, image);
+                        }
+                      }),
+                ],
               ),
             ],
           ),
-          const Gap(40),
-          WayaButton(
-            callback: () {
-              WayaUtils.showModalSheetUgt(
-                context,
-                child: ApplicationStatus(),
-              );
-            },
-            text: "Apply Now & Join the Fun!",
-          ),
-          const Gap(8),
-          WayaButton(
-              text: 'Go Back',
-              color: wayaTheme.colorScheme.greyColor300,
-              textColor: wayaTheme.colorScheme.customBlack,
-              border: Border.all(
-                  width: 1, color: wayaTheme.colorScheme.greyColor300),
-              callback: () {
-                Navigator.pop(context);
-              })
         ],
       ),
     );
