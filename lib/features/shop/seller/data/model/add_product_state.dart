@@ -17,7 +17,7 @@ class AddProductState {
   final TextEditingController productWidth;
   final TextEditingController productHeight;
   final TextEditingController productDepth;
-  final List<MultipartFile> images;
+  final List<String> images;
   final String shopId;
   final bool? isWayagramDeal;
   final bool includeMeasurement;
@@ -112,7 +112,7 @@ class AddProductState {
       bool? includeDeliveryFee,
       List<DocType>? uploadedDocuments,
       TextEditingController? discountPercentage,
-      List<MultipartFile>? images,
+      List<String>? images,
       File? productImage,
       bool? isWayagramDeal,
       List<Select>? categories,

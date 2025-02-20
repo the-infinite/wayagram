@@ -11,10 +11,13 @@ class VerifyTransactionScreen extends ConsumerStatefulWidget {
   const VerifyTransactionScreen({super.key});
 
   @override
-  ConsumerState<VerifyTransactionScreen> createState() => _VerifyTransactionScreenState();
+  ConsumerState<VerifyTransactionScreen> createState() =>
+      _VerifyTransactionScreenState();
 }
 
-class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScreen> with SingleTickerProviderStateMixin {
+class _VerifyTransactionScreenState
+    extends ConsumerState<VerifyTransactionScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -25,13 +28,17 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
+    _animation =
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
     _animationController.repeat(reverse: true);
 
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
       if (args != null) {
-        ref.read(transactionVmProvider.notifier).verifyTransaction(args["transactionId"], args["fundingOption"]);
+        ref
+            .read(transactionVmProvider.notifier)
+            .verifyTransaction(args["transactionId"], args["fundingOption"]);
       }
     });
   }
@@ -57,6 +64,8 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
         }
       });
     }
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     return WayaScaffold(
       body: SafeArea(
         child: Padding(
@@ -124,11 +133,14 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
                             onPressed: () {
                               Navigator.popUntil(
                                 context,
-                                (route) => route.settings.name == "/general-settings",
+                                (route) =>
+                                    route.settings.name == "/general-settings",
                               );
                               Navigator.pushNamed(context, WalletPage.route);
                             },
-                            child: Text("Done", style: wayaTheme.textTheme.bodyLarge!.copyWith(color: Colors.white)))
+                            child: Text("Done",
+                                style: wayaTheme.textTheme.bodyLarge!
+                                    .copyWith(color: Colors.white)))
                       ] else ...[
                         Icon(
                           Icons.error_outline,
@@ -158,14 +170,20 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
               if (!state.isVerifying! && !state.verified!) ...[
                 const SizedBox(height: 32),
                 ElevatedButton(
-                  onPressed: () => WayaNav.removeUntilNamed(WalletPage.route),
+                  onPressed: () => args?['redirect'] != null
+                      ? WayaNav.removeUntilNamed(BottomView.route)
+                      : WayaNav.removeUntilNamed(WalletPage.route),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  child: const Text('Back to Wallet', style: TextStyle(fontSize: 18)),
+                  ), // I am sorry, i just want to push sth that is working
+                  child: Text(
+                      args?['redirect'] != null
+                          ? 'Back to Home'
+                          : 'Back to Wallet',
+                      style: TextStyle(fontSize: 18)),
                 ),
               ],
             ],

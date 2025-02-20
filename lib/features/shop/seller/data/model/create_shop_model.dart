@@ -1,14 +1,11 @@
 
-import 'package:dio/dio.dart';
-
-
 class CreateShopModel {
   final String name;
   final String description;
   final String address;
   final String phone;
   final String email;
-  final MultipartFile? logo;
+  final String? logo;
   final String vendorId;
   final String lga;
   final String state;

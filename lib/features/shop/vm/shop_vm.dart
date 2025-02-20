@@ -88,7 +88,7 @@ class ShopVm extends StateNotifier<ShopState> {
             product.description.toLowerCase().contains(query);
       }
 
-      return !product.wayagramDeal;
+      return product.wayagramDeal == null||product.wayagramDeal == false;
     }).toList();
   }
 
@@ -109,7 +109,7 @@ class ShopVm extends StateNotifier<ShopState> {
             product.description.toLowerCase().contains(query);
       }
 
-      return product.wayagramDeal;
+      return product.wayagramDeal ==  true;
     }).toList();
   }
 }

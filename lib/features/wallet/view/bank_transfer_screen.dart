@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class BankTransferScreen extends StatelessWidget {
   static const route = '/bank-transfer';
@@ -10,7 +11,8 @@ class BankTransferScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     return WayaScaffold(
       backgroundColor: wayaTheme.colorScheme.greyColor50,
       appBar: AppBar(
@@ -46,7 +48,10 @@ class BankTransferScreen extends StatelessWidget {
                     Gap(10),
                     Text(
                       '${args?["amount"] ?? "N/A"} NGN',
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500, color: wayaTheme.primaryColor),
+                      style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w500,
+                          color: wayaTheme.primaryColor),
                     ),
                   ],
                 ),
@@ -65,7 +70,15 @@ class BankTransferScreen extends StatelessWidget {
                 ),
               ),
               const Gap(16),
-              ElevatedButton(onPressed: () {}, child: Text("I have Funded My Account")),
+              ElevatedButton(
+                  onPressed: () {
+                    if (args?['redirect'] != null &&
+                        (args?['redirect'] as String).isNotEmpty) {
+                      WayaNav.removeUntilNamed(
+                          BottomView.route);
+                    }
+                  },
+                  child: Text("I have Funded My Account")),
               const Gap(32),
               _buildHowToFund(),
             ],
@@ -75,7 +88,8 @@ class BankTransferScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountSection(String numberLabel, String number, String nameLabel, String name, BuildContext context) {
+  Widget _buildAccountSection(String numberLabel, String number,
+      String nameLabel, String name, BuildContext context) {
     final wayaTheme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

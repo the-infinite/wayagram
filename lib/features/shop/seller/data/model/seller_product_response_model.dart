@@ -74,7 +74,7 @@ class SellerProduct {
   final String materialType;
   final int depth;
   final String condition;
-  final bool wayagramDeal;
+  final bool? wayagramDeal;
   final String? wayagramDealRejectedReason;
   final bool approve;
   final bool deliveryCharge;

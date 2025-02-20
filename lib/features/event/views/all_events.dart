@@ -75,7 +75,8 @@ class _AllEventsState extends ConsumerState<AllEvents> {
               children: [
                 WayaButton(
                   callback: () {
-                    WayaNav.toNamed(AddEvent.route);
+                    
+                     Navigator.pushReplacementNamed(context, AddEvent.route);
                   },
                   color: wayaTheme.colorScheme.primar50,
                   centerWidget: Row(

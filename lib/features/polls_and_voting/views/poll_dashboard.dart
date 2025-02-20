@@ -10,7 +10,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
+import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
@@ -24,24 +24,19 @@ class PollDashboard extends ConsumerStatefulWidget {
 
 class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
-   late CreatePollVotingState getId;
-
-
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final pollId  = ModalRoute.of(context)?.settings.arguments as String?;
       print("DARLINGTON POLLID ====>>> ${pollId.toString()}");
-      ref.read(createPollVotingProvider.notifier).getDashboardPoll(pollId!);
+      ref.read(createPollVotingProvider.notifier).getSinglePollDashboard(pollId!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
-    print('FJBGJB ${viewModel.pollDashboardTwoModel.length}');
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: viewModel.isLoading,
@@ -136,27 +131,29 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: viewModel.dashboard.length,
+                itemCount: viewModel.votes?.length,
                 itemBuilder: (context, index) {
-                  final poll = viewModel.dashboard[index];
+                  final poll = viewModel.votes?[index];
                   // int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-                  //
+
                   // int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
 
-                  //int daysLeft = DateTime.parse('${poll.}').difference(DateTime.parse('${poll.startDate}')).inDays;
+                  //int daysLeft = DateTime.parse('${poll?.createdAt}').difference(DateTime.parse('${poll.startDate}')).inDays;
 
-                  return
-                    statisticCard(' vote', '1st', '${poll.moneyGenerated}', Theme.of(context).colorScheme.success50);
+                  position(txt){
+                    if(index == 0){
+                      return txt = '1st';
+                    }else if(index == 1){
+                      return txt = '2nd';
+                    }else if(index == 2){
+                      return txt = '3rd';
+                    }else if(index > 2){
+                      return txt = '${index}th';
+                    }
+                  }
+                  return statisticCard('${poll?.quantity} vote', '${position(index)}', '${poll?.choice?.text}', Theme.of(context).colorScheme.success50);
+
                 }),
-            // statisticCard('240 vote', '1st', 'Dr Nnamdi Azikwe', Theme.of(context).colorScheme.success50),
-            // const Gap(10),
-            // statisticCard('240 vote', '2nd', 'Bola Ahmed Tinubu', Color(0xffFEF6E7) ),
-            // const Gap(10),
-            // statisticCard('90 vote', '  3rd', 'Mohammed Buhari', Theme.of(context).colorScheme.greyColor50 ),
-            // const Gap(10),
-            // statisticCard('90 vote', '  4th', 'Ekisagha Kemepade', Theme.of(context).colorScheme.greyColor50 ),
-            // const Gap(10),
-            // statisticCard('90 vote', '  5th', 'Ekisagha Kemepade', Theme.of(context).colorScheme.greyColor50 ),
             const Gap(10),
         ],),
         ),
@@ -169,8 +166,9 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
   statisticCard(vote, position, name, color){
     return Container(
+      margin: EdgeInsets.only(bottom: 10),
       height: 32.h,
-      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+      padding: EdgeInsets.only(left: 10.w, right: 10.w,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
         color: color
@@ -241,28 +239,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
     );
   }
 
-  presImage(img, name, ctx,){
-    return Container(
-        padding: EdgeInsets.only(left: 20.w),
-        height: 60.h,
-        decoration: BoxDecoration(
-          border: Border.all(color: WayaColors.primary600, ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(children: [
-          Image.asset(img, height: 44.h,),
-          const Gap(40),
-          Text(
-            name,
-            style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(ctx).colorScheme.primary600 ),
-          ),
 
-        ],)
-    );
-  }
 
 
 }

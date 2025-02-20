@@ -3,6 +3,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
+import 'package:wayagram/features/explore/views/chat_and_social.dart';
 
 class Services {
   final String icon;
@@ -33,12 +34,14 @@ class ExploreOurServicesVm {
           icon: WayaAssets.icons.eChat.path,
           name: 'Chat & Socials',
           onTap: () {
-             Navigator.pushNamed(context, BottomView.route, arguments: 4);
+            WayaNav.toNamed(ChatAndSocial.route);
           }),
       Services(
           icon: WayaAssets.icons.eDonation.path,
           name: 'Donations',
-          onTap: () {}),
+          onTap: () {
+            Navigator.pushNamed(context, BottomView.route, arguments: 2);
+          }),
       Services(
           icon: WayaAssets.icons.ePoll.path,
           name: 'Polls & Votes',
@@ -48,9 +51,7 @@ class ExploreOurServicesVm {
       Services(
           icon: WayaAssets.icons.eEvent.path,
           name: 'Events',
-          onTap: (
-            
-          ) {
+          onTap: () {
             WayaNav.toNamed(EventView.route);
           }),
     ];

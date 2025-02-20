@@ -30,7 +30,8 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
     final walletState = ref.watch(walletVmProvider);
     final eventState = ref.watch(eventVmProvider);
     final walletBalance = walletState.data?.balance ?? '0';
-    final isInsufficientBalance = double.parse(walletBalance).toInt() < widget.event.fee;
+    final isInsufficientBalance =
+        double.parse(walletBalance).toInt() < widget.event.fee;
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
       child: Column(
@@ -104,7 +105,8 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
             callback: !eventState.isJoiningEvent
                 ? () {
                     if (isInsufficientBalance) {
-                      return WayaNav.toNamed(FundWalletOptionsScreen.route);
+                      return WayaNav.toNamed(FundWalletOptionsScreen.route,
+                          arguments: '/events');
                     }
                     ref.read(eventVmProvider.notifier).joinEvent(
                         eventId: widget.event.id,

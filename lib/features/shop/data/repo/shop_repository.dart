@@ -10,7 +10,7 @@ class ShopRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> createShop(CreateShopModel payload) {
-    return post("$serviceUrl/shops/create", payload.toJson(), formdata: true);
+    return post("$serviceUrl/shops/create", payload.toJson());
   }
 
   Future<WayaRequestResponse> getShopBySellerId(String id) {
@@ -24,7 +24,7 @@ class ShopRepository extends BaseRepository {
   Future<WayaRequestResponse> createProduct(
       {required AddProductModel payload, required String id}) {
     return post("$serviceUrl/products/create/$id", payload.toJson(),
-        formdata: true);
+       );
   }
 
   Future<WayaRequestResponse> getAllDiscounts(int page) {
@@ -56,7 +56,7 @@ class ShopRepository extends BaseRepository {
       CreateShopModel payload, String vendorId) {
   
     return patch("$serviceUrl/shops/edit/$vendorId", payload.toJson(),
-        formdata: true);
+       );
   }
 
   //

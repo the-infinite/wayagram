@@ -13,6 +13,7 @@ class EventState {
   final List<EventDoc> myEvents;
   final List<EventDoc> upcomingEvents;
   final List<EventDoc> pastEvents;
+  final List<EventDoc> joinedEvents;
   final EventDoc? singleEvent;
   final bool isUserEvent;
   final List<Doc> attendees;
@@ -32,6 +33,7 @@ class EventState {
       this.isLoadingSingleEvent = false,
       this.isReportingEvent = false,
       this.attendees = const [],
+      this.joinedEvents = const [],
       this.userId = '',
       this.isLoadingUserEvents = false});
 
@@ -41,6 +43,7 @@ class EventState {
       List<EventDoc>? myEvents,
       List<EventDoc>? upcomingEvents,
       List<EventDoc>? pastEvents,
+      List<EventDoc>? joinedEvents,
       String? userId,
       bool? isLoadingEventWithStatus,
       EventDoc? singleEvent,
@@ -65,6 +68,7 @@ class EventState {
         attendees: attendees ?? this.attendees,
         userId: userId ?? this.userId,
         isReportingEvent: isReportingEvent ?? this.isReportingEvent,
+        joinedEvents: joinedEvents ?? this.joinedEvents,
         isLoadingEventWithStatus:
             isLoadingEventWithStatus ?? this.isLoadingEventWithStatus,
         isLoadingUserEvents: isLoadingUserEvents ?? this.isLoadingUserEvents);

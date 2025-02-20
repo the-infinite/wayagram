@@ -42,12 +42,13 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
     // TODO: implement build
     //final state = ref.watch(orderVmProvider);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        GroupedWidgetHeader(
+    return Expanded(
+        child: PaginatedDataView<Order>(
+            uniqueKey: 'orders',
+            trailingWidget: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                   GroupedWidgetHeader(
             isVisible: false,
             subTitle: 'View and manage your orders',
             title: 'Orders'),
@@ -57,8 +58,8 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
           search: searchController,
         ),
         const Gap(25),
-        PaginatedDataView<Order>(
-            uniqueKey: 'orders',
+              ],
+            ),
             emptyState: EmptyState(
                 assetImage:
                     WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
@@ -67,7 +68,7 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
               count: 6,
             ),
             fetchData: ref.read(orderVmProvider.notifier).getOrders,
-            result: (data,s) {
+            result: (data, s) {
               final filteredOrder = WayaUtils.search<Order>(
                   data,
                   [
@@ -88,8 +89,6 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
                       order: filteredOrder[index],
                     );
                   });
-            })
-      ],
-    );
+            }));
   }
 }

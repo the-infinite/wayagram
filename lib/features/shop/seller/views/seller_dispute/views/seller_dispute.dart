@@ -1,37 +1,66 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/seller/views/seller_dispute/widgets/single_dispute_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 
-class SellerDispute extends ConsumerWidget {
+class SellerDispute extends ConsumerStatefulWidget {
   static const route = '/seller-dispute';
   const SellerDispute({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
+  ConsumerState<SellerDispute> createState() => _SellerDisputeState();
+}
+
+class _SellerDisputeState extends ConsumerState<SellerDispute> {
+  final searchController = TextEditingController();
+  final handler = WayaObservableScrollController();
+
+  // This is fine.
+  @override
+  Widget build(BuildContext context) {
     return WayaScaffold(
-        isLoading: false,
-        isScrollable: true,
-        title: 'All Disputes',
-        body: Column(
+      isLoading: false,
+      isScrollable: false,
+      title: 'All Disputes',
+      body: WayaObservableScrollView(
+        shouldFetch: false,
+        isAtEnd: true,
+        handler: handler,
+        onReachEnd: () async {},
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Gap(20),
-            FilterWidget(search: TextEditingController(), hintText: 'Search Dispute'),
-            const Gap(20),
+            // Some space.
+            Gap(20.h),
+
+            //? How search through our list of disputes...
+            FilterWidget(
+              search: searchController,
+              hintText: 'Search Dispute',
+              onTextChanged: (value) {
+                // TODO: Filter this.
+              },
+            ),
+
+            // Some space.
+            Gap(20.h),
+
+            //? Where we show our disputes.
             ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return SingleDisputeWidget();
-                })
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return SingleDisputeWidget();
+              },
+            )
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

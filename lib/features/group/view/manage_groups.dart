@@ -50,6 +50,7 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
       children: [
         viewModel.getAllGroups!.isEmpty ? GroupEmptyState():
         ListView.builder(
+            padding: EdgeInsets.only(bottom: 40),
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel.getAllGroups?.length,

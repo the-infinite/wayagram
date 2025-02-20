@@ -34,7 +34,6 @@ class MoreVm {
           title: "Group",
           onTap: () {
             WayaNav.toNamed('/createGroup');
-            // WayaNav.toNamed('/groupSetting');
           }),
       MoreOptionModel(
           asset: WayaAssets.icons.mShop.path,
@@ -82,7 +81,9 @@ class MoreVm {
           asset: WayaAssets.icons.mDonation.path,
           content: "Create Donation Posts and also help people in need",
           title: "Donation",
-          onTap: () {}),
+          onTap: () {
+            Navigator.pushNamed(context, BottomView.route, arguments: 2);
+          }),
       MoreOptionModel(
           asset: WayaAssets.icons.mPromotion.path,
           content:
