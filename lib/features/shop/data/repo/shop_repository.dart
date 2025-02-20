@@ -10,7 +10,7 @@ class ShopRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> createShop(CreateShopModel payload) {
-    return post("$serviceUrl/shops/create", payload.toJson(), formdata: true);
+    return post("$serviceUrl/shops/create", payload.toJson());
   }
 
   Future<WayaRequestResponse> getShopBySellerId(String id) {

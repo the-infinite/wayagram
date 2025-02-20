@@ -31,7 +31,7 @@ class _WayaShopState extends ConsumerState<WayaShop>
 
     return WayaScaffold(
         isLoading: ref.watch(createShopVmProvider).isLoading,
-        isScrollable: true,
+        isScrollable: false,
         progressIndicator: loadingState(context: context),
         onTapBackButton: () =>
             Navigator.pushNamed(context, BottomView.route, arguments: 0),

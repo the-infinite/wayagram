@@ -54,15 +54,17 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
         ShopResponseModel responseModel =
             ShopResponseModel.fromJson(response.data);
 
-        state = state.copyWith(hasShop: responseModel.data.isNotEmpty);
+        state = state.copyWith(hasShop: responseModel.data.shops.isNotEmpty);
         // state = state.copyWith(shop: responseModel.data);
-        if (responseModel.data.isEmpty) {
+
+        if (responseModel.data.shops.isEmpty) {
+          print("fdfd");
           await ref
               .read(createShopVmProvider.notifier)
               .createSellerShop(hasNoShop: true);
           return;
         } else {
-          state = state.copyWith(shop: responseModel.data);
+          state = state.copyWith(shop: responseModel.data.shops);
         }
       }
     } catch (e) {
