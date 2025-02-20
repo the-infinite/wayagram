@@ -260,7 +260,7 @@ class WayaSocketController {
         final state = chatNotifier.getState();
 
         //? If this is not fine.
-        if (state.chat?.id != args.chatId) return;
+        if (state.chat?.id != args.chatId || args.senderId == ConversationState.self.id) return;
 
         // This is fine.
         chatNotifier.setTyping(true);
@@ -275,7 +275,7 @@ class WayaSocketController {
         final state = chatNotifier.getState();
 
         //? If this is not fine.
-        if (state.chat?.id != args.chatId) return;
+        if (state.chat?.id != args.chatId || args.senderId == ConversationState.self.id) return;
 
         // This is fine.
         chatNotifier.setTyping(false);

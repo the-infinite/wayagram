@@ -20,8 +20,7 @@ class WayaShop extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _WayaShopState();
 }
 
-class _WayaShopState extends ConsumerState<WayaShop>
-    with SingleTickerProviderStateMixin {
+class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   @override
@@ -71,23 +70,17 @@ class _WayaShopState extends ConsumerState<WayaShop>
               _selectedIndex == 2,
           child: SizedBox(
             height: 50,
-            width: 50,
-            child: WayaButton(
-              callback: () {
-                WayaNav.toNamed(CreateShop.route,
-                    arguments: CreateShopArg(uniqueKey: 'create-shop'));
-              },
-              height: 50,
-              centerWidget: Center(
-                child: Icon(
-                  Icons.add,
-                  color: wayaTheme.colorScheme.white,
-                  size: 40,
-                ),
+            centerWidget: Center(
+              child: Icon(
+                Icons.add,
+                color: wayaTheme.colorScheme.white,
+                size: 40,
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget loadingState({required BuildContext context}) {
@@ -99,9 +92,8 @@ class _WayaShopState extends ConsumerState<WayaShop>
         SizedBox(height: 10),
         Text(
           "Creating your shop",
-          style: wayaTheme.textTheme.bodyMedium?.copyWith(
-              color: wayaTheme.colorScheme.customPrimary,
-              fontWeight: FontWeight.w600),
+          style: wayaTheme.textTheme.bodyMedium
+              ?.copyWith(color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600),
         ),
       ],
     );

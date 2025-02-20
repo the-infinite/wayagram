@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -514,7 +515,7 @@ class ChatInputWidget extends StatelessWidget {
                         ),
 
                   // Some space.
-                  const Gap(5),
+                  Gap(12.w),
 
                   //? Second, the input text
                   Expanded(
@@ -571,7 +572,7 @@ class ChatInputWidget extends StatelessWidget {
                   ),
 
                   // Some space.
-                  const Gap(5),
+                  Gap(12.w),
 
                   //? Third, the button for either sending messages.
                   ValueListenableBuilder(

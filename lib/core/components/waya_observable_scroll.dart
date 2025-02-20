@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+
+class WayaObservableScrollController {
+  bool _hasScrolled = false;
+}
 
 class WayaObservableScrollView extends StatefulWidget {
   /// Should this fetch something, or should it wait in this instance?
@@ -13,6 +18,10 @@ class WayaObservableScrollView extends StatefulWidget {
 
   /// The orientation of the scroll widget.
   final Axis direction;
+
+  /// How we control all of the logic inside of this one to make it impossible to
+  /// repeatedly trigger fetching the next page.
+  final WayaObservableScrollController handler;
 
   /// How much notice space we should give the controller in preparation to
   /// scroll to the end of things.
@@ -39,6 +48,7 @@ class WayaObservableScrollView extends StatefulWidget {
     required this.isAtEnd,
     required this.onReachEnd,
     required this.child,
+    required this.handler,
     this.reverse = false,
     this.direction = Axis.vertical,
     this.padding = EdgeInsets.zero,
@@ -56,38 +66,50 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
 
   @override
   void initState() {
-    if (widget.shouldFetch) {
-      _scrollController.addListener(
-        () {
-          final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
-          final current = _scrollController.offset;
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        //? Get the current page.
+        _getPage();
 
-          //? Stop if this is at the end.
-          if (widget.isAtEnd || !widget.shouldFetch) return;
+        //? Add this listener to this one.
+        _scrollController.addListener(
+          () {
+            final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
+            final current = _scrollController.offset;
 
-          //? If we should scroll.
-          if (current >= target) {
-            debugPrint("observable-scroll> Fetching (T: $target, X: $current)");
-            _getPage();
-          }
-        },
-      );
-    }
+            //? Stop if this is at the end.
+            if (widget.isAtEnd || !widget.shouldFetch || widget.handler._hasScrolled) return;
+
+            //? If we should scroll.
+            if (current >= target) {
+              debugPrint("observable-scroll> Fetching because (T: $target, X: $current)");
+              _getPage();
+            }
+          },
+        );
+      },
+    );
 
     // Initialize state.
     super.initState();
   }
 
   Future<void> _getPage() async {
+    /// Skip this.
     try {
       //? We are currently loading this up.
+      widget.handler._hasScrolled = true;
       _loadingController.value = true;
 
       //? Get the items on the current page.
-      await widget.onReachEnd();
-
-      //? Now, notify the listeners of a change in state.
-      _loadingController.value = false;
+      debounce(
+        widget.onReachEnd,
+        key: "observable-scroll-${widget.handler.hashCode}",
+        onFinish: (_) {
+          widget.handler._hasScrolled = false;
+          _loadingController.value = false;
+        },
+      )();
     } catch (_) {}
   }
 

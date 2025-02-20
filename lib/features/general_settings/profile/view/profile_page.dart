@@ -45,6 +45,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   late final groupsNotifier = ref.watch(userGroupsProvider.notifier);
   late final pagesNotifier = ref.watch(userPagesProvider.notifier);
   late final followNotifier = ref.watch(followProvider.notifier);
+  final scrollHandler = WayaObservableScrollController();
   final _pageController = ValueNotifier(0);
   final _tabController = ExpandedTabController();
   FollowStatusModel? _followStatus;
@@ -200,7 +201,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           followNotifier.reset();
         },
         child: WayaObservableScrollView(
-          shouldFetch: !postState.hasLoaded,
+          handler: scrollHandler,
+          shouldFetch: !postState.isLoading,
           isAtEnd: !postState.hasNextPage,
           onReachEnd: () async {
             await _fetchMore();
@@ -424,21 +426,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     fontSize: 12,
                                   ),
                                 ),
-                              ],
-                            ),
 
-                            // This is fine.
-                            Gap(5.w),
-
-                            //? Some more space.
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 10.w,
-                              children: [
                                 //? Posts.
                                 WayaRichText(
-                                  title1: WayaValueHelper.formatNumber(postState.posts.length),
+                                  title1: WayaValueHelper.formatNumber(postState.totalSize),
                                   title2: ' Posts',
                                   style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.black,
@@ -449,23 +440,26 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     fontSize: 12,
                                   ),
                                 ),
-
-                                //? If this is me...
-                                if (isSelf)
-                                  WayaRichText(
-                                    title1: 'Joined: ',
-                                    title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
-                                    style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                      color: wayaTheme.colorScheme.black,
-                                      fontSize: 12,
-                                    ),
-                                    style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                      color: wayaTheme.colorScheme.greyColor500,
-                                      fontSize: 12,
-                                    ),
-                                  ),
                               ],
                             ),
+
+                            // This is fine.
+                            Gap(5.w),
+
+                            //? Some more space.
+                            if (isSelf)
+                              WayaRichText(
+                                title1: 'Joined: ',
+                                title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
+                                style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.black,
+                                  fontSize: 12,
+                                ),
+                                style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.greyColor500,
+                                  fontSize: 12,
+                                ),
+                              ),
                           ],
                         ),
                       ),
