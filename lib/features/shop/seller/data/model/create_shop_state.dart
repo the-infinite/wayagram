@@ -13,7 +13,7 @@ class CreateShopState {
   final TextEditingController email;
   final TextEditingController description;
   final TextEditingController name;
-  final MultipartFile? logo;
+  final String? logo;
   final File? image;
   final String vendorId;
   final String lga;
@@ -57,7 +57,7 @@ class CreateShopState {
       List<Select>? states,
       List<Select>? lgas,
       bool? isEditingMode,
-      MultipartFile? logo,
+      String? logo,
       String? url,
       File? image,
       String? vendorId}) {

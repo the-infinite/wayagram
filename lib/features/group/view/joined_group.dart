@@ -39,9 +39,12 @@ class _JoinedGroupState extends ConsumerState<JoinedGroup> with SingleTickerProv
       children: [
         viewModel.joinedGroup!.isEmpty ? GroupEmptyState():
         ListView.builder(
+          padding: EdgeInsets.only(bottom: 40),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel.joinedGroup?.length,
             itemBuilder: (_, index){
+            print('THE LENGTH IS ===>> ${ viewModel.joinedGroup?.length}');
             final group = viewModel.joinedGroup?[index];
               return GroupWidget(
                   name: '${group?.name?.capitalizeFirst}',

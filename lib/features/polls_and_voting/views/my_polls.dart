@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
+import 'package:svg_flutter/svg_flutter.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -15,6 +17,7 @@ import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls
 import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 class MyPolls extends ConsumerStatefulWidget {
   const MyPolls({super.key});
@@ -39,6 +42,11 @@ class _MyPollsState extends ConsumerState<MyPolls> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPollVotingProvider);
+
+    if (viewModel.fetchAllPols.isEmpty) {
+      return PollEmptyState();
+    }
+
     return Column(
       children: [
         ListView.builder(
@@ -126,7 +134,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                       callback: (){
                          //WayaNav.to(PollDashboard(pollId: '${poll.choices?[index].pollId}',));
                         WayaNav.toNamed('/poll-dashboard',
-                           // arguments: '${e.pollId}'
+                            arguments: '${poll.id}'
                            // arguments: '${poll.choices?[index].pollId}'
                         );
                       },
@@ -221,57 +229,12 @@ class _MyPollsState extends ConsumerState<MyPolls> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: chk ? Row(children: [
-            //Expanded(child: Image.network(img, height: 44.h)),
-            //WayaImage(imageUrl: img, height: 44.h),
-            Expanded(child:  Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Image.network(
-                  img,
-                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      color: Colors.white,
-                      height:44.h,
-                      width: MediaQuery.of(ctx).size.height /9,
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: CircularProgressIndicator(
-                            color: WayaColors.primary.withOpacity(0.5),
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!.toInt()
-                                : null,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, exception, stackTrace) {
-                    return Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: WayaColors.primary,
-                          border: Border.all(
-                            color: Colors.white,
-                          )),
-                      //MediaQuery.of(ctx).size.height /12,
-                      height: 44.h,
-                      width: MediaQuery.of(ctx).size.height /12,
-                      child:  Center(
-                          child:
-                          //Image.asset('assets/images/home/profile_icon.png', height: 60.h, width: 70.w,)
-                        Text('Image\nError', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 8)),
-                      ),
-                    );
-                  },
-                  fit: BoxFit.cover,
-                  height: 44.h,
-                  width: MediaQuery.of(ctx).size.height /8,
-                ),
-
-              ],
-            ),),
+            WayaImage(
+              imageUrl:img,
+              height: 44.h,
+              width: 59.w,
+              radius: BorderRadius.circular(4),
+            ),
             const Gap(30),
             Expanded(
               flex: 3,
@@ -298,6 +261,37 @@ class _MyPollsState extends ConsumerState<MyPolls> {
 
             ],),
         ),
+      ),
+    );
+  }
+
+
+}
+
+class PollEmptyState extends StatelessWidget {
+  const PollEmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: EmptyState(
+            hasButton: false,
+            onTap: () {
+              //WayaNav.toNamed(CreatePost.route);
+            },
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You haven't created any poll yet"),
       ),
     );
   }

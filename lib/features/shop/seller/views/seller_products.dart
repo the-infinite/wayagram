@@ -90,18 +90,19 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                           ],
                         ),
                       ),
-                      const Gap(25),
+                      const Gap(10),
                       FilterWidget(
                         search: state.search,
                       ),
-                      const Gap(25),
-                      GroupedWidgetHeader(
-                          isVisible: false,
+                      const Gap(10),
+                      
+                    GroupedWidgetHeader(
+                          isVisible: true,
                           onTap: () {},
                           subTitle:
                               "Extensive view of all the products you have created",
                           title: "My Products"),
-                      const Gap(10),
+                           const Gap(10),
                       CategoriesFilterWidget(
                         setCategory: (value) => {
                           ref

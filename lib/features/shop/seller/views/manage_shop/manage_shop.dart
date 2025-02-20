@@ -73,16 +73,16 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                     ),
                   ],
                 ),
-                WayaButton(
-                  callback: () {},
-                  text: 'Shop Settings',
-                  textStyle: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500),
-                  height: 35,
-                  radius: 6,
-                )
+                // WayaButton(
+                //   callback: () {},
+                //   text: 'Shop Settings',
+                //   textStyle: TextStyle().wayaCopyWith(
+                //       color: wayaTheme.colorScheme.white,
+                //       fontSize: 13,
+                //       fontWeight: FontWeight.w500),
+                //   height: 35,
+                //   radius: 6,
+                // )
               ],
             ),
             const Gap(30),

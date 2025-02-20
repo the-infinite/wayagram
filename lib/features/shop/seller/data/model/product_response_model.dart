@@ -1,4 +1,4 @@
-import 'package:wayagram/core/data/model/model.dart';
+
 import 'package:wayagram/shared/model/base_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
 
@@ -57,22 +57,22 @@ class ProductData {
 }
 
 class Product extends BaseModel<Product>{
-  final String id;
+ final String id;
   final String categoryId;
   final String? discountTypeId;
   final String name;
   final String description;
- final dynamic price;
+  final dynamic price;
   final int stockQuantity;
   final List<String> images;
   final int height;
   final int width;
-  final String color;
+  final String? color;
   final String materialType;
   final int depth;
   final String condition;
-  final bool wayagramDeal;
-  final bool wayagramDealApprove;
+  final dynamic wayagramDeal;
+  final dynamic wayagramDealApprove;
   final String? wayagramDealRejectedReason;
   final bool approve;
   final bool deliveryCharge;
@@ -81,14 +81,13 @@ class Product extends BaseModel<Product>{
   final String? rating;
   final int discountPercentage;
   final String shopId;
-  final String version;
-  final bool isDeleted;
-  final DateTime createdAt;
-  final DateTime updatedAt;
   final dynamic discountedPrice;
   final String shopName;
   final String shopPhone;
   final String categoryName;
+  final bool isDeleted;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Product({
     required this.id,
@@ -96,17 +95,17 @@ class Product extends BaseModel<Product>{
     this.discountTypeId,
     required this.name,
     required this.description,
-   required this.price,
+    required this.price,
     required this.stockQuantity,
     required this.images,
     required this.height,
     required this.width,
-    required this.color,
+     this.color,
     required this.materialType,
     required this.depth,
     required this.condition,
-    required this.wayagramDeal,
-    required this.wayagramDealApprove,
+     this.wayagramDeal,
+    this.wayagramDealApprove,
     this.wayagramDealRejectedReason,
     required this.approve,
     required this.deliveryCharge,
@@ -115,50 +114,48 @@ class Product extends BaseModel<Product>{
     this.rating,
     required this.discountPercentage,
     required this.shopId,
-    required this.version,
-    required this.isDeleted,
-    required this.createdAt,
-    required this.updatedAt,
     required this.discountedPrice,
     required this.shopName,
     required this.shopPhone,
     required this.categoryName,
+    required this.isDeleted,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['id'],
-      categoryId: json['categoryId'],
+      id: json['id'] ?? '',
+      categoryId: json['categoryId'] ?? '',
       discountTypeId: json['discountTypeId'],
-      name: json['name'],
-      description: json['description'],
-    price: json['price'],
-      stockQuantity: json['stockQuantity'],
-      images: List<String>.from(json['images']),
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      price: json['price'],
+      stockQuantity: json['stockQuantity'] ?? 0,
+      images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
       height: json['height'],
       width: json['width'],
-      color: json['color'],
-      materialType: json['materialType'],
+      color: json['color'] ?? '',
+      materialType: json['materialType'] ?? '',
       depth: json['depth'],
-      condition: json['condition'],
-      wayagramDeal: json['wayagramDeal'],
-      wayagramDealApprove: json['wayagramDealApprove'],
+      condition: json['condition'] ?? '',
+      wayagramDeal: json['wayagramDeal'] ?? false,
+      wayagramDealApprove: json['wayagramDealApprove'] ?? false,
       wayagramDealRejectedReason: json['wayagramDealRejectedReason'],
-      approve: json['approve'],
-      deliveryCharge: json['deliveryCharge'],
-      options: json['options'],
-      pickupAddress: json['pickupAddress'],
-      rating: json['rating'] != null ? json['rating'] : null,
-      discountPercentage: json['discountPercentage'],
-      shopId: json['shopId'],
-      version: json['_v'],
-      isDeleted: json['isDeleted'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      approve: json['approve'] ?? false,
+      deliveryCharge: json['deliveryCharge'] ?? false,
+      options: json['options'] ?? '',
+      pickupAddress: json['pickupAddress'] ?? '',
+      rating: json['rating'],
+      discountPercentage: json['discountPercentage'] ?? 0,
+      shopId: json['shopId'] ?? '',
       discountedPrice: json['discountedPrice'],
-      shopName: json['shopName'],
-      shopPhone: json['shopPhone'],
-      categoryName: json['categoryName'],
+      shopName: json['shopName'] ?? '',
+      shopPhone: json['shopPhone'] ?? '',
+      categoryName: json['categoryName'] ?? '',
+      isDeleted: json['isDeleted'] ?? false,
+      createdAt: DateTime.parse(json['createdAt'] ?? ''),
+      updatedAt: DateTime.parse(json['updatedAt'] ?? ''),
     );
   }
 
@@ -188,7 +185,6 @@ class Product extends BaseModel<Product>{
       'rating': rating,
       'discountPercentage': discountPercentage,
       'shopId': shopId,
-      '_v': version,
       'isDeleted': isDeleted,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
@@ -276,7 +272,6 @@ class Product extends BaseModel<Product>{
       rating: rating ?? this.rating,
       discountPercentage: discountPercentage ?? this.discountPercentage,
       shopId: shopId ?? this.shopId,
-      version: version ?? this.version,
       isDeleted: isDeleted ?? this.isDeleted,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

@@ -43,7 +43,7 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
     final productDetail = getProduct(type: arg!, ref: ref);
     return WayaScaffold(
         isLoading: false,
-        isScrollable: true,
+        isScrollable: false,
         title: productDetail.title,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +53,7 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
               search: searchController,
             ),
             const Gap(25),
-            PaginatedDataView<Product>(
+          Expanded(child:   PaginatedDataView<Product>(
                 uniqueKey: 'product',
                 emptyState: EmptyState(
                     assetImage:
@@ -76,7 +76,7 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
                       ],
                       searchController.text);
                   return ProductsGrid(products: filteredProducts);
-                })
+                }))
           ],
         ));
   }
