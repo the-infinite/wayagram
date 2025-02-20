@@ -111,14 +111,17 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                               color: Theme.of(context).colorScheme.greyColor500 ),
                         ),
                         const Gap(10),
-
+//[vote(choice)/vote(poll)] * 100
                         Column(
                           children: [
                             if(poll.choices != null)
                               ...poll.choices!.map((e)=>
                                   choiceStatistics('${e.imageUrl}',
                                       '${e.text}', context, true, poll.feePerVote,
-                                      e.id, e.pollId,e.text, poll.url, '${e.votePercentage}', '${e.voteCount}'))
+                                      e.id, e.pollId,e.text, poll.url,
+                                      //'${(viewModel.fetchAllPols[index].voteCount!/(e.voteCount!))*100}',
+                                      '${(e.voteCount)!*100}',
+                                      '${e.voteCount}'))
                           ],
                         )
 
@@ -234,7 +237,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
   }
 
   choiceStatistics(img, name, ctx, chk, voteFee, choiceId,
-      pollId,candidateName, votingLink, votePercentage, voteCount ){
+      pollId,candidateName, votingLink, votePercentage, voteCount, ){
     return voteCount == '0'? Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -391,6 +394,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
             children: [
               Text(
                 '$votePercentage%',
+                //'${(voteCount/100)}%',
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,

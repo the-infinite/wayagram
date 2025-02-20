@@ -1,5 +1,7 @@
 
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,20 +26,70 @@ class PollDashboard extends ConsumerStatefulWidget {
 
 class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
+  CreatePollVotingState? poll;
+
+  late DateTime startDate;
+  late DateTime endDate;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+      // startDate = DateTime.parse("${poll?.startDate}");
+      // endDate = DateTime.parse("${poll?.endDate}");
+      print('DASHBOARD ===>>>${poll?.startDate}');
+
+      //_startCountdown();
       final pollId  = ModalRoute.of(context)?.settings.arguments as String?;
-      print("DARLINGTON POLLID ====>>> ${pollId.toString()}");
-      ref.read(createPollVotingProvider.notifier).getSinglePollDashboard(pollId!);
+      print('DASHBOARD POLL ID ==> $pollId');
+      ref.read(createPollVotingProvider.notifier).getDashboard(pollId);
     });
   }
+
+  Duration remainingTime = Duration.zero;
+  Timer? countdownTimer;
+
+  void _startCountdown() {
+    countdownTimer?.cancel(); // Cancel existing timer if any
+
+    setState(() {
+      remainingTime = endDate.difference(DateTime.now());
+    });
+
+    if (remainingTime.inSeconds > 0) {
+      countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+        setState(() {
+          remainingTime = endDate.difference(DateTime.now());
+          if (remainingTime.isNegative) {
+            timer.cancel();
+          }
+        });
+      });
+    }
+  }
+
+  String _formatDuration(Duration duration) {
+    int days = duration.inDays;
+    int hours = duration.inHours % 24;
+    int minutes = duration.inMinutes % 60;
+    int seconds = duration.inSeconds % 60;
+
+    return "$days days: ${hours.toString().padLeft(2, '0')}hrs: "
+        "${minutes.toString().padLeft(2, '0')}min: "
+        "${seconds.toString().padLeft(2, '0')}sec";
+  }
+
+  @override
+  void dispose() {
+    countdownTimer?.cancel(); // Cleanup timer when widget is disposed
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
-    final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: viewModel.isLoading,
         isScrollable: true,
@@ -101,7 +153,8 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
           ),
             const Gap(10),
             Text(
-              '12 days: 45hrs: 55min: 12sec',
+              _formatDuration(remainingTime),
+              //'12 days: 45hrs: 55min: 12sec',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -131,9 +184,9 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: viewModel.votes?.length,
+                itemCount: viewModel.pollDashboardModelDocs?.length,
                 itemBuilder: (context, index) {
-                  final poll = viewModel.votes?[index];
+                  final poll = viewModel.pollDashboardModelDocs?[index];
                   // int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
 
                   // int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
@@ -151,7 +204,9 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                       return txt = '${index}th';
                     }
                   }
-                  return statisticCard('${poll?.quantity} vote', '${position(index)}', '${poll?.choice?.text}', Theme.of(context).colorScheme.success50);
+                  return statisticCard('${poll?.voteCount} ${poll?.voteCount == 1 || poll?.voteCount == 0? 'Vote' :'Votes'}',
+                      '${position(index)}', '${poll?.choices?[index].text?.capitalizeFirst}',
+                      Theme.of(context).colorScheme.success50, index == 0);
 
                 }),
             const Gap(10),
@@ -164,14 +219,14 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
         ) );
   }
 
-  statisticCard(vote, position, name, color){
+  statisticCard(vote, position, name, color, chk){
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       height: 32.h,
       padding: EdgeInsets.only(left: 10.w, right: 10.w,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
-        color: color
+        color: chk == 0 ?  Theme.of(context).colorScheme.success50: color
         //border: Border.all(color:Theme.of(context).colorScheme.greyColor100),
       ),
       child: Row(

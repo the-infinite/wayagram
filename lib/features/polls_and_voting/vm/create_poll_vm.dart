@@ -16,6 +16,9 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
+//import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard_model.dart';
+
 import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
 import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
@@ -482,8 +485,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   }
 
 
-
-  Future<void> createPoll(
+  Future<void> createFreePoll(
       BuildContext context,
       String question,
       String startDate,
@@ -491,7 +493,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       String maxVotes,
       String choiceText,
       String description,
-      String feePerVote) async {
+      String feePerVote,
+      String pollType) async {
     Future<MultipartFile> formattedImage(File file) async {
       final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
 
@@ -508,10 +511,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     final Map<String, dynamic> choiceMap = {};
 
     for (var i = 0; i < state.choices.length; i++) {
-      choiceMap["choices[$i].text"] = state.choices[i].text.text;
-      choiceMap["choices[$i].image"] = state.choices[i].image !=null? await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*')):null;
+      choiceMap["choices[$i][text]"] = state.choices[i].text.text;
+      choiceMap["choices[$i][image]"] = state.choices[i].image !=null? await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*')):null;
       ///choiceMap["choices[$i].image"] = await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*'));
-      choiceMap["choices[$i].description"] = state.choices[i].description.text;
+      choiceMap["choices[$i][description]"] = state.choices[i].description.text;
     }
 
 
@@ -521,7 +524,78 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       'endDate': endDate,
       'feePerVote': feePerVote,
       'maxVotesPerUser': maxVotes,
-      'ispaid': true,
+      //'ispaid': true,
+      'pollType': pollType,
+      ...choiceMap
+    };
+
+    print('CHOICE  MAP ==>>  $choiceMap');
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.createPoll(formdata);
+      if (response.success && context.mounted) {
+        WayaUtils.showModalSheet(
+          context,
+          child: PollsModal(),
+        );
+        // showDialog(
+        //     useRootNavigator: false,
+        //     context: context,
+        //     barrierDismissible: false,
+        //     builder: (BuildContext context) {
+        //       return PaymentDialog();
+        //     });
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+      //CreatePollVotingState.initial;
+    }
+  }
+
+  Future<void> createPoll(
+      BuildContext context,
+      String question,
+      String startDate,
+      String endDate,
+      String maxVotes,
+      String choiceText,
+      String description,
+      String feePerVote,
+      String pollType) async {
+    Future<MultipartFile> formattedImage(File file) async {
+      final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
+
+      return await MultipartFile.fromFile(
+        file.path,
+        filename: file.uri.pathSegments.last,
+        contentType: MediaType.parse(mimeType),
+      );
+    }
+
+    //final List<Map<String, dynamic>> choices = [];
+
+
+    final Map<String, dynamic> choiceMap = {};
+
+    for (var i = 0; i < state.choices.length; i++) {
+      choiceMap["choices[$i][text]"] = state.choices[i].text.text;
+      choiceMap["choices[$i][image]"] = state.choices[i].image !=null? await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*')):null;
+      ///choiceMap["choices[$i].image"] = await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*'));
+      choiceMap["choices[$i][description]"] = state.choices[i].description.text;
+    }
+
+
+    final formdata = {
+      'question': question,
+      'startDate': startDate,
+      'endDate': endDate,
+      'feePerVote': feePerVote,
+      'maxVotesPerUser': maxVotes,
+      //'ispaid': true,
+      'pollType': pollType,
       ...choiceMap
     };
 
@@ -539,10 +613,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
             builder: (BuildContext context) {
               return PaymentDialog();
             });
-        // WayaUtils.showModalSheet(
-        //   context,
-        //   child: PaymentDialog(),
-        // );
       }
     } catch (e) {
       _logger.e(e);
@@ -681,6 +751,31 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
             voteCount: responseModel.data?.voteCount.toString(),
             moneyGenerated: responseModel.data?.moneyGenerated.toString(),
             numberOfPeopleVoted: responseModel.data?.numberOfPeopleVoted.toString());
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+  Future<void> getDashboard(pollId) async {
+    print('Fetching single Poll...');
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getDashboard(pollId);
+      state = state.copyWith(isLoading: false);
+
+      if (response.success) {
+        PollDashboardModel responseModel = PollDashboardModel.fromJson(response.data);
+        state = state.copyWith(
+            // startDate: responseModel.data?.docs?[0].endDate,
+            // endDate: responseModel.data?.docs?[0].endDate,
+            pollDashboardModelDocs: responseModel.data?.docs,
+           voteCount: responseModel.data?.docs?[0].voteCount.toString(),
+            moneyGenerated: responseModel.data?.docs?[0].amountGenerated,
+            numberOfPeopleVoted: responseModel.data?.docs?[0].numberOfVoters.toString());
       } else {
         state = state.copyWith(isLoading: false);
       }
