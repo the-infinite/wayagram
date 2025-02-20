@@ -15,6 +15,7 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
 import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
@@ -23,6 +24,7 @@ import 'package:wayagram/features/polls_and_voting/data/model/model.dart';
 
 import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
+import 'package:wayagram/features/shop/data/model/shop_state.dart';
 
 import '../data/model/get_all_poll_model.dart';
 
@@ -581,27 +583,51 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<void> getMyPolls(String creatorId) async {
+  Future<PaginatedResult<Docs>?> getMyPolls( page) async {
+
+    try{
     state = state.copyWith(isLoading: true);
-    final response = await _pollAndVotingRepository.getMyPolls(creatorId);
+    final response = await _pollAndVotingRepository.getMyPolls(ConversationState.self.id,page);
+    List<Docs>? fetchAllPols = [];
+    bool? hasNextPage = false;
     state = state.copyWith(isLoading: false);
     if (response.success) {
       FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+      fetchAllPols = responseModel.data?.docs;
+      hasNextPage = responseModel.data?.hasNextPage;
+      state = state.copyWith(fetchAllPols: fetchAllPols);
       state = state.copyWith(fetchAllPols: responseModel.data?.docs);
     } else {
       state = state.copyWith(isLoading: false);
     }
+    return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchAllPols!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
   }
 
-  Future<void> getAllPolls() async {
-    state = state.copyWith(isLoading: true);
-    final response = await _pollAndVotingRepository.getAllPolls();
-    state = state.copyWith(isLoading: false);
-    if (response.success) {
-      FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
-
-      state = state.copyWith(fetchAllPols: responseModel.data?.docs);
-    } else {
+  Future<PaginatedResult<Docs>?> getAllPolls(int page) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getAllPolls(page);
+      List<Docs>? fetchAllPols = [];
+      bool? hasNextPage = false;
+      if (response.success) {
+        FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+        fetchAllPols = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(fetchAllPols: fetchAllPols);
+        state = state.copyWith(fetchAllPols: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchAllPols!);
+    }catch (e){
+      _logger.e(e);
+      return null;
+    }finally {
       state = state.copyWith(isLoading: false);
     }
   }

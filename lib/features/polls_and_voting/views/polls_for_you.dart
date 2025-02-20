@@ -3,19 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:slide_countdown/slide_countdown.dart';
+import 'package:svg_flutter/svg_flutter.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/event/views/my_events.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 class PollsForYou extends ConsumerStatefulWidget {
   const PollsForYou({super.key});
@@ -25,137 +32,102 @@ class PollsForYou extends ConsumerStatefulWidget {
 }
 class _PollsForYouState extends ConsumerState<PollsForYou> {
 
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPollVotingProvider.notifier).getAllPolls();
-    });
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPollVotingProvider);
-    return Column(
-      children: [
-        ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: viewModel.fetchAllPols.length,
-            itemBuilder: (context, index) {
-              //final poll = viewModel.getAllPollModel[index];
-              final poll = viewModel.fetchAllPols[index];
-              int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
+    return Expanded(
+      child: PaginatedDataView<Docs>(
+          uniqueKey: 'polls-for-you',
+          loadingState: SizedBox(
+              height: context.height * 0.4,
+              child: Center(
+                child: CircularProgressIndicator(),
+              )),
+          emptyState:PollEmptyState(),
+          fetchData: ref.read(createPollVotingProvider.notifier).getAllPolls,
+          result: (data, s) {
+            return ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: viewModel.fetchAllPols.length,
+                itemBuilder: (context, index) {
+                  final poll = viewModel.fetchAllPols[index];
+                  int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
+                  int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
+                  print('URL ===> ${poll.url}');
 
-              int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
-          print('URL ===> ${poll.url}');
-
-              String formatTimeAgo(String dateString) {
-                DateTime dateTime =
-                DateTime.parse(dateString); // Convert string to DateTime
-                return timeago.format(dateTime); // Convert to "time ago" format
-              }
-              void checkEndDate(String endDateFromBackend) {
-                try {
-                  // Parse the endDate string from the backend
-                  DateTime endDate = DateTime.parse('${poll.endDate}');
-                  DateTime currentDate = DateTime.now();
-
-                  // Compare the dates
-                  if (currentDate.isBefore(endDate)) {
-                    // EndDate is still current
-                    print("The end date is still valid.");
-                  } else if (currentDate.isAtSameMomentAs(endDate)) {
-                    // EndDate is exactly the current time
-                    print("The end date is now.");
-                  } else {
-                    // EndDate has passed
-                    print("The end date has passed.");
+                  String formatTimeAgo(String dateString) {
+                    DateTime dateTime =
+                    DateTime.parse(dateString); // Convert string to DateTime
+                    return timeago.format(dateTime); // Convert to "time ago" format
                   }
-                } catch (e) {
-                  print("Error parsing date: $e");
-                }
-              }
-              return Container(
-                margin: EdgeInsets.only(bottom: 40.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 40.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
-                    Row(children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(poll.userData?.profilePicture ?? ''),
-                        radius: 10,
-                        backgroundColor: wayaTheme.colorScheme.greyColor200,
-                      ),
-                      const Gap(3),
-                      Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
-                      const Gap(3),
-                      Text(
-                        //' • ${hoursLeft}h ago',
-                        ' • ${formatTimeAgo('${poll.createdAt}')}',
-                        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Theme.of(context).colorScheme.greyColor500 ),
-                      ),
-
-                      Spacer(),
-                      Image.asset('assets/images/polls/menu.png', height: 32.h,),
-
-                    ],),
-                    const Gap(10),
-
-                    Text("${poll.question?.capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
-                    const Gap(3),
-                    if(poll.choices != null)
-                      ...poll.choices!.map((e)=>
+                        Row(children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(poll.userData?.profilePicture ?? ''),
+                            radius: 10,
+                            backgroundColor: wayaTheme.colorScheme.greyColor200,
+                          ),
+                          const Gap(3),
+                          Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
+                          const Gap(3),
                           Text(
-                            '${e.description?.capitalizeFirst}',
+                            ' • ${formatTimeAgo('${poll.createdAt}')}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 12,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).colorScheme.greyColor500 ),
-                          ),),
-                    const Gap(10),
-                    Text(
-                      '${poll.maxVotesPerUser} ${poll.maxVotesPerUser == 0 || poll.maxVotesPerUser == 1 ? 'Vote' : 'Votes'} • $daysLeft hours remaining',
-                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).colorScheme.greyColor500 ),
-                    ),
-                    const Gap(10),
+                          ),
 
-                    // Column(
-                    //   children: [
-                    //     if(poll.choices != null)
-                    //     ...poll.choices!.map((e)=>
-                    //         presImage('${e.imageUrl}',
-                    //         '${e.text}', context, true, poll.feePerVote,
-                    //             e.id, e.pollId,e.text, poll.url))
-                    //   ],
-                    // )
+                          Spacer(),
+                          Image.asset('assets/images/polls/menu.png', height: 32.h,),
 
-                    Column(
-                      children: [
+                        ],),
+                        const Gap(10),
+
+                        Text("${poll.question?.capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
+                        const Gap(3),
                         if(poll.choices != null)
                           ...poll.choices!.map((e)=>
-                              choiceStatistics('${e.imageUrl}',
-                                  '${e.text}', context, true, poll.feePerVote,
-                                  e.id, e.pollId,e.text, poll.url, '${e.votePercentage}', '${e.voteCount}'))
-                      ],
-                    )
+                              Text(
+                                '${e.description?.capitalizeFirst}',
+                                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color: Theme.of(context).colorScheme.greyColor500 ),
+                              ),),
+                        const Gap(10),
+                        Text(
+                          '${poll.maxVotesPerUser} ${poll.maxVotesPerUser == 0 || poll.maxVotesPerUser == 1 ? 'Vote' : 'Votes'} • $daysLeft hours remaining',
+                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).colorScheme.greyColor500 ),
+                        ),
+                        const Gap(10),
 
-                  ],),
-              );
-            }),
-        const Gap(10),
-      ],
+                        Column(
+                          children: [
+                            if(poll.choices != null)
+                              ...poll.choices!.map((e)=>
+                                  choiceStatistics('${e.imageUrl}',
+                                      '${e.text}', context, true, poll.feePerVote,
+                                      e.id, e.pollId,e.text, poll.url, '${e.votePercentage}', '${e.voteCount}'))
+                          ],
+                        )
+
+                      ],),
+                  );
+                });
+          }),
+
+
     );
   }
   presImage(img, name, ctx, chk, voteFee, choiceId, pollId,candidateName, votingLink){
@@ -438,6 +410,35 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
     );
   }
 
+}
+
+class PollEmptyState extends StatelessWidget {
+  const PollEmptyState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: EmptyState(
+            hasButton: false,
+            onTap: () {
+              //WayaNav.toNamed(CreatePost.route);
+            },
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You haven't created any poll yet"),
+      ),
+    );
+  }
 }
 
 
