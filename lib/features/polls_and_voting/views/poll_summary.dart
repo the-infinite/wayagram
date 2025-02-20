@@ -18,7 +18,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
+import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
@@ -47,7 +47,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
   Widget build(BuildContext context) {
 
     final viewModel = ref.watch(createPollVotingProvider);
-    final viewModel2 = ref.watch(createPollVotingProvider.notifier);
+    final poll = ref.watch(createPollVotingProvider.notifier);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
 
@@ -95,13 +95,9 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   viewModel.firstChoiceDescription.text,
                   viewModel.votePrice.text
                 );
-               //viewModel2.reset();
+               poll.reset();
               }
-
-
-            }
-                : null,
-            //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create',),
+            } : null,
             height: 30,
             isLoading: viewModel.isLoading,
             text: 'Create',
@@ -136,9 +132,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                //21st of July\n2024
                 summary('Start Date',
-                    //formatDate(viewModel.startDate),
                     '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.startDate)}\n',
                     'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
                 summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
@@ -163,7 +157,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   itemCount: viewModel.choices.length,
                   itemBuilder: (context, index){
                     print('IMAGE PRINTING ==>> ${viewModel.choices[index].image?.absolute}');
-                    return presImage('${viewModel.choices[index].image?.absolute.path}', viewModel.choices[index].text.text.capitalizeFirst, context, );
+                    return presImage('${viewModel.choices[index].image?.absolute.path}',
+                      viewModel.choices[index].text.text.capitalizeFirst, context, viewModel.choices[index].image?.absolute.path == null);
                   }),
             )
           ],
@@ -239,7 +234,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     }
   }
 
-  presImage(img, name, ctx,){
+  presImage(img, name, ctx, chk){
     return Container(
       margin: EdgeInsets.only(bottom: 10,),
       padding: EdgeInsets.only(left: 20.w,  bottom: 0,),
@@ -251,7 +246,11 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
       child: Row(children: [
         ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.file(File(img), height: 66.h, width: 50.w,)),
+            child: chk?
+            //Image.file(File('assets/images/pages/image_placeholder.png'), height: 66.h, width: 50.w,):
+            Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
+            Image.file(File(img), height: 66.h, width: 50.w,),
+        ),
         const Gap(40),
         Text(
           name,

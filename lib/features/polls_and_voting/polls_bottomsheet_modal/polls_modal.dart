@@ -1,16 +1,13 @@
-import 'dart:developer';
+
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -20,11 +17,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-import 'package:wayagram/shared/components/loading_dialog.dart';
-import 'package:wayagram/shared/components/pin_entry_bottom_sheet.dart';
-import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
-import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
@@ -465,8 +458,10 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
+                print('YOUR URL ${widget.votingLink}');
                 Share.share(widget.votingLink);
-                //WayaNav.toNamed("/poll-dashboard");
+
+                //WayaNav.toNamed('/share-voting', arguments: widget.votingLink);
               },
               text: "Share Voting Invitation",
               textColor: WayaColors.black,

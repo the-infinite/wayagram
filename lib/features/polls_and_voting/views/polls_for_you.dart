@@ -87,7 +87,6 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   children: [
 
                     Row(children: [
-
                       CircleAvatar(
                         backgroundImage: NetworkImage(poll.userData?.profilePicture ?? ''),
                         radius: 10,
@@ -132,13 +131,23 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                     ),
                     const Gap(10),
 
+                    // Column(
+                    //   children: [
+                    //     if(poll.choices != null)
+                    //     ...poll.choices!.map((e)=>
+                    //         presImage('${e.imageUrl}',
+                    //         '${e.text}', context, true, poll.feePerVote,
+                    //             e.id, e.pollId,e.text, poll.url))
+                    //   ],
+                    // )
+
                     Column(
                       children: [
                         if(poll.choices != null)
-                        ...poll.choices!.map((e)=>
-                            presImage('${e.imageUrl}',
-                            '${e.text}', context, true, poll.feePerVote,
-                                e.id, e.pollId,e.text, poll.url))
+                          ...poll.choices!.map((e)=>
+                              choiceStatistics('${e.imageUrl}',
+                                  '${e.text}', context, true, poll.feePerVote,
+                                  e.id, e.pollId,e.text, poll.url, '${e.votePercentage}', '${e.voteCount}'))
                       ],
                     )
 
@@ -251,6 +260,185 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
       ),
     );
   }
+
+  choiceStatistics(img, name, ctx, chk, voteFee, choiceId,
+      pollId,candidateName, votingLink, votePercentage, voteCount ){
+    return voteCount == '0'? Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        splashFactory: NoSplash.splashFactory,
+        onTap: (){
+          WayaUtils.showModalSheet(
+            ctx,
+            child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,
+              pollId: pollId,candidateName: candidateName,
+              votingLink:votingLink,),
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.only(left: 20.w,),
+          height: 60.h,
+          decoration: BoxDecoration(
+            border: Border.all(color: WayaColors.primary600, ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: chk ? Row(children: [
+            WayaImage(
+              imageUrl:img,
+              height: 44.h,
+              width: 59.w,
+              radius: BorderRadius.circular(4),
+            ),
+            const Gap(30),
+            Expanded(
+              flex: 3,
+              child: Text(
+                name,
+                style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(ctx).colorScheme.primary600 ),
+              ),
+            ),
+
+          ],) : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              Text(
+                name,
+                style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(ctx).colorScheme.primary600 ),
+              ),
+
+            ],),
+        ),
+      ),
+    ):
+    Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          InkWell(
+            splashColor: Colors.transparent,
+            splashFactory: NoSplash.splashFactory,
+            onTap: (){
+              WayaUtils.showModalSheet(
+                ctx,
+                child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,
+                  pollId: pollId,candidateName: candidateName,
+                  votingLink:votingLink,),
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.only(left: 20.w,),
+              height: 60.h,
+              decoration: BoxDecoration(
+                color: WayaColors.primary500,
+                border: Border.all(color: WayaColors.primary600, ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: chk ? Row(children: [
+                WayaImage(
+                  imageUrl:img,
+                  height: 44.h,
+                  width: 59.w,
+                  radius: BorderRadius.circular(4),
+                ),
+                               /*     Image.network(
+                  img,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: Colors.white,
+                      height:44.h,
+                      width: MediaQuery.of(ctx).size.height /9,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: CircularProgressIndicator(
+                            color: WayaColors.primary.withOpacity(0.5),
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!.toInt()
+                                : null,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, exception, stackTrace) {
+                    return Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: WayaColors.greyColor100,
+                          border: Border.all(
+                            color: Colors.white,
+                          )),
+                      //MediaQuery.of(ctx).size.height /12,
+                      height: 44.h,
+                      width: MediaQuery.of(ctx).size.height /12,
+                      child:  Center(
+                        child:
+                        Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,)
+                      ),
+                    );
+                  },
+                  fit: BoxFit.cover,
+                  height: 44.h,
+                  width: MediaQuery.of(ctx).size.height /8,
+                )*/
+                const Gap(30),
+                Text(
+                  '$name  ',
+                  style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(ctx).colorScheme.white ),
+                ),
+
+              ],) : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+
+                  Text(
+                    name,
+                    style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(ctx).colorScheme.primary600 ),
+                  ),
+
+                ],),
+            ),
+          ),
+          Gap(10),
+          Column(
+            children: [
+              Text(
+                '$votePercentage%',
+                style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(ctx).colorScheme.black ),
+              ),
+              Text(
+                '$voteCount votes',
+                style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Theme.of(ctx).colorScheme.greyColor500 ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
 }
+
 
 

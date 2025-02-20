@@ -26,11 +26,11 @@ class PollAndVotingRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAllPolls() {
-    return get("$serviceUrl/client/polls");
+    return get("$serviceUrl/client/polls?limit=20&page=1");
   }
 
   Future<WayaRequestResponse> getMyPolls(String creatorId) {
-    return get("$serviceUrl/client/polls/?creatorId=$creatorId");
+    return get("$serviceUrl/client/polls/?creatorId=$creatorId?limit=20&page=1");
   }
 
   Future<WayaRequestResponse> getDashboardPolls(String pollId) {
@@ -39,6 +39,10 @@ class PollAndVotingRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getAllPollsById( String id) {
     return get("$serviceUrl/client/polls/$id");
+  }
+
+  Future<WayaRequestResponse> getAPollsByUrl( String url) {
+    return get("$serviceUrl/client/polls/get-id/$url");
   }
 
 
