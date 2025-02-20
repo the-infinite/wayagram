@@ -20,8 +20,10 @@ class ContestRepo extends BaseRepository {
     return post('$serviceUrl2/contests/create', payLoad, formdata: false);
   }
 
-    Future<WayaRequestResponse> getAllContestForYou(payLoad) {
-    return get('$serviceUrl2//contests/contest-for-you', );
+
+
+    Future<WayaRequestResponse> getAllContestForAll(int page) {
+    return get('$serviceUrl2/contests/contest-for-you?page=$page');
   }
 
   /*Future<WayaRequestResponse> createContestController({

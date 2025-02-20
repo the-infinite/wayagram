@@ -7,10 +7,13 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ForYouContest extends ConsumerWidget {
+/* class ForYouContest extends ConsumerWidget {
   const ForYouContest({super.key});
 
   @override
@@ -47,5 +50,95 @@ class ForYouContest extends ConsumerWidget {
         ),
       ],
     );
+  }
+}
+ */
+
+class ForYouContest extends ConsumerStatefulWidget {
+  const ForYouContest({super.key});
+
+  @override
+  _ForYouContestState createState() => _ForYouContestState();
+}
+
+class _ForYouContestState extends ConsumerState<ForYouContest> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(postProvider.notifier).fetchPosts();
+
+    // Scroll listener for pagination
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 100) {
+        ref.read(postProvider.notifier).fetchPosts();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final posts = ref.watch(postProvider);
+    final postNotifier = ref.read(postProvider.notifier);
+    final wayaTheme = Theme.of(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GroupedWidgetHeader(
+            onTap: null,
+            subTitle:
+                "See contests which are active for you to \n participate in",
+            title: "Active Contests"),
+        const Gap(10),
+        Expanded(
+          child: ListView.builder(
+            controller: _scrollController,
+            shrinkWrap: true,
+            itemCount: posts.length + 1,
+            itemBuilder: (context, index) {
+              if (index == posts.length) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              final post = posts[index];
+              return Card(
+                margin: EdgeInsets.all(8),
+                child: ListTile(
+                  title: Text(post.content),
+                  subtitle: Text("By ${post.author} - ${post.likes} likes"),
+                  trailing: Wrap(
+                    spacing: 8,
+                    children: [
+                      // Like Button
+                      IconButton(
+                        icon: Icon(
+                          post.isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: post.isLiked ? Colors.red : Colors.grey,
+                        ),
+                        onPressed: () => postNotifier.toggleLike(post.id),
+                      ),
+                      // Follow Button
+                      TextButton(
+                        onPressed: () => postNotifier.toggleFollow(post.id),
+                        child: Text(post.isFollowing ? "Unfollow" : "Follow"),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
