@@ -103,7 +103,7 @@ class EventVm extends StateNotifier<EventState> {
 
       final userId = await _secureDataSource.getUserId();
       final response =
-          await _eventRepository.getUserEvents(userId: userId!, page: page);
+      await _eventRepository.getUserEvents(userId: userId!, page: page);
       List<EventDoc> myEvents = [];
       bool hasNextPage = false;
       if (response.success) {

@@ -34,8 +34,8 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         title: "Polls and Votes",
-        isLoading: viewModel.isLoading,
-        isScrollable: true,
+        isLoading: false,
+        isScrollable: false,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -8,6 +8,7 @@ import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.da
 import 'package:wayagram/features/polls_and_voting/data/model/get_all_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
 
@@ -26,6 +27,7 @@ class CreatePollVotingState {
   final List<SingleDashboardVotes>? votes;
   final List<Select> pollTypes;
   final VoteUrlData? voteUrlData;
+  final List<PollDashboardModelDocs>? pollDashboardModelDocs;
   //final List<VoteUrlChoices> voteUrlChoices;
 
 
@@ -76,6 +78,7 @@ class CreatePollVotingState {
     this.candidateImage,
     this.voteUrlData ,
     this.choices = const [],
+    this.pollDashboardModelDocs = const [],
     //this.voteUrlChoices = const [],
     this.fetchAllPols =  const [],
     this.getPollModel = const [],
@@ -125,11 +128,11 @@ class CreatePollVotingState {
     List<Docs>? fetchAllPols,
     List<GetPollData>? getPollModel,
     List<GetAllPollData>? getAllPollModel,
+    List<PollDashboardModelDocs>? pollDashboardModelDocs,
     List<PollData>? getMyPollModel,
     List<SingleDashboardVotes>? votes,
     List<CastVoteData>? castVoteModel,
     List<Choice>? choices,
-    //List<VoteUrlChoices>? voteUrlChoices,
     List<Select>? pollTypes,
   }) {
     return CreatePollVotingState(
@@ -157,12 +160,12 @@ class CreatePollVotingState {
       getPollModel: getPollModel ?? this.getPollModel,
       getAllPollModel: getAllPollModel ?? this.getAllPollModel,
       getMyPollModel : getMyPollModel ?? this.getMyPollModel,
+      pollDashboardModelDocs: pollDashboardModelDocs ?? this.pollDashboardModelDocs,
       votes: votes ?? this.votes,
         castVoteModel: castVoteModel ?? this.castVoteModel,
       uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
       choices: choices ?? this.choices,
       voteUrlData: voteUrlData ?? this.voteUrlData,
-      //voteUrlChoices: voteUrlChoices ?? this.voteUrlChoices,
       pollTypes: pollTypes ?? this.pollTypes,
       pollTypeId: pollTypeId ?? this.pollTypeId,
         voteCount: voteCount  ?? this.voteCount,
