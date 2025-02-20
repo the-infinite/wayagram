@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -15,18 +15,17 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
+import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
-//import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/model.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard_model.dart' as dashboard;
 
 import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 
 import '../data/model/get_all_poll_model.dart';
-import '../data/model/poll_dashboard_two_model.dart';
+
 
 
 class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
@@ -68,6 +67,15 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   void selectPollType(String value) {
     state = state.copyWith(pollType: value.toLowerCase());
   }
+
+  void selectStartDate({required String date, required String iso}) {
+    state = state.copyWith(startDateString: date, startDate: date);
+  }
+
+  void selectEndDate({required String date, required String iso}) {
+    state = state.copyWith(endDateString: date, endDate: date);
+  }
+
 
   void addChoice() {
     List<Choice> allChoices = [];
@@ -499,11 +507,11 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     for (var i = 0; i < state.choices.length; i++) {
       choiceMap["choices[$i].text"] = state.choices[i].text.text;
-      choiceMap["choices[$i].image"] = await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*'));
-      //await MultipartFile.fromFile(state.choices[i].image!.path);
-      //choiceMap["choices[$i].image"] = state.choices[i].image; // convert this to multipartfile
+      choiceMap["choices[$i].image"] = state.choices[i].image !=null? await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*')):null;
+      ///choiceMap["choices[$i].image"] = await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*'));
       choiceMap["choices[$i].description"] = state.choices[i].description.text;
     }
+
 
     final formdata = {
       'question': question,
@@ -520,9 +528,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.createPoll(formdata);
-      if (
-      //response.data['statusCode'] == 200 ||
-          response.success && context.mounted) {
+      if (response.success && context.mounted) {
 
         showDialog(
             useRootNavigator: false,
@@ -544,12 +550,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<void> castYourVote(
-      String amountPaid, String qty, String choiceId, String  pollId,ctx, candidateName, votingLink) async {
+  Future<void> castYourVote(String amountPaid, String qty, String choiceId, String  pollId,ctx, candidateName, votingLink) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response =
-          await _pollAndVotingRepository.castVote(amountPaid, qty, choiceId, pollId);
+      final response = await _pollAndVotingRepository.castVote(amountPaid, qty, choiceId, pollId);
       state = state.copyWith(isLoading: false);
       Navigator.of(ctx).pop();
       if (response.success && ctx.mounted) {
@@ -602,18 +606,22 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  /*Future<void> getAllPolls() async {
+  Future<void> getPollsByUrl(String pollUrl) async {
     state = state.copyWith(isLoading: true);
-    final response = await _pollAndVotingRepository.getAllPolls();
+    final response = await _pollAndVotingRepository.getAPollsByUrl(pollUrl);
     state = state.copyWith(isLoading: false);
-    if (response.success) {
-      GetAllPollModel responseModel = GetAllPollModel.fromJson(response.data);
+    if (response.statusCode == 200) {
+      VoteUrlModel responseModel = VoteUrlModel.fromJson(response.data);
+      _logger.i('GENERATED ${responseModel.data}');
 
-      state = state.copyWith(getAllPollModel: responseModel.data);
+      state = state.copyWith(voteUrlData: responseModel.data
+          //voteUrlChoices: responseModel.data?.choices
+      );
     } else {
       state = state.copyWith(isLoading: false);
     }
-  }*/
+  }
+
 
   Future<void> getPollsById(String pollId) async {
     state = state.copyWith(isLoading: true);
@@ -629,56 +637,35 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<void> getDashboardPoll(String pollId) async {
-    state = state.copyWith(isLoading: true);
-    final response = await _pollAndVotingRepository.getDashboardPolls(pollId);
-    state = state.copyWith(isLoading: false);
-    if (response.statusCode == 200) {
-      dashboard.PollDashboardModel responseModel = dashboard.PollDashboardModel.fromJson(response.data);
-      // PollDashboardTwoData responseModel = PollDashboardTwoData.fromJson(response.data);
-      print('MY MONEYGENERATED  ==>>>  ${responseModel.moneyGenerated}');
-      state = state.copyWith(voteCount: responseModel.voteCount.toString(),
-           moneyGenerated: responseModel.moneyGenerated.toString(),
-           numberOfPeopleVoted: responseModel.numberOfPeopleVoted.toString());
-    } else {
+
+  Future<void> getSinglePollDashboard(pollId) async {
+    print('Fetching single Poll...');
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getDashboardPolls(pollId);
       state = state.copyWith(isLoading: false);
-    }
+
+      if (response.success) {
+        SingleDashboardModel responseModel = SingleDashboardModel.fromJson(response.data);
+
+        print('VOTECOUNT ===>> ${responseModel.data?.voteCount.toString()}');
+        state = state.copyWith(
+            votes: responseModel.data?.votes,
+            voteCount: responseModel.data?.voteCount.toString(),
+            moneyGenerated: responseModel.data?.moneyGenerated.toString(),
+            numberOfPeopleVoted: responseModel.data?.numberOfPeopleVoted.toString());
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      print(e);
+    } finally {}
   }
 
-  void submit(BuildContext context, bool isWayagramDeal) async {
-    //final addProductData = ref.watch(addProductProvider.notifier);
-
-    if (isWayagramDeal) {
-      // print("$addProductData");
-      WayaUtils.showNotice(
-          context: context,
-          title: "Your Application has been submitted Successfully! 🎉",
-          message:
-              "Your product has been submitted. We'll notify you \n once it's reviewed.",
-          onPress: () => WayaNav.toNamed('/wayagram-deal'),
-          icon: Image.asset('assets/images/shop/add-product-success.png'),
-          buttonText: 'View Application Status',
-          secondButtonText: 'Go to Dashboard',
-          onCancel: () => WayaNav.toNamed('/wayagram-deal'));
-    } else {
-      // print("$addProductData");
-      WayaUtils.showNotice(
-        context: context,
-        title: "Product Added Successfully! 🎉",
-        message:
-            "Your product is now live in your shop and ready \n for customers to discover.",
-        onPress: () => WayaNav.toNamed('/add-product'),
-        icon: Image.asset('assets/images/shop/add-product-success.png'),
-        buttonText: 'Add Another Product',
-        secondButtonText: 'Go to Dashboard',
-        onCancel: () => WayaNav.toNamed(BottomView.route, arguments: 1),
-      );
-    }
-  }
 }
 
-// final createPollVotingProvider = StateNotifierProvider<CreatePollVotingVm, CreatePollVotingState>(
-//         (ref,) => CreatePollVotingVm(ref));
+
 
 final pollAndVotingProvider = Provider((ref) => PollAndVotingRepository());
 final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {

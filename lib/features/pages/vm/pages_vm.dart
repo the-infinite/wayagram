@@ -481,6 +481,7 @@ class PageVm extends StateNotifier<PageState> {
         state = state.copyWith(getAllPost: responseModel.data?.docs);
       } else {}
     } catch (e) {
+      print(e);
     } finally {}
   }
 

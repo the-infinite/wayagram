@@ -25,7 +25,7 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPageProvider);
     final viewModel2 = ref.watch(createPageProvider.notifier);
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     //final type  = ModalRoute.of(context)?.settings.arguments as String?;
     return WayaScaffold(
       title: "Confirm Details",
