@@ -29,46 +29,49 @@ class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderSt
     final wayaTheme = Theme.of(context);
 
     return WayaScaffold(
-        isLoading: ref.watch(createShopVmProvider).isLoading,
-        isScrollable: false,
-        progressIndicator: loadingState(context: context),
-        onTapBackButton: () =>
-            Navigator.pushNamed(context, BottomView.route, arguments: 0),
-        title: 'Shop',
-        appBarTrailing: WayaCartIcon(),
-        body: Column(
-          children: [
-            const Gap(10),
-            Row(
-              children: [
-                WayaTabButton(
-                  isSelected: _selectedIndex == 0,
-                  text: 'All Products',
-                  onTap: () => setState(() => _selectedIndex = 0),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 1,
-                  text: 'Orders',
-                  onTap: () => setState(() => _selectedIndex = 1),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 2,
-                  text: 'Manage Shop',
-                  onTap: () => setState(() => _selectedIndex = 2),
-                ),
-              ],
-            ),
-            const Gap(10),
-            if (_selectedIndex == 0) AllProducts(),
-            if (_selectedIndex == 1) AllOrders(),
-            if (_selectedIndex == 2) SellerShop()
-          ],
-        ),
-        floatingActionButton: Visibility(
-          visible: ref.read(successfulSetupVmProvider).user!.user!.role!.name !=
-                  'PERSONAL' &&
-              _selectedIndex == 2,
-          child: SizedBox(
+      isLoading: ref.watch(createShopVmProvider).isLoading,
+      isScrollable: true,
+      progressIndicator: loadingState(context: context),
+      onTapBackButton: () => Navigator.pushNamed(context, BottomView.route, arguments: 0),
+      title: 'Shop',
+      appBarTrailing: WayaCartIcon(),
+      body: Column(
+        children: [
+          const Gap(10),
+          Row(
+            children: [
+              WayaTabButton(
+                isSelected: _selectedIndex == 0,
+                text: 'All Products',
+                onTap: () => setState(() => _selectedIndex = 0),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 1,
+                text: 'Orders',
+                onTap: () => setState(() => _selectedIndex = 1),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 2,
+                text: 'Manage Shop',
+                onTap: () => setState(() => _selectedIndex = 2),
+              ),
+            ],
+          ),
+          const Gap(10),
+          if (_selectedIndex == 0) AllProducts(),
+          if (_selectedIndex == 1) AllOrders(),
+          if (_selectedIndex == 2) SellerShop()
+        ],
+      ),
+      floatingActionButton: Visibility(
+        visible: ref.read(successfulSetupVmProvider).user!.user!.role!.name != 'PERSONAL' && _selectedIndex == 2,
+        child: SizedBox(
+          height: 50,
+          width: 50,
+          child: WayaButton(
+            callback: () {
+              WayaNav.toNamed(CreateShop.route, arguments: CreateShopArg(uniqueKey: 'create-shop'));
+            },
             height: 50,
             centerWidget: Center(
               child: Icon(
