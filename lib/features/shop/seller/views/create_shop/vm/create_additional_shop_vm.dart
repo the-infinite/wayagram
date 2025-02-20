@@ -8,24 +8,25 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
-import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
+import 'package:wayagram/shared/features/file/repo/default.dart';
 
 class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   final ShopRepository _shopRepository;
   final AuthRepository _authRepository;
   final ImagePicker _picker;
   final WayaSecureDataSource _secureDataSource;
-  final SuccessfulSetUpState _setUpState;
+
   final Ref ref;
 
   final _logger = getLogger('CreateAdditionalShopVm');
   CreateAdditionalShopVm(this._shopRepository, this._authRepository,
-      this._picker, this._secureDataSource, this._setUpState, this.ref)
+      this._picker, this._secureDataSource, this.ref)
       : super(CreateShopState());
 
   Future<void> selectState(Select value) async {
@@ -50,12 +51,16 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
   Future<void> createSellerShop() async {
     try {
-      if ((state.logo == null && !state.isEditingMode) ||
+      if ((state.image == null && !state.isEditingMode) ||
           state.isEditingMode && state.url == null) {
         return WayaSnackBar.showToast('Pls add a Logo');
       }
-      final userId = await _secureDataSource.getUserId();
-      state = state.copyWith(vendorId: userId);
+      if (state.logo == null && state.image != null) {
+        final String? url =
+            await WayaFileRepository.instance.uploadFile(state.image!);
+        state.copyWith(logo: url);
+      }
+      state = state.copyWith(vendorId: ConversationState.self.id);
       state = state.copyWith(isLoading: true);
 
       final response = state.isEditingMode
@@ -122,8 +127,7 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
         state = state.copyWith(
           image: file,
         );
-        final formatted = await WayaHelpers.formattedImage(file);
-        state = state.copyWith(logo: formatted);
+
         if (state.isEditingMode) {
           state = state.copyWith(url: null);
         }
@@ -144,13 +148,13 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
         description: TextEditingController(text: singleShop.description),
         name: TextEditingController(text: singleShop.name),
         url: singleShop.logo,
+        logo: singleShop.logo,
         address: TextEditingController(text: singleShop.address));
   }
 }
 
 final createAdditionalShopVmProvider = StateNotifierProvider.family<
     CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
-  final setUp = ref.watch(successfulSetupVmProvider);
   return CreateAdditionalShopVm(ShopRepository(), AuthRepository(),
-      ImagePicker(), WayaSecureDataSource(), setUp, ref);
+      ImagePicker(), WayaSecureDataSource(), ref);
 });

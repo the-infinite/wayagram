@@ -322,8 +322,7 @@ class _ExploreState extends ConsumerState<Explore> {
               ),
             ),
           ),
-        )
-        );
+        ));
   }
 
   Widget _buildProductGrid({required List<Product> products}) {
@@ -333,17 +332,16 @@ class _ExploreState extends ConsumerState<Explore> {
           Row(
             children: [
               Expanded(
-                child: ProductCard(
-                  product: products[i],
-                ),
+                child: ProductCard(product: products[i]),
               ),
               if (i + 1 < products.length) ...[
                 const SizedBox(width: 12),
                 Expanded(
-                  child: ProductCard(
-                    product: products[i + 1],
-                  ),
+                  child: ProductCard(product: products[i + 1]),
                 ),
+              ] else ...[
+                const SizedBox(width: 12),
+                Expanded(child: SizedBox()),
               ],
             ],
           ),
