@@ -13,19 +13,20 @@ class WayaSelectField extends ConsumerWidget {
   final String hintText;
   final BorderRadius? radius;
   final List<Select> items;
-  final  Function(Select value) onSelected;
+  final Function(Select value) onSelected;
   final String uniqueKey;
 
-  const WayaSelectField(
-      {super.key,
-      required this.hintText,
-      this.label,
-      this.height = 48,
-      required this.items,
-      required this.onSelected,
-      this.value = '',
-      this.radius,
-      this.uniqueKey = ''});
+  const WayaSelectField({
+    super.key,
+    required this.hintText,
+    this.label,
+    this.height = 48,
+    required this.items,
+    required this.onSelected,
+    this.value = '',
+    this.radius,
+    this.uniqueKey = '',
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,13 +60,10 @@ class WayaSelectField extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text((value == null || value!.isEmpty ) ? hintText :value!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.wayaCopyWith(
+                    Text((value == null || value!.isEmpty) ? hintText : value!,
+                        style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
                               fontSize: 14,
-                              color: (value == null || value!.isEmpty )
+                              color: (value == null || value!.isEmpty)
                                   ? wayaTheme.colorScheme.greyColor300
                                   : wayaTheme.colorScheme.customBlack,
                             )),
@@ -78,9 +76,7 @@ class WayaSelectField extends ConsumerWidget {
               )),
           border: Border.all(
               width: 1,
-              color: viewModel.isFocused
-                  ? wayaTheme.colorScheme.customPrimary
-                  : wayaTheme.colorScheme.greyColor300),
+              color: viewModel.isFocused ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300),
         )
       ],
     );
@@ -103,18 +99,16 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> selectValue(BuildContext context, String title,
-      List<Select> items, Function(Select value) onSelected) async {
-    final result = await WayaUtils.showSelectModal(
-        context: context, title: title, items: items);
- onSelected(result);
+  Future<void> selectValue(
+      BuildContext context, String title, List<Select> items, Function(Select value) onSelected) async {
+    final result = await WayaUtils.showSelectModal(context: context, title: title, items: items);
+    onSelected(result);
 
     notifyListeners();
   }
 }
 
 final wayaSelectFieldViewModelProvider =
-    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>(
-        (ref, uniqueKey) {
+    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>((ref, uniqueKey) {
   return WayaSelectFieldViewModel(ref);
 });

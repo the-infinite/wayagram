@@ -9,7 +9,6 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/utils/task.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/dto/chat.dart';
@@ -323,12 +322,14 @@ class ChatInputController {
 class ChatInputWidget extends StatelessWidget {
   final ChatInputController controller;
   final ChatNotifier notifier;
+  final bool voiceEnabled;
 
   // Construct.
   const ChatInputWidget({
     super.key,
     required this.controller,
     required this.notifier,
+    this.voiceEnabled = true,
   });
 
   /// Helper function used to add an attachment.
@@ -578,6 +579,38 @@ class ChatInputWidget extends StatelessWidget {
                   ValueListenableBuilder(
                     valueListenable: controller._canSend,
                     builder: (context, canSend, _) {
+                      //? If voice messages cannot be sent
+                      if (!voiceEnabled) {
+                        return AnimatedCrossFade(
+                          duration: const Duration(milliseconds: 350),
+                          crossFadeState: canSend ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                          firstChild: WayaButton(
+                            callback: _sendMessage,
+                            height: null,
+                            color: WayaColors.primary,
+                            horizontalPadding: 10,
+                            verticalPadding: 10,
+                            centerWidget: WayaAssets.icons.cSend.svg(
+                              color: WayaColors.white,
+                              height: 18,
+                              width: 18,
+                            ),
+                          ),
+                          secondChild: WayaButton(
+                            callback: null,
+                            height: null,
+                            color: WayaColors.greyColor200,
+                            horizontalPadding: 10,
+                            verticalPadding: 10,
+                            centerWidget: WayaAssets.icons.cSend.svg(
+                              color: WayaColors.black,
+                              height: 18,
+                              width: 18,
+                            ),
+                          ),
+                        );
+                      }
+
                       //? Since we cannot send yet, show this message type's
                       //? protocol icon.
                       return AnimatedCrossFade(
