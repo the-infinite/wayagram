@@ -26,7 +26,12 @@ final _debounceTimers = <String, Timer?>{};
 ///   * [delay]: The duration to delay the function execution. Defaults to 300 milliseconds
 ///
 /// Returns a new function that wraps the original function with debounce functionality.
-Function debounce(Function func, {required String key, Duration delay = const Duration(milliseconds: 300)}) {
+Function debounce(
+  Function func, {
+  required String key,
+  Duration delay = const Duration(milliseconds: 300),
+  void Function(dynamic)? onFinish,
+}) {
   return () {
     final debounceTimer = _debounceTimers[key];
 
@@ -36,9 +41,10 @@ Function debounce(Function func, {required String key, Duration delay = const Du
     }
 
     //? Something like this.
-    _debounceTimers[key] = Timer(delay, () {
+    _debounceTimers[key] = Timer(delay, () async {
       _debounceTimers.remove(key);
-      func();
+      final result = await func();
+      onFinish?.call(result);
     });
   };
 }
@@ -352,6 +358,9 @@ class TaskScheduler {
   /// isolate. It handles all the heavy logic associated with what to do when the
   /// number of tasks running are at the max possible value.
   Future<T> run<T>(Task<T> task) async {
+    // Wait for this to be initialized.
+    await ensureInitialized();
+
     /// This should take the heavy lifting away from you kind of.
     final executor = _nextExecutor;
     final completer = Completer<T>();

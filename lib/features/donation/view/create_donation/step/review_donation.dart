@@ -3,18 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
-import 'package:wayagram/core/components/waya_image.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/quotation/buyer/model/create_request_state_model.dart';
-import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
-import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
-import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
-import 'package:wayagram/features/shop/widgets/about_product.dart';
+import 'package:wayagram/features/donation/state/donation_state.dart';
+import 'package:wayagram/features/donation/vm/donation_vm.dart';
 
 class ReviewDonation extends ConsumerStatefulWidget {
   final Function(int index) goBack;
@@ -28,33 +23,12 @@ class ReviewDonation extends ConsumerStatefulWidget {
 }
 
 class _ReviewDonationState extends ConsumerState<ReviewDonation> {
-  CreateRequestState? viewModel;
-  WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
-
-  disposeControllers(){
-    viewModel?.productName.dispose();
-    viewModel?.brandName.dispose();
-    viewModel?.productDescription?.dispose();
-    viewModel?.quantity?.dispose();
-    viewModel?.minDistance?.dispose();
-    viewModel?.maxDistance?.dispose();
-    viewModel?.bidStartingAmount?.dispose();
-    viewModel?.maxBidAmount?.dispose();
-    viewModel?.deliveryAddress?.dispose();
-    // viewModel?.startTime?.dispose();
-    // viewModel?.endTime?.dispose();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+  DonationState? viewModel;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_){
-      viewModel = ref.read(createRequestProvider);
-      print(viewModel?.brandName.text);
+      viewModel = ref.read(donationVmProvider);
+
     });
     super.initState();
   }
@@ -62,152 +36,70 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    viewModel = ref.watch(createRequestProvider);
+    viewModel = ref.watch(donationVmProvider);
+    final donation = ref.watch(donationVmProvider.notifier);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Review Request Details", style: wayaTheme.textTheme.titleLarge),
+        Text("Review Donation Details", style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
-        Text("Review your request details before submission",
+        Text("Review your donation details before submission",
             style: wayaTheme.textTheme.hintStyle),
+        const Gap(20),
+        Text("Donation Thumbnail",
+          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.black),),
         const Gap(30),
         EditHeader(
           onTap: () {
             widget.goBack(0);
           },
-          title: 'Product Information',
+          title: 'Donation Information ',
         ),
-        const Gap(30),
-        AboutProduct(
-            title: 'Product Name',
-            content: '${viewModel?.productName.text}'),
-        const Gap(15),
-        AboutProduct(title: 'Brand Name', content: '${viewModel?.brandName.text.capitalizeFirst}'),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'Product Category', content: '${viewModel?.productCategory}'),
-            ),
-            Expanded(
-              child: AboutProduct(
-                  title: 'Product Condition', content: '${viewModel?.productCondition}'),
-            )
-          ],
-        ),
-        const Gap(15),
-        AboutProduct(
-            title: 'Product Description',
-            content:
-            '${viewModel?.productDescription.text.capitalizeFirst}'),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'Quantity', content: '${viewModel?.quantity.text}'),
-            ),
-            Expanded(
-              flex: 2,
-              child: AboutProduct(title: 'State of Purchase', content: '${viewModel?.stateOfPurchase}'),
-            ),
-            Expanded(
-              child: AboutProduct(title: 'LGA', content: '${viewModel?.lga}'),
-            )
-          ],
-        ),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'Min Distance', content: '${viewModel?.minDistance.text}Km'),
-            ),
-            Expanded(
-              child: AboutProduct(title: 'Product Condition', content: '${viewModel?.productCondition}'),
-            ),
+    _reviewText('Cause Title', '${viewModel?.title.text.capitalizeFirst}'),
+        const Gap(10),
+    _reviewText('Cause Description', '${viewModel?.description.text.capitalizeFirst}'),
+        const Gap(10),
+    _reviewText('Proposed Solution', '${viewModel?.solution.text.capitalizeFirst}'),
+        const Gap(10),
+    _reviewText('Impact Statement', '${viewModel?.statement.text.capitalizeFirst}'),
+        const Gap(10),
+    _reviewText('Target Amount', WayaHelpers.formatPrice(int.parse('${viewModel?.amount.text}'))),
+        const Gap(10),
+        Row(children: [
+          _reviewText('Start Date', '${viewModel?.startDate}'),
+          Spacer(),
+          _reviewText('End Date', '${viewModel?.endDate}'),
+        ],),
+        const Gap(10),
+    _reviewText('Fundraiser Details', '${viewModel?.details.text.capitalizeFirst}'),
+        const Gap(10),
+    _reviewText('Privacy Settings', '${'Public'}'),
+        const Gap(10),
+    Row(children: [
+      _reviewText('Show Amount Raised', viewModel!.showAmountRaised ? 'Yes':'No'),
+      Spacer(),
+      _reviewText('Show Number of Donors', viewModel!.showNumberOfDonors? 'Yes':'No'),
+    ],),
 
-          ],
-        ),
         const Gap(30),
-        EditHeader(
-          onTap: () {
-            widget.goBack(1);
-          },
-          title: 'Pricing & Delivery',
-        ),
-        const Gap(30),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'Bid Starting Amount', content: '${viewModel?.bidStartingAmount.text} NGN'),
-            ),
-            Expanded(
-              child: AboutProduct(title: 'Maximum Bid Amount', content: '${viewModel?.maxBidAmount.text} NGN'),
-            ),
 
-          ],
-        ),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: AboutProduct(
-                  title: 'Delivery Address',
-                  content: '${viewModel?.deliveryAddress.text.capitalizeFirst}'),
-            )
-          ],
-        ),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'State', content: '${viewModel?.deliveryState.capitalizeFirst}'),
-            ),
-            Expanded(
-              child: AboutProduct(title: 'LGA', content: '${viewModel?.deliveryLga.capitalizeFirst}'),
-            )
-          ],
-        ),
-        const Gap(30),
-        EditHeader(
-          onTap: () {
-            widget.goBack(1);
-          },
-          title: 'Bid Timing',
-        ),
-        const Gap(30),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(title: 'Start Time', content: '${viewModel?.startDate}'),
-            ),
-            Expanded(
-              child: AboutProduct(
-                  title: 'End Time', content: '${viewModel?.endDate}'),
-            )
-          ],
-        ),
-        const Gap(30),
+
+
         WayaButton(
           callback: !viewModel!.isLoading
               ? ()  async{
 
-            final buyerId = _wayaLocalDataSource.getUserId();
-            CreateBuyerRequest createBuyerRequest = CreateBuyerRequest(
+          /*  CreateBuyerRequest createBuyerRequest = CreateBuyerRequest(
                 buyerId: buyerId,
-                productName: viewModel!.productName.text,
-                brand: viewModel!.brandName.text,
-                category: viewModel!.productCategory,
-                condition: viewModel!.productCondition.toLowerCase(),
+                productName: viewModel!.title.text,
+                brand: viewModel!.description.text,
+                category: viewModel!.details.text,
+                condition: viewModel!.amount.text,
                 description: viewModel!.productDescription.text,
                 quantity: viewModel!.quantity.text,
                 bidStart: viewModel!.startDate,
@@ -226,50 +118,16 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
                 bidStartingAmount: viewModel!.bidStartingAmount.text.replaceAll(',', ''));
             await ref.read(createRequestProvider.notifier).createBuyerRequest(
                 createBuyerRequest
-            );
+            );*/
 
-            disposeControllers();
-            WayaNav.toNamed('/seeBuyer-bids');
+            donation.reset();
+            //WayaNav.toNamed('/seeBuyer-bids');
           }
               : null,
           centerWidget: LoadingState(
-              loading: viewModel!.isLoading, text: 'Find offers'),
+              loading: viewModel!.isLoading, text: 'Post Donation'),
         ),
-        /* WayaButton(
-            text: 'Find offers',
-            callback: () async{
 
-              final buyerId = _wayaLocalDataSource.getUserId();
-              CreateBuyerRequest createBuyerRequest = CreateBuyerRequest(
-                  buyerId: buyerId,
-                  productName: viewModel!.productName.text,
-                  brand: viewModel!.brandName.text,
-                  category: viewModel!.productCategory,
-                  condition: viewModel!.productCondition.toLowerCase(),
-                  description: viewModel!.productDescription.text,
-                  quantity: viewModel!.quantity.text,
-                  bidStart: viewModel!.startDate,
-                  bidEnd: viewModel!.endDate,
-                  deliveryDetails: '----',
-                  minDistance: viewModel!.minDistance.text,
-                  maxDistance: viewModel!.maxDistance.text,
-                  stateOfPurchase: viewModel!.stateOfPurchase,
-                  lga: viewModel!.lga,
-                  vendorsCanSeeBidFromAnyDistance: '${viewModel!.vendorSeeBuyRequest}',
-                  deliveryType: 'delivery',
-                  deliveryAddress: viewModel!.deliveryAddress.text,
-                  deliveryState: viewModel!.deliveryState,
-                  deliveryLga: viewModel!.deliveryLga,
-                  maxBidAmount: viewModel!.maxBidAmount.text,
-                  bidStartingAmount: viewModel!.bidStartingAmount.text.replaceAll(',', ''));
-              await ref.read(createRequestProvider.notifier).createBuyerRequest(
-                createBuyerRequest
-              );
-
-              disposeControllers();
-              WayaNav.toNamed('/seeBuyer-bids');
-            }
-            ),*/
         const Gap(8),
         WayaButton(
             text: 'Go Back',
@@ -282,6 +140,23 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
             })
       ],
     );
+  }
+  _reviewText(title, subTitle){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      Text(title,
+        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Theme.of(context).colorScheme.greyColor500),),
+
+      Text(subTitle,
+        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).colorScheme.black),),
+    ],);
   }
 }
 

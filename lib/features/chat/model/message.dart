@@ -158,9 +158,16 @@ class MessageModel {
 
   String get contentDescription {
     return switch (messageType) {
-      MessageType.file => "${media?.length ?? 1} files",
-      MessageType.location => "Location",
-      _ => content ?? "",
+      MessageType.file => media?.length == 1 ? 'Shared a file' : '${media?.length ?? 1} files',
+      MessageType.location => "Shared location",
+      MessageType.voiceNote => "Shared a voicenote",
+      MessageType.video => "Shared a video",
+      MessageType.image => "Shared an image",
+      MessageType.contact => "Shared a contact",
+      MessageType.text => content ?? "",
+      MessageType.sticker => "Shared a sticker",
+      MessageType.call => "Started a call",
+      MessageType.missedCall => "Started a call",
     };
   }
 

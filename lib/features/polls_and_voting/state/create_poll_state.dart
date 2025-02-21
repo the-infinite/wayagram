@@ -8,9 +8,9 @@ import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.da
 import 'package:wayagram/features/polls_and_voting/data/model/get_all_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard_two_model.dart';
-
-import 'poll_dashboard_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
 
 class CreatePollVotingState {
   final TextEditingController pollTitle;
@@ -24,28 +24,33 @@ class CreatePollVotingState {
   final TextEditingController secondChoiceDescription;
   final List<DocType> uploadedDocuments;
   final List<Choice> choices;
+  final List<SingleDashboardVotes>? votes;
   final List<Select> pollTypes;
+  final VoteUrlData? voteUrlData;
+  final List<PollDashboardModelDocs> pollDashboardModelDocs;
+  final List<PollDashboardChoices> pollDashboardChoices;
+
 
   final String moneyGenerated;
   final String voteCount;
   final String numberOfPeopleVoted;
   final String startDate;
   final String endDate;
+  final String startDateString;
+  final String endDateString;
   final String pollType;
   final String pollTypeId;
   File? candidateImage;
   final String dateIsoFormat;
   final bool isFocused;
   final bool isLoading;
+  final bool isLoadingPollWithStatus;
   bool? isPersonalNotUpgradedToBusiness;
   List<Docs> fetchAllPols;
   List<GetPollData> getPollModel;
   List<GetAllPollData> getAllPollModel;
   List<PollData> getMyPollModel;
-  List<Votes> pollDashboardModel;
   List<CastVoteData> castVoteModel;
-  List<PollDashboardModel> dashboard;
-  List<PollDashboardTwoData> pollDashboardTwoModel;
 
   CreatePollVotingState({
     TextEditingController? pollTitle,
@@ -63,20 +68,24 @@ class CreatePollVotingState {
     this.pollType = '',
     this.startDate = '',
     this.endDate = '',
+    this.startDateString = '',
+    this.endDateString = '',
     this.dateIsoFormat = '',
     this.pollTypeId = '',
     this.isFocused = false,
     this.isLoading = false,
+    this.isLoadingPollWithStatus = false,
     this.candidateImage,
+    this.voteUrlData ,
     this.choices = const [],
+    this.pollDashboardModelDocs = const [],
+    this.pollDashboardChoices = const [],
     this.fetchAllPols =  const [],
     this.getPollModel = const [],
     this.getAllPollModel = const [],
     this.getMyPollModel = const [],
-    this.pollDashboardModel = const [],
-    this.pollDashboardTwoModel = const [],
+    this.votes = const [],
     this.castVoteModel = const [],
-    this.dashboard = const [],
     this.pollTypes = const [],
     this.uploadedDocuments = const [],
     this.isPersonalNotUpgradedToBusiness = false,
@@ -105,23 +114,27 @@ class CreatePollVotingState {
     String? voteCount,
     String? numberOfPeopleVoted,
     String? startDate,
+    String? startDateString,
+    String? endDateString,
     String? dateIsoFormat,
     String? endDate,
     String? pollType,
     File? candidateImage,
+    VoteUrlData? voteUrlData,
     String? pollTypeId,
     bool? isFocused,
     bool? isLoading,
+    bool? isLoadingPollWithStatus,
     List<Docs>? fetchAllPols,
     List<GetPollData>? getPollModel,
     List<GetAllPollData>? getAllPollModel,
+    List<PollDashboardModelDocs>? pollDashboardModelDocs,
     List<PollData>? getMyPollModel,
-    List<Votes>? pollDashboardModel,
-    List<PollDashboardTwoData>? pollDashboardTwoModel,
+    List<SingleDashboardVotes>? votes,
     List<CastVoteData>? castVoteModel,
-    List<PollDashboardModel>? dashboard,
     List<Choice>? choices,
     List<Select>? pollTypes,
+    List<PollDashboardChoices>? pollDashboardChoices,
   }) {
     return CreatePollVotingState(
       isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ?? this.isPersonalNotUpgradedToBusiness,
@@ -137,25 +150,29 @@ class CreatePollVotingState {
       pollType: pollType ?? this.pollType,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
+      startDateString: startDateString ?? this.startDateString,
+      endDateString: endDateString ?? this.endDateString,
       candidateImage: candidateImage ?? this.candidateImage,
       dateIsoFormat: dateIsoFormat ?? this.dateIsoFormat,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
+      isLoadingPollWithStatus: isLoadingPollWithStatus ?? this.isLoadingPollWithStatus,
       fetchAllPols: fetchAllPols  ?? this.fetchAllPols,
       getPollModel: getPollModel ?? this.getPollModel,
       getAllPollModel: getAllPollModel ?? this.getAllPollModel,
       getMyPollModel : getMyPollModel ?? this.getMyPollModel,
-      pollDashboardModel: pollDashboardModel ?? this.pollDashboardModel,
-        pollDashboardTwoModel : pollDashboardTwoModel ?? this.pollDashboardTwoModel,
+      pollDashboardModelDocs: pollDashboardModelDocs ?? this.pollDashboardModelDocs,
+      votes: votes ?? this.votes,
         castVoteModel: castVoteModel ?? this.castVoteModel,
-      dashboard: dashboard ?? this.dashboard,
       uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
       choices: choices ?? this.choices,
+      voteUrlData: voteUrlData ?? this.voteUrlData,
       pollTypes: pollTypes ?? this.pollTypes,
       pollTypeId: pollTypeId ?? this.pollTypeId,
         voteCount: voteCount  ?? this.voteCount,
       numberOfPeopleVoted: numberOfPeopleVoted  ?? this.numberOfPeopleVoted,
       moneyGenerated: moneyGenerated ?? this.moneyGenerated,
+      pollDashboardChoices: pollDashboardChoices ?? this.pollDashboardChoices
 
     );
   }

@@ -28,13 +28,14 @@ class DonationVm extends StateNotifier<DonationState> {
     state = DonationState();
   }
 
+  void updateAmountRaised(bool value) {
+    state = state.copyWith(showAmountRaised: value);
+  }
 
+  void updateNumberOfDonors(bool value) {
+    state = state.copyWith(showNumberOfDonors: value);
+  }
 
-
-  // void updatePrivacyOption(String value) {
-  //   state = state.copyWith(privacyOption: value);
-  // }
-  //
   void selectStartDate({required String date, required String iso}) {
     state = state.copyWith(startDateString: date, startDate: date);
   }

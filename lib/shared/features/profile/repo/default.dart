@@ -18,10 +18,10 @@ class UserProfileRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getGroupsForUser(String userId, int page, int limit) async {
-    return httpClient.getHttp("$serviceUri/groups?userId=$userId&page=$page&limit=$limit");
+    return httpClient.getHttp("$serviceUri/groups?ownerId=$userId&page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getPagesForUser(String userId, int page, int limit) async {
-    return httpClient.getHttp("$serviceUri/pages?userId=$userId&page=$page&limit=$limit");
+    return httpClient.getHttp("$serviceUri/pages?ownerId=$userId&page=$page&limit=$limit");
   }
 }

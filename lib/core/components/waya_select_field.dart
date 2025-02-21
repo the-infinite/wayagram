@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/waya_dummy_input.dart';
+import 'package:wayagram/core/components/waya_input_decorator.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
@@ -14,19 +16,20 @@ class WayaSelectField extends ConsumerWidget {
   final String hintText;
   final BorderRadius? radius;
   final List<Select> items;
-  final  Function(Select value) onSelected;
+  final Function(Select value) onSelected;
   final String uniqueKey;
 
-  const WayaSelectField(
-      {super.key,
-      required this.hintText,
-      this.label,
-      this.height = 48,
-      required this.items,
-      required this.onSelected,
-      this.value = '',
-      this.radius,
-      this.uniqueKey = ''});
+  const WayaSelectField({
+    super.key,
+    required this.hintText,
+    this.label,
+    this.height = 48,
+    required this.items,
+    required this.onSelected,
+    this.value = '',
+    this.radius,
+    this.uniqueKey = '',
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,49 +48,29 @@ class WayaSelectField extends ConsumerWidget {
                       color: wayaTheme.colorScheme.greyColor900,
                     )),
           ),
-        WayaButton(
-          callback: () {
+
+        //worked on Focus, Focus node not working properly
+        AppTextField(
+          textFieldType: TextFieldType.NAME,
+          onTap: () {
             viewModel.selectValue(context, hintText, items, onSelected);
           },
-          horizontalPadding: 0,
-          color: wayaTheme.colorScheme.transparent,
-          centerWidget: Focus(
-              onFocusChange: (hasFocus) {
-                viewModel.focusChange(hasFocus);
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                  SizedBox(width: 100,
-                  child:   Text((value == null || value!.isEmpty ) ? hintText :value!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.wayaCopyWith(
-                              fontSize: 14,
-                              color: (value == null || value!.isEmpty )
-                                  ? wayaTheme.colorScheme.greyColor300
-                                  : wayaTheme.colorScheme.customBlack,
-                                
-                              
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis ,
-                            ),),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      color: wayaTheme.colorScheme.greyColor300,
-                    )
-                  ],
+
+          readOnly: true,
+          decoration: inputDecoration(
+            wayaTheme: wayaTheme,
+            hintText: (value == null || value!.isEmpty) ? hintText : value!,
+            hintStyle: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+                  fontSize: 14,
+                  color: (value == null || value!.isEmpty)
+                      ? wayaTheme.colorScheme.greyColor300
+                      : wayaTheme.colorScheme.customBlack,
                 ),
-              )),
-          border: Border.all(
-              width: 1,
-              color: viewModel.isFocused
-                  ? wayaTheme.colorScheme.customPrimary
-                  : wayaTheme.colorScheme.greyColor300),
+          ),
+          suffix: Icon(
+            Icons.arrow_drop_down,
+            color: wayaTheme.colorScheme.greyColor300,
+          ),
         )
       ],
     );
@@ -114,14 +97,13 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
       List<Select> items, Function(Select value) onSelected) async {
     final result = await WayaUtils.showSelectModal(
         context: context, title: title, items: items);
- onSelected(result);
+    onSelected(result);
 
     notifyListeners();
   }
 }
 
 final wayaSelectFieldViewModelProvider =
-    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>(
-        (ref, uniqueKey) {
+    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>((ref, uniqueKey) {
   return WayaSelectFieldViewModel(ref);
 });

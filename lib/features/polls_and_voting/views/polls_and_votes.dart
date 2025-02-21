@@ -8,7 +8,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
+import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
@@ -34,8 +34,8 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         title: "Polls and Votes",
-        isLoading: viewModel.isLoading,
-        isScrollable: true,
+        isLoading: false,
+        isScrollable: false,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

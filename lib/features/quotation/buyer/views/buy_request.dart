@@ -78,7 +78,6 @@ class BuyRequests extends ConsumerStatefulWidget {
 }
 
 class _BuyRequestsState extends ConsumerState<BuyRequests> {
-
   int currentPage = 0;
 
   late Timer timer;
@@ -98,11 +97,13 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
       } else {
         currentPage = 0;
       }
-      pageController.animateToPage(
-        currentPage,
-        duration: const Duration(milliseconds: 1500),
-        curve: Curves.easeIn,
-      );
+      if (pageController.hasClients) {
+        pageController.animateToPage(
+          currentPage,
+          duration: const Duration(milliseconds: 1500),
+          curve: Curves.easeIn,
+        );
+      }
     });
     super.initState();
   }
@@ -115,24 +116,33 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
       children: [
         FilterWidget(search: TextEditingController(), hintText: 'Search Requests'),
         const Gap(25),
-        GroupedWidgetHeader(
-            onTap: () {},
-            subTitle: 'Explore Categories & Best Offers',
-            title: 'Wayagram Deals'),
+        GroupedWidgetHeader(onTap: () {}, subTitle: 'Explore Categories & Best Offers', title: 'Wayagram Deals'),
         const Gap(10),
-       // CategoriesFilterWidget<Product>(allItems: []),
+        // CategoriesFilterWidget<Product>(allItems: []),
         const Gap(25),
         Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(15),
           ),
           height: 180.h,
           child: PageView(
             controller: pageController,
             children: [
-              ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png',fit: BoxFit.fitWidth,),),
-              ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png', fit: BoxFit.fitWidth),),
-              ClipRRect(borderRadius: BorderRadius.circular(15),child: Image.asset('assets/images/waya_deal_ad.png', fit: BoxFit.fitWidth),),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset(
+                  'assets/images/waya_deal_ad.png',
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset('assets/images/waya_deal_ad.png', fit: BoxFit.fitWidth),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset('assets/images/waya_deal_ad.png', fit: BoxFit.fitWidth),
+              ),
             ],
           ),
         ),
@@ -141,7 +151,7 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
           padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w, bottom: 30.h),
           child: Center(
             child: SmoothPageIndicator(
-                effect:  ExpandingDotsEffect(
+                effect: ExpandingDotsEffect(
                     dotWidth: 16,
                     dotHeight: 6,
                     spacing: 4,
@@ -157,17 +167,17 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
             //itemCount: viewModel.quotations.length,
             itemCount: viewModel.buyerRequest.length,
             itemBuilder: (context, index) {
-
-              return viewModel.buyerRequest.isEmpty ? Center(child: Text('No request')): RequestCard(product: viewModel.buyerRequest[index],
-                onTap: () {
-                  WayaNav.toNamed('/seeSeller-bids');
-                },);
+              return viewModel.buyerRequest.isEmpty
+                  ? Center(child: Text('No request'))
+                  : RequestCard(
+                      product: viewModel.buyerRequest[index],
+                      onTap: () {
+                        WayaNav.toNamed('/seeSeller-bids');
+                      },
+                    );
             }),
         const Gap(25),
-        GroupedWidgetHeader(
-            onTap: () {},
-            subTitle: 'Explore Categories & Best Offers',
-            title: 'Recommended Bids'),
+        GroupedWidgetHeader(onTap: () {}, subTitle: 'Explore Categories & Best Offers', title: 'Recommended Bids'),
         const Gap(25),
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
@@ -175,10 +185,12 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
             //itemCount: viewModel.quotations.length,
             itemCount: viewModel.buyerRequest.length,
             itemBuilder: (context, index) {
-              return RequestCard(product: viewModel.buyerRequest[index],
+              return RequestCard(
+                product: viewModel.buyerRequest[index],
                 onTap: () {
                   WayaNav.toNamed('/seeSeller-bids');
-                },);
+                },
+              );
             }),
       ],
     );

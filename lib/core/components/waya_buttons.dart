@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -5,6 +7,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
@@ -507,6 +510,159 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class WayaActionButton extends StatelessWidget {
+  final String icon;
+  final String title;
+  final String description;
+  final double iconSize;
+  final double spacing;
+  final Color? iconBackground;
+  final FutureOr<void> Function() callback;
+
+  // Construct.
+  const WayaActionButton({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.callback,
+    this.iconSize = 24,
+    this.spacing = 2,
+    this.iconBackground,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final accentColor = iconBackground ?? theme.colorScheme.primary.withAlpha(30);
+
+    // This is fine.
+    return InkWell(
+      onTap: callback,
+      borderRadius: BorderRadius.circular(10),
+      splashColor: accentColor,
+      focusColor: accentColor,
+      highlightColor: accentColor,
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: spacing,
+          children: [
+            //* First, the icon for this attachment action button.
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: accentColor,
+              ),
+              child: SvgPicture.asset(
+                icon,
+                height: iconSize,
+                width: iconSize,
+              ),
+            ),
+
+            //* Second, the title of this section.
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyBold,
+            ),
+
+            //* The body of this action button.
+            Text(
+              description,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.descriptionStyle.copyWith(
+                fontSize: 13,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WayaProgressiveButton extends StatelessWidget {
+  final String text;
+  final Color? color;
+  final Widget? leadingIcon;
+  final BoxShape shape;
+  final Widget? trailingIcon;
+  final Alignment alignment;
+  final double? radius;
+  final BoxBorder? border;
+  final Future<void> Function() callback;
+  final Color? textColor;
+  final TextStyle? textStyle;
+  final Widget? centerWidget;
+  final bool? isDisabled;
+  final double horizontalPadding;
+  final double verticalPadding;
+  final double? height;
+  final ValueNotifier<bool> notifier;
+
+  const WayaProgressiveButton({
+    super.key,
+    required this.callback,
+    required this.notifier,
+    this.text = '',
+    this.color,
+    this.radius,
+    this.border,
+    this.textStyle,
+    this.trailingIcon,
+    this.leadingIcon,
+    this.textColor,
+    this.centerWidget,
+    this.horizontalPadding = 6,
+    this.verticalPadding = 0,
+    this.height = 48,
+    this.isDisabled,
+    this.shape = BoxShape.rectangle,
+    this.alignment = Alignment.center,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: notifier,
+      builder: (controller, isLoading, _) => WayaButton(
+        callback: isLoading
+            ? null
+            : () async {
+                notifier.value = true;
+                await callback();
+                try {
+                  notifier.value = false;
+                } catch (_) {}
+              },
+        text: text,
+        color: color,
+        radius: radius,
+        border: border,
+        textStyle: textStyle,
+        trailingIcon: trailingIcon,
+        isLoading: isLoading,
+        leadingIcon: leadingIcon,
+        textColor: textColor,
+        centerWidget: centerWidget,
+        horizontalPadding: horizontalPadding,
+        verticalPadding: horizontalPadding,
+        height: height,
+        isDisabled: isDisabled,
+        shape: shape,
+        alignment: alignment,
       ),
     );
   }
