@@ -18,7 +18,7 @@ class ShopRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAllCategories(int page) {
-    return get('$serviceUrl/category/all?page=$page');
+    return get('$serviceUrl/category/all?page=$page&limit=1000');
   }
 
   Future<WayaRequestResponse> createProduct(
