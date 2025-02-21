@@ -133,7 +133,8 @@ String docsToJson(Docs data) => json.encode(data.toJson());
 class Docs {
   Docs({
       this.id, 
-      this.creatorId, 
+      this.creatorId,
+      this.voteCount,
       this.isPaid, 
       this.isSettled, 
       this.question, 
@@ -151,6 +152,7 @@ class Docs {
   Docs.fromJson(dynamic json) {
     id = json['id'];
     creatorId = json['creatorId'];
+    voteCount = json['voteCount'];
     isPaid = json['isPaid'];
     isSettled = json['isSettled'];
     question = json['question'];
@@ -174,6 +176,7 @@ class Docs {
   }
   String? id;
   String? creatorId;
+  num? voteCount;
   bool? isPaid;
   bool? isSettled;
   String? question;
@@ -189,6 +192,7 @@ class Docs {
   UserData? userData;
 Docs copyWith({  String? id,
   String? creatorId,
+  num? voteCount,
   bool? isPaid,
   bool? isSettled,
   String? question,
@@ -204,6 +208,7 @@ Docs copyWith({  String? id,
   UserData? userData,
 }) => Docs(  id: id ?? this.id,
   creatorId: creatorId ?? this.creatorId,
+  voteCount: voteCount ?? this.voteCount,
   isPaid: isPaid ?? this.isPaid,
   isSettled: isSettled ?? this.isSettled,
   question: question ?? this.question,
@@ -222,6 +227,7 @@ Docs copyWith({  String? id,
     final map = <String, dynamic>{};
     map['id'] = id;
     map['creatorId'] = creatorId;
+    map['voteCount'] = voteCount;
     map['isPaid'] = isPaid;
     map['isSettled'] = isSettled;
     map['question'] = question;

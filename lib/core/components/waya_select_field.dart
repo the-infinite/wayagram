@@ -18,16 +18,17 @@ class WayaSelectField extends ConsumerWidget {
   final Function(Select value) onSelected;
   final String uniqueKey;
 
-  const WayaSelectField(
-      {super.key,
-      required this.hintText,
-      this.label,
-      this.height = 48,
-      required this.items,
-      required this.onSelected,
-      this.value = '',
-      this.radius,
-      this.uniqueKey = ''});
+  const WayaSelectField({
+    super.key,
+    required this.hintText,
+    this.label,
+    this.height = 48,
+    required this.items,
+    required this.onSelected,
+    this.value = '',
+    this.radius,
+    this.uniqueKey = '',
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -101,7 +102,6 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
 }
 
 final wayaSelectFieldViewModelProvider =
-    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>(
-        (ref, uniqueKey) {
+    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>((ref, uniqueKey) {
   return WayaSelectFieldViewModel(ref);
 });

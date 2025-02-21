@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/features/ugt/contest_setting/steps/stage_contest_settings.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/contest_timeline.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';

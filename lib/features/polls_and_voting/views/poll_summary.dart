@@ -54,14 +54,12 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     String startDate = viewModel.startDate;
     print('START DATE ==>>>$startDate');
     String endDate = viewModel.endDate;
-    print('END DARTE ==>> ${viewModel.endDate}');
+    print('END DATE ==>> ${viewModel.endDate}');
     DateFormat format = DateFormat("yyyy-M-d");
     DateTime parsedDate = format.parse(startDate);
     DateTime parsedDate2 = format.parse(endDate);
     num daysLeft = parsedDate2.difference(parsedDate).inDays;
-    //print('Start Date is ${viewModel.startDate}');
-    //print(" ${DateFormat('yyyy-MM--dd').format(viewModel.startDate as DateTime)}");
-
+print('THE POLLTYPE IS ===> ${viewModel.pollType.toLowerCase()}');
     return WayaScaffold(
         title: "Polls Summary",
         isLoading: viewModel.isLoading,
@@ -71,9 +69,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-
               if (viewModel.pollType == 'paid' && userType == "PERSONAL") {
-
+          print('MY POLLING');
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   WayaUtils.showNotice(
                       context: context,
@@ -84,7 +81,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                       secondButtonText: 'Cancel',
                       icon: Image.asset('assets/images/cp-shop.png'));
                 });
-              } else {
+              } if(viewModel.pollType == 'paid' && userType != "PERSONAL"){
                await ref.read(createPollVotingProvider.notifier).createPoll(
                   context,
                   viewModel.pollTitle.text,
@@ -93,9 +90,23 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   viewModel.voteNumber.text,
                   viewModel.pollDescription.text,
                   viewModel.firstChoiceDescription.text,
-                  viewModel.votePrice.text
+                  viewModel.votePrice.text,
+                 viewModel.pollType.toLowerCase()
                 );
-               poll.reset();
+               //poll.reset();
+              }if(viewModel.pollType == 'free' ){
+                await ref.read(createPollVotingProvider.notifier).createFreePoll(
+                    context,
+                    viewModel.pollTitle.text,
+                    viewModel.startDate,
+                    viewModel.endDate,
+                    viewModel.voteNumber.text,
+                    viewModel.pollDescription.text,
+                    viewModel.firstChoiceDescription.text,
+                    viewModel.votePrice.text,
+                    viewModel.pollType.toLowerCase()
+                );
+                //poll.reset();
               }
             } : null,
             height: 30,

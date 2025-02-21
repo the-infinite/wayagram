@@ -76,6 +76,9 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/p
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
+import 'package:wayagram/features/support/views/chat.dart';
+import 'package:wayagram/features/support/views/dispute.dart';
+import 'package:wayagram/features/support/views/request.dart';
 import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
@@ -216,7 +219,10 @@ class WayaAppRoutes {
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     CreateDonation.route: ()=> CreateDonation(),
-    ChatAndSocial.route:() => ChatAndSocial()
+    ChatAndSocial.route:() => ChatAndSocial(),
+    SupportRequestScreen.route: () => SupportRequestScreen(),
+    SupportDisputeScreen.route: () => SupportDisputeScreen(),
+    SupportChatScreen.route: () => SupportChatScreen(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

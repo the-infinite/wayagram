@@ -22,14 +22,14 @@ import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
 
-class PollsModal extends StatefulWidget {
+class PollsModal extends ConsumerStatefulWidget {
   const PollsModal({super.key});
 
   @override
-  State<PollsModal> createState() => _PollsModalState();
+  ConsumerState<PollsModal> createState() => _PollsModalState();
 }
 
-class _PollsModalState extends State<PollsModal> {
+class _PollsModalState extends ConsumerState<PollsModal> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -61,6 +61,7 @@ class _PollsModalState extends State<PollsModal> {
             WayaButton(
               callback: () async {
                 WayaNav.removeUntil(PollAndVoting());
+                ref.read(createPollVotingProvider.notifier).reset();
                // WayaNav.toNamed("/poll-and-voting");
               },
               text: "View Application Status",

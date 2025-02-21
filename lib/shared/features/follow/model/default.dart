@@ -4,6 +4,8 @@ part 'default.g.dart';
 
 enum FollowRelationship {
   accepted,
+  none,
+  rejected,
 }
 
 @JsonSerializable()
