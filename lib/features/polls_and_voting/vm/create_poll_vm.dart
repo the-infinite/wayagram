@@ -769,11 +769,14 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
       if (response.success) {
         PollDashboardModel responseModel = PollDashboardModel.fromJson(response.data);
+       print('LENGTH IS ==>>> ${responseModel.data?.docs?[0].choices}');
         state = state.copyWith(
             // startDate: responseModel.data?.docs?[0].endDate,
             // endDate: responseModel.data?.docs?[0].endDate,
-            pollDashboardModelDocs: responseModel.data?.docs,
-           voteCount: responseModel.data?.docs?[0].voteCount.toString(),
+            //pollDashboardModelDocs: responseModel.data?.docs?[0].choices,
+            pollDashboardChoices:responseModel.data?.docs?[0].choices,
+            //pollDashboardChoices: responseModel?.data!.docs,
+            voteCount: responseModel.data?.docs?[0].voteCount.toString(),
             moneyGenerated: responseModel.data?.docs?[0].amountGenerated,
             numberOfPeopleVoted: responseModel.data?.docs?[0].numberOfVoters.toString());
       } else {
