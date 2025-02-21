@@ -25,6 +25,6 @@ class FollowRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> unFollowUser(String id) {
-    return httpClient.postHttp("$serviceUri/unfollow/$id", null);
+    return httpClient.postHttp("$serviceUri/follow/unfollow/$id", null);
   }
 }
