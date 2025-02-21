@@ -120,6 +120,7 @@ class _AppFieldState extends State<WayaTextFormField> {
     final wayaTheme = Theme.of(context).colorScheme;
     Widget textFormField = TextFormField(
       readOnly: widget.isReadOnly ?? false,
+      
       onTap: widget.onTap,
       onChanged: widget.onChanged,
       focusNode: _focusNode,

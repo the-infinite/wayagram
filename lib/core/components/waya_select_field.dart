@@ -5,6 +5,7 @@ import 'package:wayagram/core/components/waya_dummy_input.dart';
 import 'package:wayagram/core/components/waya_input_decorator.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
@@ -54,6 +55,7 @@ class WayaSelectField extends ConsumerWidget {
           onTap: () {
             viewModel.selectValue(context, hintText, items, onSelected);
           },
+
           readOnly: true,
           decoration: inputDecoration(
             wayaTheme: wayaTheme,
