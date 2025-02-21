@@ -643,7 +643,9 @@ class WayaProgressiveButton extends StatelessWidget {
             : () async {
                 notifier.value = true;
                 await callback();
-                notifier.value = false;
+                try {
+                  notifier.value = false;
+                } catch (_) {}
               },
         text: text,
         color: color,
