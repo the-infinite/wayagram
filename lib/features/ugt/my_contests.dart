@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
@@ -19,6 +20,7 @@ class MyContests extends ConsumerWidget {
         title: "No Contest Created",
         buttonText: "Host a Contest",
         onTap: () {
+            ivalidateUGTVM(ref);
           WayaNav.toNamed("/create-contest");
         });
   }
