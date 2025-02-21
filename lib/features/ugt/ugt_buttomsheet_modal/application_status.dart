@@ -5,6 +5,8 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/components/waya_select_field.dart';
@@ -13,7 +15,8 @@ import '../../../core/utils/waya_navigation.dart';
 import '../widgets/upcoming_widgets/upcoming_widget.dart';
 
 class ApplicationStatus extends StatefulWidget {
-  const ApplicationStatus({super.key});
+  Contest? post;
+   ApplicationStatus(this.post, {super.key});
 
   @override
   State<ApplicationStatus> createState() => _ApplicationStatusState();
@@ -53,13 +56,13 @@ class _ApplicationStatusState extends State<ApplicationStatus> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
+                UpcomingWidget(title: "Start Date", content: formatDate(widget.post?.startDate??"")),
                 const Gap(20),
-                UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
+                UpcomingWidget(title: "End Date", content: formatDate(widget.post?.endDate??"")),
                 const Gap(20),
-                UpcomingWidget(title: "Entry Type", content: "Free"),
+                UpcomingWidget(title: "Entry Type", content:widget.post?.entryType??"" ),
                 const Gap(20),
-                UpcomingWidget(title: "Duration", content: "5 Weeks"),
+                UpcomingWidget(title: "Duration", content:widget.post?.durationType??""),
               ],
             ),
             const Gap(10),
@@ -67,13 +70,13 @@ class _ApplicationStatusState extends State<ApplicationStatus> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UpcomingWidget(title: "Total Stages", content: "5 Stages"),
+                UpcomingWidget(title: "Total Stages", content:widget.post?.multipleStages??""),
                 const Gap(20),
-                UpcomingWidget(title: "Category", content: "Music & Arts"),
+                UpcomingWidget(title: "Category", content:widget.post?.categoryName??""),
                 const Gap(20),
-                UpcomingWidget(title: "Prize", content: "₦100,000 "),
+                UpcomingWidget(title: "Prize", content: widget.post?.winnerPrize??""),
                 const Gap(20),
-                UpcomingWidget(title: "Host", content: "UNIBEN"),
+                UpcomingWidget(title: "Host", content:"Host"),
               ],
             ),
             const Gap(20),

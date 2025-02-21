@@ -69,7 +69,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     voteCountToQualify.dispose();
     amountPerVote.dispose();
     numberOfWeeks.dispose();
-    
+
     super.dispose();
   }
 
@@ -155,6 +155,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "title": title.text,
         "profileId": _localDataSource.getUserId().toString(),
         "category": state.categoryId,
+        "categoryName": state.categorys,
         "state": state.state,
         //  "numberOfWeeks":numberOfWeeks.text,
         "winnerPrize": winnerPrize.text,
@@ -188,7 +189,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "currentStage": state.contestTimelineCurrentStage,
         "participationStartDate": _convertToISO(state.startDate),
         "startDate": _convertToISO(state.contestTimelineStartDate),
-        "uploadCoverImages":profileImageUrl,
+        "uploadCoverImages": profileImageUrl,
         "endDate": _convertToISO(state.contestTimelineEndDate),
 
         "entryType": state.entrySelectType.toUpperCase(),
@@ -534,8 +535,8 @@ final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
 
-ivalidateUGTVM(WidgetRef ref){
-   ref.invalidate(contestNotifierProvider);
-            ref.invalidate(stateRequirementProvider);
-            ref.invalidate(stateContactProvider);
+ivalidateUGTVM(WidgetRef ref) {
+  ref.invalidate(contestNotifierProvider);
+  ref.invalidate(stateRequirementProvider);
+  ref.invalidate(stateContactProvider);
 }

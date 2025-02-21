@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
+import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 //import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/ugt/widgets/status_widget.dart';
 
@@ -15,7 +17,8 @@ import '../data/model/ugt_model.dart';
 import 'about_ugt_widget.dart';
 
 class ContestAppliedCard extends StatelessWidget {
-  const ContestAppliedCard ({super.key});
+  AppliedContestModel post;
+  ContestAppliedCard(this.post, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class ContestAppliedCard extends StatelessWidget {
             color: wayaTheme.colorScheme.white,
             borderRadius: BorderRadius.circular(16),
             border:
-            Border.all(color: wayaTheme.colorScheme.greyColor200, width: 0),
+                Border.all(color: wayaTheme.colorScheme.greyColor200, width: 0),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,12 +54,14 @@ class ContestAppliedCard extends StatelessWidget {
                             wayaTheme.colorScheme.success, BlendMode.srcIn),
                       ),*/
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(45), // Adjust the radius as needed
+                          borderRadius: BorderRadius.circular(
+                              45), // Adjust the radius as needed
                           child: Image.asset(
-                            'assets/images/waya.png',
-                            width: 45,
+                            'assets/images/frameuni.png',
                             height: 45,
-                            fit: BoxFit.cover, // Ensures the image covers the area properly
+                            width: 45,
+                            fit: BoxFit
+                                .cover, // Ensures the image covers the area properly
                           ),
                         ),
                         /*WayaImage(
@@ -74,9 +79,8 @@ class ContestAppliedCard extends StatelessWidget {
                             SizedBox(
                               width: context.width * 0.6,
                               child: Text(
-                                "Best University Musician 2024",
+                                post.contest?.title ?? "",
                                 overflow: TextOverflow.ellipsis,
-
                                 style: wayaTheme.textTheme.bodyMedium,
                               ),
                             ),
@@ -90,17 +94,25 @@ class ContestAppliedCard extends StatelessWidget {
                       ],
                     ),
                   ),
-
                 ],
               ),
               const Gap(20),
               ClipRRect(
-                borderRadius: BorderRadius.circular(16), // Adjust the radius as needed
-                child: Image.asset(
-                  'assets/images/frameuni.png',
-                  height: 200,
-                  fit: BoxFit.cover, // Ensures the image covers the area properly
-                ),
+                borderRadius:
+                    BorderRadius.circular(16), // Adjust the radius as needed
+                child: post.contest?.uploadCoverImages != null
+                    ? Image.network(
+                        post.contest?.uploadCoverImages ?? "",
+                        height: 200,
+                        fit: BoxFit
+                            .cover, // Ensures the image covers the area properly
+                      )
+                    : Image.asset(
+                        'assets/images/frameuni.png',
+                        height: 200,
+                        fit: BoxFit
+                            .cover, // Ensures the image covers the area properly
+                      ),
               ),
               /*WayaImage(
                 imageUrl: "assets/images/frameuni.png",
@@ -109,7 +121,7 @@ class ContestAppliedCard extends StatelessWidget {
               ),*/
               const Gap(20),
               Text(
-                "Discover and support the most talented students competing for the top spot! Browse through unique performances, vote for your favorite candidates, and watch them rise to the top",
+                post.contest?.description ?? "",
                 style: wayaTheme.textTheme.hintStyle,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -120,10 +132,12 @@ class ContestAppliedCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AboutUgtWidget(
-                      title: "Start Date", content: "21st of July 2024"),
+                      title: "Start Date",
+                      content: formatDate(post.contest?.startDate ?? "")),
                   const Gap(30),
                   AboutUgtWidget(
-                      title: "End Date", content: "21st of July 2024"),
+                      title: "End Date",
+                      content: formatDate(post.contest?.endDate ?? "")),
                 ],
               ),
               const Gap(10),
@@ -131,11 +145,16 @@ class ContestAppliedCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 StatusWidget(title: "Application", content: "Pending",),
+                  StatusWidget(
+                    title: "Application",
+                    content: post.contest?.status??"Pending",
+                  ),
                   const Gap(30),
-                  AboutUgtWidget(title: "Prize", content: "N100,000"),
+                  AboutUgtWidget(
+                      title: "Prize", content: post.contest?.winnerPrize ?? ""),
                   const Gap(30),
-                  AboutUgtWidget(title: "Category", content: "Music"),
+                  AboutUgtWidget(
+                      title: "Category", content: post.categoryName ?? ""),
                 ],
               ),
               const Gap(25),
@@ -143,14 +162,10 @@ class ContestAppliedCard extends StatelessWidget {
                 callback: () {},
                 text: "View Application Status",
               ),
-
-
             ],
           ),
         ),
-
       ],
     );
   }
 }
-

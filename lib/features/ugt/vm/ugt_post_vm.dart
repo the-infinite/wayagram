@@ -1,8 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 
-class PostNotifier extends StateNotifier<List<Post>> {
-  PostNotifier() : super([]);
+class PostNotifier extends StateNotifier<List<Contest>> {
+  final ContestRepo _contestRepository;
+  final WayaLocalDataSource _localDataSource;
+
+  PostNotifier(this._contestRepository, this._localDataSource) : super([]);
 
   int _page = 1; // Pagination tracking
   bool isLoading = false;
@@ -12,7 +19,7 @@ class PostNotifier extends StateNotifier<List<Post>> {
     if (isLoading) return;
     isLoading = true;
 
-    await Future.delayed(Duration(seconds: 2)); // Simulating API call
+    /*   await Future.delayed(Duration(seconds: 2)); // Simulating API call
 
     List<Post> newPosts = List.generate(10, (index) {
       int postNumber = (_page - 1) * 10 + index + 1;
@@ -23,30 +30,111 @@ class PostNotifier extends StateNotifier<List<Post>> {
         likes: postNumber,
       );
     });
-
-    state = [...state, ...newPosts];
-    _page++;
-    isLoading = false;
+ */
+    try {
+      final response = await _contestRepository.getContestForAll(_page);
+      List<Contest> contestList = [];
+      if (response.success) {
+        ContestResponse responseModel = ContestResponse.fromJson(response.data);
+        contestList = responseModel.data.docs;
+        state = [...state, ...contestList];
+        _page++;
+        isLoading = false;
+      }
+      // return contestList;
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoading = false;
+    }
   }
 
   // Toggle Like
   void toggleLike(String postId) {
+    // Contest? contestPost = null;
     state = state.map((post) {
       if (post.id == postId) {
+        if (!post.isLiked!) {
+          doOnLikeLike(postId);
+        }
         return post.copyWith(
-          isLiked: !post.isLiked,
-          likes: post.isLiked ? post.likes - 1 : post.likes + 1,
+          isLiked: true,
+          likeCount: post.likeCount! + 1,
         );
       }
       return post;
     }).toList();
   }
 
+  void doOnLikeLike(String postId) async {
+    // print("do like stuff");
+    final response = await _contestRepository.likeContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
+
+    if (!response.success) {
+      //  print("do like stuff Fail");
+      state = state.map((post) {
+        if (post.id == postId) {
+          return post.copyWith(
+            isLiked: !post.isLiked!,
+            likeCount: post.likeCount! - 1,
+          );
+        }
+        return post;
+      }).toList();
+    //  WayaSnackBar.showToast("Unable to like, Please try again");
+    } else {
+      print("do like stuff Success");
+    }
+  }
+    void toggleShare(String postId) {
+    // Contest? contestPost = null;
+    state = state.map((post) {
+      if (post.id == postId) {
+      
+         
+        
+        return post.copyWith(
+         // isLiked: true,
+          shareCount: post.shareCount! + 1,
+        );
+      }
+      return post;
+    }).toList();
+     doshare(postId);
+  }
+
+    void doshare(String postId) async {
+    // print("do like stuff");
+    final response = await _contestRepository.shareContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
+
+    if (!response.success) {
+      //  print("do like stuff Fail");
+      state = state.map((post) {
+        if (post.id == postId) {
+          return post.copyWith(
+            isLiked: !post.isLiked!,
+            likeCount: post.likeCount! - 1,
+          );
+        }
+        return post;
+      }).toList();
+    //  WayaSnackBar.showToast("Unable to like, Please try again");
+    } else {
+      print("do like stuff Success");
+    }
+  }
+
   // Toggle Follow
   void toggleFollow(String postId) {
     state = state.map((post) {
       if (post.id == postId) {
-        return post.copyWith(isFollowing: !post.isFollowing);
+        return post.copyWith(isFollowing: !post.isFollowing!);
       }
       return post;
     }).toList();
@@ -54,6 +142,6 @@ class PostNotifier extends StateNotifier<List<Post>> {
 }
 
 // Provider
-final postProvider = StateNotifierProvider<PostNotifier, List<Post>>((ref) {
-  return PostNotifier();
+final postProvider = StateNotifierProvider<PostNotifier, List<Contest>>((ref) {
+  return PostNotifier(ContestRepo(), WayaLocalDataSource());
 });

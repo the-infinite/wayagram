@@ -20,11 +20,35 @@ class ContestRepo extends BaseRepository {
     return post('$serviceUrl2/contests/create', payLoad, formdata: false);
   }
 
+  Future<WayaRequestResponse> registerContest(payLoad) {
+    return post('$serviceUrl2/application/', payLoad, formdata: false);
+  }
 
-
-    Future<WayaRequestResponse> getAllContestForAll(int page) {
+  Future<WayaRequestResponse> getContestForAll(int page) {
     return get('$serviceUrl2/contests/contest-for-you?page=$page');
   }
+
+  Future<WayaRequestResponse> fetchHostedContest(String userId, int page) {
+    return get(
+        '$serviceUrl2/contests/hostedContests-by-profile?profileId=$userId&page=$page');
+  }
+
+    Future<WayaRequestResponse> fetchAppliedContest(String userId) {
+    return get(
+        '$serviceUrl2/application/$userId/appliedContest');
+  }
+
+  Future<WayaRequestResponse> likeContest(payLoad) {
+    return post('$serviceUrl2/contestInteraction/like', payLoad,
+        formdata: false);
+  }
+
+  Future<WayaRequestResponse> shareContest(payLoad) {
+    return post('$serviceUrl2/contestInteraction/share', payLoad,
+        formdata: false);
+  }
+
+
 
   /*Future<WayaRequestResponse> createContestController({
     required final String contestStatus,

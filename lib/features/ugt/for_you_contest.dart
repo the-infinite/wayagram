@@ -12,6 +12,7 @@ import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 /* class ForYouContest extends ConsumerWidget {
   const ForYouContest({super.key});
@@ -73,6 +74,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 100) {
+        print("My scrolling here");
         ref.read(postProvider.notifier).fetchPosts();
       }
     });
@@ -81,8 +83,9 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
   @override
   Widget build(BuildContext context) {
     final posts = ref.watch(postProvider);
-    final postNotifier = ref.read(postProvider.notifier);
+
     final wayaTheme = Theme.of(context);
+    final postNotifier = ref.read(postProvider.notifier);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,47 +96,47 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                 "See contests which are active for you to \n participate in",
             title: "Active Contests"),
         const Gap(10),
-        Expanded(
-          child: ListView.builder(
+        WayaButton(
+          callback: () {
+            ivalidateUGTVM(ref);
+            //WayaNav.toNamed('/create-profile-contest1');
+            WayaNav.toNamed('/create-contest');
+          },
+          color: wayaTheme.colorScheme.primar50,
+          text: "Host a Contest",
+          textColor: wayaTheme.colorScheme.customPrimary,
+        ),
+        const Gap(10),
+        if (posts.isEmpty) emptyWidget(),
+        if (posts.isNotEmpty)
+          ListView.builder(
             controller: _scrollController,
             shrinkWrap: true,
-            itemCount: posts.length + 1,
+            itemCount: posts.length,
             itemBuilder: (context, index) {
-              if (index == posts.length) {
+              if (postNotifier.isLoading) {
                 return Center(child: CircularProgressIndicator());
               }
 
               final post = posts[index];
-              return Card(
-                margin: EdgeInsets.all(8),
-                child: ListTile(
-                  title: Text(post.content),
-                  subtitle: Text("By ${post.author} - ${post.likes} likes"),
-                  trailing: Wrap(
-                    spacing: 8,
-                    children: [
-                      // Like Button
-                      IconButton(
-                        icon: Icon(
-                          post.isLiked ? Icons.favorite : Icons.favorite_border,
-                          color: post.isLiked ? Colors.red : Colors.grey,
-                        ),
-                        onPressed: () => postNotifier.toggleLike(post.id),
-                      ),
-                      // Follow Button
-                      TextButton(
-                        onPressed: () => postNotifier.toggleFollow(post.id),
-                        child: Text(post.isFollowing ? "Unfollow" : "Follow"),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              return ContestCard(post);
             },
           ),
-        ),
       ],
     );
+  }
+
+  Widget emptyWidget() {
+    return UgtEmptyState(
+        icon: Image.asset("assets/images/u-emptystate.png"),
+        desc:
+            "You don’t have any active contest here. Create a \n contest and have different participant",
+        title: "No Contest Created",
+        buttonText: "Host a Contest",
+        onTap: () {
+          ivalidateUGTVM(ref);
+          WayaNav.toNamed("/create-contest");
+        });
   }
 
   @override

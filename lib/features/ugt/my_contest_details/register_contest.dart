@@ -12,6 +12,7 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
@@ -57,8 +58,9 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
     final viewModel = ref.watch(registerFormProvider);
     final notifier = ref.read(registerFormProvider.notifier);
     final wayaTheme = Theme.of(context);
-    final selectedUniversity = useState("");
-    final selectedState = useState("");
+    // final selectedUniversity = useState("");
+    //final selectedState = useState("");
+    final isLoading = useState(false);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -262,8 +264,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             const Gap(20),
             Text("University Information",
                 style: wayaTheme.textTheme.hintStyle),
-            const Gap(20),
-            FormField<String>(validator: (value) {
+            //   const Gap(20),
+            /*    FormField<String>(validator: (value) {
               if (notifier.university.isEmpty) {
                 return 'Business Type is required';
               }
@@ -301,7 +303,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                 ],
               );
             }),
-
+ */
             /*   WayaSelectField(
               height: 0.3,
               label: "Which University do you represent?",
@@ -318,7 +320,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
               },
               uniqueKey: 'contest-state',
             ), */
-
+/* 
             const Gap(15),
             FormField<String>(validator: (value) {
               if (selectedState.value.isEmpty) {
@@ -355,7 +357,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                 ],
               );
             }),
-            Gap(15),
+            */
+            //  Gap(15),
 
             ListView.builder(
               shrinkWrap: true, // Makes the ListView take only the needed space
@@ -385,6 +388,13 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                             children: [
                               WayaTextFormField(
                                 controller: field.textController,
+                                onChanged: (value) {
+                                  // print("Mean kkkkkk  $value");
+                                  // field.textController!.text = value;
+                                  ref
+                                      .read(registerFormProvider.notifier)
+                                      .updateText(field.id, value);
+                                },
                                 hintText: "${field.title} is required",
                                 label: field.title,
                                 borderColor: formState.hasError &&
@@ -422,31 +432,31 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
 
             const Gap(40),
             WayaButton(
-              callback: () {
-                if (_formKey.currentState!.validate()) {
-                  for (var model in viewModel) {
-                    if (model.isRequired) {
-                      if (model.type == FieldType.image) {
-                        if (model.imagePath == null ||
-                            model.imagePath!.trim().isEmpty) {
-                          WayaSnackBar.showToast(
-                              "please pick image for ${model.title}");
+              centerWidget: LoadingState(
+                  loading: isLoading.value, text: 'Apply Now & Join the Fun!'),
+              callback: !isLoading.value
+                  ? () {
+                      if (_formKey.currentState!.validate()) {
+                        for (var model in viewModel) {
+                          if (model.isRequired) {
+                            if (model.type == FieldType.image) {
+                              if (model.imagePath == null ||
+                                  model.imagePath!.trim().isEmpty) {
+                                WayaSnackBar.showToast(
+                                    "please pick image for ${model.title}");
 
-                          return;
+                                return;
+                              }
+                            }
+                          }
                         }
+                        notifier.submitDetail(context, isLoading);
                       }
                     }
-                  }
-                  notifier.submitDetail();
-                }
+                  : null,
 
-                print("Mean i am here");
+              //
 
-                /*  WayaUtils.showModalSheetUgt(
-                  context,
-                  child: ApplicationStatus(),
-                ); */
-              },
               text: "Apply Now & Join the Fun!",
             ),
             const Gap(8),
