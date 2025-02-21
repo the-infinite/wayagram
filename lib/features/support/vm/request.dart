@@ -6,7 +6,7 @@ import 'package:wayagram/features/support/state/request.dart';
 class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
   final email = TextEditingController();
   final fullname = TextEditingController();
-  final phoneNumber = TextEditingController();
+  final phone = TextEditingController();
   final details = TextEditingController();
   final topicNotifier = ValueNotifier<Select?>(null);
 
@@ -34,7 +34,7 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
   void reset() {
     email.clear();
     fullname.clear();
-    phoneNumber.clear();
+    phone.clear();
     details.clear();
     topicNotifier.value = null;
   }

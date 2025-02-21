@@ -9,8 +9,7 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
-import 'package:wayagram/features/support/modal/dispute.dart';
+import 'package:wayagram/features/support/modal/request.dart';
 import 'package:wayagram/features/support/vm/request.dart';
 
 class SupportRequestScreen extends ConsumerStatefulWidget {
@@ -28,12 +27,13 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
 
   @override
   void dispose() {
+    loadingNotifier.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    final theme = Theme.of(context);
 
     //? Our support request form.
     return WayaScaffold(
@@ -54,7 +54,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
               alignment: Alignment.centerLeft,
               child: Text(
                 "Need Support?",
-                style: wayaTheme.textTheme.titleLarge?.copyWith(
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                   fontSize: 24,
                 ),
@@ -70,8 +70,8 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
               alignment: Alignment.centerLeft,
               child: Text(
                 "Don't worry we're here to help you with whatever you need using wayagram.",
-                style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                  color: wayaTheme.colorScheme.greyColor500,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.greyColor500,
                 ),
               ),
             ),
@@ -97,7 +97,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                     controller: notifier.fullname,
                     hintText: 'Rufai Maleek',
                     borderColor:
-                        formState.hasError && notifier.fullname.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                        formState.hasError && notifier.fullname.text.isEmpty ? theme.colorScheme.error : null,
                     label: 'Fullname',
                   ),
 
@@ -107,8 +107,8 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         formState.errorText!,
-                        style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                          color: wayaTheme.colorScheme.error,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.error,
                           fontSize: 12,
                         ),
                       ),
@@ -143,7 +143,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                     keyboardType: TextInputType.emailAddress,
                     controller: notifier.email,
                     hintText: 'example@gmail.com',
-                    borderColor: formState.hasError && notifier.email.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                    borderColor: formState.hasError && notifier.email.text.isEmpty ? theme.colorScheme.error : null,
                     label: 'Email Address',
                   ),
 
@@ -153,8 +153,8 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         formState.errorText!,
-                        style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                          color: wayaTheme.colorScheme.error,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.error,
                           fontSize: 12,
                         ),
                       ),
@@ -169,7 +169,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
             //? Third, the phone number.
             FormField<String>(
               validator: (value) {
-                if (notifier.phoneNumber.text.isEmpty) {
+                if (notifier.phone.text.isEmpty) {
                   return 'Your phone number is required';
                 }
 
@@ -182,9 +182,9 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                   children: [
                     Text(
                       "Phone Number",
-                      style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                      style: theme.textTheme.bodyMedium?.copyWith(
                         fontSize: 14,
-                        color: wayaTheme.colorScheme.greyColor900,
+                        color: theme.colorScheme.greyColor900,
                       ),
                     ),
 
@@ -202,7 +202,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                           width: 90,
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
+                            border: Border.all(color: theme.colorScheme.greyColor300, width: 1),
                             borderRadius: BorderRadius.all(
                               Radius.circular(6.0),
                             ),
@@ -223,7 +223,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                               // The country code
                               Text(
                                 "+234",
-                                style: wayaTheme.textTheme.hintStyle,
+                                style: theme.textTheme.hintStyle,
                               )
                             ],
                           ),
@@ -233,10 +233,10 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                         Expanded(
                           child: WayaTextFormField(
                             keyboardType: TextInputType.phone,
-                            controller: notifier.phoneNumber,
+                            controller: notifier.phone,
                             hintText: '000-000-000',
-                            borderColor: formState.hasError && notifier.phoneNumber.text.isEmpty
-                                ? wayaTheme.colorScheme.error
+                            borderColor: formState.hasError && notifier.phone.text.isEmpty
+                                ? theme.colorScheme.error
                                 : null,
                           ),
                         )
@@ -244,13 +244,13 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                     ),
 
                     //? If this field has an error.
-                    if (formState.hasError && notifier.phoneNumber.text.isEmpty)
+                    if (formState.hasError && notifier.phone.text.isEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           formState.errorText!,
-                          style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                            color: wayaTheme.colorScheme.error,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.error,
                             fontSize: 12,
                           ),
                         ),
@@ -297,8 +297,8 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           formState.errorText!,
-                          style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                            color: wayaTheme.colorScheme.error,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.error,
                             fontSize: 12,
                           ),
                         ),
@@ -329,7 +329,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                     controller: notifier.details,
                     hintText: 'Write a brief description of the issue',
                     borderColor:
-                        formState.hasError && notifier.details.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                        formState.hasError && notifier.details.text.isEmpty ? theme.colorScheme.error : null,
                     line: 6,
                     maxLength: 450,
                     padding: const EdgeInsets.all(12),
@@ -342,8 +342,8 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         formState.errorText!,
-                        style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                          color: wayaTheme.colorScheme.error,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.error,
                           fontSize: 12,
                         ),
                       ),
@@ -362,14 +362,14 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
 
                 //? Since we sent this support request ticket.
                 if (await notifier.sendRequestTicket()) {
-                  //? Show the popup.
+                  //? Leave this screen if the action was successful
+                  WayaNav.goBack();
+
+                  //? Show the popup on the previous screen.
                   await WayaUtils.showModalSheet(
                     Get.context!,
-                    child: SuccessfulSupportDisputeDialog(id: "XXXXXXX"),
+                    child: SuccessfulSupportRequestDialog(id: "XXXXXXX"),
                   );
-
-                  //? After the user dismisses the popup, leave this screen.
-                  WayaNav.goBack();
                 }
               },
               notifier: loadingNotifier,

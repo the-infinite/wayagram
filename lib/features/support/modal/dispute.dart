@@ -31,17 +31,17 @@ class SuccessfulSupportDisputeDialog extends StatelessWidget {
             WayaAssets.images.successugt.image(),
 
             // Some space.
-            Gap(20.h),
+            Gap(30.h),
 
             //? Second, the title.
             Text(
-              'Support Request Submitted',
+              'Your dispute has been submitted successfully',
+              textAlign: TextAlign.center,
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
                 color: wayaTheme.colorScheme.black,
               ),
-              textAlign: TextAlign.center,
             ),
 
             // Some space.
@@ -49,18 +49,18 @@ class SuccessfulSupportDisputeDialog extends StatelessWidget {
 
             //? Third, the message.
             Text(
-              "Your request (#$id) has been logged. We'll get back to you shortly.",
+              "Your dispute number #$id. Check your email inbox for updates.",
               style: wayaTheme.textTheme.hintStyle,
               textAlign: TextAlign.center,
             ),
 
             // Some space.
-            Gap(17.h),
+            Gap(20.h),
 
             //? Finally, our button to explore wayagram.
             WayaButton(
               callback: () async {
-                WayaNav.toNamed(BottomView.route, arguments: 0);
+                WayaNav.offNamed(BottomView.route);
               },
               text: "Explore Wayagram",
             ),

@@ -70,10 +70,11 @@ class SupportTypeDialog extends StatelessWidget {
                   icon: WayaAssets.icons.mSupport.path,
                   title: "Livechat Support",
                   iconSize: 40.h,
-                  description: "Talk to one of our agents about an experience to get help with any issues you are facing",
+                  description:
+                      "Talk to one of our agents about an experience to get help with any issues you are facing",
                   spacing: 6.h,
                   callback: () {
-                    WayaNav.toNamed(SupportChatScreen.route);
+                    WayaNav.replaceNamed(SupportChatScreen.route);
                   },
                 ),
 
@@ -82,11 +83,12 @@ class SupportTypeDialog extends StatelessWidget {
                   icon: WayaAssets.icons.dispute.path,
                   title: "Dispute Resolution",
                   iconSize: 40.h,
-                  description: "Reach out to our dedicated team about any disputes you have encountered while making a purchase.",
+                  description:
+                      "Reach out to our dedicated team about any disputes you have encountered while making a purchase.",
                   spacing: 6.h,
                   iconBackground: theme.colorScheme.info.withAlpha(30),
                   callback: () {
-                    WayaNav.toNamed(SupportDisputeScreen.route);
+                    WayaNav.replaceNamed(SupportDisputeScreen.route);
                   },
                 ),
 
@@ -95,11 +97,12 @@ class SupportTypeDialog extends StatelessWidget {
                   icon: WayaAssets.icons.requestIcon.path,
                   title: "Support Request",
                   iconSize: 40.h,
-                  description: "If you're looking for something else, you can create a ticket that gets sent to our support team.",
+                  description:
+                      "If you're looking for something else, you can create a ticket that gets sent to our support team.",
                   spacing: 6.h,
                   iconBackground: theme.colorScheme.error.withAlpha(30),
                   callback: () {
-                    WayaNav.toNamed(SupportRequestScreen.route);
+                    WayaNav.replaceNamed(SupportRequestScreen.route);
                   },
                 ),
               ],
