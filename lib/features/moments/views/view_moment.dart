@@ -101,12 +101,15 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
   void _onPageChanged(int index) {
     if (!mounted) return;
 
-    setState(() {
-      currentIndex = index;
-      _animationController.reset();
-      print("on page changed $currentIndex");
-      _startTimer();
-    });
+    if (index < moments.length) {
+      setState(() {
+        currentIndex = index;
+        _animationController.reset();
+        _startTimer();
+      });
+    } else {
+      _pageController.jumpToPage(moments.length - 1);
+    }
   }
 
   void pauseAnimation() {
@@ -161,8 +164,9 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
               children: [
                 PageView.builder(
                   controller: _pageController,
+                  
                   onPageChanged: (index) {
-                    _onPageChanged(currentIndex);
+                    _onPageChanged(index);
                   },
                   itemCount: moments.length,
                   itemBuilder: (context, index) {

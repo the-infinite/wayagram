@@ -72,11 +72,12 @@ class BankTransferScreen extends StatelessWidget {
               const Gap(16),
               ElevatedButton(
                   onPressed: () {
-                    if (args?['redirect'] != null &&
-                        (args?['redirect'] as String).isNotEmpty) {
+                    // if (args?['redirect'] != null &&
+                    //     (args?['redirect'] as String).isNotEmpty) {
+                    
+                    // }
                       WayaNav.removeUntilNamed(
                           BottomView.route);
-                    }
                   },
                   child: Text("I have Funded My Account")),
               const Gap(32),

@@ -63,10 +63,7 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
             const Gap(10),
               Text(
             "Based on your follows",
-            style: TextStyle(
-                color: wayaTheme.colorScheme.greyColor700,
-                fontSize: 13,
-                fontWeight: FontWeight.w500),
+            style: wayaTheme.textTheme.bodyMedium,
           ),
             const Gap(10),
             SharedMoments(),
