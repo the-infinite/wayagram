@@ -469,6 +469,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               uniqueKey: 'state',
                               label: "State",
                               value: viewModel.state,
+                              
                               hintText: 'Select State',
                               items: viewModel.states,
                               onSelected: (value) => ref

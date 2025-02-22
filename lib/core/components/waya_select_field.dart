@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
@@ -59,7 +60,8 @@ class WayaSelectField extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text((value == null || value!.isEmpty ) ? hintText :value!,
+                  SizedBox(width: 100,
+                  child:   Text((value == null || value!.isEmpty ) ? hintText :value!,
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
@@ -68,7 +70,12 @@ class WayaSelectField extends ConsumerWidget {
                               color: (value == null || value!.isEmpty )
                                   ? wayaTheme.colorScheme.greyColor300
                                   : wayaTheme.colorScheme.customBlack,
-                            )),
+                                
+                              
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis ,
+                            ),),
                     Icon(
                       Icons.arrow_drop_down,
                       color: wayaTheme.colorScheme.greyColor300,
