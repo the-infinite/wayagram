@@ -26,7 +26,12 @@ final _debounceTimers = <String, Timer?>{};
 ///   * [delay]: The duration to delay the function execution. Defaults to 300 milliseconds
 ///
 /// Returns a new function that wraps the original function with debounce functionality.
-Function debounce(Function func, {required String key, Duration delay = const Duration(milliseconds: 300)}) {
+Function debounce(
+  Function func, {
+  required String key,
+  Duration delay = const Duration(milliseconds: 300),
+  void Function(dynamic)? onFinish,
+}) {
   return () {
     final debounceTimer = _debounceTimers[key];
 
@@ -36,9 +41,10 @@ Function debounce(Function func, {required String key, Duration delay = const Du
     }
 
     //? Something like this.
-    _debounceTimers[key] = Timer(delay, () {
+    _debounceTimers[key] = Timer(delay, () async {
       _debounceTimers.remove(key);
-      func();
+      final result = await func();
+      onFinish?.call(result);
     });
   };
 }
@@ -294,6 +300,9 @@ class TaskScheduler {
   /// round-robin scheduled to execute the next task.
   int _currentIsolate = 0;
 
+  // Our scheduler singleton instance.
+  static TaskScheduler? _instance;
+
   /// This is used to modify the value of current isolate appropriately to allow
   ///  scheduling feel more simple.
   TaskExecutor get _nextExecutor {
@@ -315,10 +324,23 @@ class TaskScheduler {
   // Enclosed dummy constructor.
   TaskScheduler._();
 
+  /// How we get our singleton instance.
+  static TaskScheduler get instance => _instance!;
+
+  /// Helper function used to ensure that the task scheduler is initialized.
+  static Future<void> ensureInitialized() {
+    if (_instance == null) return init();
+
+    // This is fine.
+    return Future.value(null);
+  }
+
   /// This creates a new scheduler that preserves the total number of processors
   /// on this machine as the current number of isolates that can be spawned and
   /// used to consume and execute computations in the background.
-  static Future<TaskScheduler> init([int? maxParallel]) async {
+  static Future<void> init([int? maxParallel]) async {
+    if (_instance != null) return;
+
     final scheduler = TaskScheduler._();
     final schedulerCount = maxParallel ?? TaskScheduler.maxParallel;
 
@@ -329,13 +351,16 @@ class TaskScheduler {
     } while (scheduler._isolates.length < schedulerCount);
 
     // Return the scheduler.
-    return scheduler;
+    _instance = scheduler;
   }
 
   /// A helper function used to provision a function to run a new task on a dart
   /// isolate. It handles all the heavy logic associated with what to do when the
   /// number of tasks running are at the max possible value.
   Future<T> run<T>(Task<T> task) async {
+    // Wait for this to be initialized.
+    await ensureInitialized();
+
     /// This should take the heavy lifting away from you kind of.
     final executor = _nextExecutor;
     final completer = Completer<T>();

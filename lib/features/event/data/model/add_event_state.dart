@@ -24,7 +24,7 @@ class AddEventState {
   final String startDateString;
   final String endDateString;
   final DocType? eventImage;
-  final MultipartFile? image;
+  final String? image;
   final String userId;
   final bool isEditingMode;
   final String imageUrl;
@@ -80,7 +80,7 @@ class AddEventState {
       String? endTime,
       DocType? eventImage,
       String? startDateString,
-      MultipartFile? image,
+      String? image,
       String? userId,
       bool? isEditingMode,
       String? imageUrl,

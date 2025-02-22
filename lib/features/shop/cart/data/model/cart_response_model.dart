@@ -156,7 +156,7 @@ class CartProduct {
   final String? pickUpAddress;
   final String deliveryOptions;
   final bool deliveryCharge;
-  final String productImage;
+  final String? productImage;
 
   CartProduct(
       {required this.price,
@@ -164,7 +164,7 @@ class CartProduct {
       required this.productId,
       required this.productName,
       required this.deliveryCharge,
-      required this.productImage,
+     this.productImage,
       this.pickUpAddress,
       required this.deliveryOptions});
 

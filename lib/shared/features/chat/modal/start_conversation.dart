@@ -5,7 +5,6 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
@@ -108,6 +107,11 @@ class _StartConversationModalState extends State<StartConversationModal> {
                         //? If we could make this chat...
                         chatNotifier.setChat(chat);
                         WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
+                      },
+                    ).catchError(
+                      (_) {
+                        //? Leave here.
+                        WayaNav.goBack();
                       },
                     );
 

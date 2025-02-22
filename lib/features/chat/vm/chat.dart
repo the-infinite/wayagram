@@ -13,6 +13,24 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   /// Helper function used to get the list of messages from the back-end so they
   /// can be stored locally on this device.
+  Future<List<MessageModel>> getSupportMessages([bool reset = false]) async {
+    final result = <MessageModel>[];
+
+    //? For now, pause for a bit to emulate network requests.
+    await Future.delayed(const Duration(milliseconds: 450));
+
+    //? Just update state.
+    state = state.copyWith(
+      hasLoaded: true,
+      messages: result,
+    );
+
+    //? Return this collated result.
+    return result;
+  }
+
+  /// Helper function used to get the list of messages from the back-end so they
+  /// can be stored locally on this device.
   Future<List<MessageModel>> getMessages([bool reset = false]) async {
     final result = <MessageModel>[];
 

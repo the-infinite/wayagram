@@ -10,6 +10,7 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
@@ -47,42 +48,20 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
     try {
       state = state.copyWith(isLoading: true);
       if (hasNoShop == true) {
-        final shopLogo = await getDefaultLogo();
-        state = state.copyWith(logo: shopLogo);
+        final String imageUrl =
+            "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1736968175/e-shop_rlniqm.png";
+        state = state.copyWith(logo: imageUrl);
       }
-      final userId = await _secureDataSource.getUserId();
-      state = state.copyWith(vendorId: userId);
+
+      state = state.copyWith(vendorId: ConversationState.self.id);
       final response = await _shopRepository.createShop(state.createShopModel);
 
       _logger.i(response.data);
       await ref.read(manageShopVmProvider.notifier).refreshShops();
-      
     } catch (e) {
       _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
-      
-    }
-  }
-
-  Future<MultipartFile?> getDefaultLogo() async {
-    try {
-      final String imageUrl =
-          "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1736968175/e-shop_rlniqm.png";
-      final response = await http.get(Uri.parse(imageUrl));
-      if (response.statusCode == 200) {
-        var bytes = response.bodyBytes;
-        var fileName = imageUrl.split('/').last;
-        print("fileName $fileName");
-        var mimeType = lookupMimeType(imageUrl) ?? 'image/jpeg';
-        print("mimeType $mimeType");
-        return MultipartFile.fromBytes(bytes,
-            filename: fileName, contentType: MediaType.parse(mimeType));
-      } else {
-        return null;
-      }
-    } catch (e) {
-      rethrow;
     }
   }
 
@@ -95,7 +74,6 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
         final formatted = await WayaHelpers.formattedImage(file);
         state = state.copyWith(
           image: file,
-          logo: formatted,
         );
       } else {
         _logger.i('No image selected.');

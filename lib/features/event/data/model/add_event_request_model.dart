@@ -14,7 +14,7 @@ class AddEventRequestModel {
   final int fee;
   final int? maxCapacity;
   final String privacyOption;
-  final MultipartFile image;
+  final String image;
   final String userId;
 
   AddEventRequestModel({

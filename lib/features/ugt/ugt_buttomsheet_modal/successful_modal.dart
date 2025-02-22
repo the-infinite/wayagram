@@ -28,22 +28,24 @@ class _SuccessfulModalState extends State<SuccessfulModal> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset('assets/images/successugt.png', ),
+            Image.asset(
+              'assets/images/successugt.png',
+            ),
             SizedBox(height: 20.h),
-            Text(
-                "Contest created Successfully",
+            Text("Contest created Successfully",
                 style: wayaTheme.textTheme.bodyMedium),
             SizedBox(height: 3.h),
             Text(
               "Your contest is now live and visible to the public.\n Manage or  share your contest details from your dashboard.",
-
-              style: wayaTheme.textTheme.hintStyle, textAlign: TextAlign.center,),
-
+              style: wayaTheme.textTheme.hintStyle,
+              textAlign: TextAlign.center,
+            ),
             SizedBox(height: 17.h),
             WayaButton(
-              callback: () async{
-                Navigator.pop(context);
-              //  WayaNav.toNamed("/contest-setting-content");
+              callback: () async {
+                //  Navigator.pop(context);
+                WayaNav.removeUntilNamed("/ugt-home");
+                //  WayaNav.toNamed("/contest-setting-content");
               },
               text: "Manage Contest",
             ),
@@ -52,11 +54,9 @@ class _SuccessfulModalState extends State<SuccessfulModal> {
                 text: 'Copy Contest Invite Link',
                 color: wayaTheme.colorScheme.greyColor300,
                 textColor: wayaTheme.colorScheme.customBlack,
-                border:
-                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-                callback: () {
-
-                })
+                border: Border.all(
+                    width: 1, color: wayaTheme.colorScheme.greyColor300),
+                callback: () {})
           ],
         ),
       ),

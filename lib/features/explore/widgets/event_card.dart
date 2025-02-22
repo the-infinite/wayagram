@@ -71,7 +71,7 @@ class EventCard extends ConsumerWidget {
                 width: 60,
                 child: WayaButton(
                   callback: () {
-                    print("wfwfew");
+                   
                     WayaNav.toNamed(EventDetail.route, arguments: event);
                   },
                   text: event.userId == userId ? 'View' : 'Register',

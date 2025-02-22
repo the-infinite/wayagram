@@ -10,6 +10,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 
@@ -121,7 +122,8 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                         //'${args['groupId']}'
                      );
                       ref.watch(createPageProvider.notifier).reset();
-                     WayaNav.toNamed("/pages",);
+                     Navigator.pushNamed(context, BottomView.route, arguments: 0);
+                     //WayaNav.toNamed("/pages",);
                     }
                   } : null,
                   height: 30,
@@ -299,7 +301,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.primary ),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
                 ],),
               )

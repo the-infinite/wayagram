@@ -9,6 +9,7 @@ import 'package:wayagram/features/auth/account_creation/data/model/personal_stat
 import 'package:wayagram/features/auth/account_creation/data/model/response_model.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 
 class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   final AuthRepository _authRepository;
@@ -17,8 +18,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
 
   final _logger = getLogger('PersonalFirstStepVm');
 
-  PersonalFirstStepVm(
-      this._authRepository, this._localDataSource, this._secureDataSource)
+  PersonalFirstStepVm(this._authRepository, this._localDataSource, this._secureDataSource)
       : super(PersonalFirstStepState());
 
   void togglePasswordVisibility() {
@@ -26,8 +26,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   }
 
   void toggleConfirmPasswordVisibility() {
-    state = state.copyWith(
-        isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
+    state = state.copyWith(isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
   }
 
   void setConfirmPasswordFocus(bool hasFocus) {
@@ -60,9 +59,9 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     state = state.copyWith(state: value.label);
 
     if (_state.isNotEmpty && value.label != _state) {
-            state.copyWith(cities: []);
+      state.copyWith(cities: []);
       state = state.copyWith(city: '');
-        state.copyWith(lgas: []);
+      state.copyWith(lgas: []);
       state = state.copyWith(lga: '');
     }
     await fetchCities(value.value, 'NG');
@@ -75,9 +74,9 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     if (_country.isNotEmpty && value.label != _country) {
       state.copyWith(states: []);
       state = state.copyWith(state: '');
-        state.copyWith(cities: []);
+      state.copyWith(cities: []);
       state = state.copyWith(city: '');
-        state.copyWith(lgas: []);
+      state.copyWith(lgas: []);
       state = state.copyWith(lga: '');
     }
     await fetchStates();
@@ -99,12 +98,10 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
 
   Future<void> fetchCities(String stateCode, String countryCode) async {
     try {
-      final response = await _authRepository.getAllCities(
-          stateCode: stateCode, countryCode: countryCode);
+      final response = await _authRepository.getAllCities(stateCode: stateCode, countryCode: countryCode);
 
       if (response.success) {
-        CitiesResponseModel responseModel =
-            CitiesResponseModel.fromJson(response.data);
+        CitiesResponseModel responseModel = CitiesResponseModel.fromJson(response.data);
 
         final List<Select> allCities = responseModel.data.map((val) {
           return Select(label: val.name, value: val.stateCode);
@@ -121,8 +118,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       final response = await _authRepository.getAllStates();
 
       if (response.success) {
-        StatesResponseModel responseModel =
-            StatesResponseModel.fromJson(response.data);
+        StatesResponseModel responseModel = StatesResponseModel.fromJson(response.data);
 
         final List<Select> allStates = responseModel.data.map((val) {
           return Select(label: val.name, value: val.isoCode);
@@ -136,12 +132,10 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
 
   Future<void> fetchLGA(String stateCode, String countryCode) async {
     try {
-      final response = await _authRepository.getAllLGA(
-          stateCode: stateCode, countryCode: countryCode);
+      final response = await _authRepository.getAllLGA(stateCode: stateCode, countryCode: countryCode);
 
       if (response.success) {
-        LGAResponseModel responseModel =
-            LGAResponseModel.fromJson(response.data);
+        LGAResponseModel responseModel = LGAResponseModel.fromJson(response.data);
 
         final List<Select> lgas = responseModel.data.lgas.map((val) {
           return Select(label: val, value: val);
@@ -158,12 +152,8 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       final reponse = await _authRepository.getAllCountries();
 
       if (reponse.success) {
-        CountryResponseModel responseModel =
-            CountryResponseModel.fromJson(reponse.data);
-        final List<Select> countries = [
-          Select(
-              label: responseModel.data.name, value: responseModel.data.isoCode)
-        ];
+        CountryResponseModel responseModel = CountryResponseModel.fromJson(reponse.data);
+        final List<Select> countries = [Select(label: responseModel.data.name, value: responseModel.data.isoCode)];
 
         state = state.copyWith(countries: countries);
       }
@@ -196,23 +186,17 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
       final response = await showDatePicker(
-          context: context,
-          firstDate: DateTime(1950),
-          lastDate: DateTime.now(),
-          initialDate: DateTime.now());
+          context: context, firstDate: DateTime(1950), lastDate: DateTime.now(), initialDate: DateTime.now());
 
       if (response != null) {
-        final dateOfBirth =
-            "${response.year}-${response.month}-${response.day}";
+        final dateOfBirth = "${response.year}-${response.month}-${response.day}";
         final dateIsoFormat = response.toIso8601String();
-        state = state.copyWith(
-            dateOfBirth: dateOfBirth, dateIsoFormat: dateIsoFormat);
+        state = state.copyWith(dateOfBirth: dateOfBirth, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
       print(error);
     }
   }
-
 
   // Future<Waya>
 
@@ -248,17 +232,22 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
                 "country": state.country,
                 "lga": state.lga,
                 "address": state.businessAddress.text,
-                "businessTypeId":_localDataSource.getSelectedBusinessType().value,
+                "businessTypeId": _localDataSource.getSelectedBusinessType().value,
               },
       ));
 
       if (response.success) {
         final responseModel = ResponseModel.fromJson(response.data);
         final user = responseModel.data.user;
+        final profile = responseModel.data.profile;
         state = state.copyWith(user: user);
 
-        _secureDataSource.saveUserId(user.id!);
-        _localDataSource.saveUserId(user.id!);
+        // This is fine.
+        ConversationState.setSelf(user, profile);
+
+        // This is fine.
+        _secureDataSource.saveUserId(user.id);
+        _localDataSource.saveUserId(user.id);
 
         if (!isPersonal) {
           final business = responseModel.data.business!;
@@ -281,12 +270,10 @@ final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
 
-final personalFirstStepProvider =
-    StateNotifierProvider<PersonalFirstStepVm, PersonalFirstStepState>((ref) {
+final personalFirstStepProvider = StateNotifierProvider<PersonalFirstStepVm, PersonalFirstStepState>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final localDataSource = ref.watch(localDataSourceProvider);
-  return PersonalFirstStepVm(
-      authRepository, localDataSource, WayaSecureDataSource());
+  return PersonalFirstStepVm(authRepository, localDataSource, WayaSecureDataSource());
 });
 
 class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {
@@ -322,8 +309,7 @@ class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {
   }
 }
 
-final businessTypesProvider =
-    StateNotifierProvider<BusinessTypes, AsyncValue<List<Select>>>((ref) {
+final businessTypesProvider = StateNotifierProvider<BusinessTypes, AsyncValue<List<Select>>>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return BusinessTypes(authRepository);
 });

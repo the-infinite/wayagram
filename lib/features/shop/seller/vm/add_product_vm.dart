@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,15 +17,19 @@ import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
+import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 final addProductProvider =
     StateNotifierProvider.family<AddProductVm, AddProductState, String>(
-        (ref, uniqueKey) => AddProductVm(ShopRepository(), ref));
+        (ref, uniqueKey) =>
+            AddProductVm(UploadFileRepository(), ShopRepository(), ref));
 
 class AddProductVm extends StateNotifier<AddProductState> {
   final ShopRepository _shopRepository;
   final Ref ref;
-  AddProductVm(this._shopRepository, this.ref) : super(AddProductState()) {
+  final UploadFileRepository _uploadRepository;
+  AddProductVm(this._uploadRepository, this._shopRepository, this.ref)
+      : super(AddProductState()) {
     final shop = ref.watch(manageShopVmProvider).singleShop;
     if (shop != null) {
       state = state.copyWith(shopId: shop.id);
@@ -125,17 +128,28 @@ class AddProductVm extends StateNotifier<AddProductState> {
       }
       if (state.pickUpOption != 'Delivery' &&
           state.pickUpAddress.text.isEmpty) {
-        WayaSnackBar.showToast("Pls add a pickup address");
+        WayaSnackBar.showToast("Kindly add a pickup address");
+        return;
+      }
+
+      if (state.pricePerUnit.text.isEmpty) {
+        WayaSnackBar.showToast("Kindly add a price");
         return;
       }
       state = state.copyWith(isLoading: true);
 
-      List<MultipartFile> addedimages = [];
+      List<String> addedimages = [];
 
-      for (DocType doc
-          in state.uploadedDocuments.where((d) => d.file != null)) {
-        final imgPartFile = await WayaHelpers.formattedImage(doc.file!);
-        addedimages.add(imgPartFile);
+      for (DocType doc in state.uploadedDocuments) {
+        if (doc.file != null) {
+          final imgPartFile = await WayaUtils.uploadFile(
+              repository: _uploadRepository, file: doc.file!);
+          if (imgPartFile != null) {
+            addedimages.add(imgPartFile);
+          }
+        } else if (doc.url.isNotEmpty) {
+          addedimages.add(doc.url);
+        }
       }
       state = state.copyWith(images: addedimages);
 
@@ -144,15 +158,22 @@ class AddProductVm extends StateNotifier<AddProductState> {
       if (response.success && context.mounted) {
         if (state.isWayagramDeal != null && state.isWayagramDeal == true) {
           WayaUtils.showNotice(
-              context: context,
-              title: "Your Application has been submitted Successfully! 🎉",
-              message:
-                  "Your product has been submitted. We'll notify you \n once it's reviewed.",
-              onPress: () => WayaNav.toNamed('/wayagram-deal'),
-              icon: Image.asset('assets/images/shop/add-product-success.png'),
-              buttonText: 'View Application Status',
-              secondButtonText: 'Go to Dashboard',
-              onCancel: () => WayaNav.toNamed('/wayagram-deal'));
+            context: context,
+            title: "Your Application has been submitted Successfully! 🎉",
+            message:
+                "Your product has been submitted. We'll notify you \n once it's reviewed.",
+            onPress: () {
+              WayaNav.toNamed('/wayagram-deal');
+              // reset();
+            },
+            icon: Image.asset('assets/images/shop/add-product-success.png'),
+            buttonText: 'View Application Status',
+            secondButtonText: 'Go to Dashboard',
+            onCancel: () {
+              WayaNav.toNamed('/wayagram-deal');
+              // reset();
+            },
+          );
           return;
         }
         WayaUtils.showNotice(
@@ -163,13 +184,19 @@ class AddProductVm extends StateNotifier<AddProductState> {
             message: state.isEditMode
                 ? "Your product has been updated and changes are now live."
                 : "Your product is now live in your shop and ready for customers to discover.",
-            onPress: () => WayaNav.toNamed(ManageShop.route),
+            onPress: () {
+              WayaNav.replaceNamed(ManageShop.route);
+              //reset();
+            },
             icon: Image.asset('assets/images/shop/add-product-success.png'),
             buttonText: 'Add Another Product',
             secondButtonText: 'Go to Shop',
-            onCancel: () => WayaNav.toNamed(BottomView.route, arguments: 1));
+            onCancel: () {
+              WayaNav.removeUntilNamed(BottomView.route, arguments: 1);
+              //reset();
+            });
       }
-      reset();
+      //
     } catch (e) {
       print(e);
     } finally {
@@ -189,6 +216,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
         state = state.copyWith(productType: value.value);
       case "pickUpOption":
         state = state.copyWith(pickUpOption: value.value);
+        updatePackageOption(value.value);
       case "discountType":
         state = state.copyWith(discountType: value.label);
         state = state.copyWith(selectedDiscountType: value);
@@ -197,10 +225,21 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }
   }
 
+  void updatePackageOption(String value) {
+    if (value == 'Pickup') {
+      state = state.copyWith(includeDeliveryFee: false);
+      return;
+    }
+    if (value == 'Delivery') {
+      state = state.copyWith(pickUpAddress: TextEditingController(text: ''));
+      return;
+    }
+  }
+
   Future<void> deleteProduct(
       {required String shopId, required String productId}) async {
     try {
-      final response = _shopRepository.deleteProductRequest(
+      final response = await _shopRepository.deleteProductRequest(
           shopId: shopId, productId: productId);
     } catch (e) {
       print(e);
@@ -214,24 +253,21 @@ class AddProductVm extends StateNotifier<AddProductState> {
   Future<void> initializeForEdit(SellerProduct product) async {
     try {
       state = state.copyWith(isLoadingEditingMode: true);
-      final SelectTypePaginatedResult? catPage =
-          await ref.watch(shopVmProvider.notifier).allCategories(1);
-      if (catPage != null) {
-        Select? prevCat =
-            catPage.items.firstWhere((cat) => cat.value == product.categoryId);
-        state = state.copyWith(selectedCategory: prevCat);
-      }
+
       state = state.copyWith(
         isEditMode: true,
         productName: TextEditingController(text: product.name),
         productDescription: TextEditingController(text: product.description),
         materialType: TextEditingController(text: product.materialType),
-        pricePerUnit: TextEditingController(text: product.price),
+        pricePerUnit: TextEditingController(
+            text: double.parse(product.price).toInt().toString()),
         pickUpAddress: TextEditingController(text: product.pickupAddress),
         productCategory: product.categoryId,
         shopId: product.shopId,
         productCondition: product.condition,
         pickUpOption: product.options,
+        selectedCategory:
+            Select(label: product.categoryName, value: product.categoryId),
         includeDeliveryFee: product.deliveryCharge,
         isWayagramDeal: product.wayagramDeal,
         includeMeasurement:
@@ -239,8 +275,8 @@ class AddProductVm extends StateNotifier<AddProductState> {
         productHeight: TextEditingController(text: product.height.toString()),
         productWidth: TextEditingController(text: product.height.toString()),
         productDepth: TextEditingController(text: product.height.toString()),
-        discountPercentage:
-            TextEditingController(text: product.discountPercentage.toString()),
+        discountPercentage: TextEditingController(
+            text: product.discountPercentage.toInt().toString()),
         discountType: product.discountTypeId,
         applyDiscount:
             product.discountTypeId != null || product.discountPercentage > 0,

@@ -90,6 +90,12 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/posts?groupId=$groupId&status=active");
   }
 
+  // all the group filter by id
+  Future<WayaRequestResponse> getMyGroups() {
+    return get("$serviceUrl/groups/user-groups");
+  }
+
+
   Future<WayaRequestResponse> getAllGroups() {
     return get("$serviceUrl/groups");
   }
@@ -109,9 +115,17 @@ class GroupRepository extends BaseRepository {
   Future<WayaRequestResponse> joinRequest(groupId) {
     return get("$serviceUrl/groups/join-requests/$groupId?rstatus=pending");
   }
-
+  // groups i joinrd
   Future<WayaRequestResponse> getJoinedGroup() {
     return get("$serviceUrl/groups/joined-groups");
+  }
+
+  Future<WayaRequestResponse> reportGroup(String groupId, String reason) {
+    final payload = {
+      "groupId": groupId,
+      "reason": reason
+    };
+    return post("$serviceUrl/moderation", payload);
   }
 
   Future<WayaRequestResponse> approveJoinRequest(String requestId ) {
@@ -129,12 +143,13 @@ class GroupRepository extends BaseRepository {
 
   Future<WayaRequestResponse> inviteUserToGroup(String groupId, String role, targetId) {
     final payload = {
-    "targetUserId": "d8ad236b-f969-4e1d-acd2-07f439c78574",
+    "targetUserId": targetId,
     "role": role
     };
     return post("$serviceUrl/groups/invitations/$groupId", payload);
   }
 
+  // recommended groups
   Future<WayaRequestResponse> recommendedGroup() {
     return get("$serviceUrl/groups/recommended");
   }

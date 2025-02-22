@@ -1,81 +1,15 @@
-import 'dart:async';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/types/attachment.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
-
-class _AttachmentActionButton extends StatelessWidget {
-  final String icon;
-  final String title;
-  final String description;
-  final FutureOr<void> Function() callback;
-
-  // Construct.
-  const _AttachmentActionButton({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.callback,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: callback,
-      borderRadius: BorderRadius.circular(10),
-      splashColor: WayaColors.primary.withAlpha(30),
-      focusColor: WayaColors.primary.withAlpha(30),
-      highlightColor: WayaColors.primary.withAlpha(30),
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            //* First, the icon for this attachment action button.
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: WayaColors.primary.withAlpha(30),
-              ),
-              child: SvgPicture.asset(
-                icon,
-              ),
-            ),
-
-            //* Second, the title of this section.
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: WayaTextStyles.bodyBold,
-            ),
-
-            //* The body of this action button.
-            Text(
-              description,
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style: WayaTextStyles.descriptionStyle.copyWith(
-                fontSize: 13,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class ChatAttachmentDialog extends StatelessWidget {
   final ChatInputController controller;
@@ -135,7 +69,7 @@ class ChatAttachmentDialog extends StatelessWidget {
               crossAxisCount: 3,
               children: [
                 // This can be fine.
-                _AttachmentActionButton(
+                WayaActionButton(
                   icon: WayaAssets.icons.cAttachCamera.path,
                   title: "Camera",
                   description: "Send a video or photo from camera",
@@ -164,7 +98,7 @@ class ChatAttachmentDialog extends StatelessWidget {
                 ),
 
                 // This is fine.
-                _AttachmentActionButton(
+                WayaActionButton(
                   icon: WayaAssets.icons.cAttachGallery.path,
                   title: "Media",
                   description: "Share photos and videos",
@@ -189,7 +123,7 @@ class ChatAttachmentDialog extends StatelessWidget {
                 ),
 
                 // This is fine.
-                _AttachmentActionButton(
+                WayaActionButton(
                   icon: WayaAssets.icons.cAttachDocument.path,
                   title: "Documents",
                   description: "Share a document or file",
@@ -232,7 +166,7 @@ class ChatAttachmentDialog extends StatelessWidget {
                 ),
 
                 // This is fine.
-                _AttachmentActionButton(
+                WayaActionButton(
                   icon: WayaAssets.icons.cAttachAudio.path,
                   title: "Audio",
                   description: "Share a song or audio",
@@ -262,7 +196,7 @@ class ChatAttachmentDialog extends StatelessWidget {
                 ),
 
                 // This is fine.
-                // _AttachmentActionButton(
+                // WayaActionButton(
                 //   icon: WayaAssets.icons.cAttachLocation.path,
                 //   title: "Location",
                 //   description: "Share your location to your friends",
@@ -270,7 +204,7 @@ class ChatAttachmentDialog extends StatelessWidget {
                 // ),
 
                 // This is fine.
-                _AttachmentActionButton(
+                WayaActionButton(
                   icon: WayaAssets.icons.cAttachContact.path,
                   title: "Contacts",
                   description: "Share a contact or a friend",

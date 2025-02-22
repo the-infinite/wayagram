@@ -20,8 +20,14 @@ class WayaNav<T> {
     );
   }
 
-  static void removeUntilNamed(String route) {
-    Get.offAllNamed(route);
+  static void removeUntilNamed(String route,{dynamic arguments, Function(dynamic)? onResult}) {
+    Get.offAllNamed( route,
+      arguments: arguments,
+    )?.then((result) {
+      if (onResult != null) {
+        onResult(result);
+      }
+    });
   }
 
   static void goBack<T>({T? result}) {

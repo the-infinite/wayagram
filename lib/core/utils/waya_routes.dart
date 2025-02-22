@@ -4,10 +4,12 @@ import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
+import 'package:wayagram/features/donation/view/create_donation.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/chat/view/chat.dart';
+import 'package:wayagram/features/explore/views/chat_and_social.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
@@ -74,6 +76,9 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/p
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
+import 'package:wayagram/features/support/views/chat.dart';
+import 'package:wayagram/features/support/views/dispute.dart';
+import 'package:wayagram/features/support/views/request.dart';
 import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
@@ -213,6 +218,11 @@ class WayaAppRoutes {
     SearchView.route: () => SearchView(),
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
+    CreateDonation.route: ()=> CreateDonation(),
+    ChatAndSocial.route:() => ChatAndSocial(),
+    SupportRequestScreen.route: () => SupportRequestScreen(),
+    SupportDisputeScreen.route: () => SupportDisputeScreen(),
+    SupportChatScreen.route: () => SupportChatScreen(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

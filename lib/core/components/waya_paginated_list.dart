@@ -137,27 +137,29 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
   }
 
   Future<void> _getPage(int page) async {
-    //? We are currently loading this up.
-    _loadingController.value = true;
+    try {
+      //? We are currently loading this up.
+      _loadingController.value = true;
 
-    //? Get the items on the current page.
-    final result = await widget.getPage(page);
+      //? Get the items on the current page.
+      final result = await widget.getPage(page);
 
-    //? If there is an on-fetch callback we CAN call...
-    if (result.isNotEmpty && widget.onFetch != null) {
-      widget.onFetch!.call(page, result);
-    }
+      //? If there is an on-fetch callback we CAN call...
+      if (result.isNotEmpty && widget.onFetch != null) {
+        widget.onFetch!.call(page, result);
+      }
 
-    //? Now, notify the listeners of a change in state.
-    _itemsNotifier.value = _itemsNotifier.value + 1;
-    _loadingController.value = false;
+      //? Now, notify the listeners of a change in state.
+      _itemsNotifier.value = _itemsNotifier.value + 1;
+      _loadingController.value = false;
+    } catch (_) {}
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _loadingController.dispose();
     _itemsNotifier.dispose();
+    _loadingController.dispose();
     super.dispose();
   }
 

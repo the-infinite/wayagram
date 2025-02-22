@@ -39,7 +39,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
               Row(
                 children: [
                   WayaImage(
-                    imageUrl: widget.shop.logo,
+                    imageUrl: widget.shop.logo ?? '',
                     height: 40,
                     width: 40,
                     radius: BorderRadius.circular(40),

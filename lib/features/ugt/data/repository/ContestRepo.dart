@@ -4,11 +4,10 @@ import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import '../model/create_contest.dart';
 
-class ContestRepo extends  BaseRepository{
- static const serviceUrl2 = "school-contest/api/v1";
+class ContestRepo extends BaseRepository {
+  static const serviceUrl2 = "school-contest/api/v1";
 
   Future<WayaRequestResponse> getCategory() {
-
     return get('$serviceUrl2/category/getAll');
   }
 
@@ -17,12 +16,38 @@ class ContestRepo extends  BaseRepository{
   //   return post('$serviceUrl/contests/create',payLoad.toJson());
   // }
 
-
-
-  Future<WayaRequestResponse> createContest(CreateContestModel payLoad) {
-
-    return post('$serviceUrl2/contests/create', payLoad, formdata: true);
+  Future<WayaRequestResponse> createContest(payLoad) {
+    return post('$serviceUrl2/contests/create', payLoad, formdata: false);
   }
+
+  Future<WayaRequestResponse> registerContest(payLoad) {
+    return post('$serviceUrl2/application/', payLoad, formdata: false);
+  }
+
+  Future<WayaRequestResponse> getContestForAll(int page) {
+    return get('$serviceUrl2/contests/contest-for-you?page=$page');
+  }
+
+  Future<WayaRequestResponse> fetchHostedContest(String userId, int page) {
+    return get(
+        '$serviceUrl2/contests/hostedContests-by-profile?profileId=$userId&page=$page');
+  }
+
+    Future<WayaRequestResponse> fetchAppliedContest(String userId) {
+    return get(
+        '$serviceUrl2/application/$userId/appliedContest');
+  }
+
+  Future<WayaRequestResponse> likeContest(payLoad) {
+    return post('$serviceUrl2/contestInteraction/like', payLoad,
+        formdata: false);
+  }
+
+  Future<WayaRequestResponse> shareContest(payLoad) {
+    return post('$serviceUrl2/contestInteraction/share', payLoad,
+        formdata: false);
+  }
+
 
 
   /*Future<WayaRequestResponse> createContestController({
@@ -87,6 +112,4 @@ class ContestRepo extends  BaseRepository{
     print("newSingle ${response}");
     return response;
   }*/
-
-
 }
