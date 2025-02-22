@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.8-staging+137
+version: 1.91.8-prod+138
 
 environment:
   sdk: ^3.6.0
