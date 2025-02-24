@@ -169,7 +169,7 @@ class CreateSheet extends ConsumerWidget {
               _CreateActionButton(
                   icon: WayaAssets.icons.csPage.path,
                   title: "Page",
-                  description: "Ceate a page for your business or fan",
+                  description: "Create a page for your business or fan",
                   callback: () {
                     WayaNav.toNamed(CreatePage.route);
                   }),

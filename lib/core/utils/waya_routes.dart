@@ -5,6 +5,9 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/donation/view/create_donation.dart';
+import 'package:wayagram/features/donation/view/donation_details.dart';
+import 'package:wayagram/features/donation/view/donation_management.dart';
+import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
@@ -218,7 +221,10 @@ class WayaAppRoutes {
     SearchView.route: () => SearchView(),
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
+   Donations.route: ()=> Donations(),
+   DonationDetails.route: ()=> DonationDetails(),
     CreateDonation.route: ()=> CreateDonation(),
+    DonationManagement.route: ()=> DonationManagement(),
     ChatAndSocial.route:() => ChatAndSocial(),
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
