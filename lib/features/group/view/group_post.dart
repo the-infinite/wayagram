@@ -66,7 +66,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
 
     return Padding(
       padding: const  EdgeInsets.only(left: 25),
-      child: viewModel2.getAllPost!.isEmpty? PostEmptyState() : Column(
+      child: viewModel2.groupPostdocs!.isEmpty? PostEmptyState() : Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
