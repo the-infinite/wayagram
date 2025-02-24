@@ -63,12 +63,15 @@ class _SellerShopState extends ConsumerState<SellerShop> {
               Text("My Shops", style: wayaTheme.textTheme.titleSmall),
               const Gap(10),
               ListView.builder(
-                  itemCount: manageShop.shop.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return SingleShopCard(shop: manageShop.shop[index]);
-                  }),
+                itemCount: manageShop.shop.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return SingleShopCard(
+                    shop: manageShop.shop[index],
+                  );
+                },
+              ),
               const Gap(20),
               // Text("Shared Shop", style: wayaTheme.textTheme.titleSmall),
               // const Gap(10),
@@ -93,25 +96,19 @@ Widget buildSellerShopSkeleton({required BuildContext context}) {
       Container(
         width: 80,
         height: 24,
-        decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.greyColor100,
-            borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
       ),
       const Gap(3),
       Container(
         height: 24,
         width: 120,
-        decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.greyColor100,
-            borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
       ),
       const Gap(20),
       Container(
         height: 20,
         width: 50,
-        decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.greyColor100,
-            borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
       ),
       const Gap(3),
       CardLoadingState(),
@@ -119,9 +116,7 @@ Widget buildSellerShopSkeleton({required BuildContext context}) {
       Container(
         height: 20,
         width: 50,
-        decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.greyColor100,
-            borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
       ),
       const Gap(3),
       CardLoadingState(),
