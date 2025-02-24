@@ -21,7 +21,11 @@ import '../../../core/utils/waya_navigation.dart';
 
 class ContestCard extends ConsumerWidget {
   Contest post;
-  ContestCard(this.post, {super.key});
+  final  Function(String) onLikePressed;
+  final Function(String) onSharePressed;
+  final Function(String) onFollowPressed;
+  ContestCard(this.post,  this.onLikePressed,
+     this.onSharePressed,this.onFollowPressed, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +35,7 @@ class ContestCard extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.white,
             borderRadius: BorderRadius.circular(16),
@@ -47,8 +51,9 @@ class ContestCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: context.width * 0.8,
+                    // width: context.width * 0.8,
                     child: Row(
+                      //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         /*SvgPicture.asset(
                         '',
@@ -58,13 +63,21 @@ class ContestCard extends ConsumerWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(
                               45), // Adjust the radius as needed
-                          child: Image.asset(
-                            'assets/images/uni.png',
-                            width: 45,
-                            height: 45,
-                            fit: BoxFit
-                                .cover, // Ensures the image covers the area properly
-                          ),
+                          child: post.uploadCoverImages != null
+                              ? Image.network(
+                                  post.uploadCoverImages!,
+                                  height: 45,
+                                  width: 45,
+                                  fit: BoxFit
+                                      .cover, // Ensures the image covers the area properly
+                                )
+                              : Image.asset(
+                                  'assets/images/frameuni.png',
+                                  height: 45,
+                                  width: 45,
+                                  fit: BoxFit
+                                      .cover, // Ensures the image covers the area properly
+                                ),
                         ),
                         /*WayaImage(
                         imageUrl: 'assets/images/destructive.png',
@@ -77,9 +90,10 @@ class ContestCard extends ConsumerWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
                           children: [
                             SizedBox(
-                              width: context.width * 0.6,
+                              width: context.width * 0.4,
                               child: Text(
                                 post.title ?? "Title",
                                 overflow: TextOverflow.ellipsis,
@@ -92,7 +106,39 @@ class ContestCard extends ConsumerWidget {
                               style: wayaTheme.textTheme.hintStyle,
                             ),
                           ],
+                        ),
+                        // Spacer(),
+                        Gap(
+                          context.width * 0.15,
+                        ),
+                        //  post.isFollowing!
+                        WayaButton(
+                          callback: () => onFollowPressed(post.id!),
+                          height: 40,
+                          text: "Follow",
                         )
+                        /*  : SizedBox(
+                                height: 40,
+                                width: 90,
+                                child: OutlinedButton(
+                                    onPressed: () =>
+                                        postNotifier.doFollow(post.id!),
+                                    style: OutlinedButton.styleFrom(
+                                      side: BorderSide(
+                                          color: wayaTheme.primaryColor,
+                                          width: 2), // Border color and width
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            4), // Rounded corners
+                                      ),
+                                    ),
+                                    child: Text("Follow")),
+                              ), */
+                        /*  WayaButton(
+                          callback: () => postNotifier.doFollow(post.id!),
+                          height: 40,
+                          text: "Follow",
+                        ), */
                       ],
                     ),
                   ),
@@ -176,7 +222,7 @@ class ContestCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () => postNotifier.toggleLike(post.id!),
+                    onTap: () => onLikePressed(post.id!),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -204,7 +250,7 @@ class ContestCard extends ConsumerWidget {
                   ),
                   const Gap(30),
                   GestureDetector(
-                    onTap: () => postNotifier.toggleShare(post.id!),
+                    onTap: () => onSharePressed(post.id!),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,

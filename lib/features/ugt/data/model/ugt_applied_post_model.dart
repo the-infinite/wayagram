@@ -49,8 +49,8 @@ class AppliedContestModel {
   final ApplicationData? applicationData;
   final String? status;
   final String? rejectionReason;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final String? createdAt;
+  final String? updatedAt;
   final Contest? contest;
   final String? categoryName;
 

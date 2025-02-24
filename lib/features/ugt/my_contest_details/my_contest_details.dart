@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contest_detail_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_followed_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
@@ -34,6 +35,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
   void initState() {
     super.initState();
     ref.read(contestDetailProvider.notifier).fetchHostedContest();
+    ref.read(followedContestProvider.notifier).fetchFollowedPosts();
     ref.read(appliedContestProvider.notifier).fetchAppliedContest();
 
     // Scroll listener for pagination
@@ -51,7 +53,10 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
     final wayaTheme = Theme.of(context);
     final host = ref.watch(contestDetailProvider);
     final applied = ref.watch(appliedContestProvider);
+    final followed = ref.watch(followedContestProvider);
     final hostNotifier = ref.read(contestDetailProvider.notifier);
+    final appliedNotifier = ref.read(appliedContestProvider.notifier);
+    final followedNotifier = ref.read(followedContestProvider.notifier);
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       runSpacing: 1,
@@ -125,13 +130,49 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                       textColor: wayaTheme.colorScheme.customPrimary,
                     ),
                     const Gap(10),
+                    if (host.isEmpty && applied.isEmpty && followed.isEmpty)
+                      emptyWidget(),
                     ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: 3,
+                      itemCount: applied.length,
                       itemBuilder: (context, index) {
-                        return Text("my data");
-                        // return ContestCard();
+                        final post = applied[index];
+                        return ContestAppliedCard(post);
+                      },
+                    ),
+                    const Gap(10),
+                    ListView.builder(
+                      // controller: _hostedScrollController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: followed.length,
+                      itemBuilder: (context, index) {
+                        if (hostNotifier.isLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        final post = followed[index];
+                        return ContestCard(
+                            post,
+                            followedNotifier.toggleLike,
+                            followedNotifier.toggleShare,
+                            followedNotifier.doFollow);
+                      },
+                    ),
+                    const Gap(10),
+                    ListView.builder(
+                      controller: _hostedScrollController,
+                      shrinkWrap: true,
+                      itemCount: host.length,
+                      itemBuilder: (context, index) {
+                        if (hostNotifier.isLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        final post = host[index];
+                        return ContestCard(post, hostNotifier.toggleLike,
+                            hostNotifier.toggleShare, hostNotifier.doFollow);
                       },
                     ),
                   ],
@@ -150,7 +191,8 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                       }
 
                       final post = host[index];
-                      return ContestCard(post);
+                      return ContestCard(post, hostNotifier.toggleLike,
+                          hostNotifier.toggleShare, hostNotifier.doFollow);
                     },
                   ),
 

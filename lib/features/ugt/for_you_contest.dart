@@ -119,7 +119,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
               }
 
               final post = posts[index];
-              return ContestCard(post);
+              return ContestCard(post, postNotifier.toggleLike ,postNotifier.toggleShare,postNotifier.doFollow);
             },
           ),
       ],

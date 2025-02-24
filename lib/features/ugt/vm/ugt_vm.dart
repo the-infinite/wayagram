@@ -155,7 +155,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "title": title.text,
         "profileId": _localDataSource.getUserId().toString(),
         "category": state.categoryId,
-        "categoryName": state.categorys,
+        // "categoryName": state.categorys,
         "state": state.state,
         //  "numberOfWeeks":numberOfWeeks.text,
         "winnerPrize": winnerPrize.text,
@@ -237,7 +237,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       final response = await showDatePicker(
           context: context,
           firstDate: DateTime(1950),
-          lastDate: DateTime.now(),
+          lastDate: DateTime(2050),
           initialDate: DateTime.now());
 
       if (response != null) {
@@ -258,7 +258,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       final response = await showDatePicker(
           context: context,
           firstDate: DateTime(1950),
-          lastDate: DateTime.now(),
+          lastDate: DateTime(2050),
           initialDate: DateTime.now());
       if (response != null) {
         final endDate = "${response.year}-${response.month}-${response.day}";

@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
-import 'package:wayagram/features/quotation/data/model/model.dart';
-import 'package:wayagram/features/ugt/data/model/register_for_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
@@ -59,7 +58,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
 
   void addDefault(List<FormRequirements> model, Contest post) {
     postId = post.id;
-      this.post = post;
+    this.post = post;
 
     var fieldList = <DynamicField>[];
 /*     var list = [
@@ -157,10 +156,9 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     isLoading.value = false;
 
     if (response.success) {
-      WayaUtils.showModalSheetUgt(
-        context,
-        child: ApplicationStatus(post),
-      );
+      WayaSnackBar.showToast(
+          "Application sent, Your Application is under review");
+      Navigator.pop(context);
     }
   }
 

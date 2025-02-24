@@ -94,7 +94,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       final response = await showDatePicker(
           context: context,
           firstDate: DateTime(1950),
-          lastDate: DateTime.now(),
+         lastDate: DateTime(2050),
           initialDate: DateTime.now());
 
       if (response != null) {
@@ -112,7 +112,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       final response = await showDatePicker(
           context: context,
           firstDate: DateTime(1950),
-          lastDate: DateTime(2026),
+          lastDate: DateTime(2050),
           initialDate: DateTime.now());
 
       if (response != null) {

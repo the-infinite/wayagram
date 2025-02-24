@@ -6,7 +6,9 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 //import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/ugt/widgets/status_widget.dart';
@@ -56,13 +58,21 @@ class ContestAppliedCard extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(
                               45), // Adjust the radius as needed
-                          child: Image.asset(
-                            'assets/images/frameuni.png',
-                            height: 45,
-                            width: 45,
-                            fit: BoxFit
-                                .cover, // Ensures the image covers the area properly
-                          ),
+                          child: post.contest?.uploadCoverImages != null
+                              ? Image.network(
+                                  post.contest?.uploadCoverImages ?? "",
+                                  height: 45,
+                                  width: 45,
+                                  fit: BoxFit
+                                      .cover, // Ensures the image covers the area properly
+                                )
+                              : Image.asset(
+                                  'assets/images/frameuni.png',
+                                  height: 45,
+                                  width: 45,
+                                  fit: BoxFit
+                                      .cover, // Ensures the image covers the area properly
+                                ),
                         ),
                         /*WayaImage(
                         imageUrl: 'assets/images/destructive.png',
@@ -147,7 +157,7 @@ class ContestAppliedCard extends StatelessWidget {
                 children: [
                   StatusWidget(
                     title: "Application",
-                    content: post.contest?.status??"Pending",
+                    content: post.contest?.status ?? "Pending",
                   ),
                   const Gap(30),
                   AboutUgtWidget(
@@ -159,7 +169,12 @@ class ContestAppliedCard extends StatelessWidget {
               ),
               const Gap(25),
               WayaButton(
-                callback: () {},
+                callback: () {
+                   WayaUtils.showModalSheetUgt(
+        context,
+        child: ApplicationStatus(post),
+      );
+                },
                 text: "View Application Status",
               ),
             ],

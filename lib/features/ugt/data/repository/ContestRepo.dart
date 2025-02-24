@@ -24,7 +24,7 @@ class ContestRepo extends BaseRepository {
     return post('$serviceUrl2/application/', payLoad, formdata: false);
   }
 
-  Future<WayaRequestResponse> getContestForAll(int page) {
+  Future<WayaRequestResponse> getContestForYou(int page) {
     return get('$serviceUrl2/contests/contest-for-you?page=$page');
   }
 
@@ -38,8 +38,17 @@ class ContestRepo extends BaseRepository {
         '$serviceUrl2/application/$userId/appliedContest');
   }
 
+   Future<WayaRequestResponse> fetchFollowedVoteContest(String userId) {
+    return get(
+        '$serviceUrl2/contests/contest-follow-vote/$userId');
+  }
+
   Future<WayaRequestResponse> likeContest(payLoad) {
     return post('$serviceUrl2/contestInteraction/like', payLoad,
+        formdata: false);
+  }
+    Future<WayaRequestResponse> followContest(payLoad) {
+    return post('$serviceUrl2/contestInteraction/follow', payLoad,
         formdata: false);
   }
 

@@ -3,7 +3,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as post;
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 
 class AppliedContestNotifier extends StateNotifier<List<AppliedContestModel>> {
@@ -53,6 +53,27 @@ class AppliedContestNotifier extends StateNotifier<List<AppliedContestModel>> {
       isLoading = false;
     }
   }
+ /*    Future<void> fetchFollowedPosts() async {
+    if (isLoading) return;
+    isLoading = true;
+
+    try {
+      final response = await _contestRepository.fetchFollowedVoteContest( _localDataSource.getUserId().toString());
+      List<post.Contest> contestList = [];
+      if (response.success) {
+        post.ContestResponse responseModel =  post.ContestResponse.fromJson(response.data);
+        contestList = responseModel.data.docs;
+        state = [...state, ...contestList];
+       // _page++;
+        isLoading = false;
+      }
+      // return contestList;
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoading = false;
+    }
+  } */
 
 
 
