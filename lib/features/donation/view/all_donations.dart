@@ -100,7 +100,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                 onTap: (){
                   WayaNav.toNamed('/donationDetails');
                 },
-                buttonWidth: 6.00,
+                buttonWidth: 60.0,
               );
             }
         ),
