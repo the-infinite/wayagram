@@ -12,6 +12,7 @@ import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.d
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
+import 'package:wayagram/features/group/data/model/group_post_model.dart';
 import 'package:wayagram/features/group/data/model/group_response.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
@@ -400,23 +401,21 @@ class GroupVm extends StateNotifier<GroupState> {
     } finally {}
   }
 
-  Future<void> getGroupPosts() async {
+  Future<void> getGroupPosts(String groupId) async {
     print('Fetching saved posts...');
 
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.getGroupPost();
+      final response = await _groupRepository.getGroupPost(groupId);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        GetAllPost responseModel = GetAllPost.fromJson(response.data);
-        state = state.copyWith(getAllPost: responseModel.data?.docs);
-
-      } else {
+        GroupPostModel responseModel =GroupPostModel.fromJson(response.data);
+        state = state.copyWith(groupPostdocs: responseModel.data?.docs);
 
       }
     } catch (e) {
-
+    print(e);
     } finally {
 
     }

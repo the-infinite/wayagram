@@ -13,6 +13,8 @@ import 'package:wayagram/features/explore/widgets/donation_widget.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 
+import '../widget/manage_donation_widget.dart';
+
 class AllDonations extends ConsumerStatefulWidget {
   const AllDonations({super.key});
 
@@ -68,7 +70,14 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             shrinkWrap: true,
             itemCount: 3,
             itemBuilder: (context, index){
-              return DonationWidget();
+              return ManageDonationWidget(
+                text:  "Donate",
+                onTap: (){
+                  WayaNav.toNamed('/donationDetails');
+                },
+                buttonWidth: 60.0,
+              );
+
             }
         ),
         Gap(20),
@@ -86,7 +95,13 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             shrinkWrap: true,
             itemCount: 3,
             itemBuilder: (context, index){
-              return DonationWidget();
+              return ManageDonationWidget(
+                text:  "Donate",
+                onTap: (){
+                  WayaNav.toNamed('/donationDetails');
+                },
+                buttonWidth: 60.0,
+              );
             }
         ),
       ],

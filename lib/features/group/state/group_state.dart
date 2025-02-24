@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
+import 'package:wayagram/features/group/data/model/group_post_model.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
@@ -28,6 +29,7 @@ class GroupState {
   List<GetAllGroupDocs>? myGroups;
   List<RecommendedGroupDocs>? recommendedGroupDocs;
   List<GetAllPostDocs>? getAllPost;
+  List<GroupPostDocs>? groupPostdocs;
   
 
   final bool isFocused;
@@ -51,6 +53,7 @@ class GroupState {
     this.name = '',
     this.desc = '',
     this.docs = const [],
+    this.groupPostdocs = const [],
     this.allGroupMemberDocs = const [],
     this.getAllGroups = const [],
     this.fetchAllEventDocs = const [],
@@ -76,6 +79,7 @@ class GroupState {
     List<AllGroupMemberDocs>? allGroupMemberDocs,
     List<JoinedGroupDocs>? joinedGroup,
     List<RecommendedGroupDocs>? recommendedGroupDocs,
+    List<GroupPostDocs>? groupPostdocs,
     List<GetAllPostDocs>? getAllPost,
     bool? isFocused,
     bool? isLoading,
@@ -98,6 +102,7 @@ class GroupState {
       getAllGroups: getAllGroups ?? this.getAllGroups,
       fetchAllEventDocs: fetchAllEventDocs ?? this.fetchAllEventDocs,
       allGroupMemberDocs: allGroupMemberDocs ?? this.allGroupMemberDocs,
+      groupPostdocs: groupPostdocs ?? this.groupPostdocs,
       recommendedGroupDocs: recommendedGroupDocs ?? this.recommendedGroupDocs,
       myGroups: myGroups ?? this.myGroups,
       joinedGroup: joinedGroup ?? this.joinedGroup,

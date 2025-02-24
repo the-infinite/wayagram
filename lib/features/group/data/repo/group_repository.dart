@@ -100,8 +100,8 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/groups");
   }
 
-  Future<WayaRequestResponse> getGroupPost() {
-    return get("$serviceUrl/groups/recommended");
+  Future<WayaRequestResponse> getGroupPost(groupId) {
+    return get("$serviceUrl/posts?groupId=$groupId&status=active");
   }
 
   Future<WayaRequestResponse> getGroupMember(groupId) {
