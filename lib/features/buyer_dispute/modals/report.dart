@@ -161,7 +161,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                               label: "Reason for dispute",
                               hintText: 'Select Type',
                               items: notifier.disputeType,
-                              onSelected: (value) => reasonController.value = value,
+                              onSelected: (value) => reasonController.value = value.first,
                             );
                           },
                         ),
