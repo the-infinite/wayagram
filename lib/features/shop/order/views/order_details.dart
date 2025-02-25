@@ -18,78 +18,113 @@ class OrderDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final arg = ModalRoute.of(context)?.settings.arguments as OrderDetailArg?;
 
-    final OrderDetailArg? arg =
-        ModalRoute.of(context)?.settings.arguments as OrderDetailArg?;
-
+    //? The actual components.
     return WayaScaffold(
-        isLoading: false,
-        isScrollable: true,
-        title: "Order Details",
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Order Details", style: wayaTheme.textTheme.bodyMedium),
-            const Gap(10),
-            CopyCode(
-                code: "#${arg?.order.id.substring(0, 6)}",
-                title: "Order Details"),
-            const Gap(25),
-            Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
-            const Gap(10),
-            ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: arg?.order.items.length,
-                itemBuilder: (context, index) {
-                  CartProduct order = CartProduct(
-                      price: arg?.order.items[index].price ?? 0,
-                      quantity: arg?.order.items[index].quantity ?? 0,
-                      productId: arg?.order.items[index].productId ?? '',
-                      productName: arg?.order.items[index].name ?? '',
-                      deliveryCharge: false,
-                      productImage: arg?.order.items[index].productImage ?? '',
-                      deliveryOptions: '');
-                  return OrderedProductCard(orders: order);
-                }),
-            const Gap(25),
-            OrderAddressWidget(
-                type: 'Pickup Address', address: arg?.order.pickupAddress),
-            OrderAddressWidget(
-                type: 'Delivery Address', address: arg?.order.deliveryAddress),
-            Text("Token", style: wayaTheme.textTheme.bodyMedium),
-            const Gap(10),
-            CopyCode(
-                code: arg?.order.deliveryToken ?? '',
-                title: "Delivery Confirmation Token"),
-            const Gap(25),
-            Text(
-                arg?.order.deliveryType == 'Pickup'
-                    ? "Pickup Progress"
-                    : "Delivery Progress",
-                style: wayaTheme.textTheme.bodyMedium),
-            const Gap(10),
-            OrderTracking(
-                statuses: arg?.order.deliveryType == 'Pickup'
-                    ? pickupStatus
-                    : deliveryStatus,
-                type: arg?.order.deliveryType,
-                status: arg?.order.deliveryType == 'Pickup'
-                    ? arg?.order.pickupStatus
-                    : arg?.order.deliveryStatus),
-            const Gap(25),
-            Visibility(
-                visible: arg?.order.deliveryStatus == 'completed' ||
-                    arg?.order.pickupStatus == 'completed',
-                child: WayaButton(
-                  callback: () {
-                    WayaNav.toNamed(ConfirmOrderDelivery.route,
-                        arguments: arg?.order.deliveryToken);
-                  },
-                  text: "Confirm Order Delivery",
-                ))
-          ],
-        ));
+      isLoading: false,
+      isScrollable: true,
+      title: "Order Details",
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //? The title of the page.
+          Text(
+            "Order Details",
+            style: wayaTheme.textTheme.bodyMedium,
+          ),
+
+          // Some space.
+          const Gap(10),
+
+          //? How we are supposed to get to the order details page.
+          CopyCode(
+            code: "#${arg?.order.id.substring(0, 6)}",
+            title: "Order Details",
+          ),
+
+          // Some space.
+          const Gap(25),
+
+          //? The products that were ordered.
+          Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
+          const Gap(10), // Space.
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: arg?.order.items.length,
+            itemBuilder: (context, index) {
+              CartProduct order = CartProduct(
+                price: arg?.order.items[index].price ?? 0,
+                quantity: arg?.order.items[index].quantity ?? 0,
+                productId: arg?.order.items[index].productId ?? '',
+                productName: arg?.order.items[index].name ?? '',
+                deliveryCharge: false,
+                productImage: arg?.order.items[index].productImage ?? '',
+                deliveryOptions: '',
+              );
+              return OrderedProductCard(orders: order);
+            },
+          ),
+
+          // Some space.
+          const Gap(25),
+
+          //? The address this was picked up from.
+          OrderAddressWidget(
+            type: 'Pickup Address',
+            address: arg?.order.pickupAddress,
+          ),
+
+          //? The address this was delivered to.
+          OrderAddressWidget(
+            type: 'Delivery Address',
+            address: arg?.order.deliveryAddress,
+          ),
+
+          //? The delivery confirmation token
+          Text("Token", style: wayaTheme.textTheme.bodyMedium),
+          const Gap(10),
+          CopyCode(
+            code: arg?.order.deliveryToken ?? '',
+            title: "Delivery Confirmation Token",
+          ),
+
+          // Some space.
+          const Gap(25),
+
+          //? Show them the deliver
+          Text(
+            arg?.order.deliveryType == 'Pickup' ? "Pickup Progress" : "Delivery Progress",
+            style: wayaTheme.textTheme.bodyMedium,
+          ),
+
+          // Some space.
+          const Gap(10),
+
+          //? For tracking the orders.
+          OrderTracking(
+            statuses: arg?.order.deliveryType == 'Pickup' ? pickupStatus : deliveryStatus,
+            type: arg?.order.deliveryType,
+            status: arg?.order.deliveryType == 'Pickup' ? arg?.order.pickupStatus : arg?.order.deliveryStatus,
+          ),
+
+          // Some space.
+          const Gap(25),
+
+          //? For the button that is supposed to
+          Visibility(
+            visible: arg?.order.deliveryStatus == 'completed' || arg?.order.pickupStatus == 'completed',
+            child: WayaButton(
+              callback: () {
+                WayaNav.toNamed(ConfirmOrderDelivery.route, arguments: arg?.order.deliveryToken);
+              },
+              text: "Confirm Order Delivery",
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

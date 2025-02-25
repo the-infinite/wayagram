@@ -59,6 +59,11 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
   // Helper function used to start a new support conversation.
   void _startSupportChat() async {}
 
+  //? This is fine.
+  Future<ChatModel?> _startConversation() async {
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     // This is fine too.
@@ -201,6 +206,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                 controller: inputController,
                 notifier: notifier,
                 voiceEnabled: false,
+                createChat: _startConversation,
               ),
           ],
         ),

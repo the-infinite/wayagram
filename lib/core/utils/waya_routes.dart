@@ -3,6 +3,7 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/buyer_dispute/views/detail.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/donation/view/create_donation.dart';
 import 'package:wayagram/features/donation/view/donation_details.dart';
@@ -217,19 +218,20 @@ class WayaAppRoutes {
           title: '',
           postId: '',
         ),
-    EditGroupInfo.route: ()=> EditGroupInfo(),
-    AddGroupMember.route: ()=> AddGroupMember(),
+    EditGroupInfo.route: () => EditGroupInfo(),
+    AddGroupMember.route: () => AddGroupMember(),
     SearchView.route: () => SearchView(),
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
-   Donations.route: ()=> Donations(),
-   DonationDetails.route: ()=> DonationDetails(),
-    CreateDonation.route: ()=> CreateDonation(),
-    DonationManagement.route: ()=> DonationManagement(),
-    ChatAndSocial.route:() => ChatAndSocial(),
+    Donations.route: () => Donations(),
+    DonationDetails.route: () => DonationDetails(),
+    CreateDonation.route: () => CreateDonation(),
+    DonationManagement.route: () => DonationManagement(),
+    ChatAndSocial.route: () => ChatAndSocial(),
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
     SupportChatScreen.route: () => SupportChatScreen(),
+    DisputeDetail.route: () => DisputeDetail(id: WayaNav.search['id'].toString()),
     ProductSearchResult.route:() => ProductSearchResult()
   };
 
@@ -240,6 +242,10 @@ class WayaAppRoutes {
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
   static String getProfileRoute(String id) => "${ProfilePage.route}?id=$id";
+
+  /// Helper function that is used to get the route to the details of a single
+  /// dispute by its ID.
+  static String getDisputeDetailsRoute(String id) => "${DisputeDetail.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages => routes.entries.map((entry) {
