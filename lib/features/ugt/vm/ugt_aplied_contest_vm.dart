@@ -18,7 +18,7 @@ class AppliedContestNotifier extends StateNotifier<List<AppliedContestModel>> {
 
   // Simulate fetching paginated posts
   Future<void> fetchAppliedContest() async {
-  /*   if (isLoading) return;
+    /*   if (isLoading) return;
     isLoading = true;
 
     /*   await Future.delayed(Duration(seconds: 2)); // Simulating API call
@@ -35,17 +35,17 @@ class AppliedContestNotifier extends StateNotifier<List<AppliedContestModel>> {
  */ */
 
     try {
-      final response = await _contestRepository.fetchAppliedContest(
-          _localDataSource.getUserId().toString());
+      final response = await _contestRepository
+          .fetchAppliedContest(_localDataSource.getUserId().toString());
       List<AppliedContestModel> contestList = [];
       if (response.success) {
         AppliedContest responseModel = AppliedContest.fromJson(response.data);
         contestList = responseModel.data!;
         state = [...state, ...contestList];
-       // _page++;
-       // isLoading = false;
+        // _page++;
+        // isLoading = false;
       }
-      
+
       // return contestList;
     } catch (e) {
       print(e);
@@ -53,7 +53,7 @@ class AppliedContestNotifier extends StateNotifier<List<AppliedContestModel>> {
       isLoading = false;
     }
   }
- /*    Future<void> fetchFollowedPosts() async {
+  /*    Future<void> fetchFollowedPosts() async {
     if (isLoading) return;
     isLoading = true;
 
@@ -74,16 +74,29 @@ class AppliedContestNotifier extends StateNotifier<List<AppliedContestModel>> {
       isLoading = false;
     }
   } */
-
-
-
-
-
-
 }
 
+final selectedAppliedContestProvider =
+    StateProvider<AppliedContestModel?>((ref) {
+  return AppliedContestModel(
+      id: "",
+      contestId: "",
+      userId: "userId",
+      fullName: "fullName",
+      email: "",
+      phoneNumber: "phoneNumber",
+      address: "address",
+      applicationData: null,
+      status: "status",
+      rejectionReason: null,
+      createdAt: null,
+      updatedAt: "",
+      contest: null,
+      categoryName: "");
+});
 // Provider
 final appliedContestProvider =
-    StateNotifierProvider<AppliedContestNotifier, List<AppliedContestModel>>((ref) {
+    StateNotifierProvider<AppliedContestNotifier, List<AppliedContestModel>>(
+        (ref) {
   return AppliedContestNotifier(ContestRepo(), WayaLocalDataSource());
 });

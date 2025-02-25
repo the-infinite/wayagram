@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
@@ -14,6 +15,7 @@ import 'package:wayagram/features/ugt/data/model/create_contest.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/ugt_modal.dart';
+import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import '../../../core/data/local_data_source.dart';
 import '../../../core/data/model/model.dart';
@@ -214,6 +216,38 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     } finally {
       isLoading.value = false;
       state = state.copyWith(isLoading: false);
+    }
+  }
+
+  void createContestProfile(
+    BuildContext context,
+    ValueNotifier<bool> isLoading,
+    WidgetRef ref,
+    String imagePath,
+    String videoPath,
+    String bio,
+    String expectationFromVoters,
+  ) async {
+    isLoading.value = true;
+    final imageUrl = await WayaFileRepository.instance
+        .uploadFile(File(imagePath), "ugt-video-${Uuid().v4()}");
+    final videoUrl = await WayaFileRepository.instance
+        .uploadFile(File(videoPath), "ugt-image-${Uuid().v4()}");
+    var model = ref.read(selectedAppliedContestProvider.notifier).state;
+    var map = {
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": model!.contestId,
+      "bio": bio,
+      "expectationFromVoters": expectationFromVoters,
+      "contestApplicationId": model.id,
+      "introVideo": videoUrl,
+      "profilePhoto": imageUrl
+    };
+
+    final response = await _contestRepository.createProfile(map);
+    isLoading.value = false;
+    if (response.success) {
+      Navigator.pop(context);
     }
   }
 
@@ -508,6 +542,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     state.copyWith(stagePrefModels: [...state.stagePrefModels ?? [], model]);
   }
 }
+
 
 final authRepositoryProvider = Provider((ref) => ContestRepo());
 final contestControllerProvider = Provider((ref) => ContestController());

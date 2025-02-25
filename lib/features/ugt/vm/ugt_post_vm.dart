@@ -144,6 +144,9 @@ class ContestForYou extends StateNotifier<List<Contest>> {
   } */
 }
 
+final selectedContestProvider = StateProvider<Contest>((ref) {
+  return Contest();
+});
 // Provider
 final postProvider = StateNotifierProvider<ContestForYou, List<Contest>>((ref) {
   return ContestForYou(ContestRepo(), WayaLocalDataSource());

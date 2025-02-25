@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 //import 'package:wayagram/features/explore/data/model/default.dart';
@@ -161,7 +162,9 @@ class ContestAppliedCard extends StatelessWidget {
                   ),
                   const Gap(30),
                   AboutUgtWidget(
-                      title: "Prize", content: post.contest?.winnerPrize ?? ""),
+                      title: "Prize",
+                      content:
+                          "NGN ${formatMoney(post.contest?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
                   const Gap(30),
                   AboutUgtWidget(
                       title: "Category", content: post.categoryName ?? ""),
@@ -170,10 +173,10 @@ class ContestAppliedCard extends StatelessWidget {
               const Gap(25),
               WayaButton(
                 callback: () {
-                   WayaUtils.showModalSheetUgt(
-        context,
-        child: ApplicationStatus(post),
-      );
+                  WayaUtils.showModalSheetUgt(
+                    context,
+                    child: ApplicationStatus(post),
+                  );
                 },
                 text: "View Application Status",
               ),

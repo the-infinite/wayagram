@@ -12,6 +12,7 @@ import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/widgets/about_ugt_widget.dart';
@@ -21,11 +22,12 @@ import '../../../core/utils/waya_navigation.dart';
 
 class ContestCard extends ConsumerWidget {
   Contest post;
-  final  Function(String) onLikePressed;
+  final Function(String) onLikePressed;
   final Function(String) onSharePressed;
   final Function(String) onFollowPressed;
-  ContestCard(this.post,  this.onLikePressed,
-     this.onSharePressed,this.onFollowPressed, {super.key});
+  ContestCard(
+      this.post, this.onLikePressed, this.onSharePressed, this.onFollowPressed,
+      {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -200,7 +202,8 @@ class ContestCard extends ConsumerWidget {
                   //  AboutUgtWidget(title: "Status", content: "Ongoing", ),
                   const Gap(30),
                   AboutUgtWidget(
-                      title: "Prize", content: "NGN ${post.winnerPrize}"),
+                      title: "Prize",
+                      content: "NGN ${formatMoney(post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
                   const Gap(30),
                   AboutUgtWidget(
                       title: "Category",
@@ -212,7 +215,9 @@ class ContestCard extends ConsumerWidget {
                 callback: () {
                   ref.read(registerFormProvider.notifier).addDefault(
                       post.contestSettings?.formRequirements ?? [], post);
-                  WayaNav.toNamed("/register-contest1");
+                  //  WayaNav.toNamed("/register-contest1");
+                  ref.read(selectedContestProvider.notifier).state = post;
+                  WayaNav.toNamed("/upcoming-contest-details");
                 },
                 text: "View Details",
               ),
@@ -291,7 +296,7 @@ String formatDate(String isoDate) {
   DateTime date = DateTime.parse(isoDate);
   String day = DateFormat('d').format(date);
   String suffix = getDaySuffix(int.parse(day));
-  String month = DateFormat('MMMM').format(date);
+  String month = DateFormat('MMM').format(date);
   String year = DateFormat('y').format(date);
   return "$day$suffix $month $year";
 }

@@ -57,6 +57,12 @@ class ContestRepo extends BaseRepository {
         formdata: false);
   }
 
+  
+  Future<WayaRequestResponse> createProfile(payLoad) {
+    return post('$serviceUrl2/profile/create', payLoad,
+        formdata: false);
+  }
+
 
 
   /*Future<WayaRequestResponse> createContestController({
