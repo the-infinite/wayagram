@@ -104,7 +104,8 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
           onCancel: () => Navigator.pop(context),
           message:
               'Your payment has been processed successfully, you can download your reciept and track your order progress',
-          onPress: () => WayaNav.toNamed(BottomView.route, arguments: 1),
+          onPress: () => WayaNav.toNamed(BottomView.route,
+              arguments: {'index': 1, 'current': 1}),
           icon: Image.asset('assets/images/d-code-valid.png'),
           buttonCenterWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,

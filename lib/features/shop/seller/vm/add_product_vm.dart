@@ -153,8 +153,11 @@ class AddProductVm extends StateNotifier<AddProductState> {
       }
       state = state.copyWith(images: addedimages);
 
-      final response = await _shopRepository.createProduct(
-          payload: state.addProductModel, id: state.shopId);
+      final response = state.isEditMode
+          ? await _shopRepository.editProductRequest(
+              payload: state.addProductModel, productId: state.productId)
+          : await _shopRepository.createProduct(
+              payload: state.addProductModel, id: state.shopId);
       if (response.success && context.mounted) {
         if (state.isWayagramDeal != null && state.isWayagramDeal == true) {
           WayaUtils.showNotice(
@@ -256,6 +259,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
 
       state = state.copyWith(
         isEditMode: true,
+        productId: product.id,
         productName: TextEditingController(text: product.name),
         productDescription: TextEditingController(text: product.description),
         materialType: TextEditingController(text: product.materialType),

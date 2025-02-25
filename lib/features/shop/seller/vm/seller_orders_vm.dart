@@ -49,7 +49,7 @@ class SellerOrdersVm extends StateNotifier<SellerOrdersState> {
     state = state.copyWith(shopId: id);
   }
 
-  Future<PaginatedResult<Order>?> getOrders(int page) async {
+  Future<PaginatedResult<Order>?> getOrders({required int page}) async {
     try {
       final response =
           await _orderRepository.getSellerOrders(state.shopId, page);
