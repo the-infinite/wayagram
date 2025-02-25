@@ -77,7 +77,7 @@ dependencies:
   #Manage single screen state 
   hooks_riverpod: ^2.6.1
   flutter_hooks: ^0.20.5
-
+  syncfusion_flutter_sliders: ^28.2.6
   video_trimmer: ^3.0.1-LTS
 
 

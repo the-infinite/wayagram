@@ -46,26 +46,28 @@ class WayaUtils {
     );
   }
 
-  static Future<Select> showSelectModal({
-    required BuildContext context,
-    required String title,
-    required List<Select> items,
-  }) async {
-    final result = await showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return WayaBottomSheetContent(
-          title: title,
-          items: items,
-        );
-      },
-      transitionAnimationController: AnimationController(
-        duration: const Duration(milliseconds: 300),
-        vsync: Navigator.of(context),
-      ),
-    );
-    return result;
-  }
+  static Future<List<Select>> showSelectModal({
+  required BuildContext context,
+  required String title,
+  required List<Select> items,
+  List<Select>? selectedItems,
+  bool multi = false,
+}) async {
+  final result = await showModalBottomSheet(
+    context: context,
+    isDismissible: !multi,
+    builder: (BuildContext context) {
+      return WayaBottomSheetContent(
+        title: title,
+        items: items,
+        selectedItems: selectedItems,
+        multi: multi,
+      );
+    },
+  );
+
+  return result ?? [];
+}
 
   static copyText(String text) async {
     await Clipboard.setData(ClipboardData(text: text));

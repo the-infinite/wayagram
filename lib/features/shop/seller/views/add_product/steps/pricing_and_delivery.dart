@@ -100,7 +100,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.3,
                           uniqueKey: 'pickup-option',
                           label: "Delivery/Pickup Option",
@@ -113,7 +113,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                           onSelected: (value) => ref
                               .read(
                                   addProductProvider(widget.uniqueKey).notifier)
-                              .update(value, "pickUpOption")),
+                              .update(value.first, "pickUpOption")),
                       if (formState.hasError && viewModel.pickUpOption.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
